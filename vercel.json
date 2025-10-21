@@ -1,7 +1,7 @@
 {
   "buildCommand": "pnpm build",
   "outputDirectory": "dist",
-  "installCommand": "pnpm install --no-frozen-lockfile",
+  "installCommand": "npm update -g pnpm && pnpm install",
   "framework": "astro",
   "headers": [
     {
