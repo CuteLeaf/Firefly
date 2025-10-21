@@ -69,7 +69,6 @@
 ### 平台托管部署
 
 - **参考[官方指南](https://docs.astro.build/zh-cn/guides/deploy/)将博客部署至 Vercel, Netlify, GitHub Pages 等。**
-- **环境变量配置：** 如果你需要使用Umami统计，推荐在部署平台设置环境变量 `UMAMI_API_KEY` 为您的 Umami API 密钥，或者直接在配置文件中修改
 
 ## 📖 配置说明
 
@@ -88,7 +87,6 @@ src/
 │   ├── licenseConfig.ts      # 许可证配置
 │   ├── footerConfig.ts       # 页脚配置
 │   ├── FooterConfig.html     # 页脚HTML内容
-│   ├── umamiConfig.ts        # 统计配置
 │   ├── expressiveCodeConfig.ts # 代码高亮配置
 │   ├── sakuraConfig.ts       # 樱花特效配置
 │   ├── fontConfig.ts         # 字体配置
