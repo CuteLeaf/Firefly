@@ -5,7 +5,7 @@ tags:
   - email
   - Instant Mail
 id: 202509110937
-date: 2025-09-11 06:37:00
+published: 2025-09-11 06:37:00
 cover: "https://wp-cdn.4ce.cn/v2/zsdjAvc.png"
 recommend: true
 top: false
