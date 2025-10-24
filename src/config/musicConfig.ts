@@ -35,10 +35,10 @@ export const musicPlayerConfig: MusicPlayerConfig = {
     playlist: [
       {
         id: 1,
-        title: "使一颗心免于哀伤",
-        artist: "知更鸟 / HOYO-MiX / Chevy",
-        cover: "/assets/music/cover/109951169585655912.jpg",
-        url: "/assets/music/使一颗心免于哀伤-哼唱.wav",
+        title: "呼吸着你的香水味",
+        artist: "小小宇",
+        cover: "/assets/music/cover/49ef802e45ff9613eb79039c00ad46151761349423978.jpg",
+        url: "/assets/music/小小宇唱歌.mp3",
         duration: 240,
       },
     ],
