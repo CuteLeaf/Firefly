@@ -1,6 +1,6 @@
 ---
 title: TalkEase - 实时聊天
-categories: Cloudflare
+category: 开源
 tags:
   - Cloudflare
   - 实时聊天
