@@ -105,15 +105,13 @@ export const siteConfig: SiteConfig = {
         // 主页显示自定义文本（全局开关）
         enable: true,
         // 主页横幅主标题
-        title: "Lovely firefly!",
+        title: "The xmhai Stack",
         // 主页横幅副标题
         subtitle: [
-          "In Reddened Chrysalis, I Once Rest",
-          "From Shattered Sky, I Free Fall",
-          "Amidst Silenced Stars, I Deep Sleep",
-          "Upon Lighted Fyrefly, I Soon Gaze",
-          "From Undreamt Night, I Thence Shine",
-          "In Finalized Morrow, I Full Bloom",
+          "一起慢慢进步.",
+          "Make progress together.",
+          "相濡以沫不如相忘江湖.",
+          "It is better to forget each other than to foam each other",
         ],
         typewriter: {
           enable: true, // 启用副标题打字机效果
@@ -124,7 +122,7 @@ export const siteConfig: SiteConfig = {
       },
       credit: {
         enable: {
-          desktop: true, // 桌面端显示横幅图片来源文本
+          desktop: false, // 桌面端显示横幅图片来源文本
           mobile: false, // 移动端显示横幅图片来源文本
         },
         text: {
