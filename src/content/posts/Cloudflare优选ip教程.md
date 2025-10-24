@@ -1,13 +1,11 @@
 ---
 title: Cloudflare优选ip教程
-categories: 教程
-tags:
-  - Cloudflare
-  - 教程
-id: 202510240404
-date: 2025-10-24 04:04:00
-cover: "https://dash.cloudflare.com/favicon-196x196.png"
-recommend: true
+description: 用我的两个域名来演示
+category: Cloudflare
+tags: [Cloudflare, 教程]
+published: 2025-10-24 04:04:00
+image: "https://dash.cloudflare.com/favicon-196x196.png"
+author: 星觅海
 ---
 :::note{type="error"}
 用我的两个域名来演示
