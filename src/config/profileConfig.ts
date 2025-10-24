@@ -1,7 +1,7 @@
 import type { ProfileConfig } from "../types/config";
 
 export const profileConfig: ProfileConfig = {
-  avatar: "https://q1.qlogo.cn/g?b=qq&nk=1498934815&s=100",
+  avatar: "https://q1.qlogo.cn/g?b=qq&nk=1498934815&s=640",
   name: "星觅海",
   bio: "Hello, I'm Xingmihai.",
   links: [
