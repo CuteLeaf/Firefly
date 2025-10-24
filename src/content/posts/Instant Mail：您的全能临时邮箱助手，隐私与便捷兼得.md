@@ -1,15 +1,13 @@
 ---
 title: Instant Mail：您的全能临时邮箱助手，隐私与便捷兼得
-categories: email
+category: email
 tags:
   - email
   - Instant Mail
-id: 202509110937
-published: 2025-09-11 06:37:00
-cover: "https://wp-cdn.4ce.cn/v2/zsdjAvc.png"
-recommend: true
-top: false
-hide: false
+slug: 202509110637
+published: 2025-09-11
+image: "https://wp-cdn.4ce.cn/v2/zsdjAvc.png"
+author: 星觅海
 ---
 
 ::btn[下载链接]{link="https://save.jasmiam.top/raw/InstantMail_JASMIAM.apk" type="error"}
