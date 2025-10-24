@@ -3,7 +3,8 @@ title: Cloudflare优选ip教程
 description: 用我的两个域名来演示
 category: Cloudflare
 tags: [Cloudflare, 教程]
-published: 2025-10-24 04:04:00
+published: 2025-10-24
+slug: 202510240404
 image: "https://dash.cloudflare.com/favicon-196x196.png"
 author: 星觅海
 ---
