@@ -6,7 +6,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
   enable: true, // 启用音乐播放器功能
 
   // 播放器模式配置
-  mode: "local", // 播放器模式："local" 本地音乐，"meting" 在线音乐
+  mode: "meting", // 播放器模式："local" 本地音乐，"meting" 在线音乐
 
   // Meting API 配置
   meting: {
