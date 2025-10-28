@@ -14,7 +14,7 @@ export const siteConfig: SiteConfig = {
     "Blog",
     "Astro",
     "ACGN",
-    "博客",
+    "自动化",
     "技术博客",
     "阿荣博客",
   ],
@@ -39,14 +39,14 @@ export const siteConfig: SiteConfig = {
   // 导航栏Logo
   // navbarLogo 支持三种类型：Astro图标库，本地图片，网络图片
   // { type: "icon", value: "material-symbols:home-pin-outline" }
-  // { type: "image", value: "/assets/images/logo.webp", alt: "Firefly Logo" }
-  // { type: "image", value: "https://example.com/logo.png", alt: "Firefly Logo" }
+  // { type: "image", value: "/assets/images/logo.jpg", alt: "Logo" }
+  // { type: "image", value: "https://example.com/logo.jpg", alt: "Logo" }
   navbarLogo: {
     type: "image",
     value: "/assets/images/LiuYingPure3.svg",
     alt: "🍀",
   },
-  navbarTitle: "Firefly", // 导航栏标题，可以设置为与 title 不同的值，如果不设置则使用 title
+  navbarTitle: "Arong's Blog", // 导航栏标题，可以设置为与 title 不同的值，如果不设置则使用 title
 
   
   // 追番配置
