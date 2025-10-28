@@ -1,7 +1,7 @@
 import type { ProfileConfig } from "../types/config";
 
 export const profileConfig: ProfileConfig = {
-  avatar: "/assets/images/logo.jpg",
+  avatar: "/assets/images/avatar.webp",
   name: "Arong",
   bio: "Hello, I'm Arong.",
   links: [
@@ -14,6 +14,11 @@ export const profileConfig: ProfileConfig = {
       name: "GitHub",
       icon: "fa6-brands:github",
       url: "https://github.com/Arongjun",
+    },
+    {
+      name: "Email",
+      icon: "fa6-solid:envelope",
+      url: "mailto:admin@wuenrong.cn",
     },
   ],
 };
