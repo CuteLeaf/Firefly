@@ -190,6 +190,27 @@ lang: jp      # 仅当文章语言与 `config.ts` 中的网站语言不同时需
 | `pnpm astro ...`                  | 执行 `astro add`, `astro check` 等指令 |
 | `pnpm astro --help`               | 显示 Astro CLI 帮助                   |
 
+## 💝 赞助Firefly
+
+如果 Firefly 对你有帮助，欢迎通过以下方式赞助支持项目的发展：
+
+<table>
+  <tr>
+    <td align="center">
+      <strong>支付宝</strong><br/>
+      <img src="./docs/images/sponsor/alipay.png" width="200" alt="支付宝收款码" />
+    </td>
+    <td align="center">
+      <strong>微信</strong><br/>
+      <img src="./docs/images/sponsor/wechat.png" width="200" alt="微信收款码" />
+    </td>
+    <td align="center">
+      <strong>爱发电</strong><br/>
+      <img src="./docs/images/sponsor/afdian.png" width="200" alt="爱发电" />
+    </td>
+  </tr>
+</table>
+
 ## 🙏 致谢
 
 - 感谢原始 [Fuwari](https://github.com/saicaca/fuwari) 模板
@@ -212,26 +233,6 @@ lang: jp      # 仅当文章语言与 `config.ts` 中的网站语言不同时需
 
 [![Star History Chart](https://api.star-history.com/svg?repos=CuteLeaf/Firefly&type=Date)](https://star-history.com/#CuteLeaf/Firefly&Date)
 
-## 💝 赞助本项目
-
-如果 Firefly 对你有帮助，欢迎通过以下方式赞助支持项目的发展：
-
-<table>
-  <tr>
-    <td align="center">
-      <strong>支付宝</strong><br/>
-      <img src="./docs/images/sponsor/alipay.png" width="200" alt="支付宝收款码" />
-    </td>
-    <td align="center">
-      <strong>微信</strong><br/>
-      <img src="./docs/images/sponsor/wechat.png" width="200" alt="微信收款码" />
-    </td>
-    <td align="center">
-      <strong>爱发电</strong><br/>
-      <img src="./docs/images/sponsor/afdian.png" width="200" alt="爱发电" />
-    </td>
-  </tr>
-</table>
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
