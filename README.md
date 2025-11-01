@@ -220,15 +220,15 @@ lang: jp      # 仅当文章语言与 `config.ts` 中的网站语言不同时需
   <tr>
     <td align="center">
       <strong>支付宝</strong><br/>
-      <img src="./docs/images/sponsor/alipay.png" width="300" alt="支付宝收款码" />
+      <img src="./docs/images/sponsor/alipay.png" width="200" alt="支付宝收款码" />
     </td>
     <td align="center">
       <strong>微信</strong><br/>
-      <img src="./docs/images/sponsor/wechat.png" width="300" alt="微信收款码" />
+      <img src="./docs/images/sponsor/wechat.png" width="200" alt="微信收款码" />
     </td>
     <td align="center">
       <strong>爱发电</strong><br/>
-      <img src="./docs/images/sponsor/afdian.jpg" width="300" alt="爱发电" />
+      <img src="./docs/images/sponsor/afdian.png" width="200" alt="爱发电" />
     </td>
   </tr>
 </table>
