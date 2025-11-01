@@ -150,6 +150,22 @@ enum I18nKey {
   wallpaperBannerMode = "wallpaperBannerMode",
   wallpaperOverlayMode = "wallpaperOverlayMode",
   wallpaperNoneMode = "wallpaperNoneMode",
+
+  // 赞助页面
+  sponsor = "sponsor",
+  sponsorTitle = "sponsorTitle",
+  sponsorDescription = "sponsorDescription",
+  sponsorMethods = "sponsorMethods",
+  sponsorList = "sponsorList",
+  sponsorEmpty = "sponsorEmpty",
+  sponsorAmount = "sponsorAmount",
+  sponsorDate = "sponsorDate",
+  sponsorMessage = "sponsorMessage",
+  sponsorAnonymous = "sponsorAnonymous",
+  scanToSponsor = "scanToSponsor",
+  sponsorGoTo = "sponsorGoTo",
+  sponsorButton = "sponsorButton",
+  sponsorButtonText = "sponsorButtonText",
 }
 
 export default I18nKey;

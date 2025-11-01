@@ -236,6 +236,9 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
 					const bannerWrapper = document.getElementById('banner-wrapper');
 					const fullscreenWallpaper = document.querySelector('[data-fullscreen-wallpaper]');
 					
+					// 检查当前是否为首页
+					const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
+					
 					if (wallpaperMode === WALLPAPER_OVERLAY) {
 						// 全屏壁纸模式：显示全屏壁纸，隐藏banner
 						if (bannerWrapper) {
@@ -259,10 +262,26 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
 						// banner模式：显示banner，隐藏全屏壁纸
 						if (bannerWrapper) {
 							bannerWrapper.style.display = 'block';
+							// 移动端非首页时隐藏banner
+							if (!isHomePage) {
+								bannerWrapper.classList.add('mobile-hide-banner');
+							} else {
+								bannerWrapper.classList.remove('mobile-hide-banner');
+							}
 						}
 						if (fullscreenWallpaper) {
 							fullscreenWallpaper.style.display = 'none';
 							fullscreenWallpaper.classList.add('hidden', 'opacity-0');
+						}
+					}
+					
+					// 处理主内容区域位置
+					const mainContentWrapper = document.querySelector('.absolute.w-full.z-30');
+					if (mainContentWrapper) {
+						if (!isHomePage) {
+							mainContentWrapper.classList.add('mobile-main-no-banner');
+						} else {
+							mainContentWrapper.classList.remove('mobile-main-no-banner');
 						}
 					}
 

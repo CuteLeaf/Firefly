@@ -11,9 +11,9 @@ description: "与优秀的朋友们一起成长"
 
 ```yaml
 站点名称: 夏夜流萤
-站点描述: 总有一场相遇，是互相喜欢的！
+站点描述: 飞萤之火自无梦的长夜亮起，绽放在终竟的明天。
 站点链接: https://blog.cuteleaf.cn
-头像链接: https://q.qlogo.cn/headimg_dl?dst_uin=7618557&spec=640&img_type=jpg
+头像链接: https://q1.qlogo.cn/g?b=qq&nk=7618557&s=640
 
 ```
 

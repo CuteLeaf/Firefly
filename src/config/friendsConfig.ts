@@ -7,7 +7,7 @@ export const friendsConfig: FriendLink[] = [
   {
     title: "夏夜流萤",
     imgurl:
-      "https://q.qlogo.cn/headimg_dl?dst_uin=7618557&spec=640&img_type=jpg",
+      "https://q1.qlogo.cn/g?b=qq&nk=7618557&s=640",
     desc: "总有一场相遇，是互相喜欢的！",
     siteurl: "https://blog.cuteleaf.cn",
     tags: ["Blog"],

@@ -41,7 +41,10 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
     name: "关于",
     url: "/content/",
     icon: "material-symbols:info",
-    children: [LinkPreset.About],
+    children: [
+      ...(siteConfig.pages.sponsor ? [LinkPreset.Sponsor] : []), // 根据配置决定是否添加赞助页面
+      LinkPreset.About,
+    ],
   });
   return { links };
 };

@@ -132,4 +132,20 @@ export const ja: Translation = {
   [Key.wallpaperBannerMode]: "バナー壁紙",
   [Key.wallpaperOverlayMode]: "全画面壁紙",
   [Key.wallpaperNoneMode]: "単色背景",
+
+  // スポンサーページ
+  [Key.sponsor]: "スポンサー",
+  [Key.sponsorTitle]: "サポート",
+  [Key.sponsorDescription]: "私のコンテンツがあなたの役に立ったなら、以下の方法で私をスポンサーしてください。あなたのサポートは私の継続的な創作の原動力です！",
+  [Key.sponsorMethods]: "支払い方法",
+  [Key.sponsorList]: "スポンサーリスト",
+  [Key.sponsorEmpty]: "スポンサー記録なし",
+  [Key.sponsorAmount]: "金額",
+  [Key.sponsorDate]: "日付",
+  [Key.sponsorMessage]: "メッセージ",
+  [Key.sponsorAnonymous]: "匿名",
+  [Key.scanToSponsor]: "スキャンしてスポンサー",
+  [Key.sponsorGoTo]: "スポンサーへ",
+  [Key.sponsorButton]: "サポート",
+  [Key.sponsorButtonText]: "この記事が役に立ったなら、サポートをお願いします！",
 };

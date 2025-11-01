@@ -128,4 +128,20 @@ export const zh_TW: Translation = {
   [Key.wallpaperBannerMode]: "橫幅壁紙",
   [Key.wallpaperOverlayMode]: "全屏壁紙",
   [Key.wallpaperNoneMode]: "純色背景",
+
+  // 贊助頁面
+  [Key.sponsor]: "贊助",
+  [Key.sponsorTitle]: "贊助支持",
+  [Key.sponsorDescription]: "如果我的內容對你有幫助，歡迎通過以下方式贊助我，你的支持是我持續創作的動力！",
+  [Key.sponsorMethods]: "贊助方式",
+  [Key.sponsorList]: "贊助列表",
+  [Key.sponsorEmpty]: "暫無贊助記錄",
+  [Key.sponsorAmount]: "金額",
+  [Key.sponsorDate]: "日期",
+  [Key.sponsorMessage]: "留言",
+  [Key.sponsorAnonymous]: "匿名",
+  [Key.scanToSponsor]: "掃碼贊助",
+  [Key.sponsorGoTo]: "前往贊助",
+  [Key.sponsorButton]: "贊助支持",
+  [Key.sponsorButtonText]: "如果這篇文章對你有幫助，歡迎贊助支持！",
 };

@@ -57,6 +57,7 @@
 - [x] **侧边栏配置** - 可关闭/切换左右位置，丰富的侧边栏组件
 - [x] **导航栏定制** - Logo、标题、链接全面自定义
 - [x] **友情链接** - 精美的友链展示卡片
+- [x] **赞助页面** - 多种支付方式、收款码展示、赞助者列表、文章内赞助按钮
 - [x] **公告栏** - 顶部公告提示，支持关闭和自定义样式
 - [x] **页脚配置** - HTML 内容注入，完全自定义
 - [x] **关于页面** - 自定义个人介绍
@@ -155,7 +156,8 @@ src/
 │   ├── musicConfig.ts        # 音乐播放器配置
 │   ├── pioConfig.ts          # 看板娘配置
 │   ├── adConfig.ts           # 广告配置
-│   └── friendsConfig.ts      # 友链配置
+│   ├── friendsConfig.ts      # 友链配置
+│   └── sponsorConfig.ts      # 赞助配置
 ```
 
 
@@ -196,7 +198,7 @@ lang: jp      # 仅当文章语言与 `config.ts` 中的网站语言不同时需
 - 使用 [Astro](https://astro.build) 和 [Tailwind CSS](https://tailwindcss.com) 构建
 - 图标来自 [Iconify](https://iconify.design/)
 
-## 🍀贡献者
+## 🍀 贡献者
 
 感谢以下贡献者对本项目做出的贡献，如有问题或建议，请提交 [Issue](https://github.com/CuteLeaf/Firefly/issues) 或 [Pull Request](https://github.com/CuteLeaf/Firefly/pulls)。
 
@@ -206,9 +208,30 @@ lang: jp      # 仅当文章语言与 `config.ts` 中的网站语言不同时需
 
 ![Alt](https://repobeats.axiom.co/api/embed/6139639d8e88da4d3dc9d45fd43f4e4b2d580086.svg "Repobeats analytics image")
 
-## ⭐Star History
+## ⭐ Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=CuteLeaf/Firefly&type=Date)](https://star-history.com/#CuteLeaf/Firefly&Date)
+
+## 💝 赞助本项目
+
+如果 Firefly 对你有帮助，欢迎通过以下方式赞助支持项目的发展：
+
+<table>
+  <tr>
+    <td align="center">
+      <strong>支付宝</strong><br/>
+      <img src="./docs/images/sponsor/alipay.png" width="300" alt="支付宝收款码" />
+    </td>
+    <td align="center">
+      <strong>微信</strong><br/>
+      <img src="./docs/images/sponsor/wechat.png" width="300" alt="微信收款码" />
+    </td>
+    <td align="center">
+      <strong>爱发电</strong><br/>
+      <img src="./docs/images/sponsor/afdian.jpg" width="300" alt="爱发电" />
+    </td>
+  </tr>
+</table>
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->

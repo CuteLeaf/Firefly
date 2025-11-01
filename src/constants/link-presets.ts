@@ -28,5 +28,9 @@ export const LinkPresets: { [key in LinkPreset]: NavBarLink } = {
     url: "/anime/",
     icon: "material-symbols:movie",
   },
-
+  [LinkPreset.Sponsor]: {
+    name: i18n(I18nKey.sponsor),
+    url: "/sponsor/",
+    icon: "material-symbols:favorite",
+  },
 };

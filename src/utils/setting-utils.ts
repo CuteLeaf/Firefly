@@ -368,6 +368,9 @@ function showBannerMode() {
 	// 显示banner壁纸（通过CSS类和display控制）
 	const bannerWrapper = document.getElementById('banner-wrapper');
 	if (bannerWrapper) {
+		// 检查当前是否为首页
+		const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
+		
 		// 先设置display，然后使用requestAnimationFrame确保渲染
 		bannerWrapper.style.display = 'block';
 		bannerWrapper.style.setProperty('display', 'block', 'important');
@@ -375,6 +378,13 @@ function showBannerMode() {
 			bannerWrapper.classList.remove('hidden');
 			bannerWrapper.classList.remove('opacity-0');
 			bannerWrapper.classList.add('opacity-100');
+			
+			// 移动端非首页时隐藏banner
+			if (!isHomePage) {
+				bannerWrapper.classList.add('mobile-hide-banner');
+			} else {
+				bannerWrapper.classList.remove('mobile-hide-banner');
+			}
 		});
 	}
 
@@ -403,6 +413,17 @@ function showBannerMode() {
 
 	// 调整主内容位置
 	adjustMainContentPosition('banner');
+	
+	// 处理移动端非首页主内容区域位置
+	const mainContentWrapper = document.querySelector('.absolute.w-full.z-30');
+	if (mainContentWrapper) {
+		const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
+		if (!isHomePage) {
+			mainContentWrapper.classList.add('mobile-main-no-banner');
+		} else {
+			mainContentWrapper.classList.remove('mobile-main-no-banner');
+		}
+	}
 
 	// 移除透明效果（横幅模式不使用半透明）
 	adjustMainContentTransparency(false);

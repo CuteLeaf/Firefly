@@ -154,4 +154,20 @@ export const zh_CN: Translation = {
   [Key.wallpaperBannerMode]: "横幅壁纸",
   [Key.wallpaperOverlayMode]: "全屏壁纸",
   [Key.wallpaperNoneMode]: "纯色背景",
+
+  // 赞助页面
+  [Key.sponsor]: "赞助",
+  [Key.sponsorTitle]: "赞助支持",
+  [Key.sponsorDescription]: "如果我的内容对你有帮助，欢迎通过以下方式赞助我，你的支持是我持续创作的动力！",
+  [Key.sponsorMethods]: "赞助方式",
+  [Key.sponsorList]: "赞助列表",
+  [Key.sponsorEmpty]: "暂无赞助记录",
+  [Key.sponsorAmount]: "金额",
+  [Key.sponsorDate]: "日期",
+  [Key.sponsorMessage]: "留言",
+  [Key.sponsorAnonymous]: "匿名",
+  [Key.scanToSponsor]: "扫码赞助",
+  [Key.sponsorGoTo]: "前往赞助",
+  [Key.sponsorButton]: "赞助支持",
+  [Key.sponsorButtonText]: "如果这篇文章对你有帮助，欢迎赞助支持！",
 };

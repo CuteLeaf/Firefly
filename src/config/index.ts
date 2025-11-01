@@ -25,6 +25,7 @@ export { musicPlayerConfig } from "./musicConfig"; // 音乐播放器配置
 export { spineModelConfig, live2dModelConfig } from "./pioConfig"; // 看板娘配置
 export { adConfig1, adConfig2 } from "./adConfig"; // 广告配置
 export { getEnabledFriends } from "./friendsConfig"; // 友链配置
+export { sponsorConfig } from "./sponsorConfig"; // 赞助配置
 
 // 类型导出
 export type {
@@ -41,4 +42,7 @@ export type {
   NavBarConfig,
   WidgetComponentConfig,
   WidgetComponentType,
+  SponsorConfig,
+  SponsorMethod,
+  SponsorItem,
 } from "../types/config";

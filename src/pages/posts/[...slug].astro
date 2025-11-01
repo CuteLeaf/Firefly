@@ -17,6 +17,8 @@ import PostMetadata from "@/components/content/PostMeta.astro";
 import { profileConfig } from "@/config/profileConfig";
 import { siteConfig } from "@/config/siteConfig";
 import { formatDateToYYYYMMDD } from "@/utils/date-utils";
+import { sponsorConfig } from "@/config/sponsorConfig";
+import { url } from "@/utils/url-utils";
 export async function getStaticPaths() {
   const blogEntries = await getSortedPosts();
   return blogEntries.map((entry) => ({
@@ -167,6 +169,39 @@ const jsonLd = {
       <Markdown class="mb-6 markdown-content onload-animation">
         <Content />
       </Markdown>
+
+      {/* 赞助按钮 */}
+      {
+        sponsorConfig.showButtonInPost && siteConfig.pages.sponsor && (
+          <div class="mb-6 rounded-xl onload-animation">
+            <div class="p-6 bg-[var(--license-block-bg)] rounded-xl">
+              <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3 flex-1">
+                  <div class="h-12 w-12 rounded-lg bg-[var(--primary)] flex items-center justify-center text-white dark:text-black/70 flex-shrink-0">
+                    <Icon name="material-symbols:favorite" class="text-2xl" />
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
+                      {i18n(I18nKey.sponsorButton)}
+                    </h3>
+                    <p class="text-sm text-neutral-600 dark:text-neutral-400">
+                      {i18n(I18nKey.sponsorButtonText)}
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href={url("/sponsor/")}
+                  class="inline-flex items-center gap-2 px-6 py-3 bg-[var(--primary)] text-white dark:text-black/70 rounded-lg font-medium hover:bg-[var(--primary)]/80 hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
+                >
+                  <span>{i18n(I18nKey.sponsor)}</span>
+                  <Icon name="fa6-solid:arrow-right" class="text-sm" />
+                </a>
+              </div>
+            </div>
+          </div>
+        )
+      }
+
       {
         licenseConfig.enable && (
           <License
@@ -184,45 +219,44 @@ const jsonLd = {
     </div>
   </div>
 
+  <!-- 上次编辑时间 -->
   {
     siteConfig.showLastModified && (
       <div class="card-base p-6 mb-4">
-        <div class="card-base p-1 mb-0.1">
-          <div class="flex items-center gap-2">
-            <div class="transition h-9 w-9 rounded-lg overflow-hidden relative flex items-center justify-center mr-0">
-              <Icon
-                name="material-symbols:history-rounded"
-                class="text-4xl text-[var(--primary)] transition-transform group-hover:translate-x-0.5 bg-[var(--enter-btn-bg)] p-2 rounded-md"
-              />
-            </div>
-
-            {(() => {
-              const lastModified = dayjs(
-                entry.data.updated || entry.data.published
-              );
-              const now = dayjs();
-              const daysDiff = now.diff(lastModified, "day");
-              const dateStr = lastModified.format("YYYY-MM-DD");
-              const isOutdated = daysDiff >= 1;
-
-              return (
-                <div class="flex flex-col gap-0.1">
-                  <div class="text-[1.0rem] leading-tight text-black/75 dark:text-white/75">
-                    {`${i18n(I18nKey.lastModifiedPrefix)}${dateStr}${
-                      isOutdated
-                        ? `，${i18n(I18nKey.lastModifiedDaysAgo).replace("{days}", daysDiff.toString())}`
-                        : ""
-                    }`}
-                  </div>
-                  {isOutdated && (
-                    <p class="text-[0.8rem] leading-tight text-black/75 dark:text-white/75">
-                      {i18n(I18nKey.lastModifiedOutdated)}
-                    </p>
-                  )}
-                </div>
-              );
-            })()}
+        <div class="flex items-center gap-2">
+          <div class="transition h-9 w-9 rounded-lg overflow-hidden relative flex items-center justify-center mr-0">
+            <Icon
+              name="material-symbols:history-rounded"
+              class="text-4xl text-[var(--primary)] transition-transform group-hover:translate-x-0.5 bg-[var(--enter-btn-bg)] p-2 rounded-md"
+            />
           </div>
+
+          {(() => {
+            const lastModified = dayjs(
+              entry.data.updated || entry.data.published
+            );
+            const now = dayjs();
+            const daysDiff = now.diff(lastModified, "day");
+            const dateStr = lastModified.format("YYYY-MM-DD");
+            const isOutdated = daysDiff >= 1;
+
+            return (
+              <div class="flex flex-col gap-0.1">
+                <div class="text-[1.0rem] leading-tight text-black/75 dark:text-white/75">
+                  {`${i18n(I18nKey.lastModifiedPrefix)}${dateStr}${
+                    isOutdated
+                      ? `，${i18n(I18nKey.lastModifiedDaysAgo).replace("{days}", daysDiff.toString())}`
+                      : ""
+                  }`}
+                </div>
+                {isOutdated && (
+                  <p class="text-[0.8rem] leading-tight text-black/75 dark:text-white/75">
+                    {i18n(I18nKey.lastModifiedOutdated)}
+                  </p>
+                )}
+              </div>
+            );
+          })()}
         </div>
       </div>
     )

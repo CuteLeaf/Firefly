@@ -122,13 +122,7 @@ export default defineConfig({
 				if (pathname === '/anime/' && !siteConfig.pages.anime) {
 					return false;
 				}
-				if (pathname === '/projects/' && !siteConfig.pages.projects) {
-					return false;
-				}
-				if (pathname === '/timeline/' && !siteConfig.pages.timeline) {
-					return false;
-				}
-				if (pathname === '/skills/' && !siteConfig.pages.skills) {
+				if (pathname === '/sponsor/' && !siteConfig.pages.sponsor) {
 					return false;
 				}
 

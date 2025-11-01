@@ -58,6 +58,7 @@ const iconId = `icon-${Math.random().toString(36).substr(2, 9)}`;
   <iconify-icon 
     icon={icon}
     class="icon-content opacity-0 transition-opacity duration-200"
+    style="color: currentColor;"
     data-icon-element
     loading={loading}
   ></iconify-icon>
@@ -159,6 +160,12 @@ const iconId = `icon-${Math.random().toString(36).substr(2, 9)}`;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    color: currentColor;
+  }
+  
+  /* 确保 iconify-icon 能够继承颜色 */
+  iconify-icon {
+    color: currentColor;
   }
   
   [data-icon-container] {
