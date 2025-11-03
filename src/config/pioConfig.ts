@@ -46,7 +46,7 @@ export const spineModelConfig: SpineModelConfig = {
     idleInterval: 8000, // 待机动画切换间隔（8秒）
   },
   responsive: {
-    hideOnMobile: true, // 在移动端隐藏
+    hideOnMobile: false, // 在移动端隐藏
     mobileBreakpoint: 768, // 移动端断点
   },
   zIndex: 1000, // 层级
