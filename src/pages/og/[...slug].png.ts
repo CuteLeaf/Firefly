@@ -34,7 +34,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }));
 };
 
+let fontCache: { regular: Buffer | null; bold: Buffer | null } | null = null;
+
 async function fetchNotoSansSCFonts() {
+  if (fontCache) return fontCache;
   try {
     const cssResp = await fetch(
       "https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap"
@@ -60,6 +63,7 @@ async function fetchNotoSansSCFonts() {
       console.warn(
         "Could not find font urls in Google Fonts CSS; falling back to no fonts."
       );
+      fontCache = { regular: null, bold: null };
       return { regular: null, bold: null };
     }
 
@@ -71,15 +75,17 @@ async function fetchNotoSansSCFonts() {
       console.warn(
         "Failed to download font files from Google; falling back to no fonts."
       );
+      fontCache = { regular: null, bold: null };
       return { regular: null, bold: null };
     }
 
     const rBuf = Buffer.from(await rResp.arrayBuffer());
     const bBuf = Buffer.from(await bResp.arrayBuffer());
-
-    return { regular: rBuf, bold: bBuf };
+    fontCache = { regular: rBuf, bold: bBuf };
+    return fontCache;
   } catch (err) {
     console.warn("Error fetching fonts:", err);
+    fontCache = { regular: null, bold: null };
     return { regular: null, bold: null };
   }
 }

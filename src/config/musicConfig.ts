@@ -20,119 +20,103 @@ export const musicPlayerConfig: MusicPlayerConfig = {
       server: "netease", // 音乐平台：netease=网易云音乐, tencent=QQ音乐, kugou=酷狗音乐, xiami=虾米音乐, baidu=百度音乐
       type: "playlist", // 类型：playlist=歌单, album=专辑, song=单曲
     },
+  // 使用方式：'meting' 或 'local'
+  mode: "meting", // "meting" 使用 Meting API，"local" 使用本地音乐列表
+
+  // Meting API 配置
+  meting: {
+    // Meting API 地址
+    // 默认使用官方 API，也可以使用自定义 API
+    api: "https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&r=:r",
+
+    // 音乐平台：netease=网易云音乐, tencent=QQ音乐, kugou=酷狗音乐, xiami=虾米音乐, baidu=百度音乐
+    server: "netease",
+
+    // 类型：song=单曲, playlist=歌单, album=专辑, search=搜索, artist=艺术家
+    type: "playlist",
+
+    // 歌单/专辑/单曲 ID 或搜索关键词
+    id: "10046455237", // 网易云音乐歌单ID示例
+
+    // 认证 token（可选）
+    auth: "",
 
     // 备用 API 配置（当主 API 失败时使用）
     fallbackApis: [
       "https://api.injahow.cn/bete/?server=:server&type=:type&id=:id",
       "https://api.uomg.com/api/other/163music?format=json&id=:id",
     ],
+
+    // MetingJS 脚本路径
+    // 默认使用 CDN：https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js
+    // 备用CDN：https://unpkg.com/meting@2/dist/Meting.min.js
+    // 也可配置为本地路径
+    jsPath: "https://unpkg.com/meting@2/dist/Meting.min.js",
   },
 
-  // 本地音乐配置
+  // 本地音乐配置（当 mode 为 'local' 时使用）
   local: {
-    // 本地播放列表
-    // 本地音乐文件路径（相对于 public 目录）
     playlist: [
       {
-        id: 1,
-        title: "使一颗心免于哀伤",
+        name: "使一颗心免于哀伤",
         artist: "知更鸟 / HOYO-MiX / Chevy",
-        cover: "/assets/music/cover/109951169585655912.jpg",
         url: "/assets/music/使一颗心免于哀伤-哼唱.wav",
-        duration: 240,
+        cover: "/assets/music/cover/109951169585655912.jpg",
+        lrc: "", // 歌词内容，支持 LRC 格式
       },
     ],
   },
 
-  // 播放器行为配置
-  behavior: {
-    // 自动播放（注意：现代浏览器通常阻止自动播放）
-    autoplay: false,
+  // APlayer 配置选项
+  player: {
+    // 是否自动播放 浏览器可能会阻止，需用户交互一次网页后才自动播放
+    autoplay: true,
+
+    // 主题色
+    theme: "var(--btn-regular-bg)",
+
+    // 循环模式：'all'=列表循环, 'one'=单曲循环, 'none'=不循环
+    loop: "all",
+
+    // 播放顺序：'list'=列表顺序, 'random'=随机播放
+    order: "list",
+
+    // 预加载：'none'=不预加载, 'metadata'=预加载元数据, 'auto'=自动
+    preload: "auto",
 
     // 默认音量 (0-1)
-    defaultVolume: 0.7,
+    volume: 0.7,
 
-    // 默认播放模式
-    defaultShuffle: true, // 随机播放
-    defaultRepeat: 2, // 循环模式：0=不循环, 1=单曲循环, 2=列表循环
+    // 是否互斥播放（同时只能播放一个播放器）
+    mutex: true,
 
-    // 播放器位置
-    position: {
-      bottom: 16, // 距离底部距离 (px)
-      right: 16, // 距离右侧距离 (px)
-    },
-  },
+    // 歌词类型：0=不显示, 1=显示（需要提供 lrc 字段）, 2=显示（从 HTML 内容读取）, 3=异步加载（从 API 获取）
+    lrcType: 3,
 
-  // 界面配置
-  ui: {
-    // 动画配置
-    animation: {
-      // 封面旋转动画
-      coverRotation: {
-        enable: true, // 启用封面旋转
-        speed: 3, // 旋转速度（秒/圈）
-        pauseOnHover: true, // 鼠标悬停时暂停旋转
-      },
-    },
+    // 歌词是否默认隐藏（当 lrcType 不为 0 时，可以通过此选项控制初始显示状态）
+    // true=默认隐藏（用户可以通过歌词按钮手动显示）, false=默认显示
+    lrcHidden: true,
 
-    // 显示配置
-    display: {
-      // 是否显示播放列表按钮
-      showPlaylistButton: true,
+    // 播放列表是否默认折叠
+    listFolded: false,
 
-      // 是否显示音量控制
-      showVolumeControl: true,
+    // 播放列表最大高度
+    listMaxHeight: "340px",
 
-      // 是否显示随机播放按钮
-      showShuffleButton: true,
-
-      // 是否显示循环按钮
-      showRepeatButton: true,
-
-      // 是否显示上一首/下一首按钮
-      showSkipButtons: true,
-    },
-
-    // 播放列表配置
-    playlist: {
-      // 播放列表面板最大高度 (px)
-      maxHeight: 384,
-
-      // 播放列表面板宽度 (px)
-      width: 320,
-
-      // 是否显示歌曲序号
-      showTrackNumbers: true,
-
-      // 是否显示歌曲时长
-      showDuration: true,
-    },
+    // localStorage 存储键名
+    storageName: "aplayer-setting",
   },
 
   // 响应式配置
   responsive: {
     // 移动端配置
     mobile: {
-      // 移动端播放器位置
-      position: {
-        bottom: 24, // 增加底部距离，避免被手机屏幕圆角遮挡
-        right: 8,
-      },
+      // 在移动端是否隐藏
+      hide: false,
+
+      // 移动端断点（小于此宽度时应用移动端配置）
+      breakpoint: 768,
     },
-
-    // 小屏幕配置 (≤480px)
-    smallScreen: {},
-  },
-
-  // 错误处理配置
-  errorHandling: {
-    // 是否显示错误提示
-    showErrorMessages: true,
-
-    // 错误提示显示时长 (ms)
-    errorDisplayDuration: 3000,
-
-    // 是否在播放失败时自动跳转到下一首
-    autoSkipOnError: true,
   },
 };
+

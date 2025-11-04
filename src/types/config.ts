@@ -1,6 +1,7 @@
 import type {
   DARK_MODE,
   LIGHT_MODE,
+  SYSTEM_MODE,
   WALLPAPER_BANNER,
   WALLPAPER_OVERLAY,
   WALLPAPER_NONE,
@@ -17,12 +18,7 @@ export type SiteConfig = {
     | "zh_CN"
     | "zh_TW"
     | "ja"
-    | "ko"
-    | "es"
-    | "th"
-    | "vi"
-    | "tr"
-    | "id";
+    | "ru";
 
   themeColor: {
     hue: number;
@@ -61,6 +57,8 @@ export type SiteConfig = {
   // 页面开关配置
   pages: {
     anime: boolean; // 追番页面开关
+    sponsor: boolean; // 赞助页面开关
+    guestbook: boolean; // 留言板页面开关
   };
 
   // 文章列表布局配置
@@ -87,6 +85,8 @@ export enum LinkPreset {
   About = 2,
   Friends = 3,
   Anime = 4,
+  Sponsor = 5,
+  Guestbook = 6,
 }
 
 export type NavBarLink = {
@@ -97,8 +97,39 @@ export type NavBarLink = {
   children?: (NavBarLink | LinkPreset)[]; // 支持子菜单，可以是NavBarLink或LinkPreset
 };
 
+export enum NavBarSearchMethod {
+  PageFind = 0,
+  MeiliSearch = 1,
+};
+
+
+/**
+ * MeiliSearch配置
+ *
+ * @property INDEX_NAME MeiliSearch索引名称
+ * @property MEILI_HOST MeiliSearch服务器地址
+ * @property MEILI_MASTER_KEY MeiliSearch主密钥
+ * @property PUBLIC_MEILI_HOST 公共MeiliSearch服务器地址（前端使用）
+ * @property PUBLIC_MEILI_SEARCH_KEY 公共MeiliSearch搜索密钥（前端使用）
+ */
+export type MeiliSearchConfig = {
+  INDEX_NAME: string;
+  CONTENT_DIR: string;
+  MEILI_HOST: string;
+  MEILI_MASTER_KEY: string;
+  PUBLIC_MEILI_HOST: string;
+  PUBLIC_MEILI_SEARCH_KEY: string;
+}
+
+export type NavBarSearchConfig = {
+  method: NavBarSearchMethod;
+  meiliSearchConfig?: MeiliSearchConfig;
+}
+
 export type NavBarConfig = {
   links: (NavBarLink | LinkPreset)[];
+  searchMethod?: NavBarSearchMethod;
+  meiliSearchConfig?: MeiliSearchConfig;
 };
 
 export type ProfileConfig = {
@@ -120,20 +151,46 @@ export type LicenseConfig = {
 // 评论配置
 
 export type CommentConfig = {
-  enable: boolean; // 是否启用评论功能
-  enableVisitorCount?: boolean; // 是否启用文章访问量统计功能
-  twikoo?: TwikooConfig;
-};
-
-type TwikooConfig = {
-  envId: string;
-  region?: string;
-  lang?: string;
+  /**
+   * 当前启用的评论系统类型
+   * "none" | "twikoo" | "waline" | "giscus" | "disqus"
+   */
+  type: 'none' | 'twikoo' | 'waline' | 'giscus' | 'disqus';
+  twikoo?: {
+    envId: string;
+    region?: string;
+    lang?: string;
+    visitorCount?: boolean;
+  };
+  waline?: {
+    serverURL: string;
+    lang?: string;
+    login?: 'enable' | 'force' | 'disable';
+    visitorCount?: boolean; // 是否统计访问量，true 启用访问量，false 关闭
+  };
+  giscus?: {
+    repo: string;
+    repoId: string;
+    category: string;
+    categoryId: string;
+    mapping: string;
+    strict: string;
+    reactionsEnabled: string;
+    emitMetadata: string;
+    inputPosition: string;
+    theme: string;
+    lang: string;
+    loading: string;
+  };
+  disqus?: {
+    shortname: string;
+  };
 };
 
 export type LIGHT_DARK_MODE =
   | typeof LIGHT_MODE
-  | typeof DARK_MODE;
+  | typeof DARK_MODE
+  | typeof SYSTEM_MODE;
 
 export type WALLPAPER_MODE =
   | typeof WALLPAPER_BANNER
@@ -206,6 +263,26 @@ export type FontConfig = {
 export type FooterConfig = {
   enable: boolean; // 是否启用Footer HTML注入功能
   customHtml?: string; // 自定义HTML内容，用于添加备案号等信息
+};
+
+export type CoverImageConfig = {
+  enable: boolean; // 是否启用随机图功能
+  apis: string[]; // 随机图API列表，支持 {seed} 占位符，会替换为文章slug或时间戳
+  fallback?: string; // 当API请求失败时的备用图片路径
+  // 加载指示器配置
+  loading?: {
+    image?: string; // 自定义加载图片路径（相对于public目录），默认 "/assets/images/loading.gif"
+    backgroundColor?: string; // 加载指示器背景颜色，默认与loading.gif背景色一致 (#fefefe)
+  };
+  watermark?: {
+    enable: boolean; // 是否显示水印
+    text?: string; // 水印文本，默认为"随机图"
+    position?: "top-left" | "top-right" | "bottom-left" | "bottom-right" | "center"; // 水印位置
+    opacity?: number; // 水印透明度 0-1，默认0.6
+    fontSize?: string; // 字体大小，默认"0.75rem"
+    color?: string; // 文字颜色，默认为白色
+    backgroundColor?: string; // 背景颜色，默认为半透明黑色
+  };
 };
 
 // 组件配置类型定义
@@ -355,7 +432,10 @@ export type BackgroundWallpaperConfig = {
         desktop?: string | string[];
         mobile?: string | string[];
       }; // 支持单个图片、图片数组或分别设置桌面端和移动端图片
-  position?:
+  
+  // Banner模式特有配置
+  banner?: {
+    position?:
     | "top"
     | "center"
     | "bottom"
@@ -375,8 +455,6 @@ export type BackgroundWallpaperConfig = {
     | "right center"
     | "right bottom"
     | string; // 壁纸位置，支持CSS object-position的所有值，包括百分比和像素值
-  // Banner模式特有配置
-  banner?: {
     homeText?: {
       enable: boolean; // 是否在首页显示自定义文字（全局开关）
       title?: string; // 主标题
@@ -475,105 +553,127 @@ export type MusicPlayerConfig = {
   // 基础功能开关
   enable: boolean; // 启用音乐播放器功能
 
-  // 播放器模式配置
-  mode?: "local" | "meting"; // 播放器模式："local" 本地音乐，"meting" 在线音乐
+  // 使用方式：'meting' 或 'local'
+  mode?: "meting" | "local"; // "meting" 使用 Meting API，"local" 使用本地音乐列表
 
   // Meting API 配置
   meting?: {
     // Meting API 地址
     api?: string;
 
-    // 歌单配置
-    playlist?: {
-      id?: string; // 歌单ID
-      server?: "netease" | "tencent" | "kugou" | "xiami" | "baidu"; // 音乐平台
-      type?: "playlist" | "album" | "song"; // 类型
-    };
+    // 音乐平台：netease=网易云音乐, tencent=QQ音乐, kugou=酷狗音乐, xiami=虾米音乐, baidu=百度音乐
+    server?: "netease" | "tencent" | "kugou" | "xiami" | "baidu";
 
-    // 备用 API 配置
+    // 类型：song=单曲, playlist=歌单, album=专辑, search=搜索, artist=艺术家
+    type?: "song" | "playlist" | "album" | "search" | "artist";
+
+    // 歌单/专辑/单曲 ID 或搜索关键词
+    id?: string;
+
+    // 认证 token（可选）
+    auth?: string;
+
+    // 备用 API 配置（当主 API 失败时使用）
     fallbackApis?: string[];
+
+    // MetingJS 脚本路径（默认使用 CDN，也可配置为本地路径）
+    jsPath?: string;
   };
 
-  // 本地音乐配置
+  // 本地音乐配置（当 mode 为 'local' 时使用）
   local?: {
-    // 本地播放列表
-    // 本地音乐文件路径（相对于 public 目录）
     playlist?: Array<{
-      id: number;
-      title: string;
-      artist: string;
-      cover: string;
-      url: string;
-      duration: number;
+      name: string; // 歌曲名称
+      artist: string; // 艺术家
+      url: string; // 音乐文件路径（相对于 public 目录）
+      cover?: string; // 封面图片路径（相对于 public 目录）
+      lrc?: string; // 歌词内容，支持 LRC 格式
     }>;
   };
 
-  // 播放器行为配置
-  behavior?: {
-    // 自动播放
+  // APlayer 配置选项
+  player?: {
+    // 是否固定模式（固定在页面底部）
+    fixed?: boolean;
+
+    // 是否迷你模式
+    mini?: boolean;
+
+    // 是否自动播放
     autoplay?: boolean;
 
-    // 默认音量
-    defaultVolume?: number;
+    // 主题色
+    theme?: string;
 
-    // 默认播放模式
-    defaultShuffle?: boolean;
-    defaultRepeat?: 0 | 1 | 2; // 0=不循环, 1=单曲循环, 2=列表循环
+    // 循环模式：'all'=列表循环, 'one'=单曲循环, 'none'=不循环
+    loop?: "all" | "one" | "none";
 
-    // 播放器位置
-    position?: {
-      bottom?: number;
-      right?: number;
-    };
-  };
+    // 播放顺序：'list'=列表顺序, 'random'=随机播放
+    order?: "list" | "random";
 
-  // 界面配置
-  ui?: {
-    // 动画配置
-    animation?: {
-      coverRotation?: {
-        enable?: boolean;
-        speed?: number;
-        pauseOnHover?: boolean;
-      };
-    };
+    // 预加载：'none'=不预加载, 'metadata'=预加载元数据, 'auto'=自动
+    preload?: "none" | "metadata" | "auto";
 
-    // 显示配置
-    display?: {
-      showPlaylistButton?: boolean;
-      showVolumeControl?: boolean;
-      showShuffleButton?: boolean;
-      showRepeatButton?: boolean;
-      showSkipButtons?: boolean;
-    };
+    // 默认音量 (0-1)
+    volume?: number;
 
-    // 播放列表配置
-    playlist?: {
-      maxHeight?: number;
-      width?: number;
-      showTrackNumbers?: boolean;
-      showDuration?: boolean;
-    };
+    // 是否互斥播放（同时只能播放一个播放器）
+    mutex?: boolean;
+
+    // 歌词类型：0=不显示, 1=显示（需要提供 lrc 字段）, 2=显示（从 HTML 内容读取）, 3=异步加载（从 API 获取）
+    lrcType?: 0 | 1 | 2 | 3;
+
+    // 歌词是否默认隐藏（当 lrcType 不为 0 时，可以通过此选项控制初始显示状态）
+    lrcHidden?: boolean;
+
+    // 播放列表是否默认折叠
+    listFolded?: boolean;
+
+    // 播放列表最大高度
+    listMaxHeight?: string;
+
+    // localStorage 存储键名
+    storageName?: string;
   };
 
   // 响应式配置
   responsive?: {
     // 移动端配置
     mobile?: {
-      position?: {
-        bottom?: number;
-        right?: number;
-      };
+      // 在移动端是否隐藏
+      hide?: boolean;
+
+      // 移动端断点（小于此宽度时应用移动端配置）
+      breakpoint?: number;
     };
-
-    // 小屏幕配置
-    smallScreen?: {};
   };
+};
 
-  // 错误处理配置
-  errorHandling?: {
-    showErrorMessages?: boolean;
-    errorDisplayDuration?: number;
-    autoSkipOnError?: boolean;
-  };
+// 赞助方式类型
+export type SponsorMethod = {
+  name: string; // 赞助方式名称，如 "支付宝"、"微信"、"PayPal"
+  icon?: string; // 图标名称（Iconify 格式），如 "fa6-brands:alipay"
+  qrCode?: string; // 收款码图片路径（相对于 public 目录），可选
+  link?: string; // 赞助链接 URL，可选。如果提供，会显示跳转按钮
+  description?: string; // 描述文本
+  enabled: boolean; // 是否启用
+};
+
+// 赞助者列表项
+export type SponsorItem = {
+  name: string; // 赞助者名称，如果想显示匿名，可以直接设置为"匿名"或使用 i18n
+  amount?: string; // 赞助金额（可选）
+  date?: string; // 赞助日期（可选，ISO 格式）
+  message?: string; // 留言（可选）
+};
+
+// 赞助配置
+export type SponsorConfig = {
+  title?: string; // 页面标题，默认使用 i18n
+  description?: string; // 页面描述文本
+  usage?: string; // 赞助用途说明
+  methods: SponsorMethod[]; // 赞助方式列表
+  sponsors?: SponsorItem[]; // 赞助者列表（可选）
+  showSponsorsList?: boolean; // 是否显示赞助者列表，默认 true
+  showButtonInPost?: boolean; // 是否在文章详情页底部显示赞助按钮，默认 true
 };

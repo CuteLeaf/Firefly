@@ -1,5 +1,5 @@
 ---
-import path from "node:path";
+import * as path from "node:path";
 
 interface Props {
 	id?: string;
@@ -44,12 +44,40 @@ if (isLocal) {
 	img = await file();
 }
 
-const imageClass = "w-full h-full object-cover";
+const imageClass = "w-full h-full object-cover image-wrapper-optimized";
 // 支持所有 CSS object-position 值
-const imageStyle = `object-position: ${position || 'center'}`;
+// 添加图片渲染优化，确保大图片在缩小显示时平滑清晰
+// 使用 -webkit-optimize-contrast 确保缩放时平滑，避免像素点
+const imageStyle = `object-position: ${position || 'center'} !important; image-rendering: -webkit-optimize-contrast;`;
 ---
 <div id={id} class:list={[className, 'overflow-hidden relative']}>
     <div class="transition absolute inset-0 dark:bg-black/10 bg-opacity-50 pointer-events-none"></div>
     {isLocal && img && <Image src={img} alt={alt || ""} class={imageClass} style={imageStyle}/>}
-    {!isLocal && <img src={isPublic ? url(src) : src} alt={alt || ""} class={imageClass} style={imageStyle}/>}
+    {!isLocal && <img src={isPublic ? url(src) : src} alt={alt || ""} class={imageClass} style={imageStyle} loading="lazy" decoding="async"/>}
 </div>
+
+<style>
+  /* 图片缩放优化 - 确保大图片在小容器中清晰显示，避免像素化 */
+  .image-wrapper-optimized,
+  img.image-wrapper-optimized {
+    /* 图片渲染优化 - 确保大图缩小显示时平滑清晰 */
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: auto !important;
+    /* 启用硬件加速优化缩放性能 */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    /* 优化图片缩放算法 */
+    -ms-interpolation-mode: bicubic;
+    /* 确保图片在容器内正确填充 */
+    object-fit: cover !important;
+    /* 防止图片溢出容器 */
+    max-width: 100%;
+    max-height: 100%;
+    /* 确保图片填满容器 */
+    width: 100%;
+    height: 100%;
+  }
+</style>

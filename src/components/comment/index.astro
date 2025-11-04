@@ -4,6 +4,9 @@ import { commentConfig } from "@/config/commentConfig";
 import { i18n } from "@/i18n/translation";
 import Key from "@/i18n/i18nKey";
 import Twikoo from "./Twikoo.astro";
+import Waline from "./Waline.astro";
+import Giscus from "./Giscus.astro";
+import Disqus from "./Disqus.astro";
 
 interface Props {
   post: CollectionEntry<"posts"> | CollectionEntry<"spec">;
@@ -18,14 +21,12 @@ const path =
   customPath || (post.collection === "posts" ? `/posts/${slug}` : `/${slug}`);
 const url = `${Astro.site?.href}${path}`;
 
-let commentService = "";
-if (commentConfig?.enable && commentConfig?.twikoo) {
-  commentService = "twikoo";
-}
+// 强制commentService类型为string，避免类型不兼容警告
+let commentService: string = commentConfig?.type || "none";
 ---
 
 {
-  commentConfig?.enable && (
+  commentService !== "none" && (
     <div class="card-base p-8 mb-6 relative overflow-hidden">
       <!-- 评论区装饰性背景 -->
       <div class="absolute top-0 right-0 w-32 h-32 opacity-5 pointer-events-none">
@@ -35,7 +36,6 @@ if (commentConfig?.enable && commentConfig?.twikoo) {
           <circle cx="50" cy="50" r="10" fill="currentColor" class="text-[var(--primary)]" />
         </svg>
       </div>
-      
       <!-- 评论区标题 -->
       <div class="relative z-10 mb-6">
         <div class="flex items-center gap-3 mb-2">
@@ -44,11 +44,13 @@ if (commentConfig?.enable && commentConfig?.twikoo) {
         </div>
         <p class="text-sm text-[var(--content-meta)] ml-4">{i18n(Key.commentSubtitle)}</p>
       </div>
-      
       <!-- 评论内容区域 -->
       <div class="relative z-10">
         {commentService === "twikoo" && <Twikoo path={path} />}
-        {commentService === "" && (
+        {commentService === "waline" && <Waline path={path} />}
+        {commentService === "giscus" && <Giscus />}
+        {commentService === "disqus" && <Disqus identifier={slug} url={url} title={post.data.title} />}
+        {commentService === "none" && (
           <div class="text-center py-8 text-[var(--content-meta)]">
             <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--btn-regular-bg)] flex items-center justify-center">
               <svg class="w-8 h-8 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">

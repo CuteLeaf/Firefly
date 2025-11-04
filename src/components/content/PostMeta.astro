@@ -19,6 +19,7 @@ export interface Props {
   words?: number;
   minutes?: number;
   showWordCount?: boolean; // 是否显示字数统计，默认false显示标签
+  customPath?: string;
 }
 
 const {
@@ -34,7 +35,10 @@ const {
   words,
   minutes,
   showWordCount = false,
+  customPath
 } = Astro.props;
+
+const path = customPath || (slug ? `/posts/${slug}` : '');
 ---
 
 <div
@@ -151,8 +155,8 @@ const {
   <!-- Twikoo访问量统计（首页不显示，且文章访问量统计启用时显示） -->
   {
     !isHome &&
-      commentConfig.enable &&
-      commentConfig.enableVisitorCount &&
+      commentConfig.type === 'twikoo' &&
+      commentConfig.twikoo?.visitorCount &&
       slug && (
         <div class="flex items-center">
           <div class="meta-icon">
@@ -167,6 +171,23 @@ const {
           <span class="text-50 text-sm font-medium" id="twikoo_visitors">
             {i18n(I18nKey.pageViewsLoading)}
           </span>
+        </div>
+      )
+  }
+  <!-- Waline访问量统计（首页不显示、仅type为waline时显示） -->
+  {
+    !isHome &&
+      commentConfig.type === 'waline' &&
+      commentConfig.waline?.visitorCount &&
+      slug && (
+        <div class="flex items-center">
+          <div class="meta-icon">
+            <Icon name="material-symbols:visibility-outline-rounded" class="text-xl" />
+          </div>
+          <span class="text-50 text-sm font-medium mr-1">
+            {i18n(I18nKey.pageViews)}
+          </span>
+          <span class="text-50 text-sm font-medium waline-pageview-count" data-path={path}>{i18n(I18nKey.pageViewsLoading)}</span>
         </div>
       )
   }

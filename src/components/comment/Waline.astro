@@ -1,0 +1,25 @@
+---
+import { commentConfig } from '@/config'
+
+interface Props {
+  path: string
+}
+
+const config = {
+  ...commentConfig.waline,
+  el: '#waline',
+  path: Astro.props.path,
+  dark: 'html.dark',
+  wordLimit: ["2", "300"],
+  ...(commentConfig.waline?.visitorCount ? { pageview: true } : {})
+}
+---
+<!-- Waline -->
+<div class="relative w-full">
+  <div id="waline"></div>
+  <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css" />
+  <script type="module" is:inline define:vars={{ config }}>
+    import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+    init(config);
+  </script>
+</div>

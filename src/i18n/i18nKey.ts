@@ -19,6 +19,7 @@ enum I18nKey {
   commentSection = "commentSection",
   commentSubtitle = "commentSubtitle",
   commentNotConfigured = "commentNotConfigured",
+  guestbookCommentHint = "guestbookCommentHint",
 
   untitled = "untitled",
   uncategorized = "uncategorized",
@@ -43,6 +44,7 @@ enum I18nKey {
   publishedAt = "publishedAt",
   license = "license",
   friends = "friends",
+  guestbook = "guestbook",
   anime = "anime",
 
   // 番剧页面
@@ -103,10 +105,6 @@ enum I18nKey {
   notFoundDescription = "notFoundDescription",
   backToHome = "backToHome",
 
-  // 音乐播放器
-  playlist = "playlist",
-
-
   // RSS页面
   rss = "rss",
   rssDescription = "rssDescription",
@@ -144,6 +142,28 @@ enum I18nKey {
 
   // 置顶
   pinned = "pinned",
+
+  // 壁纸模式
+  wallpaperMode = "wallpaperMode",
+  wallpaperBannerMode = "wallpaperBannerMode",
+  wallpaperOverlayMode = "wallpaperOverlayMode",
+  wallpaperNoneMode = "wallpaperNoneMode",
+
+  // 赞助页面
+  sponsor = "sponsor",
+  sponsorTitle = "sponsorTitle",
+  sponsorDescription = "sponsorDescription",
+  sponsorMethods = "sponsorMethods",
+  sponsorList = "sponsorList",
+  sponsorEmpty = "sponsorEmpty",
+  sponsorAmount = "sponsorAmount",
+  sponsorDate = "sponsorDate",
+  sponsorMessage = "sponsorMessage",
+  sponsorAnonymous = "sponsorAnonymous",
+  scanToSponsor = "scanToSponsor",
+  sponsorGoTo = "sponsorGoTo",
+  sponsorButton = "sponsorButton",
+  sponsorButtonText = "sponsorButtonText",
 }
 
 export default I18nKey;

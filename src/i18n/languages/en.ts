@@ -22,7 +22,9 @@ export const en: Translation = {
   [Key.commentSection]: "Comments",
   [Key.commentSubtitle]: "Share your thoughts and discuss with everyone",
   [Key.commentNotConfigured]: "Comment system not configured",
+  [Key.guestbookCommentHint]: "You have not enabled the comment system in the configuration file yet. After enabling it, visitors will be able to leave messages here",
   [Key.friends]: "Friends",
+  [Key.guestbook]: "Guestbook",
   [Key.untitled]: "Untitled",
   [Key.uncategorized]: "Uncategorized",
   [Key.noTags]: "No Tags",
@@ -107,10 +109,6 @@ export const en: Translation = {
     "Sorry, the page you visited does not exist or has been moved.",
   [Key.backToHome]: "Back to Home",
 
-  // Music Player
-  [Key.playlist]: "Playlist",
-
-
 	// RSS Page
 	[Key.rss]: "RSS Feed",
 	[Key.rssDescription]: "Subscribe to get latest updates",
@@ -153,4 +151,26 @@ export const en: Translation = {
 
   // Pinned
   [Key.pinned]: "Pinned",
+
+  // Wallpaper Mode
+  [Key.wallpaperMode]: "Wallpaper Mode",
+  [Key.wallpaperBannerMode]: "Banner Wallpaper",
+  [Key.wallpaperOverlayMode]: "Full Screen Wallpaper",
+  [Key.wallpaperNoneMode]: "Solid Color Background",
+
+  // Sponsor Page
+  [Key.sponsor]: "Sponsor",
+  [Key.sponsorTitle]: "Support Me",
+  [Key.sponsorDescription]: "If my content has been helpful to you, welcome to sponsor me through the following methods. Your support is the driving force for my continued creation!",
+  [Key.sponsorMethods]: "Payment Methods",
+  [Key.sponsorList]: "Sponsors",
+  [Key.sponsorEmpty]: "No sponsors yet",
+  [Key.sponsorAmount]: "Amount",
+  [Key.sponsorDate]: "Date",
+  [Key.sponsorMessage]: "Message",
+  [Key.sponsorAnonymous]: "Anonymous",
+  [Key.scanToSponsor]: "Scan to Sponsor",
+  [Key.sponsorGoTo]: "Go to Sponsor",
+  [Key.sponsorButton]: "Support",
+  [Key.sponsorButtonText]: "If this article helped you, welcome to support!",
 };

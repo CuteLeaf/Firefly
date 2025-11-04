@@ -14,7 +14,6 @@
 - `GlobalStyles.astro` - 全局样式组件
 - `SideBar.astro` - 侧边栏组件
 - `DropdownMenu.astro` - 下拉菜单组件
-- `DynamicSideBar.astro` - 动态侧边栏组件
 - `NavMenuPanel.astro` - 导航菜单面板
 
 ### 🎮 interactive/ - 交互组件
@@ -23,11 +22,11 @@
 - `LightDarkSwitch.svelte` - 主题切换组件
 - `LayoutSwitchButton.svelte` - 布局切换按钮
 - `Search.svelte` - 搜索功能组件
-- `MobileTOC.svelte` - 移动端目录组件
 - `ArchivePanel.svelte` - 归档面板组件
 - `FontManager.astro` - 字体管理组件
 - `DisplaySettings.svelte` - 显示设置组件
 - `FloatingTOC.astro` - 浮动目录组件
+- `WallpaperSwitch.svelte` - 壁纸模式切换组件
 
 ### 📄 content/ - 内容组件
 用于展示内容的组件，如文章卡片、元数据等。
@@ -54,7 +53,8 @@
 - `Announcement.astro` - 公告组件
 - `Categories.astro` - 分类组件
 - `Live2DWidget.astro` - Live2D 小部件
-- `MusicPlayer.svelte` - 音乐播放器组件
+- `MusicPlayer.astro` - 音乐播放器组件
+- `PioMessageBox.astro` - Pio 消息框组件
 - `SpineModel.astro` - Spine 模型组件
 - `Tags.astro` - 标签组件
 - `TOC.astro` - 目录组件
@@ -76,6 +76,12 @@
 - `index.astro` - 评论主组件
 - `Twikoo.astro` - Twikoo 评论组件
 
+### ✨ effects/ - 特效组件
+页面特效和动画相关的组件。
+
+- `FancyboxManager.astro` - Fancybox 图片查看器管理组件
+- `SakuraEffect.astro` - 樱花飘落特效组件
+
 
 
 ### 组件分类原则
@@ -87,5 +93,6 @@
 5. **widget/** - 功能小部件
 6. **misc/** - 辅助工具
 7. **comment/** - 评论系统
+8. **effects/** - 页面特效和动画
 ---
 

@@ -1,0 +1,184 @@
+---
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import { sponsorConfig, siteConfig } from "@/config";
+import { url } from "@/utils/url-utils";
+import Icon from "@/components/misc/Icon.astro";
+
+// 检查页面是否启用
+if (!siteConfig.pages.sponsor) {
+  return Astro.redirect("/404/");
+}
+
+const title = sponsorConfig.title || i18n(I18nKey.sponsorTitle);
+const description = sponsorConfig.description || i18n(I18nKey.sponsorDescription);
+const enabledMethods = sponsorConfig.methods.filter((method) => method.enabled);
+const sponsors = sponsorConfig.sponsors || [];
+const showSponsorsList = sponsorConfig.showSponsorsList !== false;
+---
+
+<MainGridLayout title={title} description={description}>
+  <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+    <div class="card-base z-10 px-9 py-6 relative w-full">
+      <!-- 页面标题和描述 -->
+      <div class="mb-8">
+        <div class="flex items-center gap-3 mb-3">
+            <div class="h-8 w-8 rounded-lg bg-[var(--primary)] flex items-center justify-center text-white dark:text-black/70">
+                <Icon icon="material-symbols:favorite" class="text-[1.5rem]"></Icon>
+            </div>
+          <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+            {title}
+          </h1>
+        </div>
+        {description && (
+          <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
+            {description}
+          </p>
+        )}
+        {sponsorConfig.usage && (
+          <div class="mb-8 p-4 rounded-lg bg-[var(--primary)]/8 dark:bg-[var(--btn-regular-bg)] border border-[var(--primary)]/30 dark:border-none backdrop-blur-sm shadow-sm usage-info-box">
+            <div class="flex items-start gap-2">
+              <Icon icon="material-symbols:info-outline" class="text-[var(--primary)] text-lg flex-shrink-0 mt-0.5" />
+              <p class="text-sm text-neutral-700 dark:text-neutral-200 leading-relaxed">
+                <span class="font-semibold text-[var(--primary)]"></span>
+                {sponsorConfig.usage}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <!-- 赞助方式 -->
+      <div class="mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {enabledMethods.map((method) => (
+                      <div class="flex flex-col items-center p-6 rounded-lg bg-neutral-50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 hover:border-[var(--primary)] transition-colors">
+                        <!-- 图标和名称 -->
+                        <div class="flex items-center gap-3 mb-4">
+                          {method.icon && (
+                            <Icon icon={method.icon} size="2xl" class="text-neutral-900 dark:text-neutral-100 transition-colors" />
+                          )}
+                          <h3 class="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
+                            {method.name}
+                          </h3>
+                        </div>
+          
+                        <!-- 描述 -->
+                        {method.description && (
+                          <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-4 text-center">
+                            {method.description}
+                          </p>
+                        )}
+          
+                        <!-- 二维码或链接 -->
+                        {method.qrCode && (
+                          <div class="relative w-full max-w-[200px] aspect-square bg-white rounded-lg p-4 shadow-md mb-4">
+                            <img
+                              src={url(method.qrCode)}
+                              alt={`${method.name} ${i18n(I18nKey.scanToSponsor)}`}
+                              class="w-full h-full object-contain"
+                              loading="lazy"
+                            />
+                          </div>
+                        )}
+                        
+                        {method.link && (
+                          <a
+                            href={method.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center gap-2 px-4 py-2 bg-[var(--primary)] text-white dark:text-black/70 rounded-lg font-medium hover:bg-[var(--primary)]/90 active:scale-95 transition-all"
+                          >
+                            <span>{i18n(I18nKey.sponsorGoTo)}</span>
+                            <Icon icon="fa6-solid:arrow-up-right-from-square" class="text-sm" />
+                          </a>
+                        )}
+                      </div>
+                    ))}
+        </div>
+      </div>
+
+
+      <!-- 赞助者列表 -->
+      {showSponsorsList && (
+        <div>
+          <div class="flex items-center gap-3 mb-6">
+            <Icon icon="material-symbols:emoji-people-rounded" size="xl" class="text-[var(--primary)]" />
+            <h2 class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+              {i18n(I18nKey.sponsorList)}
+            </h2>
+          </div>
+          {sponsors.length > 0 ? (
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {sponsors.map((sponsor) => (
+                <div class="relative p-5 rounded-lg bg-neutral-50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 hover:border-[var(--primary)] transition-all duration-200 hover:shadow-md">
+                  <!-- 内容 -->
+                  <div class="flex flex-col h-full">
+                    <!-- 头部：姓名和金额 -->
+                    <div class="flex items-center justify-between mb-3">
+                      <span class="font-semibold text-lg text-neutral-900 dark:text-neutral-100">
+                        {sponsor.name}
+                      </span>
+                      {sponsor.amount && (
+                        <span class="inline-flex items-center px-3 py-1 text-sm font-bold text-[var(--primary)] bg-[var(--primary)]/10 dark:bg-[var(--primary)]/20 rounded-full">
+                          {sponsor.amount}
+                        </span>
+                      )}
+                    </div>
+
+                    <!-- 留言 -->
+                    {sponsor.message && (
+                      <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-3 leading-relaxed flex-1">
+                        {sponsor.message}
+                      </p>
+                    )}
+
+                    <!-- 底部：日期 -->
+                    {sponsor.date && (
+                      <div class="flex items-center gap-1.5 mt-auto pt-3 border-t border-neutral-200 dark:border-neutral-800">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="w-4 h-4 text-neutral-400 dark:text-neutral-500"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                        <span class="text-xs text-neutral-500 dark:text-neutral-500">
+                          {new Date(sponsor.date).toLocaleDateString()}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div class="text-center py-12 text-neutral-500 dark:text-neutral-500">
+              <p>{i18n(I18nKey.sponsorEmpty)}</p>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  </div>
+</MainGridLayout>
+
+<style>
+  /* 透明模式下使用半透明背景 */
+  :global(body.wallpaper-transparent .usage-info-box) {
+    background-color: rgba(var(--primary-rgb, 70, 130, 180), 0.15) !important;
+  }
+  
+  :global(:root.dark body.wallpaper-transparent .usage-info-box) {
+    background-color: oklch(from var(--primary) l c h / 0.15) !important;
+  }
+</style>
+

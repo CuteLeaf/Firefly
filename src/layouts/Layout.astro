@@ -1,7 +1,7 @@
 ---
 import ConfigCarrier from "@components/layout/ConfigCarrier.astro";
 import FontManager from "@components/interactive/FontManager.astro";
-import MusicPlayer from "@components/widget/MusicPlayer.svelte";
+import MusicPlayer from "@components/widget/MusicPlayer.astro";
 import SakuraEffect from "@components/effects/SakuraEffect.astro";
 import FancyboxManager from "@components/effects/FancyboxManager.astro";
 
@@ -132,16 +132,25 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
 		))}
 
 		<!-- Set the theme before the page is rendered to avoid a flash -->
-		<script is:inline define:vars={{BANNER_HEIGHT_EXTEND, PAGE_WIDTH, configHue, defaultMode: siteConfig.themeColor.defaultMode || "light", defaultWallpaperMode: siteConfig.backgroundWallpaper.mode, isWallpaperSwitchable: siteConfig.backgroundWallpaper.switchable ?? true}}>
+		<script is:inline define:vars={{BANNER_HEIGHT_EXTEND, PAGE_WIDTH, configHue, defaultMode: siteConfig.themeColor.defaultMode ?? "light", defaultWallpaperMode: siteConfig.backgroundWallpaper.mode, isWallpaperSwitchable: siteConfig.backgroundWallpaper.switchable ?? true}}>
 			// 主题初始化 - 与setting-utils.ts保持一致
 			const LIGHT_MODE = 'light';
 			const DARK_MODE = 'dark';
+			const SYSTEM_MODE = 'system';
 			
 			// 获取存储的主题，如果没有则使用默认值
 			const theme = localStorage.getItem('theme') || defaultMode;
 			
-			// 解析主题
+			// 获取系统主题
+			function getSystemTheme() {
+				return window.matchMedia('(prefers-color-scheme: dark)').matches ? DARK_MODE : LIGHT_MODE;
+			}
+			
+			// 解析主题（如果是system模式，则获取系统主题）
 			function resolveTheme(themeValue) {
+				if (themeValue === SYSTEM_MODE) {
+					return getSystemTheme();
+				}
 				return themeValue;
 			}
 			
@@ -163,9 +172,27 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
 			document.documentElement.style.setProperty('--hue', hue);
 
 			// calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
-			let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
-			offset = offset - offset % 4;
-			document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
+			// 使用更准确的窗口高度计算
+			function calculateBannerHeightExtend() {
+				let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
+				offset = offset - offset % 4;
+				document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
+			}
+			
+			// 立即设置初始值
+			calculateBannerHeightExtend();
+			
+			// 在下一帧重新计算精确值（仅在值变化时更新，避免闪烁）
+			requestAnimationFrame(() => {
+				const oldValue = parseInt(document.documentElement.style.getPropertyValue('--banner-height-extend'));
+				calculateBannerHeightExtend();
+				const newValue = parseInt(document.documentElement.style.getPropertyValue('--banner-height-extend'));
+				// 如果值变化了，再更新一次确保准确
+				if (Math.abs(oldValue - newValue) > 4) {
+					// 如果有明显变化，延迟一帧再更新，避免闪烁
+					requestAnimationFrame(calculateBannerHeightExtend);
+				}
+			});
 
 			// 初始化壁纸模式 - 在页面渲染前应用
 			const WALLPAPER_BANNER = 'banner';
@@ -209,6 +236,9 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
 					const bannerWrapper = document.getElementById('banner-wrapper');
 					const fullscreenWallpaper = document.querySelector('[data-fullscreen-wallpaper]');
 					
+					// 检查当前是否为首页
+					const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
+					
 					if (wallpaperMode === WALLPAPER_OVERLAY) {
 						// 全屏壁纸模式：显示全屏壁纸，隐藏banner
 						if (bannerWrapper) {
@@ -232,10 +262,26 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
 						// banner模式：显示banner，隐藏全屏壁纸
 						if (bannerWrapper) {
 							bannerWrapper.style.display = 'block';
+							// 移动端非首页时隐藏banner
+							if (!isHomePage) {
+								bannerWrapper.classList.add('mobile-hide-banner');
+							} else {
+								bannerWrapper.classList.remove('mobile-hide-banner');
+							}
 						}
 						if (fullscreenWallpaper) {
 							fullscreenWallpaper.style.display = 'none';
 							fullscreenWallpaper.classList.add('hidden', 'opacity-0');
+						}
+					}
+					
+					// 处理主内容区域位置
+					const mainContentWrapper = document.querySelector('.absolute.w-full.z-30');
+					if (mainContentWrapper) {
+						if (!isHomePage) {
+							mainContentWrapper.classList.add('mobile-main-no-banner');
+						} else {
+							mainContentWrapper.classList.remove('mobile-main-no-banner');
 						}
 					}
 
@@ -297,7 +343,7 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
 		<slot />
 		
 		<!-- Music Player -->
-		<MusicPlayer client:load />
+		<MusicPlayer />
 		
 		<!-- increase the page height during page transition to prevent the scrolling animation from jumping -->
 		<div id="page-height-extend" class="hidden h-[300vh]"></div>
@@ -420,6 +466,8 @@ function setClickOutsideToClose(panel: string, ignores: string[]) {
 setClickOutsideToClose("display-setting", ["display-setting", "display-settings-switch"])
 setClickOutsideToClose("nav-menu-panel", ["nav-menu-panel", "nav-menu-switch"])
 setClickOutsideToClose("search-panel", ["search-panel", "search-bar", "search-switch"])
+setClickOutsideToClose("wallpaper-mode-panel", ["wallpaper-mode-panel", "wallpaper-mode-switch"])
+setClickOutsideToClose("theme-mode-panel", ["theme-mode-panel", "scheme-switch"])
 
 
 function loadTheme() {
@@ -768,13 +816,15 @@ if (document.readyState === 'loading') {
 }
 
 // Initialize wallpaper mode
-import { initWallpaperMode } from '@/utils/setting-utils';
+import { initWallpaperMode, initThemeListener } from '@/utils/setting-utils';
 if (document.readyState === 'loading') {
 	document.addEventListener('DOMContentLoaded', () => {
 		initWallpaperMode();
+		initThemeListener();
 	});
 } else {
 	initWallpaperMode();
+	initThemeListener();
 }
 
 </script>

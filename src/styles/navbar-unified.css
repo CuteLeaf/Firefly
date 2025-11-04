@@ -346,8 +346,8 @@
     #banner-wrapper ~ * .dropdown-content,
     body:has(#banner-wrapper) .dropdown-content {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
     
@@ -355,8 +355,26 @@
     #banner-wrapper ~ * #display-setting,
     body:has(#banner-wrapper) #display-setting {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
+        box-shadow: var(--shadow-navbar) !important;
+    }
+    
+    /* 壁纸模式切换面板横幅模式透明度 */
+    #banner-wrapper ~ * #wallpaper-mode-panel .float-panel,
+    body:has(#banner-wrapper) #wallpaper-mode-panel .float-panel {
+        backdrop-filter: blur(var(--blur-2xl)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
+        box-shadow: var(--shadow-navbar) !important;
+    }
+    
+    /* 主题切换面板横幅模式透明度 */
+    #banner-wrapper ~ * #theme-mode-panel .float-panel,
+    body:has(#banner-wrapper) #theme-mode-panel .float-panel {
+        backdrop-filter: blur(var(--blur-2xl)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
     
@@ -364,8 +382,8 @@
     #banner-wrapper ~ * #nav-menu-panel,
     body:has(#banner-wrapper) #nav-menu-panel {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
     
@@ -373,8 +391,8 @@
     #banner-wrapper ~ * #mobile-toc-panel,
     body:has(#banner-wrapper) #mobile-toc-panel {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
     
@@ -382,8 +400,8 @@
     #banner-wrapper ~ * #search-panel,
     body:has(#banner-wrapper) #search-panel {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
 }
@@ -393,40 +411,56 @@
     /* 二级菜单半透明效果 */
     body.wallpaper-transparent .dropdown-content {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
     
     /* 主题色设置面板半透明效果 */
     body.wallpaper-transparent #display-setting {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
+        box-shadow: var(--shadow-navbar) !important;
+    }
+    
+    /* 壁纸模式切换面板半透明效果 */
+    body.wallpaper-transparent #wallpaper-mode-panel .float-panel {
+        backdrop-filter: blur(var(--blur-2xl)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
+        box-shadow: var(--shadow-navbar) !important;
+    }
+    
+    /* 主题切换面板半透明效果 */
+    body.wallpaper-transparent #theme-mode-panel .float-panel {
+        backdrop-filter: blur(var(--blur-2xl)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
     
     /* 手机端导航菜单半透明效果 */
     body.wallpaper-transparent #nav-menu-panel {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
     
     /* 手机端MD导航菜单面板半透明效果 */
     body.wallpaper-transparent #mobile-toc-panel {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
     
     /* 搜索面板半透明效果 */
     body.wallpaper-transparent #search-panel {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
 }
@@ -437,8 +471,8 @@
     #banner-wrapper ~ * #navbar[data-is-home="true"] .dropdown-content,
     body:has(#banner-wrapper) #navbar[data-is-home="true"] .dropdown-content {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
     
@@ -446,40 +480,58 @@
     #banner-wrapper ~ * #navbar[data-is-home="true"] ~ * #display-setting,
     body:has(#banner-wrapper) #navbar[data-is-home="true"] ~ * #display-setting {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
+        box-shadow: var(--shadow-navbar) !important;
+    }
+    
+    /* 壁纸模式切换面板移动端横幅模式透明度 */
+    #banner-wrapper ~ * #navbar[data-is-home="true"] #wallpaper-mode-panel .float-panel,
+    body:has(#banner-wrapper) #navbar[data-is-home="true"] #wallpaper-mode-panel .float-panel {
+        backdrop-filter: blur(var(--blur-2xl)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
+        box-shadow: var(--shadow-navbar) !important;
+    }
+    
+    /* 主题切换面板移动端横幅模式透明度 */
+    #banner-wrapper ~ * #navbar[data-is-home="true"] #theme-mode-panel .float-panel,
+    body:has(#banner-wrapper) #navbar[data-is-home="true"] #theme-mode-panel .float-panel {
+        backdrop-filter: blur(var(--blur-2xl)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
     
     /* 手机端导航菜单半透明效果 */
     body:has(#banner-wrapper) #navbar[data-is-home="true"] #nav-menu-panel {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
     
     /* 手机端MD导航菜单面板半透明效果 */
     body:has(#banner-wrapper) #navbar[data-is-home="true"] #mobile-toc-panel {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
     
     /* 搜索面板半透明效果 */
     body:has(#banner-wrapper) #navbar[data-is-home="true"] #search-panel {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
     
     /* 主题色设置面板半透明效果 */
     body:has(#banner-wrapper) #navbar[data-is-home="true"] #display-setting {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
 }
@@ -489,48 +541,48 @@
     /* 二级菜单半透明效果 */
     body.wallpaper-transparent #navbar[data-is-home="true"] .dropdown-content {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
     
     /* 主题色设置面板半透明效果 */
     body.wallpaper-transparent #navbar[data-is-home="true"] ~ * #display-setting {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
     
     /* 手机端导航菜单半透明效果 */
     body.wallpaper-transparent #navbar[data-is-home="true"] #nav-menu-panel {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
     
     /* 手机端MD导航菜单面板半透明效果 */
     body.wallpaper-transparent #navbar[data-is-home="true"] #mobile-toc-panel {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
     
     /* 搜索面板半透明效果 */
     body.wallpaper-transparent #navbar[data-is-home="true"] #search-panel {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
     
     /* 主题色设置面板半透明效果 */
     body.wallpaper-transparent #navbar[data-is-home="true"] #display-setting {
         backdrop-filter: blur(var(--blur-2xl)) !important;
-        background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
+        background: rgba(255, 255, 255, var(--opacity-90)) !important;
+        border: 1px solid rgba(255, 255, 255, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar) !important;
     }
 }
@@ -540,40 +592,56 @@
     /* 二级菜单暗色主题半透明效果 */
     :root.dark #banner-wrapper ~ * .dropdown-content,
     :root.dark body:has(#banner-wrapper) .dropdown-content {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 主题色设置面板暗色主题半透明效果 */
     :root.dark #banner-wrapper ~ * #display-setting,
     :root.dark body:has(#banner-wrapper) #display-setting {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
+        box-shadow: var(--shadow-navbar-dark) !important;
+    }
+    
+    /* 壁纸模式切换面板暗色主题横幅模式透明度 */
+    :root.dark #banner-wrapper ~ * #wallpaper-mode-panel .float-panel,
+    :root.dark body:has(#banner-wrapper) #wallpaper-mode-panel .float-panel {
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
+        box-shadow: var(--shadow-navbar-dark) !important;
+    }
+    
+    /* 主题切换面板暗色主题横幅模式透明度 */
+    :root.dark #banner-wrapper ~ * #theme-mode-panel .float-panel,
+    :root.dark body:has(#banner-wrapper) #theme-mode-panel .float-panel {
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 手机端导航菜单暗色主题半透明效果 */
     :root.dark #banner-wrapper ~ * #nav-menu-panel,
     :root.dark body:has(#banner-wrapper) #nav-menu-panel {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 手机端MD导航菜单面板暗色主题半透明效果 */
     :root.dark #banner-wrapper ~ * #mobile-toc-panel,
     :root.dark body:has(#banner-wrapper) #mobile-toc-panel {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 搜索面板暗色主题半透明效果 */
     :root.dark #banner-wrapper ~ * #search-panel,
     :root.dark body:has(#banner-wrapper) #search-panel {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
 }
@@ -582,36 +650,50 @@
 @media (min-width: 1024px) {
     /* 二级菜单暗色主题半透明效果 */
     :root.dark body.wallpaper-transparent .dropdown-content {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 主题色设置面板暗色主题半透明效果 */
     :root.dark body.wallpaper-transparent #display-setting {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
+        box-shadow: var(--shadow-navbar-dark) !important;
+    }
+    
+    /* 壁纸模式切换面板暗色主题全屏壁纸模式透明度 */
+    :root.dark body.wallpaper-transparent #wallpaper-mode-panel .float-panel {
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
+        box-shadow: var(--shadow-navbar-dark) !important;
+    }
+    
+    /* 主题切换面板暗色主题全屏壁纸模式透明度 */
+    :root.dark body.wallpaper-transparent #theme-mode-panel .float-panel {
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 手机端导航菜单暗色主题半透明效果 */
     :root.dark body.wallpaper-transparent #nav-menu-panel {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 手机端MD导航菜单面板暗色主题半透明效果 */
     :root.dark body.wallpaper-transparent #mobile-toc-panel {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 搜索面板暗色主题半透明效果 */
     :root.dark body.wallpaper-transparent #search-panel {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
 }
@@ -621,51 +703,81 @@
     /* 二级菜单暗色主题半透明效果 */
     :root.dark #banner-wrapper ~ * #navbar[data-is-home="true"] .dropdown-content,
     :root.dark body:has(#banner-wrapper) #navbar[data-is-home="true"] .dropdown-content {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 主题色设置面板暗色主题半透明效果 */
     :root.dark #banner-wrapper ~ * #navbar[data-is-home="true"] ~ * #display-setting,
     :root.dark body:has(#banner-wrapper) #navbar[data-is-home="true"] ~ * #display-setting {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
+        box-shadow: var(--shadow-navbar-dark) !important;
+    }
+    
+    /* 壁纸模式切换面板暗色主题移动端横幅模式透明度 */
+    :root.dark #banner-wrapper ~ * #navbar[data-is-home="true"] #wallpaper-mode-panel .float-panel,
+    :root.dark body:has(#banner-wrapper) #navbar[data-is-home="true"] #wallpaper-mode-panel .float-panel {
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
+        box-shadow: var(--shadow-navbar-dark) !important;
+    }
+    
+    /* 主题切换面板暗色主题移动端横幅模式透明度 */
+    :root.dark #banner-wrapper ~ * #navbar[data-is-home="true"] #theme-mode-panel .float-panel,
+    :root.dark body:has(#banner-wrapper) #navbar[data-is-home="true"] #theme-mode-panel .float-panel {
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 手机端导航菜单暗色主题半透明效果 */
     :root.dark body:has(#banner-wrapper) #navbar[data-is-home="true"] #nav-menu-panel {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 手机端MD导航菜单面板暗色主题半透明效果 */
     :root.dark body:has(#banner-wrapper) #navbar[data-is-home="true"] #mobile-toc-panel {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 搜索面板暗色主题半透明效果 */
     :root.dark body:has(#banner-wrapper) #navbar[data-is-home="true"] #search-panel {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 主题色设置面板暗色主题半透明效果 */
     :root.dark body:has(#banner-wrapper) #navbar[data-is-home="true"] #display-setting {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
+        box-shadow: var(--shadow-navbar-dark) !important;
+    }
+    
+    /* 壁纸模式切换面板暗色主题移动端横幅模式透明度 */
+    :root.dark body:has(#banner-wrapper) #navbar[data-is-home="true"] #wallpaper-mode-panel .float-panel {
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
+        box-shadow: var(--shadow-navbar-dark) !important;
+    }
+    
+    /* 主题切换面板暗色主题移动端横幅模式透明度 */
+    :root.dark body:has(#banner-wrapper) #navbar[data-is-home="true"] #theme-mode-panel .float-panel {
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 搜索面板暗色主题半透明效果 */
     :root.dark body:has(#banner-wrapper) #navbar[data-is-home="true"] #search-panel {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
 }
@@ -674,43 +786,43 @@
 @media (max-width: 1023px) {
     /* 二级菜单暗色主题半透明效果 */
     :root.dark body.wallpaper-transparent #navbar[data-is-home="true"] .dropdown-content {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 主题色设置面板暗色主题半透明效果 */
     :root.dark body.wallpaper-transparent #navbar[data-is-home="true"] ~ * #display-setting {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 手机端导航菜单暗色主题半透明效果 */
     :root.dark body.wallpaper-transparent #navbar[data-is-home="true"] #nav-menu-panel {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 手机端MD导航菜单面板暗色主题半透明效果 */
     :root.dark body.wallpaper-transparent #navbar[data-is-home="true"] #mobile-toc-panel {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 搜索面板暗色主题半透明效果 */
     :root.dark body.wallpaper-transparent #navbar[data-is-home="true"] #search-panel {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
     
     /* 主题色设置面板暗色主题半透明效果 */
     :root.dark body.wallpaper-transparent #navbar[data-is-home="true"] #display-setting {
-        background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
+        background: rgba(0, 0, 0, var(--opacity-90)) !important;
+        border: 1px solid rgba(0, 0, 0, var(--opacity-90)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
 }

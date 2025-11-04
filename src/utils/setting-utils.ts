@@ -2,6 +2,7 @@ import {
   DARK_MODE,
   DEFAULT_THEME,
   LIGHT_MODE,
+  SYSTEM_MODE,
   WALLPAPER_BANNER,
   WALLPAPER_OVERLAY,
   WALLPAPER_NONE,
@@ -28,10 +29,24 @@ export function getDefaultHue(): number {
 }
 
 export function getDefaultTheme(): LIGHT_DARK_MODE {
-  return siteConfig.themeColor.defaultMode || DEFAULT_THEME;
+  // 如果配置文件中设置了 defaultMode，使用配置的值
+  // 否则使用 DEFAULT_THEME（向后兼容）
+  return siteConfig.themeColor.defaultMode ?? DEFAULT_THEME;
 }
 
+// 获取系统主题
+export function getSystemTheme(): LIGHT_DARK_MODE {
+  if (typeof window === 'undefined') {
+    return LIGHT_MODE;
+  }
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? DARK_MODE : LIGHT_MODE;
+}
+
+// 解析主题（如果是system模式，则获取系统主题）
 export function resolveTheme(theme: LIGHT_DARK_MODE): LIGHT_DARK_MODE {
+  if (theme === SYSTEM_MODE) {
+    return getSystemTheme();
+  }
   return theme;
 }
 
@@ -135,13 +150,98 @@ export function applyThemeToDocument(theme: LIGHT_DARK_MODE) {
   });
 }
 
+// 系统主题监听器引用
+let systemThemeListener: ((e: MediaQueryListEvent | MediaQueryList) => void) | null = null;
+
 export function setTheme(theme: LIGHT_DARK_MODE): void {
   // 检查是否在浏览器环境中
   if (typeof localStorage === 'undefined') {
     return;
   }
-  localStorage.setItem("theme", theme);
+  
+  // 先应用主题
   applyThemeToDocument(theme);
+  
+  // 保存到localStorage
+  localStorage.setItem("theme", theme);
+  
+  // 如果切换到 system 模式，需要监听系统主题变化
+  if (theme === SYSTEM_MODE) {
+    setupSystemThemeListener();
+  } else {
+    // 如果切换其他模式，移除系统主题监听
+    cleanupSystemThemeListener();
+  }
+}
+
+// 设置系统主题监听器
+export function setupSystemThemeListener() {
+  // 先清理之前的监听器
+  cleanupSystemThemeListener();
+  
+  if (typeof window === 'undefined') {
+    return;
+  }
+  
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  
+  // 处理系统主题变化的回调
+  const handleSystemThemeChange = (e: MediaQueryListEvent | MediaQueryList) => {
+    const isDark = e.matches;
+    
+    // 添加过渡保护以避免闪屏
+    document.documentElement.classList.add("is-theme-transitioning");
+    
+    // 应用系统主题，但不保存到 localStorage
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    
+    // Set the theme for Expressive Code
+    const expressiveTheme = isDark ? "github-dark" : "github-light";
+    document.documentElement.setAttribute("data-theme", expressiveTheme);
+    
+    // 移除过渡保护
+    requestAnimationFrame(() => {
+      document.documentElement.classList.remove("is-theme-transitioning");
+    });
+    
+    // 触发自定义事件通知其他组件
+    window.dispatchEvent(new CustomEvent("theme-change"));
+  };
+  
+  // 立即调用一次以设置初始状态
+  handleSystemThemeChange(mediaQuery);
+  
+  // 监听系统主题变化（现代浏览器）
+  if (mediaQuery.addEventListener) {
+    mediaQuery.addEventListener('change', handleSystemThemeChange);
+  } else {
+    // 兼容旧浏览器
+    (mediaQuery as any).addListener(handleSystemThemeChange);
+  }
+  
+  systemThemeListener = handleSystemThemeChange;
+}
+
+// 清理系统主题监听器
+function cleanupSystemThemeListener() {
+  if (typeof window === 'undefined' || !systemThemeListener) {
+    return;
+  }
+  
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  
+  if (mediaQuery.removeEventListener) {
+    mediaQuery.removeEventListener('change', systemThemeListener);
+  } else {
+    // 兼容旧浏览器
+    (mediaQuery as any).removeListener(systemThemeListener);
+  }
+  
+  systemThemeListener = null;
 }
 
 
@@ -153,6 +253,20 @@ export function getStoredTheme(): LIGHT_DARK_MODE {
   return (
     (localStorage.getItem("theme") as LIGHT_DARK_MODE) || getDefaultTheme()
   );
+}
+
+// 初始化主题监听器（用于页面加载后）
+export function initThemeListener() {
+  if (typeof localStorage === 'undefined') {
+    return;
+  }
+  
+  const theme = getStoredTheme();
+  
+  // 如果主题是 system 模式，需要监听系统主题变化
+  if (theme === SYSTEM_MODE) {
+    setupSystemThemeListener();
+  }
 }
 
 // Wallpaper mode functions
@@ -254,6 +368,9 @@ function showBannerMode() {
 	// 显示banner壁纸（通过CSS类和display控制）
 	const bannerWrapper = document.getElementById('banner-wrapper');
 	if (bannerWrapper) {
+		// 检查当前是否为首页
+		const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
+		
 		// 先设置display，然后使用requestAnimationFrame确保渲染
 		bannerWrapper.style.display = 'block';
 		bannerWrapper.style.setProperty('display', 'block', 'important');
@@ -261,6 +378,13 @@ function showBannerMode() {
 			bannerWrapper.classList.remove('hidden');
 			bannerWrapper.classList.remove('opacity-0');
 			bannerWrapper.classList.add('opacity-100');
+			
+			// 移动端非首页时隐藏banner
+			if (!isHomePage) {
+				bannerWrapper.classList.add('mobile-hide-banner');
+			} else {
+				bannerWrapper.classList.remove('mobile-hide-banner');
+			}
 		});
 	}
 
@@ -289,6 +413,17 @@ function showBannerMode() {
 
 	// 调整主内容位置
 	adjustMainContentPosition('banner');
+	
+	// 处理移动端非首页主内容区域位置
+	const mainContentWrapper = document.querySelector('.absolute.w-full.z-30');
+	if (mainContentWrapper) {
+		const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
+		if (!isHomePage) {
+			mainContentWrapper.classList.add('mobile-main-no-banner');
+		} else {
+			mainContentWrapper.classList.remove('mobile-main-no-banner');
+		}
+	}
 
 	// 移除透明效果（横幅模式不使用半透明）
 	adjustMainContentTransparency(false);

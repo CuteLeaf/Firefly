@@ -328,10 +328,9 @@ const paddingClass = getPaddingStyle();
   /* 响应式调整 */
   @media (max-width: 768px) {
     .advertisement-widget {
-      margin: 0 -1rem;
-      border-radius: 0;
-      border-left: none;
-      border-right: none;
+      margin: 0; /* 与其他组件保持一致的边距（由外层布局控制） */
+      border-radius: var(--radius-large);
+      /* 保持左右边框，避免与其他卡片不一致 */
       backdrop-filter: blur(8px);
     }
 

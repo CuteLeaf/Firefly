@@ -125,7 +125,6 @@ const transparentClass = shouldEnableTransparency
 			desktop: typeof backgroundImages.desktop === 'string' ? backgroundImages.desktop : '',
 			mobile: typeof backgroundImages.mobile === 'string' ? backgroundImages.mobile : ''
 		},
-		position: siteConfig.backgroundWallpaper.position,
 		zIndex: siteConfig.backgroundWallpaper.overlay?.zIndex,
 		opacity: siteConfig.backgroundWallpaper.overlay?.opacity,
 		blur: siteConfig.backgroundWallpaper.overlay?.blur,
@@ -161,7 +160,7 @@ const transparentClass = shouldEnableTransparency
             alt="Mobile background image of the blog" 
             class:list={["block lg:hidden object-cover h-full w-full transition duration-700 opacity-100"]}
             src={typeof backgroundImages.mobile === 'string' ? backgroundImages.mobile : (typeof backgroundImages.desktop === 'string' ? backgroundImages.desktop : '')} 
-            position={siteConfig.backgroundWallpaper.position}
+            position={siteConfig.backgroundWallpaper.banner?.position}
         />
         <!-- Desktop: use desktop-specific image -->
         <ImageWrapper 
@@ -169,7 +168,7 @@ const transparentClass = shouldEnableTransparency
             alt="Desktop background image of the blog" 
             class:list={["hidden lg:block object-cover h-full transition duration-700 opacity-100"]}
             src={typeof backgroundImages.desktop === 'string' ? backgroundImages.desktop : (typeof backgroundImages.mobile === 'string' ? backgroundImages.mobile : '')} 
-            position={siteConfig.backgroundWallpaper.position}
+            position={siteConfig.backgroundWallpaper.banner?.position}
         />
     </div>
     

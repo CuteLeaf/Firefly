@@ -28,7 +28,7 @@ import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
 import mdx from "@astrojs/mdx";
 // https://astro.build/config
 export default defineConfig({
-	site: "https://demo-firefly.netlify.app/",
+	site: "https://firefly.cuteleaf.cn/",
 
 	base: "/",
 	trailingSlash: "always",
@@ -122,13 +122,10 @@ export default defineConfig({
 				if (pathname === '/anime/' && !siteConfig.pages.anime) {
 					return false;
 				}
-				if (pathname === '/projects/' && !siteConfig.pages.projects) {
+				if (pathname === '/sponsor/' && !siteConfig.pages.sponsor) {
 					return false;
 				}
-				if (pathname === '/timeline/' && !siteConfig.pages.timeline) {
-					return false;
-				}
-				if (pathname === '/skills/' && !siteConfig.pages.skills) {
+				if (pathname === '/guestbook/' && !siteConfig.pages.guestbook) {
 					return false;
 				}
 

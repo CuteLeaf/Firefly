@@ -1,0 +1,29 @@
+---
+import { commentConfig } from '@/config'
+
+if (!commentConfig || !commentConfig.giscus) {
+  throw new Error('Giscus comments are not configured')
+}
+
+const giscus = commentConfig.giscus
+---
+
+/**
+ * Giscus 官方Web Component用法，兼容Astro静态输出，无需import包，无需NPM依赖！
+ * 参考：https://giscus.app/ 详情配置说明
+ */
+<giscus-widget
+  id="comments"
+  repo={giscus.repo}
+  repoId={giscus.repoId}
+  category={giscus.category}
+  categoryId={giscus.categoryId}
+  mapping={giscus.mapping}
+  strict={giscus.strict}
+  reactionsEnabled={giscus.reactionsEnabled}
+  emitMetadata={giscus.emitMetadata}
+  inputPosition={giscus.inputPosition}
+  theme={giscus.theme}
+  lang={giscus.lang}
+  loading={giscus.loading}
+/>

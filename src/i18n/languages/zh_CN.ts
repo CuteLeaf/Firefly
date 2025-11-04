@@ -22,7 +22,9 @@ export const zh_CN: Translation = {
   [Key.commentSection]: "评论区",
   [Key.commentSubtitle]: "分享你的想法，与大家交流讨论",
   [Key.commentNotConfigured]: "评论系统暂未配置",
+  [Key.guestbookCommentHint]: "您还未在配置文件中启用评论系统，启用后访客才可在此留言",
   [Key.friends]: "友链",
+  [Key.guestbook]: "留言",
   [Key.untitled]: "无标题",
   [Key.uncategorized]: "未分类",
   [Key.noTags]: "无标签",
@@ -105,10 +107,6 @@ export const zh_CN: Translation = {
   [Key.notFoundDescription]: "抱歉，您访问的页面不存在或已被移动。",
   [Key.backToHome]: "返回首页",
 
-  // Music Player
-  [Key.playlist]: "播放列表",
-
-
   // RSS页面
   [Key.rss]: "RSS 订阅",
   [Key.rssDescription]: "订阅获取最新更新",
@@ -148,4 +146,26 @@ export const zh_CN: Translation = {
 
   // 置顶
   [Key.pinned]: "置顶",
+
+  // 壁纸模式
+  [Key.wallpaperMode]: "壁纸模式",
+  [Key.wallpaperBannerMode]: "横幅壁纸",
+  [Key.wallpaperOverlayMode]: "全屏壁纸",
+  [Key.wallpaperNoneMode]: "纯色背景",
+
+  // 赞助页面
+  [Key.sponsor]: "赞助",
+  [Key.sponsorTitle]: "赞助支持",
+  [Key.sponsorDescription]: "如果我的内容对你有帮助，欢迎通过以下方式赞助我，你的支持是我持续创作的动力！",
+  [Key.sponsorMethods]: "赞助方式",
+  [Key.sponsorList]: "赞助列表",
+  [Key.sponsorEmpty]: "暂无赞助记录",
+  [Key.sponsorAmount]: "金额",
+  [Key.sponsorDate]: "日期",
+  [Key.sponsorMessage]: "留言",
+  [Key.sponsorAnonymous]: "匿名",
+  [Key.scanToSponsor]: "扫码赞助",
+  [Key.sponsorGoTo]: "前往赞助",
+  [Key.sponsorButton]: "赞助支持",
+  [Key.sponsorButtonText]: "如果这篇文章对你有帮助，欢迎赞助支持！",
 };

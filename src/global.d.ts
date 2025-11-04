@@ -49,4 +49,4 @@ interface SearchResult {
   sub_results?: SearchResult[];
 }
 
-export {};
+export {SearchResult};

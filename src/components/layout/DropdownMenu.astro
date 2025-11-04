@@ -11,15 +11,24 @@ interface Props {
 
 const { link, class: className } = Astro.props;
 
+// 检查 link 是否存在
+if (!link) {
+	return null;
+}
+
 // 转换子菜单中的LinkPreset为NavBarLink
 const processedLink = {
 	...link,
-	children: link.children?.map((child: NavBarLink | LinkPreset): NavBarLink => {
+	children: link.children?.map((child: NavBarLink | LinkPreset): NavBarLink | null => {
 		if (typeof child === "number") {
-			return LinkPresets[child];
+			// 检查 LinkPreset 是否存在于 LinkPresets 中
+			if (child in LinkPresets) {
+				return LinkPresets[child as LinkPreset];
+			}
+			return null;
 		}
 		return child;
-	}),
+	}).filter((child): child is NavBarLink => child !== null),
 };
 
 const hasChildren = processedLink.children && processedLink.children.length > 0;

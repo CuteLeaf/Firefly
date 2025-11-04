@@ -1,6 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
-import { siteConfig, navBarConfig } from "@/config";
+import { siteConfig, navBarConfig, navBarSearchConfig } from "@/config";
 import { LinkPresets } from "@/constants/link-presets";
 import { LinkPreset, type NavBarLink } from "@/types/config";
 import { url } from "@/utils/url-utils";
@@ -12,6 +12,7 @@ import DisplaySettings from "@/components/interactive/DisplaySettings.svelte";
 import WallpaperSwitch from "@/components/interactive/WallpaperSwitch.svelte";
 import DropdownMenu from "./DropdownMenu.astro";
 import NavMenuPanel from "./NavMenuPanel.astro";
+import {NavBarSearchMethod} from "@/types/config";
 
 const className = Astro.props.class;
 
@@ -61,7 +62,11 @@ let links: NavBarLink[] = navBarConfig.links.map(
         </div>
         <div class="flex">
             <!--<SearchPanel client:load>-->
-            <Search client:load></Search>
+            <Search
+                client:load
+                searchMethod={navBarSearchConfig.method}
+                meiliSearchConfig={navBarSearchConfig.meiliSearchConfig}
+            />
             {!siteConfig.themeColor.fixed && (
                     <button aria-label="Display Settings" class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="display-settings-switch">
                         <Icon name="material-symbols:palette-outline" class="text-[1.25rem]"></Icon>
@@ -110,6 +115,26 @@ function loadButtonScript() {
             }
         };
     }
+
+    let wallpaperSwitchBtn = document.getElementById("wallpaper-mode-switch");
+    if (wallpaperSwitchBtn) {
+        wallpaperSwitchBtn.onclick = function () {
+            let wallpaperPanel = document.getElementById("wallpaper-mode-panel");
+            if (wallpaperPanel) {
+                wallpaperPanel.classList.toggle("float-panel-closed");
+            }
+        };
+    }
+
+    let themeSwitchBtn = document.getElementById("scheme-switch");
+    if (themeSwitchBtn) {
+        themeSwitchBtn.onclick = function () {
+            let themePanel = document.getElementById("theme-mode-panel");
+            if (themePanel) {
+                themePanel.classList.toggle("float-panel-closed");
+            }
+        };
+    }
 }
 
 loadButtonScript();
@@ -118,60 +143,60 @@ loadButtonScript();
 function initSemifullScrollDetection() {
     const navbar = document.getElementById('navbar');
     if (!navbar) return;
-    
+
     const transparentMode = navbar.getAttribute('data-transparent-mode');
     if (transparentMode !== 'semifull') return;
-    
+
     const isHomePage = navbar.getAttribute('data-is-home') === 'true';
-    
+
     // 如果不是首页，移除滚动事件监听器并设置为半透明状态
     if (!isHomePage) {
         // 移除之前的滚动事件监听器（如果存在）
         if (window.semifullScrollHandler) {
-            window.removeEventListener('scroll', window.semifullScrollHandler);
-            window.semifullScrollHandler = null;
+            window.removeEventListener('scroll', window.semifullScrollHandler as () => void);
+            window.semifullScrollHandler = undefined;
         }
         // 设置为半透明状态
         navbar.classList.add('scrolled');
         return;
     }
-    
+
     // 移除现有的scrolled类，重置状态
     navbar.classList.remove('scrolled');
-    
+
     let ticking = false;
-    
+
     function updateNavbarState() {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const threshold = 50; // 滚动阈值，可以根据需要调整
         // 使用批量DOM操作优化性能
         if (scrollTop > threshold) {
-            navbar.classList.add('scrolled');
+            navbar!.classList.add('scrolled');
         } else {
-            navbar.classList.remove('scrolled');
+            navbar!.classList.remove('scrolled');
         }
-        
+
         ticking = false;
     }
-    
+
     function requestTick() {
         if (!ticking) {
             requestAnimationFrame(updateNavbarState);
             ticking = true;
         }
     }
-    
+
     // 移除之前的滚动事件监听器（如果存在）
     if (window.semifullScrollHandler) {
-        window.removeEventListener('scroll', window.semifullScrollHandler);
+        window.removeEventListener('scroll', window.semifullScrollHandler as () => void);
     }
-    
+
     // 保存新的事件处理器引用
-    window.semifullScrollHandler = requestTick;
-    
+    window.semifullScrollHandler = requestTick as unknown as (() => void);
+
     // 监听滚动事件
     window.addEventListener('scroll', requestTick, { passive: true });
-    
+
     // 初始化状态
     updateNavbarState();
 }
@@ -187,38 +212,39 @@ if (document.readyState === 'loading') {
 }
 </script>
 
-{import.meta.env.PROD && <script is:inline define:vars={{scriptUrl: url('/pagefind/pagefind.js')}}>
-async function loadPagefind() {
-    try {
-        const response = await fetch(scriptUrl, { method: 'HEAD' });
-        if (!response.ok) {
-            throw new Error(`Pagefind script not found: ${response.status}`);
-        }
+{
+    navBarSearchConfig.method === NavBarSearchMethod.PageFind && import.meta.env.PROD && (
+        <script is:inline define:vars={{ scriptUrl: url('/pagefind/pagefind.js') }}>
+            {/* 你的 loadPagefind 函数的完整内容放在这里 */}
+            async function loadPagefind() {
+                try {
+                    const response = await fetch(scriptUrl, { method: 'HEAD' });
+                    if (!response.ok) {
+                        throw new Error(`Pagefind script not found: ${response.status}`);
+                    }
+                    const pagefind = await import(scriptUrl);
+                    await pagefind.options({
+                        excerptLength: 20
+                    });
+                    window.pagefind = pagefind;
+                    document.dispatchEvent(new CustomEvent('pagefindready'));
+                    console.log('Pagefind loaded and initialized successfully, event dispatched.');
+                } catch (error) {
+                    console.error('Failed to load Pagefind:', error);
+                    window.pagefind = {
+                        search: () => Promise.resolve({ results: [] }),
+                        options: () => Promise.resolve(),
+                    };
+                    document.dispatchEvent(new CustomEvent('pagefindloaderror'));
+                    console.log('Pagefind load error, event dispatched.');
+                }
+            }
 
-        const pagefind = await import(scriptUrl);
-
-        await pagefind.options({
-            excerptLength: 20
-        });
-
-        window.pagefind = pagefind;
-
-        document.dispatchEvent(new CustomEvent('pagefindready'));
-        console.log('Pagefind loaded and initialized successfully, event dispatched.');
-    } catch (error) {
-        console.error('Failed to load Pagefind:', error);
-        window.pagefind = {
-            search: () => Promise.resolve({ results: [] }),
-            options: () => Promise.resolve(),
-        };
-        document.dispatchEvent(new CustomEvent('pagefindloaderror'));
-        console.log('Pagefind load error, event dispatched.');
-    }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', loadPagefind);
+            } else {
+                loadPagefind();
+            }
+        </script>
+    )
 }
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadPagefind);
-} else {
-    loadPagefind();
-}
-</script>}
