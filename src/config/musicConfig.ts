@@ -12,11 +12,13 @@ export const musicPlayerConfig: MusicPlayerConfig = {
   meting: {
     // Meting API 地址，默认使用 bilibili.uno 提供的免费服务
     // 你也可以使用其他 Meting API 服务或自建服务
-    api: "https://www.bilibili.uno/api?server=:server&type=:type&id=:id&auth=:auth&r=:r",
+    api: "https://api.qijieya.cn/meting/?server=:server&type=:type&id=:id&r=:r",
+
+/api?server=:server&type=:type&id=:id&r=:r",
 
     // 歌单配置
     playlist: {
-      id: "2578068117", // 歌单ID
+      id: "8223823179", // 歌单ID
       server: "netease", // 音乐平台：netease=网易云音乐, tencent=QQ音乐, kugou=酷狗音乐, xiami=虾米音乐, baidu=百度音乐
       type: "playlist", // 类型：playlist=歌单, album=专辑, song=单曲
     },
