@@ -28,7 +28,7 @@ import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
 import mdx from "@astrojs/mdx";
 // https://astro.build/config
 export default defineConfig({
-	site: "https://firefly.cuteleaf.cn/",
+	site: "https://blog.wuenrong.com/",
 
 	base: "/",
 	trailingSlash: "always",
