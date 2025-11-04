@@ -12,9 +12,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
   meting: {
     // Meting API 地址，默认使用 bilibili.uno 提供的免费服务
     // 你也可以使用其他 Meting API 服务或自建服务
-    api: "https://api.qijieya.cn/meting/?server=:server&type=:type&id=:id&r=:r",
-
-/api?server=:server&type=:type&id=:id&r=:r",
+    api: "https://api.qijieya.cn/meting/?server=:server&type=:type&id=:id",
 
     // 歌单配置
     playlist: {
