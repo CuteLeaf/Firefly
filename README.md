@@ -1,4 +1,3 @@
-
 <img src="./docs/images/1131.png" width = "405" height = "511" alt="NapCat" align=right />
 
 <div align="center">
@@ -238,6 +237,7 @@ lang: zh-CN      # 仅当文章语言与 `siteConfig.ts` 中的网站语言不�
 ## ⭐ Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=CuteLeaf/Firefly&type=Date)](https://star-history.com/#CuteLeaf/Firefly&Date)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FCuteLeaf%2FFirefly.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FCuteLeaf%2FFirefly?ref=badge_shield)
 
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
@@ -248,3 +248,7 @@ lang: zh-CN      # 仅当文章语言与 `siteConfig.ts` 中的网站语言不�
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FCuteLeaf%2FFirefly.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FCuteLeaf%2FFirefly?ref=badge_large)
