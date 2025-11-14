@@ -48,10 +48,11 @@ export const en: Translation = {
   [Key.publishedAt]: "Published at",
   [Key.license]: "License",
   [Key.anime]: "Anime",
+  [Key.bangumi]: "Bangumi",
 
   // Anime Page
   [Key.animeTitle]: "My Anime List",
-  [Key.animeSubtitle]: "Record my anime journey",
+  [Key.animeSubtitle]: "Record my ACG journey",
   [Key.animeList]: "Anime List",
   [Key.animeTotal]: "Total",
   [Key.animeWatching]: "Watching",
@@ -64,7 +65,47 @@ export const en: Translation = {
   [Key.animeEmpty]: "No anime data",
   [Key.animeEmptyBangumi]:
     "Please check Bangumi configuration or network connection",
-    
+
+  // Bangumi Filter and Status Text
+  [Key.bangumiTitle]: "My Bangumi",
+  [Key.bangumiSubtitle]: "Record my ACG journey",
+  [Key.bangumiFilterAll]: "All",
+  [Key.bangumiFilterWatched]: "Watched",
+  [Key.bangumiFilterWatching]: "Watching",
+  [Key.bangumiFilterWish]: "Wish",
+  [Key.bangumiFilterOnHold]: "On Hold",
+  [Key.bangumiFilterDropped]: "Dropped",
+  [Key.bangumiStatusWish]: "Wish",
+  [Key.bangumiStatusWatched]: "Watched",
+  [Key.bangumiStatusWatching]: "Watching",
+  [Key.bangumiStatusOnHold]: "On Hold",
+  [Key.bangumiStatusDropped]: "Dropped",
+  [Key.bangumiStatusUnknown]: "Unknown",
+  [Key.bangumiNoData]: "No Data",
+  [Key.bangumiNoDataDescription]: "No items in this category",
+  [Key.bangumiEmpty]: "No Data",
+  [Key.bangumiEmptyReason]: "Possible reasons: username does not exist, network connection issue, or API limit",
+  [Key.bangumiUsername]: "Username",
+  [Key.bangumiApi]: "API",
+  [Key.bangumiConfigTip]: "Tip: Please set the correct Bangumi username in the page configuration",
+  [Key.bangumiPrevPage]: "Previous",
+  [Key.bangumiNextPage]: "Next",
+  [Key.bangumiCurrentPage]: "Page",
+  [Key.bangumiTotalPages]: "of",
+  [Key.bangumiPage]: "page",
+
+  // Bangumi Categories
+  [Key.bangumiCategoryBook]: "Book",
+  [Key.bangumiCategoryAnime]: "Anime",
+  [Key.bangumiCategoryMusic]: "Music",
+  [Key.bangumiCategoryGame]: "Game",
+  [Key.bangumiCategoryReal]: "Real",
+
+  // Bangumi Data Update
+  [Key.bangumiLastUpdated]: "Data updated at",
+  [Key.bangumiUpdatedAt]: "Build time",
+  [Key.bangumiDataStatic]: "Static data",
+  
   // Anime Status
   [Key.animeStatusAll]: "All",
   [Key.animeStatusWish]: "Wish",
@@ -173,4 +214,36 @@ export const en: Translation = {
   [Key.sponsorGoTo]: "Go to Sponsor",
   [Key.sponsorButton]: "Support",
   [Key.sponsorButtonText]: "If this article helped you, welcome to support!",
+
+  // Site Statistics
+  [Key.siteStats]: "Site Statistics",
+  [Key.siteStatsPostCount]: "Posts",
+  [Key.siteStatsCategoryCount]: "Categories",
+  [Key.siteStatsTagCount]: "Tags",
+  [Key.siteStatsTotalWords]: "Total Words",
+  [Key.siteStatsRunningDays]: "Running Days",
+  [Key.siteStatsLastUpdate]: "Last Activity",
+  [Key.siteStatsDaysAgo]: "{days} days ago",
+  [Key.siteStatsDays]: "{days} days",
+
+  // Calendar Component
+  [Key.calendarSunday]: "Sun",
+  [Key.calendarMonday]: "Mon",
+  [Key.calendarTuesday]: "Tue",
+  [Key.calendarWednesday]: "Wed",
+  [Key.calendarThursday]: "Thu",
+  [Key.calendarFriday]: "Fri",
+  [Key.calendarSaturday]: "Sat",
+  [Key.calendarJanuary]: "Jan",
+  [Key.calendarFebruary]: "Feb",
+  [Key.calendarMarch]: "Mar",
+  [Key.calendarApril]: "Apr",
+  [Key.calendarMay]: "May",
+  [Key.calendarJune]: "Jun",
+  [Key.calendarJuly]: "Jul",
+  [Key.calendarAugust]: "Aug",
+  [Key.calendarSeptember]: "Sep",
+  [Key.calendarOctober]: "Oct",
+  [Key.calendarNovember]: "Nov",
+  [Key.calendarDecember]: "Dec",
 };

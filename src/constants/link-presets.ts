@@ -38,4 +38,9 @@ export const LinkPresets: { [key in LinkPreset]: NavBarLink } = {
     url: "/guestbook/",
     icon: "material-symbols:chat",
   },
+  [LinkPreset.Bangumi]: {
+    name: i18n(I18nKey.bangumi),
+    url: "/bangumi/",
+    icon: "material-symbols:movie",
+  },
 };

@@ -10,6 +10,7 @@ import type {
 export type SiteConfig = {
   title: string;
   subtitle: string;
+  site_url: string;
   description?: string; // 网站描述，用于生成 <meta name="description">
   keywords?: string[]; // 站点关键词，用于生成 <meta name="keywords">
 
@@ -28,6 +29,9 @@ export type SiteConfig = {
 
   // 字体配置
   font: FontConfig;
+
+  // 站点开始日期，用于计算运行天数
+  siteStartDate?: string; // 格式: "YYYY-MM-DD"
 
   // 添加bangumi配置
   bangumi?: {
@@ -59,6 +63,7 @@ export type SiteConfig = {
     anime: boolean; // 追番页面开关
     sponsor: boolean; // 赞助页面开关
     guestbook: boolean; // 留言板页面开关
+    bangumi: boolean
   };
 
   // 文章列表布局配置
@@ -87,6 +92,7 @@ export enum LinkPreset {
   Anime = 4,
   Sponsor = 5,
   Guestbook = 6,
+  Bangumi = 7,
 }
 
 export type NavBarLink = {
@@ -107,8 +113,8 @@ export enum NavBarSearchMethod {
  * MeiliSearch配置
  *
  * @property INDEX_NAME MeiliSearch索引名称
+ * @property CONTENT_DIR 需要被索引的内容目录
  * @property MEILI_HOST MeiliSearch服务器地址
- * @property MEILI_MASTER_KEY MeiliSearch主密钥
  * @property PUBLIC_MEILI_HOST 公共MeiliSearch服务器地址（前端使用）
  * @property PUBLIC_MEILI_SEARCH_KEY 公共MeiliSearch搜索密钥（前端使用）
  */
@@ -116,7 +122,6 @@ export type MeiliSearchConfig = {
   INDEX_NAME: string;
   CONTENT_DIR: string;
   MEILI_HOST: string;
-  MEILI_MASTER_KEY: string;
   PUBLIC_MEILI_HOST: string;
   PUBLIC_MEILI_SEARCH_KEY: string;
 }
@@ -214,7 +219,12 @@ export type BlogPostData = {
 };
 
 export type ExpressiveCodeConfig = {
-  theme: string;
+  /** @deprecated 使用 darkTheme 和 lightTheme 代替 */
+  theme?: string;
+  /** 暗色主题名称（用于暗色模式） */
+  darkTheme: string;
+  /** 亮色主题名称（用于亮色模式） */
+  lightTheme: string;
 };
 
 export type AnnouncementConfig = {
@@ -293,6 +303,8 @@ export type WidgetComponentType =
   | "tags"
   | "toc"
   | "advertisement"
+  | "stats"
+  | "calendar"
   | "custom";
 
 export type WidgetComponentConfig = {
@@ -300,6 +312,7 @@ export type WidgetComponentConfig = {
   enable: boolean; // 是否启用该组件
   order: number; // 显示顺序，数字越小越靠前
   position: "top" | "sticky"; // 组件位置：顶部固定区域或粘性区域
+  sidebar?: "left" | "right"; // 组件所在侧边栏：左侧或右侧（仅当启用双侧边栏时有效）
   class?: string; // 自定义CSS类名
   style?: string; // 自定义内联样式
   animationDelay?: number; // 动画延迟时间（毫秒）
@@ -313,7 +326,7 @@ export type WidgetComponentConfig = {
 
 export type SidebarLayoutConfig = {
   enable: boolean; // 是否启用侧边栏
-  position: "left" | "right"; // 侧边栏位置：左侧或右侧
+  position: "left" | "right" | "both"; // 侧边栏位置：左侧、右侧或双侧
   components: WidgetComponentConfig[]; // 组件配置列表
   defaultAnimation: {
     enable: boolean; // 是否启用默认动画
@@ -321,14 +334,9 @@ export type SidebarLayoutConfig = {
     increment: number; // 每个组件递增的延迟时间（毫秒）
   };
   responsive: {
-    breakpoints: {
-      mobile: number; // 移动端断点（px）
-      tablet: number; // 平板端断点（px）
-      desktop: number; // 桌面端断点（px）
-    };
     layout: {
       mobile: "hidden" | "bottom" | "drawer" | "sidebar"; // 移动端布局模式
-      tablet: "sidebar" | "bottom" | "drawer"; // 平板端布局模式
+      tablet: "hidden" | "sidebar" | "bottom" | "drawer"; // 平板端布局模式
       desktop: "sidebar"; // 桌面端布局模式
     };
   };
@@ -432,7 +440,7 @@ export type BackgroundWallpaperConfig = {
         desktop?: string | string[];
         mobile?: string | string[];
       }; // 支持单个图片、图片数组或分别设置桌面端和移动端图片
-  
+
   // Banner模式特有配置
   banner?: {
     position?:

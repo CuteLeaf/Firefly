@@ -48,6 +48,7 @@ export const zh_CN: Translation = {
   [Key.publishedAt]: "发布于",
   [Key.license]: "许可协议",
   [Key.anime]: "追番",
+  [Key.bangumi]: "番组计划",
 
   // 番剧页面
   [Key.animeTitle]: "我的追番记录",
@@ -63,6 +64,46 @@ export const zh_CN: Translation = {
   [Key.animeStudio]: "制作",
   [Key.animeEmpty]: "暂无追番数据",
   [Key.animeEmptyBangumi]: "请检查 Bangumi 配置或网络连接",
+
+  // 番组计划筛选和状态文本
+  [Key.bangumiTitle]: "我的番组计划",
+  [Key.bangumiSubtitle]: "记录我的二次元之旅",
+  [Key.bangumiFilterAll]: "全部",
+  [Key.bangumiFilterWatched]: "看过",
+  [Key.bangumiFilterWatching]: "在看",
+  [Key.bangumiFilterWish]: "想看",
+  [Key.bangumiFilterOnHold]: "搁置",
+  [Key.bangumiFilterDropped]: "抛弃",
+  [Key.bangumiStatusWish]: "想看",
+  [Key.bangumiStatusWatched]: "看过",
+  [Key.bangumiStatusWatching]: "在看",
+  [Key.bangumiStatusOnHold]: "搁置",
+  [Key.bangumiStatusDropped]: "抛弃",
+  [Key.bangumiStatusUnknown]: "未知",
+  [Key.bangumiNoData]: "暂无数据",
+  [Key.bangumiNoDataDescription]: "该分类下还没有任何条目",
+  [Key.bangumiEmpty]: "暂无数据",
+  [Key.bangumiEmptyReason]: "可能的原因：用户名不存在、网络连接问题或API限制",
+  [Key.bangumiUsername]: "用户名",
+  [Key.bangumiApi]: "API",
+  [Key.bangumiConfigTip]: "提示：请在页面配置中设置正确的Bangumi用户名",
+  [Key.bangumiPrevPage]: "上一页",
+  [Key.bangumiNextPage]: "下一页",
+  [Key.bangumiCurrentPage]: "第",
+  [Key.bangumiTotalPages]: "页，共",
+  [Key.bangumiPage]: "页",
+
+  // 番组分类
+  [Key.bangumiCategoryBook]: "书籍",
+  [Key.bangumiCategoryAnime]: "动画",
+  [Key.bangumiCategoryMusic]: "音乐",
+  [Key.bangumiCategoryGame]: "游戏",
+  [Key.bangumiCategoryReal]: "三次元",
+
+  // 番组数据更新
+  [Key.bangumiLastUpdated]: "数据更新于",
+  [Key.bangumiUpdatedAt]: "构建时间",
+  [Key.bangumiDataStatic]: "静态数据",
   
   // 动漫状态
   [Key.animeStatusAll]: "全部",
@@ -168,4 +209,36 @@ export const zh_CN: Translation = {
   [Key.sponsorGoTo]: "前往赞助",
   [Key.sponsorButton]: "赞助支持",
   [Key.sponsorButtonText]: "如果这篇文章对你有帮助，欢迎赞助支持！",
+
+  // 站点统计
+  [Key.siteStats]: "站点统计",
+  [Key.siteStatsPostCount]: "文章",
+  [Key.siteStatsCategoryCount]: "分类",
+  [Key.siteStatsTagCount]: "标签",
+  [Key.siteStatsTotalWords]: "总字数",
+  [Key.siteStatsRunningDays]: "运行时长",
+  [Key.siteStatsLastUpdate]: "最后活动",
+  [Key.siteStatsDaysAgo]: "{days} 天前",
+  [Key.siteStatsDays]: "{days} 天",
+
+  // 日历组件
+  [Key.calendarSunday]: "日",
+  [Key.calendarMonday]: "一",
+  [Key.calendarTuesday]: "二",
+  [Key.calendarWednesday]: "三",
+  [Key.calendarThursday]: "四",
+  [Key.calendarFriday]: "五",
+  [Key.calendarSaturday]: "六",
+  [Key.calendarJanuary]: "1月",
+  [Key.calendarFebruary]: "2月",
+  [Key.calendarMarch]: "3月",
+  [Key.calendarApril]: "4月",
+  [Key.calendarMay]: "5月",
+  [Key.calendarJune]: "6月",
+  [Key.calendarJuly]: "7月",
+  [Key.calendarAugust]: "8月",
+  [Key.calendarSeptember]: "9月",
+  [Key.calendarOctober]: "10月",
+  [Key.calendarNovember]: "11月",
+  [Key.calendarDecember]: "12月",
 };

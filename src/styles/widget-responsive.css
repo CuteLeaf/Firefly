@@ -96,8 +96,8 @@
   }
 }
 
-/* 平板端样式 (768px - 1024px) */
-@media (min-width: 768px) and (max-width: 1024px) {
+/* 平板端样式 (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
   #dynamic-sidebar {
     width: var(--sidebar-width-tablet);
     padding: 0.75rem;
@@ -120,8 +120,8 @@
 
 }
 
-/* 桌面端样式 (> 1024px) */
-@media (min-width: 1025px) {
+/* 桌面端样式 (>= 1024px) */
+@media (min-width: 1024px) {
   #dynamic-sidebar {
     width: var(--sidebar-width-desktop);
     padding: 1rem;

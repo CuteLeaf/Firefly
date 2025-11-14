@@ -8,8 +8,9 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
   // 是否启用侧边栏功能
   enable: true,
 
-  // 侧边栏位置：左侧left或右侧right
-  position: "left",
+  // 侧边栏位置：left=左侧，right=右侧
+  // both=双侧，开启双侧后网格（双列）模式将无法使用，且右侧组件会在宽度低于1024px时隐藏
+  position: "both",
 
   // 侧边栏组件配置列表
   components: [
@@ -22,6 +23,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
       order: 1,
       // 组件位置："top" 表示固定在顶部
       position: "top",
+      // 所在侧边栏
+      sidebar: "left",
       // CSS 类名，用于应用样式和动画
       class: "onload-animation",
       // 动画延迟时间（毫秒），用于错开动画效果
@@ -36,6 +39,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
       order: 2,
       // 组件位置："top" 表示固定在顶部
       position: "top",
+      // 所在侧边栏
+      sidebar: "left",
       // CSS 类名
       class: "onload-animation",
       // 动画延迟时间
@@ -50,6 +55,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
       order: 3,
       // 组件位置："sticky" 表示粘性定位，可滚动
       position: "sticky",
+      // 所在侧边栏
+      sidebar: "left",
       // CSS 类名
       class: "onload-animation",
       // 动画延迟时间
@@ -69,6 +76,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
       order: 5,
       // 组件位置："sticky" 表示粘性定位
       position: "sticky",
+      // 所在侧边栏：右侧
+      sidebar: "left",
       // CSS 类名
       class: "onload-animation",
       // 动画延迟时间
@@ -80,14 +89,48 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
       },
     },
     {
+      // 组件类型：站点统计组件
+      type: "stats",
+      // 是否启用该组件
+      enable: true,
+      // 组件显示顺序
+      order: 6,
+      // 组件位置："top" 表示固定在顶部
+      position: "top",
+      // 所在侧边栏：右侧
+      sidebar: "right",
+      // CSS 类名
+      class: "onload-animation",
+      // 动画延迟时间
+      animationDelay: 200,
+    },
+    {
+      // 组件类型：日历组件
+      type: "calendar",
+      // 是否启用该组件
+      enable: true,
+      // 组件显示顺序
+      order: 7,
+      // 组件位置："sticky" 表示粘性定位
+      position: "sticky",
+      // 所在侧边栏：右侧
+      sidebar: "right",
+      // CSS 类名
+      class: "onload-animation",
+      // 动画延迟时间
+      animationDelay: 250,
+    },
+    {
       // 组件类型：广告栏组件 1
       type: "advertisement",
       // 是否启用该组件
       enable: false,
       // 组件显示顺序
-      order: 6,
+      order: 10,
       // 组件位置："sticky" 表示粘性定位
       position: "sticky",
+      // 所在侧边栏：左侧
+      sidebar: "left",
       // CSS 类名
       class: "onload-animation",
       // 动画延迟时间
@@ -101,9 +144,11 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
       // 是否启用该组件
       enable: false,
       // 组件显示顺序
-      order: 7,
+      order: 10,
       // 组件位置："sticky" 表示粘性定位
       position: "sticky",
+      // 所在侧边栏：右侧
+      sidebar: "right",
       // CSS 类名
       class: "onload-animation",
       // 动画延迟时间
@@ -125,23 +170,15 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 
   // 响应式布局配置
   responsive: {
-    // 断点配置（像素值）
-    breakpoints: {
-      // 移动端断点：屏幕宽度小于768px
-      mobile: 768,
-      // 平板端断点：屏幕宽度小于1024px
-      tablet: 1024,
-      // 桌面端断点：屏幕宽度小于1280px
-      desktop: 1280,
-    },
     // 不同设备的布局模式
-    //hidden:不显示侧边栏(桌面端)   drawer:抽屉模式(移动端不显示)   sidebar:显示侧边栏
+    // hidden:不显示侧边栏   drawer:抽屉模式(移动端不显示)   sidebar:显示侧边栏
+    // 使用 Tailwind 标准断点：mobile(<768px), tablet(768px-1023px), desktop(>=1024px)
     layout: {
-      // 移动端：抽屉模式
+      // 移动端：<768px
       mobile: "sidebar",
-      // 平板端：显示侧边栏
+      // 平板端：768px-1023px
       tablet: "sidebar",
-      // 桌面端：显示侧边栏
+      // 桌面端：>=1024px
       desktop: "sidebar",
     },
   },

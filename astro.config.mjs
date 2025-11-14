@@ -26,9 +26,10 @@ import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
 import { remarkMermaid } from "./src/plugins/remark-mermaid.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
 import mdx from "@astrojs/mdx";
+import searchIndexer from "./src/integrations/searchIndex.mts";
 // https://astro.build/config
 export default defineConfig({
-	site: "https://blog.wuenrong.com/",
+	site: siteConfig.site_url,
 
 	base: "/",
 	trailingSlash: "always",
@@ -67,15 +68,17 @@ export default defineConfig({
 			},
 		}),
 		expressiveCode({
-			themes: [expressiveCodeConfig.theme, expressiveCodeConfig.theme],
+			themes: [expressiveCodeConfig.darkTheme, expressiveCodeConfig.lightTheme],
+			useDarkModeMediaQuery: false,
+			themeCssSelector: (theme) => `[data-theme='${theme.name}']`,
 			plugins: [
 				pluginCollapsibleSections(),
 				pluginLineNumbers(),
-				pluginLanguageBadge(),
+				// pluginLanguageBadge(),
 				pluginCustomCopyButton(),
 			],
 			defaultProps: {
-				wrap: true,
+				wrap: false,
 				overridesByLang: {
 					shellsession: {
 						showLineNumbers: false,
@@ -83,23 +86,12 @@ export default defineConfig({
 				},
 			},
 			styleOverrides: {
-				codeBackground: "var(--codeblock-bg)",
 				borderRadius: "0.75rem",
-				borderColor: "none",
 				codeFontSize: "0.875rem",
 				codeFontFamily:
 					"'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
 				codeLineHeight: "1.5rem",
 				frames: {
-					editorBackground: "var(--codeblock-bg)",
-					terminalBackground: "var(--codeblock-bg)",
-					terminalTitlebarBackground: "var(--codeblock-topbar-bg)",
-					editorTabBarBackground: "var(--codeblock-topbar-bg)",
-					editorActiveTabBackground: "none",
-					editorActiveTabIndicatorBottomColor: "var(--primary)",
-					editorActiveTabIndicatorTopColor: "none",
-					editorTabBarBorderBottomColor: "var(--codeblock-topbar-bg)",
-					terminalTitlebarBorderBottomColor: "none",
 				},
 				textMarkers: {
 					delHue: 0,
@@ -128,10 +120,14 @@ export default defineConfig({
 				if (pathname === '/guestbook/' && !siteConfig.pages.guestbook) {
 					return false;
 				}
+				if (pathname === '/bangumi/' && !siteConfig.pages.bangumi) {
+					return false;
+				}
 
 				return true;
 			},
 		}),
+    searchIndexer(),
     mdx()
 	],
 	markdown: {

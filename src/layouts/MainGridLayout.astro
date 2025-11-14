@@ -3,6 +3,8 @@ import BackToTop from "@components/control/BackToTop.astro";
 import Footer from "@components/layout/Footer.astro";
 import Navbar from "@components/layout/Navbar.astro";
 import SideBar from "@components/layout/SideBar.astro";
+import LeftSideBar from "@components/layout/LeftSideBar.astro";
+import RightSideBar from "@components/layout/RightSideBar.astro";
 import SpineModel from "@components/widget/SpineModel.astro";
 import Live2DWidget from "@components/widget/Live2DWidget.astro";
 import type { MarkdownHeading } from "astro";
@@ -20,7 +22,7 @@ import {
 	MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
 } from "@/constants/constants";
 import { getBackgroundImages, isHomePage } from "@/utils/layout-utils";
-import { getResponsiveSidebarConfig, generateGridClasses, generateSidebarClasses, generateMainContentClasses } from "@/utils/responsive-utils";
+import { getResponsiveSidebarConfig, generateGridClasses, generateSidebarClasses, generateRightSidebarClasses, generateMainContentClasses } from "@/utils/responsive-utils";
 import Layout from "./Layout.astro";
 
 interface Props {
@@ -94,15 +96,16 @@ const mobileNonHomeBannerClass = !isHomePageCheck ? "mobile-hide-banner" : "";
 const mainPanelTop = isBannerMode && isBackgroundEnabled
 	? `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`
 	: "5.5rem";
-const mobileNonHomeMainTop = !isHomePageCheck ? "5.5rem" : mainPanelTop;
 
 // 当banner模式被禁用时，主内容区域应该始终从顶栏下面开始
+// 非首页在小于1024px时会通过 mobile-main-no-banner CSS类覆盖top值为5.5rem
 const finalMainPanelTop = isBannerMode && isBackgroundEnabled ? mainPanelTop : "5.5rem";
 
 // 获取响应式侧边栏配置
 const sidebarConfig = getResponsiveSidebarConfig();
 const { gridCols } = generateGridClasses(sidebarConfig);
 const sidebarClass = generateSidebarClasses(sidebarConfig);
+const rightSidebarClass = sidebarConfig.isBothSidebars ? generateRightSidebarClasses(sidebarConfig) : "";
 const mainContentClass = generateMainContentClasses(sidebarConfig);
 
 // 检查是否应该启用半透明效果
@@ -310,18 +313,37 @@ const transparentClass = shouldEnableTransparency
             </a>}
 
 
-            {(sidebarConfig.mobileShowSidebar || sidebarConfig.tabletShowSidebar || sidebarConfig.desktopShowSidebar) && <SideBar class={`${sidebarClass} ${transparentClass}`} headings={headings}></SideBar>}
-
+            {/* 渲染侧边栏 - 根据配置决定使用单侧或双侧边栏 */}
+            {sidebarConfig.isBothSidebars ? (
+                <>
+                    {/* 左侧边栏 */}
+                    {sidebarConfig.hasLeftComponents && (sidebarConfig.mobileShowSidebar || sidebarConfig.tabletShowSidebar || sidebarConfig.desktopShowSidebar) && (
+                        <LeftSideBar class={`${sidebarClass} ${transparentClass}`} headings={headings}></LeftSideBar>
+                    )}
+                </>
+            ) : (
+                <>
+                    {/* 单侧边栏布局 */}
+                    {(sidebarConfig.mobileShowSidebar || sidebarConfig.tabletShowSidebar || sidebarConfig.desktopShowSidebar) && (
+                        <SideBar class={`${sidebarClass} ${transparentClass}`} headings={headings}></SideBar>
+                    )}
+                </>
+            )}
+                    
+            {/* 主内容区 - 始终渲染，确保 Swup 容器存在 */}
             <main id="swup-container" class={`${mainContentClass} transition-main`}>
                 <div id="content-wrapper" class="onload-animation transition-leaving">
-                    <!-- the overflow-hidden here prevent long text break the layout-->
-                    <!-- make id different from windows.swup global property -->
                     <slot></slot>
                     <div class="footer col-span-2 onload-animation hidden lg:block">
                         <Footer></Footer>
                     </div>
                 </div>
             </main>
+            
+            {/* 右侧边栏 - 仅双侧边栏模式 */}
+            {sidebarConfig.isBothSidebars && sidebarConfig.hasRightComponents && (sidebarConfig.mobileShowSidebar || sidebarConfig.tabletShowSidebar || sidebarConfig.desktopShowSidebar) && (
+                <RightSideBar class={`${rightSidebarClass} ${transparentClass}`} headings={headings}></RightSideBar>
+            )}
 
             <div class="footer col-span-2 onload-animation block lg:hidden">
                 <Footer></Footer>

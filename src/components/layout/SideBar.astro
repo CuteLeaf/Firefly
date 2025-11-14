@@ -7,6 +7,8 @@ import Profile from "@/components/content/Profile.astro";
 import Tags from "@/components/widget/Tags.astro";
 import TOC from "@/components/widget/TOC.astro";
 import Advertisement from "@/components/widget/Advertisement.astro";
+import SiteStats from "@/components/widget/SiteStats.astro";
+import Calendar from "@/components/widget/Calendar.astro";
 
 interface Props {
   class?: string;
@@ -20,9 +22,7 @@ const topComponents = widgetManager.getComponentsByPosition("top");
 const stickyComponents = widgetManager.getComponentsByPosition("sticky");
 
 // 提取客户端需要的数据
-const breakpoints = widgetManager.getBreakpoints();
 const sidebarConfig = {
-  breakpoints: breakpoints,
   shouldShowSidebar: {
     mobile: widgetManager.shouldShowSidebar("mobile"),
     tablet: widgetManager.shouldShowSidebar("tablet"),
@@ -38,6 +38,8 @@ const componentMap = {
   tags: Tags,
   toc: TOC,
   advertisement: Advertisement,
+  stats: SiteStats,
+  calendar: Calendar,
 };
 
 // 渲染组件的辅助函数
@@ -83,7 +85,7 @@ function renderComponent(component: any, index: number, _components: any[]) {
     stickyComponents.length > 0 && (
       <div
         id="sidebar-sticky"
-        class="transition-all duration-700 flex flex-col w-full gap-4 top-4 sticky top-4"
+        class="transition-all duration-700 flex flex-col w-full gap-4 sticky top-4"
       >
         {stickyComponents.map((component, index) => {
           const renderData = renderComponent(

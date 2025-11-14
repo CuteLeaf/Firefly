@@ -1,0 +1,97 @@
+---
+interface Filter {
+  value: string;
+  label: string;
+  count?: number;
+}
+
+interface Props {
+  filters: Filter[];
+  activeFilter: string;
+  sectionId: string;
+}
+
+const { filters, activeFilter, sectionId } = Astro.props;
+---
+
+<div class="flex flex-wrap gap-1.5 mb-4">
+  {filters.map((filter) => (
+    <button
+      class:list={[
+        "px-3 py-1 rounded-full text-xs font-medium transition-all duration-200",
+        {
+          "bg-[var(--primary)] text-white shadow-md": filter.value === activeFilter,
+          "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600": filter.value !== activeFilter
+        }
+      ]}
+      data-filter={filter.value}
+      data-section={sectionId}
+      type="button"
+    >
+      {filter.label}
+      {filter.count !== undefined && (
+        <span class="ml-1">({filter.count})</span>
+      )}
+    </button>
+  ))}
+</div>
+
+<script is:inline define:vars={{ sectionId }}>
+  function initFilterControls() {
+    const filterButtons = document.querySelectorAll(`[data-section="${sectionId}"][data-filter]`);
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const filter = this.dataset.filter;
+        const currentSectionId = this.dataset.section;
+
+        // Update active filter button for this section
+        const sectionButtons = document.querySelectorAll(`[data-section="${currentSectionId}"][data-filter]`);
+        sectionButtons.forEach(btn => {
+          btn.classList.remove('bg-[var(--primary)]', 'text-white', 'shadow-md');
+          btn.classList.add('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200', 'dark:bg-gray-700', 'dark:text-gray-300', 'dark:hover:bg-gray-600');
+        });
+
+        this.classList.remove('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200', 'dark:bg-gray-700', 'dark:text-gray-300', 'dark:hover:bg-gray-600');
+        this.classList.add('bg-[var(--primary)]', 'text-white', 'shadow-md');
+
+        // Filter items
+        const items = document.querySelectorAll(`[data-item-section="${currentSectionId}"]`);
+        items.forEach(item => {
+          const itemStatus = item.dataset.itemStatus;
+
+          if (filter === 'all' || itemStatus === filter) {
+            item.classList.remove('hidden');
+            item.style.display = 'block';
+          } else {
+            item.classList.add('hidden');
+            item.style.display = 'none';
+          }
+        });
+
+        // Update pagination
+        updatePagination(currentSectionId);
+      });
+    });
+  }
+
+  function updatePagination(sectionId) {
+    const visibleItems = document.querySelectorAll(`[data-item-section="${sectionId}"]:not(.hidden)`);
+    const pagination = document.querySelector(`[data-pagination-section="${sectionId}"]`);
+
+    if (pagination) {
+      // Trigger pagination update
+      const event = new CustomEvent('updatePagination', {
+        detail: { visibleCount: visibleItems.length }
+      });
+      pagination.dispatchEvent(event);
+    }
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFilterControls);
+  } else {
+    initFilterControls();
+  }
+</script>

@@ -10,7 +10,7 @@
 
 ---
 
-[**🖥️在线预览(EdgeOne)**](https://firefly.cuteleaf.cn/) /
+[**🖥️在线预览**](https://firefly.cuteleaf.cn/) /
 [**📝使用文档**](https://docs-firefly.cuteleaf.cn/) /
 [**🍀我的博客**](https://blog.cuteleaf.cn) 
 
@@ -24,14 +24,9 @@
 
 🔧 高度可配置: 大部分功能模块均可通过配置文件自定义
 
-<img alt="firefly" src="./docs/images/1.png" />
+<img alt="firefly" src="./docs/images/1.webp" />
 
-<table>
-  <tr>
-    <td valign="top"><img src="./docs/images/2.png"></td>
-    <td valign="top"><img src="./docs/images/3.png"></td>
-  </tr>
- </table>
+**更多布局配置及演示请查看：[https://firefly.cuteleaf.cn/posts/layout/firefly-layout-system/](https://firefly.cuteleaf.cn/posts/firefly-layout-system/)**
 
 ## ✨ 功能特性
 
@@ -54,7 +49,7 @@
 
 ### 页面组件
 
-- [x] **文章目录 (TOC)** - 自动生成，支持桌面端和移动端
+- [x] **文章目录** - 自动生成，支持桌面端和移动端
 - [x] **侧边栏配置** - 可关闭/切换左右位置，丰富的侧边栏组件
 - [x] **导航栏定制** - Logo、标题、链接全面自定义
 - [x] **友情链接** - 精美的友链展示卡片
@@ -110,8 +105,12 @@
    git clone https://github.com/Cuteleaf/Firefly.git
    cd Firefly
    ```
-
-2. **安装依赖：**
+   **先 [Fork](https://github.com/CuteLeaf/Firefly/fork) 到自己仓库在克隆（推荐）**
+   ```bash
+   git clone https://github.com/you-github-name/Firefly.git
+   cd Firefly
+   ```
+3. **安装依赖：**
    ```bash
    # 如果没有安装 pnpm，先安装
    npm install -g pnpm
@@ -120,18 +119,17 @@
    pnpm install
    ```
 
-3. **配置博客：**
+4. **配置博客：**
    - 编辑 `src/config/` 目录下的配置文件自定义博客设置
 
-4. **启动开发服务器：**
+5. **启动开发服务器：**
    ```bash
    pnpm dev
    ```
    博客将在 `http://localhost:4321` 可用
 
 ### 平台托管部署
-
-- **参考[官方指南](https://docs.astro.build/zh-cn/guides/deploy/)将博客部署至 Vercel, Netlify, GitHub Pages 等。**
+- **参考[官方指南](https://docs.astro.build/zh-cn/guides/deploy/)将博客部署至 Vercel, Netlify, GitHub Pages, Cloudflare Pages, EdgeOne Pages 等。**
 
 ## 📖 配置说明
 
@@ -175,7 +173,7 @@ image: ./cover.jpg  # 或使用 "api" 来启用随机封面图
 tags: [Foo, Bar]
 category: Front-end
 draft: false
-lang: jp      # 仅当文章语言与 `config.ts` 中的网站语言不同时需要设置
+lang: zh-CN      # 仅当文章语言与 `siteConfig.ts` 中的网站语言不同时需要设置
 ---
 ```
 
@@ -193,33 +191,13 @@ lang: jp      # 仅当文章语言与 `config.ts` 中的网站语言不同时需
 | `pnpm astro ...`                  | 执行 `astro add`, `astro check` 等指令 |
 | `pnpm astro --help`               | 显示 Astro CLI 帮助                   |
 
-## 💝 赞助Firefly
-
-如果 Firefly 对你有帮助，欢迎通过以下方式赞助支持项目的发展：
-
-<table>
-  <tr>
-    <td align="center">
-      <strong>支付宝</strong><br/>
-      <img src="./docs/images/sponsor/alipay.png" width="200" alt="支付宝收款码" />
-    </td>
-    <td align="center">
-      <strong>微信</strong><br/>
-      <img src="./docs/images/sponsor/wechat.png" width="200" alt="微信收款码" />
-    </td>
-    <td align="center">
-      <strong>爱发电</strong><br/>
-      <img src="./docs/images/sponsor/afdian.png" width="200" alt="爱发电" />
-    </td>
-  </tr>
-</table>
-
 ## 🙏 致谢
 
 - 感谢原始 [Fuwari](https://github.com/saicaca/fuwari) 模板
-- 感谢基于Fuwari二次开发的[Mizuki](https://github.com/matsuzaka-yuki/Mizuki) 模板
+- 感谢基于Fuwari二次开发的 [Mizuki](https://github.com/matsuzaka-yuki/Mizuki) 模板
 - 感谢b站up[公公的日常](https://space.bilibili.com/3546750017080050)提供的Q版 流萤 看板娘切片数据模型
 - 使用 [Astro](https://astro.build) 和 [Tailwind CSS](https://tailwindcss.com) 构建
+- 使用 [MetingJS](https://github.com/metowolf/MetingJS) 和 [APlayer](https://github.com/MoePlayer/APlayer) 音乐播放器
 - 图标来自 [Iconify](https://iconify.design/)
 
 ## 🍀 贡献者

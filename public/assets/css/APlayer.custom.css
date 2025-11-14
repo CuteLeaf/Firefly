@@ -1,0 +1,480 @@
+.aplayer.aplayer-fixed {
+  left: unset !important;
+  right: 2rem !important;
+  bottom: 2rem !important;
+  color: #000;
+  width: 100%;
+  background: transparent !important;
+  box-shadow: none !important;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 展开状态时始终显示背景（包括 local 模式和 meting 模式） */
+.aplayer.aplayer-fixed:not(.aplayer-narrow) {
+  background: var(--card-bg, white) !important;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.07), 0 1px 5px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+.aplayer.aplayer-fixed:not(.aplayer-narrow) .aplayer-body {
+  background: var(--card-bg, white) !important;
+}
+
+/* 暗色主题：展开状态时显示背景 */
+:root.dark .aplayer.aplayer-fixed:not(.aplayer-narrow) {
+  background: var(--card-bg, oklch(0.23 0.015 var(--hue))) !important;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 5px 0 rgba(0, 0, 0, 0.4) !important;
+}
+
+:root.dark .aplayer.aplayer-fixed:not(.aplayer-narrow) .aplayer-body {
+  background: var(--card-bg, oklch(0.23 0.015 var(--hue))) !important;
+}
+
+/* 收缩状态下鼠标悬浮时显示背景 */
+.aplayer.aplayer-fixed.aplayer-narrow:hover {
+  background: var(--card-bg, white) !important;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.07), 0 1px 5px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 暗色主题悬浮效果 */
+:root.dark .aplayer.aplayer-fixed.aplayer-narrow:hover {
+  background: var(--card-bg, oklch(0.23 0.015 var(--hue))) !important;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 5px 0 rgba(0, 0, 0, 0.4) !important;
+}
+
+:root.dark .aplayer.aplayer-fixed {
+  color: var(--btn-content, oklch(0.75 0.1 var(--hue)));
+}
+
+.aplayer.aplayer-fixed .aplayer-body {
+  left: unset !important;
+  right: 2rem !important;
+  width: 400px !important;
+  bottom: 2rem !important;
+  max-width: calc(100% - 18px);
+  padding-right: 0 !important;
+  background: transparent !important;
+  transition: background 0.3s ease;
+}
+
+.aplayer.aplayer-fixed .aplayer-miniswitcher {
+  right: unset;
+  left: -18px;
+  transform: rotate(180deg);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* 触摸设备：始终显示 miniswitcher 和背景 */
+@media (hover: none) and (pointer: coarse) {
+  .aplayer.aplayer-fixed .aplayer-miniswitcher {
+    display: block;
+    opacity: 1;
+    /* 触摸设备上半透明背景 */
+    background: rgba(200, 200, 200, 0.5) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  
+  /* 触摸设备暗色主题：半透明背景 */
+  :root.dark .aplayer.aplayer-fixed .aplayer-miniswitcher {
+    background: rgba(100, 100, 100, 0.5) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  
+  /* 触摸设备上始终显示背景 */
+  .aplayer.aplayer-fixed {
+    background: var(--card-bg, white) !important;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.07), 0 1px 5px 0 rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  :root.dark .aplayer.aplayer-fixed {
+    background: var(--card-bg, oklch(0.23 0.015 var(--hue))) !important;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 5px 0 rgba(0, 0, 0, 0.4) !important;
+  }
+}
+
+/* 非触摸设备：默认隐藏，悬停时显示 */
+@media (hover: hover) {
+  .aplayer.aplayer-fixed .aplayer-miniswitcher {
+    display: none;
+  }
+
+  /* 鼠标悬停在播放器上时显示 miniswitcher */
+  .aplayer.aplayer-fixed:hover .aplayer-miniswitcher {
+    display: block;
+    opacity: 1;
+  }
+
+  /* 收起状态下也支持悬停显示 */
+  .aplayer.aplayer-fixed.aplayer-narrow:hover .aplayer-miniswitcher {
+    display: block;
+    opacity: 1;
+  }
+
+  /* 列表展开状态时始终显示收缩按钮 */
+  .aplayer.aplayer-fixed.aplayer-withlist:not(.aplayer-narrow) .aplayer-miniswitcher {
+    display: block !important;
+    opacity: 1 !important;
+  }
+}
+
+/* 禁用初始化时的过渡动画，只在加载完成后恢复 */
+.aplayer.aplayer-fixed:not([data-initialized="true"]) .aplayer-body {
+  transition: none !important;
+}
+
+.aplayer.aplayer-fixed:not([data-initialized="true"]) .aplayer-info {
+  transition: none !important;
+}
+
+/* 缩小状态下禁用所有过渡动画 */
+.aplayer.aplayer-narrow .aplayer-body {
+  transition: none !important;
+}
+
+.aplayer.aplayer-narrow .aplayer-info {
+  transition: none !important;
+}
+
+/* ===== 移动端适配 ===== */
+@media (max-width: 768px) {
+  .aplayer.aplayer-fixed {
+    right: 0 !important;
+    bottom: 0rem !important;
+  }
+  .aplayer.aplayer-fixed .aplayer-body {
+    right: 0 !important;
+    bottom: 0rem !important;
+  }
+}
+
+/* ===== 平板适配 ===== */
+@media (min-width: 641px) and (max-width: 1280px) {
+  .aplayer.aplayer-fixed {
+    right: 0.5rem !important;
+    bottom: 2rem !important;
+  }
+  .aplayer.aplayer-fixed .aplayer-body {
+    right: 0.5rem !important;
+    bottom: 2rem !important;
+  }
+}
+
+/* 横屏模式适配 */
+@media (orientation: landscape) and (max-height: 640px) {
+  .aplayer.aplayer-fixed {
+    right: 0.5rem !important;
+    bottom: 2rem !important;
+  }
+  .aplayer.aplayer-fixed .aplayer-body {
+    right: 0.5rem !important;
+    bottom: 2rem !important;
+  }
+}
+
+/* ===== 封面播放特效 ===== */
+/* 封面基础样式 - 默认正方形（触摸设备） */
+.aplayer .aplayer-pic {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 1;
+}
+
+/* 确保封面图片适配 */
+.aplayer .aplayer-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 桌面端：圆形封面 */
+@media (hover: hover) {
+  .aplayer .aplayer-pic {
+    border-radius: 50%;
+  }
+  
+  .aplayer .aplayer-pic img {
+    border-radius: 50%;
+  }
+}
+
+/* 缩小状态下禁用过渡动画 */
+.aplayer.aplayer-narrow .aplayer-pic {
+  transition: none !important;
+}
+
+/* 旋转动画关键帧 */
+@keyframes aplayer-cover-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 亮色主题脉动动画 */
+@keyframes aplayer-cover-pulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  }
+}
+
+/* 暗色主题脉动动画 */
+@keyframes aplayer-cover-pulse-dark {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* 桌面端：播放状态旋转动画 */
+@media (hover: hover) {
+  /* 始终应用旋转动画，但通过 animation-play-state 控制播放/暂停 */
+  .aplayer .aplayer-pic {
+    animation: aplayer-cover-rotate 20s linear infinite,
+      aplayer-cover-pulse 2s ease-in-out infinite;
+    animation-play-state: paused;
+  }
+
+  /* 播放状态：恢复动画 */
+  .aplayer[data-playing="true"] .aplayer-pic,
+  .aplayer.aplayer-playing .aplayer-pic {
+    animation-play-state: running;
+  }
+
+  /* 暂停状态：暂停动画（保持当前位置） */
+  .aplayer[data-playing="false"] .aplayer-pic,
+  .aplayer.aplayer-pause .aplayer-pic {
+    animation-play-state: paused;
+  }
+
+  /* 暗色主题下的播放特效 */
+  :root.dark .aplayer[data-playing="true"] .aplayer-pic,
+  :root.dark .aplayer.aplayer-playing .aplayer-pic {
+    animation: aplayer-cover-rotate 20s linear infinite,
+      aplayer-cover-pulse-dark 2s ease-in-out infinite;
+    animation-play-state: running;
+  }
+
+  /* 暗色主题暂停状态 */
+  :root.dark .aplayer[data-playing="false"] .aplayer-pic,
+  :root.dark .aplayer.aplayer-pause .aplayer-pic {
+    animation: aplayer-cover-rotate 20s linear infinite,
+      aplayer-cover-pulse-dark 2s ease-in-out infinite;
+    animation-play-state: paused;
+  }
+}
+
+/* 触摸设备：无旋转动画，保持静态 */
+@media (hover: none) and (pointer: coarse) {
+  .aplayer .aplayer-pic {
+    animation: none !important;
+  }
+  
+  .aplayer[data-playing="true"] .aplayer-pic,
+  .aplayer.aplayer-playing .aplayer-pic,
+  .aplayer[data-playing="false"] .aplayer-pic,
+  .aplayer.aplayer-pause .aplayer-pic {
+    animation: none !important;
+    animation-play-state: paused !important;
+  }
+}
+
+/* 桌面端：播放时隐藏暂停按钮，暂停时显示播放按钮 */
+@media (hover: hover) {
+  /* 播放状态时隐藏暂停按钮（封面在转，不需要暂停按钮） */
+  .aplayer[data-playing="true"] .aplayer-pic .aplayer-pause,
+  .aplayer.aplayer-playing .aplayer-pic .aplayer-pause {
+    display: none !important;
+  }
+  
+  /* 播放状态时隐藏播放按钮（因为已经播放了） */
+  .aplayer[data-playing="true"] .aplayer-pic .aplayer-play,
+  .aplayer.aplayer-playing .aplayer-pic .aplayer-play {
+    display: none !important;
+  }
+  
+  /* 暂停状态时隐藏暂停按钮，只显示播放按钮 */
+  .aplayer[data-playing="false"] .aplayer-pic .aplayer-pause,
+  .aplayer.aplayer-pause .aplayer-pic .aplayer-pause,
+  .aplayer:not([data-playing="true"]):not(.aplayer-playing) .aplayer-pic .aplayer-pause {
+    display: none !important;
+  }
+  
+  /* 暂停状态时显示播放按钮（通过悬停显示） */
+  .aplayer[data-playing="false"] .aplayer-pic:hover .aplayer-play,
+  .aplayer.aplayer-pause .aplayer-pic:hover .aplayer-play,
+  .aplayer:not([data-playing="true"]):not(.aplayer-playing) .aplayer-pic:hover .aplayer-play {
+    display: block !important;
+  }
+}
+
+/* ===== 亮色主题适配 ===== */
+
+/* ===== 暗色主题适配 ===== */
+:root.dark .aplayer {
+  background: var(--card-bg, oklch(0.23 0.015 var(--hue)));
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 5px 0 rgba(0, 0, 0, 0.4);
+}
+
+:root.dark .aplayer.aplayer-withlist .aplayer-info {
+  border-bottom: 1px solid var(--line-divider, rgba(255, 255, 255, 0.08));
+}
+
+:root.dark .aplayer.aplayer-fixed .aplayer-list {
+  border: 1px solid var(--line-divider, rgba(255, 255, 255, 0.08));
+  border-bottom: none;
+}
+
+:root.dark .aplayer.aplayer-fixed .aplayer-body {
+  background: var(--card-bg, oklch(0.23 0.015 var(--hue)));
+}
+
+:root.dark .aplayer.aplayer-fixed .aplayer-lrc {
+  text-shadow: -1px -1px 0 var(--card-bg, oklch(0.23 0.015 var(--hue)));
+}
+
+:root.dark .aplayer.aplayer-fixed .aplayer-info {
+  border-top: 1px solid var(--line-divider, rgba(255, 255, 255, 0.08));
+}
+
+:root.dark .aplayer .aplayer-info .aplayer-music .aplayer-author {
+  color: var(--content-meta, rgba(255, 255, 255, 0.6));
+}
+
+:root.dark
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+:root.dark
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar
+  .aplayer-loaded {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+:root.dark .aplayer .aplayer-info .aplayer-controller .aplayer-time {
+  color: var(--content-meta, rgba(255, 255, 255, 0.6));
+}
+
+:root.dark
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-time
+  .aplayer-icon
+  path {
+  fill: var(--content-meta, rgba(255, 255, 255, 0.6));
+}
+
+:root.dark
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-time
+  .aplayer-icon:hover
+  path {
+  fill: var(--btn-content, oklch(0.75 0.1 var(--hue)));
+}
+
+:root.dark
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-volume-wrap
+  .aplayer-volume-bar-wrap
+  .aplayer-volume-bar {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+:root.dark .aplayer .aplayer-lrc:before {
+  background: linear-gradient(
+    180deg,
+    var(--card-bg, oklch(0.23 0.015 var(--hue))) 0,
+    hsla(0, 0%, 100%, 0)
+  );
+}
+
+:root.dark .aplayer .aplayer-lrc:after {
+  background: linear-gradient(
+    180deg,
+    hsla(0, 0%, 100%, 0) 0,
+    rgba(255, 255, 255, 0.1)
+  );
+}
+
+:root.dark .aplayer .aplayer-lrc p {
+  color: var(--content-meta, rgba(255, 255, 255, 0.6));
+}
+
+:root.dark .aplayer .aplayer-list ol::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+:root.dark .aplayer .aplayer-list ol::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+:root.dark .aplayer .aplayer-list ol li {
+  border-top: 1px solid var(--line-divider, rgba(255, 255, 255, 0.08));
+}
+
+:root.dark .aplayer .aplayer-list ol li:hover {
+  background: var(--btn-plain-bg-hover, oklch(0.3 0.035 var(--hue)));
+}
+
+:root.dark .aplayer .aplayer-list ol li.aplayer-list-light {
+  background: var(--btn-plain-bg-hover, oklch(0.3 0.035 var(--hue)));
+}
+
+:root.dark .aplayer .aplayer-list ol li .aplayer-list-index {
+  color: var(--content-meta, rgba(255, 255, 255, 0.6));
+}
+
+:root.dark .aplayer .aplayer-list ol li .aplayer-list-author {
+  color: var(--content-meta, rgba(255, 255, 255, 0.6));
+}
+
+:root.dark .aplayer .aplayer-notice {
+  background-color: var(--card-bg, oklch(0.23 0.015 var(--hue)));
+  color: var(--content-meta, rgba(255, 255, 255, 0.6));
+}
+
+:root.dark .aplayer .aplayer-miniswitcher {
+  background: var(--btn-regular-bg, oklch(0.33 0.035 var(--hue)));
+  border-top: 1px solid var(--line-divider, #e5e7eb);
+  border-bottom: 1px solid var(--line-divider, #e5e7eb);
+  border-left: 1px solid var(--line-divider, #e5e7eb);
+}
+
+:root.dark .aplayer .aplayer-miniswitcher .aplayer-icon path {
+  fill: var(--content-meta, rgba(255, 255, 255, 0.6));
+}
+
+:root.dark .aplayer .aplayer-miniswitcher .aplayer-icon:hover path {
+  fill: var(--btn-content, oklch(0.75 0.1 var(--hue)));
+}
+
+:root.dark .aplayer .aplayer-info .aplayer-music .aplayer-title {
+  color: var(--btn-content, oklch(0.75 0.1 var(--hue)));
+}
+
+:root.dark .aplayer .aplayer-list ol li .aplayer-list-title {
+  color: var(--btn-content, oklch(0.75 0.1 var(--hue)));
+}

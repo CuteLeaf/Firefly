@@ -7,7 +7,7 @@ import {
   WALLPAPER_OVERLAY,
   WALLPAPER_NONE,
 } from "@constants/constants";
-import { siteConfig } from "../config";
+import { siteConfig, expressiveCodeConfig } from "../config";
 import type { LIGHT_DARK_MODE, WALLPAPER_MODE } from "@/types/config";
 
 // Declare global functions
@@ -104,7 +104,7 @@ export function applyThemeToDocument(theme: LIGHT_DARK_MODE) {
   // 1. dark类状态是否改变
   // 2. expressiveCode主题是否需要更新
   const needsThemeChange = currentIsDark !== targetIsDark;
-  const expectedTheme = targetIsDark ? "github-dark" : "github-light";
+  const expectedTheme = targetIsDark ? expressiveCodeConfig.darkTheme : expressiveCodeConfig.lightTheme;
   const needsCodeThemeUpdate = currentTheme !== expectedTheme;
 
   // 如果既不需要主题切换也不需要代码主题更新，直接返回
@@ -129,7 +129,7 @@ export function applyThemeToDocument(theme: LIGHT_DARK_MODE) {
     }
 
     // Set the theme for Expressive Code based on current mode
-    const expressiveTheme = targetIsDark ? "github-dark" : "github-light";
+    const expressiveTheme = targetIsDark ? expressiveCodeConfig.darkTheme : expressiveCodeConfig.lightTheme;
     document.documentElement.setAttribute("data-theme", expressiveTheme);
 
     // 强制重新渲染代码块 - 解决从首页进入文章页面时的渲染问题
@@ -200,7 +200,7 @@ export function setupSystemThemeListener() {
     }
     
     // Set the theme for Expressive Code
-    const expressiveTheme = isDark ? "github-dark" : "github-light";
+    const expressiveTheme = isDark ? expressiveCodeConfig.darkTheme : expressiveCodeConfig.lightTheme;
     document.documentElement.setAttribute("data-theme", expressiveTheme);
     
     // 移除过渡保护

@@ -2,7 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getPostUrlBySlug } from "@utils/url-utils";
 import PostCard from "@/components/content/PostCard.astro";
-import { siteConfig } from "@/config";
+import { siteConfig, sidebarLayoutConfig } from "@/config";
 
 const { page } = Astro.props;
 
@@ -11,6 +11,9 @@ const interval = 50;
 
 // 类型别名避免Fragment语法问题
 type PostEntry = CollectionEntry<"posts">;
+
+// 检查是否启用双侧边栏
+const isBothSidebars = sidebarLayoutConfig.position === "both";
 ---
 
 <div
@@ -18,6 +21,7 @@ type PostEntry = CollectionEntry<"posts">;
   class="transition flex flex-col gap-4 md:gap-4 mb-4"
   style="opacity: 0;"
   data-default-layout={siteConfig.postListLayout.defaultMode}
+  data-both-sidebars={isBothSidebars}
 >
   {
     page.data.map((entry: PostEntry) => (
@@ -46,6 +50,9 @@ type PostEntry = CollectionEntry<"posts">;
     const postListContainer = document.getElementById("post-list-container");
     if (!postListContainer) return;
 
+    // 检查是否启用双侧边栏
+    const isBothSidebars = postListContainer.getAttribute("data-both-sidebars") === "true";
+
     // 检查屏幕宽度
     const screenWidth = window.innerWidth;
     const isSmallScreen = screenWidth < 1200;
@@ -56,8 +63,8 @@ type PostEntry = CollectionEntry<"posts">;
       postListContainer.getAttribute("data-default-layout") || "list";
     let currentLayout = savedLayout || defaultLayout;
 
-    // 如果屏幕宽度小于1200px，强制使用列表模式
-    if (isSmallScreen) {
+    // 如果启用双侧边栏或屏幕宽度小于1200px，强制使用列表模式
+    if (isBothSidebars || isSmallScreen) {
       currentLayout = "list";
     }
 
@@ -99,11 +106,17 @@ type PostEntry = CollectionEntry<"posts">;
   // 监听布局变化事件
   window.addEventListener("layoutChange", function (event: CustomEvent) {
     const newLayout = event.detail.layout;
-    // 检查屏幕宽度，如果小于1200px则强制使用列表模式
+    const postListContainer = document.getElementById("post-list-container");
+    if (!postListContainer) return;
+
+    // 检查是否启用双侧边栏
+    const isBothSidebars = postListContainer.getAttribute("data-both-sidebars") === "true";
+    
+    // 检查屏幕宽度，如果小于1200px或启用双侧边栏则强制使用列表模式
     const screenWidth = window.innerWidth;
     const isSmallScreen = screenWidth < 1200;
 
-    if (isSmallScreen) {
+    if (isBothSidebars || isSmallScreen) {
       updatePostListLayout("list");
     } else {
       updatePostListLayout(newLayout);

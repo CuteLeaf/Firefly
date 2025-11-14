@@ -15,6 +15,8 @@ export const WIDGET_COMPONENT_MAP = {
   tags: "../components/widget/Tags.astro",
   toc: "../components/widget/TOC.astro",
   advertisement: "../components/widget/Advertisement.astro",
+  stats: "../components/widget/SiteStats.astro",
+  calendar: "../components/widget/Calendar.astro",
   custom: null, // 自定义组件需要在配置中指定路径
 } as const;
 
@@ -50,11 +52,75 @@ export class WidgetManager {
   /**
    * 根据位置获取组件列表
    * @param position 组件位置：'top' | 'sticky'
+   * @param sidebar 侧边栏位置（可选）：'left' | 'right'
    */
-  getComponentsByPosition(position: "top" | "sticky"): WidgetComponentConfig[] {
-    return this.enabledComponents.filter(
+  getComponentsByPosition(position: "top" | "sticky", sidebar?: "left" | "right"): WidgetComponentConfig[] {
+    let components = this.enabledComponents.filter(
       (component) => component.position === position
     );
+    
+    // 如果指定了侧边栏位置，则进一步过滤
+    if (sidebar) {
+      components = components.filter((component) => {
+        // 如果组件没有指定 sidebar 属性,默认分配到左侧
+        const componentSidebar = component.sidebar || "left";
+        return componentSidebar === sidebar;
+      });
+    } else if (this.config.position === "left" || this.config.position === "right") {
+      // 单侧边栏模式下，只显示对应侧的组件
+      const currentSidebar = this.config.position;
+      components = components.filter((component) => {
+        const componentSidebar = component.sidebar || "left";
+        return componentSidebar === currentSidebar;
+      });
+    }
+    
+    return components;
+  }
+
+  /**
+   * 检查指定侧边栏是否有组件
+   * @param sidebar 侧边栏位置：'left' | 'right'
+   */
+  hasComponentsInSidebar(sidebar: "left" | "right"): boolean {
+    if (this.config.position !== "both") {
+      return false;
+    }
+    
+    return this.enabledComponents.some((component) => {
+      // 如果组件没有指定 sidebar 属性,默认分配到左侧
+      const componentSidebar = component.sidebar || "left";
+      return componentSidebar === sidebar;
+    });
+  }
+
+  /**
+   * 检查指定侧边栏在特定设备上是否有可见组件
+   * @param sidebar 侧边栏位置：'left' | 'right'
+   * @param deviceType 设备类型：'mobile' | 'tablet' | 'desktop'
+   * 注：tablet 对应 Tailwind 的 md 到 lg 之间 (768px-1023px)
+   */
+  hasVisibleComponentsInSidebar(sidebar: "left" | "right", deviceType: "mobile" | "tablet" | "desktop"): boolean {
+    if (this.config.position !== "both") {
+      return false;
+    }
+    
+    // 双侧边栏模式下，右侧边栏在平板端隐藏
+    if (deviceType === "tablet" && sidebar === "right") {
+      return false;
+    }
+    
+    return this.enabledComponents.some((component) => {
+      // 如果组件没有指定 sidebar 属性,默认分配到左侧
+      const componentSidebar = component.sidebar || "left";
+      if (componentSidebar !== sidebar) {
+        return false;
+      }
+      
+      // 检查组件是否在该设备上隐藏
+      const hiddenDevices = component.responsive?.hidden || [];
+      return !hiddenDevices.includes(deviceType);
+    });
   }
 
   /**
@@ -90,21 +156,10 @@ export class WidgetManager {
       classes.push(component.class);
     }
 
-    // 添加响应式隐藏类名
-    if (component.responsive?.hidden) {
-      component.responsive.hidden.forEach((device) => {
-        switch (device) {
-          case "mobile":
-            classes.push("hidden", "md:block");
-            break;
-          case "tablet":
-            classes.push("md:hidden", "lg:block");
-            break;
-          case "desktop":
-            classes.push("lg:hidden");
-            break;
-        }
-      });
+    // 双侧边栏模式下，右侧边栏的组件在平板端自动隐藏
+    // 使用 Tailwind 标准断点：lg(1024px) 以下全部隐藏
+    if (this.config.position === "both" && component.sidebar === "right") {
+      classes.push("hidden", "lg:block");
     }
 
     return classes.join(" ");
@@ -163,13 +218,6 @@ export class WidgetManager {
 
     const layoutMode = this.config.responsive.layout[deviceType];
     return layoutMode === "sidebar";
-  }
-
-  /**
-   * 获取设备断点配置
-   */
-  getBreakpoints() {
-    return this.config.responsive.breakpoints;
   }
 
   /**

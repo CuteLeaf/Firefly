@@ -28,8 +28,8 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 
     // 备用 API 配置（当主 API 失败时使用）
     fallbackApis: [
-      "https://api.injahow.cn/bete/?server=:server&type=:type&id=:id",
-      "https://api.uomg.com/api/other/163music?format=json&id=:id",
+      "https://api.injahow.cn/meting/?server=:server&type=:type&id=:id",
+      "https://api.moeyao.cn/meting/?server=:server&type=:type&id=:id",
     ],
 
     // MetingJS 脚本路径
@@ -54,8 +54,8 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 
   // APlayer 配置选项
   player: {
-    // 是否自动播放 浏览器可能会阻止，需用户交互一次网页后才自动播放
-    autoplay: true,
+    // 是否自动播放  浏览器可能会阻止，需用户交互一次网页后才自动播放
+    autoplay: false,
 
     // 主题色
     theme: "var(--btn-regular-bg)",
@@ -75,8 +75,8 @@ export const musicPlayerConfig: MusicPlayerConfig = {
     // 是否互斥播放（同时只能播放一个播放器）
     mutex: true,
 
-    // 歌词类型：0=不显示, 1=显示（需要提供 lrc 字段）, 2=显示（从 HTML 内容读取）, 3=异步加载（从 API 获取）
-    lrcType: 3,
+    // local歌词类型：0=不显示, 1=显示（需要提供 lrc 字段）, 2=显示（从 HTML 内容读取）
+    lrcType: 1,
 
     // 歌词是否默认隐藏（当 lrcType 不为 0 时，可以通过此选项控制初始显示状态）
     // true=默认隐藏（用户可以通过歌词按钮手动显示）, false=默认显示

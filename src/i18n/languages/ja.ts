@@ -48,6 +48,7 @@ export const ja: Translation = {
   [Key.publishedAt]: "公開日",
   [Key.license]: "ライセンス",
   [Key.anime]: "アニメ",
+  [Key.bangumi]: "バングミ",
 
   // アニメページ
   [Key.animeTitle]: "私のアニメリスト",
@@ -65,6 +66,46 @@ export const ja: Translation = {
   [Key.animeEmpty]: "アニメデータなし",
   [Key.animeEmptyBangumi]:
     "Bangumiの設定またはネットワーク接続を確認してください",
+
+  // バングミフィルターと状態文本
+  [Key.bangumiTitle]: "私のバングミ",
+  [Key.bangumiSubtitle]: "私の二次元の旅を記録する",
+  [Key.bangumiFilterAll]: "すべて",
+  [Key.bangumiFilterWatched]: "見た",
+  [Key.bangumiFilterWatching]: "視聴中",
+  [Key.bangumiFilterWish]: "見たい",
+  [Key.bangumiFilterOnHold]: "保留",
+  [Key.bangumiFilterDropped]: "中断",
+  [Key.bangumiStatusWish]: "見たい",
+  [Key.bangumiStatusWatched]: "見た",
+  [Key.bangumiStatusWatching]: "視聴中",
+  [Key.bangumiStatusOnHold]: "保留",
+  [Key.bangumiStatusDropped]: "中断",
+  [Key.bangumiStatusUnknown]: "不明",
+  [Key.bangumiNoData]: "データなし",
+  [Key.bangumiNoDataDescription]: "このカテゴリに項目がありません",
+  [Key.bangumiEmpty]: "データなし",
+  [Key.bangumiEmptyReason]: "考えられる理由：ユーザー名が存在しない、ネットワーク接続の問題、またはAPI制限",
+  [Key.bangumiUsername]: "ユーザー名",
+  [Key.bangumiApi]: "API",
+  [Key.bangumiConfigTip]: "ヒント：ページ設定で正しいBangumiユーザー名を設定してください",
+  [Key.bangumiPrevPage]: "前へ",
+  [Key.bangumiNextPage]: "次へ",
+  [Key.bangumiCurrentPage]: "ページ",
+  [Key.bangumiTotalPages]: "の",
+  [Key.bangumiPage]: "ページ",
+
+  // バングミカテゴリ
+  [Key.bangumiCategoryBook]: "本",
+  [Key.bangumiCategoryAnime]: "アニメ",
+  [Key.bangumiCategoryMusic]: "音楽",
+  [Key.bangumiCategoryGame]: "ゲーム",
+  [Key.bangumiCategoryReal]: "実写",
+
+  // バングミデータ更新
+  [Key.bangumiLastUpdated]: "データ更新",
+  [Key.bangumiUpdatedAt]: "ビルド時間",
+  [Key.bangumiDataStatic]: "静的データ",
   
   // アニメ状態
   [Key.animeStatusAll]: "すべて",
@@ -172,4 +213,36 @@ export const ja: Translation = {
   [Key.sponsorGoTo]: "スポンサーへ",
   [Key.sponsorButton]: "サポート",
   [Key.sponsorButtonText]: "この記事が役に立ったなら、サポートをお願いします！",
+
+  // サイト統計
+  [Key.siteStats]: "サイト統計",
+  [Key.siteStatsPostCount]: "記事",
+  [Key.siteStatsCategoryCount]: "カテゴリー",
+  [Key.siteStatsTagCount]: "タグ",
+  [Key.siteStatsTotalWords]: "総文字数",
+  [Key.siteStatsRunningDays]: "運用日数",
+  [Key.siteStatsLastUpdate]: "最終活動",
+  [Key.siteStatsDaysAgo]: "{days} 日前",
+  [Key.siteStatsDays]: "{days} 日",
+
+  // カレンダーコンポーネント
+  [Key.calendarSunday]: "日",
+  [Key.calendarMonday]: "月",
+  [Key.calendarTuesday]: "火",
+  [Key.calendarWednesday]: "水",
+  [Key.calendarThursday]: "木",
+  [Key.calendarFriday]: "金",
+  [Key.calendarSaturday]: "土",
+  [Key.calendarJanuary]: "1月",
+  [Key.calendarFebruary]: "2月",
+  [Key.calendarMarch]: "3月",
+  [Key.calendarApril]: "4月",
+  [Key.calendarMay]: "5月",
+  [Key.calendarJune]: "6月",
+  [Key.calendarJuly]: "7月",
+  [Key.calendarAugust]: "8月",
+  [Key.calendarSeptember]: "9月",
+  [Key.calendarOctober]: "10月",
+  [Key.calendarNovember]: "11月",
+  [Key.calendarDecember]: "12月",
 };

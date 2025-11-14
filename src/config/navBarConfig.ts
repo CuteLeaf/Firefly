@@ -1,4 +1,4 @@
-import {LinkPreset, MeiliSearchConfig, NavBarConfig, NavBarLink, NavBarSearchMethod, NavBarSearchConfig} from "../types/config";
+import {LinkPreset, type NavBarConfig, type NavBarLink, NavBarSearchMethod, type NavBarSearchConfig} from "../types/config";
 import {siteConfig} from "./siteConfig";
 
 // 根据页面开关动态生成导航栏配置
@@ -44,6 +44,7 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
       ...(siteConfig.pages.anime ? [LinkPreset.Anime] : []), // 根据配置决定是否添加追番页面
       ...(siteConfig.pages.sponsor ? [LinkPreset.Sponsor] : []), // 根据配置决定是否添加赞助页面
       LinkPreset.About,
+      ...(siteConfig.pages.bangumi ? [LinkPreset.Bangumi] : []), // 根据配置决定是否添加番组计划页面
     ],
   });
   // 仅返回链接，其它导航搜索相关配置在模块顶层常量中独立导出
@@ -61,7 +62,6 @@ export const navBarSearchConfig: NavBarSearchConfig = {
     INDEX_NAME: 'posts',
     CONTENT_DIR: 'src/content/posts',
     MEILI_HOST: "http://localhost:7700",
-    MEILI_MASTER_KEY: "aVeryLongAndSecureMasterKey",
     PUBLIC_MEILI_HOST: "http://localhost:7700",
     PUBLIC_MEILI_SEARCH_KEY: "41134b15079da66ca545375edbea848a9b7173dff13be2028318fefa41ae8f2b",
   }

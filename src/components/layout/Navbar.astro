@@ -1,6 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
-import { siteConfig, navBarConfig, navBarSearchConfig } from "@/config";
+import { siteConfig, navBarConfig, navBarSearchConfig, sidebarLayoutConfig } from "@/config";
 import { LinkPresets } from "@/constants/link-presets";
 import { LinkPreset, type NavBarLink } from "@/types/config";
 import { url } from "@/utils/url-utils";
@@ -18,6 +18,10 @@ const className = Astro.props.class;
 
 // 检查是否允许切换壁纸模式
 const isWallpaperSwitchable = siteConfig.backgroundWallpaper.switchable ?? true;
+
+// 检查是否启用双侧边栏 - 双侧边栏时禁用网格布局切换
+const isBothSidebars = sidebarLayoutConfig.position === "both";
+const allowLayoutSwitch = siteConfig.postListLayout.allowSwitch && !isBothSidebars;
 
 // 获取导航栏透明模式配置
 const navbarTransparentMode =
@@ -73,7 +77,7 @@ let links: NavBarLink[] = navBarConfig.links.map(
                     </button>
             )}
             {isWallpaperSwitchable && <WallpaperSwitch client:load></WallpaperSwitch>}
-            <LayoutSwitchButton client:load currentLayout={siteConfig.postListLayout.defaultMode}></LayoutSwitchButton>
+            {allowLayoutSwitch && <LayoutSwitchButton client:load currentLayout={siteConfig.postListLayout.defaultMode}></LayoutSwitchButton>}
             <LightDarkSwitch client:load></LightDarkSwitch>
             <button aria-label="Menu" name="Nav Menu" class="btn-plain scale-animation rounded-lg w-11 h-11 active:scale-90 md:!hidden" id="nav-menu-switch">
                 <Icon name="material-symbols:menu-rounded" class="text-[1.25rem]"></Icon>

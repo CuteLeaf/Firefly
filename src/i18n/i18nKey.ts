@@ -46,6 +46,7 @@ enum I18nKey {
   friends = "friends",
   guestbook = "guestbook",
   anime = "anime",
+  bangumi = "bangumi",
 
   // 番剧页面
   animeTitle = "animeTitle",
@@ -61,7 +62,47 @@ enum I18nKey {
   animeStudio = "animeStudio",
   animeEmpty = "animeEmpty",
   animeEmptyBangumi = "animeEmptyBangumi",
-  
+
+  // 番组计划筛选和状态文本
+  bangumiTitle = "bangumiTitle",
+  bangumiSubtitle = "bangumiSubtitle",
+  bangumiFilterAll = "bangumiFilterAll",
+  bangumiFilterWatched = "bangumiFilterWatched",
+  bangumiFilterWatching = "bangumiFilterWatching",
+  bangumiFilterWish = "bangumiFilterWish",
+  bangumiFilterOnHold = "bangumiFilterOnHold",
+  bangumiFilterDropped = "bangumiFilterDropped",
+  bangumiStatusWish = "bangumiStatusWish",
+  bangumiStatusWatched = "bangumiStatusWatched",
+  bangumiStatusWatching = "bangumiStatusWatching",
+  bangumiStatusOnHold = "bangumiStatusOnHold",
+  bangumiStatusDropped = "bangumiStatusDropped",
+  bangumiStatusUnknown = "bangumiStatusUnknown",
+  bangumiNoData = "bangumiNoData",
+  bangumiNoDataDescription = "bangumiNoDataDescription",
+  bangumiEmpty = "bangumiEmpty",
+  bangumiEmptyReason = "bangumiEmptyReason",
+  bangumiUsername = "bangumiUsername",
+  bangumiApi = "bangumiApi",
+  bangumiConfigTip = "bangumiConfigTip",
+  bangumiPrevPage = "bangumiPrevPage",
+  bangumiNextPage = "bangumiNextPage",
+  bangumiCurrentPage = "bangumiCurrentPage",
+  bangumiTotalPages = "bangumiTotalPages",
+  bangumiPage = "bangumiPage",
+
+  // 番组分类
+  bangumiCategoryBook = "bangumiCategoryBook",
+  bangumiCategoryAnime = "bangumiCategoryAnime",
+  bangumiCategoryMusic = "bangumiCategoryMusic",
+  bangumiCategoryGame = "bangumiCategoryGame",
+  bangumiCategoryReal = "bangumiCategoryReal",
+
+  // 番组数据更新
+  bangumiLastUpdated = "bangumiLastUpdated",
+  bangumiUpdatedAt = "bangumiUpdatedAt",
+  bangumiDataStatic = "bangumiDataStatic",
+
   // 动漫状态
   animeStatusAll = "animeStatusAll",
   animeStatusWish = "animeStatusWish",
@@ -164,6 +205,38 @@ enum I18nKey {
   sponsorGoTo = "sponsorGoTo",
   sponsorButton = "sponsorButton",
   sponsorButtonText = "sponsorButtonText",
+
+  // 站点统计
+  siteStats = "siteStats",
+  siteStatsPostCount = "siteStatsPostCount",
+  siteStatsCategoryCount = "siteStatsCategoryCount",
+  siteStatsTagCount = "siteStatsTagCount",
+  siteStatsTotalWords = "siteStatsTotalWords",
+  siteStatsRunningDays = "siteStatsRunningDays",
+  siteStatsLastUpdate = "siteStatsLastUpdate",
+  siteStatsDaysAgo = "siteStatsDaysAgo",
+  siteStatsDays = "siteStatsDays",
+
+  // 日历组件
+  calendarSunday = "calendarSunday",
+  calendarMonday = "calendarMonday",
+  calendarTuesday = "calendarTuesday",
+  calendarWednesday = "calendarWednesday",
+  calendarThursday = "calendarThursday",
+  calendarFriday = "calendarFriday",
+  calendarSaturday = "calendarSaturday",
+  calendarJanuary = "calendarJanuary",
+  calendarFebruary = "calendarFebruary",
+  calendarMarch = "calendarMarch",
+  calendarApril = "calendarApril",
+  calendarMay = "calendarMay",
+  calendarJune = "calendarJune",
+  calendarJuly = "calendarJuly",
+  calendarAugust = "calendarAugust",
+  calendarSeptember = "calendarSeptember",
+  calendarOctober = "calendarOctober",
+  calendarNovember = "calendarNovember",
+  calendarDecember = "calendarDecember",
 }
 
 export default I18nKey;

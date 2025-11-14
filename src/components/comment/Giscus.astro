@@ -8,10 +8,12 @@ if (!commentConfig || !commentConfig.giscus) {
 const giscus = commentConfig.giscus
 ---
 
-/**
- * Giscus 官方Web Component用法，兼容Astro静态输出，无需import包，无需NPM依赖！
- * 参考：https://giscus.app/ 详情配置说明
- */
+<script type="module" src="https://esm.sh/giscus"></script>
+
+<!-- 
+  Giscus 官方Web Component用法，兼容Astro静态输出，无需import包，无需NPM依赖！
+  参考：https://giscus.app/ 详情配置说明
+-->
 <giscus-widget
   id="comments"
   repo={giscus.repo}

@@ -1,0 +1,215 @@
+---
+import BangumiSection from "@/components/pages/bangumi/BangumiSection.astro";
+import TabNav from "@/components/pages/bangumi/TabNav.astro";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { siteConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type {
+  UserSubjectCollection,
+  UserSubjectCollectionResponse,
+} from "@/types/bangumi";
+
+//参考：霞葉 https://kasuha.com/posts/fuwari-enhance-ep2/
+
+// 检查页面是否启用
+if (!siteConfig.pages.bangumi) {
+  return Astro.redirect("/404/");
+}
+
+//////////////// Bangumi 配置 ////////////////////////
+const bangumiConfig = {
+  username: siteConfig.bangumi?.userId, // 在这里配置你的Bangumi用户名
+  apiUrl: "https://api.bgm.tv",
+  categories: {
+    book: false,
+    anime: true,
+    music: false,
+    game: true,
+    real: false,
+  },
+  // 数据获取设置
+  pagination: {
+    limit: 50, // 每页获取数量
+    delay: 50, // 请求间隔毫秒数，避免频率限制
+    maxTotal: 1000, // 最大获取总数，防止无限循环（0=无限制）
+  },
+};
+////////////////////////////////////////////////////
+
+// 分类映射
+const categoryMap = {
+  book: { id: "book", name: i18n(I18nKey.bangumiCategoryBook), subjectType: 1 },
+  anime: { id: "anime", name: i18n(I18nKey.bangumiCategoryAnime), subjectType: 2 },
+  music: { id: "music", name: i18n(I18nKey.bangumiCategoryMusic), subjectType: 3 },
+  game: { id: "game", name: i18n(I18nKey.bangumiCategoryGame), subjectType: 4 },
+  real: { id: "real", name: i18n(I18nKey.bangumiCategoryReal), subjectType: 6 },
+};
+
+// 获取Bangumi数据的函数 - 支持分页获取所有数据
+async function fetchBangumiData(username: string, subjectType: number) {
+  try {
+    const { limit, delay, maxTotal } = bangumiConfig.pagination;
+    let offset = 0;
+    let allData: UserSubjectCollection[] = [];
+    let hasMore = true;
+
+    console.log(
+      `[Bangumi] 开始获取用户 ${username} 的 subjectType ${subjectType} 数据...`,
+    );
+
+    while (hasMore) {
+      // 检查是否超过最大获取限制
+      if (maxTotal > 0 && allData.length >= maxTotal) {
+        console.log(`[Bangumi] 已达到最大获取限制 ${maxTotal}，停止获取`);
+        break;
+      }
+
+      const url = `${bangumiConfig.apiUrl}/v0/users/${username}/collections?subject_type=${subjectType}&limit=${limit}&offset=${offset}`;
+
+      console.log(`[Bangumi] 正在获取数据: ${url} (已获取: ${allData.length})`);
+
+      const response = await fetch(url, {
+        headers: {
+          "User-Agent": "YuuOuRou Blog",
+          Accept: "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        console.warn(
+          `[Bangumi] 无法获取数据 (状态码: ${response.status}):`,
+          url,
+        );
+        break;
+      }
+
+      const data = (await response.json()) as UserSubjectCollectionResponse;
+      const currentBatch = data.data || [];
+
+      if (currentBatch.length > 0) {
+        allData = allData.concat(currentBatch);
+        offset += limit;
+
+        // 如果本次获取的数据少于limit，说明已经是最后一页
+        if (currentBatch.length < limit) {
+          hasMore = false;
+        }
+      } else {
+        hasMore = false;
+      }
+
+      // 添加延迟避免请求过于频繁
+      if (hasMore) {
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+
+    console.log(`[Bangumi] 总共获取到 ${allData.length} 条数据`);
+    return allData;
+  } catch (error) {
+    console.error("[Bangumi] 获取数据时出错:", error);
+    return [];
+  }
+}
+
+// 获取所有启用分类的数据
+const bangumiData: Record<string, UserSubjectCollection[]> = {};
+const tabs: Array<{ id: string; name: string; count: number }> = [];
+
+console.log("[Bangumi] 🌐 从 API 获取数据");
+
+for (const [categoryKey, enabled] of Object.entries(bangumiConfig.categories)) {
+  if (enabled && categoryMap[categoryKey as keyof typeof categoryMap]) {
+    const categoryInfo = categoryMap[categoryKey as keyof typeof categoryMap];
+    try {
+      const data = await fetchBangumiData(
+        bangumiConfig.username,
+        categoryInfo.subjectType,
+      );
+      bangumiData[categoryKey] = data;
+      tabs.push({
+        id: categoryKey,
+        name: categoryInfo.name,
+        count: data.length,
+      });
+    } catch (error) {
+      console.error(`[Bangumi] 获取 ${categoryInfo.name} 数据失败:`, error);
+      bangumiData[categoryKey] = [];
+      tabs.push({
+        id: categoryKey,
+        name: categoryInfo.name,
+        count: 0,
+      });
+    }
+  }
+}
+
+const activeTab = tabs[0]?.id || "anime";
+
+// 获取构建时间
+const buildTime = new Date().toLocaleString();
+---
+
+<MainGridLayout title={i18n(I18nKey.bangumi)} description={i18n(I18nKey.animeSubtitle)}>
+  <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+    <div class="card-base z-10 px-9 py-6 relative w-full">
+        <!-- 页面标题 -->
+        <div class="relative w-full mb-8">
+            <div class="mb-6">
+                <h1 class="text-4xl font-bold text-black/90 dark:text-white/90 mb-2">
+                    {i18n(I18nKey.bangumiTitle)}
+                </h1>
+                <p class="text-black/75 dark:text-white/75">
+                    {i18n(I18nKey.animeSubtitle)}
+                </p>
+                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                    {i18n(I18nKey.bangumiLastUpdated)} {buildTime}
+                </p>
+            </div>
+
+      <!-- Tab 导航和内容 -->
+      {tabs.length > 0 ? (
+        <>
+          <TabNav tabs={tabs} activeTab={activeTab} />
+
+          <!-- 内容区域 -->
+          {tabs.map((tab) => (
+                      <BangumiSection
+            sectionId={tab.id}
+            items={bangumiData[tab.id] || []}
+            isActive={tab.id === activeTab}
+            itemsPerPage={6}
+          />
+          ))}
+        </>
+      ) : (
+        <div class="text-center py-12">
+          <h2 class="text-xl font-medium text-gray-600 dark:text-gray-400 mb-2">
+            {i18n(I18nKey.bangumiEmpty)}
+          </h2>
+          <p class="text-gray-500 dark:text-gray-400 mb-4">
+            {i18n(I18nKey.bangumiEmptyReason)}
+          </p>
+          <div class="text-sm text-gray-400 dark:text-gray-500 space-y-1">
+            <div>{i18n(I18nKey.bangumiUsername)}: {bangumiConfig.username}</div>
+            <div>{i18n(I18nKey.bangumiApi)}: {bangumiConfig.apiUrl}</div>
+            <div class="mt-3 text-xs">
+              {i18n(I18nKey.bangumiConfigTip)}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+</MainGridLayout>
+
+<style>
+  /* 自定义样式 */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

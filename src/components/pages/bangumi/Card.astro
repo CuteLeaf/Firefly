@@ -1,0 +1,101 @@
+---
+import type { UserSubjectCollection } from "@/types/bangumi";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+
+interface Props {
+  item: UserSubjectCollection;
+}
+
+const { item } = Astro.props;
+
+const subject_base_url = "https://bgm.tv/subject/";
+
+const getStatusColor = (type: number) => {
+  switch (type) {
+    case 1:
+      return "bg-blue-500";
+    case 2:
+      return "bg-green-500";
+    case 3:
+      return "bg-yellow-500";
+    case 4:
+      return "bg-orange-500";
+    case 5:
+      return "bg-red-500";
+    default:
+      return "bg-gray-500";
+  }
+};
+
+const getStatusText = (type: number) => {
+  switch (type) {
+    case 1:
+      return i18n(I18nKey.bangumiStatusWish);
+    case 2:
+      return i18n(I18nKey.bangumiStatusWatched);
+    case 3:
+      return i18n(I18nKey.bangumiStatusWatching);
+    case 4:
+      return i18n(I18nKey.bangumiStatusOnHold);
+    case 5:
+      return i18n(I18nKey.bangumiStatusDropped);
+    default:
+      return i18n(I18nKey.bangumiStatusUnknown);
+  }
+};
+---
+
+<a
+  href={`${subject_base_url}${item.subject.id}`}
+  target="_blank"
+  rel="noopener noreferrer nofollow"
+  class="group relative overflow-hidden rounded-xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-2xl transition-all duration-200 hover:scale-105 block"
+>
+  <div class="aspect-[2/3] relative overflow-hidden" >
+    {item.subject?.images?.medium ? (
+      <img
+        src={item.subject.images.medium}
+        alt={item.subject.name_cn || item.subject.name}
+        class="w-full h-full object-cover pointer-events-none"
+        loading="lazy"
+      />
+    ) : (
+      <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+        <div class="text-gray-400 text-4xl">📖</div>
+      </div>
+    )}
+
+    <!-- Status badge -->
+    <div class={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs text-white font-medium ${getStatusColor(item.type)}`}>
+      {getStatusText(item.type)}
+    </div>
+  </div>
+
+  <!-- Info overlay on hover -->
+  <div class="absolute inset-x-0 bottom-0 bg-black/80 text-white p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-200">
+    <h3 class="font-bold text-sm mb-1 line-clamp-2">
+      {item.subject.name_cn || item.subject.name}
+    </h3>
+
+    {(item.subject.score || item.comment) && (
+      <div class="flex items-center justify-between mb-2">
+        {item.subject.score && (
+          <div class="flex items-center gap-1">
+            <div class="text-yellow-400">⭐</div>
+            <span class="text-sm">{item.subject.score}</span>
+          </div>
+        )}
+
+        {item.comment && (
+          <div class="relative group/comment">
+            <div class="text-sm text-gray-300 cursor-help">💬</div>
+            <div class="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover/comment:opacity-100 transition-opacity duration-150 w-32 sm:w-44 xl:w-52 z-10 pointer-events-none">
+              {item.comment}
+            </div>
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+</a>

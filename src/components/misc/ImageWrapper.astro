@@ -63,12 +63,6 @@ const imageStyle = `object-position: ${position || 'center'} !important; image-r
     /* 图片渲染优化 - 确保大图缩小显示时平滑清晰 */
     image-rendering: -webkit-optimize-contrast !important;
     image-rendering: auto !important;
-    /* 启用硬件加速优化缩放性能 */
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    will-change: transform;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
     /* 优化图片缩放算法 */
     -ms-interpolation-mode: bicubic;
     /* 确保图片在容器内正确填充 */

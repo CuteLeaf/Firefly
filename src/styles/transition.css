@@ -26,7 +26,7 @@ html.is-leaving .transition-main {
         transform 300ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
-/* 进入动画 - 从右下角轻微滑入，模仿yukina效果 */
+/* 进入动画 - 从右下角轻微滑入 */
 html.is-animating .transition-main {
     opacity: 0;
     transform: translateY(1.5rem) translateX(0.5rem);
@@ -71,7 +71,7 @@ html.is-animating .transition-swup-fade {
     }
 }
 
-/* 页面加载动画 - yukina风格 */
+/* 页面加载动画 */
 .onload-animation {
     opacity: 0;
     animation: fade-in-up 300ms ease-out forwards;

@@ -48,6 +48,11 @@ export const zh_TW: Translation = {
   [Key.publishedAt]: "發布於",
   [Key.license]: "許可協議",
   [Key.anime]: "追番",
+  [Key.bangumi]: "番組計劃",
+
+  // 番組計劃
+  [Key.bangumiTitle]: "我的番組計劃",
+  [Key.bangumiSubtitle]: "記錄我的二次元之旅",
 
   // 番劇頁面
   [Key.animeTitle]: "我的追番記錄",
@@ -64,6 +69,44 @@ export const zh_TW: Translation = {
   [Key.animeStudio]: "製作",
   [Key.animeEmpty]: "暫無追番數據",
   [Key.animeEmptyBangumi]: "請檢查 Bangumi 配置或網絡連接",
+
+  // 番組計劃篩選和狀態文本
+  [Key.bangumiFilterAll]: "全部",
+  [Key.bangumiFilterWatched]: "看過",
+  [Key.bangumiFilterWatching]: "在看",
+  [Key.bangumiFilterWish]: "想看",
+  [Key.bangumiFilterOnHold]: "擱置",
+  [Key.bangumiFilterDropped]: "拋棄",
+  [Key.bangumiStatusWish]: "想看",
+  [Key.bangumiStatusWatched]: "看過",
+  [Key.bangumiStatusWatching]: "在看",
+  [Key.bangumiStatusOnHold]: "擱置",
+  [Key.bangumiStatusDropped]: "拋棄",
+  [Key.bangumiStatusUnknown]: "未知",
+  [Key.bangumiNoData]: "暫無數據",
+  [Key.bangumiNoDataDescription]: "該分類下還沒有任何條目",
+  [Key.bangumiEmpty]: "暫無數據",
+  [Key.bangumiEmptyReason]: "可能的原因：用戶名不存在、網絡連接問題或API限制",
+  [Key.bangumiUsername]: "用戶名",
+  [Key.bangumiApi]: "API",
+  [Key.bangumiConfigTip]: "提示：請在頁面配置中設置正確的Bangumi用戶名",
+  [Key.bangumiPrevPage]: "上一頁",
+  [Key.bangumiNextPage]: "下一頁",
+  [Key.bangumiCurrentPage]: "第",
+  [Key.bangumiTotalPages]: "頁，共",
+  [Key.bangumiPage]: "頁",
+
+  // 番組分類
+  [Key.bangumiCategoryBook]: "書籍",
+  [Key.bangumiCategoryAnime]: "動畫",
+  [Key.bangumiCategoryMusic]: "音樂",
+  [Key.bangumiCategoryGame]: "遊戲",
+  [Key.bangumiCategoryReal]: "三次元",
+
+  // 番組數據更新
+  [Key.bangumiLastUpdated]: "數據更新於",
+  [Key.bangumiUpdatedAt]: "構建時間",
+  [Key.bangumiDataStatic]: "靜態數據",
   
   // 動漫狀態
   [Key.animeStatusAll]: "全部",
@@ -168,4 +211,36 @@ export const zh_TW: Translation = {
   [Key.sponsorGoTo]: "前往贊助",
   [Key.sponsorButton]: "贊助支持",
   [Key.sponsorButtonText]: "如果這篇文章對你有幫助，歡迎贊助支持！",
+
+  // 站點統計
+  [Key.siteStats]: "站點統計",
+  [Key.siteStatsPostCount]: "文章",
+  [Key.siteStatsCategoryCount]: "分類",
+  [Key.siteStatsTagCount]: "標籤",
+  [Key.siteStatsTotalWords]: "總字數",
+  [Key.siteStatsRunningDays]: "運行時長",
+  [Key.siteStatsLastUpdate]: "最後活動",
+  [Key.siteStatsDaysAgo]: "{days} 天前",
+  [Key.siteStatsDays]: "{days} 天",
+
+  // 日曆組件
+  [Key.calendarSunday]: "日",
+  [Key.calendarMonday]: "一",
+  [Key.calendarTuesday]: "二",
+  [Key.calendarWednesday]: "三",
+  [Key.calendarThursday]: "四",
+  [Key.calendarFriday]: "五",
+  [Key.calendarSaturday]: "六",
+  [Key.calendarJanuary]: "1月",
+  [Key.calendarFebruary]: "2月",
+  [Key.calendarMarch]: "3月",
+  [Key.calendarApril]: "4月",
+  [Key.calendarMay]: "5月",
+  [Key.calendarJune]: "6月",
+  [Key.calendarJuly]: "7月",
+  [Key.calendarAugust]: "8月",
+  [Key.calendarSeptember]: "9月",
+  [Key.calendarOctober]: "10月",
+  [Key.calendarNovember]: "11月",
+  [Key.calendarDecember]: "12月",
 };

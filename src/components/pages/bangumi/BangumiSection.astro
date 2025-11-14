@@ -1,0 +1,83 @@
+---
+import type { UserSubjectCollection } from "@/types/bangumi";
+import Card from "./Card.astro";
+import FilterControls from "./FilterControls.astro";
+import Pagination from "./Pagination.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+
+interface Props {
+  sectionId: string;
+  items: UserSubjectCollection[];
+  isActive: boolean;
+  itemsPerPage?: number;
+}
+
+const { sectionId, items, isActive, itemsPerPage = 12 } = Astro.props;
+
+// 状态映射
+const statusMap = {
+  1: "wish",
+  2: "collect",
+  3: "doing",
+  4: "on_hold",
+  5: "dropped",
+};
+
+// Get status filters with counts
+const statusCounts = items.reduce(
+  (acc, item) => {
+    const status = statusMap[item.type as keyof typeof statusMap] || "unknown";
+    acc[status] = (acc[status] || 0) + 1;
+    return acc;
+  },
+  {} as Record<string, number>,
+);
+
+const filters = [
+  { value: "all", label: i18n(I18nKey.bangumiFilterAll), count: items.length },
+  { value: "collect", label: i18n(I18nKey.bangumiFilterWatched), count: statusCounts.collect || 0 },
+  { value: "doing", label: i18n(I18nKey.bangumiFilterWatching), count: statusCounts.doing || 0 },
+  { value: "wish", label: i18n(I18nKey.bangumiFilterWish), count: statusCounts.wish || 0 },
+  { value: "on_hold", label: i18n(I18nKey.bangumiFilterOnHold), count: statusCounts.on_hold || 0 },
+  { value: "dropped", label: i18n(I18nKey.bangumiFilterDropped), count: statusCounts.dropped || 0 },
+].filter((filter) => filter.value === "all" || filter.count > 0);
+
+const defaultFilter = "all"; // 默认显示全部，用户可以通过筛选器选择
+---
+
+<div class:list={["bangumi-section", { "hidden": !isActive }]} data-section={sectionId}>
+  {items.length > 0 ? (
+    <>
+      <FilterControls
+        filters={filters}
+        activeFilter={defaultFilter}
+        sectionId={sectionId}
+      />
+
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
+        {items.map((item) => (
+          <div
+            class="bangumi-item"
+            data-item-section={sectionId}
+            data-item-status={statusMap[item.type as keyof typeof statusMap] || "unknown"}
+          >
+            <Card item={item} />
+          </div>
+        ))}
+      </div>
+
+      <Pagination
+        totalItems={items.length}
+        itemsPerPage={itemsPerPage}
+        currentPage={1}
+        sectionId={sectionId}
+      />
+    </>
+  ) : (
+    <div class="text-center py-12">
+      <h3 class="text-xl font-medium text-gray-600 dark:text-gray-400 mb-2">{i18n(I18nKey.bangumiNoData)}</h3>
+      <p class="text-gray-500 dark:text-gray-500">{i18n(I18nKey.bangumiNoDataDescription)}</p>
+    </div>
+  )}
+</div>

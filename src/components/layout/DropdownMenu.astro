@@ -43,7 +43,7 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 			data-dropdown-trigger
 		>
 			<div class="flex items-center">
-				{processedLink.icon && <Icon name={processedLink.icon} class="text-[1.1rem] mr-2" />}
+				{processedLink.icon && <Icon name={processedLink.icon} class="text-[1.1rem] mr-2 navbar-icon" />}
 				{processedLink.name}
 				<Icon name="material-symbols:keyboard-arrow-down-rounded" class="text-[1.25rem] transition-transform duration-200 dropdown-arrow ml-1" />
 			</div>
@@ -58,7 +58,7 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 						aria-label={child.name}
 					>
 						<div class="flex items-center">
-							{child.icon && <Icon name={child.icon} class="text-[1rem] mr-2" />}
+							{child.icon && <Icon name={child.icon} class="text-[1rem] mr-2 navbar-icon" />}
 							<span>{child.name}</span>
 						</div>
 						{child.external && (
@@ -76,7 +76,7 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 			class="btn-plain scale-animation rounded-lg h-11 font-bold px-5 active:scale-95"
 		>
 			<div class="flex items-center">
-				{processedLink.icon && <Icon name={processedLink.icon} class="text-[1.1rem] mr-2" />}
+				{processedLink.icon && <Icon name={processedLink.icon} class="text-[1.1rem] mr-2 navbar-icon" />}
 				{processedLink.name}
 				{processedLink.external && <Icon name="fa6-solid:arrow-up-right-from-square" class="text-[0.875rem] transition -translate-y-[1px] ml-1 text-black/[0.2] dark:text-white/[0.2]" />}
 			</div>

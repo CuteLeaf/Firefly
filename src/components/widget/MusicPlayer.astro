@@ -6,6 +6,7 @@ const config = musicPlayerConfig;
 
 // 预先生成本地资源路径，确保在非根目录部署时也能正确加载
 const aplayerCssPath = url("/assets/css/APlayer.min.css");
+const aplayerCustomCssPath = url("/assets/css/APlayer.custom.css");
 const aplayerJsPath = url("/assets/js/APlayer.min.js");
 
 // MetingJS 路径处理
@@ -19,11 +20,23 @@ const metingJsPath = config.meting?.jsPath
 
 // 预处理本地音乐列表的路径（如果使用本地模式）
 const processedLocalPlaylist = config.mode === "local" && config.local?.playlist
-  ? config.local.playlist.map((song) => ({
-      ...song,
-      url: url(song.url),
-      cover: song.cover ? url(song.cover) : undefined,
-    }))
+  ? config.local.playlist.map((song) => {
+      // 辅助函数：判断是否为完整 URL
+      const isFullUrl = (path: string): boolean => {
+        return /^https?:\/\//.test(path);
+      };
+
+      return {
+        ...song,
+        // 仅对相对路径使用 url() 处理，完整 URL 直接使用
+        url: isFullUrl(song.url) ? song.url : url(song.url),
+        cover: song.cover
+          ? isFullUrl(song.cover)
+            ? song.cover
+            : url(song.cover)
+          : undefined,
+      };
+    })
   : null;
 ---
 
@@ -33,6 +46,10 @@ const processedLocalPlaylist = config.mode === "local" && config.local?.playlist
     <link
       rel="stylesheet"
       href={aplayerCssPath}
+    />
+    <link
+      rel="stylesheet"
+      href={aplayerCustomCssPath}
     />
 
     <!-- 音乐播放器容器 -->
@@ -57,44 +74,13 @@ const processedLocalPlaylist = config.mode === "local" && config.local?.playlist
           preload={config.player?.preload || "auto"}
           volume={String(config.player?.volume ?? 0.7)}
           mutex={config.player?.mutex !== false ? "true" : "false"}
-          lrc-type={String(config.player?.lrcType ?? 3)}
           list-folded={config.player?.listFolded ? "true" : "false"}
           list-max-height={config.player?.listMaxHeight || "340px"}
           storage-name={config.player?.storageName || "aplayer-setting"}
         />
       ) : config.mode === "local" && processedLocalPlaylist && processedLocalPlaylist.length > 0 ? (
-        <!-- 使用本地音乐列表 -->
-        <!-- 单个音乐使用 MetingJS，多个音乐使用 APlayer 直接初始化 -->
-        {processedLocalPlaylist.length === 1 ? (
-          <meting-js
-            name={processedLocalPlaylist?.[0]?.name || ""}
-            artist={processedLocalPlaylist?.[0]?.artist || ""}
-            url={processedLocalPlaylist?.[0]?.url || ""}
-            cover={processedLocalPlaylist?.[0]?.cover}
-            fixed={(config.player?.fixed ?? true) ? "true" : "false"}
-            mini={(config.player?.mini ?? true) ? "true" : "false"}
-            autoplay={config.player?.autoplay ? "true" : "false"}
-            theme={config.player?.theme || "#b7daff"}
-            loop={config.player?.loop || "all"}
-            order={config.player?.order || "list"}
-            preload={config.player?.preload || "auto"}
-            volume={String(config.player?.volume ?? 0.7)}
-            mutex={config.player?.mutex !== false ? "true" : "false"}
-            lrc-type={processedLocalPlaylist[0]?.lrc ? "2" : "0"}
-            list-folded={config.player?.listFolded ? "true" : "false"}
-            list-max-height={config.player?.listMaxHeight || "340px"}
-            storage-name={config.player?.storageName || "aplayer-setting"}
-          >
-            {processedLocalPlaylist?.[0]?.lrc && (
-              <pre hidden>
-                {processedLocalPlaylist[0].lrc}
-              </pre>
-            )}
-          </meting-js>
-        ) : (
-          <!-- 多个本地音乐，使用 APlayer 直接初始化 -->
-          <div id="local-aplayer"></div>
-        )}
+        <!-- 使用本地音乐列表，统一使用 APlayer 直接初始化 -->
+        <div id="local-aplayer"></div>
       ) : null}
     </div>
   </>
@@ -120,10 +106,7 @@ const processedLocalPlaylist = config.mode === "local" && config.local?.playlist
         aplayerScript.src = aplayerJsPath;
         aplayerScript.async = true;
         aplayerScript.onload = () => resolve(window.APlayer);
-        aplayerScript.onerror = () => {
-          console.error("Failed to load APlayer");
-          resolve(null);
-        };
+        aplayerScript.onerror = () => resolve(null);
         document.head.appendChild(aplayerScript);
       });
     }
@@ -133,47 +116,233 @@ const processedLocalPlaylist = config.mode === "local" && config.local?.playlist
       window.hasMusicInteracted = false;
     }
     
+    // 全局播放器实例存储（防止页面切换时重复创建）
+    if (!window.__globalAPlayer) {
+      window.__globalAPlayer = null;
+    }
+    
     function tryAutoplay(aplayer) {
       if (!config.player?.autoplay) return;
       
       // 如果用户已经交互过，立即尝试播放
       if (window.hasMusicInteracted) {
-        if (aplayer && aplayer.paused) {
-          const playPromise = aplayer.play();
-          if (playPromise && typeof playPromise.catch === 'function') {
-            playPromise.catch((error) => {
-              // 浏览器阻止自动播放是正常的，不需要报错
-              if (error.name !== 'NotAllowedError') {
-                console.log('自动播放失败:', error.name);
-              }
-            });
-          }
+        if (aplayer?.paused) {
+          aplayer.play().catch(() => {});
         }
       } else {
         // 等待用户第一次交互后自动播放
         const enableAutoplay = () => {
           if (window.hasMusicInteracted) return;
           window.hasMusicInteracted = true;
-          
-          if (aplayer && aplayer.paused) {
-            const playPromise = aplayer.play();
-            if (playPromise && typeof playPromise.catch === 'function') {
-              playPromise.catch((error) => {
-                if (error.name !== 'NotAllowedError') {
-                  console.log('自动播放失败:', error.name);
-                }
-              });
-            }
+          if (aplayer?.paused) {
+            aplayer.play().catch(() => {});
           }
         };
         
         // 监听各种用户交互事件（只监听一次）
         ['click', 'keydown', 'touchstart', 'scroll'].forEach(eventType => {
-          document.addEventListener(eventType, enableAutoplay, { 
-            once: true, 
-            passive: true 
-          });
+          document.addEventListener(eventType, enableAutoplay, { once: true, passive: true });
         });
+      }
+    }
+
+    // 检查 MetingJS 元素是否成功加载了音乐
+    function checkMetingSuccess(metingElement, timeout = 5000) {
+      return new Promise((resolve) => {
+        const startTime = Date.now();
+        
+        const checkSuccess = setInterval(() => {
+          const aplayer = metingElement?.aplayer;
+          // 检查是否有 APlayer 实例且有音频列表
+          if (aplayer && aplayer.list && aplayer.list.audios && aplayer.list.audios.length > 0) {
+            clearInterval(checkSuccess);
+            resolve(true);
+            return;
+          }
+          
+          // 超时检查
+          if (Date.now() - startTime >= timeout) {
+            clearInterval(checkSuccess);
+            resolve(false);
+          }
+        }, 100);
+      });
+    }
+
+    // 重新创建 MetingJS 元素以使用新的 API
+    function recreateMetingElement(container, apiUrl, config) {
+      // 移除旧的元素
+      const oldElement = container.querySelector('meting-js');
+      if (oldElement) {
+        if (oldElement.aplayer) {
+          oldElement.aplayer.destroy();
+        }
+        oldElement.remove();
+      }
+      
+      // 创建新元素
+      const newElement = document.createElement('meting-js');
+      newElement.setAttribute('server', config.meting?.server || 'netease');
+      newElement.setAttribute('type', config.meting?.type || 'playlist');
+      newElement.setAttribute('id', config.meting?.id || '');
+      newElement.setAttribute('api', apiUrl);
+      if (config.meting?.auth) {
+        newElement.setAttribute('auth', config.meting.auth);
+      }
+      newElement.setAttribute('fixed', (config.player?.fixed ?? true) ? 'true' : 'false');
+      newElement.setAttribute('mini', (config.player?.mini ?? true) ? 'true' : 'false');
+      newElement.setAttribute('autoplay', config.player?.autoplay ? 'true' : 'false');
+      newElement.setAttribute('theme', config.player?.theme || '#b7daff');
+      newElement.setAttribute('loop', config.player?.loop || 'all');
+      newElement.setAttribute('order', config.player?.order || 'list');
+      newElement.setAttribute('preload', config.player?.preload || 'auto');
+      newElement.setAttribute('volume', String(config.player?.volume ?? 0.7));
+      newElement.setAttribute('mutex', config.player?.mutex !== false ? 'true' : 'false');
+      newElement.setAttribute('list-folded', config.player?.listFolded ? 'true' : 'false');
+      newElement.setAttribute('list-max-height', config.player?.listMaxHeight || '340px');
+      newElement.setAttribute('storage-name', config.player?.storageName || 'aplayer-setting');
+      
+      container.appendChild(newElement);
+      return newElement;
+    }
+
+    // 处理移动端显示/隐藏（统一处理容器和播放器）
+    function handleMobileVisibility(aplayer) {
+      const container = document.getElementById('aplayer-container');
+      const shouldHide = config.responsive?.mobile?.hide === true;
+      const breakpoint = config.responsive?.mobile?.breakpoint || 768;
+      const isMobile = window.innerWidth <= breakpoint;
+      
+      // 处理容器
+      if (container) {
+        if (shouldHide && isMobile) {
+          container.style.display = 'none';
+          container.classList.add('mobile-hide');
+        } else {
+          container.style.display = '';
+          container.classList.remove('mobile-hide');
+        }
+      }
+      
+      // 处理播放器（如果已初始化）
+      if (aplayer?.container) {
+        if (shouldHide && isMobile) {
+          aplayer.container.style.display = 'none';
+          aplayer.container.classList.add('mobile-hide');
+        } else {
+          aplayer.container.style.display = '';
+          aplayer.container.classList.remove('mobile-hide');
+        }
+      }
+    }
+
+    // 播放器初始化完成后的通用设置
+    function setupPlayerAfterInit(aplayer, isRestore = false) {
+      if (!aplayer?.container) return;
+      
+      // 监听播放状态，更新封面动画
+      const updatePlayingState = () => {
+        const isPlaying = !aplayer.paused;
+        aplayer.container.setAttribute('data-playing', String(isPlaying));
+        aplayer.container.classList.toggle('aplayer-playing', isPlaying);
+      };
+      
+      // 只在首次初始化时绑定事件（避免重复绑定）
+      if (!isRestore) {
+        aplayer.audio?.addEventListener('play', updatePlayingState);
+        aplayer.audio?.addEventListener('pause', updatePlayingState);
+        aplayer.audio?.addEventListener('ended', updatePlayingState);
+      }
+      
+      // 立即设置右侧定位
+      aplayer.container.setAttribute('data-positioned', 'right');
+      
+      requestAnimationFrame(() => {
+        aplayer.container.style.right = '0';
+        aplayer.container.style.left = 'unset';
+        updatePlayingState();
+        
+        // 处理移动端显示/隐藏（页面恢复时也需要重新处理）
+        handleMobileVisibility(aplayer);
+        
+        // 只在首次初始化时绑定 resize 事件
+        if (!isRestore) {
+          window.addEventListener('resize', () => handleMobileVisibility(aplayer));
+        }
+        
+        // 延迟后恢复展开动画
+        setTimeout(() => {
+          aplayer.container.setAttribute('data-initialized', 'true');
+          
+          // 隐藏歌词（如果配置）
+          if (config.player?.lrcHidden && aplayer.lrc) {
+            aplayer.lrc.hide();
+            const lrcButton = aplayer.container.querySelector('.aplayer-icon-lrc');
+            lrcButton?.classList.add('aplayer-icon-lrc-inactivity');
+          }
+          
+          // 尝试自动播放（只在首次初始化时）
+          if (!isRestore && config.player?.autoplay && aplayer.paused) {
+            tryAutoplay(aplayer);
+          }
+        }, 100);
+      });
+    }
+
+    // 初始化 MetingJS 元素并设置播放器
+    function setupMetingElement(metingElement) {
+      return new Promise((resolve) => {
+        // 监听 aplayer 初始化
+        const checkAPlayer = setInterval(() => {
+          const aplayer = metingElement.aplayer;
+          if (aplayer?.container) {
+            clearInterval(checkAPlayer);
+            setupPlayerAfterInit(aplayer);
+            resolve(true);
+          }
+        }, 50);
+        
+        // 10秒后停止检查
+        setTimeout(() => {
+          clearInterval(checkAPlayer);
+          resolve(false);
+        }, 10000);
+      });
+    }
+
+    // 使用备用 API 重试加载
+    async function retryWithFallbackAPI(container, fallbackApis, currentIndex = 0) {
+      if (currentIndex >= fallbackApis.length) {
+        return null;
+      }
+      
+      const fallbackApi = fallbackApis[currentIndex];
+      
+      // 替换 API URL 中的占位符
+      const server = config.meting?.server || 'netease';
+      const type = config.meting?.type || 'playlist';
+      const id = config.meting?.id || '';
+      
+      let apiUrl = fallbackApi
+        .replace(':server', server)
+        .replace(':type', type)
+        .replace(':id', id);
+      
+      // 设置全局 API
+      window.meting_api = apiUrl;
+      
+      // 重新创建元素
+      const newElement = recreateMetingElement(container, apiUrl, config);
+      
+      // 等待元素初始化并检查是否成功
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const success = await checkMetingSuccess(newElement, 5000);
+      
+      if (success) {
+        return newElement;
+      } else {
+        // 如果失败，尝试下一个备用 API
+        return retryWithFallbackAPI(container, fallbackApis, currentIndex + 1);
       }
     }
 
@@ -188,76 +357,79 @@ const processedLocalPlaylist = config.mode === "local" && config.local?.playlist
         const metingScript = document.createElement("script");
         metingScript.src = metingJsPath;
         metingScript.async = true;
-        metingScript.onload = () => {
-          // 如果配置了全局 API，设置它
-          if (config.mode === "meting" && config.meting?.api) {
-            window.meting_api = config.meting.api;
+        metingScript.onload = async () => {
+          // 等待 MetingJS 元素创建
+          await new Promise(resolve => setTimeout(resolve, 100));
+          
+          const container = document.getElementById('aplayer-container');
+          if (!container) {
+            resolve(false);
+            return;
           }
           
-          // 等待 MetingJS 元素创建后，立即设置右侧定位避免动画
-          setTimeout(() => {
-            const metingElements = document.querySelectorAll('meting-js');
-            metingElements.forEach((element) => {
-              // 监听 aplayer 初始化
-              const checkAPlayer = setInterval(() => {
-                const aplayer = element.aplayer;
-                if (aplayer && aplayer.container) {
-                  clearInterval(checkAPlayer);
-                  
-                  aplayer.container.setAttribute('data-positioned', 'right');
-                  // 立即应用右侧样式
-                  requestAnimationFrame(() => {
-                    if (aplayer.container) {
-                      aplayer.container.style.right = '0';
-                      aplayer.container.style.left = 'unset';
-                      
-                      // 短暂延迟后标记为已初始化，恢复展开动画
-                      setTimeout(() => {
-                        aplayer.container.setAttribute('data-initialized', 'true');
-                        
-                        // 如果配置了默认隐藏歌词，则隐藏歌词
-                        if (config.player?.lrcHidden && aplayer.lrc) {
-                          aplayer.lrc.hide();
-                          // 同时设置歌词按钮为未激活状态
-                          const lrcButton = aplayer.container.querySelector('.aplayer-icon-lrc');
-                          if (lrcButton) {
-                            lrcButton.classList.add('aplayer-icon-lrc-inactivity');
-                          }
-                        }
-                        
-                        // 如果自动播放被阻止，等待用户交互后恢复
-                        if (config.player?.autoplay && aplayer.paused) {
-                          tryAutoplay(aplayer);
-                        }
-                      }, 200);
-                    }
-                  });
-                }
-              }, 50);
-              
-              // 10秒后停止检查
-              setTimeout(() => clearInterval(checkAPlayer), 10000);
-            });
-          }, 100);
+          let metingElement = container.querySelector('meting-js');
+          
+          if (config.mode === "meting" && config.meting?.api && metingElement) {
+            const server = config.meting.server || 'netease';
+            const type = config.meting.type || 'playlist';
+            const id = config.meting.id || '';
+            
+            // 替换 API URL 中的占位符
+            let mainApiUrl = config.meting.api
+              .replace(':server', server)
+              .replace(':type', type)
+              .replace(':id', id)
+              .replace(':r', Math.random().toString());
+            
+            // 设置全局 API
+            window.meting_api = mainApiUrl;
+            
+            // 等待元素初始化并检查主 API 是否成功
+            await new Promise(resolve => setTimeout(resolve, 500));
+            const mainApiSuccess = await checkMetingSuccess(metingElement, 5000);
+            
+            if (!mainApiSuccess && config.meting.fallbackApis?.length > 0) {
+              // 主 API 失败，尝试备用 API
+              const newElement = await retryWithFallbackAPI(container, config.meting.fallbackApis);
+              if (newElement) {
+                metingElement = newElement;
+              }
+            }
+          }
+          
+          // 设置播放器（如果元素存在）
+          if (metingElement) {
+            await setupMetingElement(metingElement);
+          }
           
           resolve(true);
         };
         metingScript.onerror = () => {
-          console.error("Failed to load MetingJS");
           resolve(false);
         };
         document.head.appendChild(metingScript);
       });
     }
 
-    // 初始化本地音乐播放器（多个音乐）
+    // 初始化本地音乐播放器
     async function initLocalPlayer() {
-      if (
-        config.mode !== "local" ||
-        !processedLocalPlaylist ||
-        processedLocalPlaylist.length <= 1
-      ) {
+      if (config.mode !== "local" || !processedLocalPlaylist || processedLocalPlaylist.length === 0) {
         return;
+      }
+
+      // 如果全局已有播放器实例，检查是否还在 DOM 中
+      if (window.__globalAPlayer) {
+        const existingContainer = window.__globalAPlayer.container;
+        // 如果容器还在页面中，说明播放器还存在，直接恢复状态
+        if (existingContainer && document.body.contains(existingContainer)) {
+          setupPlayerAfterInit(window.__globalAPlayer);
+          return;
+        }
+        // 否则销毁旧实例
+        try {
+          window.__globalAPlayer.destroy();
+        } catch (e) {}
+        window.__globalAPlayer = null;
       }
 
       const APlayerClass = await loadAPlayer();
@@ -266,92 +438,68 @@ const processedLocalPlaylist = config.mode === "local" && config.local?.playlist
       const container = document.getElementById("local-aplayer");
       if (!container) return;
 
-      // 使用预处理好的路径列表（已经在服务端处理了非根目录部署的问题）
       const audioList = processedLocalPlaylist.map((song) => ({
         name: song.name,
         artist: song.artist,
         url: song.url,
         cover: song.cover,
-        lrc: song.lrc || undefined,
+        lrc: song.lrc,
         type: "auto",
       }));
 
-      const aplayerOptions = {
-        container: container,
-        audio: audioList,
-        mutex: config.player?.mutex !== false,
-        lrcType: config.player?.lrcType !== undefined ? config.player.lrcType : 0,
-        fixed: config.player?.fixed ?? true,
-        mini: config.player?.mini ?? true,
-        autoplay: config.player?.autoplay || false, // 直接设置 autoplay，浏览器可能会阻止但可以后续通过用户交互恢复
-        theme: config.player?.theme || "#b7daff",
-        loop: config.player?.loop || "all",
-        order: config.player?.order || "list",
-        preload: config.player?.preload || "auto",
-        volume: config.player?.volume || 0.7,
-        listFolded: config.player?.listFolded || false,
-        listMaxHeight: config.player?.listMaxHeight || "340px",
-        storageName: config.player?.storageName || "aplayer-setting",
-      };
-
       try {
-        const aplayer = new APlayerClass(aplayerOptions);
+        const aplayer = new APlayerClass({
+          container,
+          audio: audioList,
+          mutex: config.player?.mutex !== false,
+          lrcType: config.player?.lrcType ?? 0,
+          fixed: config.player?.fixed ?? true,
+          mini: config.player?.mini ?? true,
+          autoplay: config.player?.autoplay || false,
+          theme: config.player?.theme || "#b7daff",
+          loop: config.player?.loop || "all",
+          order: config.player?.order || "list",
+          preload: config.player?.preload || "auto",
+          volume: config.player?.volume ?? 0.7,
+          listFolded: config.player?.listFolded || false,
+          listMaxHeight: config.player?.listMaxHeight || "340px",
+          storageName: config.player?.storageName || "aplayer-setting",
+        });
         
-        // 立即设置右侧定位，避免动画
-        if (aplayer.container) {
-          aplayer.container.setAttribute('data-positioned', 'right');
-          // 确保立即应用右侧样式，避免从左到右的过渡
-          requestAnimationFrame(() => {
-            if (aplayer.container) {
-              aplayer.container.style.right = '0';
-              aplayer.container.style.left = 'unset';
-              
-              // 短暂延迟后标记为已初始化，恢复展开动画
-              setTimeout(() => {
-                aplayer.container.setAttribute('data-initialized', 'true');
-                
-                // 如果配置了默认隐藏歌词，则隐藏歌词
-                if (config.player?.lrcHidden && aplayer.lrc) {
-                  aplayer.lrc.hide();
-                  // 同时设置歌词按钮为未激活状态
-                  const lrcButton = aplayer.container.querySelector('.aplayer-icon-lrc');
-                  if (lrcButton) {
-                    lrcButton.classList.add('aplayer-icon-lrc-inactivity');
-                  }
-                }
-                
-                // 如果自动播放被阻止，等待用户交互后恢复
-                if (config.player?.autoplay && aplayer.paused) {
-                  tryAutoplay(aplayer);
-                }
-              }, 100);
-            }
-          });
-        }
+        // 保存到全局
+        window.__globalAPlayer = aplayer;
+        
+        setupPlayerAfterInit(aplayer);
       } catch (error) {
-        console.error("Failed to initialize APlayer:", error);
+        // 初始化失败时静默处理
       }
     }
 
-    // 如果使用 Meting 模式，加载 MetingJS
+    // 初始化容器的移动端显示/隐藏
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => handleMobileVisibility(null));
+    } else {
+      handleMobileVisibility(null);
+    }
+    
+    // 监听 Astro 页面切换事件
+    document.addEventListener('astro:after-swap', () => {
+      // 页面切换后，如果有全局播放器实例，恢复其状态
+      if (window.__globalAPlayer && window.__globalAPlayer.container) {
+        setupPlayerAfterInit(window.__globalAPlayer, true);
+      }
+    });
+    
+    // 根据模式初始化播放器
     if (config.mode === "meting") {
-      loadAPlayer().then(() => {
-        loadMetingJS();
-      });
+      // Meting 模式
+      loadAPlayer().then(() => loadMetingJS());
     } else if (config.mode === "local") {
-      // 本地模式：单个音乐使用 MetingJS，多个音乐使用 APlayer
-      if (processedLocalPlaylist && processedLocalPlaylist.length > 1) {
-        // 多个音乐，使用 APlayer
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", initLocalPlayer);
-        } else {
-          initLocalPlayer();
-        }
+      // 本地模式：统一使用 APlayer
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initLocalPlayer);
       } else {
-        // 单个音乐，使用 MetingJS
-        loadAPlayer().then(() => {
-          loadMetingJS();
-        });
+        initLocalPlayer();
       }
     }
   })();
@@ -384,11 +532,14 @@ const processedLocalPlaylist = config.mode === "local" && config.local?.playlist
     left: unset !important;
   }
 
-  /* 移动端隐藏 */
-  @media (max-width: 768px) {
-    #aplayer-container.mobile-hide {
-      display: none !important;
-    }
+  /* 移动端隐藏 - 通过 JavaScript 动态添加类 */
+  .aplayer-fixed.mobile-hide {
+    display: none !important;
+  }
+  
+  /* 移动端隐藏容器 */
+  #aplayer-container.mobile-hide {
+    display: none !important;
   }
 </style>
 

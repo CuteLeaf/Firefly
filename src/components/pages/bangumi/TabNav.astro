@@ -1,0 +1,79 @@
+---
+interface Tab {
+  id: string;
+  name: string;
+  count?: number;
+}
+
+interface Props {
+  tabs: Tab[];
+  activeTab: string;
+}
+
+const { tabs, activeTab } = Astro.props;
+---
+
+<div class="border-b border-gray-200 dark:border-gray-700 mb-3">
+  <nav class="flex space-x-8" aria-label="Tabs">
+    {tabs.map((tab) => (
+      <button
+        class:list={[
+          "whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200",
+          {
+            "border-[var(--primary)] text-[var(--primary)]": tab.id === activeTab,
+            "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300": tab.id !== activeTab
+          }
+        ]}
+        data-tab={tab.id}
+        type="button"
+      >
+        {tab.name}
+        {tab.count !== undefined && (
+          <span class="ml-2 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 py-0.5 px-2 rounded-full text-xs">
+            {tab.count}
+          </span>
+        )}
+      </button>
+    ))}
+  </nav>
+</div>
+
+<script>
+  function initTabNavigation() {
+    const tabButtons = document.querySelectorAll('[data-tab]');
+    const sections = document.querySelectorAll('[data-section]');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', (event) => {
+        const currentButton = event.currentTarget as HTMLButtonElement;
+        const targetTab = currentButton.dataset.tab;
+
+        // Update active tab
+        tabButtons.forEach(btn => {
+          btn.classList.remove('border-[var(--primary)]', 'text-[var(--primary)]');
+          btn.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300', 'dark:text-gray-400', 'dark:hover:text-gray-300');
+        });
+
+        currentButton.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300', 'dark:text-gray-400', 'dark:hover:text-gray-300');
+        currentButton.classList.add('border-[var(--primary)]', 'text-[var(--primary)]');
+
+        // Show/hide sections
+        sections.forEach(section => {
+          const htmlSection = section as HTMLElement;
+          if (htmlSection.dataset.section === targetTab) {
+            htmlSection.classList.remove('hidden');
+          } else {
+            htmlSection.classList.add('hidden');
+          }
+        });
+      });
+    });
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTabNavigation);
+  } else {
+    initTabNavigation();
+  }
+</script>
