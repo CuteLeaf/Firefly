@@ -3,11 +3,9 @@
     padding: 1.25rem;
     transition: all 0.3s ease;
   
-    /* ★ 卡片背景增强：深色模式中更亮，区分主体背景 */
     background: var(--card-bg, rgba(255, 255, 255, 0.65));
     backdrop-filter: blur(18px);
   
-    /* ★ 明显层级：描边 + 内阴影 + 外阴影 */
     border: 1px solid rgba(255, 255, 255, 0.12);         /* 外框 */
     box-shadow:
       inset 0 0 0.5px rgba(255, 255, 255, 0.4),          /* 内层微光 */
@@ -48,7 +46,6 @@
     font-size: 0.875rem;
     transition: all 0.2s ease;
   
-    /* 让按钮更像 Firefly 风格 */
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.15);
   }
