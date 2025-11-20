@@ -27,6 +27,7 @@ export { spineModelConfig, live2dModelConfig } from "./pioConfig"; // 看板娘�
 export { adConfig1, adConfig2 } from "./adConfig"; // 广告配置
 export { getEnabledFriends } from "./friendsConfig"; // 友链配置
 export { sponsorConfig } from "./sponsorConfig"; // 赞助配置
+export { aiSummaryConfig } from "./AISummaryConfig"; // AI总结配置
 
 // 类型导出
 export type {
@@ -46,5 +47,6 @@ export type {
   WidgetComponentType,
   SponsorConfig,
   SponsorMethod,
+  AISummaryConfig,
   SponsorItem,
 } from "../types/config";

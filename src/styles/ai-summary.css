@@ -1,0 +1,63 @@
+.ai-summary-container {
+    border-radius: 1rem;
+    padding: 1.25rem;
+    transition: all 0.3s ease;
+  
+    /* ★ 卡片背景增强：深色模式中更亮，区分主体背景 */
+    background: var(--card-bg, rgba(255, 255, 255, 0.65));
+    backdrop-filter: blur(18px);
+  
+    /* ★ 明显层级：描边 + 内阴影 + 外阴影 */
+    border: 1px solid rgba(255, 255, 255, 0.12);         /* 外框 */
+    box-shadow:
+      inset 0 0 0.5px rgba(255, 255, 255, 0.4),          /* 内层微光 */
+      0 4px 12px rgba(0, 0, 0, 0.25),                    /* 外阴影 1 */
+      0 8px 24px rgba(0, 0, 0, 0.15);                    /* 外阴影 2 */
+  }
+  
+  /* 悬停时稍微抬起 */
+.ai-summary-container:hover {
+    box-shadow:
+      inset 0 0 0.5px rgba(255, 255, 255, 0.4),
+      0 6px 16px rgba(0, 0, 0, 0.30),
+      0 10px 32px rgba(0, 0, 0, 0.20);
+    transform: translateY(-2px);
+  }
+  
+.ai-summary-container h3 {
+    color: var(--btn-content);
+    font-weight: 600;
+    font-size: 1.125rem;
+  }
+  
+.ai-summary-content {
+    line-height: 1.65;
+    font-size: 0.98rem;
+  }
+  
+.ai-explanation {
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 0.95rem;
+    color: var(--text-normal);
+  }
+  
+.retry-btn {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+  
+    /* 让按钮更像 Firefly 风格 */
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  
+.retry-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+  
+.ai-summary-container .animate-spin {
+    color: var(--text-muted);
+  }
+  

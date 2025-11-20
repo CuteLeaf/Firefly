@@ -684,3 +684,26 @@ export type SponsorConfig = {
   showSponsorsList?: boolean; // 是否显示赞助者列表，默认 true
   showButtonInPost?: boolean; // 是否在文章详情页底部显示赞助按钮，默认 true
 };
+
+// AI总结配置
+export type AISummaryConfig = {
+  enable: boolean;  // AI总结功能开关
+  debug: boolean; // 调试信息输出开关
+  // API配置
+  api: {
+    endpoint: string; // API地址
+    apiKey: string; // API密钥
+    model: string;  // 使用的模型
+    timeout: number;  // 请求超时时间(ms)
+  };
+  // 提示词配置
+  prompt: {
+    summary: string;  // 生成摘要的提示词
+  };
+  // 显示配置
+  display: {
+    loadingText: string;  // 加载时显示的文本
+    errorText: string;  // 错误时显示的文本
+    autoHideDelay: number;  // 成功生成后的显示时长(ms)，0表示不自动隐藏
+  };
+}
