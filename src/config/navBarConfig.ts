@@ -41,7 +41,6 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
     url: "/content/",
     icon: "material-symbols:info",
     children: [
-      ...(siteConfig.pages.anime ? [LinkPreset.Anime] : []), // 根据配置决定是否添加追番页面
       ...(siteConfig.pages.sponsor ? [LinkPreset.Sponsor] : []), // 根据配置决定是否添加赞助页面
       LinkPreset.About,
       ...(siteConfig.pages.bangumi ? [LinkPreset.Bangumi] : []), // 根据配置决定是否添加番组计划页面

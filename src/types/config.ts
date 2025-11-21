@@ -56,7 +56,6 @@ export type SiteConfig = {
 
   // 页面开关配置
   pages: {
-    anime: boolean; // 追番页面开关
     sponsor: boolean; // 赞助页面开关
     guestbook: boolean; // 留言板页面开关
     bangumi: boolean
@@ -85,10 +84,9 @@ export enum LinkPreset {
   Archive = 1,
   About = 2,
   Friends = 3,
-  Anime = 4,
-  Sponsor = 5,
-  Guestbook = 6,
-  Bangumi = 7,
+  Sponsor = 4,
+  Guestbook = 5,
+  Bangumi = 6,
 }
 
 export type NavBarLink = {

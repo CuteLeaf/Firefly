@@ -65,12 +65,8 @@ export const siteConfig: SiteConfig = {
   generateOgImages: false,
 
   // 页面开关配置 - 控制特定页面的访问权限，设为false会返回404
-
-  // anime和bangumi都是来源bangumi的数据，请配置bangumi.userId
-  // anime是动态请求获取数据，所以是实时数据，目前缺点是需要手动F5刷新一次才加载数据
-  // bangumi的数据为编译时获取的，所以不是实时数据
+  // bangumi的数据为编译时获取的，所以不是实时数据，请配置bangumi.userId
   pages: {
-    anime: false, // 追番页面开关
     sponsor: true, // 赞助页面开关
     guestbook: true, // 留言板页面开关，需要配置评论系统
     bangumi: true, // 番组计划页面开关，含追番和游戏

@@ -6,6 +6,7 @@ import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
 import { getEnabledFriends } from "@/config";
 import Comment from "@components/comment/index.astro";
+import Icon from "@/components/misc/Icon.astro";
 
 const friendsPost = await getEntry("spec", "friends");
 
@@ -17,16 +18,34 @@ const { Content } = await render(friendsPost);
 
 // 使用配置文件中的友链数据，按权重排序
 const items = getEnabledFriends();
+
+// 页面标题和描述
+const title = i18n(I18nKey.friends);
+const description = i18n(I18nKey.friendsDescription);
 ---
 
-<MainGridLayout
-  title={i18n(I18nKey.friends)}
-  description={i18n(I18nKey.friends)}
->
+<MainGridLayout title={title} description={description}>
   <div
     class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32"
   >
     <div class="card-base z-10 px-9 py-6 relative w-full">
+      <!-- 页面标题和描述 -->
+      <div class="mb-8">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="h-8 w-8 rounded-lg bg-[var(--primary)] flex items-center justify-center text-white dark:text-black/70">
+            <Icon icon="material-symbols:group" class="text-[1.5rem]"></Icon>
+          </div>
+          <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+            {title}
+          </h1>
+        </div>
+        {description && (
+          <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
+            {description}
+          </p>
+        )}
+      </div>
+      
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-8 my-4">
         {
           items.map((item) => (

@@ -44,24 +44,10 @@ enum I18nKey {
   publishedAt = "publishedAt",
   license = "license",
   friends = "friends",
+  friendsDescription = "friendsDescription",
   guestbook = "guestbook",
-  anime = "anime",
+  guestbookDescription = "guestbookDescription",
   bangumi = "bangumi",
-
-  // 番剧页面
-  animeTitle = "animeTitle",
-  animeSubtitle = "animeSubtitle",
-  animeList = "animeList",
-  animeTotal = "animeTotal",
-  animeWatching = "animeWatching",
-  animeCompleted = "animeCompleted",
-  animeAvgRating = "animeAvgRating",
-  animeStatusWatching = "animeStatusWatching",
-  animeStatusCompleted = "animeStatusCompleted",
-  animeStatusPlanned = "animeStatusPlanned",
-  animeStudio = "animeStudio",
-  animeEmpty = "animeEmpty",
-  animeEmptyBangumi = "animeEmptyBangumi",
 
   // 番组计划筛选和状态文本
   bangumiTitle = "bangumiTitle",
@@ -102,33 +88,6 @@ enum I18nKey {
   bangumiLastUpdated = "bangumiLastUpdated",
   bangumiUpdatedAt = "bangumiUpdatedAt",
   bangumiDataStatic = "bangumiDataStatic",
-
-  // 动漫状态
-  animeStatusAll = "animeStatusAll",
-  animeStatusWish = "animeStatusWish",
-  animeStatusDone = "animeStatusDone",
-  animeStatusDoing = "animeStatusDoing",
-  animeStatusOnhold = "animeStatusOnhold",
-  animeStatusDropped = "animeStatusDropped",
-  
-  // 动漫页面文本
-  animeLoading = "animeLoading",
-  animeLoadingDescription = "animeLoadingDescription",
-  animeError = "animeError",
-  animeErrorDescription = "animeErrorDescription",
-  animeRetry = "animeRetry",
-  animeEmptyData = "animeEmptyData",
-  animeEmptyDescription = "animeEmptyDescription",
-  animeEmptySuggestion = "animeEmptySuggestion",
-  animeConfigDescription = "animeConfigDescription",
-  animeRefreshNote = "animeRefreshNote",
-  
-  // 动漫信息
-  animeYear = "animeYear",
-  animeEpisodes = "animeEpisodes",
-  animeRank = "animeRank",
-  animeUnknown = "animeUnknown",
-  animeLoadFailed = "animeLoadFailed",
   
   // 分页
   paginationFirst = "paginationFirst",

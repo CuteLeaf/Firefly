@@ -24,7 +24,9 @@ export const zh_CN: Translation = {
   [Key.commentNotConfigured]: "评论系统暂未配置",
   [Key.guestbookCommentHint]: "您还未在配置文件中启用评论系统，启用后访客才可在此留言",
   [Key.friends]: "友链",
+  [Key.friendsDescription]: "这里是我的朋友们，欢迎互相访问交流",
   [Key.guestbook]: "留言",
+  [Key.guestbookDescription]: "欢迎在这里留下你的足迹，分享你的想法和建议",
   [Key.untitled]: "无标题",
   [Key.uncategorized]: "未分类",
   [Key.noTags]: "无标签",
@@ -47,23 +49,7 @@ export const zh_CN: Translation = {
   [Key.author]: "作者",
   [Key.publishedAt]: "发布于",
   [Key.license]: "许可协议",
-  [Key.anime]: "追番",
   [Key.bangumi]: "番组计划",
-
-  // 番剧页面
-  [Key.animeTitle]: "我的追番记录",
-  [Key.animeSubtitle]: "记录我的二次元之旅",
-  [Key.animeList]: "追番列表",
-  [Key.animeTotal]: "总数",
-  [Key.animeWatching]: "追番中",
-  [Key.animeCompleted]: "已追完",
-  [Key.animeAvgRating]: "平均评分",
-  [Key.animeStatusWatching]: "追番中",
-  [Key.animeStatusCompleted]: "已追完",
-  [Key.animeStatusPlanned]: "计划中",
-  [Key.animeStudio]: "制作",
-  [Key.animeEmpty]: "暂无追番数据",
-  [Key.animeEmptyBangumi]: "请检查 Bangumi 配置或网络连接",
 
   // 番组计划筛选和状态文本
   [Key.bangumiTitle]: "我的番组计划",
@@ -104,33 +90,6 @@ export const zh_CN: Translation = {
   [Key.bangumiLastUpdated]: "数据更新于",
   [Key.bangumiUpdatedAt]: "构建时间",
   [Key.bangumiDataStatic]: "静态数据",
-  
-  // 动漫状态
-  [Key.animeStatusAll]: "全部",
-  [Key.animeStatusWish]: "想看",
-  [Key.animeStatusDone]: "看过",
-  [Key.animeStatusDoing]: "在看",
-  [Key.animeStatusOnhold]: "搁置",
-  [Key.animeStatusDropped]: "抛弃",
-  
-  // 动漫页面文本
-  [Key.animeLoading]: "正在加载追番数据...",
-  [Key.animeLoadingDescription]: "请稍候，正在从 Bangumi 获取您的收藏信息",
-  [Key.animeError]: "数据加载失败",
-  [Key.animeErrorDescription]: "无法连接到 Bangumi API，请检查网络连接或稍后重试",
-  [Key.animeRetry]: "重新加载",
-  [Key.animeEmptyData]: "暂无数据",
-  [Key.animeEmptyDescription]: "该分类下暂时没有找到相关的动漫作品",
-  [Key.animeEmptySuggestion]: "试试切换到其他分类查看",
-  [Key.animeConfigDescription]: "请在 src/config/siteConfig.ts 文件中设置你的 Bangumi 用户ID",
-  [Key.animeRefreshNote]: "由于一些限制，可能需要F5刷新一次页面才会加载追番数据，目前还没有很好的解决方法",
-  
-  // 动漫信息
-  [Key.animeYear]: "年份",
-  [Key.animeEpisodes]: "集数",
-  [Key.animeRank]: "排名",
-  [Key.animeUnknown]: "未知",
-  [Key.animeLoadFailed]: "加载失败",
 
   // 分页
   [Key.paginationFirst]: "首页",

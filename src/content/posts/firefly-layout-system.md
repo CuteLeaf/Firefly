@@ -3,8 +3,8 @@ title: Firefly 布局系统详解
 published: 1970-01-02
 description: 深入了解 Firefly 的布局系统，包括侧边栏布局（左侧/双侧）和文章列表布局（列表/网格），以及为什么双侧边栏与网格模式会冲突的技术原理。
 image: api
-tags: [Firefly, 布局, 教程, 配置]
-category: 教程
+tags: [Firefly, 布局, 博客, 使用指南]
+category: 博客指南
 draft: false
 ---
 
@@ -170,7 +170,6 @@ export const siteConfig: SiteConfig = {
 #### 特点
 
 - 双列横向排列
-- 不显示文章封面图
 - 紧凑布局，信息密度高
 - 适合快速浏览
 
@@ -190,7 +189,7 @@ export const siteConfig: SiteConfig = {
 
 - ⚠️ **不支持双侧边栏模式**
 - ⚠️ 屏幕宽度 < 1200px 时自动切换为列表模式
-- ⚠️ 不显示封面图，视觉吸引力较弱
+- ⚠️ 封面图目前显示不全，视觉吸引力较弱，待优化
 
 #### 适用场景
 

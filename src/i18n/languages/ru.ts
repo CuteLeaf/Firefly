@@ -24,7 +24,9 @@ export const ru: Translation = {
   [Key.commentNotConfigured]: "Система комментариев не настроена",
   [Key.guestbookCommentHint]: "Вы еще не включили систему комментариев в файле конфигурации. После включения посетители смогут оставлять сообщения здесь",
   [Key.friends]: "Ссылки",
+  [Key.friendsDescription]: "Вот мои друзья, добро пожаловать посетить и общаться друг с другом",
   [Key.guestbook]: "Гостевая книга",
+  [Key.guestbookDescription]: "Добро пожаловать, оставьте свой след здесь, поделитесь своими мыслями и предложениями",
   [Key.untitled]: "Без названия",
   [Key.uncategorized]: "Без категории",
   [Key.noTags]: "Нет тегов",
@@ -47,24 +49,7 @@ export const ru: Translation = {
   [Key.author]: "Автор",
   [Key.publishedAt]: "Опубликовано",
   [Key.license]: "Лицензия",
-  [Key.anime]: "Аниме",
   [Key.bangumi]: "Бангуми",
-
-  // Страница аниме
-  [Key.animeTitle]: "Мой список аниме",
-  [Key.animeSubtitle]: "Запись моего аниме путешествия",
-  [Key.animeList]: "Список аниме",
-  [Key.animeTotal]: "Всего",
-  [Key.animeWatching]: "Смотрю",
-  [Key.animeCompleted]: "Завершено",
-  [Key.animeAvgRating]: "Средний рейтинг",
-  [Key.animeStatusWatching]: "Смотрю",
-  [Key.animeStatusCompleted]: "Завершено",
-  [Key.animeStatusPlanned]: "Запланировано",
-  [Key.animeStudio]: "Студия",
-  [Key.animeEmpty]: "Нет данных об аниме",
-  [Key.animeEmptyBangumi]:
-    "Пожалуйста, проверьте конфигурацию Bangumi или подключение к сети",
 
   // Фильтр и статус Бангуми текст
   [Key.bangumiTitle]: "Мой план группы",
@@ -105,33 +90,6 @@ export const ru: Translation = {
   [Key.bangumiLastUpdated]: "Данные обновлены",
   [Key.bangumiUpdatedAt]: "Время сборки",
   [Key.bangumiDataStatic]: "Статические данные",
-  
-  // Статус аниме
-  [Key.animeStatusAll]: "Все",
-  [Key.animeStatusWish]: "Хочу",
-  [Key.animeStatusDone]: "Просмотрено",
-  [Key.animeStatusDoing]: "Смотрю",
-  [Key.animeStatusOnhold]: "Отложено",
-  [Key.animeStatusDropped]: "Брошено",
-  
-  // Текст страницы аниме
-  [Key.animeLoading]: "Загрузка данных об аниме...",
-  [Key.animeLoadingDescription]: "Пожалуйста, подождите, загружаем вашу коллекцию из Bangumi",
-  [Key.animeError]: "Ошибка загрузки данных",
-  [Key.animeErrorDescription]: "Не удается подключиться к Bangumi API, пожалуйста, проверьте подключение к сети или попробуйте позже",
-  [Key.animeRetry]: "Повторить",
-  [Key.animeEmptyData]: "Нет данных",
-  [Key.animeEmptyDescription]: "Аниме в этой категории не найдено",
-  [Key.animeEmptySuggestion]: "Попробуйте переключиться на другие категории",
-  [Key.animeConfigDescription]: "Пожалуйста, установите ваш ID пользователя Bangumi в src/config/siteConfig.ts",
-  [Key.animeRefreshNote]: "Из-за некоторых ограничений может потребоваться обновить страницу один раз для загрузки данных об аниме, пока нет хорошего решения",
-  
-  // Информация об аниме
-  [Key.animeYear]: "Год",
-  [Key.animeEpisodes]: "Серий",
-  [Key.animeRank]: "Рейтинг",
-  [Key.animeUnknown]: "Неизвестно",
-  [Key.animeLoadFailed]: "Ошибка загрузки",
 
   // Пагинация
   [Key.paginationFirst]: "Первая",

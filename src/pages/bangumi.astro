@@ -5,6 +5,7 @@ import MainGridLayout from "@/layouts/MainGridLayout.astro";
 import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
+import Icon from "@/components/misc/Icon.astro";
 import type {
   UserSubjectCollection,
   UserSubjectCollectionResponse,
@@ -151,19 +152,24 @@ const activeTab = tabs[0]?.id || "anime";
 const buildTime = new Date().toLocaleString();
 ---
 
-<MainGridLayout title={i18n(I18nKey.bangumi)} description={i18n(I18nKey.animeSubtitle)}>
+<MainGridLayout title={i18n(I18nKey.bangumi)} description={i18n(I18nKey.bangumiSubtitle)}>
   <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
     <div class="card-base z-10 px-9 py-6 relative w-full">
         <!-- 页面标题 -->
         <div class="relative w-full mb-8">
             <div class="mb-6">
-                <h1 class="text-4xl font-bold text-black/90 dark:text-white/90 mb-2">
-                    {i18n(I18nKey.bangumiTitle)}
-                </h1>
-                <p class="text-black/75 dark:text-white/75">
-                    {i18n(I18nKey.animeSubtitle)}
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="h-8 w-8 rounded-lg bg-[var(--primary)] flex items-center justify-center text-white dark:text-black/70">
+                        <Icon icon="material-symbols:movie" class="text-[1.5rem]"></Icon>
+                    </div>
+                    <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+                        {i18n(I18nKey.bangumi)}
+                    </h1>
+                </div>
+                <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                    {i18n(I18nKey.bangumiSubtitle)}
                 </p>
-                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                <p class="text-xs text-neutral-500 dark:text-neutral-500 mt-2">
                     {i18n(I18nKey.bangumiLastUpdated)} {buildTime}
                 </p>
             </div>

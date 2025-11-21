@@ -66,7 +66,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
     <div class="mobile-pagination items-center space-x-2">
       <button
         type="button"
-        class="p-1.5 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition-colors duration-200"
+        class="p-1.5 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 flex items-center justify-center"
         data-page="prev"
         data-section={sectionId}
         disabled={currentPage === 1}
@@ -78,7 +78,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
       <!-- 移动端页码信息 -->
       <div class="flex items-center space-x-1">
         <span class="text-sm text-gray-600 dark:text-gray-400">{i18n(I18nKey.bangumiCurrentPage)}</span>
-        <span class="mobile-current-page px-2 py-1 text-sm font-medium bg-blue-500 text-white rounded">{currentPage}</span>
+        <span class="mobile-current-page px-2 py-1 text-sm font-medium bg-[var(--primary)] text-white rounded">{currentPage}</span>
         <span class="text-sm text-gray-600 dark:text-gray-400">{i18n(I18nKey.bangumiTotalPages)}</span>
         <span class="mobile-total-pages text-sm font-medium text-gray-700 dark:text-gray-300">{totalPages}</span>
         <span class="text-sm text-gray-600 dark:text-gray-400">{i18n(I18nKey.bangumiPage)}</span>
@@ -86,7 +86,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
 
       <button
         type="button"
-        class="p-1.5 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition-colors duration-200"
+        class="p-1.5 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 flex items-center justify-center"
         data-page="next"
         data-section={sectionId}
         disabled={currentPage === totalPages}
@@ -100,7 +100,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
     <div class="desktop-pagination items-center space-x-2">
       <button
         type="button"
-        class="p-2 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+        class="p-3 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
         data-page="prev"
         data-section={sectionId}
         disabled={currentPage === 1}
@@ -119,7 +119,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
               class:list={[
                 "px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200",
                 {
-                  "bg-blue-500 text-white shadow-md": pageItem === currentPage,
+                  "bg-[var(--primary)] text-white shadow-md": pageItem === currentPage,
                   "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600": pageItem !== currentPage
                 }
               ]}
@@ -136,7 +136,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
 
       <button
         type="button"
-        class="p-2 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+        class="p-3 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
         data-page="next"
         data-section={sectionId}
         disabled={currentPage === totalPages}
@@ -283,7 +283,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
             const button = document.createElement('button');
             button.className = `px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
               pageItem === currentPage
-                ? 'bg-blue-500 text-white'
+                ? 'bg-[var(--primary)] text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
             }`;
             button.dataset.page = pageItem.toString();

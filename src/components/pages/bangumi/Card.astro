@@ -44,6 +44,12 @@ const getStatusText = (type: number) => {
       return i18n(I18nKey.bangumiStatusUnknown);
   }
 };
+
+// 获取标签：优先用户标签，否则使用条目标签
+const displayTags = item.tags && item.tags.length > 0 
+  ? item.tags 
+  : (item.subject.tags || []).map(t => t.name).slice(0, 5);
+
 ---
 
 <a
@@ -94,6 +100,22 @@ const getStatusText = (type: number) => {
               {item.comment}
             </div>
           </div>
+        )}
+      </div>
+    )}
+
+    <!-- Tags display -->
+    {displayTags && displayTags.length > 0 && (
+      <div class="flex flex-wrap gap-1 mt-2">
+        {displayTags.slice(0, 5).map((tag: string) => (
+          <span class="text-xs px-2 py-0.5 bg-white/20 rounded-full text-white/90">
+            {tag}
+          </span>
+        ))}
+        {displayTags.length > 5 && (
+          <span class="text-xs px-2 py-0.5 bg-white/20 rounded-full text-white/60">
+            +{displayTags.length - 5}
+          </span>
         )}
       </div>
     )}

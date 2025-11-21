@@ -24,7 +24,9 @@ export const en: Translation = {
   [Key.commentNotConfigured]: "Comment system not configured",
   [Key.guestbookCommentHint]: "You have not enabled the comment system in the configuration file yet. After enabling it, visitors will be able to leave messages here",
   [Key.friends]: "Friends",
+  [Key.friendsDescription]: "Here are my friends, welcome to visit and communicate with each other",
   [Key.guestbook]: "Guestbook",
+  [Key.guestbookDescription]: "Welcome to leave your mark here, share your thoughts and suggestions",
   [Key.untitled]: "Untitled",
   [Key.uncategorized]: "Uncategorized",
   [Key.noTags]: "No Tags",
@@ -47,24 +49,7 @@ export const en: Translation = {
   [Key.author]: "Author",
   [Key.publishedAt]: "Published at",
   [Key.license]: "License",
-  [Key.anime]: "Anime",
   [Key.bangumi]: "Bangumi",
-
-  // Anime Page
-  [Key.animeTitle]: "My Anime List",
-  [Key.animeSubtitle]: "Record my ACG journey",
-  [Key.animeList]: "Anime List",
-  [Key.animeTotal]: "Total",
-  [Key.animeWatching]: "Watching",
-  [Key.animeCompleted]: "Completed",
-  [Key.animeAvgRating]: "Average Rating",
-  [Key.animeStatusWatching]: "Watching",
-  [Key.animeStatusCompleted]: "Completed",
-  [Key.animeStatusPlanned]: "Planned",
-  [Key.animeStudio]: "Studio",
-  [Key.animeEmpty]: "No anime data",
-  [Key.animeEmptyBangumi]:
-    "Please check Bangumi configuration or network connection",
 
   // Bangumi Filter and Status Text
   [Key.bangumiTitle]: "My Bangumi",
@@ -105,33 +90,6 @@ export const en: Translation = {
   [Key.bangumiLastUpdated]: "Data updated at",
   [Key.bangumiUpdatedAt]: "Build time",
   [Key.bangumiDataStatic]: "Static data",
-  
-  // Anime Status
-  [Key.animeStatusAll]: "All",
-  [Key.animeStatusWish]: "Wish",
-  [Key.animeStatusDone]: "Done",
-  [Key.animeStatusDoing]: "Watching",
-  [Key.animeStatusOnhold]: "On Hold",
-  [Key.animeStatusDropped]: "Dropped",
-  
-  // Anime Page Text
-  [Key.animeLoading]: "Loading anime data...",
-  [Key.animeLoadingDescription]: "Please wait, fetching your collection from Bangumi",
-  [Key.animeError]: "Data loading failed",
-  [Key.animeErrorDescription]: "Unable to connect to Bangumi API, please check your network connection or try again later",
-  [Key.animeRetry]: "Retry",
-  [Key.animeEmptyData]: "No data",
-  [Key.animeEmptyDescription]: "No anime found in this category",
-  [Key.animeEmptySuggestion]: "Try switching to other categories",
-  [Key.animeConfigDescription]: "Please set your Bangumi user ID in src/config/siteConfig.ts",
-  [Key.animeRefreshNote]: "Due to some limitations, you may need to refresh the page once to load anime data, there is no good solution yet",
-  
-  // Anime Info
-  [Key.animeYear]: "Year",
-  [Key.animeEpisodes]: "Episodes",
-  [Key.animeRank]: "Rank",
-  [Key.animeUnknown]: "Unknown",
-  [Key.animeLoadFailed]: "Load failed",
 
   // Pagination
   [Key.paginationFirst]: "First",
