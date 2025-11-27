@@ -17,8 +17,6 @@ export const siteConfig: SiteConfig = {
     "Astro",
     "ACGN",
     "博客",
-    "技术博客",
-    "静态博客",
   ],
 
   lang: SITE_LANG,
@@ -26,7 +24,7 @@ export const siteConfig: SiteConfig = {
   themeColor: {
     hue: 165, // 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
     fixed: false, // 对访问者隐藏主题色选择器
-    defaultMode: "system", // 默认模式："light" 亮色，"dark" 暗色，"system" 跟随系统
+    defaultMode: "dark", // 默认模式："light" 亮色，"dark" 暗色，"system" 跟随系统
   },
 
   favicon: [
@@ -51,7 +49,7 @@ export const siteConfig: SiteConfig = {
   navbarTitle: "Firefly", // 导航栏标题，可以设置为与 title 不同的值，如果不设置则使用 title
 
   // 站点开始日期，用于统计运行天数
-  siteStartDate: "2025-01-01", // 请修改为你的站点实际开始日期，格式：YYYY-MM-DD
+  siteStartDate: "2025-11-28", // 请修改为你的站点实际开始日期，格式：YYYY-MM-DD
 
   // bangumi配置
   bangumi: {
@@ -67,9 +65,9 @@ export const siteConfig: SiteConfig = {
   // 页面开关配置 - 控制特定页面的访问权限，设为false会返回404
   // bangumi的数据为编译时获取的，所以不是实时数据，请配置bangumi.userId
   pages: {
-    sponsor: true, // 赞助页面开关
+    sponsor: false, // 赞助页面开关
     guestbook: true, // 留言板页面开关，需要配置评论系统
-    bangumi: true, // 番组计划页面开关，含追番和游戏，dev调试时只获取一页数据，build才会获取全部数据
+    bangumi: false, // 番组计划页面开关，含追番和游戏，dev调试时只获取一页数据，build才会获取全部数据
   },
 
   // 文章列表布局配置
@@ -112,7 +110,7 @@ export const siteConfig: SiteConfig = {
         // 主页显示自定义文本（全局开关）
         enable: true,
         // 主页横幅主标题
-        title: "Lovely firefly!",
+        title: "xiaoqueqiao's blog!",
         // 主页横幅副标题
         subtitle: [
           "In Reddened Chrysalis, I Once Rest",
