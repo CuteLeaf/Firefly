@@ -16,7 +16,7 @@ import type { CoverImageConfig } from "../types/config";
  */
 export const coverImageConfig: CoverImageConfig = {
   // 随机封面图功能开关
-  enable: false,
+  enable: true,
   // 封面图API列表
   apis: [
     "https://t.alcy.cc/pc",

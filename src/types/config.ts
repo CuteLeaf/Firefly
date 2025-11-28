@@ -478,12 +478,12 @@ export type BackgroundWallpaperConfig = {
         desktop: boolean; // 桌面端是否显示横幅图片来源文本
         mobile: boolean; // 移动端是否显示横幅图片来源文本
       }; // 是否显示横幅图片来源文本，支持布尔值或分别设置桌面端和移动端
-      text:
-      | string
-      | {
-        desktop: string; // 桌面端显示的来源文本
-        mobile: string; // 移动端显示的来源文本
-      }; // 横幅图片来源文本，支持字符串或分别设置桌面端和移动端
+      // text:
+      // | string
+      // | {
+      //   desktop: string; // 桌面端显示的来源文本
+      //   mobile: string; // 移动端显示的来源文本
+      // }; // 横幅图片来源文本，支持字符串或分别设置桌面端和移动端
       url?:
       | string
       | {

@@ -6,9 +6,9 @@ import { fontConfig } from "./fontConfig";
 const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
-  title: "Firefly",
-  subtitle: "Demo site",
-  site_url: "https://firefly.cuteleaf.cn",
+  title: "lingluoa",
+  subtitle: "个人博客",
+  site_url: "https://llingqing.github.io",
   description:
     "Firefly 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。",
   keywords: [
@@ -33,7 +33,7 @@ export const siteConfig: SiteConfig = {
     // 留空以使用默认 favicon
     {
       src: "/assets/images/favicon.ico", // 图标文件路径
-      theme: "light", // 可选，指定主题 'light' | 'dark'
+      theme: "dark", // 可选，指定主题 'light' | 'dark'
       sizes: "32x32", // 可选，图标大小
     },
   ],
@@ -51,7 +51,7 @@ export const siteConfig: SiteConfig = {
   navbarTitle: "Firefly", // 导航栏标题，可以设置为与 title 不同的值，如果不设置则使用 title
 
   // 站点开始日期，用于统计运行天数
-  siteStartDate: "2025-01-01", // 请修改为你的站点实际开始日期，格式：YYYY-MM-DD
+  siteStartDate: "2025-11-28", // 请修改为你的站点实际开始日期，格式：YYYY-MM-DD
 
   // bangumi配置
   bangumi: {
@@ -67,9 +67,9 @@ export const siteConfig: SiteConfig = {
   // 页面开关配置 - 控制特定页面的访问权限，设为false会返回404
   // bangumi的数据为编译时获取的，所以不是实时数据，请配置bangumi.userId
   pages: {
-    sponsor: true, // 赞助页面开关
-    guestbook: true, // 留言板页面开关，需要配置评论系统
-    bangumi: true, // 番组计划页面开关，含追番和游戏，dev调试时只获取一页数据，build才会获取全部数据
+    sponsor: false, // 赞助页面开关
+    guestbook: false, // 留言板页面开关，需要配置评论系统
+    bangumi: false, // 番组计划页面开关，含追番和游戏，dev调试时只获取一页数据，build才会获取全部数据
   },
 
   // 文章列表布局配置
@@ -91,7 +91,7 @@ export const siteConfig: SiteConfig = {
     // 壁纸模式："banner" 横幅壁纸，"overlay" 全屏壁纸，"none" 纯色背景无壁纸
     mode: "banner",
     // 是否允许用户通过导航栏切换壁纸模式，设为false可提升性能（只渲染当前模式）
-    switchable: true,
+    switchable: false,
 
     // 背景图片配置
     src: {
@@ -136,10 +136,10 @@ export const siteConfig: SiteConfig = {
           desktop: true, // 桌面端显示横幅图片来源文本
           mobile: true, // 移动端显示横幅图片来源文本
         },
-        text: {
-          desktop: "Pixiv - 晚晚喵", // 桌面端要显示的来源文本
-          mobile: "Pixiv - KiraraShss", // 移动端要显示的来源文本
-        },
+        // text: {
+        //   desktop: "Pixiv - 晚晚喵", // 桌面端要显示的来源文本
+        //   mobile: "Pixiv - KiraraShss", // 移动端要显示的来源文本
+        // },
         url: {
           desktop: "https://www.pixiv.net/artworks/135490046", // 桌面端原始艺术品或艺术家页面的 URL 链接
           mobile: "https://www.pixiv.net/users/42715864", // 移动端原始艺术品或艺术家页面的 URL 链接
@@ -155,7 +155,7 @@ export const siteConfig: SiteConfig = {
           mobile: true, // 移动端启用波浪动画效果
         },
         performance: {
-          quality: "high",
+          quality: "medium",
           hardwareAcceleration: true, // 是否启用硬件加速
         },
         // 性能优化说明：

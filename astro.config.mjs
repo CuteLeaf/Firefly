@@ -29,8 +29,11 @@ import mdx from "@astrojs/mdx";
 import searchIndexer from "./src/integrations/searchIndex.mts";
 // https://astro.build/config
 export default defineConfig({
-	site: siteConfig.site_url,
-
+	site: 'https://llingqing.github.io',
+	// server: {
+	// port: 6789,
+	// host: '127.0.0.1'
+	// },
 	base: "/",
 	trailingSlash: "always",
 	integrations: [

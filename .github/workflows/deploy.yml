@@ -1,4 +1,4 @@
-name: Deploy to Pages Branch
+name: Deploy to GitHub Pages
 
 on:
   # 每次推送到 `main` 分支时触发这个"工作流程"
@@ -39,6 +39,5 @@ jobs:
       - name: Deploy to pages branch
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: pages # 部署到pages分支
           folder: dist # Astro默认构建输出目录
           clean: true # 清理目标分支中的旧文件
