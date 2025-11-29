@@ -178,7 +178,7 @@ import { url } from "@/utils/url-utils";
           console.log("✅ Spine runtime loaded from CDN");
           resolve();
         };
-        script.onerror = (error) => {
+        script.onerror = (_error) => {
           console.warn("⚠️ CDN failed, trying local fallback...");
 
           // 尝试本地回退
@@ -229,7 +229,7 @@ import { url } from "@/utils/url-utils";
       window.spineModelInitialized = true;
 
       // 创建 SpinePlayer
-      const player = new window.spine.SpinePlayer("spine-player-container", {
+      const _player = new window.spine.SpinePlayer("spine-player-container", {
         skeleton: modelPath,
         atlas: atlasPath,
         animation: "idle",
@@ -330,7 +330,7 @@ import { url } from "@/utils/url-utils";
 
           console.log("✅ Spine model setup complete!");
         },
-        error: (player, reason) => {
+        error: (_player, reason) => {
           console.error("❌ Spine model loading error:", reason);
 
           const errorDiv = document.getElementById("spine-error");
