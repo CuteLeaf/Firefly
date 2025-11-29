@@ -1,17 +1,17 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { commentConfig } from "@/config/commentConfig";
-import { i18n } from "@/i18n/translation";
 import Key from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
 import { removeFileExtension } from "@/utils/url-utils";
+import Disqus from "./Disqus.astro";
+import Giscus from "./Giscus.astro";
 import Twikoo from "./Twikoo.astro";
 import Waline from "./Waline.astro";
-import Giscus from "./Giscus.astro";
-import Disqus from "./Disqus.astro";
 
 interface Props {
-  post: CollectionEntry<"posts"> | CollectionEntry<"spec">;
-  customPath?: string;
+	post: CollectionEntry<"posts"> | CollectionEntry<"spec">;
+	customPath?: string;
 }
 
 const { post, customPath } = Astro.props;
@@ -20,7 +20,7 @@ const { id, data } = post;
 // 根据页面类型确定路径
 const slug = removeFileExtension(id);
 const path =
-  customPath || (post.collection === "posts" ? `/posts/${slug}` : `/${slug}`);
+	customPath || (post.collection === "posts" ? `/posts/${slug}` : `/${slug}`);
 const url = `${Astro.site?.href}${path}`;
 
 // 强制commentService类型为string，避免类型不兼容警告

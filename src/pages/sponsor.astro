@@ -1,18 +1,19 @@
 ---
-import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import Icon from "@/components/misc/Icon.astro";
+import { siteConfig, sponsorConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
-import { sponsorConfig, siteConfig } from "@/config";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
 import { url } from "@/utils/url-utils";
-import Icon from "@/components/misc/Icon.astro";
 
 // 检查页面是否启用
 if (!siteConfig.pages.sponsor) {
-  return Astro.redirect("/404/");
+	return Astro.redirect("/404/");
 }
 
 const title = sponsorConfig.title || i18n(I18nKey.sponsorTitle);
-const description = sponsorConfig.description || i18n(I18nKey.sponsorDescription);
+const description =
+	sponsorConfig.description || i18n(I18nKey.sponsorDescription);
 const enabledMethods = sponsorConfig.methods.filter((method) => method.enabled);
 const sponsors = sponsorConfig.sponsors || [];
 const showSponsorsList = sponsorConfig.showSponsorsList !== false;

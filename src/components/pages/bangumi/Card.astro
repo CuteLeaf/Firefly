@@ -1,10 +1,10 @@
 ---
-import type { UserSubjectCollection } from "@/types/bangumi";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
+import type { UserSubjectCollection } from "@/types/bangumi";
 
 interface Props {
-  item: UserSubjectCollection;
+	item: UserSubjectCollection;
 }
 
 const { item } = Astro.props;
@@ -12,44 +12,44 @@ const { item } = Astro.props;
 const subject_base_url = "https://bgm.tv/subject/";
 
 const getStatusColor = (type: number) => {
-  switch (type) {
-    case 1:
-      return "bg-blue-500";
-    case 2:
-      return "bg-green-500";
-    case 3:
-      return "bg-yellow-500";
-    case 4:
-      return "bg-orange-500";
-    case 5:
-      return "bg-red-500";
-    default:
-      return "bg-gray-500";
-  }
+	switch (type) {
+		case 1:
+			return "bg-blue-500";
+		case 2:
+			return "bg-green-500";
+		case 3:
+			return "bg-yellow-500";
+		case 4:
+			return "bg-orange-500";
+		case 5:
+			return "bg-red-500";
+		default:
+			return "bg-gray-500";
+	}
 };
 
 const getStatusText = (type: number) => {
-  switch (type) {
-    case 1:
-      return i18n(I18nKey.bangumiStatusWish);
-    case 2:
-      return i18n(I18nKey.bangumiStatusWatched);
-    case 3:
-      return i18n(I18nKey.bangumiStatusWatching);
-    case 4:
-      return i18n(I18nKey.bangumiStatusOnHold);
-    case 5:
-      return i18n(I18nKey.bangumiStatusDropped);
-    default:
-      return i18n(I18nKey.bangumiStatusUnknown);
-  }
+	switch (type) {
+		case 1:
+			return i18n(I18nKey.bangumiStatusWish);
+		case 2:
+			return i18n(I18nKey.bangumiStatusWatched);
+		case 3:
+			return i18n(I18nKey.bangumiStatusWatching);
+		case 4:
+			return i18n(I18nKey.bangumiStatusOnHold);
+		case 5:
+			return i18n(I18nKey.bangumiStatusDropped);
+		default:
+			return i18n(I18nKey.bangumiStatusUnknown);
+	}
 };
 
 // 获取标签：优先用户标签，否则使用条目标签
-const displayTags = item.tags && item.tags.length > 0 
-  ? item.tags 
-  : (item.subject.tags || []).map(t => t.name).slice(0, 5);
-
+const displayTags =
+	item.tags && item.tags.length > 0
+		? item.tags
+		: (item.subject.tags || []).map((t) => t.name).slice(0, 5);
 ---
 
 <a

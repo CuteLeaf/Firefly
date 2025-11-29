@@ -3,46 +3,49 @@ import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
 import * as path from "node:path";
 import { Icon } from "astro-icon/components";
+import RandomCoverImage from "@/components/misc/RandomCoverImage.astro";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
-import { getDir, getTagUrl, getFileDirFromPath } from "@/utils/url-utils";
 import { processCoverImageSync } from "@/utils/image-utils";
-import RandomCoverImage from "@/components/misc/RandomCoverImage.astro";
+import { getDir, getFileDirFromPath, getTagUrl } from "@/utils/url-utils";
 import PostMetadata from "./PostMeta.astro";
 
 interface Props {
-  class?: string;
-  entry: CollectionEntry<"posts">;
-  title: string;
-  url: string;
-  published: Date;
-  updated?: Date;
-  tags: string[];
-  category: string | null;
-  image: string;
-  description: string;
-  draft: boolean;
-  pinned?: boolean;
-  style: string;
+	class?: string;
+	entry: CollectionEntry<"posts">;
+	title: string;
+	url: string;
+	published: Date;
+	updated?: Date;
+	tags: string[];
+	category: string | null;
+	image: string;
+	description: string;
+	draft: boolean;
+	pinned?: boolean;
+	style: string;
 }
 const {
-  entry,
-  title,
-  url,
-  published,
-  updated,
-  tags,
-  category,
-  image,
-  description,
-  pinned,
-  style,
+	entry,
+	title,
+	url,
+	published,
+	updated,
+	tags,
+	category,
+	image,
+	description,
+	pinned,
+	style,
 } = Astro.props;
 const className = Astro.props.class;
 
 // 处理随机图：如果image为"api"，则从配置的API获取随机图
 const processedImage = processCoverImageSync(image, entry.id);
-const hasCover = processedImage !== undefined && processedImage !== null && processedImage !== "";
+const hasCover =
+	processedImage !== undefined &&
+	processedImage !== null &&
+	processedImage !== "";
 
 const coverWidth = "28%";
 

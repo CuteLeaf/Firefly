@@ -1,20 +1,20 @@
 ---
-import { Icon } from "astro-icon/components";
 import type { MarkdownHeading } from "astro";
-import { i18n } from "@/i18n/translation";
-import I18nKey from "@/i18n/i18nKey";
+import { Icon } from "astro-icon/components";
 import TOCStyles from "@/components/common/styles/TOCStyles.astro";
 import { sidebarLayoutConfig } from "@/config/sidebarConfig";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
 
 interface Props {
-  headings: MarkdownHeading[];
+	headings: MarkdownHeading[];
 }
 
 let { headings = [] } = Astro.props;
 
 // 检查侧边栏目录组件是否启用
 const sidebarTocComponent = sidebarLayoutConfig.rightComponents?.find(
-  (c) => c.type === "sidebarToc"
+	(c) => c.type === "sidebarToc",
 );
 const isSidebarTocEnabled = sidebarTocComponent?.enable ?? false;
 ---

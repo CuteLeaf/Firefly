@@ -1,46 +1,66 @@
 ---
-import type { UserSubjectCollection } from "@/types/bangumi";
-import Card from "./Card.astro";
-import FilterControls from "./FilterControls.astro";
 import ClientPagination from "@/components/common/controls/ClientPagination.astro";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
+import type { UserSubjectCollection } from "@/types/bangumi";
+import Card from "./Card.astro";
+import FilterControls from "./FilterControls.astro";
 
 interface Props {
-  sectionId: string;
-  items: UserSubjectCollection[];
-  isActive: boolean;
-  itemsPerPage?: number;
+	sectionId: string;
+	items: UserSubjectCollection[];
+	isActive: boolean;
+	itemsPerPage?: number;
 }
 
 const { sectionId, items, isActive, itemsPerPage = 12 } = Astro.props;
 
 // 状态映射
 const statusMap = {
-  1: "wish",
-  2: "collect",
-  3: "doing",
-  4: "on_hold",
-  5: "dropped",
+	1: "wish",
+	2: "collect",
+	3: "doing",
+	4: "on_hold",
+	5: "dropped",
 };
 
 // Get status filters with counts
 const statusCounts = items.reduce(
-  (acc, item) => {
-    const status = statusMap[item.type as keyof typeof statusMap] || "unknown";
-    acc[status] = (acc[status] || 0) + 1;
-    return acc;
-  },
-  {} as Record<string, number>,
+	(acc, item) => {
+		const status = statusMap[item.type as keyof typeof statusMap] || "unknown";
+		acc[status] = (acc[status] || 0) + 1;
+		return acc;
+	},
+	{} as Record<string, number>,
 );
 
 const filters = [
-  { value: "all", label: i18n(I18nKey.bangumiFilterAll), count: items.length },
-  { value: "collect", label: i18n(I18nKey.bangumiFilterWatched), count: statusCounts.collect || 0 },
-  { value: "doing", label: i18n(I18nKey.bangumiFilterWatching), count: statusCounts.doing || 0 },
-  { value: "wish", label: i18n(I18nKey.bangumiFilterWish), count: statusCounts.wish || 0 },
-  { value: "on_hold", label: i18n(I18nKey.bangumiFilterOnHold), count: statusCounts.on_hold || 0 },
-  { value: "dropped", label: i18n(I18nKey.bangumiFilterDropped), count: statusCounts.dropped || 0 },
+	{ value: "all", label: i18n(I18nKey.bangumiFilterAll), count: items.length },
+	{
+		value: "collect",
+		label: i18n(I18nKey.bangumiFilterWatched),
+		count: statusCounts.collect || 0,
+	},
+	{
+		value: "doing",
+		label: i18n(I18nKey.bangumiFilterWatching),
+		count: statusCounts.doing || 0,
+	},
+	{
+		value: "wish",
+		label: i18n(I18nKey.bangumiFilterWish),
+		count: statusCounts.wish || 0,
+	},
+	{
+		value: "on_hold",
+		label: i18n(I18nKey.bangumiFilterOnHold),
+		count: statusCounts.on_hold || 0,
+	},
+	{
+		value: "dropped",
+		label: i18n(I18nKey.bangumiFilterDropped),
+		count: statusCounts.dropped || 0,
+	},
 ].filter((filter) => filter.value === "all" || filter.count > 0);
 
 const defaultFilter = "all"; // 默认显示全部，用户可以通过筛选器选择

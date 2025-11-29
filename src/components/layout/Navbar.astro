@@ -1,18 +1,26 @@
 ---
 import { Icon } from "astro-icon/components";
-import { siteConfig, navBarConfig, navBarSearchConfig, sidebarLayoutConfig } from "@/config";
-import { LinkPresets } from "@/constants/link-presets";
-import { LinkPreset, type NavBarLink } from "@/types/config";
-import { url } from "@/utils/url-utils";
-import { isHomePage } from "@/utils/layout-utils";
-import LightDarkSwitch from "@/components/interactive/LightDarkSwitch.svelte";
-import LayoutSwitchButton from "@/components/interactive/LayoutSwitchButton.svelte";
-import Search from "@/components/interactive/Search.svelte";
 import DisplaySettings from "@/components/interactive/DisplaySettings.svelte";
+import LayoutSwitchButton from "@/components/interactive/LayoutSwitchButton.svelte";
+import LightDarkSwitch from "@/components/interactive/LightDarkSwitch.svelte";
+import Search from "@/components/interactive/Search.svelte";
 import WallpaperSwitch from "@/components/interactive/WallpaperSwitch.svelte";
+import {
+	navBarConfig,
+	navBarSearchConfig,
+	sidebarLayoutConfig,
+	siteConfig,
+} from "@/config";
+import { LinkPresets } from "@/constants/link-presets";
+import {
+	LinkPreset,
+	type NavBarLink,
+	NavBarSearchMethod,
+} from "@/types/config";
+import { isHomePage } from "@/utils/layout-utils";
+import { url } from "@/utils/url-utils";
 import DropdownMenu from "./DropdownMenu.astro";
 import NavMenuPanel from "./NavMenuPanel.astro";
-import {NavBarSearchMethod} from "@/types/config";
 
 const className = Astro.props.class;
 

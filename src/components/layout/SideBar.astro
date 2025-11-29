@@ -1,18 +1,18 @@
 ---
 import type { MarkdownHeading } from "astro";
-import { widgetManager } from "@/utils/widget-manager";
-import Announcement from "@/components/widget/Announcement.astro";
-import Categories from "@/components/widget/Categories.astro";
 import Profile from "@/components/content/Profile.astro";
-import Tags from "@/components/widget/Tags.astro";
 import Advertisement from "@/components/widget/Advertisement.astro";
-import SiteStats from "@/components/widget/SiteStats.astro";
+import Announcement from "@/components/widget/Announcement.astro";
 import Calendar from "@/components/widget/Calendar.astro";
+import Categories from "@/components/widget/Categories.astro";
 import SidebarTOC from "@/components/widget/SidebarTOC.astro";
+import SiteStats from "@/components/widget/SiteStats.astro";
+import Tags from "@/components/widget/Tags.astro";
+import { widgetManager } from "@/utils/widget-manager";
 
 interface Props {
-  class?: string;
-  headings?: MarkdownHeading[];
+	class?: string;
+	headings?: MarkdownHeading[];
 }
 
 const { class: className, headings } = Astro.props;
@@ -22,82 +22,96 @@ const sidebarPosition = widgetManager.getConfig().position;
 const targetSidebar = sidebarPosition === "left" ? "left" : undefined;
 
 // 获取配置的组件列表 - 根据 position 配置决定显示哪一侧
-const topComponents = widgetManager.getComponentsByPosition("top", targetSidebar);
-const stickyComponents = widgetManager.getComponentsByPosition("sticky", targetSidebar);
+const topComponents = widgetManager.getComponentsByPosition(
+	"top",
+	targetSidebar,
+);
+const stickyComponents = widgetManager.getComponentsByPosition(
+	"sticky",
+	targetSidebar,
+);
 
 // 组件类型到ID的映射
 const componentTypeToId = {
-  stats: "site-stats",
-  calendar: "calendar-widget",
-  sidebarToc: "sidebar-toc",
-  profile: "profile",
-  announcement: "announcement",
-  categories: "categories",
-  tags: "tags",
-  advertisement: "advertisement",
+	stats: "site-stats",
+	calendar: "calendar-widget",
+	sidebarToc: "sidebar-toc",
+	profile: "profile",
+	announcement: "announcement",
+	categories: "categories",
+	tags: "tags",
+	advertisement: "advertisement",
 };
 
 // 提取客户端需要的数据
 const sidebarConfig = {
-  shouldShowSidebar: {
-    mobile: widgetManager.shouldShowSidebar("mobile"),
-    tablet: widgetManager.shouldShowSidebar("tablet"),
-    desktop: widgetManager.shouldShowSidebar("desktop"),
-  },
-  breakpoints: {
-    mobile: 768,
-    tablet: 1024,
-    desktop: 1280,
-  },
+	shouldShowSidebar: {
+		mobile: widgetManager.shouldShowSidebar("mobile"),
+		tablet: widgetManager.shouldShowSidebar("tablet"),
+		desktop: widgetManager.shouldShowSidebar("desktop"),
+	},
+	breakpoints: {
+		mobile: 768,
+		tablet: 1024,
+		desktop: 1280,
+	},
 };
 
 // 提取组件的 showOnPostPage 配置
 const componentsConfig = (() => {
-  const components = targetSidebar === "left" 
-    ? widgetManager.getConfig().leftComponents 
-    : [...widgetManager.getConfig().leftComponents, ...widgetManager.getConfig().rightComponents];
-  
-  return components
-    .filter(c => c.enable)
-    .map(c => ({
-      id: componentTypeToId[c.type as keyof typeof componentTypeToId],
-      showOnPostPage: c.showOnPostPage ?? true,
-    }));
+	const components =
+		targetSidebar === "left"
+			? widgetManager.getConfig().leftComponents
+			: [
+					...widgetManager.getConfig().leftComponents,
+					...widgetManager.getConfig().rightComponents,
+				];
+
+	return components
+		.filter((c) => c.enable)
+		.map((c) => ({
+			id: componentTypeToId[c.type as keyof typeof componentTypeToId],
+			showOnPostPage: c.showOnPostPage ?? true,
+		}));
 })();
 
 // 组件映射表
 const componentMap = {
-  profile: Profile,
-  announcement: Announcement,
-  categories: Categories,
-  tags: Tags,
-  sidebarToc: SidebarTOC,
-  advertisement: Advertisement,
-  stats: SiteStats,
-  calendar: Calendar,
+	profile: Profile,
+	announcement: Announcement,
+	categories: Categories,
+	tags: Tags,
+	sidebarToc: SidebarTOC,
+	advertisement: Advertisement,
+	stats: SiteStats,
+	calendar: Calendar,
 };
 
 // 渲染组件的辅助函数
 function renderComponent(component: any, index: number, _components: any[]) {
-  const ComponentToRender =
-    componentMap[component.type as keyof typeof componentMap];
-  if (!ComponentToRender) return null;
+	const ComponentToRender =
+		componentMap[component.type as keyof typeof componentMap];
+	if (!ComponentToRender) return null;
 
-  // 使用配置的侧边栏位置，如果是 both 则默认为 left
-  const sidebar = targetSidebar || "left";
-  const componentClass = widgetManager.getComponentClass(component, sidebar, index);
-  const componentStyle = widgetManager.getComponentStyle(component, index);
+	// 使用配置的侧边栏位置，如果是 both 则默认为 left
+	const sidebar = targetSidebar || "left";
+	const componentClass = widgetManager.getComponentClass(
+		component,
+		sidebar,
+		index,
+	);
+	const componentStyle = widgetManager.getComponentStyle(component, index);
 
-  return {
-    Component: ComponentToRender,
-    props: {
-      class: componentClass,
-      style: componentStyle,
-      headings: component.type === "sidebarToc" ? headings : undefined,
-      configId: component.configId, // 传递configId给Advertisement组件
-      ...component.customProps,
-    },
-  };
+	return {
+		Component: ComponentToRender,
+		props: {
+			class: componentClass,
+			style: componentStyle,
+			headings: component.type === "sidebarToc" ? headings : undefined,
+			configId: component.configId, // 传递configId给Advertisement组件
+			...component.customProps,
+		},
+	};
 }
 ---
 

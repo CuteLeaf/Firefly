@@ -1,4 +1,5 @@
 ---
+import { render } from "astro:content";
 import path from "node:path";
 import Comment from "@components/comment/index.astro";
 import License from "@components/misc/License.astro";
@@ -7,30 +8,34 @@ import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import { getSortedPosts } from "@utils/content-utils";
-import { getDir, getPostUrlBySlug, removeFileExtension, getFileDirFromPath } from "@utils/url-utils";
-import { render } from "astro:content";
+import {
+	getDir,
+	getFileDirFromPath,
+	getPostUrlBySlug,
+	removeFileExtension,
+} from "@utils/url-utils";
 import { Icon } from "astro-icon/components";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { licenseConfig } from "@/config/licenseConfig";
-import RandomCoverImage from "@/components/misc/RandomCoverImage.astro";
 import PostMetadata from "@/components/content/PostMeta.astro";
+import RandomCoverImage from "@/components/misc/RandomCoverImage.astro";
+import { licenseConfig } from "@/config/licenseConfig";
 import { profileConfig } from "@/config/profileConfig";
 import { siteConfig } from "@/config/siteConfig";
-import { formatDateToYYYYMMDD } from "@/utils/date-utils";
 import { sponsorConfig } from "@/config/sponsorConfig";
-import { url } from "@/utils/url-utils";
+import { formatDateToYYYYMMDD } from "@/utils/date-utils";
 import { processCoverImageSync } from "@/utils/image-utils";
+import { url } from "@/utils/url-utils";
 export async function getStaticPaths() {
-  const blogEntries = await getSortedPosts();
-  return blogEntries.map((entry) => {
-    // 将 id 转换为 slug（移除扩展名）以匹配路由参数
-    const slug = removeFileExtension(entry.id);
-    return {
-      params: { slug },
-      props: { entry },
-    };
-  });
+	const blogEntries = await getSortedPosts();
+	return blogEntries.map((entry) => {
+		// 将 id 转换为 slug（移除扩展名）以匹配路由参数
+		const slug = removeFileExtension(entry.id);
+		return {
+			params: { slug },
+			props: { entry },
+		};
+	});
 }
 
 const { entry } = Astro.props;
@@ -45,25 +50,25 @@ const processedImage = processCoverImageSync(entry.data.image, entry.id);
 
 dayjs.extend(utc);
 const lastModified = dayjs(entry.data.updated || entry.data.published)
-  .utc()
-  .format("YYYY-MM-DDTHH:mm:ss");
+	.utc()
+	.format("YYYY-MM-DDTHH:mm:ss");
 
 const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  headline: entry.data.title,
-  description: entry.data.description || entry.data.title,
-  keywords: entry.data.tags,
-  author: {
-    "@type": "Person",
-    name: profileConfig.name,
-    url: Astro.site,
-  },
-  datePublished: formatDateToYYYYMMDD(entry.data.published),
-  inLanguage: entry.data.lang
-    ? entry.data.lang.replace("_", "-")
-    : siteConfig.lang.replace("_", "-"),
-  // TODO include cover image here
+	"@context": "https://schema.org",
+	"@type": "BlogPosting",
+	headline: entry.data.title,
+	description: entry.data.description || entry.data.title,
+	keywords: entry.data.tags,
+	author: {
+		"@type": "Person",
+		name: profileConfig.name,
+		url: Astro.site,
+	},
+	datePublished: formatDateToYYYYMMDD(entry.data.published),
+	inLanguage: entry.data.lang
+		? entry.data.lang.replace("_", "-")
+		: siteConfig.lang.replace("_", "-"),
+	// TODO include cover image here
 };
 ---
 

@@ -4,10 +4,10 @@ import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 
 interface Props {
-  totalItems: number;
-  itemsPerPage: number;
-  currentPage: number;
-  sectionId: string;
+	totalItems: number;
+	itemsPerPage: number;
+	currentPage: number;
+	sectionId: string;
 }
 
 const { totalItems, itemsPerPage, currentPage, sectionId } = Astro.props;
@@ -15,46 +15,46 @@ const totalPages = Math.ceil(totalItems / itemsPerPage);
 
 // 生成智能分页页码数组
 function generatePageNumbers(current: number, total: number) {
-  const delta = 2; // 当前页左右显示的页码数量
-  const range = [];
-  const rangeWithDots = [];
+	const delta = 2; // 当前页左右显示的页码数量
+	const range = [];
+	const rangeWithDots = [];
 
-  // 如果总页数小于等于7，显示所有页码
-  if (total <= 7) {
-    for (let i = 1; i <= total; i++) {
-      range.push(i);
-    }
-    return range;
-  }
+	// 如果总页数小于等于7，显示所有页码
+	if (total <= 7) {
+		for (let i = 1; i <= total; i++) {
+			range.push(i);
+		}
+		return range;
+	}
 
-  // 计算显示范围
-  const left = Math.max(2, current - delta);
-  const right = Math.min(total - 1, current + delta);
+	// 计算显示范围
+	const left = Math.max(2, current - delta);
+	const right = Math.min(total - 1, current + delta);
 
-  // 始终显示第一页
-  rangeWithDots.push(1);
+	// 始终显示第一页
+	rangeWithDots.push(1);
 
-  // 如果左边界大于2，添加省略号
-  if (left > 2) {
-    rangeWithDots.push("...");
-  }
+	// 如果左边界大于2，添加省略号
+	if (left > 2) {
+		rangeWithDots.push("...");
+	}
 
-  // 添加中间页码
-  for (let i = left; i <= right; i++) {
-    rangeWithDots.push(i);
-  }
+	// 添加中间页码
+	for (let i = left; i <= right; i++) {
+		rangeWithDots.push(i);
+	}
 
-  // 如果右边界小于最后一页-1，添加省略号
-  if (right < total - 1) {
-    rangeWithDots.push("...");
-  }
+	// 如果右边界小于最后一页-1，添加省略号
+	if (right < total - 1) {
+		rangeWithDots.push("...");
+	}
 
-  // 始终显示最后一页（如果总页数大于1）
-  if (total > 1) {
-    rangeWithDots.push(total);
-  }
+	// 始终显示最后一页（如果总页数大于1）
+	if (total > 1) {
+		rangeWithDots.push(total);
+	}
 
-  return rangeWithDots;
+	return rangeWithDots;
 }
 
 const pageNumbers = generatePageNumbers(currentPage, totalPages);

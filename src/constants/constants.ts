@@ -1,14 +1,14 @@
 export const PAGE_SIZE = 8;
 
 export const LIGHT_MODE = "light",
-  DARK_MODE = "dark",
-  SYSTEM_MODE = "system";
+	DARK_MODE = "dark",
+	SYSTEM_MODE = "system";
 export const DEFAULT_THEME = LIGHT_MODE; // 仅作为向后兼容的默认值，实际使用 siteConfig.themeColor.defaultMode
 
 // Wallpaper modes
 export const WALLPAPER_BANNER = "banner",
-  WALLPAPER_OVERLAY = "overlay",
-  WALLPAPER_NONE = "none";
+	WALLPAPER_OVERLAY = "overlay",
+	WALLPAPER_NONE = "none";
 
 // Banner height unit: vh
 export const BANNER_HEIGHT = 35;

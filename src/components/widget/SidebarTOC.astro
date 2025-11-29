@@ -1,14 +1,14 @@
 ---
 import type { MarkdownHeading } from "astro";
-import { i18n } from "@/i18n/translation";
-import I18nKey from "@/i18n/i18nKey";
-import WidgetLayout from "./WidgetLayout.astro";
 import TOCStyles from "@/components/common/styles/TOCStyles.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import WidgetLayout from "./WidgetLayout.astro";
 
 interface Props {
-  headings: MarkdownHeading[];
-  class?: string;
-  style?: string;
+	headings: MarkdownHeading[];
+	class?: string;
+	style?: string;
 }
 
 const { headings = [], class: className, style } = Astro.props;

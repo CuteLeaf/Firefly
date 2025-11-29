@@ -3,7 +3,7 @@
  * 公共下拉面板选项组件 (Svelte 5 版本)
  * 用于下拉面板中的选项项
  */
-import type { Snippet } from 'svelte';
+import type { Snippet } from "svelte";
 
 interface Props {
 	isActive?: boolean;
@@ -13,16 +13,17 @@ interface Props {
 	children?: Snippet;
 }
 
-let { 
-	isActive = false, 
-	isLast = false, 
-	class: className = '',
+let {
+	isActive = false,
+	isLast = false,
+	class: className = "",
 	onclick,
 	children,
-	...restProps 
+	...restProps
 }: Props = $props();
 
-const baseClasses = "flex transition whitespace-nowrap items-center !justify-start w-full btn-plain scale-animation rounded-lg h-9 px-3 font-medium active:scale-95";
+const baseClasses =
+	"flex transition whitespace-nowrap items-center !justify-start w-full btn-plain scale-animation rounded-lg h-9 px-3 font-medium active:scale-95";
 
 // 使用 $derived 使类名响应式
 const allClasses = $derived.by(() => {

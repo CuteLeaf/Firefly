@@ -3,13 +3,13 @@ import { commentConfig } from "@/config/commentConfig";
 import { url } from "@/utils/url-utils";
 
 interface Props {
-  path: string;
+	path: string;
 }
 
 const config = {
-  ...commentConfig.twikoo,
-  el: "#tcomment",
-  path: Astro.props.path,
+	...commentConfig.twikoo,
+	el: "#tcomment",
+	path: Astro.props.path,
 };
 ---
 

@@ -1,11 +1,11 @@
 ---
-import { commentConfig } from '@/config'
+import { commentConfig } from "@/config";
 
 if (!commentConfig || !commentConfig.giscus) {
-  throw new Error('Giscus comments are not configured')
+	throw new Error("Giscus comments are not configured");
 }
 
-const giscus = commentConfig.giscus
+const giscus = commentConfig.giscus;
 ---
 
 <script type="module" src="https://esm.sh/giscus"></script>
