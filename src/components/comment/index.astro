@@ -23,6 +23,9 @@ const path =
   customPath || (post.collection === "posts" ? `/posts/${slug}` : `/${slug}`);
 const url = `${Astro.site?.href}${path}`;
 
+// Extract post title safely (may not exist for all collection types)
+const postTitle = (data as { title?: string })?.title ?? "";
+
 // 强制commentService类型为string，避免类型不兼容警告
 let commentService: string = commentConfig?.type || "none";
 ---
@@ -51,7 +54,7 @@ let commentService: string = commentConfig?.type || "none";
         {commentService === "twikoo" && <Twikoo path={path} />}
         {commentService === "waline" && <Waline path={path} />}
         {commentService === "giscus" && <Giscus />}
-        {commentService === "disqus" && <Disqus identifier={slug} url={url} title={(post.data as { title?: string }).title ?? ""} />}
+        {commentService === "disqus" && <Disqus identifier={slug} url={url} title={postTitle} />}
         {commentService === "none" && (
           <div class="text-center py-8 text-[var(--content-meta)]">
             <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--btn-regular-bg)] flex items-center justify-center">
