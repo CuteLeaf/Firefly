@@ -4,14 +4,18 @@
 
 <script>
 import { Fancybox } from "@fancyapps/ui";
+const FancyboxAny = Fancybox as unknown as {  
+  close: () => void;  
+  bind: (...args: any[]) => void;
+};
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 function initFancybox() {
   // 销毁现有的 Fancybox 实例（如果存在）
-  Fancybox.close();
+  FancyboxAny.close();
   
   // 为相册图片添加 Fancybox 支持
-  Fancybox.bind(".custom-md img, #post-cover img, .moment-images img" as any, {
+  Fancybox.bind(".custom-md img, #post-cover img, .moment-images img" , {
     groupAll: true,
     Thumbs: {
       autoStart: true,
@@ -70,7 +74,7 @@ function initFancybox() {
   });
   
   // 为相册中的链接添加 Fancybox 支持
-  Fancybox.bind(".moment-images a[data-fancybox]" as any, {
+  Fancybox.bind(".moment-images a[data-fancybox]", {
     Thumbs: {
       autoStart: true,
       showOnStart: "yes",
@@ -127,7 +131,7 @@ function initFancybox() {
   });
   
   // 为单独的 fancybox 图片添加支持
-  Fancybox.bind("[data-fancybox]:not(.moment-images a)" as any, {
+  Fancybox.bind("[data-fancybox]:not(.moment-images a)", {
     // 自定义选项
     Thumbs: {
       autoStart: true,
