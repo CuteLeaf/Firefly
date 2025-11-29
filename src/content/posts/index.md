@@ -11,7 +11,7 @@ tags:
 category: "游戏技术"
 author: "xiaoqueqiao"
 slug: "minecraft-complete-error-solutions"
-draft: falseminecraft-complete-error-solutions.md
+draft: false  # 确保这一行单独存在，后面不要有其他内容
 ---
 
 # Minecraft Java版服务器错误解决
