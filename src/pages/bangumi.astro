@@ -149,33 +149,33 @@ if (!isUserIdConfigured) {
 }
 
 for (const [categoryKey, enabled] of Object.entries(bangumiConfig.categories)) {
-  // 如果未配置用户ID，跳过数据获取
-  if (!isUserIdConfigured) {
-    break;
-  }
-  if (enabled && categoryMap[categoryKey as keyof typeof categoryMap]) {
-    const categoryInfo = categoryMap[categoryKey as keyof typeof categoryMap];
-    try {
-      const data = await fetchBangumiData(
-        bangumiConfig.username ?? "",
-        categoryInfo.subjectType,
-      );
-      bangumiData[categoryKey] = data;
-      tabs.push({
-        id: categoryKey,
-        name: categoryInfo.name,
-        count: data.length,
-      });
-    } catch (error) {
-      console.error(`[Bangumi] 获取 ${categoryInfo.name} 数据失败:`, error);
-      bangumiData[categoryKey] = [];
-      tabs.push({
-        id: categoryKey,
-        name: categoryInfo.name,
-        count: 0,
-      });
-    }
-  }
+	// 如果未配置用户ID，跳过数据获取
+	if (!isUserIdConfigured) {
+		break;
+	}
+	if (enabled && categoryMap[categoryKey as keyof typeof categoryMap]) {
+		const categoryInfo = categoryMap[categoryKey as keyof typeof categoryMap];
+		try {
+			const data = await fetchBangumiData(
+				bangumiConfig.username ?? "",
+				categoryInfo.subjectType,
+			);
+			bangumiData[categoryKey] = data;
+			tabs.push({
+				id: categoryKey,
+				name: categoryInfo.name,
+				count: data.length,
+			});
+		} catch (error) {
+			console.error(`[Bangumi] 获取 ${categoryInfo.name} 数据失败:`, error);
+			bangumiData[categoryKey] = [];
+			tabs.push({
+				id: categoryKey,
+				name: categoryInfo.name,
+				count: 0,
+			});
+		}
+	}
 }
 
 const activeTab = tabs[0]?.id || "anime";

@@ -8,35 +8,33 @@
  * @returns 提取的代码文本
  */
 export function extractCodeText(codeElement: Element): string {
-    // 获取所有代码行元素
-    const lineElements = codeElement.querySelectorAll('span.line');
-    if (lineElements.length > 0) {
-        // 对于有行结构的代码块，精确处理每一行
-        const lines: string[] = [];
-        for (let i = 0; i < lineElements.length; i++) {
-            const lineElement = lineElements[i];
-            // 直接获取文本内容，不添加额外处理
-            const lineText = lineElement.textContent || '';
-            lines.push(lineText);
-        }
-        // 重要：使用 \n 连接行，而不是 \n\n 或其他方式
-        return lines.join('\n');
-    } else {
-        // 对于没有行结构的代码块
-        const codeElements = codeElement.querySelectorAll('.code:not(summary *)');
-        if (codeElements.length > 0) {
-            const lines: string[] = [];
-            for (let i = 0; i < codeElements.length; i++) {
-                const el = codeElements[i];
-                const lineText = el.textContent || '';
-                lines.push(lineText);
-            }
-            return lines.join('\n');
-        } else {
-            // 最后回退到直接使用整个code元素的文本内容
-            return codeElement.textContent || '';
-        }
-    }
+	// 获取所有代码行元素
+	const lineElements = codeElement.querySelectorAll("span.line");
+	if (lineElements.length > 0) {
+		// 对于有行结构的代码块，精确处理每一行
+		const lines: string[] = [];
+		for (let i = 0; i < lineElements.length; i++) {
+			const lineElement = lineElements[i];
+			// 直接获取文本内容，不添加额外处理
+			const lineText = lineElement.textContent || "";
+			lines.push(lineText);
+		}
+		// 重要：使用 \n 连接行，而不是 \n\n 或其他方式
+		return lines.join("\n");
+	}
+	// 对于没有行结构的代码块
+	const codeElements = codeElement.querySelectorAll(".code:not(summary *)");
+	if (codeElements.length > 0) {
+		const lines: string[] = [];
+		for (let i = 0; i < codeElements.length; i++) {
+			const el = codeElements[i];
+			const lineText = el.textContent || "";
+			lines.push(lineText);
+		}
+		return lines.join("\n");
+	}
+	// 最后回退到直接使用整个code元素的文本内容
+	return codeElement.textContent || "";
 }
 
 /**
@@ -45,29 +43,29 @@ export function extractCodeText(codeElement: Element): string {
  * @returns 处理后的代码文本
  */
 export function processEmptyLines(code: string): string {
-    return code.replace(/\n\n\n+/g, function(match) {
-        // 计算连续换行符的数量
-        const newlineCount = match.length;
-        // 计算空行数量（换行符数量减1）
-        const emptyLineCount = newlineCount - 1;
-        
-        // 偶数空行：除以2
-        // 奇数空行：(空行数+1)/2 向下取整
-        let resultEmptyLines: number;
-        if (emptyLineCount % 2 === 0) {
-            // 偶数
-            resultEmptyLines = emptyLineCount / 2;
-        } else {
-            // 奇数
-            resultEmptyLines = Math.floor((emptyLineCount + 1) / 2);
-        }
-        
-        // 至少保留一个空行
-        if (resultEmptyLines < 1) resultEmptyLines = 1;
-        
-        // 返回对应数量的换行符
-        return '\n'.repeat(resultEmptyLines + 1);
-    });
+	return code.replace(/\n\n\n+/g, (match) => {
+		// 计算连续换行符的数量
+		const newlineCount = match.length;
+		// 计算空行数量（换行符数量减1）
+		const emptyLineCount = newlineCount - 1;
+
+		// 偶数空行：除以2
+		// 奇数空行：(空行数+1)/2 向下取整
+		let resultEmptyLines: number;
+		if (emptyLineCount % 2 === 0) {
+			// 偶数
+			resultEmptyLines = emptyLineCount / 2;
+		} else {
+			// 奇数
+			resultEmptyLines = Math.floor((emptyLineCount + 1) / 2);
+		}
+
+		// 至少保留一个空行
+		if (resultEmptyLines < 1) resultEmptyLines = 1;
+
+		// 返回对应数量的换行符
+		return "\n".repeat(resultEmptyLines + 1);
+	});
 }
 
 /**

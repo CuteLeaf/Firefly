@@ -117,7 +117,9 @@ export const generateGridClasses = (
 			${mobileShowSidebar ? "grid-cols-1" : "grid-cols-1"}
 			${tabletShowSidebar ? (sidebarPos === "right" ? "md:grid-cols-[1fr_17.5rem]" : "md:grid-cols-[17.5rem_1fr]") : "md:grid-cols-1"}
 			${desktopShowSidebar ? (sidebarPos === "right" ? "lg:grid-cols-[1fr_17.5rem]" : "lg:grid-cols-[17.5rem_1fr]") : "lg:grid-cols-1"}
-		`.trim().replace(/\s+/g, " ");
+		`
+			.trim()
+			.replace(/\s+/g, " ");
 	}
 
 	return { gridCols };
@@ -146,14 +148,16 @@ export const generateSidebarClasses = (
 			.trim()
 			.replace(/\s+/g, " ");
 	}
-	
+
 	const sidebarPos = String(sidebarPosition);
 	return `
 		mb-4 row-start-2 row-end-3 col-span-2 onload-animation
 		${mobileShowSidebar ? "block" : "hidden"}
 		${tabletShowSidebar ? `md:block md:row-start-1 md:row-end-2 md:max-w-[17.5rem] ${sidebarPos === "right" ? "md:col-start-2 md:col-end-3" : "md:col-start-1 md:col-end-2"}` : "md:hidden"}
 		${desktopShowSidebar ? `lg:block lg:row-start-1 lg:row-end-2 lg:max-w-[17.5rem] ${sidebarPos === "right" ? "lg:col-start-2 lg:col-end-3" : "lg:col-start-1 lg:col-end-2"}` : "lg:hidden"}
-	`.trim().replace(/\s+/g, " ");
+	`
+		.trim()
+		.replace(/\s+/g, " ");
 };
 
 // 生成右侧边栏类名（仅用于双侧边栏）
@@ -274,12 +278,14 @@ export const generateMainContentClasses = (
 
 		return `transition-swup-fade overflow-hidden w-full ${mobileCol} ${tabletCol} ${desktopCol}`.trim();
 	}
-	
+
 	const sidebarPos = String(sidebarPosition);
 	return `
 		transition-swup-fade overflow-hidden w-full
 		${mobileShowSidebar ? "col-span-2" : "col-span-1"}
 		${tabletShowSidebar ? `${sidebarPos === "right" ? "md:col-start-1 md:col-end-2" : "md:col-start-2 md:col-end-3"}` : "md:col-span-1"}
 		${desktopShowSidebar ? `${sidebarPos === "right" ? "lg:col-start-1 lg:col-end-2" : "lg:col-start-2 lg:col-end-3"}` : "lg:col-span-1"}
-	`.trim().replace(/\s+/g, " ");
+	`
+		.trim()
+		.replace(/\s+/g, " ");
 };
