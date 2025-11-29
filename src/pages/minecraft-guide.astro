@@ -1,0 +1,215 @@
+---
+// src/pages/minecraft-guide.astro
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+
+export const title = "Minecraft 服务器手册";
+export const description = "小雀巧服务器的 Minecraft 服务器使用指南，包括地图坐标、问题解决方案、资源工具和服务器成员信息。";
+---
+
+<MainGridLayout title={title} description={description}>
+    <div class="card-base p-6">
+        <h1 class="text-3xl font-bold mb-6 text-green-400">📚 {title}</h1>
+        
+        <!-- 快速导航 -->
+        <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg p-4 mb-8">
+            <h2 class="text-white text-lg font-semibold mb-2">📋 快速导航</h2>
+            <div class="flex flex-wrap gap-2">
+                <a href="#map-coordinates" class="bg-white bg-opacity-20 text-white px-3 py-1 rounded text-sm hover:bg-opacity-30 transition">🗺️ 地图坐标</a>
+                <a href="#troubleshooting" class="bg-white bg-opacity-20 text-white px-3 py-1 rounded text-sm hover:bg-opacity-30 transition">🔧 问题解决</a>
+                <a href="#members" class="bg-white bg-opacity-20 text-white px-3 py-1 rounded text-sm hover:bg-opacity-30 transition">👥 服务器成员</a>
+                <a href="/minecraft/" class="bg-white bg-opacity-20 text-white px-3 py-1 rounded text-sm hover:bg-opacity-30 transition">🏠 返回服务器主页</a>
+                <a href="#download" class="bg-white bg-opacity-20 text-white px-3 py-1 rounded text-sm hover:bg-opacity-30 transition">⬇️ 资源下载</a>
+          </div>
+        </div>
+
+        <!-- 地图坐标部分 -->
+        <section id="map-coordinates" class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4 text-green-400">🗺️ 地图坐标</h2>
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700">
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold text-gray-100 mb-2">服务器信息</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div class="bg-gray-700 rounded p-3">
+                            <span class="text-gray-400">种子:</span>
+                            <code class="ml-2 text-green-300">8131352127096568697</code>
+                        </div>
+                        <div class="bg-gray-700 rounded p-3">
+                            <span class="text-gray-400">版本:</span>
+                            <span class="ml-2 text-blue-300">Java 1.21.1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 主世界坐标 -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-yellow-400 mb-3">🌍 主世界</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <div class="bg-gray-900 rounded p-3">
+                            <span class="text-gray-400">掠夺者哨塔:</span>
+                            <code class="ml-2 text-green-300">549 63 609</code>
+                        </div>
+                        <div class="bg-gray-900 rounded p-3">
+                            <span class="text-gray-400">海底神庙:</span>
+                            <code class="ml-2 text-blue-300">-241 63 -241</code>
+                        </div>
+                        <div class="bg-gray-900 rounded p-3">
+                            <span class="text-gray-400">丛林神庙:</span>
+                            <code class="ml-2 text-yellow-300">-3478 70 2279</code>
+                        </div>
+                        <div class="bg-gray-900 rounded p-3">
+                            <span class="text-gray-400">竹林:</span>
+                            <code class="ml-2 text-green-300">-2644 63 2389</code>
+                        </div>
+                        <div class="bg-gray-900 rounded p-3">
+                            <span class="text-gray-400">末地门:</span>
+                            <code class="ml-2 text-purple-300">1603 26 -1556</code>
+                        </div>
+                        <div class="bg-gray-900 rounded p-3">
+                            <span class="text-gray-400">村庄002:</span>
+                            <code class="ml-2 text-orange-300">1165 71 226</code>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 下界坐标 -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-red-400 mb-3">🔥 下界</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div class="bg-gray-900 rounded p-3">
+                            <span class="text-gray-400">传送门:</span>
+                            <code class="ml-2 text-red-300">38 60 -37</code>
+                        </div>
+                        <div class="bg-gray-900 rounded p-3">
+                            <span class="text-gray-400">朱灵堡垒:</span>
+                            <code class="ml-2 text-red-300">328 33 40</code>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 末地坐标 -->
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold text-purple-400 mb-3">🌌 末地</h3>
+                    <div class="bg-gray-900 rounded p-3">
+                        <span class="text-gray-400">折跃门:</span>
+                        <code class="ml-2 text-purple-300">1 75 95</code>
+                    </div>
+                </div>
+
+                <!-- 工具链接 -->
+                <div class="bg-blue-500 bg-opacity-10 border border-blue-500 rounded p-4">
+                    <h4 class="text-blue-400 font-semibold mb-2">🔧 实用工具</h4>
+                    <a href="https://mcseedmap.net/1.21.1-Java/8131352127096568697" 
+                       class="text-blue-300 hover:text-blue-200 underline" 
+                       target="_blank">
+                        MC种子地图查看器（自动定位本服务器）
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 问题解决部分 -->
+        <section id="troubleshooting" class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4 text-yellow-400">🔧 常见问题解决</h2>
+            <div class="space-y-6">
+                <!-- cpolar使用 -->
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700">
+                    <h3 class="text-lg font-semibold text-blue-400 mb-3">📡 cpolar内网穿透使用</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-gray-300">
+                            <thead class="bg-gray-700">
+                                <tr>
+                                    <th class="p-2 text-left">操作</th>
+                                    <th class="p-2 text-left">Web UI（推荐）</th>
+                                    <th class="p-2 text-left">命令行</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-gray-600">
+                                    <td class="p-2">查看隧道</td>
+                                    <td class="p-2">登录 Dashboard -> 状态/隧道列表</td>
+                                    <td class="p-2"><code>cpolar tunnel list</code></td>
+                                </tr>
+                                <tr class="border-b border-gray-600">
+                                    <td class="p-2">启动隧道</td>
+                                    <td class="p-2">点击隧道旁的"启动"按钮</td>
+                                    <td class="p-2"><code>cpolar start [隧道名称]</code></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2">使用隧道</td>
+                                    <td class="p-2">复制"公共地址"栏的URL</td>
+                                    <td class="p-2">命令结果中会显示URL</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-green-400 mt-3">💡 最简单的步骤：登录 CPolar 的 Web UI 管理界面，一切操作都清晰可见。</p>
+                </div>
+
+                <!-- 错误代码表格 -->
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700">
+                    <h3 class="text-lg font-semibold text-red-400 mb-3">❌ Minecraft常见报错</h3>
+                    <div class="space-y-3">
+                        <div class="bg-gray-900 rounded p-3">
+                            <h4 class="font-semibold text-red-300">Can't resolve hostname</h4>
+                            <p class="text-gray-400 text-sm">服务器IP输入错误，或者目前网络状态极差</p>
+                        </div>
+                        <div class="bg-gray-900 rounded p-3">
+                            <h4 class="font-semibold text-red-300">Connection refused: connect</h4>
+                            <p class="text-gray-400 text-sm">寻找不到服务器，或者服务器关闭中，建议检测IP是否正确</p>
+                        </div>
+                        <!-- 可以继续添加更多错误 -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 资源下载 -->
+        <section id="download" class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4 text-blue-400">⬇️ 资源下载</h2>
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700">
+            <ul class="list-disc list-inside space-y-3 text-gray-300">
+            
+            </ul>
+             </div>
+        </section>
+
+        <!-- 服务器成员 -->
+        <section id="members" class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4 text-purple-400">👥 服务器成员</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg p-6 text-white">
+                    <h3 class="text-lg font-semibold mb-3">🛠️ 管理员</h3>
+                    <ul class="space-y-1">
+                        <li>• xiaoqueqiao (服主)</li>
+                    </ul>
+                </div>
+                <div class="bg-gradient-to-br from-blue-500 to-cyan-600 rounded-lg p-6 text-white">
+                    <h3 class="text-lg font-semibold mb-3">🎮 成员</h3>
+                    <ul class="space-y-1">
+                        <li>• wssg</li>
+                        <li>• yangbin</li>
+                        <li>• 1234xzh</li>
+                        <li>• ly</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+</MainGridLayout>
+
+<style>
+html {
+    scroll-behavior: smooth;
+}
+code {
+    @apply bg-gray-900 px-2 py-1 rounded text-sm;
+}
+@media (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+</style>

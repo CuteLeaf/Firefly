@@ -1,0 +1,80 @@
+---
+// src/pages/minecraft.astro
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+
+export const title = i18n(I18nKey.minecraft); // 使用国际化
+export const description = "我的 Minecraft 服务器信息和相关资源";
+---
+
+<MainGridLayout title={title} description={description}>
+    <div class="card-base p-6">
+        <h1 class="text-3xl font-bold mb-6 text-green-400">🎮 {title}</h1>
+
+        <!-- 服务器介绍 -->
+<section class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4 text-green-400">📖 服务器介绍</h2>
+    <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700">
+        <p class="text-gray-300 mb-4">欢迎来到我的 Minecraft 服务器！这里是一个友好的生存社区。</p>
+        
+        <h3 class="text-gray-100 mb-3 text-lg font-semibold">特色功能</h3>
+        <ul class="text-gray-300 space-y-2">
+            <li class="flex items-center transition-colors hover:text-green-300">
+                <span class="text-green-400 mr-2">✅</span>
+                纯净生存体验
+            </li>
+        </ul>
+    </div>
+</section>
+
+<!-- 规则说明 -->
+<section class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4 text-yellow-400">📜 服务器规则</h2>
+    <div class="bg-yellow-500 bg-opacity-10 border border-yellow-500 border-opacity-30 rounded-lg p-6">
+        <ol class="list-decimal list-inside space-y-3 text-gray-200">
+            <li class="pl-2 transition-colors hover:text-yellow-300">禁止使用任何作弊客户端</li>
+            <li class="pl-2 transition-colors hover:text-yellow-300">尊重其他玩家，禁止恶意破坏</li>
+            <li class="pl-2 transition-colors hover:text-yellow-300">禁止刷屏和广告行为</li>
+            <li class="pl-2 transition-colors hover:text-yellow-300">共同维护和谐的社区环境</li>
+        </ol>
+    </div>
+</section>
+
+<!-- 联系方式 -->
+<section class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4 text-purple-400">📞 联系我们</h2>
+    <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-300">
+            <div class="flex items-center">
+                <span class="mr-3">📱 邮箱:</span>
+                <code class="bg-gray-700 px-2 py-1 rounded">hyx1081487532@outlook.com</code>
+            </div>     
+        </div>
+    </div>
+</section>
+
+<!-- 快速入门 -->
+<section class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4 text-cyan-400">⚡ 快速入门</h2>
+    <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700">
+        <ol class="list-decimal list-inside space-y-3 text-gray-300">
+            <li>下载并安装 Minecraft 1.21.1</li>
+            <li>在多人游戏中添加服务器地址
+            <li>进入游戏，开始你的冒险！</li>
+        </ol>
+    </div>
+</section>
+
+ <!-- 添加导航到详细手册 -->
+        <section class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-6 text-white">
+            <h2 class="text-xl font-semibold mb-3">📚 详细服务器手册</h2>
+            <p class="mb-4 opacity-90">需要查看完整的地图坐标、问题解决方案和下载资源？</p>
+            <a href="/minecraft-guide/" 
+               class="inline-flex items-center bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg transition-colors">
+                <span>查看完整手册</span>
+                <span class="ml-2">→</span>
+            </a>
+        </section>
+    </div>
+</MainGridLayout>

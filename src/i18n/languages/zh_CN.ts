@@ -200,4 +200,6 @@ export const zh_CN: Translation = {
   [Key.calendarOctober]: "10月",
   [Key.calendarNovember]: "11月",
   [Key.calendarDecember]: "12月",
+  //Minecraft
+  [Key.minecraft]: "Minecraft 服务器", 
 };

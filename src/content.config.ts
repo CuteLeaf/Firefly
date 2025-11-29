@@ -32,7 +32,20 @@ const specCollection = defineCollection({
 	schema: z.object({}),
 });
 
+// 添加 minecraft 集合
+const minecraftCollection = defineCollection({
+	loader: glob({ pattern: "**/*.md", base: "./src/content/minecraft" }),
+	schema: z.object({
+		title: z.string(),
+		description: z.string().optional().default(""),
+		date: z.date(),
+		type: z.enum(['news', 'update', 'event']).default('news'),
+	}),
+});
+
+// 只保留一个 export collections，合并所有集合
 export const collections = {
 	posts: postsCollection,
 	spec: specCollection,
+	minecraft: minecraftCollection, // 添加这一行
 };

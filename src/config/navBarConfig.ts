@@ -26,6 +26,14 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
         external: true,
         icon: "fa6-brands:bilibili",
       },
+      {
+       name: "Minecraft",  // 或使用 i18n 翻译
+       url: "/minecraft/",
+      },
+      {
+        name: "服务器手册",  // 或者添加国际化键
+        url: "/minecraft-guide/",  // 详细手册页
+      }
     ],
   });
 
