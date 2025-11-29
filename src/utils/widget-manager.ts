@@ -26,6 +26,7 @@ export const WIDGET_COMPONENT_MAP = {
  */
 export class WidgetManager {
 	private config: SidebarLayoutConfig;
+	private enabledComponents: WidgetComponentConfig[];
 
 	constructor(config: SidebarLayoutConfig = sidebarLayoutConfig) {
 		this.config = config;
