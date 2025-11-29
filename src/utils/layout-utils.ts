@@ -1,4 +1,4 @@
-import { siteConfig } from '../config';
+import { siteConfig } from "../config";
 
 // 背景图片处理工具函数
 export const getBackgroundImages = () => {
@@ -65,20 +65,23 @@ export const getDefaultBackground = (): string => {
 export const isHomePage = (pathname: string): boolean => {
 	// 获取 base URL
 	const baseUrl = import.meta.env.BASE_URL || "/";
-	
+
 	// 标准化路径：移除 base URL 前缀
 	const normalizedPath = pathname.replace(baseUrl, "/");
-	
+
 	// 检查是否为根路径
 	return normalizedPath === "/" || normalizedPath === "";
 };
 
 // 获取横幅偏移量
-export const getBannerOffset = (position: string = "center") => {
+export const getBannerOffset = (position = "center") => {
 	const bannerOffsetByPosition = {
 		top: "100vh",
-		center: "50vh", 
+		center: "50vh",
 		bottom: "0",
 	};
-	return bannerOffsetByPosition[position as keyof typeof bannerOffsetByPosition] || "50vh";
+	return (
+		bannerOffsetByPosition[position as keyof typeof bannerOffsetByPosition] ||
+		"50vh"
+	);
 };

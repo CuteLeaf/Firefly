@@ -1,17 +1,18 @@
 ---
-import { commentConfig } from '@/config'
+import { commentConfig } from "@/config";
+
 interface Props {
-  identifier: string
-  url: string
-  title: string
+	identifier: string;
+	url: string;
+	title: string;
 }
 
-const { identifier, url, title } = Astro.props
+const { identifier, url, title } = Astro.props;
 
 if (!commentConfig || !commentConfig.disqus) {
-  throw new Error('Disqus comments are not configured')
+	throw new Error("Disqus comments are not configured");
 }
-const shortname = commentConfig.disqus.shortname
+const shortname = commentConfig.disqus.shortname;
 ---
 
 <div id="disqus_thread"></div>

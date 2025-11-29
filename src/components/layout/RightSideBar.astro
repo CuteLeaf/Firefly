@@ -1,79 +1,87 @@
 ---
 import type { MarkdownHeading } from "astro";
-import { widgetManager } from "@/utils/widget-manager";
-import Announcement from "@/components/widget/Announcement.astro";
-import Categories from "@/components/widget/Categories.astro";
 import Profile from "@/components/content/Profile.astro";
-import Tags from "@/components/widget/Tags.astro";
 import Advertisement from "@/components/widget/Advertisement.astro";
-import SiteStats from "@/components/widget/SiteStats.astro";
+import Announcement from "@/components/widget/Announcement.astro";
 import Calendar from "@/components/widget/Calendar.astro";
+import Categories from "@/components/widget/Categories.astro";
 import SidebarTOC from "@/components/widget/SidebarTOC.astro";
+import SiteStats from "@/components/widget/SiteStats.astro";
+import Tags from "@/components/widget/Tags.astro";
 import { siteConfig } from "@/config/siteConfig";
+import { widgetManager } from "@/utils/widget-manager";
 
 interface Props {
-  class?: string;
-  headings?: MarkdownHeading[];
+	class?: string;
+	headings?: MarkdownHeading[];
 }
 
 const { class: className, headings } = Astro.props;
 
 // 获取右侧边栏的组件列表
 const topComponents = widgetManager.getComponentsByPosition("top", "right");
-const stickyComponents = widgetManager.getComponentsByPosition("sticky", "right");
+const stickyComponents = widgetManager.getComponentsByPosition(
+	"sticky",
+	"right",
+);
 
 // 组件类型到ID的映射
 const componentTypeToId = {
-  stats: "site-stats",
-  calendar: "calendar-widget",
-  sidebarToc: "sidebar-toc",
-  profile: "profile",
-  announcement: "announcement",
-  categories: "categories",
-  tags: "tags",
-  advertisement: "advertisement",
+	stats: "site-stats",
+	calendar: "calendar-widget",
+	sidebarToc: "sidebar-toc",
+	profile: "profile",
+	announcement: "announcement",
+	categories: "categories",
+	tags: "tags",
+	advertisement: "advertisement",
 };
 
 // 提取客户端需要的数据 - 包含组件的 showOnPostPage 配置
-const rightComponentsConfig = widgetManager.getConfig().rightComponents
-  .filter(c => c.enable)
-  .map(c => ({
-    id: componentTypeToId[c.type as keyof typeof componentTypeToId],
-    showOnPostPage: c.showOnPostPage ?? true, // 默认为 true
-  }));
+const rightComponentsConfig = widgetManager
+	.getConfig()
+	.rightComponents.filter((c) => c.enable)
+	.map((c) => ({
+		id: componentTypeToId[c.type as keyof typeof componentTypeToId],
+		showOnPostPage: c.showOnPostPage ?? true, // 默认为 true
+	}));
 
 // 组件映射表
 const componentMap = {
-  profile: Profile,
-  announcement: Announcement,
-  categories: Categories,
-  tags: Tags,
-  sidebarToc: SidebarTOC,
-  advertisement: Advertisement,
-  stats: SiteStats,
-  calendar: Calendar,
+	profile: Profile,
+	announcement: Announcement,
+	categories: Categories,
+	tags: Tags,
+	sidebarToc: SidebarTOC,
+	advertisement: Advertisement,
+	stats: SiteStats,
+	calendar: Calendar,
 };
 
 // 渲染组件的辅助函数
 function renderComponent(component: any, index: number, _components: any[]) {
-  const ComponentToRender =
-    componentMap[component.type as keyof typeof componentMap];
-  if (!ComponentToRender) return null;
+	const ComponentToRender =
+		componentMap[component.type as keyof typeof componentMap];
+	if (!ComponentToRender) return null;
 
-  const componentClass = widgetManager.getComponentClass(component, "right", index);
-  const componentStyle = widgetManager.getComponentStyle(component, index);
+	const componentClass = widgetManager.getComponentClass(
+		component,
+		"right",
+		index,
+	);
+	const componentStyle = widgetManager.getComponentStyle(component, index);
 
-  return {
-    Component: ComponentToRender,
-    props: {
-      class: componentClass,
-      style: componentStyle,
-      headings: component.type === "sidebarToc" ? headings : undefined,
-      configId: component.configId,
-      showOnPostPage: component.showOnPostPage,
-      ...component.customProps,
-    },
-  };
+	return {
+		Component: ComponentToRender,
+		props: {
+			class: componentClass,
+			style: componentStyle,
+			headings: component.type === "sidebarToc" ? headings : undefined,
+			configId: component.configId,
+			showOnPostPage: component.showOnPostPage,
+			...component.customProps,
+		},
+	};
 }
 ---
 

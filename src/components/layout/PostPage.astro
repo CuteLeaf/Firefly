@@ -2,7 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getPostUrlBySlug } from "@utils/url-utils";
 import PostCard from "@/components/content/PostCard.astro";
-import { siteConfig, sidebarLayoutConfig } from "@/config";
+import { sidebarLayoutConfig, siteConfig } from "@/config";
 
 const { page } = Astro.props;
 
@@ -18,9 +18,9 @@ const isBothSidebars = sidebarLayoutConfig.position === "both";
 // 根据配置设置初始布局模式，避免闪烁
 const defaultLayout = siteConfig.postListLayout.defaultMode || "list";
 const initialLayoutClass =
-  defaultLayout === "grid"
-    ? "grid grid-cols-1 md:grid-cols-2 gap-4 grid-mode"
-    : "flex flex-col gap-4 md:gap-4 list-mode";
+	defaultLayout === "grid"
+		? "grid grid-cols-1 md:grid-cols-2 gap-4 grid-mode"
+		: "flex flex-col gap-4 md:gap-4 list-mode";
 ---
 
 <div

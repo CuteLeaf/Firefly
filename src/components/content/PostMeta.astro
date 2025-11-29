@@ -1,44 +1,44 @@
 ---
 import { Icon } from "astro-icon/components";
-import { profileConfig, commentConfig } from "@/config";
+import { commentConfig, profileConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { formatDateToYYYYMMDD } from "@/utils/date-utils";
 import { getCategoryUrl, getTagUrl } from "@/utils/url-utils";
 
 export interface Props {
-  published: Date;
-  updated?: Date;
-  category?: string;
-  tags?: string[];
-  hideUpdateDate?: boolean;
-  hideTagsForMobile?: boolean;
-  isHome?: boolean;
-  className?: string;
-  id?: string;
-  words?: number;
-  minutes?: number;
-  showWordCount?: boolean; // 是否显示字数统计，默认false显示标签
-  customPath?: string;
+	published: Date;
+	updated?: Date;
+	category?: string;
+	tags?: string[];
+	hideUpdateDate?: boolean;
+	hideTagsForMobile?: boolean;
+	isHome?: boolean;
+	className?: string;
+	id?: string;
+	words?: number;
+	minutes?: number;
+	showWordCount?: boolean; // 是否显示字数统计，默认false显示标签
+	customPath?: string;
 }
 
 const {
-  published,
-  updated,
-  category,
-  tags,
-  hideUpdateDate,
-  hideTagsForMobile,
-  isHome,
-  className = "",
-  id,
-  words,
-  minutes,
-  showWordCount = false,
-  customPath
+	published,
+	updated,
+	category,
+	tags,
+	hideUpdateDate,
+	hideTagsForMobile,
+	isHome,
+	className = "",
+	id,
+	words,
+	minutes,
+	showWordCount = false,
+	customPath,
 } = Astro.props;
 
-const path = customPath || (id ? `/posts/${id}` : '');
+const path = customPath || (id ? `/posts/${id}` : "");
 ---
 
 <div

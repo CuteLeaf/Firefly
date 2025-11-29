@@ -19,7 +19,7 @@ export function AdmonitionComponent(properties, children, type) {
 		);
 
 	let label = null;
-	if (Object(properties).hasOwnProperty("has-directive-label")) {
+	if (Object.hasOwn(Object(properties), "has-directive-label")) {
 		label = children[0]; // The first child is the label
 		// biome-ignore lint/style/noParameterAssign: <check later>
 		children = children.slice(1);

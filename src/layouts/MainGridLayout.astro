@@ -1,27 +1,33 @@
 ---
 import BackToTop from "@components/common/controls/BackToTop.astro";
 import Footer from "@components/layout/Footer.astro";
-import Navbar from "@components/layout/Navbar.astro";
-import SideBar from "@components/layout/SideBar.astro";
 import LeftSideBar from "@components/layout/LeftSideBar.astro";
+import Navbar from "@components/layout/Navbar.astro";
 import RightSideBar from "@components/layout/RightSideBar.astro";
-import SpineModel from "@components/widget/SpineModel.astro";
+import SideBar from "@components/layout/SideBar.astro";
 import Live2DWidget from "@components/widget/Live2DWidget.astro";
+import SpineModel from "@components/widget/SpineModel.astro";
 import type { MarkdownHeading } from "astro";
 import { Icon } from "astro-icon/components";
+import TypewriterText from "@/components/content/TypewriterText.astro";
+import FloatingTOC from "@/components/interactive/FloatingTOC.astro";
 import FullscreenWallpaper from "@/components/misc/FullscreenWallpaper.astro";
 import IconifyLoader from "@/components/misc/IconifyLoader.astro";
 import ImageWrapper from "@/components/misc/ImageWrapper.astro";
-import TypewriterText from "@/components/content/TypewriterText.astro";
-import FloatingTOC from "@/components/interactive/FloatingTOC.astro";
-import { siteConfig, live2dModelConfig } from "@/config";
+import { live2dModelConfig, siteConfig } from "@/config";
 import {
 	BANNER_HEIGHT,
 	BANNER_HEIGHT_EXTEND,
 	MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
 } from "@/constants/constants";
 import { getBackgroundImages, isHomePage } from "@/utils/layout-utils";
-import { getResponsiveSidebarConfig, generateGridClasses, generateSidebarClasses, generateRightSidebarClasses, generateMainContentClasses } from "@/utils/responsive-utils";
+import {
+	generateGridClasses,
+	generateMainContentClasses,
+	generateRightSidebarClasses,
+	generateSidebarClasses,
+	getResponsiveSidebarConfig,
+} from "@/utils/responsive-utils";
 import Layout from "./Layout.astro";
 
 interface Props {
@@ -56,29 +62,52 @@ const isWallpaperSwitchable = siteConfig.backgroundWallpaper.switchable ?? true;
 const wavesConfig = siteConfig.backgroundWallpaper.banner?.waves?.enable;
 const isWavesEnabled = isBannerMode && isBackgroundEnabled && wavesConfig;
 // 处理分设备控制的波浪动画
-const wavesEnabledOnDesktop = typeof wavesConfig === 'object' ? wavesConfig.desktop : wavesConfig;
-const wavesEnabledOnMobile = typeof wavesConfig === 'object' ? wavesConfig.mobile : wavesConfig;
+const wavesEnabledOnDesktop =
+	typeof wavesConfig === "object" ? wavesConfig.desktop : wavesConfig;
+const wavesEnabledOnMobile =
+	typeof wavesConfig === "object" ? wavesConfig.mobile : wavesConfig;
 
 // 获取波浪效果性能设置
-const performanceConfig = siteConfig.backgroundWallpaper.banner?.waves?.performance;
-const waveQuality = performanceConfig?.quality || 'high';
+const performanceConfig =
+	siteConfig.backgroundWallpaper.banner?.waves?.performance;
+const waveQuality = performanceConfig?.quality || "high";
 const hardwareAcceleration = performanceConfig?.hardwareAcceleration ?? true;
 
 // 处理分设备控制的横幅信贷显示
-const creditEnableConfig = siteConfig.backgroundWallpaper.banner?.credit?.enable;
-const creditEnabledOnDesktop = typeof creditEnableConfig === 'object' ? creditEnableConfig.desktop : creditEnableConfig;
-const creditEnabledOnMobile = typeof creditEnableConfig === 'object' ? creditEnableConfig.mobile : creditEnableConfig;
+const creditEnableConfig =
+	siteConfig.backgroundWallpaper.banner?.credit?.enable;
+const creditEnabledOnDesktop =
+	typeof creditEnableConfig === "object"
+		? creditEnableConfig.desktop
+		: creditEnableConfig;
+const creditEnabledOnMobile =
+	typeof creditEnableConfig === "object"
+		? creditEnableConfig.mobile
+		: creditEnableConfig;
 
-const hasBannerCredit = isBannerMode && isBackgroundEnabled && creditEnableConfig;
+const hasBannerCredit =
+	isBannerMode && isBackgroundEnabled && creditEnableConfig;
 
 // 处理分设备控制的横幅信贷文本和链接
 const creditTextConfig = siteConfig.backgroundWallpaper.banner?.credit?.text;
-const creditTextDesktop = typeof creditTextConfig === 'object' ? creditTextConfig.desktop : creditTextConfig;
-const creditTextMobile = typeof creditTextConfig === 'object' ? creditTextConfig.mobile : creditTextConfig;
+const creditTextDesktop =
+	typeof creditTextConfig === "object"
+		? creditTextConfig.desktop
+		: creditTextConfig;
+const creditTextMobile =
+	typeof creditTextConfig === "object"
+		? creditTextConfig.mobile
+		: creditTextConfig;
 
 const creditUrlConfig = siteConfig.backgroundWallpaper.banner?.credit?.url;
-const creditUrlDesktop = typeof creditUrlConfig === 'object' ? creditUrlConfig.desktop : creditUrlConfig;
-const creditUrlMobile = typeof creditUrlConfig === 'object' ? creditUrlConfig.mobile : creditUrlConfig;
+const creditUrlDesktop =
+	typeof creditUrlConfig === "object"
+		? creditUrlConfig.desktop
+		: creditUrlConfig;
+const creditUrlMobile =
+	typeof creditUrlConfig === "object"
+		? creditUrlConfig.mobile
+		: creditUrlConfig;
 
 const hasBannerLink = !!(creditUrlDesktop || creditUrlMobile);
 
@@ -87,12 +116,12 @@ const isHomePageCheck = isHomePage(Astro.url.pathname);
 
 // 随机选择副标题（当打字机关闭且为数组时）
 const getRandomSubtitle = () => {
-  const subtitle = siteConfig.backgroundWallpaper.banner?.homeText?.subtitle;
-  if (Array.isArray(subtitle)) {
-    const randomIndex = Math.floor(Math.random() * subtitle.length);
-    return subtitle[randomIndex];
-  }
-  return subtitle;
+	const subtitle = siteConfig.backgroundWallpaper.banner?.homeText?.subtitle;
+	if (Array.isArray(subtitle)) {
+		const randomIndex = Math.floor(Math.random() * subtitle.length);
+		return subtitle[randomIndex];
+	}
+	return subtitle;
 };
 const randomSubtitle = getRandomSubtitle();
 
@@ -103,19 +132,23 @@ const showHomeText = isBannerMode && !!homeTextEnable && isHomePageCheck;
 const mobileNonHomeBannerClass = !isHomePageCheck ? "mobile-hide-banner" : "";
 
 // 计算主内容区域位置，考虑手机端非首页时banner被隐藏
-const mainPanelTop = isBannerMode && isBackgroundEnabled
-	? `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`
-	: "5.5rem";
+const mainPanelTop =
+	isBannerMode && isBackgroundEnabled
+		? `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`
+		: "5.5rem";
 
 // 当banner模式被禁用时，主内容区域应该始终从顶栏下面开始
 // 非首页在小于1024px时会通过 mobile-main-no-banner CSS类覆盖top值为5.5rem
-const finalMainPanelTop = isBannerMode && isBackgroundEnabled ? mainPanelTop : "5.5rem";
+const finalMainPanelTop =
+	isBannerMode && isBackgroundEnabled ? mainPanelTop : "5.5rem";
 
 // 获取响应式侧边栏配置
 const sidebarConfig = getResponsiveSidebarConfig();
 const { gridCols } = generateGridClasses(sidebarConfig);
 const sidebarClass = generateSidebarClasses(sidebarConfig);
-const rightSidebarClass = sidebarConfig.isBothSidebars ? generateRightSidebarClasses(sidebarConfig) : "";
+const rightSidebarClass = sidebarConfig.isBothSidebars
+	? generateRightSidebarClasses(sidebarConfig)
+	: "";
 const mainContentClass = generateMainContentClasses(sidebarConfig);
 
 // 检查是否应该启用半透明效果

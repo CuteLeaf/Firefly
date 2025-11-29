@@ -1,13 +1,13 @@
 ---
 interface Tab {
-  id: string;
-  name: string;
-  count?: number;
+	id: string;
+	name: string;
+	count?: number;
 }
 
 interface Props {
-  tabs: Tab[];
-  activeTab: string;
+	tabs: Tab[];
+	activeTab: string;
 }
 
 const { tabs, activeTab } = Astro.props;

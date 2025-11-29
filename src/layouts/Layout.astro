@@ -1,21 +1,21 @@
 ---
-import ConfigCarrier from "@components/layout/ConfigCarrier.astro";
-import FontManager from "@components/interactive/FontManager.astro";
-import MusicPlayer from "@components/widget/MusicPlayer.astro";
-import SakuraEffect from "@components/effects/SakuraEffect.astro";
 import FancyboxManager from "@components/effects/FancyboxManager.astro";
+import SakuraEffect from "@components/effects/SakuraEffect.astro";
+import FontManager from "@components/interactive/FontManager.astro";
+import ConfigCarrier from "@components/layout/ConfigCarrier.astro";
+import MusicPlayer from "@components/widget/MusicPlayer.astro";
 
-import { profileConfig, siteConfig, expressiveCodeConfig } from "@/config";
+import { expressiveCodeConfig, profileConfig, siteConfig } from "@/config";
 import {
-  BANNER_HEIGHT,
-  BANNER_HEIGHT_EXTEND,
-  BANNER_HEIGHT_HOME,
-  PAGE_WIDTH,
+	BANNER_HEIGHT,
+	BANNER_HEIGHT_EXTEND,
+	BANNER_HEIGHT_HOME,
+	PAGE_WIDTH,
 } from "@/constants/constants";
 import { defaultFavicons } from "@/constants/icon";
 import type { Favicon } from "@/types/config";
-import { url } from "@/utils/url-utils";
 import { getDefaultBackground, isHomePage } from "@/utils/layout-utils";
+import { url } from "@/utils/url-utils";
 
 import "katex/dist/katex.css";
 import "@/styles/navbar.css";
@@ -24,16 +24,16 @@ import "@/styles/layout-styles.css";
 import "@/styles/waves.css";
 
 interface Props {
-  title?: string;
-  banner?: string;
-  description?: string;
-  lang?: string;
-  setOGTypeArticle?: boolean;
-  postSlug?: string;
+	title?: string;
+	banner?: string;
+	description?: string;
+	lang?: string;
+	setOGTypeArticle?: boolean;
+	postSlug?: string;
 }
 
 let { title, banner, description, lang, setOGTypeArticle, postSlug } =
-  Astro.props;
+	Astro.props;
 
 // apply a class to the body element to decide the height of the banner, only used for initial page load
 // Swup can update the body for each page visit, but it's after the page transition, causing a delay for banner height change
@@ -46,13 +46,13 @@ const configHue = siteConfig.themeColor.hue;
 
 // 获取导航栏透明模式配置
 const navbarTransparentMode =
-  siteConfig.backgroundWallpaper?.banner?.navbar?.transparentMode || "semi";
+	siteConfig.backgroundWallpaper?.banner?.navbar?.transparentMode || "semi";
 // 判断是否应该显示顶部高光效果（只在full和semifull模式下显示）
 const shouldShowTopHighlight =
-  navbarTransparentMode === "full" || navbarTransparentMode === "semifull";
+	navbarTransparentMode === "full" || navbarTransparentMode === "semifull";
 
 if (!banner || typeof banner !== "string" || banner.trim() === "") {
-  banner = getDefaultBackground();
+	banner = getDefaultBackground();
 }
 
 // TODO don't use post cover as banner for now
@@ -62,24 +62,24 @@ const enableBanner = siteConfig.backgroundWallpaper.mode === "banner";
 
 let pageTitle: string;
 if (title) {
-  pageTitle = `${title} - ${siteConfig.title}`;
+	pageTitle = `${title} - ${siteConfig.title}`;
 } else {
-  pageTitle = siteConfig.subtitle
-    ? `${siteConfig.title} - ${siteConfig.subtitle}`
-    : siteConfig.title;
+	pageTitle = siteConfig.subtitle
+		? `${siteConfig.title} - ${siteConfig.subtitle}`
+		: siteConfig.title;
 }
 
 let ogImageUrl: string | undefined;
 if (siteConfig.generateOgImages && postSlug) {
-  ogImageUrl = new URL(`/og/${postSlug}.png`, Astro.site).toString();
+	ogImageUrl = new URL(`/og/${postSlug}.png`, Astro.site).toString();
 }
 
 const favicons: Favicon[] =
-  siteConfig.favicon.length > 0 ? siteConfig.favicon : defaultFavicons;
+	siteConfig.favicon.length > 0 ? siteConfig.favicon : defaultFavicons;
 
 // const siteLang = siteConfig.lang.replace('_', '-')
 if (!lang) {
-  lang = `${siteConfig.lang}`;
+	lang = `${siteConfig.lang}`;
 }
 const siteLang = lang.replace("_", "-");
 

@@ -89,7 +89,7 @@ export function isSwupReady(): boolean {
  * 等待 Swup 准备就绪
  * @param timeout 超时时间（毫秒）
  */
-export function waitForSwup(timeout: number = 5000): Promise<boolean> {
+export function waitForSwup(timeout = 5000): Promise<boolean> {
 	return new Promise((resolve) => {
 		if (isSwupReady()) {
 			resolve(true);
