@@ -16,8 +16,8 @@ interface Props {
 const { config, className } = Astro.props;
 
 // 获取图片源
-const desktopSrc = config.src.desktop || config.src.mobile || '';
-const mobileSrc = config.src.mobile || config.src.desktop || '';
+const desktopSrc = config.src.desktop || config.src.mobile || "";
+const mobileSrc = config.src.mobile || config.src.desktop || "";
 
 // 如果没有任何图片源，不渲染
 if (!desktopSrc && !mobileSrc) {

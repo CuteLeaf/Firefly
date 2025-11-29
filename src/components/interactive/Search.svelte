@@ -1,167 +1,184 @@
 <script lang="ts">
-  import type {SearchResult} from "@/global";
-  import I18nKey from "@i18n/i18nKey";
-  import {i18n} from "@i18n/translation";
-  import Icon from "@iconify/svelte";
-  import {url as formatUrl} from "@/utils/url-utils";
-  import {onMount} from "svelte";
-  import {type MeiliSearchConfig, NavBarSearchMethod} from "@/types/config";
-  import {navigateToPage} from "@utils/navigation-utils";
-  import {MeiliSearch} from 'meilisearch';
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import Icon from "@iconify/svelte";
+import { navigateToPage } from "@utils/navigation-utils";
+import { MeiliSearch } from "meilisearch";
+import { onMount } from "svelte";
+import type { SearchResult } from "@/global";
+import { type MeiliSearchConfig, NavBarSearchMethod } from "@/types/config";
+import { url as formatUrl } from "@/utils/url-utils";
 
-  // --- Props from Astro ---
-  export let searchMethod: NavBarSearchMethod;
-  export let meiliSearchConfig: MeiliSearchConfig;
+// --- Props from Astro ---
+export let searchMethod: NavBarSearchMethod;
+export let meiliSearchConfig: MeiliSearchConfig;
 
-  // --- State ---
-  let keywordDesktop = "";
-  let keywordMobile = "";
-  let result: SearchResult[] = [];
-  let isSearching = false;
-  let initialized = false;
-  let meiliClient: MeiliSearch | null = null;
-  let debounceTimer: NodeJS.Timeout;
+// --- State ---
+let keywordDesktop = "";
+let keywordMobile = "";
+let result: SearchResult[] = [];
+let isSearching = false;
+let initialized = false;
+let meiliClient: MeiliSearch | null = null;
+let debounceTimer: NodeJS.Timeout;
 
+// --- Mocks for Dev Mode ---
+const fakeResult: SearchResult[] = [
+	{
+		url: formatUrl("/"),
+		meta: { title: "This Is a Fake Search Result" },
+		excerpt:
+			"Because Pagefind cannot work in the <mark>dev</mark> environment.",
+	},
+	{
+		url: formatUrl("/"),
+		meta: { title: "If You Want to Test the Search" },
+		excerpt: "Try running <mark>npm build && npm preview</mark> instead.",
+	},
+];
 
-  // --- Mocks for Dev Mode ---
-  const fakeResult: SearchResult[] = [
-    {
-      url: formatUrl("/"),
-      meta: {title: "This Is a Fake Search Result"},
-      excerpt: "Because Pagefind cannot work in the <mark>dev</mark> environment.",
-    },
-    {
-      url: formatUrl("/"),
-      meta: {title: "If You Want to Test the Search"},
-      excerpt: "Try running <mark>npm build && npm preview</mark> instead.",
-    },
-  ];
+// --- UI Logic ---
+const togglePanel = () => {
+	document
+		.getElementById("search-panel")
+		?.classList.toggle("float-panel-closed");
+};
 
-  // --- UI Logic ---
-  const togglePanel = () => {
-    document.getElementById("search-panel")?.classList.toggle("float-panel-closed");
-  };
+const setPanelVisibility = (show: boolean, isDesktop: boolean): void => {
+	const panel = document.getElementById("search-panel");
+	if (
+		!panel ||
+		(isDesktop && !keywordDesktop) ||
+		(!isDesktop && !keywordMobile)
+	)
+		return;
+	show
+		? panel.classList.remove("float-panel-closed")
+		: panel.classList.add("float-panel-closed");
+};
 
-  const setPanelVisibility = (show: boolean, isDesktop: boolean): void => {
-    const panel = document.getElementById("search-panel");
-    if (!panel || (isDesktop && !keywordDesktop) || (!isDesktop && !keywordMobile)) return;
-    show ? panel.classList.remove("float-panel-closed") : panel.classList.add("float-panel-closed");
-  };
+const closeSearchPanel = (): void => {
+	document.getElementById("search-panel")?.classList.add("float-panel-closed");
+	keywordDesktop = "";
+	keywordMobile = "";
+	result = [];
+};
 
-  const closeSearchPanel = (): void => {
-    document.getElementById("search-panel")?.classList.add("float-panel-closed");
-    keywordDesktop = "";
-    keywordMobile = "";
-    result = [];
-  };
+const handleResultClick = (event: Event, url: string): void => {
+	event.preventDefault();
+	closeSearchPanel();
+	navigateToPage(url);
+};
 
-  const handleResultClick = (event: Event, url: string): void => {
-    event.preventDefault();
-    closeSearchPanel();
-    navigateToPage(url);
-  };
+// --- Core Search Logic ---
+const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
+	if (!keyword) {
+		setPanelVisibility(false, isDesktop);
+		result = [];
+		return;
+	}
+	if (!initialized) return;
 
-  // --- Core Search Logic ---
-  const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
-    if (!keyword) {
-      setPanelVisibility(false, isDesktop);
-      result = [];
-      return;
-    }
-    if (!initialized) return;
+	isSearching = true;
 
-    isSearching = true;
+	clearTimeout(debounceTimer);
+	debounceTimer = setTimeout(async () => {
+		try {
+			let searchResults: SearchResult[] = [];
 
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(async () => {
-      try {
-        let searchResults: SearchResult[] = [];
+			if (searchMethod === NavBarSearchMethod.MeiliSearch) {
+				if (!meiliClient)
+					throw new Error("MeiliSearch client not initialized.");
+				const index = meiliClient.index(meiliSearchConfig.INDEX_NAME);
+				const searchResponse = await index.search(keyword, {
+					limit: 10,
+					attributesToHighlight: ["title", "content", "description"],
+					attributesToCrop: ["content:50"],
+					highlightPreTag: "<mark>",
+					highlightPostTag: "</mark>",
+				});
+				console.log(searchResponse);
+				// Map MeiliSearch results to our standard SearchResult format
+				searchResults = searchResponse.hits
+					.filter((hit) => hit._formatted)
+					.map((hit) => {
+						return {
+							url: hit._formatted?.slug,
+							meta: { title: hit._formatted?.title },
+							excerpt: hit._formatted?.description,
+							content: hit._formatted?.content,
+						};
+					});
+			} else if (searchMethod === NavBarSearchMethod.PageFind) {
+				if (import.meta.env.PROD && window.pagefind) {
+					const response = await window.pagefind.search(keyword);
+					searchResults = await Promise.all(
+						response.results.map((item) => item.data()),
+					);
+				} else if (import.meta.env.DEV) {
+					searchResults = fakeResult;
+				}
+			}
 
-        if (searchMethod === NavBarSearchMethod.MeiliSearch) {
-          if (!meiliClient) throw new Error("MeiliSearch client not initialized.");
-          const index = meiliClient.index(meiliSearchConfig.INDEX_NAME);
-          const searchResponse = await index.search(keyword, {
-            limit: 10,
-            attributesToHighlight: ['title', 'content', 'description'],
-            attributesToCrop: ['content:50'],
-            highlightPreTag: '<mark>',
-            highlightPostTag: '</mark>',
-          });
-          console.log(searchResponse)
-          // Map MeiliSearch results to our standard SearchResult format
-          searchResults = searchResponse.hits
-            .filter(hit => hit._formatted)
-            .map(hit => {
-              return ({
-                url: hit._formatted?.slug,
-                meta: {title: hit._formatted?.title},
-                excerpt: hit._formatted?.description,
-                content: hit._formatted?.content,
-              })
-            });
+			result = searchResults;
+			setPanelVisibility(true, isDesktop);
+		} catch (error) {
+			console.error("Search error:", error);
+			result = [];
+			setPanelVisibility(false, isDesktop);
+		} finally {
+			isSearching = false;
+		}
+	}, 300); // 300ms debounce
+};
 
-        } else if (searchMethod === NavBarSearchMethod.PageFind) {
-          if (import.meta.env.PROD && window.pagefind) {
-            const response = await window.pagefind.search(keyword);
-            searchResults = await Promise.all(response.results.map((item) => item.data()));
-          } else if (import.meta.env.DEV) {
-            searchResults = fakeResult;
-          }
-        }
+// --- Initialization onMount ---
+onMount(() => {
+	if (searchMethod === NavBarSearchMethod.MeiliSearch) {
+		try {
+			meiliClient = new MeiliSearch({
+				host: meiliSearchConfig.PUBLIC_MEILI_HOST,
+				apiKey: meiliSearchConfig.PUBLIC_MEILI_SEARCH_KEY,
+			});
+			initialized = true;
+			console.log("MeiliSearch client initialized.");
+		} catch (e) {
+			console.error("Failed to initialize MeiliSearch:", e);
+		}
+	} else if (searchMethod === NavBarSearchMethod.PageFind) {
+		const initializePagefind = () => {
+			initialized = true;
+			if (keywordDesktop) search(keywordDesktop, true);
+			if (keywordMobile) search(keywordMobile, false);
+		};
 
-        result = searchResults;
-        setPanelVisibility(true, isDesktop);
-      } catch (error) {
-        console.error("Search error:", error);
-        result = [];
-        setPanelVisibility(false, isDesktop);
-      } finally {
-        isSearching = false;
-      }
-    }, 300); // 300ms debounce
-  };
+		if (import.meta.env.DEV) {
+			console.log("Pagefind mock enabled in development mode.");
+			initializePagefind();
+		} else {
+			if (window.pagefind) {
+				// If script already loaded
+				initializePagefind();
+			} else {
+				// Listen for the event
+				document.addEventListener("pagefindready", initializePagefind, {
+					once: true,
+				});
+				document.addEventListener("pagefindloaderror", initializePagefind, {
+					once: true,
+				});
+			}
+		}
+	}
+});
 
-  // --- Initialization onMount ---
-  onMount(() => {
-    if (searchMethod === NavBarSearchMethod.MeiliSearch) {
-      try {
-        meiliClient = new MeiliSearch({
-          host: meiliSearchConfig.PUBLIC_MEILI_HOST,
-          apiKey: meiliSearchConfig.PUBLIC_MEILI_SEARCH_KEY,
-        });
-        initialized = true;
-        console.log("MeiliSearch client initialized.");
-      } catch (e) {
-        console.error("Failed to initialize MeiliSearch:", e);
-      }
-    } else if (searchMethod === NavBarSearchMethod.PageFind) {
-      const initializePagefind = () => {
-        initialized = true;
-        if (keywordDesktop) search(keywordDesktop, true);
-        if (keywordMobile) search(keywordMobile, false);
-      };
-
-      if (import.meta.env.DEV) {
-        console.log("Pagefind mock enabled in development mode.");
-        initializePagefind();
-      } else {
-        if (window.pagefind) { // If script already loaded
-          initializePagefind();
-        } else { // Listen for the event
-          document.addEventListener("pagefindready", initializePagefind, {once: true});
-          document.addEventListener("pagefindloaderror", initializePagefind, {once: true});
-        }
-      }
-    }
-  });
-
-  // --- Reactive Statements ---
-  $: if (initialized && (keywordDesktop || keywordDesktop === '')) {
-    search(keywordDesktop, true);
-  }
-  $: if (initialized && (keywordMobile || keywordMobile === '')) {
-    search(keywordMobile, false);
-  }
+// --- Reactive Statements ---
+$: if (initialized && (keywordDesktop || keywordDesktop === "")) {
+	search(keywordDesktop, true);
+}
+$: if (initialized && (keywordMobile || keywordMobile === "")) {
+	search(keywordMobile, false);
+}
 </script>
 
 <!-- search bar for desktop view -->

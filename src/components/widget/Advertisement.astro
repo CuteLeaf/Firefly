@@ -3,57 +3,57 @@ import { adConfig1, adConfig2 } from "@/config/adConfig";
 import type { AdConfig } from "@/types/config";
 
 export interface Props {
-  class?: string;
-  configId?: string;
+	class?: string;
+	configId?: string;
 }
 
 const { class: className = "", configId } = Astro.props as Props;
 
 // 根据configId选择对应的广告配置
 const getAdConfig = (id?: string): AdConfig => {
-  switch (id) {
-    case "ad1":
-      return adConfig1;
-    case "ad2":
-      return adConfig2;
-    default:
-      return adConfig1; // 默认配置
-  }
+	switch (id) {
+		case "ad1":
+			return adConfig1;
+		case "ad2":
+			return adConfig2;
+		default:
+			return adConfig1; // 默认配置
+	}
 };
 
 const currentAdConfig = getAdConfig(configId);
 
 // 检查广告是否过期
 const isExpired = currentAdConfig.expireDate
-  ? new Date() > new Date(currentAdConfig.expireDate)
-  : false;
+	? new Date() > new Date(currentAdConfig.expireDate)
+	: false;
 
 // 如果过期则不显示
 if (isExpired) {
-  return null;
+	return null;
 }
 
 // 处理自定义边距
 const getPaddingStyle = () => {
-  if (!currentAdConfig.padding) return "p-4"; // 默认边距
+	if (!currentAdConfig.padding) return "p-4"; // 默认边距
 
-  if (currentAdConfig.padding.all !== undefined) {
-    // 统一边距
-    return currentAdConfig.padding.all === "0" ? "p-0" : "";
-  }
+	if (currentAdConfig.padding.all !== undefined) {
+		// 统一边距
+		return currentAdConfig.padding.all === "0" ? "p-0" : "";
+	}
 
-  // 单独边距
-  const { top, right, bottom, left } = currentAdConfig.padding;
-  return (
-    [
-      top !== undefined ? `pt-[${top}]` : "",
-      right !== undefined ? `pr-[${right}]` : "",
-      bottom !== undefined ? `pb-[${bottom}]` : "",
-      left !== undefined ? `pl-[${left}]` : "",
-    ]
-      .filter(Boolean)
-      .join(" ") || "p-4"
-  );
+	// 单独边距
+	const { top, right, bottom, left } = currentAdConfig.padding;
+	return (
+		[
+			top !== undefined ? `pt-[${top}]` : "",
+			right !== undefined ? `pr-[${right}]` : "",
+			bottom !== undefined ? `pb-[${bottom}]` : "",
+			left !== undefined ? `pl-[${left}]` : "",
+		]
+			.filter(Boolean)
+			.join(" ") || "p-4"
+	);
 };
 
 const paddingClass = getPaddingStyle();

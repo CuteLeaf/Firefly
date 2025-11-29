@@ -1,15 +1,18 @@
 ---
 import { Icon } from "astro-icon/components";
+import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
-import { getSortedPosts } from "@/utils/content-utils";
-import { getCategoryList, getTagList } from "@/utils/content-utils";
+import {
+	getCategoryList,
+	getSortedPosts,
+	getTagList,
+} from "@/utils/content-utils";
 import WidgetLayout from "./WidgetLayout.astro";
-import { siteConfig } from "@/config";
 
 interface Props {
-  class?: string;
-  style?: string;
+	class?: string;
+	style?: string;
 }
 
 const { class: className, style } = Astro.props;
@@ -25,23 +28,23 @@ const tags = await getTagList();
 // 计算总字数
 let totalWords = 0;
 for (const post of posts) {
-  if (post.body) {
-    // 移除 Markdown 空白字符后计算字数
-    const text = post.body
-      .replace(/\s+/g, ' ') // 合并空白
-      .trim();
-    
-    // 分别计算中文字符和英文单词
-    const chineseChars = text.match(/[\u4e00-\u9fa5]/g) || [];
-    const englishWords = text.match(/[a-zA-Z]+/g) || [];
-    
-    totalWords += chineseChars.length + englishWords.length;
-  }
+	if (post.body) {
+		// 移除 Markdown 空白字符后计算字数
+		const text = post.body
+			.replace(/\s+/g, " ") // 合并空白
+			.trim();
+
+		// 分别计算中文字符和英文单词
+		const chineseChars = text.match(/[\u4e00-\u9fa5]/g) || [];
+		const englishWords = text.match(/[a-zA-Z]+/g) || [];
+
+		totalWords += chineseChars.length + englishWords.length;
+	}
 }
 
 // 格式化数字（添加千位分隔符）
 function formatNumber(num: number): string {
-  return num.toLocaleString();
+	return num.toLocaleString();
 }
 
 // 获取最新文章日期（用于客户端计算）
@@ -55,43 +58,43 @@ const lastPostDate = latestPost
 	: null;
 
 const stats = [
-  {
-    icon: "material-symbols:article-outline",
-    label: i18n(I18nKey.siteStatsPostCount),
-    value: posts.length,
-  },
-  {
-    icon: "material-symbols:folder-outline",
-    label: i18n(I18nKey.siteStatsCategoryCount),
-    value: categories.length,
-  },
-  {
-    icon: "material-symbols:label-outline",
-    label: i18n(I18nKey.siteStatsTagCount),
-    value: tags.length,
-  },
-  {
-    icon: "material-symbols:text-ad-outline-rounded",
-    label: i18n(I18nKey.siteStatsTotalWords),
-    value: totalWords,
-    formatted: true
-  },
-  {
-    icon: "material-symbols:calendar-clock-outline",
-    label: i18n(I18nKey.siteStatsRunningDays),
-    value: 0, // 将由客户端更新
-    suffix: i18n(I18nKey.siteStatsDays).replace("{days}", ""),
-    dynamic: true,
-    id: "running-days"
-  },
-  {
-    icon: "material-symbols:ecg-heart-outline",
-    label: i18n(I18nKey.siteStatsLastUpdate),
-    value: 0, // 将由客户端更新
-    suffix: i18n(I18nKey.siteStatsDaysAgo).replace("{days}", ""),
-    dynamic: true,
-    id: "last-update"
-  }
+	{
+		icon: "material-symbols:article-outline",
+		label: i18n(I18nKey.siteStatsPostCount),
+		value: posts.length,
+	},
+	{
+		icon: "material-symbols:folder-outline",
+		label: i18n(I18nKey.siteStatsCategoryCount),
+		value: categories.length,
+	},
+	{
+		icon: "material-symbols:label-outline",
+		label: i18n(I18nKey.siteStatsTagCount),
+		value: tags.length,
+	},
+	{
+		icon: "material-symbols:text-ad-outline-rounded",
+		label: i18n(I18nKey.siteStatsTotalWords),
+		value: totalWords,
+		formatted: true,
+	},
+	{
+		icon: "material-symbols:calendar-clock-outline",
+		label: i18n(I18nKey.siteStatsRunningDays),
+		value: 0, // 将由客户端更新
+		suffix: i18n(I18nKey.siteStatsDays).replace("{days}", ""),
+		dynamic: true,
+		id: "running-days",
+	},
+	{
+		icon: "material-symbols:ecg-heart-outline",
+		label: i18n(I18nKey.siteStatsLastUpdate),
+		value: 0, // 将由客户端更新
+		suffix: i18n(I18nKey.siteStatsDaysAgo).replace("{days}", ""),
+		dynamic: true,
+		id: "last-update",
+	},
 ];
 ---
 

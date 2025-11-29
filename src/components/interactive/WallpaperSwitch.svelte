@@ -1,17 +1,18 @@
 <script lang="ts">
-import { onMount } from 'svelte';
-import Icon from "@iconify/svelte";
-import { WALLPAPER_BANNER, WALLPAPER_OVERLAY, WALLPAPER_NONE } from "@constants/constants";
 import {
-	getStoredWallpaperMode,
-	setWallpaperMode,
-} from "@utils/setting-utils";
-import type { WALLPAPER_MODE } from "@/types/config";
-import { siteConfig } from "@/config";
+	WALLPAPER_BANNER,
+	WALLPAPER_NONE,
+	WALLPAPER_OVERLAY,
+} from "@constants/constants";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
-import DropdownPanel from "@/components/common/base/DropdownPanel.svelte";
+import Icon from "@iconify/svelte";
+import { getStoredWallpaperMode, setWallpaperMode } from "@utils/setting-utils";
+import { onMount } from "svelte";
 import DropdownItem from "@/components/common/base/DropdownItem.svelte";
+import DropdownPanel from "@/components/common/base/DropdownPanel.svelte";
+import { siteConfig } from "@/config";
+import type { WALLPAPER_MODE } from "@/types/config";
 
 let mode: WALLPAPER_MODE = $state(siteConfig.backgroundWallpaper.mode);
 

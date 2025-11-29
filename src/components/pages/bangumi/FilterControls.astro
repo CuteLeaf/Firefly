@@ -1,14 +1,14 @@
 ---
 interface Filter {
-  value: string;
-  label: string;
-  count?: number;
+	value: string;
+	label: string;
+	count?: number;
 }
 
 interface Props {
-  filters: Filter[];
-  activeFilter: string;
-  sectionId: string;
+	filters: Filter[];
+	activeFilter: string;
+	sectionId: string;
 }
 
 const { filters, activeFilter, sectionId } = Astro.props;

@@ -1,9 +1,9 @@
 ---
-import * as path from "node:path";
 import { Image } from "astro:assets";
-import { url } from "@/utils/url-utils";
+import * as path from "node:path";
 import { coverImageConfig } from "@/config/coverImageConfig";
 import { generateApiUrls } from "@/utils/image-utils";
+import { url } from "@/utils/url-utils";
 
 interface Props {
 	id?: string;
@@ -17,7 +17,16 @@ interface Props {
 	fallback?: string; // 图片加载失败时的备用图片
 }
 
-const { id, src, alt, position = "center", basePath = "/", seed, preview = false, fallback } = Astro.props;
+const {
+	id,
+	src,
+	alt,
+	position = "center",
+	basePath = "/",
+	seed,
+	preview = false,
+	fallback,
+} = Astro.props;
 const className = Astro.props.class;
 
 const isLocal = !(
@@ -29,7 +38,9 @@ const isLocal = !(
 const isPublic = src.startsWith("/");
 
 // 检查是否是随机图API（包含query参数v=）
-const isRandomApiImage = (src.startsWith("http://") || src.startsWith("https://")) && src.includes("?v=");
+const isRandomApiImage =
+	(src.startsWith("http://") || src.startsWith("https://")) &&
+	src.includes("?v=");
 
 // TODO temporary workaround for images dynamic import
 // https://github.com/withastro/astro/issues/3373
@@ -54,7 +65,12 @@ if (isLocal) {
 }
 // 如果是随机图API，生成所有API URL列表用于客户端重试
 let allApiUrls: string[] = [];
-if (isRandomApiImage && coverImageConfig.enable && coverImageConfig.apis && coverImageConfig.apis.length > 0) {
+if (
+	isRandomApiImage &&
+	coverImageConfig.enable &&
+	coverImageConfig.apis &&
+	coverImageConfig.apis.length > 0
+) {
 	allApiUrls = generateApiUrls(seed);
 }
 
@@ -82,18 +98,20 @@ const getFallbackUrl = (src: string): string => {
 
 // 图片样式
 const imageClass = "w-full h-full object-cover";
-const imageStyle = `object-position: ${position || 'center'}; image-rendering: -webkit-optimize-contrast;`;
+const imageStyle = `object-position: ${position || "center"}; image-rendering: -webkit-optimize-contrast;`;
 
 // 水印配置
 const watermark = coverImageConfig.watermark;
 const showWatermark = isRandomApiImage && watermark?.enable;
 
 // 生成水印位置样式和类名
-const getWatermarkStyles = (pos?: string): { classes: string; styles: string } => {
+const getWatermarkStyles = (
+	pos?: string,
+): { classes: string; styles: string } => {
 	const position = pos || "bottom-right";
 	let classes = "";
 	let styles = "";
-	
+
 	switch (position) {
 		case "top-left":
 			classes = "top-2 left-2";
@@ -113,13 +131,15 @@ const getWatermarkStyles = (pos?: string): { classes: string; styles: string } =
 		default:
 			classes = "top-2 right-2 md:top-auto md:bottom-2 md:right-2";
 	}
-	
+
 	styles = `padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: ${watermark?.fontSize || "0.75rem"}; color: ${watermark?.color || "#ffffff"}; background-color: ${watermark?.backgroundColor || "rgba(0, 0, 0, 0.4)"}; opacity: ${watermark?.opacity || 0.6}; pointer-events: none; z-index: 10; white-space: nowrap; user-select: none;`;
-	
+
 	return { classes, styles };
 };
 
-const watermarkStyles = showWatermark ? getWatermarkStyles(watermark?.position) : { classes: "", styles: "" };
+const watermarkStyles = showWatermark
+	? getWatermarkStyles(watermark?.position)
+	: { classes: "", styles: "" };
 ---
 
 <div id={id} class:list={[

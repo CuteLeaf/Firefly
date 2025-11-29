@@ -10,19 +10,19 @@ const currentYear = new Date().getFullYear();
 // 读取FooterConfig.html文件内容
 let customFooterHtml = "";
 if (footerConfig.enable) {
-  try {
-    const footerConfigPath = path.join(
-      process.cwd(),
-      "src",
-      "config",
-      "FooterConfig.html"
-    );
-    customFooterHtml = fs.readFileSync(footerConfigPath, "utf-8");
-    // 移除HTML注释
-    customFooterHtml = customFooterHtml.replace(/<!--[\s\S]*?-->/g, "").trim();
-  } catch (error) {
-    console.warn("FooterConfig.html文件读取失败:", error.message);
-  }
+	try {
+		const footerConfigPath = path.join(
+			process.cwd(),
+			"src",
+			"config",
+			"FooterConfig.html",
+		);
+		customFooterHtml = fs.readFileSync(footerConfigPath, "utf-8");
+		// 移除HTML注释
+		customFooterHtml = customFooterHtml.replace(/<!--[\s\S]*?-->/g, "").trim();
+	} catch (error) {
+		console.warn("FooterConfig.html文件读取失败:", error.message);
+	}
 }
 ---
 

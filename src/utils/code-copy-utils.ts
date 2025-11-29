@@ -76,36 +76,36 @@ export function processEmptyLines(code: string): string {
  * @returns Promise<boolean> 复制是否成功
  */
 export async function copyToClipboard(text: string): Promise<boolean> {
-    try {
-        // 优先使用 Clipboard API
-        await navigator.clipboard.writeText(text);
-        return true;
-    } catch (clipboardErr) {
-        console.warn('Clipboard API 失败，尝试备用方案:', clipboardErr);
-        
-        // 备用方案：使用 document.execCommand
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        textArea.style.position = 'fixed';
-        textArea.style.left = '-999999px';
-        textArea.style.top = '-999999px';
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        
-        try {
-            const successful = document.execCommand('copy');
-            if (!successful) {
-                throw new Error('execCommand 返回 false');
-            }
-            return true;
-        } catch (execErr) {
-            console.error('execCommand 也失败了:', execErr);
-            throw new Error('所有复制方法都失败了');
-        } finally {
-            document.body.removeChild(textArea);
-        }
-    }
+	try {
+		// 优先使用 Clipboard API
+		await navigator.clipboard.writeText(text);
+		return true;
+	} catch (clipboardErr) {
+		console.warn("Clipboard API 失败，尝试备用方案:", clipboardErr);
+
+		// 备用方案：使用 document.execCommand
+		const textArea = document.createElement("textarea");
+		textArea.value = text;
+		textArea.style.position = "fixed";
+		textArea.style.left = "-999999px";
+		textArea.style.top = "-999999px";
+		document.body.appendChild(textArea);
+		textArea.focus();
+		textArea.select();
+
+		try {
+			const successful = document.execCommand("copy");
+			if (!successful) {
+				throw new Error("execCommand 返回 false");
+			}
+			return true;
+		} catch (execErr) {
+			console.error("execCommand 也失败了:", execErr);
+			throw new Error("所有复制方法都失败了");
+		} finally {
+			document.body.removeChild(textArea);
+		}
+	}
 }
 
 /**
@@ -113,40 +113,40 @@ export async function copyToClipboard(text: string): Promise<boolean> {
  * @param target 点击的按钮元素
  */
 export async function handleCodeCopy(target: Element): Promise<void> {
-    const preEle = target.closest("pre");
-    const codeEle = preEle?.querySelector("code");
-    
-    if (!codeEle) {
-        console.warn('未找到代码元素');
-        return;
-    }
-    
-    // 提取代码文本
-    let code = extractCodeText(codeEle);
-    
-    // 处理连续空行
-    code = processEmptyLines(code);
-    
-    try {
-        // 复制到剪贴板
-        await copyToClipboard(code);
-        
-        // 处理成功状态
-        const timeoutId = target.getAttribute("data-timeout-id");
-        if (timeoutId) {
-            clearTimeout(parseInt(timeoutId));
-        }
+	const preEle = target.closest("pre");
+	const codeEle = preEle?.querySelector("code");
 
-        target.classList.add("success");
+	if (!codeEle) {
+		console.warn("未找到代码元素");
+		return;
+	}
 
-        // 设置新的timeout并保存ID到按钮的自定义属性中
-        const newTimeoutId = setTimeout(() => {
-            target.classList.remove("success");
-        }, 1000);
+	// 提取代码文本
+	let code = extractCodeText(codeEle);
 
-        target.setAttribute("data-timeout-id", newTimeoutId.toString());
-    } catch (err) {
-        console.error('复制失败:', err);
-        // 可以在这里添加用户提示
-    }
+	// 处理连续空行
+	code = processEmptyLines(code);
+
+	try {
+		// 复制到剪贴板
+		await copyToClipboard(code);
+
+		// 处理成功状态
+		const timeoutId = target.getAttribute("data-timeout-id");
+		if (timeoutId) {
+			clearTimeout(Number.parseInt(timeoutId, 10));
+		}
+
+		target.classList.add("success");
+
+		// 设置新的timeout并保存ID到按钮的自定义属性中
+		const newTimeoutId = setTimeout(() => {
+			target.classList.remove("success");
+		}, 1000);
+
+		target.setAttribute("data-timeout-id", newTimeoutId.toString());
+	} catch (err) {
+		console.error("复制失败:", err);
+		// 可以在这里添加用户提示
+	}
 }

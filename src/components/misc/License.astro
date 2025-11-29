@@ -7,18 +7,18 @@ import { i18n } from "@/i18n/translation";
 import { formatDateToYYYYMMDD } from "@/utils/date-utils";
 
 interface Props {
-  title: string;
-  id: string;
-  pubDate: Date;
-  class: string;
-  author: string;
-  sourceLink: string;
-  licenseName: string;
-  licenseUrl: string;
+	title: string;
+	id: string;
+	pubDate: Date;
+	class: string;
+	author: string;
+	sourceLink: string;
+	licenseName: string;
+	licenseUrl: string;
 }
 
 const { title, pubDate, author, sourceLink, licenseName, licenseUrl } =
-  Astro.props;
+	Astro.props;
 const className = Astro.props.class;
 const profileConf = profileConfig;
 const licenseConf = licenseConfig;

@@ -1,19 +1,19 @@
 ---
 import type { Live2DModelConfig } from "@/types/config";
-import MessageBox from "./PioMessageBox.astro";
 import { url } from "@/utils/url-utils";
+import MessageBox from "./PioMessageBox.astro";
 
 interface Props {
-  config: Live2DModelConfig;
+	config: Live2DModelConfig;
 }
 
 const { config } = Astro.props;
 
 // 获取位置和尺寸配置
 const position = config.position || {
-  corner: "bottom-right" as const,
-  offsetX: 20,
-  offsetY: 20,
+	corner: "bottom-right" as const,
+	offsetX: 20,
+	offsetY: 20,
 };
 const size = config.size || { width: 280, height: 250 };
 ---

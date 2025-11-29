@@ -1,18 +1,18 @@
 ---
-import { commentConfig } from '@/config'
+import { commentConfig } from "@/config";
 
 interface Props {
-  path: string
+	path: string;
 }
 
 const config = {
-  ...commentConfig.waline,
-  el: '#waline',
-  path: Astro.props.path,
-  dark: 'html.dark',
-  wordLimit: ["2", "300"],
-  ...(commentConfig.waline?.visitorCount ? { pageview: true } : {})
-}
+	...commentConfig.waline,
+	el: "#waline",
+	path: Astro.props.path,
+	dark: "html.dark",
+	wordLimit: ["2", "300"],
+	...(commentConfig.waline?.visitorCount ? { pageview: true } : {}),
+};
 ---
 <!-- Waline -->
 <div class="relative w-full">

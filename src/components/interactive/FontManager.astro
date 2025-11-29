@@ -5,51 +5,51 @@ const { font: fontConfig } = siteConfig;
 
 // 获取选中的字体
 const getSelectedFonts = () => {
-  if (!fontConfig.enable || !fontConfig.selected) return [];
+	if (!fontConfig.enable || !fontConfig.selected) return [];
 
-  const selectedIds = Array.isArray(fontConfig.selected)
-    ? fontConfig.selected
-    : [fontConfig.selected];
+	const selectedIds = Array.isArray(fontConfig.selected)
+		? fontConfig.selected
+		: [fontConfig.selected];
 
-  return selectedIds
-    .map((id) => fontConfig.fonts[id])
-    .filter((font) => font && font.src); // 过滤掉系统字体和不存在的字体
+	return selectedIds
+		.map((id) => fontConfig.fonts[id])
+		.filter((font) => font?.src); // 过滤掉系统字体和不存在的字体
 };
 
 const selectedFonts = getSelectedFonts();
 
 // 生成字体CSS类名
 const generateFontClasses = () => {
-  if (!fontConfig.enable) return [];
+	if (!fontConfig.enable) return [];
 
-  const selectedIds = Array.isArray(fontConfig.selected)
-    ? fontConfig.selected
-    : [fontConfig.selected];
+	const selectedIds = Array.isArray(fontConfig.selected)
+		? fontConfig.selected
+		: [fontConfig.selected];
 
-  return selectedIds.map((id) => `font-${id}-enabled`);
+	return selectedIds.map((id) => `font-${id}-enabled`);
 };
 
 const fontClasses = generateFontClasses();
 
 // 生成font-family回退样式
 const generateFontFamilyStyle = () => {
-  if (!fontConfig.enable || !fontConfig.selected) return "";
+	if (!fontConfig.enable || !fontConfig.selected) return "";
 
-  const selectedIds = Array.isArray(fontConfig.selected)
-    ? fontConfig.selected
-    : [fontConfig.selected];
+	const selectedIds = Array.isArray(fontConfig.selected)
+		? fontConfig.selected
+		: [fontConfig.selected];
 
-  const selectedFontFamilies = selectedIds
-    .map((id) => fontConfig.fonts[id])
-    .filter((font) => font)
-    .map((font) => `"${font.family}"`);
+	const selectedFontFamilies = selectedIds
+		.map((id) => fontConfig.fonts[id])
+		.filter((font) => font)
+		.map((font) => `"${font.family}"`);
 
-  if (selectedFontFamilies.length === 0) return "";
+	if (selectedFontFamilies.length === 0) return "";
 
-  const fallbacks = fontConfig.fallback || [];
-  const allFonts = [...selectedFontFamilies, ...fallbacks];
+	const fallbacks = fontConfig.fallback || [];
+	const allFonts = [...selectedFontFamilies, ...fallbacks];
 
-  return `font-family: ${allFonts.join(", ")};`;
+	return `font-family: ${allFonts.join(", ")};`;
 };
 
 const fontFamilyStyle = generateFontFamilyStyle();

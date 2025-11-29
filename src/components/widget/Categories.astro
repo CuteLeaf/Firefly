@@ -1,10 +1,10 @@
 ---
+import ButtonLink from "@/components/common/controls/ButtonLink.astro";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { getCategoryList } from "@/utils/content-utils";
-import ButtonLink from "@/components/common/controls/ButtonLink.astro";
-import WidgetLayout from "./WidgetLayout.astro";
 import { widgetManager } from "@/utils/widget-manager";
+import WidgetLayout from "./WidgetLayout.astro";
 
 const categories = await getCategoryList();
 
@@ -12,11 +12,13 @@ const COLLAPSED_HEIGHT = "7.5rem";
 
 // 使用统一的组件管理器检查是否应该折叠
 const allComponents = [
-  ...widgetManager.getConfig().leftComponents,
-  ...widgetManager.getConfig().rightComponents
+	...widgetManager.getConfig().leftComponents,
+	...widgetManager.getConfig().rightComponents,
 ];
-const categoriesComponent = allComponents.find(c => c.type === "categories");
-const isCollapsed = categoriesComponent ? widgetManager.isCollapsed(categoriesComponent, categories.length) : false;
+const categoriesComponent = allComponents.find((c) => c.type === "categories");
+const isCollapsed = categoriesComponent
+	? widgetManager.isCollapsed(categoriesComponent, categories.length)
+	: false;
 
 interface Props {
 	class?: string;
