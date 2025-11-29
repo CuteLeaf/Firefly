@@ -10,7 +10,9 @@ on:
 
 # 需要写入权限来推送到pages分支
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
