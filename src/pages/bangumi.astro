@@ -146,7 +146,7 @@ for (const [categoryKey, enabled] of Object.entries(bangumiConfig.categories)) {
     const categoryInfo = categoryMap[categoryKey as keyof typeof categoryMap];
     try {
       const data = await fetchBangumiData(
-        bangumiConfig.username,
+        bangumiConfig.username ?? "",
         categoryInfo.subjectType,
       );
       bangumiData[categoryKey] = data;

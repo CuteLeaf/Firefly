@@ -268,9 +268,12 @@ const isSidebarTocEnabled = sidebarTocComponent?.enable ?? false;
     };
   }
 
+  // Create local reference for type safety
+  const FT = window.FloatingTOC!;
+
   // 切换 TOC 面板
   window.toggleFloatingTOC = function () {
-    const panel = window.FloatingTOC.panel;
+    const panel = FT.panel;
     if (!panel) return;
 
     const isHidden = panel.classList.contains("hide");
@@ -285,7 +288,7 @@ const isSidebarTocEnabled = sidebarTocComponent?.enable ?? false;
 
   // 关闭 TOC 面板
   function closeTOC() {
-    const panel = window.FloatingTOC.panel;
+    const panel = FT.panel;
     if (panel && !panel.classList.contains("hide")) {
       panel.classList.add("hide");
       panel.classList.remove("show");
@@ -317,7 +320,8 @@ const isSidebarTocEnabled = sidebarTocComponent?.enable ?? false;
 
     // 监听外部链接点击
     document.addEventListener("click", (e) => {
-      const link = e.target.closest("a");
+      const target = e.target as Element | null;
+      const link = target?.closest?.("a");
       if (!link || !link.href) return;
 
       const href = link.getAttribute("href");
@@ -349,7 +353,7 @@ const isSidebarTocEnabled = sidebarTocComponent?.enable ?? false;
   // 检查是否应该显示悬浮目录
   function shouldShowFloatingTOC() {
     // 检查是否为文章页面
-    if (!window.FloatingTOC.isPostPage()) {
+    if (!FT.isPostPage?.()) {
       return false;
     }
 
@@ -365,7 +369,7 @@ const isSidebarTocEnabled = sidebarTocComponent?.enable ?? false;
 
   // 更新悬浮目录的显示状态
   function updateFloatingTOCVisibility() {
-    const btn = window.FloatingTOC.btn;
+    const btn = FT.btn;
     if (!btn) return;
 
     if (shouldShowFloatingTOC()) {
@@ -379,10 +383,10 @@ const isSidebarTocEnabled = sidebarTocComponent?.enable ?? false;
 
   // 初始化 FloatingTOC
   async function initFloatingTOC() {
-    window.FloatingTOC.btn = document.getElementById("floating-toc-btn");
-    window.FloatingTOC.panel = document.getElementById("floating-toc-panel");
+    FT.btn = document.getElementById("floating-toc-btn");
+    FT.panel = document.getElementById("floating-toc-panel");
 
-    if (!window.FloatingTOC.btn || !window.FloatingTOC.panel) {
+    if (!FT.btn || !FT.panel) {
       return;
     }
 
@@ -391,12 +395,12 @@ const isSidebarTocEnabled = sidebarTocComponent?.enable ?? false;
 
     try {
       // 清理旧实例
-      if (window.FloatingTOC.manager) {
-        window.FloatingTOC.manager.cleanup();
+      if (FT.manager) {
+        FT.manager.cleanup();
       }
 
       // 创建新实例
-      window.FloatingTOC.manager = new TOCManager({
+      FT.manager = new TOCManager({
         contentId: "floating-toc-content",
         indicatorId: "floating-active-indicator",
         maxLevel: 3,
@@ -404,13 +408,14 @@ const isSidebarTocEnabled = sidebarTocComponent?.enable ?? false;
       });
 
       // 初始化
-      window.FloatingTOC.manager.init();
+      FT.manager.init();
 
       // 设置点击事件 - 标记为 TOC 内部导航
       const tocContent = document.getElementById("floating-toc-content");
       if (tocContent) {
         tocContent.addEventListener("click", (e) => {
-          const anchor = e.target.closest('a[href^="#"]');
+          const target = e.target as Element | null;
+          const anchor = target?.closest?.('a[href^="#"]');
           if (anchor) {
             window.tocInternalNavigation = true;
           }

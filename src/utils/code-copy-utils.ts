@@ -12,7 +12,7 @@ export function extractCodeText(codeElement: Element): string {
     const lineElements = codeElement.querySelectorAll('span.line');
     if (lineElements.length > 0) {
         // 对于有行结构的代码块，精确处理每一行
-        const lines = [];
+        const lines: string[] = [];
         for (let i = 0; i < lineElements.length; i++) {
             const lineElement = lineElements[i];
             // 直接获取文本内容，不添加额外处理
@@ -25,7 +25,7 @@ export function extractCodeText(codeElement: Element): string {
         // 对于没有行结构的代码块
         const codeElements = codeElement.querySelectorAll('.code:not(summary *)');
         if (codeElements.length > 0) {
-            const lines = [];
+            const lines: string[] = [];
             for (let i = 0; i < codeElements.length; i++) {
                 const el = codeElements[i];
                 const lineText = el.textContent || '';
@@ -53,7 +53,7 @@ export function processEmptyLines(code: string): string {
         
         // 偶数空行：除以2
         // 奇数空行：(空行数+1)/2 向下取整
-        let resultEmptyLines;
+        let resultEmptyLines: number;
         if (emptyLineCount % 2 === 0) {
             // 偶数
             resultEmptyLines = emptyLineCount / 2;

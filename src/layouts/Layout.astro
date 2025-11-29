@@ -807,7 +807,7 @@ function disableAnimation() {
       const bannerWrapper = document.getElementById("banner-wrapper");
       const mainContentWrapper = document.querySelector(
         ".absolute.w-full.z-30"
-      );
+      ) as HTMLElement | null;
 
       if (isMobile && bannerWrapper && mainContentWrapper) {
         if (isHomePage) {
@@ -1013,7 +1013,7 @@ function disableAnimation() {
     const bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100);
 
     // 使用批量DOM操作优化性能
-    const operations = [];
+    const operations: Array<() => void> = [];
 
     if (backToTopBtn) {
       operations.push(() => {

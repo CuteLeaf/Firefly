@@ -72,7 +72,7 @@ const creditEnabledOnMobile = typeof creditEnableConfig === 'object' ? creditEna
 const hasBannerCredit = isBannerMode && isBackgroundEnabled && creditEnableConfig;
 
 // 处理分设备控制的横幅信贷文本和链接
-const creditTextConfig = siteConfig.backgroundWallpaper.banner?.credit?.text;
+const creditTextConfig = (siteConfig.backgroundWallpaper.banner?.credit as any)?.text;
 const creditTextDesktop = typeof creditTextConfig === 'object' ? creditTextConfig.desktop : creditTextConfig;
 const creditTextMobile = typeof creditTextConfig === 'object' ? creditTextConfig.mobile : creditTextConfig;
 

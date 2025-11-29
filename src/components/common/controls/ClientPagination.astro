@@ -16,8 +16,8 @@ const totalPages = Math.ceil(totalItems / itemsPerPage);
 // 生成智能分页页码数组
 function generatePageNumbers(current: number, total: number) {
   const delta = 2; // 当前页左右显示的页码数量
-  const range = [];
-  const rangeWithDots = [];
+  const range: number[] = [];
+  const rangeWithDots: (number | string)[] = [];
 
   // 如果总页数小于等于7，显示所有页码
   if (total <= 7) {

@@ -71,10 +71,11 @@ export const generateGridClasses = (config: ReturnType<typeof getResponsiveSideb
 		gridCols = `${mobileGrid} ${tabletGrid} ${desktopGrid}`.trim();
 	} else {
 		// 单侧边栏布局
+		const sp = String(sidebarPosition);
 		gridCols = `
 			${mobileShowSidebar ? "grid-cols-1" : "grid-cols-1"}
-			${tabletShowSidebar ? (sidebarPosition === "right" ? "md:grid-cols-[1fr_17.5rem]" : "md:grid-cols-[17.5rem_1fr]") : "md:grid-cols-1"}
-			${desktopShowSidebar ? (sidebarPosition === "right" ? "lg:grid-cols-[1fr_17.5rem]" : "lg:grid-cols-[17.5rem_1fr]") : "lg:grid-cols-1"}
+			${tabletShowSidebar ? (sp === "right" ? "md:grid-cols-[1fr_17.5rem]" : "md:grid-cols-[17.5rem_1fr]") : "md:grid-cols-1"}
+			${desktopShowSidebar ? (sp === "right" ? "lg:grid-cols-[1fr_17.5rem]" : "lg:grid-cols-[17.5rem_1fr]") : "lg:grid-cols-1"}
 		`.trim().replace(/\s+/g, " ");
 	}
 
@@ -95,11 +96,12 @@ export const generateSidebarClasses = (config: ReturnType<typeof getResponsiveSi
 		`.trim().replace(/\s+/g, " ");
 	}
 	
+	const sp = String(sidebarPosition);
 	return `
 		mb-4 row-start-2 row-end-3 col-span-2 onload-animation
 		${mobileShowSidebar ? "block" : "hidden"}
-		${tabletShowSidebar ? `md:block md:row-start-1 md:row-end-2 md:max-w-[17.5rem] ${sidebarPosition === "right" ? "md:col-start-2 md:col-end-3" : "md:col-start-1 md:col-end-2"}` : "md:hidden"}
-		${desktopShowSidebar ? `lg:block lg:row-start-1 lg:row-end-2 lg:max-w-[17.5rem] ${sidebarPosition === "right" ? "lg:col-start-2 lg:col-end-3" : "lg:col-start-1 lg:col-end-2"}` : "lg:hidden"}
+		${tabletShowSidebar ? `md:block md:row-start-1 md:row-end-2 md:max-w-[17.5rem] ${sp === "right" ? "md:col-start-2 md:col-end-3" : "md:col-start-1 md:col-end-2"}` : "md:hidden"}
+		${desktopShowSidebar ? `lg:block lg:row-start-1 lg:row-end-2 lg:max-w-[17.5rem] ${sp === "right" ? "lg:col-start-2 lg:col-end-3" : "lg:col-start-1 lg:col-end-2"}` : "lg:hidden"}
 	`.trim().replace(/\s+/g, " ");
 };
 
@@ -177,10 +179,11 @@ export const generateMainContentClasses = (config: ReturnType<typeof getResponsi
 		return `transition-swup-fade overflow-hidden w-full ${mobileCol} ${tabletCol} ${desktopCol}`.trim();
 	}
 	
+	const sp = String(sidebarPosition);
 	return `
 		transition-swup-fade overflow-hidden w-full
 		${mobileShowSidebar ? "col-span-2" : "col-span-1"}
-		${tabletShowSidebar ? `${sidebarPosition === "right" ? "md:col-start-1 md:col-end-2" : "md:col-start-2 md:col-end-3"}` : "md:col-span-1"}
-		${desktopShowSidebar ? `${sidebarPosition === "right" ? "lg:col-start-1 lg:col-end-2" : "lg:col-start-2 lg:col-end-3"}` : "lg:col-span-1"}
+		${tabletShowSidebar ? `${sp === "right" ? "md:col-start-1 md:col-end-2" : "md:col-start-2 md:col-end-3"}` : "md:col-span-1"}
+		${desktopShowSidebar ? `${sp === "right" ? "lg:col-start-1 lg:col-end-2" : "lg:col-start-2 lg:col-end-3"}` : "lg:col-span-1"}
 	`.trim().replace(/\s+/g, " ");
-};
+};;

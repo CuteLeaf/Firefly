@@ -11,7 +11,7 @@ interface Props {
 }
 
 // 处理links中的LinkPreset转换
-const processedLinks = Astro.props.links.map(
+const processedLinks: NavBarLink[] = Astro.props.links.map(
 	(link: NavBarLink): NavBarLink => ({
 		...link,
 		children: link.children?.map(
@@ -24,6 +24,14 @@ const processedLinks = Astro.props.links.map(
 		),
 	}),
 );
+
+// Helper function to get child properties safely
+function getChildLink(child: NavBarLink | LinkPreset): NavBarLink {
+	if (typeof child === "number") {
+		return LinkPresets[child];
+	}
+	return child;
+}
 ---
 <div id="nav-menu-panel" class:list={["float-panel float-panel-closed absolute transition-all fixed right-4 px-2 py-2 max-h-[80vh] overflow-y-auto"]}>
     {processedLinks.map((link) => (
@@ -46,7 +54,9 @@ const processedLinks = Astro.props.links.map(
                         />
                     </button>
                     <div class="mobile-submenu" data-mobile-submenu>
-                        {link.children.map((child) => (
+                        {link.children.map((childItem) => {
+                            const child = getChildLink(childItem);
+                            return (
                             <a href={child.external ? child.url : url(child.url)} 
                                class="group flex justify-between items-center py-2 pl-6 pr-1 rounded-lg gap-8
                                    hover:bg-[var(--btn-plain-bg-hover)] active:bg-[var(--btn-plain-bg-active)] transition"
@@ -60,7 +70,8 @@ const processedLinks = Astro.props.links.map(
                                       class="transition text-[0.75rem] text-black/25 dark:text-white/25 -translate-x-1"
                                 />}
                             </a>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             ) : (

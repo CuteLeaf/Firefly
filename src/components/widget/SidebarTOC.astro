@@ -47,6 +47,9 @@ const { headings = [], class: className, style } = Astro.props;
     };
   }
 
+  // Create local reference for type safety
+  const ST = window.SidebarTOC!;
+
   async function initSidebarTOC() {
     const tocContent = document.getElementById("sidebar-toc-content");
     if (!tocContent) return;
@@ -70,12 +73,12 @@ const { headings = [], class: className, style } = Astro.props;
 
     try {
       // 清理旧实例
-      if (window.SidebarTOC.manager) {
-        window.SidebarTOC.manager.cleanup();
+      if (ST.manager) {
+        ST.manager.cleanup();
       }
 
       // 创建新实例
-      window.SidebarTOC.manager = new TOCManager({
+      ST.manager = new TOCManager({
         contentId: "sidebar-toc-content",
         indicatorId: "sidebar-active-indicator",
         maxLevel: 3,
@@ -83,7 +86,7 @@ const { headings = [], class: className, style } = Astro.props;
       });
 
       // 初始化
-      window.SidebarTOC.manager.init();
+      ST.manager.init();
     } catch (error) {
       console.error("Failed to load TOCManager for SidebarTOC:", error);
     }

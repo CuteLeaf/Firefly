@@ -65,7 +65,7 @@ const style = Astro.props.style;
     // 通过data-id属性找到整个widget-layout元素
     const widgetLayout = document.querySelector(
       'widget-layout[data-id="announcement"]'
-    );
+    ) as HTMLElement | null;
     if (widgetLayout) {
       // 隐藏整个widget-layout元素
       widgetLayout.style.display = "none";
@@ -78,7 +78,7 @@ const style = Astro.props.style;
   document.addEventListener("DOMContentLoaded", function () {
     const widgetLayout = document.querySelector(
       'widget-layout[data-id="announcement"]'
-    );
+    ) as HTMLElement | null;
     if (widgetLayout && localStorage.getItem("announcementClosed") === "true") {
       widgetLayout.style.display = "none";
     }
