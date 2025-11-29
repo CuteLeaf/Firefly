@@ -1,0 +1,183 @@
+---
+// src/components/Comments.astro
+// 接收当前文章的标识符作为属性
+const { slug } = Astro.props;
+// 重要：这里先用你的测试域名，部署后需要改为实际的生产域名
+const commentApi = 'https://xiaoqueqiao.dpdns.org/api/comments'; 
+---
+
+<div id="comments-section" class="comments-container">
+  <h3>评论</h3>
+  
+  <!-- 评论表单 -->
+  <form id="comment-form" class="comment-form">
+    <div class="form-group">
+      <input type="text" id="author" name="author" placeholder="昵称" required>
+      <input type="email" id="email" name="email" placeholder="邮箱" required>
+    </div>
+    <textarea id="content" name="content" placeholder="留下你的评论..." rows="4" required></textarea>
+    <button type="submit">提交评论</button>
+  </form>
+
+  <!-- 评论列表 -->
+  <div id="comments-list" class="comments-list">
+    <p>加载评论中...</p>
+  </div>
+</div>
+
+<script>
+// 注意：这里的 commentApi 需要与上面的 const 声明一致
+const commentApi = 'https://your-project.pages.dev/api/comments';
+const slug = '<%= slug %>';
+
+// 页面加载时获取评论
+document.addEventListener('DOMContentLoaded', function() {
+  loadComments();
+});
+
+async function loadComments() {
+  try {
+    const response = await fetch(`${commentApi}/${slug}`);
+    const comments = await response.json();
+    
+    const list = document.getElementById('comments-list');
+    if (comments.length === 0) {
+      list.innerHTML = '<p>暂无评论，快来抢沙发吧~</p>';
+    } else {
+      list.innerHTML = comments.map(comment => `
+        <div class="comment-item">
+          <div class="comment-header">
+            <strong>${escapeHtml(comment.author)}</strong>
+            <span class="comment-date">${new Date(comment.timestamp).toLocaleDateString('zh-CN')}</span>
+          </div>
+          <div class="comment-content">${escapeHtml(comment.content)}</div>
+        </div>
+      `).join('');
+    }
+  } catch (error) {
+    console.error('加载评论失败:', error);
+    document.getElementById('comments-list').innerHTML = '<p>评论加载失败，请刷新页面重试。</p>';
+  }
+}
+
+// 提交评论
+document.getElementById('comment-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const formData = new FormData(e.target);
+  const data = {
+    author: formData.get('author'),
+    email: formData.get('email'),
+    content: formData.get('content')
+  };
+
+  // 简单验证
+  if (!data.author.trim() || !data.content.trim()) {
+    alert('请填写昵称和评论内容');
+    return;
+  }
+
+  const submitButton = e.target.querySelector('button');
+  submitButton.disabled = true;
+  submitButton.textContent = '提交中...';
+
+  try {
+    const response = await fetch(`${commentApi}/${slug}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+      e.target.reset();
+      await loadComments(); // 重新加载评论
+      alert('评论提交成功！');
+    } else {
+      throw new Error('提交失败');
+    }
+  } catch (error) {
+    console.error('提交评论失败:', error);
+    alert('评论提交失败，请重试。');
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = '提交评论';
+  }
+});
+
+// 简单的HTML转义函数，防止XSS
+function escapeHtml(unsafe) {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+</script>
+
+<style>
+.comments-container {
+  margin-top: 3rem;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.comment-form {
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+button {
+  background: var(--accent-color);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.comment-item {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-left: 3px solid var(--accent-color);
+  background: var(--bg-primary);
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.comment-date {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.comment-content {
+  line-height: 1.5;
+}
+</style>
