@@ -1,0 +1,40 @@
+{
+    "version": "1.0.0",
+    "model": "illyasviel.moc",
+    "textures": [
+        "textures/texture_00.png"
+    ],
+    "layout": {
+        "center_x":0.0,
+        "center_y": -0.5,
+        "width": 3.5
+    },
+    "hit_areas_custom": {
+        "head_x": [-0.15, 0.6],
+        "head_y": [0.15, 0.2],
+        "body_x": [-0.3, -0.25],
+        "body_y": [0.2, -0.9]
+    },
+    "motions": {
+        "idle": [
+            {"file":"motions/Ylia_01.mtn"},
+            {"file":"motions/Ylia_02.mtn"},
+            {"file":"motions/Ylia_07.mtn"},
+            {"file":"motions/Ylia_08.mtn"}
+        ],
+        "sleepy": [
+            {"file":"motions/Ylia_03.mtn"}
+        ],
+        "flick_head": [
+            {"file":"motions/Ylia_15.mtn"}
+        ],
+        "tap_body": [
+            {"file":"motions/Ylia_04.mtn"},
+            {"file":"motions/Ylia_05.mtn"},
+            {"file":"motions/Ylia_06.mtn"},
+            {"file":"motions/Ylia_11.mtn"},
+            {"file":"motions/Ylia_12.mtn"},
+            {"file":"motions/Ylia_14.mtn"}
+        ]
+    }
+}
