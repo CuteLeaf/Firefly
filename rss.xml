@@ -238,7 +238,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 &lt;li&gt;展示更多文章摘要&lt;/li&gt;
 &lt;li&gt;适合深度阅读&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h4&gt;布局结构&lt;/h4&gt;
+&lt;h4&gt;列表布局结构&lt;/h4&gt;
 &lt;p&gt;&lt;img src=&quot;https://firefly.cuteleaf.cn/_astro/left.Dj5FqMR6_zljxw.webp&quot; alt=&quot;列表模式布局&quot; /&gt;&lt;/p&gt;
 &lt;h4&gt;优点&lt;/h4&gt;
 &lt;ul&gt;
@@ -272,7 +272,7 @@ export const siteConfig: SiteConfig = {
 &lt;li&gt;紧凑布局，信息密度高&lt;/li&gt;
 &lt;li&gt;适合快速浏览&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h4&gt;布局结构&lt;/h4&gt;
+&lt;h4&gt;网格布局结构&lt;/h4&gt;
 &lt;p&gt;&lt;img src=&quot;https://firefly.cuteleaf.cn/_astro/grid.DcvHRxbE_1jOa1z.webp&quot; alt=&quot;网格模式布局&quot; /&gt;&lt;/p&gt;
 &lt;h4&gt;优点&lt;/h4&gt;
 &lt;ul&gt;
@@ -282,6 +282,14 @@ export const siteConfig: SiteConfig = {
 &lt;li&gt;✅ 现代化的瀑布流风格&lt;/li&gt;
 &lt;li&gt;✅ 适合文章数量多的博客&lt;/li&gt;
 &lt;li&gt;✅ 视觉冲击力强，封面图吸引眼球&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;瀑布流布局结构&lt;/h4&gt;
+&lt;p&gt;Firefly 的网格模式内置了智能瀑布流布局支持，解决了网格布局中因图文混合文章导致的卡片高度不一致导致的空白问题。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://firefly.cuteleaf.cn/_astro/masonry.BLmg9e3b_2wB9vR.webp&quot; alt=&quot;瀑布流布局&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;智能排版&lt;/strong&gt;：采用 Z 字形分布（左右交替），严格保持文章的时间顺序。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;消除空白&lt;/strong&gt;：通过绝对定位精确计算每个卡片的位置，让卡片紧贴上一行的卡片，消除垂直方向的空白间隙。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;配置灵活&lt;/strong&gt;：您可以在 &lt;code&gt;siteConfig.ts&lt;/code&gt; 中通过 &lt;code&gt;postListLayout.grid.masonry&lt;/code&gt; 选项自由开启或关闭此功能。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h4&gt;限制&lt;/h4&gt;
 &lt;ul&gt;
@@ -301,6 +309,9 @@ export const siteConfig: SiteConfig = {
   postListLayout: {
     defaultMode: &quot;grid&quot;, // 网格模式
     allowSwitch: true,   // 允许用户切换
+    grid: {
+      masonry: true,     // 开启瀑布流布局
+    },
   },
 };
 &lt;/code&gt;&lt;/pre&gt;
