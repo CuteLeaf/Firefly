@@ -939,6 +939,103 @@ console.log(&apos;抱歉，你知道我在第几行吗?&apos;)
 &lt;pre&gt;&lt;code&gt;console.log(&apos;来自第5行的问候!&apos;)
 console.log(&apos;我在第6行&apos;)
 &lt;/code&gt;&lt;/pre&gt;
+</content:encoded></item><item><title>KaTeX 数学公式示例</title><link>https://firefly.cuteleaf.cn/posts/katex-math-example/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/katex-math-example/</guid><description>展示 Firefly 主题对 KaTeX 数学公式的支持，包括行内公式、块级公式和复杂数学符号。</description><pubDate>Thu, 01 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;本文展示了 &lt;a href=&quot;https://github.com/CuteLeaf/Firefly&quot;&gt;Firefly&lt;/a&gt; 主题对 KaTeX 数学公式的渲染支持。&lt;/p&gt;
+&lt;h2&gt;行内公式 (Inline)&lt;/h2&gt;
+&lt;p&gt;行内公式使用单个 &lt;code&gt;$&lt;/code&gt; 符号包裹。&lt;/p&gt;
+&lt;p&gt;例如：欧拉公式 $e^{i\pi} + 1 = 0$ 是数学中最优美的公式之一。&lt;/p&gt;
+&lt;p&gt;质能方程 $E = mc^2$ 也是家喻户晓。&lt;/p&gt;
+&lt;h2&gt;块级公式 (Block)&lt;/h2&gt;
+&lt;p&gt;块级公式使用两个 &lt;code&gt;$$&lt;/code&gt; 符号包裹，会居中显示。&lt;/p&gt;
+&lt;p&gt;$$
+\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
+$$&lt;/p&gt;
+&lt;p&gt;$$
+x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+$$&lt;/p&gt;
+&lt;h2&gt;复杂示例&lt;/h2&gt;
+&lt;h3&gt;矩阵 (Matrices)&lt;/h3&gt;
+&lt;p&gt;$$
+\begin{pmatrix}
+a &amp;amp; b \
+c &amp;amp; d
+\end{pmatrix}
+\begin{pmatrix}
+\alpha &amp;amp; \beta \
+\gamma &amp;amp; \delta
+\end{pmatrix} =
+\begin{pmatrix}
+a\alpha + b\gamma &amp;amp; a\beta + b\delta \
+c\alpha + d\gamma &amp;amp; c\beta + d\delta
+\end{pmatrix}
+$$&lt;/p&gt;
+&lt;h3&gt;极限与求和 (Limits and Sums)&lt;/h3&gt;
+&lt;p&gt;$$
+\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}
+$$&lt;/p&gt;
+&lt;p&gt;$$
+\lim_{x \to 0} \frac{\sin x}{x} = 1
+$$&lt;/p&gt;
+&lt;h3&gt;麦克斯韦方程组 (Maxwell&apos;s Equations)&lt;/h3&gt;
+&lt;p&gt;$$
+\begin{aligned}
+\nabla \cdot \mathbf{E} &amp;amp;= \frac{\rho}{\varepsilon_0} \
+\nabla \cdot \mathbf{B} &amp;amp;= 0 \
+\nabla \times \mathbf{E} &amp;amp;= -\frac{\partial \mathbf{B}}{\partial t} \
+\nabla \times \mathbf{B} &amp;amp;= \mu_0\mathbf{J} + \mu_0\varepsilon_0\frac{\partial \mathbf{E}}{\partial t}
+\end{aligned}
+$$&lt;/p&gt;
+&lt;h3&gt;化学方程式 (Chemical Equations)&lt;/h3&gt;
+&lt;p&gt;$$
+\ce{CH4 + 2O2 -&amp;gt; CO2 + 2H2O}
+$$&lt;/p&gt;
+&lt;h2&gt;更多符号&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;符号&lt;/th&gt;
+&lt;th&gt;代码&lt;/th&gt;
+&lt;th&gt;渲染结果&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Alpha&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;\alpha&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;$\alpha$&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Beta&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;\beta&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;$\beta$&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Gamma&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;\Gamma&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;$\Gamma$&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Pi&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;\pi&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;$\pi$&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Infinity&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;\infty&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;$\infty$&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Right Arrow&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;\rightarrow&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;$\rightarrow$&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Partial&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;\partial&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;$\partial$&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;更多 KaTeX 语法请参考 &lt;a href=&quot;https://katex.org/docs/supported.html&quot;&gt;KaTeX Supported Functions&lt;/a&gt;。&lt;/p&gt;
 </content:encoded></item><item><title>Markdown Mermaid 图表</title><link>https://firefly.cuteleaf.cn/posts/markdown-mermaid/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/markdown-mermaid/</guid><description>一个包含 Mermaid 的 Markdown 博客文章简单示例。</description><pubDate>Thu, 01 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;Markdown 中 Mermaid 图表完整指南&lt;/h1&gt;
 &lt;p&gt;本文演示如何在 Markdown 文档中使用 Mermaid 创建各种复杂图表，包括流程图、时序图、甘特图、类图和状态图。&lt;/p&gt;
 &lt;h2&gt;流程图示例&lt;/h2&gt;
