@@ -1187,6 +1187,81 @@ $$&lt;/p&gt;
 &lt;p&gt;Mermaid 是在 Markdown 文档中创建各种类型图表的强大工具。本文演示了如何使用流程图、时序图、甘特图、类图、状态图和饼图。这些图表可以帮助您更清晰地表达复杂的概念、流程和数据结构。&lt;/p&gt;
 &lt;p&gt;要使用 Mermaid，只需在代码块中指定 mermaid 语言，并使用简洁的文本语法描述图表。Mermaid 会自动将这些描述转换为美观的可视化图表。&lt;/p&gt;
 &lt;p&gt;尝试在您的下一篇技术博客文章或项目文档中使用 Mermaid 图表 - 它们将使您的内容更加专业且更易理解！&lt;/p&gt;
+</content:encoded></item><item><title>MDX 格式文章示例</title><link>https://firefly.cuteleaf.cn/posts/mdx-example/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/mdx-example/</guid><description>这是一个 MDX 格式的示例文章，展示了如何在 Markdown 中使用 JSX。</description><pubDate>Thu, 01 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { Icon } from &apos;astro-icon/components&apos;&lt;/p&gt;
+&lt;p&gt;:::tip
+&lt;a href=&quot;https://github.com/CuteLeaf/Firefly&quot;&gt;Firefly&lt;/a&gt; 支持 &lt;code&gt;MDX&lt;/code&gt; 和 &lt;code&gt;Markdown&lt;/code&gt; 两种类型的文章，你可以在文章中混合使用两种格式，如果没有特别复杂内容和需求，推荐使用 Markdown 格式就够了。
+:::&lt;/p&gt;
+&lt;h2&gt;Markdown 和 MDX 的区别&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Markdown (MD) 是一种轻量级标记语言，允许用户使用纯文本格式编写文档，然后将其转换为格式化的HTML。它因其简洁易用的语法而广受欢迎，特别适合编写文档和博客文章。&lt;/li&gt;
+&lt;li&gt;MDX 是一种扩展了 Markdown 语法的格式，允许在 Markdown 文档中无缝地插入 JSX 代码。通过 MDX，用户可以在文档中嵌入 React 组件，从而实现更丰富的交互性和动态性。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;特性&lt;/th&gt;
+&lt;th&gt;Markdown&lt;/th&gt;
+&lt;th&gt;MDX&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;基础语法&lt;/td&gt;
+&lt;td&gt;支持 (CommonMark)&lt;/td&gt;
+&lt;td&gt;支持 (CommonMark)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;HTML 标签&lt;/td&gt;
+&lt;td&gt;支持&lt;/td&gt;
+&lt;td&gt;支持 (作为 JSX)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;组件导入&lt;/td&gt;
+&lt;td&gt;不支持&lt;/td&gt;
+&lt;td&gt;支持 (import)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;动态数据&lt;/td&gt;
+&lt;td&gt;不支持&lt;/td&gt;
+&lt;td&gt;支持 (JS 表达式)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;样式定制&lt;/td&gt;
+&lt;td&gt;有限 (class/style)&lt;/td&gt;
+&lt;td&gt;灵活 (className/CSS-in-JS)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2&gt;使用组件&lt;/h2&gt;
+&lt;p&gt;这是一个图标组件：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;import { Icon } from &apos;astro-icon/components&apos;
+
+&amp;lt;div class=&quot;flex items-center gap-2 my-4&quot;&amp;gt;
+  &amp;lt;Icon name=&quot;fa6-solid:rocket&quot; class=&quot;text-4xl text-red-500&quot; /&amp;gt;
+  &amp;lt;span&amp;gt;火箭发射！&amp;lt;/span&amp;gt;
+&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&amp;lt;div class=&quot;flex items-center gap-2 my-4&quot;&amp;gt;
+&amp;lt;Icon name=&quot;fa6-solid:rocket&quot; class=&quot;text-4xl text-red-500&quot; /&amp;gt;
+&amp;lt;span&amp;gt;火箭发射！&amp;lt;/span&amp;gt;
+&amp;lt;/div&amp;gt;&lt;/p&gt;
+&lt;h2&gt;使用 JSX&lt;/h2&gt;
+&lt;p&gt;你也可以直接写 HTML/JSX：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;div className=&quot;p-4 bg-blue-100 dark:bg-blue-900 rounded-lg my-4&quot;&amp;gt;
+  这是一个自定义样式的 div 块，使用了 Tailwind CSS 类。
+&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&amp;lt;div className=&quot;p-4 bg-blue-100 dark:bg-blue-900 rounded-lg my-4&quot;&amp;gt;
+这是一个自定义样式的 div 块，使用了 Tailwind CSS 类。
+&amp;lt;/div&amp;gt;&lt;/p&gt;
+&lt;h2&gt;简单的变量导出&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;export const year = new Date().getFullYear()
+
+今年是 {year} 年。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;export const year = new Date().getFullYear()&lt;/p&gt;
+&lt;p&gt;今年是 {year} 年。&lt;/p&gt;
+&lt;p&gt;更多信息，请查看 &lt;a href=&quot;https://mdxjs.com/&quot;&gt;MDX 文档&lt;/a&gt;&lt;/p&gt;
 </content:encoded></item><item><title>在文章中嵌入视频</title><link>https://firefly.cuteleaf.cn/posts/video/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/video/</guid><description>这篇文章演示如何在博客文章中嵌入视频。</description><pubDate>Thu, 01 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;只需从 YouTube 或其他平台复制嵌入代码，然后将其粘贴到 markdown 文件中。&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;---
 title: 在文章中嵌入视频
@@ -1256,8 +1331,7 @@ published: 2023-10-19
 &lt;p&gt;您可以为文本添加剧透。文本也支持 &lt;strong&gt;Markdown&lt;/strong&gt; 语法。&lt;/p&gt;
 &lt;p&gt;内容 :spoiler[被隐藏了 &lt;strong&gt;哈哈&lt;/strong&gt;]！&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;内容 :spoiler[被隐藏了 **哈哈**]！&lt;/code&gt;&lt;/pre&gt;
-</content:encoded></item><item><title>Markdown 教程</title><link>https://firefly.cuteleaf.cn/posts/markdown-tutorial/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/markdown-tutorial/</guid><description>一个简明的 Markdown 博客示例。</description><pubDate>Thu, 01 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;Markdown 教程&lt;/h1&gt;
-&lt;p&gt;这是一个展示如何编写 Markdown 文件的示例。本文档汇总了核心语法与常见扩展（GFM）。&lt;/p&gt;
+</content:encoded></item><item><title>Markdown 教程</title><link>https://firefly.cuteleaf.cn/posts/markdown-tutorial/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/markdown-tutorial/</guid><description>一个简明的 Markdown 博客示例。</description><pubDate>Thu, 01 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;这是一个展示如何编写 Markdown 文件的示例。本文档汇总了核心语法与常见扩展（GFM）。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;#block-elements&quot;&gt;块级元素&lt;/a&gt;
 &lt;ul&gt;
