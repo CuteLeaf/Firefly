@@ -32,7 +32,7 @@ export const siteConfig: SiteConfig = {
 	favicon: [
 		// 留空以使用默认 favicon
 		{
-			src: "https://q2.qlogo.cn/headimg_dl?dst_uin=1050925710&spec=640", // 图标文件路径
+			src: "/assets/images/logo.jpeg", // 图标文件路径
 			theme: "light", // 可选，指定主题 'light' | 'dark'
 			sizes: "256x256", // 可选，图标大小
 		},
@@ -45,7 +45,7 @@ export const siteConfig: SiteConfig = {
 	// { type: "image", value: "https://q2.qlogo.cn/headimg_dl?dst_uin=1050925710&spec=640", alt: "Firefly Logo" }
 	navbarLogo: {
 		type: "image",
-		value: "https://q2.qlogo.cn/headimg_dl?dst_uin=1050925710&spec=640",
+		value: "/assets/images/logo.jpeg",
 		alt: "🍀",
 	},
 	navbarTitle: "shenyouchu", // 导航栏标题，可以设置为与 title 不同的值，如果不设置则使用 title
