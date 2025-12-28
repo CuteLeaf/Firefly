@@ -6,8 +6,8 @@ import { fontConfig } from "./fontConfig";
 const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
-	title: "Firefly",
-	subtitle: "Demo site",
+	title: "沈幼楚的博客",
+	subtitle: "shenyouchu",
 	site_url: "https://blog.shenyouchu.cn",
 	description:
 		"沈幼楚的博客",
