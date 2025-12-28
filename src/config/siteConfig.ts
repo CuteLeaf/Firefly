@@ -45,7 +45,7 @@ export const siteConfig: SiteConfig = {
 	// { type: "image", value: "https://q2.qlogo.cn/headimg_dl?dst_uin=1050925710&spec=640", alt: "Firefly Logo" }
 	navbarLogo: {
 		type: "image",
-		value: " ",
+		value: "https://q2.qlogo.cn/headimg_dl?dst_uin=1050925710&spec=640",
 		alt: "🍀",
 	},
 	navbarTitle: "shenyouchu", // 导航栏标题，可以设置为与 title 不同的值，如果不设置则使用 title
