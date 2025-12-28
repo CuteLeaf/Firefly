@@ -41,18 +41,18 @@ export const siteConfig: SiteConfig = {
 	// 导航栏Logo
 	// navbarLogo 支持三种类型：Astro图标库，本地图片，网络图片
 	// { type: "icon", value: "material-symbols:home-pin-outline" }
-	// { type: "image", value: "（刚刚灌灌灌灌灌个女", alt: "Firefly Logo" }
-	// { type: "image", value: "https://example.com/logo.png", alt: "Firefly Logo" }
+	// { type: "image", value: "https://q2.qlogo.cn/headimg_dl?dst_uin=1050925710&spec=640", alt: "Firefly Logo" }
+	// { type: "image", value: "https://q2.qlogo.cn/headimg_dl?dst_uin=1050925710&spec=640", alt: "Firefly Logo" }
 	navbarLogo: {
 		type: "image",
-		value: "https://q2.qlogo.cn/headimg_dl?dst_uin=1050925710&spec=640",
+		value: " ",
 		alt: "🍀",
 	},
-	navbarTitle: "Firefly", // 导航栏标题，可以设置为与 title 不同的值，如果不设置则使用 title
+	navbarTitle: "shenyouchu", // 导航栏标题，可以设置为与 title 不同的值，如果不设置则使用 title
 	navbarWidthFull: false, // 全宽导航栏，导航栏是否占满屏幕宽度，true：占满，false：不占满
 
 	// 站点开始日期，用于统计运行天数
-	siteStartDate: "2025-01-01", // 请修改为你的站点实际开始日期，格式：YYYY-MM-DD
+	siteStartDate: "2020-10-01", // 请修改为你的站点实际开始日期，格式：YYYY-MM-DD
 
 	// bangumi配置
 	bangumi: {
