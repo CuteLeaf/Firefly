@@ -18,10 +18,10 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 		server: "netease",
 
 		// 类型：song=单曲, playlist=歌单, album=专辑, search=搜索, artist=艺术家
-		type: "playlist",
+		type: "song",
 
 		// 歌单/专辑/单曲 ID 或搜索关键词
-		id: "10046455237", // 网易云音乐歌单ID示例
+		id: "1906088614", // 网易云音乐歌单ID示例
 
 		// 认证 token（可选）
 		auth: "",
@@ -43,10 +43,10 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	local: {
 		playlist: [
 			{
-				name: "使一颗心免于哀伤",
-				artist: "知更鸟 / HOYO-MiX / Chevy",
-				url: "/assets/music/使一颗心免于哀伤-哼唱.wav",
-				cover: "/assets/music/cover/109951169585655912.jpg",
+				name: "你把爱情给了谁 (钢琴版)",
+				artist: "高峰峰",
+				url: "/assets/music/bg.mp3",
+				cover: "/assets/music/cover/bg.jpg",
 				lrc: "", // 歌词内容，支持 LRC 格式
 			},
 		],
