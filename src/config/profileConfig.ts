@@ -2,11 +2,11 @@ import type { ProfileConfig } from "../types/config";
 
 export const profileConfig: ProfileConfig = {
 	// 头像
-	avatar: "/assets/images/avatar.webp",
+	avatar: "https://q2.qlogo.cn/headimg_dl?dst_uin=1050925710&spec=640",
 	// 名字
-	name: "Firefly",
+	name: "Shen youchu",
 	// 个人签名
-	bio: "Hello, I'm Firefly.",
+	bio: "Hello, I'm Shen youchu.",
 
 	// 链接配置
 	// 已经预装的图标集：fa6-brands，fa6-regular，fa6-solid，material-symbols，simple-icons
@@ -18,19 +18,19 @@ export const profileConfig: ProfileConfig = {
 		{
 			name: "Bilibli",
 			icon: "fa6-brands:bilibili",
-			url: "https://space.bilibili.com/38932988",
+			url: "https://space.bilibili.com/3493267970722652",
 			showName: false,
 		},
 		{
 			name: "GitHub",
 			icon: "fa6-brands:github",
-			url: "https://github.com/CuteLeaf",
+			url: "https://github.com/20110914",
 			showName: false,
 		},
 		{
 			name: "Email",
 			icon: "fa6-solid:envelope",
-			url: "mailto:xiaye@msn.com",
+			url: "mailto:shenyouchu.cyou@qq.com",
 			showName: false,
 		},
 		{
