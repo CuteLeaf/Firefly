@@ -41,7 +41,7 @@ export const siteConfig: SiteConfig = {
 	// 导航栏Logo
 	// navbarLogo 支持三种类型：Astro图标库，本地图片，网络图片
 	// { type: "icon", value: "material-symbols:home-pin-outline" }
-	// { type: "image", value: "https://q2.qlogo.cn/headimg_dl?dst_uin=1050925710&spec=640", alt: "Firefly Logo" }
+	// { type: "image", value: "（刚刚灌灌灌灌灌个女", alt: "Firefly Logo" }
 	// { type: "image", value: "https://example.com/logo.png", alt: "Firefly Logo" }
 	navbarLogo: {
 		type: "image",
