@@ -8,9 +8,9 @@ const SITE_LANG = "zh_CN";
 export const siteConfig: SiteConfig = {
 	title: "Firefly",
 	subtitle: "Demo site",
-	site_url: "https://firefly.cuteleaf.cn",
+	site_url: "https://blog.shenyouchu.cn",
 	description:
-		"Firefly 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。",
+		"沈幼楚的博客",
 	keywords: [
 		"Firefly",
 		"Fuwari",
@@ -32,20 +32,20 @@ export const siteConfig: SiteConfig = {
 	favicon: [
 		// 留空以使用默认 favicon
 		{
-			src: "/assets/images/favicon.ico", // 图标文件路径
+			src: "https://q2.qlogo.cn/headimg_dl?dst_uin=1050925710&spec=640", // 图标文件路径
 			theme: "light", // 可选，指定主题 'light' | 'dark'
-			sizes: "32x32", // 可选，图标大小
+			sizes: "256x256", // 可选，图标大小
 		},
 	],
 
 	// 导航栏Logo
 	// navbarLogo 支持三种类型：Astro图标库，本地图片，网络图片
 	// { type: "icon", value: "material-symbols:home-pin-outline" }
-	// { type: "image", value: "/assets/images/logo.webp", alt: "Firefly Logo" }
+	// { type: "image", value: "https://q2.qlogo.cn/headimg_dl?dst_uin=1050925710&spec=640", alt: "Firefly Logo" }
 	// { type: "image", value: "https://example.com/logo.png", alt: "Firefly Logo" }
 	navbarLogo: {
 		type: "image",
-		value: "/assets/images/LiuYingPure3.svg",
+		value: "https://q2.qlogo.cn/headimg_dl?dst_uin=1050925710&spec=640",
 		alt: "🍀",
 	},
 	navbarTitle: "Firefly", // 导航栏标题，可以设置为与 title 不同的值，如果不设置则使用 title
