@@ -3,7 +3,7 @@ title: hello world!
 published: 2026-01-01T00:00:00.381Z
 description: 你好！2026
 image: https://site-file.shenyouchu.cn/2026.webp
-tags: [2026, 新年]
+tags: ["2026", "新年"]
 author: 沈幼楚
 category: 日常
 draft: false
