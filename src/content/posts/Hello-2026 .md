@@ -1,5 +1,5 @@
 ---
-title: hello world!
+title: 你好2026!
 published: 2026-01-01T00:00:00.381Z
 description: 你好！2026
 image: https://site-file.shenyouchu.cn/2026.webp
