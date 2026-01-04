@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Firefly</title><description>Demo site</description><link>https://firefly.cuteleaf.cn/</link><language>zh_CN</language><templateTheme>Firefly</templateTheme><templateThemeVersion>6.1.3</templateThemeVersion><templateThemeUrl>https://github.com/CuteLeaf/Firefly</templateThemeUrl><lastBuildDate>2026年1月4日 10:50:21</lastBuildDate><item><title>Firefly 一款清新美观的 Astro 博客主题模板</title><link>https://firefly.cuteleaf.cn/posts/firefly/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/firefly/</guid><description>Firefly 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。</description><pubDate>Fri, 02 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;🌟 项目概述&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Firefly</title><description>Demo site</description><link>https://firefly.cuteleaf.cn/</link><language>zh_CN</language><templateTheme>Firefly</templateTheme><templateThemeVersion>6.3.2</templateThemeVersion><templateThemeUrl>https://github.com/CuteLeaf/Firefly</templateThemeUrl><lastBuildDate>2026年1月4日 11:24:35</lastBuildDate><item><title>Firefly 一款清新美观的 Astro 博客主题模板</title><link>https://firefly.cuteleaf.cn/posts/firefly/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/firefly/</guid><description>Firefly 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。</description><pubDate>Fri, 02 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;🌟 项目概述&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;Firefly&lt;/strong&gt; 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;🖥️在线预览： &lt;a href=&quot;https://firefly.cuteleaf.cn/&quot;&gt;Firefly - Demo site&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;🏠我的博客： &lt;a href=&quot;https://blog.cuteleaf.cn/&quot;&gt;https://blog.cuteleaf.cn&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
@@ -141,9 +141,9 @@ URL：&lt;code&gt;/posts/how-to-use-firefly-blog-theme&lt;/code&gt;&lt;/p&gt;
 &lt;li&gt;如果多个文章使用相同的 slug，后面的文章会覆盖前面的&lt;/li&gt;
 &lt;li&gt;Slug 会自动转换为小写&lt;/li&gt;
 &lt;/ul&gt;
-</content:encoded><author>Firefly</author></item><item><title>Firefly 布局系统详解</title><link>https://firefly.cuteleaf.cn/posts/firefly-layout-system/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/firefly-layout-system/</guid><description>深入了解 Firefly 的布局系统，包括侧边栏布局（左侧/双侧）和文章列表布局（列表/网格），以及为什么双侧边栏与网格模式会冲突的技术原理。</description><pubDate>Fri, 02 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;📖 概述&lt;/h2&gt;
+</content:encoded><author>Firefly</author></item><item><title>Firefly 布局系统详解</title><link>https://firefly.cuteleaf.cn/posts/firefly-layout-system/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/firefly-layout-system/</guid><description>深入了解 Firefly 的布局系统，包括侧边栏布局（左侧/双侧）和文章列表布局（列表/网格），以及全新的三列网格模式。</description><pubDate>Sat, 03 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;📖 概述&lt;/h2&gt;
 &lt;p&gt;Firefly 提供了灵活的布局系统，允许您根据内容需求和个人喜好自定义博客的视觉呈现方式。布局系统主要包括&lt;strong&gt;侧边栏布局&lt;/strong&gt;和&lt;strong&gt;文章列表布局&lt;/strong&gt;两个维度，它们相互配合，共同决定了页面的整体结构。&lt;/p&gt;
-&lt;p&gt;本文将详细介绍 Firefly 的各种布局模式、它们的特点、使用场景，以及为什么某些布局之间会存在冲突。&lt;/p&gt;
+&lt;p&gt;本文将详细介绍 Firefly 的各种布局模式、它们的特点、使用场景，以及不同布局组合的效果。&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2&gt;一、侧边栏布局系统&lt;/h2&gt;
 &lt;p&gt;侧边栏是博客页面的重要组成部分，用于展示导航、分类、标签、统计信息等辅助内容。Firefly 支持两种侧边栏布局模式。&lt;/p&gt;
@@ -156,8 +156,7 @@ URL：&lt;code&gt;/posts/how-to-use-firefly-blog-theme&lt;/code&gt;&lt;/p&gt;
 &lt;li&gt;适合展示导航和分类等重要信息&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h4&gt;布局结构&lt;/h4&gt;
-&lt;p&gt;&lt;img src=&quot;./images/left.webp&quot; alt=&quot;左侧边栏布局&quot; /&gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;!-- 此处可以插入左侧边栏布局截图 --&amp;gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;./images/left-list.webp&quot; alt=&quot;左侧边栏布局&quot; /&gt;&lt;/p&gt;
 &lt;h4&gt;适用场景&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;传统博客风格&lt;/li&gt;
@@ -170,13 +169,6 @@ URL：&lt;code&gt;/posts/how-to-use-firefly-blog-theme&lt;/code&gt;&lt;/p&gt;
 export const sidebarLayoutConfig: SidebarLayoutConfig = {
   enable: true,
   position: &quot;left&quot;, // 左侧边栏
-  leftComponents: [
-    { type: &quot;profile&quot;, order: 1 },
-    { type: &quot;announcement&quot;, order: 2 },
-    { type: &quot;categories&quot;, order: 3 },
-    { type: &quot;tags&quot;, order: 5 },
-  ],
-  rightComponents: [], // 右侧组件为空
 };
 &lt;/code&gt;&lt;/pre&gt;
 &lt;hr /&gt;
@@ -190,7 +182,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 &lt;li&gt;适合宽屏显示器&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h4&gt;布局结构&lt;/h4&gt;
-&lt;p&gt;&lt;img src=&quot;./images/both.webp&quot; alt=&quot;双侧边栏布局&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;./images/both-list.webp&quot; alt=&quot;双侧边栏布局&quot; /&gt;&lt;/p&gt;
 &lt;h4&gt;适用场景&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;宽屏桌面端浏览&lt;/li&gt;
@@ -198,38 +190,15 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 &lt;li&gt;需要展示大量辅助内容&lt;/li&gt;
 &lt;li&gt;专业性强的技术博客&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h4&gt;响应式行为&lt;/h4&gt;
-&lt;p&gt;双侧边栏模式具有智能的响应式设计：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;桌面端（≥1024px）&lt;/strong&gt;：显示左右双侧边栏&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;平板端（768px-1023px）&lt;/strong&gt;：只显示左侧边栏，右侧边栏自动隐藏&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;移动端（&amp;lt;768px）&lt;/strong&gt;：只显示左侧边栏&lt;/li&gt;
-&lt;/ul&gt;
 &lt;h4&gt;配置示例&lt;/h4&gt;
 &lt;pre&gt;&lt;code&gt;// src/config/sidebarConfig.ts
 export const sidebarLayoutConfig: SidebarLayoutConfig = {
   enable: true,
   position: &quot;both&quot;, // 双侧边栏
-  leftComponents: [
-    // 左侧边栏组件
-    { type: &quot;profile&quot;, order: 1 },
-    { type: &quot;announcement&quot;, order: 2 },
-    { type: &quot;categories&quot;, order: 3 },
-    { type: &quot;tags&quot;, order: 5 },
-  ],
-  rightComponents: [
-    // 右侧边栏组件
-    { type: &quot;stats&quot;, order: 1 },
-    { type: &quot;sidebarToc&quot;, order: 2, showOnPostPage: true },
-    { type: &quot;advertisement&quot;, order: 10 },
-  ],
-};
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h4&gt;⚠️ 重要限制&lt;/h4&gt;
-&lt;p&gt;启用双侧边栏后，文章列表的&lt;strong&gt;网格模式&lt;/strong&gt;将无法使用，只能使用&lt;strong&gt;列表模式&lt;/strong&gt;。原因详见下文&quot;布局冲突分析&quot;章节。&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2&gt;二、文章列表布局系统&lt;/h2&gt;
-&lt;p&gt;文章列表是博客首页和归档页的核心内容，Firefly 提供两种展示方式。&lt;/p&gt;
+&lt;p&gt;文章列表是博客首页和归档页的核心内容，Firefly 提供两种展示方式，并支持多种网格配置。&lt;/p&gt;
 &lt;h3&gt;2.1 列表模式 (defaultMode: &quot;list&quot;)&lt;/h3&gt;
 &lt;h4&gt;特点&lt;/h4&gt;
 &lt;ul&gt;
@@ -239,7 +208,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 &lt;li&gt;适合深度阅读&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h4&gt;列表布局结构&lt;/h4&gt;
-&lt;p&gt;&lt;img src=&quot;./images/left.webp&quot; alt=&quot;列表模式布局&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;./images/left-list.webp&quot; alt=&quot;列表模式布局&quot; /&gt;&lt;/p&gt;
 &lt;h4&gt;优点&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;✅ 视觉冲击力强，封面图吸引眼球&lt;/li&gt;
@@ -247,13 +216,6 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 &lt;li&gt;✅ 适合图片内容丰富的博客&lt;/li&gt;
 &lt;li&gt;✅ 移动端友好，单列更易阅读&lt;/li&gt;
 &lt;li&gt;✅ 兼容所有侧边栏配置（单侧、双侧）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4&gt;适用场景&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;摄影博客、设计博客&lt;/li&gt;
-&lt;li&gt;强调视觉效果的博客&lt;/li&gt;
-&lt;li&gt;文章数量较少但质量高的博客&lt;/li&gt;
-&lt;li&gt;移动端访问为主的博客&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h4&gt;配置示例&lt;/h4&gt;
 &lt;pre&gt;&lt;code&gt;// src/config/siteConfig.ts
@@ -268,22 +230,32 @@ export const siteConfig: SiteConfig = {
 &lt;h3&gt;2.2 网格模式 (defaultMode: &quot;grid&quot;)&lt;/h3&gt;
 &lt;h4&gt;特点&lt;/h4&gt;
 &lt;ul&gt;
-&lt;li&gt;双列横向排列&lt;/li&gt;
+&lt;li&gt;多列横向排列（支持 2 列或 3 列）&lt;/li&gt;
 &lt;li&gt;紧凑布局，信息密度高&lt;/li&gt;
 &lt;li&gt;适合快速浏览&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h4&gt;网格布局结构&lt;/h4&gt;
-&lt;p&gt;&lt;img src=&quot;./images/grid.webp&quot; alt=&quot;网格模式布局&quot; /&gt;&lt;/p&gt;
-&lt;h4&gt;优点&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;✅ 单屏显示更多文章&lt;/li&gt;
-&lt;li&gt;✅ 适合快速浏览和查找&lt;/li&gt;
-&lt;li&gt;✅ 节省垂直滚动空间&lt;/li&gt;
-&lt;li&gt;✅ 现代化的瀑布流风格&lt;/li&gt;
-&lt;li&gt;✅ 适合文章数量多的博客&lt;/li&gt;
-&lt;li&gt;✅ 视觉冲击力强，封面图吸引眼球&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4&gt;瀑布流布局结构&lt;/h4&gt;
+&lt;h4&gt;2.2.1 双列网格 (Columns: 2)&lt;/h4&gt;
+&lt;p&gt;这是网格模式的默认配置，适合大多数场景。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;./images/left-grid2.webp&quot; alt=&quot;双列网格布局&quot; /&gt;&lt;/p&gt;
+&lt;h4&gt;2.2.2 三列网格 (Columns: 3) ✨ New&lt;/h4&gt;
+&lt;p&gt;在宽屏设备上，您可以开启三列网格模式，进一步提高信息密度。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;./images/left-grid3.webp&quot; alt=&quot;三列网格布局&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;⚠️ 注意&lt;/strong&gt;：三列网格模式仅在&lt;strong&gt;左侧边栏模式&lt;/strong&gt;（或无侧边栏）下生效。如果您启用了双侧边栏，系统将自动回退到双列网格，以保证文章卡片有足够的展示宽度。&lt;/p&gt;
+&lt;h4&gt;配置示例&lt;/h4&gt;
+&lt;pre&gt;&lt;code&gt;// src/config/siteConfig.ts
+export const siteConfig: SiteConfig = {
+  postListLayout: {
+    defaultMode: &quot;grid&quot;,
+    allowSwitch: true,
+    grid: {
+      masonry: true,  // 开启瀑布流
+      columns: 3,     // 设置为 3 列模式（仅单侧边栏生效）
+    },
+  },
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr /&gt;
+&lt;h3&gt;2.3 瀑布流布局 (Masonry)&lt;/h3&gt;
 &lt;p&gt;Firefly 的网格模式内置了智能瀑布流布局支持，解决了网格布局中因图文混合文章导致的卡片高度不一致导致的空白问题。&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;./images/masonry.webp&quot; alt=&quot;瀑布流布局&quot; /&gt;&lt;/p&gt;
 &lt;ul&gt;
@@ -291,277 +263,26 @@ export const siteConfig: SiteConfig = {
 &lt;li&gt;&lt;strong&gt;消除空白&lt;/strong&gt;：通过绝对定位精确计算每个卡片的位置，让卡片紧贴上一行的卡片，消除垂直方向的空白间隙。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;配置灵活&lt;/strong&gt;：您可以在 &lt;code&gt;siteConfig.ts&lt;/code&gt; 中通过 &lt;code&gt;postListLayout.grid.masonry&lt;/code&gt; 选项自由开启或关闭此功能。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h4&gt;限制&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;⚠️ &lt;strong&gt;不支持双侧边栏模式&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;⚠️ 屏幕宽度 &amp;lt; 1200px 时自动切换为列表模式&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4&gt;适用场景&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;技术博客、文字为主的博客&lt;/li&gt;
-&lt;li&gt;文章数量多，需要快速检索&lt;/li&gt;
-&lt;li&gt;桌面端访问为主的博客&lt;/li&gt;
-&lt;li&gt;强调信息密度的场景&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4&gt;配置示例&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;// src/config/siteConfig.ts
-export const siteConfig: SiteConfig = {
-  postListLayout: {
-    defaultMode: &quot;grid&quot;, // 网格模式
-    allowSwitch: true,   // 允许用户切换
-    grid: {
-      masonry: true,     // 开启瀑布流布局
-    },
-  },
-};
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h4&gt;响应式行为&lt;/h4&gt;
-&lt;p&gt;网格模式具有智能的响应式设计：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;桌面端（≥1200px）&lt;/strong&gt;：显示双列网格&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;平板端和移动端（&amp;lt;1200px）&lt;/strong&gt;：自动切换为单列列表模式&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;布局切换按钮&lt;/strong&gt;：仅在桌面端显示&lt;/li&gt;
-&lt;/ul&gt;
 &lt;hr /&gt;
-&lt;h3&gt;2.2.1 封面位置：顶部 vs 右侧&lt;/h3&gt;
-&lt;p&gt;网格模式支持两种封面摆放方式，通过配置进行切换：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;// src/config/siteConfig.ts
-export const siteConfig: SiteConfig = {
-  postListLayout: {
-    defaultMode: &quot;grid&quot;,
-    allowSwitch: true,
-    grid: {
-      masonry: true,
-      coverPosition: &quot;top&quot;, // 或 &quot;right&quot;
-    },
-  },
-};
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h4&gt;封面置于顶部（coverPosition: &quot;top&quot;）&lt;/h4&gt;
+&lt;h2&gt;三、布局组合指南&lt;/h2&gt;
+&lt;p&gt;Firefly 允许您自由组合侧边栏和文章列表布局。以下是各种组合的效果说明。&lt;/p&gt;
+&lt;h3&gt;3.1 左侧边栏 + 网格模式&lt;/h3&gt;
+&lt;p&gt;这是最灵活的组合。您可以选择 2 列或 3 列网格。
+但需注意：开启单侧边栏后，文章详情页的侧边栏目录导航将失效，改用浮动目录导航替代，需要手动点击弹出目录导航。&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;封面图位于卡片上方，文本在下方，整体更“图文型”，适合视觉内容丰富的文章。&lt;/li&gt;
-&lt;li&gt;封面宽度占满卡片；摘要与标签在封面下自然排列，整体节奏更均衡。&lt;/li&gt;
-&lt;li&gt;移动端在卡片有封面时，置顶按钮采用半透明毛玻璃背景，覆盖在图片之上也能保持可读性。&lt;/li&gt;
-&lt;li&gt;与瀑布流（masonry）更契合：图文高度差异大时纵向堆叠更自然，减少左右列空白。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;2 列模式&lt;/strong&gt;：经典的网格布局，卡片宽度适中，阅读舒适。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;3 列模式&lt;/strong&gt;：适合宽屏（≥1024px），单屏展示更多内容，视觉效果震撼。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&quot;./images/masonry.webp&quot; alt=&quot;顶部封面&quot; /&gt;&lt;/p&gt;
-&lt;h4&gt;封面置于右侧（coverPosition: &quot;right&quot;）&lt;/h4&gt;
+&lt;h3&gt;3.2 双侧边栏 + 网格模式&lt;/h3&gt;
+&lt;p&gt;在旧版本中，此组合被禁用。但在最新版 Firefly 中，我们解除了限制，允许双侧边栏与网格模式共存。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;./images/both-grid.webp&quot; alt=&quot;双侧边栏+网格布局&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;特点与限制&lt;/strong&gt;：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;文本在左、封面在右，更利于快速浏览文字型内容，信息密度更高。&lt;/li&gt;
-&lt;li&gt;卡片高度更加稳定，列表观感更整齐；无封面文章在桌面端会显示进入按钮，便于操作。&lt;/li&gt;
-&lt;li&gt;适合标题与元信息为主、封面作为辅助点缀的内容形态。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;强制双列&lt;/strong&gt;：即使您配置了 &lt;code&gt;columns: 3&lt;/code&gt;，在此模式下也会强制显示为 2 列。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;空间紧凑&lt;/strong&gt;：由于左右都有侧边栏，中间的主内容区域相对较窄。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;信息密度极高&lt;/strong&gt;：这是信息密度最高的布局方式，适合需要同时展示大量导航信息和文章列表的站点。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&quot;./images/grid_cover_right.webp&quot; alt=&quot;右侧封面&quot; /&gt;&lt;/p&gt;
-&lt;h4&gt;使用建议&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;视觉型内容（摄影、设计、插图）优先选择“顶部”。&lt;/li&gt;
-&lt;li&gt;文字密集、需要高效扫读的列表页优先选择“右侧”，但封面内容会变窄。&lt;/li&gt;
-&lt;li&gt;图文混合且开启瀑布流时，“顶部”通常更协调&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr /&gt;
-&lt;h2&gt;三、布局冲突分析 ⚠️&lt;/h2&gt;
-&lt;h3&gt;3.1 为什么双侧边栏与网格模式冲突？&lt;/h3&gt;
-&lt;p&gt;这是 Firefly 设计中一个重要的技术限制，理解其原因有助于您做出正确的布局选择。&lt;/p&gt;
-&lt;h4&gt;空间占用分析&lt;/h4&gt;
-&lt;p&gt;让我们通过实际的宽度计算来理解这个问题：&lt;/p&gt;
-&lt;h5&gt;典型桌面屏幕宽度&lt;/h5&gt;
-&lt;p&gt;假设常见的桌面屏幕宽度为 &lt;strong&gt;1920px&lt;/strong&gt;（Full HD）&lt;/p&gt;
-&lt;h5&gt;单侧边栏 + 网格模式 ✅&lt;/h5&gt;
-&lt;pre&gt;&lt;code&gt;总宽度：1920px
-
-├─ 左侧边栏：    280px  (固定宽度)
-├─ 左侧间距：     40px  (margin)
-├─ 主内容区域： 1560px  (剩余空间)
-│  ├─ 文章卡片1： 750px
-│  ├─ 卡片间距：   60px
-│  └─ 文章卡片2： 750px
-└─ 右侧间距：     40px
-
-主内容区域 = 1920 - 280 - 40 - 40 = 1560px
-每列宽度   = (1560 - 60) / 2 = 750px  ✅ 足够显示
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;strong&gt;结论&lt;/strong&gt;：单侧边栏时，主内容区域有 &lt;strong&gt;1560px&lt;/strong&gt;，足够容纳双列网格（每列 750px），布局正常。&lt;/p&gt;
-&lt;p&gt;&amp;lt;!-- 此处可以插入单侧边栏+网格模式截图 --&amp;gt;&lt;/p&gt;
-&lt;h5&gt;双侧边栏 + 网格模式 ❌&lt;/h5&gt;
-&lt;pre&gt;&lt;code&gt;总宽度：1920px
-
-├─ 左侧边栏：    280px  (固定宽度)
-├─ 左侧间距：     40px  (margin)
-├─ 主内容区域： 1240px  (剩余空间)
-│  ├─ 文章卡片1： 590px
-│  ├─ 卡片间距：   60px
-│  └─ 文章卡片2： 590px
-├─ 右侧间距：     40px
-└─ 右侧边栏：    280px  (固定宽度)
-
-主内容区域 = 1920 - 280 - 40 - 40 - 280 - 40 = 1240px
-每列宽度   = (1240 - 60) / 2 = 590px  ❌ 空间不足
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;strong&gt;问题&lt;/strong&gt;：双侧边栏时，主内容区域被压缩到 &lt;strong&gt;1240px&lt;/strong&gt;，每列只有 &lt;strong&gt;590px&lt;/strong&gt;，文章卡片显得过于拥挤。&lt;/p&gt;
-&lt;p&gt;&amp;lt;!-- 此处可以插入双侧边栏+网格模式拥挤效果截图 --&amp;gt;&lt;/p&gt;
-&lt;h5&gt;更小屏幕的情况&lt;/h5&gt;
-&lt;p&gt;在 &lt;strong&gt;1366px&lt;/strong&gt; 宽度的笔记本电脑上：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;双侧边栏 + 网格模式
-
-总宽度：1366px
-
-主内容区域 = 1366 - 280 - 40 - 40 - 280 - 40 = 686px
-每列宽度   = (686 - 60) / 2 = 313px  ❌ 严重不足
-
-每列只有 313px，文章标题都无法完整显示！
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h4&gt;视觉体验问题&lt;/h4&gt;
-&lt;p&gt;即使在宽屏显示器上，双侧边栏 + 网格模式也会带来以下问题：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;文章卡片过窄&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;标题需要多行折叠&lt;/li&gt;
-&lt;li&gt;摘要显示不完整&lt;/li&gt;
-&lt;li&gt;标签和元信息拥挤&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;阅读体验差&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;每行文字过短，阅读不流畅&lt;/li&gt;
-&lt;li&gt;视线需要频繁跳转&lt;/li&gt;
-&lt;li&gt;信息扫描效率低&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;视觉不平衡&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;三栏布局已经占据大量横向空间&lt;/li&gt;
-&lt;li&gt;再将中间栏分成两列，过于碎片化&lt;/li&gt;
-&lt;li&gt;破坏了&quot;中心内容突出&quot;的设计原则&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h4&gt;布局对比图示&lt;/h4&gt;
-&lt;p&gt;&lt;strong&gt;❌空间不足 双侧边栏 + 网格模式（拥挤）&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;svg width=&quot;800&quot; height=&quot;200&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;&amp;gt;
-&amp;lt;!-- 背景 --&amp;gt;
-&amp;lt;rect width=&quot;800&quot; height=&quot;200&quot; fill=&quot;#f8f9fa&quot;/&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;!-- 左侧边栏 --&amp;gt;
-&amp;lt;rect x=&quot;20&quot; y=&quot;30&quot; width=&quot;140&quot; height=&quot;140&quot; fill=&quot;#e3f2fd&quot; stroke=&quot;#2196f3&quot; stroke-width=&quot;2&quot; rx=&quot;4&quot;/&amp;gt;
-&amp;lt;text x=&quot;90&quot; y=&quot;90&quot; text-anchor=&quot;middle&quot; font-size=&quot;14&quot; font-weight=&quot;bold&quot; fill=&quot;#1976d2&quot;&amp;gt;左侧边栏&amp;lt;/text&amp;gt;
-&amp;lt;text x=&quot;90&quot; y=&quot;110&quot; text-anchor=&quot;middle&quot; font-size=&quot;12&quot; fill=&quot;#666&quot;&amp;gt;280px&amp;lt;/text&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;!-- 文章1 --&amp;gt;
-&amp;lt;rect x=&quot;180&quot; y=&quot;30&quot; width=&quot;120&quot; height=&quot;140&quot; fill=&quot;#fff3e0&quot; stroke=&quot;#ff9800&quot; stroke-width=&quot;2&quot; rx=&quot;4&quot;/&amp;gt;
-&amp;lt;text x=&quot;240&quot; y=&quot;90&quot; text-anchor=&quot;middle&quot; font-size=&quot;14&quot; font-weight=&quot;bold&quot; fill=&quot;#f57c00&quot;&amp;gt;文章1&amp;lt;/text&amp;gt;
-&amp;lt;text x=&quot;240&quot; y=&quot;110&quot; text-anchor=&quot;middle&quot; font-size=&quot;12&quot; fill=&quot;#666&quot;&amp;gt;590px&amp;lt;/text&amp;gt;
-&amp;lt;text x=&quot;240&quot; y=&quot;130&quot; text-anchor=&quot;middle&quot; font-size=&quot;11&quot; fill=&quot;#d84315&quot;&amp;gt;过窄！&amp;lt;/text&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;!-- 文章2 --&amp;gt;
-&amp;lt;rect x=&quot;320&quot; y=&quot;30&quot; width=&quot;120&quot; height=&quot;140&quot; fill=&quot;#fff3e0&quot; stroke=&quot;#ff9800&quot; stroke-width=&quot;2&quot; rx=&quot;4&quot;/&amp;gt;
-&amp;lt;text x=&quot;380&quot; y=&quot;90&quot; text-anchor=&quot;middle&quot; font-size=&quot;14&quot; font-weight=&quot;bold&quot; fill=&quot;#f57c00&quot;&amp;gt;文章2&amp;lt;/text&amp;gt;
-&amp;lt;text x=&quot;380&quot; y=&quot;110&quot; text-anchor=&quot;middle&quot; font-size=&quot;12&quot; fill=&quot;#666&quot;&amp;gt;590px&amp;lt;/text&amp;gt;
-&amp;lt;text x=&quot;380&quot; y=&quot;130&quot; text-anchor=&quot;middle&quot; font-size=&quot;11&quot; fill=&quot;#d84315&quot;&amp;gt;过窄！&amp;lt;/text&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;!-- 右侧边栏 --&amp;gt;
-&amp;lt;rect x=&quot;460&quot; y=&quot;30&quot; width=&quot;140&quot; height=&quot;140&quot; fill=&quot;#e3f2fd&quot; stroke=&quot;#2196f3&quot; stroke-width=&quot;2&quot; rx=&quot;4&quot;/&amp;gt;
-&amp;lt;text x=&quot;530&quot; y=&quot;90&quot; text-anchor=&quot;middle&quot; font-size=&quot;14&quot; font-weight=&quot;bold&quot; fill=&quot;#1976d2&quot;&amp;gt;右侧边栏&amp;lt;/text&amp;gt;
-&amp;lt;text x=&quot;530&quot; y=&quot;110&quot; text-anchor=&quot;middle&quot; font-size=&quot;12&quot; fill=&quot;#666&quot;&amp;gt;280px&amp;lt;/text&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;!-- 箭头指示 --&amp;gt;
-&amp;lt;path d=&quot;M 240 180 L 240 195&quot; stroke=&quot;#d32f2f&quot; stroke-width=&quot;2&quot; marker-end=&quot;url(#arrowred)&quot;/&amp;gt;
-&amp;lt;path d=&quot;M 380 180 L 380 195&quot; stroke=&quot;#d32f2f&quot; stroke-width=&quot;2&quot; marker-end=&quot;url(#arrowred)&quot;/&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;defs&amp;gt;
-&amp;lt;marker id=&quot;arrowred&quot; markerWidth=&quot;10&quot; markerHeight=&quot;10&quot; refX=&quot;5&quot; refY=&quot;5&quot; orient=&quot;auto&quot;&amp;gt;
-&amp;lt;path d=&quot;M 0 0 L 10 5 L 0 10 Z&quot; fill=&quot;#d32f2f&quot;/&amp;gt;
-&amp;lt;/marker&amp;gt;
-&amp;lt;/defs&amp;gt;
-&amp;lt;/svg&amp;gt;&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;&lt;strong&gt;✅布局合理：双侧边栏 + 列表模式（舒适）&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;svg width=&quot;800&quot; height=&quot;200&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;&amp;gt;
-&amp;lt;!-- 背景 --&amp;gt;
-&amp;lt;rect width=&quot;800&quot; height=&quot;200&quot; fill=&quot;#f8f9fa&quot;/&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;!-- 左侧边栏 --&amp;gt;
-&amp;lt;rect x=&quot;20&quot; y=&quot;30&quot; width=&quot;140&quot; height=&quot;140&quot; fill=&quot;#e3f2fd&quot; stroke=&quot;#2196f3&quot; stroke-width=&quot;2&quot; rx=&quot;4&quot;/&amp;gt;
-&amp;lt;text x=&quot;90&quot; y=&quot;90&quot; text-anchor=&quot;middle&quot; font-size=&quot;14&quot; font-weight=&quot;bold&quot; fill=&quot;#1976d2&quot;&amp;gt;左侧边栏&amp;lt;/text&amp;gt;
-&amp;lt;text x=&quot;90&quot; y=&quot;110&quot; text-anchor=&quot;middle&quot; font-size=&quot;12&quot; fill=&quot;#666&quot;&amp;gt;280px&amp;lt;/text&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;!-- 文章列表区域 --&amp;gt;
-&amp;lt;rect x=&quot;180&quot; y=&quot;30&quot; width=&quot;320&quot; height=&quot;140&quot; fill=&quot;#e8f5e9&quot; stroke=&quot;#4caf50&quot; stroke-width=&quot;2&quot; rx=&quot;4&quot;/&amp;gt;
-&amp;lt;text x=&quot;340&quot; y=&quot;85&quot; text-anchor=&quot;middle&quot; font-size=&quot;14&quot; font-weight=&quot;bold&quot; fill=&quot;#2e7d32&quot;&amp;gt;文章列表&amp;lt;/text&amp;gt;
-&amp;lt;text x=&quot;340&quot; y=&quot;105&quot; text-anchor=&quot;middle&quot; font-size=&quot;12&quot; fill=&quot;#666&quot;&amp;gt;1240px&amp;lt;/text&amp;gt;
-&amp;lt;text x=&quot;340&quot; y=&quot;125&quot; text-anchor=&quot;middle&quot; font-size=&quot;11&quot; fill=&quot;#388e3c&quot;&amp;gt;单列，空间充足&amp;lt;/text&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;!-- 右侧边栏 --&amp;gt;
-&amp;lt;rect x=&quot;520&quot; y=&quot;30&quot; width=&quot;140&quot; height=&quot;140&quot; fill=&quot;#e3f2fd&quot; stroke=&quot;#2196f3&quot; stroke-width=&quot;2&quot; rx=&quot;4&quot;/&amp;gt;
-&amp;lt;text x=&quot;590&quot; y=&quot;90&quot; text-anchor=&quot;middle&quot; font-size=&quot;14&quot; font-weight=&quot;bold&quot; fill=&quot;#1976d2&quot;&amp;gt;右侧边栏&amp;lt;/text&amp;gt;
-&amp;lt;text x=&quot;590&quot; y=&quot;110&quot; text-anchor=&quot;middle&quot; font-size=&quot;12&quot; fill=&quot;#666&quot;&amp;gt;280px&amp;lt;/text&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;!-- 箭头指示 --&amp;gt;
-&amp;lt;path d=&quot;M 340 180 L 340 195&quot; stroke=&quot;#4caf50&quot; stroke-width=&quot;2&quot; marker-end=&quot;url(#arrowgreen)&quot;/&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;defs&amp;gt;
-&amp;lt;marker id=&quot;arrowgreen&quot; markerWidth=&quot;10&quot; markerHeight=&quot;10&quot; refX=&quot;5&quot; refY=&quot;5&quot; orient=&quot;auto&quot;&amp;gt;
-&amp;lt;path d=&quot;M 0 0 L 10 5 L 0 10 Z&quot; fill=&quot;#4caf50&quot;/&amp;gt;
-&amp;lt;/marker&amp;gt;
-&amp;lt;/defs&amp;gt;
-&amp;lt;/svg&amp;gt;&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;&lt;strong&gt;✅ 布局合理：单侧边栏 + 网格模式（舒适）&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;svg width=&quot;800&quot; height=&quot;200&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;&amp;gt;
-&amp;lt;!-- 背景 --&amp;gt;
-&amp;lt;rect width=&quot;800&quot; height=&quot;200&quot; fill=&quot;#f8f9fa&quot;/&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;!-- 左侧边栏 --&amp;gt;
-&amp;lt;rect x=&quot;20&quot; y=&quot;30&quot; width=&quot;140&quot; height=&quot;140&quot; fill=&quot;#e3f2fd&quot; stroke=&quot;#2196f3&quot; stroke-width=&quot;2&quot; rx=&quot;4&quot;/&amp;gt;
-&amp;lt;text x=&quot;90&quot; y=&quot;90&quot; text-anchor=&quot;middle&quot; font-size=&quot;14&quot; font-weight=&quot;bold&quot; fill=&quot;#1976d2&quot;&amp;gt;左侧边栏&amp;lt;/text&amp;gt;
-&amp;lt;text x=&quot;90&quot; y=&quot;110&quot; text-anchor=&quot;middle&quot; font-size=&quot;12&quot; fill=&quot;#666&quot;&amp;gt;280px&amp;lt;/text&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;!-- 文章1 --&amp;gt;
-&amp;lt;rect x=&quot;180&quot; y=&quot;30&quot; width=&quot;180&quot; height=&quot;140&quot; fill=&quot;#e8f5e9&quot; stroke=&quot;#4caf50&quot; stroke-width=&quot;2&quot; rx=&quot;4&quot;/&amp;gt;
-&amp;lt;text x=&quot;270&quot; y=&quot;85&quot; text-anchor=&quot;middle&quot; font-size=&quot;14&quot; font-weight=&quot;bold&quot; fill=&quot;#2e7d32&quot;&amp;gt;文章1&amp;lt;/text&amp;gt;
-&amp;lt;text x=&quot;270&quot; y=&quot;105&quot; text-anchor=&quot;middle&quot; font-size=&quot;12&quot; fill=&quot;#666&quot;&amp;gt;750px&amp;lt;/text&amp;gt;
-&amp;lt;text x=&quot;270&quot; y=&quot;125&quot; text-anchor=&quot;middle&quot; font-size=&quot;11&quot; fill=&quot;#388e3c&quot;&amp;gt;宽度充足&amp;lt;/text&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;!-- 文章2 --&amp;gt;
-&amp;lt;rect x=&quot;380&quot; y=&quot;30&quot; width=&quot;180&quot; height=&quot;140&quot; fill=&quot;#e8f5e9&quot; stroke=&quot;#4caf50&quot; stroke-width=&quot;2&quot; rx=&quot;4&quot;/&amp;gt;
-&amp;lt;text x=&quot;470&quot; y=&quot;85&quot; text-anchor=&quot;middle&quot; font-size=&quot;14&quot; font-weight=&quot;bold&quot; fill=&quot;#2e7d32&quot;&amp;gt;文章2&amp;lt;/text&amp;gt;
-&amp;lt;text x=&quot;470&quot; y=&quot;105&quot; text-anchor=&quot;middle&quot; font-size=&quot;12&quot; fill=&quot;#666&quot;&amp;gt;750px&amp;lt;/text&amp;gt;
-&amp;lt;text x=&quot;470&quot; y=&quot;125&quot; text-anchor=&quot;middle&quot; font-size=&quot;11&quot; fill=&quot;#388e3c&quot;&amp;gt;宽度充足&amp;lt;/text&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;!-- 箭头指示 --&amp;gt;
-&amp;lt;path d=&quot;M 270 180 L 270 195&quot; stroke=&quot;#4caf50&quot; stroke-width=&quot;2&quot; marker-end=&quot;url(#arrowgreen2)&quot;/&amp;gt;
-&amp;lt;path d=&quot;M 470 180 L 470 195&quot; stroke=&quot;#4caf50&quot; stroke-width=&quot;2&quot; marker-end=&quot;url(#arrowgreen2)&quot;/&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;defs&amp;gt;
-&amp;lt;marker id=&quot;arrowgreen2&quot; markerWidth=&quot;10&quot; markerHeight=&quot;10&quot; refX=&quot;5&quot; refY=&quot;5&quot; orient=&quot;auto&quot;&amp;gt;
-&amp;lt;path d=&quot;M 0 0 L 10 5 L 0 10 Z&quot; fill=&quot;#4caf50&quot;/&amp;gt;
-&amp;lt;/marker&amp;gt;
-&amp;lt;/defs&amp;gt;
-&amp;lt;/svg&amp;gt;&lt;/p&gt;
-&lt;h3&gt;3.2 技术实现层面&lt;/h3&gt;
-&lt;p&gt;从代码实现角度，Firefly 采用了以下策略：&lt;/p&gt;
-&lt;h4&gt;自动冲突检测&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;// src/utils/layout-utils.ts (示例)
-
-// 检测布局冲突
-function canUseGridLayout(): boolean {
-  const { position } = sidebarLayoutConfig;
-  
-  // 如果启用了双侧边栏，禁用网格模式
-  if (position === &quot;both&quot;) {
-    return false;
-  }
-  
-  return true;
-}
-
-// 自动修正布局
-function getActualLayoutMode(): &quot;list&quot; | &quot;grid&quot; {
-  const { defaultMode } = siteConfig.postListLayout;
-  
-  if (defaultMode === &quot;grid&quot; &amp;amp;&amp;amp; !canUseGridLayout()) {
-    console.warn(&quot;网格模式与双侧边栏冲突，已自动切换为列表模式&quot;);
-    return &quot;list&quot;;
-  }
-  
-  return defaultMode;
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h4&gt;布局切换按钮行为&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;// 双侧边栏时，隐藏布局切换按钮
-const showLayoutSwitch = 
-  siteConfig.postListLayout.allowSwitch &amp;amp;&amp;amp; 
-  sidebarLayoutConfig.position !== &quot;both&quot;;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3&gt;3.3 设计建议&lt;/h3&gt;
-&lt;p&gt;根据以上分析，我们给出以下布局组合建议：&lt;/p&gt;
-&lt;h4&gt;✅ 推荐组合&lt;/h4&gt;
+&lt;h3&gt;3.3 布局选择建议&lt;/h3&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -576,188 +297,60 @@ const showLayoutSwitch =
 &lt;td&gt;左侧边栏&lt;/td&gt;
 &lt;td&gt;列表模式&lt;/td&gt;
 &lt;td&gt;⭐⭐⭐⭐⭐&lt;/td&gt;
-&lt;td&gt;传统博客风格，视觉效果好&lt;/td&gt;
+&lt;td&gt;摄影、设计、生活类博客，强调图片和沉浸感&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;左侧边栏&lt;/td&gt;
-&lt;td&gt;网格模式&lt;/td&gt;
+&lt;td&gt;2列网格&lt;/td&gt;
 &lt;td&gt;⭐⭐⭐⭐⭐&lt;/td&gt;
-&lt;td&gt;快速浏览，信息密集&lt;/td&gt;
+&lt;td&gt;技术、笔记类博客，平衡阅读与检索效率&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;左侧边栏&lt;/td&gt;
+&lt;td&gt;3列网格&lt;/td&gt;
+&lt;td&gt;⭐⭐⭐⭐⭐&lt;/td&gt;
+&lt;td&gt;内容量大的站点，宽屏体验极佳&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;双侧边栏&lt;/td&gt;
 &lt;td&gt;列表模式&lt;/td&gt;
-&lt;td&gt;⭐⭐⭐⭐&lt;/td&gt;
-&lt;td&gt;宽屏显示，信息丰富&lt;/td&gt;
+&lt;td&gt;⭐⭐⭐⭐⭐&lt;/td&gt;
+&lt;td&gt;需要展示大量侧边栏信息的站点&lt;/td&gt;
 &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;h4&gt;❌ 不推荐/不支持组合&lt;/h4&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;侧边栏模式&lt;/th&gt;
-&lt;th&gt;文章列表模式&lt;/th&gt;
-&lt;th&gt;推荐度&lt;/th&gt;
-&lt;th&gt;原因&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;双侧边栏&lt;/td&gt;
-&lt;td&gt;网格模式&lt;/td&gt;
-&lt;td&gt;❌ 禁止&lt;/td&gt;
-&lt;td&gt;主内容区域过窄，体验差&lt;/td&gt;
+&lt;td&gt;2列网格&lt;/td&gt;
+&lt;td&gt;⭐⭐⭐⭐⭐&lt;/td&gt;
+&lt;td&gt;极客风格，追求最高信息密度&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;hr /&gt;
 &lt;h2&gt;四、响应式布局行为&lt;/h2&gt;
 &lt;p&gt;Firefly 的布局系统具有智能的响应式设计，会根据屏幕尺寸自动调整。&lt;/p&gt;
-&lt;h3&gt;4.1 断点定义&lt;/h3&gt;
-&lt;p&gt;Firefly 使用 Tailwind CSS 标准断点：&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;断点名称&lt;/th&gt;
-&lt;th&gt;屏幕宽度&lt;/th&gt;
-&lt;th&gt;设备类型&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;Mobile&lt;/td&gt;
-&lt;td&gt;&amp;lt; 768px&lt;/td&gt;
-&lt;td&gt;手机&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Tablet&lt;/td&gt;
-&lt;td&gt;768px - 1023px&lt;/td&gt;
-&lt;td&gt;平板&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Desktop&lt;/td&gt;
-&lt;td&gt;≥ 1024px&lt;/td&gt;
-&lt;td&gt;桌面&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Wide Desktop&lt;/td&gt;
-&lt;td&gt;≥ 1200px&lt;/td&gt;
-&lt;td&gt;宽屏桌面&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;h3&gt;4.2 侧边栏响应式规则&lt;/h3&gt;
-&lt;h4&gt;单侧边栏模式&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Desktop (≥1024px)&lt;/strong&gt;：显示侧边栏&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Tablet (768px-1023px)&lt;/strong&gt;：显示侧边栏&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Mobile (&amp;lt;768px)&lt;/strong&gt;：显示侧边栏（可配置隐藏）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4&gt;双侧边栏模式&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Desktop (≥1024px)&lt;/strong&gt;：显示左右双侧边栏&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Tablet (768px-1023px)&lt;/strong&gt;：只显示左侧边栏&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Mobile (&amp;lt;768px)&lt;/strong&gt;：只显示左侧边栏&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;4.3 文章列表响应式规则&lt;/h3&gt;
-&lt;h4&gt;列表模式&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;所有屏幕尺寸&lt;/strong&gt;：始终单列显示&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Mobile&lt;/strong&gt;：缩小间距和卡片内边距&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4&gt;网格模式&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Wide Desktop (≥1200px)&lt;/strong&gt;：双列网格&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Tablet &amp;amp; Mobile (&amp;lt;1200px)&lt;/strong&gt;：自动切换为单列列表&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;布局切换按钮&lt;/strong&gt;：仅在 ≥1200px 时显示&lt;/li&gt;
-&lt;/ul&gt;
+&lt;h3&gt;4.1 智能降级规则&lt;/h3&gt;
+&lt;p&gt;为了保证最佳阅读体验，系统会在屏幕变窄时自动调整布局：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;3 列网格 -&amp;gt; 2 列网格&lt;/strong&gt;：当屏幕宽度不足以容纳 3 列时（或开启双侧边栏时），自动降级为单列表模式。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;网格模式 -&amp;gt; 列表模式&lt;/strong&gt;：当屏幕宽度小于 1200px（平板和手机）时，网格模式会自动切换为单列列表模式，以保证卡片内容的可读性。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;双侧边栏 -&amp;gt; 左侧边栏&lt;/strong&gt;：当屏幕宽度小于 1200px 时，右侧边栏会自动隐藏，文章目录导航会切换成浮动目录导航。&lt;/li&gt;
+&lt;/ol&gt;
 &lt;hr /&gt;
-&lt;h2&gt;五、布局选择指南&lt;/h2&gt;
-&lt;h3&gt;5.1 基于内容类型选择&lt;/h3&gt;
-&lt;h4&gt;摄影/设计博客&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;// 推荐：左侧边栏 + 列表模式
-position: &quot;left&quot;
-defaultMode: &quot;list&quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;strong&gt;原因&lt;/strong&gt;：列表模式可以展示精美的封面图，突出视觉效果。&lt;/p&gt;
-&lt;h4&gt;技术博客&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;// 方案1：左侧边栏 + 网格模式
-position: &quot;left&quot;
-defaultMode: &quot;grid&quot;
-
-// 方案2：双侧边栏 + 列表模式
-position: &quot;both&quot;
-defaultMode: &quot;list&quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;strong&gt;原因&lt;/strong&gt;：技术博客文章多，网格模式便于快速查找；或使用双侧边栏展示更多分类和标签。&lt;/p&gt;
-&lt;h4&gt;个人日记&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;// 推荐：左侧边栏 + 列表模式
-position: &quot;left&quot;
-defaultMode: &quot;list&quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;strong&gt;原因&lt;/strong&gt;：突出内容，营造亲切感。&lt;/p&gt;
+&lt;h2&gt;五、常见问题&lt;/h2&gt;
+&lt;h3&gt;Q1: 为什么我配置了 3 列网格，但只显示 2 列？&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;A&lt;/strong&gt;: 请检查以下情况：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;是否开启了双侧边栏（&lt;code&gt;position: &quot;both&quot;&lt;/code&gt;）？双侧边栏模式下强制 2 列。&lt;/li&gt;
+&lt;li&gt;屏幕宽度是否足够？3 列模式通常需要 ≥1024px 的宽度。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3&gt;Q2: 为什么在手机上看不到网格效果？&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;A&lt;/strong&gt;: 为了保证阅读体验，Firefly 在屏幕宽度小于 1200px 时会自动强制切换为列表模式。手机屏幕太窄，不适合展示多列网格。&lt;/p&gt;
+&lt;h3&gt;Q3: 布局切换按钮在哪里？&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;A&lt;/strong&gt;: 布局切换按钮位于导航栏右侧。它仅在屏幕宽度 ≥ 1200px 时显示，因为在小屏幕上系统强制使用列表模式，无需切换。&lt;/p&gt;
 &lt;hr /&gt;
-&lt;h2&gt;七、常见问题&lt;/h2&gt;
-&lt;h3&gt;Q1: 为什么我配置了网格模式，但页面还是显示列表？&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;A&lt;/strong&gt;: 检查以下几点：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;侧边栏是否配置为双侧边栏（&lt;code&gt;position: &quot;both&quot;&lt;/code&gt;）？&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;如果是，网格模式会被自动禁用&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;屏幕宽度是否小于 1200px？&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;网格模式仅在宽屏桌面端生效&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;浏览器是否缓存了旧的设置？&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;清除 localStorage 中的布局偏好&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3&gt;Q2: 双侧边栏在我的笔记本上显示不正常怎么办？&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;A&lt;/strong&gt;: 双侧边栏需要较大的屏幕宽度（建议 ≥1400px）。解决方案：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;使用外接显示器&lt;/li&gt;
-&lt;li&gt;切换为单侧边栏模式&lt;/li&gt;
-&lt;li&gt;配置响应式布局，让平板端自动隐藏右侧边栏&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3&gt;Q3: 可以让移动端也显示网格模式吗？&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;A&lt;/strong&gt;: 不建议。移动端屏幕太窄，双列网格会导致文章卡片过窄，严重影响阅读体验。Firefly 已自动在小屏幕上切换为列表模式。&lt;/p&gt;
-&lt;h3&gt;Q4: 布局切换按钮在哪里？&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;A&lt;/strong&gt;: 布局切换按钮位于导航栏右侧，但需要满足以下条件：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;code&gt;siteConfig.postListLayout.allowSwitch&lt;/code&gt; 为 &lt;code&gt;true&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;侧边栏不是双侧边栏模式&lt;/li&gt;
-&lt;li&gt;屏幕宽度 ≥ 1200px&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3&gt;Q5: 可以禁用侧边栏只显示主内容吗？&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;A&lt;/strong&gt;: 可以，设置 &lt;code&gt;sidebarLayoutConfig.enable = false&lt;/code&gt; 即可。但不建议这样做，因为会失去导航和辅助信息。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h2&gt;八、总结&lt;/h2&gt;
-&lt;p&gt;Firefly 的布局系统设计遵循以下原则：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;内容为王&lt;/strong&gt;：确保主内容区域有足够的空间&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;响应式优先&lt;/strong&gt;：自动适配不同设备&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;用户友好&lt;/strong&gt;：提供灵活的配置选项&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;性能考虑&lt;/strong&gt;：避免过度复杂的布局组合&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;strong&gt;核心要点&lt;/strong&gt;：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;✅ 单侧边栏 + 列表模式：最通用，适合大多数场景&lt;/li&gt;
-&lt;li&gt;✅ 单侧边栏 + 网格模式：适合内容密集型博客&lt;/li&gt;
-&lt;li&gt;✅ 双侧边栏 + 列表模式：适合宽屏显示，信息丰富&lt;/li&gt;
-&lt;li&gt;❌ 双侧边栏 + 网格模式：&lt;strong&gt;不支持&lt;/strong&gt;，会导致布局拥挤&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;布局冲突的本质&lt;/strong&gt;：&lt;/p&gt;
-&lt;p&gt;双侧边栏已经占据了大量横向空间（560px），再将主内容区域分成双列，会导致每列宽度不足（590px），严重影响阅读体验。这是一个设计上的合理限制，而非技术缺陷。&lt;/p&gt;
-&lt;p&gt;选择适合您的布局组合，让您的博客既美观又实用！&lt;/p&gt;
+&lt;h2&gt;六、总结&lt;/h2&gt;
+&lt;p&gt;Firefly 的新版布局系统给予了您更大的自由度。无论是追求视觉冲击力的&lt;strong&gt;三列网格&lt;/strong&gt;，还是追求信息密度的&lt;strong&gt;双侧边栏网格&lt;/strong&gt;，您都可以通过简单的配置实现。&lt;/p&gt;
+&lt;p&gt;我们建议您根据自己的内容类型和目标读者的设备偏好，尝试不同的组合，找到最适合您的博客形态。&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2&gt;相关链接&lt;/h2&gt;
 &lt;ul&gt;
@@ -766,7 +359,7 @@ defaultMode: &quot;list&quot;
 &lt;li&gt;🏠 &lt;a href=&quot;https://docs-firefly.cuteleaf.cn/&quot;&gt;Firefly 官方文档&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;⭐ &lt;a href=&quot;https://github.com/CuteLeaf/Firefly&quot;&gt;Firefly GitHub&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-</content:encoded><author>Firefly</author></item><item><title>Firefly 代码块示例</title><link>https://firefly.cuteleaf.cn/posts/code-examples/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/code-examples/</guid><description>在Firefly中使用表达性代码的代码块在 Markdown 中的外观。</description><pubDate>Fri, 02 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;在这里，我们将探索如何使用 &lt;a href=&quot;https://expressive-code.com/&quot;&gt;Expressive Code&lt;/a&gt; 展示代码块。提供的示例基于官方文档，您可以参考以获取更多详细信息。&lt;/p&gt;
+</content:encoded><author>Firefly</author></item><item><title>Firefly 代码块示例</title><link>https://firefly.cuteleaf.cn/posts/code-examples/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/code-examples/</guid><description>在Firefly中使用表达性代码的代码块在 Markdown 中的外观。</description><pubDate>Sat, 03 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;在这里，我们将探索如何使用 &lt;a href=&quot;https://expressive-code.com/&quot;&gt;Expressive Code&lt;/a&gt; 展示代码块。提供的示例基于官方文档，您可以参考以获取更多详细信息。&lt;/p&gt;
 &lt;h2&gt;表达性代码&lt;/h2&gt;
 &lt;h3&gt;语法高亮&lt;/h3&gt;
 &lt;p&gt;&lt;a href=&quot;https://expressive-code.com/key-features/syntax-highlighting/&quot;&gt;语法高亮&lt;/a&gt;&lt;/p&gt;
@@ -975,7 +568,7 @@ console.log(&apos;抱歉，你知道我在第几行吗?&apos;)
 &lt;pre&gt;&lt;code&gt;console.log(&apos;来自第5行的问候!&apos;)
 console.log(&apos;我在第6行&apos;)
 &lt;/code&gt;&lt;/pre&gt;
-</content:encoded><author>Firefly</author></item><item><title>KaTeX 数学公式示例</title><link>https://firefly.cuteleaf.cn/posts/katex-math-example/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/katex-math-example/</guid><description>展示 Firefly 主题对 KaTeX 数学公式的支持，包括行内公式、块级公式和复杂数学符号。</description><pubDate>Thu, 01 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;本文展示了 &lt;a href=&quot;https://github.com/CuteLeaf/Firefly&quot;&gt;Firefly&lt;/a&gt; 主题对 KaTeX 数学公式的渲染支持。&lt;/p&gt;
+</content:encoded><author>Firefly</author></item><item><title>KaTeX 数学公式示例</title><link>https://firefly.cuteleaf.cn/posts/katex-math-example/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/katex-math-example/</guid><description>展示 Firefly 主题对 KaTeX 数学公式的支持，包括行内公式、块级公式和复杂数学符号。</description><pubDate>Fri, 02 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;本文展示了 &lt;a href=&quot;https://github.com/CuteLeaf/Firefly&quot;&gt;Firefly&lt;/a&gt; 主题对 KaTeX 数学公式的渲染支持。&lt;/p&gt;
 &lt;h2&gt;行内公式 (Inline)&lt;/h2&gt;
 &lt;p&gt;行内公式使用单个 &lt;code&gt;$&lt;/code&gt; 符号包裹。&lt;/p&gt;
 &lt;p&gt;例如：欧拉公式 $e^{i\pi} + 1 = 0$ 是数学中最优美的公式之一。&lt;/p&gt;
@@ -1072,6 +665,81 @@ $$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;更多 KaTeX 语法请参考 &lt;a href=&quot;https://katex.org/docs/supported.html&quot;&gt;KaTeX Supported Functions&lt;/a&gt;。&lt;/p&gt;
+</content:encoded><author>Firefly</author></item><item><title>MDX 格式文章示例</title><link>https://firefly.cuteleaf.cn/posts/mdx-example/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/mdx-example/</guid><description>这是一个 MDX 格式的示例文章，展示了如何在 Markdown 中使用 JSX。</description><pubDate>Fri, 02 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { Icon } from &apos;astro-icon/components&apos;&lt;/p&gt;
+&lt;p&gt;:::tip
+&lt;a href=&quot;https://github.com/CuteLeaf/Firefly&quot;&gt;Firefly&lt;/a&gt; 支持 &lt;code&gt;MDX&lt;/code&gt; 和 &lt;code&gt;Markdown&lt;/code&gt; 两种类型的文章，你可以在文章中混合使用两种格式，如果没有特别复杂内容和需求，推荐使用 Markdown 格式就够了。
+:::&lt;/p&gt;
+&lt;h2&gt;Markdown 和 MDX 的区别&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Markdown (MD) 是一种轻量级标记语言，允许用户使用纯文本格式编写文档，然后将其转换为格式化的HTML。它因其简洁易用的语法而广受欢迎，特别适合编写文档和博客文章。&lt;/li&gt;
+&lt;li&gt;MDX 是一种扩展了 Markdown 语法的格式，允许在 Markdown 文档中无缝地插入 JSX 代码。通过 MDX，用户可以在文档中嵌入 React 组件，从而实现更丰富的交互性和动态性。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;特性&lt;/th&gt;
+&lt;th&gt;Markdown&lt;/th&gt;
+&lt;th&gt;MDX&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;基础语法&lt;/td&gt;
+&lt;td&gt;支持 (CommonMark)&lt;/td&gt;
+&lt;td&gt;支持 (CommonMark)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;HTML 标签&lt;/td&gt;
+&lt;td&gt;支持&lt;/td&gt;
+&lt;td&gt;支持 (作为 JSX)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;组件导入&lt;/td&gt;
+&lt;td&gt;不支持&lt;/td&gt;
+&lt;td&gt;支持 (import)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;动态数据&lt;/td&gt;
+&lt;td&gt;不支持&lt;/td&gt;
+&lt;td&gt;支持 (JS 表达式)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;样式定制&lt;/td&gt;
+&lt;td&gt;有限 (class/style)&lt;/td&gt;
+&lt;td&gt;灵活 (className/CSS-in-JS)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2&gt;使用组件&lt;/h2&gt;
+&lt;p&gt;这是一个图标组件：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;import { Icon } from &apos;astro-icon/components&apos;
+
+&amp;lt;div class=&quot;flex items-center gap-2 my-4&quot;&amp;gt;
+  &amp;lt;Icon name=&quot;fa6-solid:rocket&quot; class=&quot;text-4xl text-red-500&quot; /&amp;gt;
+  &amp;lt;span&amp;gt;火箭发射！&amp;lt;/span&amp;gt;
+&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&amp;lt;div class=&quot;flex items-center gap-2 my-4&quot;&amp;gt;
+&amp;lt;Icon name=&quot;fa6-solid:rocket&quot; class=&quot;text-4xl text-red-500&quot; /&amp;gt;
+&amp;lt;span&amp;gt;火箭发射！&amp;lt;/span&amp;gt;
+&amp;lt;/div&amp;gt;&lt;/p&gt;
+&lt;h2&gt;使用 JSX&lt;/h2&gt;
+&lt;p&gt;你也可以直接写 HTML/JSX：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;div className=&quot;p-4 bg-blue-100 dark:bg-blue-900 rounded-lg my-4&quot;&amp;gt;
+  这是一个自定义样式的 div 块，使用了 Tailwind CSS 类。
+&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&amp;lt;div className=&quot;p-4 bg-blue-100 dark:bg-blue-900 rounded-lg my-4&quot;&amp;gt;
+这是一个自定义样式的 div 块，使用了 Tailwind CSS 类。
+&amp;lt;/div&amp;gt;&lt;/p&gt;
+&lt;h2&gt;简单的变量导出&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;export const year = new Date().getFullYear()
+
+今年是 {year} 年。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;export const year = new Date().getFullYear()&lt;/p&gt;
+&lt;p&gt;今年是 {year} 年。&lt;/p&gt;
+&lt;p&gt;更多信息，请查看 &lt;a href=&quot;https://mdxjs.com/&quot;&gt;MDX 文档&lt;/a&gt;&lt;/p&gt;
 </content:encoded><author>Firefly</author></item><item><title>Markdown Mermaid 图表</title><link>https://firefly.cuteleaf.cn/posts/markdown-mermaid/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/markdown-mermaid/</guid><description>一个包含 Mermaid 的 Markdown 博客文章简单示例。</description><pubDate>Thu, 01 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;Markdown 中 Mermaid 图表完整指南&lt;/h1&gt;
 &lt;p&gt;本文演示如何在 Markdown 文档中使用 Mermaid 创建各种复杂图表，包括流程图、时序图、甘特图、类图和状态图。&lt;/p&gt;
 &lt;h2&gt;流程图示例&lt;/h2&gt;
@@ -1223,81 +891,6 @@ $$&lt;/p&gt;
 &lt;p&gt;Mermaid 是在 Markdown 文档中创建各种类型图表的强大工具。本文演示了如何使用流程图、时序图、甘特图、类图、状态图和饼图。这些图表可以帮助您更清晰地表达复杂的概念、流程和数据结构。&lt;/p&gt;
 &lt;p&gt;要使用 Mermaid，只需在代码块中指定 mermaid 语言，并使用简洁的文本语法描述图表。Mermaid 会自动将这些描述转换为美观的可视化图表。&lt;/p&gt;
 &lt;p&gt;尝试在您的下一篇技术博客文章或项目文档中使用 Mermaid 图表 - 它们将使您的内容更加专业且更易理解！&lt;/p&gt;
-</content:encoded><author>Firefly</author></item><item><title>MDX 格式文章示例</title><link>https://firefly.cuteleaf.cn/posts/mdx-example/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/mdx-example/</guid><description>这是一个 MDX 格式的示例文章，展示了如何在 Markdown 中使用 JSX。</description><pubDate>Thu, 01 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { Icon } from &apos;astro-icon/components&apos;&lt;/p&gt;
-&lt;p&gt;:::tip
-&lt;a href=&quot;https://github.com/CuteLeaf/Firefly&quot;&gt;Firefly&lt;/a&gt; 支持 &lt;code&gt;MDX&lt;/code&gt; 和 &lt;code&gt;Markdown&lt;/code&gt; 两种类型的文章，你可以在文章中混合使用两种格式，如果没有特别复杂内容和需求，推荐使用 Markdown 格式就够了。
-:::&lt;/p&gt;
-&lt;h2&gt;Markdown 和 MDX 的区别&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;Markdown (MD) 是一种轻量级标记语言，允许用户使用纯文本格式编写文档，然后将其转换为格式化的HTML。它因其简洁易用的语法而广受欢迎，特别适合编写文档和博客文章。&lt;/li&gt;
-&lt;li&gt;MDX 是一种扩展了 Markdown 语法的格式，允许在 Markdown 文档中无缝地插入 JSX 代码。通过 MDX，用户可以在文档中嵌入 React 组件，从而实现更丰富的交互性和动态性。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;特性&lt;/th&gt;
-&lt;th&gt;Markdown&lt;/th&gt;
-&lt;th&gt;MDX&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;基础语法&lt;/td&gt;
-&lt;td&gt;支持 (CommonMark)&lt;/td&gt;
-&lt;td&gt;支持 (CommonMark)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;HTML 标签&lt;/td&gt;
-&lt;td&gt;支持&lt;/td&gt;
-&lt;td&gt;支持 (作为 JSX)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;组件导入&lt;/td&gt;
-&lt;td&gt;不支持&lt;/td&gt;
-&lt;td&gt;支持 (import)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;动态数据&lt;/td&gt;
-&lt;td&gt;不支持&lt;/td&gt;
-&lt;td&gt;支持 (JS 表达式)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;样式定制&lt;/td&gt;
-&lt;td&gt;有限 (class/style)&lt;/td&gt;
-&lt;td&gt;灵活 (className/CSS-in-JS)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;h2&gt;使用组件&lt;/h2&gt;
-&lt;p&gt;这是一个图标组件：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;import { Icon } from &apos;astro-icon/components&apos;
-
-&amp;lt;div class=&quot;flex items-center gap-2 my-4&quot;&amp;gt;
-  &amp;lt;Icon name=&quot;fa6-solid:rocket&quot; class=&quot;text-4xl text-red-500&quot; /&amp;gt;
-  &amp;lt;span&amp;gt;火箭发射！&amp;lt;/span&amp;gt;
-&amp;lt;/div&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&amp;lt;div class=&quot;flex items-center gap-2 my-4&quot;&amp;gt;
-&amp;lt;Icon name=&quot;fa6-solid:rocket&quot; class=&quot;text-4xl text-red-500&quot; /&amp;gt;
-&amp;lt;span&amp;gt;火箭发射！&amp;lt;/span&amp;gt;
-&amp;lt;/div&amp;gt;&lt;/p&gt;
-&lt;h2&gt;使用 JSX&lt;/h2&gt;
-&lt;p&gt;你也可以直接写 HTML/JSX：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;lt;div className=&quot;p-4 bg-blue-100 dark:bg-blue-900 rounded-lg my-4&quot;&amp;gt;
-  这是一个自定义样式的 div 块，使用了 Tailwind CSS 类。
-&amp;lt;/div&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&amp;lt;div className=&quot;p-4 bg-blue-100 dark:bg-blue-900 rounded-lg my-4&quot;&amp;gt;
-这是一个自定义样式的 div 块，使用了 Tailwind CSS 类。
-&amp;lt;/div&amp;gt;&lt;/p&gt;
-&lt;h2&gt;简单的变量导出&lt;/h2&gt;
-&lt;pre&gt;&lt;code&gt;export const year = new Date().getFullYear()
-
-今年是 {year} 年。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;export const year = new Date().getFullYear()&lt;/p&gt;
-&lt;p&gt;今年是 {year} 年。&lt;/p&gt;
-&lt;p&gt;更多信息，请查看 &lt;a href=&quot;https://mdxjs.com/&quot;&gt;MDX 文档&lt;/a&gt;&lt;/p&gt;
 </content:encoded><author>Firefly</author></item><item><title>在文章中嵌入视频</title><link>https://firefly.cuteleaf.cn/posts/video/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/video/</guid><description>这篇文章演示如何在博客文章中嵌入视频。</description><pubDate>Thu, 01 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;只需从 YouTube 或其他平台复制嵌入代码，然后将其粘贴到 markdown 文件中。&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;---
 title: 在文章中嵌入视频
