@@ -2,9 +2,7 @@
 import BackToTop from "@components/common/controls/BackToTop.astro";
 import OverlayWallpaper from "@components/interactive/OverlayWallpaper.astro";
 import Footer from "@components/layout/Footer.astro";
-import LeftSideBar from "@components/layout/LeftSideBar.astro";
 import Navbar from "@components/layout/Navbar.astro";
-import RightSideBar from "@components/layout/RightSideBar.astro";
 import SideBar from "@components/layout/SideBar.astro";
 import Live2DWidget from "@components/widget/Live2DWidget.astro";
 import SpineModel from "@components/widget/SpineModel.astro";
@@ -379,7 +377,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
                     <>
                         {/* 左侧边栏 */}
                         {sidebarConfig.hasLeftComponents && (sidebarConfig.mobileShowSidebar || sidebarConfig.tabletShowSidebar || sidebarConfig.desktopShowSidebar) && (
-                            <LeftSideBar class={`${sidebarClass} ${transparentClass}`} headings={headings}></LeftSideBar>
+                            <SideBar side="left" class={`${sidebarClass} ${transparentClass}`} headings={headings}></SideBar>
                         )}
                     </>
                 ) : (
@@ -418,7 +416,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
                 <>
                     <div id="right-sidebar-static" class="contents">
                         {sidebarConfig.isBothSidebars && sidebarConfig.hasRightComponents && (sidebarConfig.mobileShowSidebar || sidebarConfig.tabletShowSidebar || sidebarConfig.desktopShowSidebar) && (
-                            <RightSideBar class={`${rightSidebarClass} ${transparentClass}`} headings={headings}></RightSideBar>
+                            <SideBar side="right" class={`${rightSidebarClass} ${transparentClass}`} headings={headings}></SideBar>
                         )}
                     </div>
                     <div id="right-sidebar-dynamic" class="hidden"></div>
@@ -426,7 +424,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
             ) : (
                 <div id="right-sidebar-dynamic" class="contents">
                     {sidebarConfig.isBothSidebars && sidebarConfig.hasRightComponents && (sidebarConfig.mobileShowSidebar || sidebarConfig.tabletShowSidebar || sidebarConfig.desktopShowSidebar) && (
-                        <RightSideBar class={`${rightSidebarClass} ${transparentClass}`} headings={headings}></RightSideBar>
+                        <SideBar side="right" class={`${rightSidebarClass} ${transparentClass}`} headings={headings}></SideBar>
                     )}
                 </div>
             )}
@@ -455,7 +453,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
       display: none !important;
     }
     
-    /* 同时调整网格布局为两列 */
+    /* 同时调整网格布局 */
     #main-grid {
       grid-template-columns: 17.5rem 1fr !important;
     }

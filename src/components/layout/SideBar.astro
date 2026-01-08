@@ -14,15 +14,20 @@ import { widgetManager } from "@/utils/widget-manager";
 interface Props {
 	class?: string;
 	headings?: MarkdownHeading[];
+    side?: "left" | "right";
 }
 
-const { class: className, headings } = Astro.props;
+const { class: className, headings, side } = Astro.props;
 
 // 获取配置的侧边栏位置
 const sidebarPosition = widgetManager.getConfig().position;
-const targetSidebar = sidebarPosition === "left" ? "left" : undefined;
 
-// 获取配置的组件列表 - 根据 position 配置决定显示哪一侧
+// 确定侧边栏组件的数据源
+// 如果传入了 side 参数，则强制使用该侧的组件
+// 否则，根据全局配置决定（兼容原 SideBar 逻辑：left -> left, right -> undefined/mixed）
+const targetSidebar = side || (sidebarPosition === "left" ? "left" : undefined);
+
+// 获取配置的组件列表
 const topComponents = widgetManager.getComponentsByPosition(
 	"top",
 	targetSidebar,
@@ -44,9 +49,20 @@ const componentTypeToId = {
 	advertisement: "advertisement",
 };
 
+// 获取组件唯一ID
+const getComponentId = (component: WidgetComponentConfig) => {
+    const baseId = componentTypeToId[component.type as keyof typeof componentTypeToId];
+    return component.configId ? `${baseId}-${component.configId}` : baseId;
+};
+
+// 确定侧边栏的 ID 和 样式基准侧
+const sidebarId = side === "right" ? "right-sidebar" : "sidebar"; 
+const styleSide = targetSidebar || "left";
+
 // 提取客户端需要的数据
 const sidebarConfig = {
 	shouldShowSidebar: {
+        // 全局配置中的响应式设置
 		mobile: widgetManager.shouldShowSidebar("mobile"),
 		tablet: widgetManager.shouldShowSidebar("tablet"),
 		desktop: widgetManager.shouldShowSidebar("desktop"),
@@ -60,9 +76,11 @@ const sidebarConfig = {
 
 // 提取组件的 showOnPostPage 配置
 const componentsConfig = (() => {
+    // 如果 targetSidebar 是 undefined，则合并两边的组件配置（或取所有）
+    // widgetManager API 有点不直观，这里我们需要手动获取所有涉及的组件配置来生成 list
 	const components =
-		targetSidebar === "left"
-			? widgetManager.getConfig().leftComponents
+		targetSidebar
+			? (targetSidebar === "left" ? widgetManager.getConfig().leftComponents : widgetManager.getConfig().rightComponents)
 			: [
 					...widgetManager.getConfig().leftComponents,
 					...widgetManager.getConfig().rightComponents,
@@ -71,7 +89,7 @@ const componentsConfig = (() => {
 	return components
 		.filter((c) => c.enable)
 		.map((c) => ({
-			id: componentTypeToId[c.type as keyof typeof componentTypeToId],
+			id: getComponentId(c),
 			showOnPostPage: c.showOnPostPage ?? true,
 		}));
 })();
@@ -98,11 +116,9 @@ function renderComponent(
 		componentMap[component.type as keyof typeof componentMap];
 	if (!ComponentToRender) return null;
 
-	// 使用配置的侧边栏位置，如果是 both 则默认为 left
-	const sidebar = targetSidebar || "left";
 	const componentClass = widgetManager.getComponentClass(
 		component,
-		sidebar,
+		styleSide,
 		index,
 	);
 	const componentStyle = widgetManager.getComponentStyle(component, index);
@@ -120,7 +136,8 @@ function renderComponent(
 }
 ---
 
-<div id="sidebar" class:list={[className, "w-full"]}>
+<div id={sidebarId} class:list={[className, "w-full", "sidebar-instance"]} data-components-config={JSON.stringify(componentsConfig)} data-sidebar-config={JSON.stringify(sidebarConfig)}>
+
   <!-- 顶部固定组件区域 -->
   {
     topComponents.length > 0 && (
@@ -130,7 +147,11 @@ function renderComponent(
           if (!renderData) return null;
 
           const { Component, props } = renderData;
-          return <Component {...props} />;
+          return (
+            <div class="sidebar-widget contents" data-id={getComponentId(component)}>
+              <Component {...props} />
+            </div>
+          );
         })}
       </div>
     )
@@ -140,7 +161,7 @@ function renderComponent(
   {
     stickyComponents.length > 0 && (
       <div
-        id="sidebar-sticky"
+        id={`${sidebarId}-sticky`}
         class="transition-all duration-700 flex flex-col w-full gap-4 sticky top-4"
       >
         {stickyComponents.map((component, index) => {
@@ -152,7 +173,11 @@ function renderComponent(
           if (!renderData) return null;
 
           const { Component, props } = renderData;
-          return <Component {...props} />;
+          return (
+            <div class="sidebar-widget contents" data-id={getComponentId(component)}>
+              <Component {...props} />
+            </div>
+          );
         })}
       </div>
     )
@@ -163,113 +188,48 @@ function renderComponent(
 <style>
   /* 响应式断点样式 */
   @media (max-width: 768px) {
-    #sidebar {
+    #sidebar, #right-sidebar {
       display: var(--sidebar-mobile-display, block);
     }
   }
 
   @media (min-width: 769px) and (max-width: 1024px) {
-    #sidebar {
+    #sidebar, #right-sidebar {
       display: var(--sidebar-tablet-display, block);
     }
   }
 
   @media (min-width: 1025px) {
-    #sidebar {
+    #sidebar, #right-sidebar {
       display: var(--sidebar-desktop-display, block);
     }
   }
 </style>
 
-<script is:inline define:vars={{ sidebarConfig, componentsConfig }}>
-  // 根据 showOnPostPage 配置控制组件显示
-  function toggleComponentsVisibility() {
-    const isPostPage = window.location.pathname.includes("/posts/");
-    
-    const sidebar = document.getElementById('sidebar');
-    if (!sidebar) return;
-    
-    const widgets = sidebar.querySelectorAll('widget-layout');
-    
-    widgets.forEach((widget) => {
-      const widgetId = widget.getAttribute('data-id');
-      const componentConfig = componentsConfig.find(c => c.id === widgetId);
+<script>
+  import { initSidebars } from "@/utils/sidebar-utils";
+
+  // 立即初始化
+  initSidebars();
+
+  // 使得 swup 监听更加健壮
+  function setupSwupListener() {
+      const win = window as any;
       
-      if (componentConfig) {
-        // 特殊处理：侧边栏TOC只在文章详情页显示
-        if (widgetId === 'sidebar-toc') {
-          widget.style.display = isPostPage ? '' : 'none';
-        }
-        // 其他组件的 showOnPostPage 含义：
-        // true: 在文章页和非文章页都显示（默认行为）
-        // false: 只在非文章页显示，文章页隐藏
-        else if (isPostPage && !componentConfig.showOnPostPage) {
-          widget.style.display = 'none';
-        } else {
-          widget.style.display = '';
-        }
-      }
-    });
-  }
+      const register = () => {
+          if (win.swup && win.swup.hooks) {
+              win.swup.hooks.on("content:replace", () => {
+                  initSidebars();
+              });
+          }
+      };
 
-  // 响应式布局管理
-  class SidebarManager {
-    constructor() {
-      this.config = sidebarConfig;
-      this.init();
-    }
-
-    init() {
-      this.updateResponsiveDisplay();
-      toggleComponentsVisibility();
-      
-      window.addEventListener("resize", () => this.updateResponsiveDisplay());
-
-      // 监听SWUP内容替换事件
-      if (typeof window !== "undefined" && window.swup) {
-        window.swup.hooks.on("content:replace", () => {
-          // 延迟执行以确保DOM已更新
-          setTimeout(() => {
-            this.updateResponsiveDisplay();
-            toggleComponentsVisibility();
-          }, 100);
-        });
-      }
-    }
-
-    updateResponsiveDisplay() {
-      const breakpoints = this.config.breakpoints;
-      const width = window.innerWidth;
-
-      let deviceType;
-      if (width < breakpoints.mobile) {
-        deviceType = "mobile";
-      } else if (width < breakpoints.tablet) {
-        deviceType = "tablet";
+      if (win.swup) {
+          register();
       } else {
-        deviceType = "desktop";
+          document.addEventListener("swup:enable", register, { once: true });
       }
-
-      const shouldShow = this.config.shouldShowSidebar[deviceType];
-      const sidebar = document.getElementById("sidebar");
-
-      if (sidebar) {
-        sidebar.style.setProperty(
-          `--sidebar-${deviceType}-display`,
-          shouldShow ? "block" : "none"
-        );
-      }
-    }
   }
 
-  // 页面加载时执行
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      toggleComponentsVisibility();
-      new SidebarManager();
-    });
-  } else {
-    toggleComponentsVisibility();
-    new SidebarManager();
-  }
+  setupSwupListener();
 </script>
