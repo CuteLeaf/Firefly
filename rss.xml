@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Firefly</title><description>Demo site</description><link>https://firefly.cuteleaf.cn/</link><language>zh_CN</language><templateTheme>Firefly</templateTheme><templateThemeVersion>6.3.6</templateThemeVersion><templateThemeUrl>https://github.com/CuteLeaf/Firefly</templateThemeUrl><lastBuildDate>2026年1月9日 12:06:46</lastBuildDate><item><title>Firefly 一款清新美观的 Astro 博客主题模板</title><link>https://firefly.cuteleaf.cn/posts/firefly/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/firefly/</guid><description>Firefly 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。</description><pubDate>Fri, 02 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;🌟 项目概述&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Firefly</title><description>Demo site</description><link>https://firefly.cuteleaf.cn/</link><language>zh_CN</language><templateTheme>Firefly</templateTheme><templateThemeVersion>6.3.7</templateThemeVersion><templateThemeUrl>https://github.com/CuteLeaf/Firefly</templateThemeUrl><lastBuildDate>2026年1月10日 09:39:25</lastBuildDate><item><title>Firefly 一款清新美观的 Astro 博客主题模板</title><link>https://firefly.cuteleaf.cn/posts/firefly/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/firefly/</guid><description>Firefly 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。</description><pubDate>Fri, 02 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;🌟 项目概述&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;Firefly&lt;/strong&gt; 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;🖥️在线预览： &lt;a href=&quot;https://firefly.cuteleaf.cn/&quot;&gt;Firefly - Demo site&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;🏠我的博客： &lt;a href=&quot;https://blog.cuteleaf.cn/&quot;&gt;https://blog.cuteleaf.cn&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
@@ -933,24 +933,165 @@ published: 2023-10-19
 &lt;p&gt;使用代码 &lt;code&gt;::github{repo=&quot;CuteLeaf/Firefly&quot;}&lt;/code&gt; 创建 GitHub 仓库卡片。&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;::github{repo=&quot;CuteLeaf/Firefly&quot;}
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h2&gt;提醒框&lt;/h2&gt;
+&lt;h2&gt;提醒框(Admonitions)配置&lt;/h2&gt;
+&lt;p&gt;Firefly 采用了 &lt;a href=&quot;https://github.com/lin-stephanie/rehype-callouts&quot;&gt;rehype-callouts&lt;/a&gt; 插件，支持了三种风格的提醒框主题：&lt;code&gt;GitHub&lt;/code&gt;、&lt;code&gt;Obsidian&lt;/code&gt; 和 &lt;code&gt;VitePress&lt;/code&gt;。您可以在 &lt;code&gt;src/config/siteConfig.ts&lt;/code&gt; 中进行配置：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;// src/config/siteConfig.ts
+export const siteConfig: SiteConfig = {
+  // ...
+  rehypeCallouts: {
+    // 选项: &quot;github&quot; | &quot;obsidian&quot; | &quot;vitepress&quot;
+    theme: &quot;github&quot;,
+  },
+  // ...
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;注意：&lt;strong&gt;更改配置后需要重启开发服务器才能生效。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;以下是各个主题支持的类型列表，每个主题风格和语法不同，可根据喜好选择。&lt;/p&gt;
+&lt;h3&gt;1. GitHub 主题风格&lt;/h3&gt;
+&lt;p&gt;这是 GitHub 官方支持的 5 种基本类型。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;./images/github.png&quot; alt=&quot;GitHub&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;基本语法&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt; [!NOTE] NOTE
+&amp;gt; 突出显示用户应该考虑的信息。
+
+&amp;gt; [!TIP] TIP
+&amp;gt; 可选信息，帮助用户更成功。
+
+&amp;gt; [!IMPORTANT] IMPORTANT
+&amp;gt; 用户成功所必需的关键信息。
+
+&amp;gt; [!WARNING] WARNING
+&amp;gt; 关键内容，需要立即注意。
+
+&amp;gt; [!CAUTION] CAUTION
+&amp;gt; 行动的负面潜在后果。
+
+&amp;gt; [!NOTE] 自定义标题
+&amp;gt; 这是一个带有自定义标题的示例。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr /&gt;
+&lt;h3&gt;2. Obsidian 主题风格&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://obsidian.md/&quot;&gt;Obsidian&lt;/a&gt; 风格支持非常丰富的类型和别名。&lt;/p&gt;
+&lt;p&gt;&amp;lt;details&amp;gt;
+&amp;lt;summary&amp;gt;点击展开 Obsidian 语法列表&amp;lt;/summary&amp;gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+&amp;gt; [!NOTE] NOTE
+&amp;gt; 通用的笔记块。
+
+&amp;gt; [!ABSTRACT] ABSTRACT
+&amp;gt; 文章的摘要。
+
+&amp;gt; [!SUMMARY] SUMMARY
+&amp;gt; 文章的总结（同 Abstract）。
+
+&amp;gt; [!TLDR] TLDR
+&amp;gt; 太长不看（同 Abstract）。
+
+&amp;gt; [!INFO] INFO
+&amp;gt; 提供额外信息。
+
+&amp;gt; [!TODO] TODO
+&amp;gt; 需要完成的事项。
+
+&amp;gt; [!TIP] TIP
+&amp;gt; 实用技巧或提示。
+
+&amp;gt; [!HINT] HINT
+&amp;gt; 暗示（同 Tip）。
+
+&amp;gt; [!IMPORTANT] IMPORTANT
+&amp;gt; 重要信息（Obsidian 风格通常使用类似的图标）。
+
+&amp;gt; [!SUCCESS] SUCCESS
+&amp;gt; 操作成功。
+
+&amp;gt; [!CHECK] CHECK
+&amp;gt; 检查通过（同 Success）。
+
+&amp;gt; [!DONE] DONE
+&amp;gt; 已完成（同 Success）。
+
+&amp;gt; [!QUESTION] QUESTION
+&amp;gt; 提出问题。
+
+&amp;gt; [!HELP] HELP
+&amp;gt; 寻求帮助（同 Question）。
+
+&amp;gt; [!FAQ] FAQ
+&amp;gt; 常见问题（同 Question）。
+
+&amp;gt; [!WARNING] WARNING
+&amp;gt; 警告信息。
+
+&amp;gt; [!CAUTION] CAUTION
+&amp;gt; 注意事项（同 Warning）。
+
+&amp;gt; [!ATTENTION] ATTENTION
+&amp;gt; 引起注意（同 Warning）。
+
+&amp;gt; [!FAILURE] FAILURE
+&amp;gt; 操作失败。
+
+&amp;gt; [!FAIL] FAIL
+&amp;gt; 失败（同 Failure）。
+
+&amp;gt; [!MISSING] MISSING
+&amp;gt; 缺失内容（同 Failure）。
+
+&amp;gt; [!DANGER] DANGER
+&amp;gt; 危险操作警告。
+
+&amp;gt; [!ERROR] ERROR
+&amp;gt; 错误信息（同 Danger）。
+
+&amp;gt; [!BUG] BUG
+&amp;gt; 报告软件缺陷。
+
+&amp;gt; [!EXAMPLE] EXAMPLE
+&amp;gt; 展示一个例子。
+
+&amp;gt; [!QUOTE] QUOTE
+&amp;gt; 引用一段话。
+
+&amp;gt; [!CITE] CITE
+&amp;gt; 引证（同 Quote）。
+
+&amp;gt; [!NOTE] 自定义标题
+&amp;gt; 这是一个带有自定义标题的示例。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&amp;lt;/details&amp;gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;./images/obsidian.png&quot; alt=&quot;Obsidian&quot; /&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h3&gt;3. VitePress 主题风格&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://vitepress.dev/&quot;&gt;VitePress&lt;/a&gt; 风格提供了一套现代化的、扁平的默认样式。目前仅包含与 GitHub 一致的 &lt;strong&gt;5 种&lt;/strong&gt; 基础类型。&lt;/p&gt;
+&lt;p&gt;&amp;lt;details&amp;gt;
+&amp;lt;summary&amp;gt;点击展开 VitePress 语法列表&amp;lt;/summary&amp;gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt; [!NOTE] NOTE
+&amp;gt; 对应 GitHub 的 Note。
+
+&amp;gt; [!TIP] TIP
+&amp;gt; 对应 GitHub 的 Tip。
+
+&amp;gt; [!IMPORTANT] IMPORTANT
+&amp;gt; 对应 GitHub 的 Important。
+
+&amp;gt; [!WARNING] WARNING
+&amp;gt; 对应 GitHub 的 Warning。
+
+&amp;gt; [!CAUTION] CAUTION
+&amp;gt; 对应 GitHub 的 Caution。
+
+&amp;gt; [!TIP] 自定义标题
+&amp;gt; VitePress 风格同样支持自定义标题。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&amp;lt;/details&amp;gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;./images/vitepress.png&quot; alt=&quot;VitePress&quot; /&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h3&gt;4. Docusaurus 风格语法&lt;/h3&gt;
+&lt;p&gt;仅支持语法，风格保持跟上面三个主题相同。&lt;/p&gt;
+&lt;p&gt;&amp;lt;details&amp;gt;
+&amp;lt;summary&amp;gt;点击展开 Docusaurus 语法列表 &amp;lt;/summary&amp;gt;&lt;/p&gt;
 &lt;p&gt;支持以下类型的提醒框：&lt;code&gt;note&lt;/code&gt; &lt;code&gt;tip&lt;/code&gt; &lt;code&gt;important&lt;/code&gt; &lt;code&gt;warning&lt;/code&gt; &lt;code&gt;caution&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;:::note
-突出显示用户应该考虑的信息，即使在快速浏览时也是如此。
-:::&lt;/p&gt;
-&lt;p&gt;:::tip
-可选信息，帮助用户更成功。
-:::&lt;/p&gt;
-&lt;p&gt;:::important
-用户成功所必需的关键信息。
-:::&lt;/p&gt;
-&lt;p&gt;:::warning
-由于潜在风险需要用户立即注意的关键内容。
-:::&lt;/p&gt;
-&lt;p&gt;:::caution
-行动的负面潜在后果。
-:::&lt;/p&gt;
-&lt;h3&gt;基本语法&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;:::note
 突出显示用户应该考虑的信息，即使在快速浏览时也是如此。
 :::
@@ -958,31 +1099,30 @@ published: 2023-10-19
 :::tip
 可选信息，帮助用户更成功。
 :::
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3&gt;自定义标题&lt;/h3&gt;
-&lt;p&gt;可以自定义提醒框的标题。&lt;/p&gt;
-&lt;p&gt;:::note[我的自定义标题]
-这是一个带有自定义标题的注释。
-:::&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;:::note[我的自定义标题]
-这是一个带有自定义标题的注释。
+
+:::important
+用户成功所必需的关键信息。
+:::
+
+:::warning
+由于潜在风险需要用户立即注意的关键内容。
+:::
+
+:::caution
+行动的负面潜在后果。
+:::
+
+:::tip[自定义标题]
+可选信息，帮助用户更成功。
 :::
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h3&gt;GitHub 语法&lt;/h3&gt;
-&lt;blockquote&gt;
-&lt;p&gt;[!TIP]
-也支持 &lt;a href=&quot;https://github.com/orgs/community/discussions/16925&quot;&gt;GitHub 语法&lt;/a&gt;。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;pre&gt;&lt;code&gt;&amp;gt; [!NOTE]
-&amp;gt; 也支持 GitHub 语法。
-
-&amp;gt; [!TIP]
-&amp;gt; 也支持 GitHub 语法。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3&gt;剧透&lt;/h3&gt;
+&lt;p&gt;&amp;lt;/details&amp;gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2&gt;剧透&lt;/h2&gt;
 &lt;p&gt;您可以为文本添加剧透。文本也支持 &lt;strong&gt;Markdown&lt;/strong&gt; 语法。&lt;/p&gt;
 &lt;p&gt;内容 :spoiler[被隐藏了 &lt;strong&gt;哈哈&lt;/strong&gt;]！&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;内容 :spoiler[被隐藏了 **哈哈**]！&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;内容 :spoiler[被隐藏了 **哈哈**]！
+&lt;/code&gt;&lt;/pre&gt;
 </content:encoded><author>Firefly</author></item><item><title>Markdown 教程</title><link>https://firefly.cuteleaf.cn/posts/markdown-tutorial/</link><guid isPermaLink="true">https://firefly.cuteleaf.cn/posts/markdown-tutorial/</guid><description>一个简明的 Markdown 博客示例。</description><pubDate>Thu, 01 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;这是一个展示如何编写 Markdown 文件的示例。本文档汇总了核心语法与常见扩展（GFM）。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;#block-elements&quot;&gt;块级元素&lt;/a&gt;
