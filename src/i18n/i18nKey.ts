@@ -231,6 +231,11 @@ enum I18nKey {
 	copyLink = "copyLink",
 	savePoster = "savePoster",
 	scanToRead = "scanToRead",
+
+	// Typst viewer
+	typstNoPdf = "typstNoPdf",
+	typstOpenPdf = "typstOpenPdf",
+	typstPdfPreviewTitle = "typstPdfPreviewTitle",
 }
 
 export default I18nKey;

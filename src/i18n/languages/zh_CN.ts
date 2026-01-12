@@ -237,4 +237,9 @@ export const zh_CN: Translation = {
 	[Key.copyLink]: "复制链接",
 	[Key.savePoster]: "保存海报",
 	[Key.scanToRead]: "扫码阅读文章",
+
+	// Typst viewer
+	[Key.typstNoPdf]: "暂无可展示的 Typst PDF。",
+	[Key.typstOpenPdf]: "下载 / 打开 PDF",
+	[Key.typstPdfPreviewTitle]: "Typst PDF 预览",
 };

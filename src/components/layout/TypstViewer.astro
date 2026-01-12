@@ -1,0 +1,46 @@
+---
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+
+interface Props {
+  pdfUrl: string | null;
+  sourcePath?: string;
+  error?: string;
+}
+
+const { pdfUrl, sourcePath = "", error } = Astro.props;
+---
+<div class="mb-6 flex flex-col gap-4 onload-animation">
+  {error && (
+    <div class="border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-200 px-4 py-3 rounded-lg text-sm">
+      {error}
+    </div>
+  )}
+
+  {!pdfUrl ? (
+    <div class="border border-dashed border-[var(--line-divider)] bg-[var(--code-bg)]/40 dark:bg-black/30 px-4 py-6 rounded-lg text-sm text-black/60 dark:text-white/60">
+      {i18n(I18nKey.typstNoPdf)}
+    </div>
+  ) : (
+    <div class="flex flex-col gap-3">
+      <div class="flex flex-wrap gap-2">
+        <a
+          class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--primary)] text-white dark:text-black/70 text-sm font-medium hover:bg-[var(--primary)]/85 active:scale-95 transition"
+          href={pdfUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span>{i18n(I18nKey.typstOpenPdf)}</span>
+        </a>
+      </div>
+      <div class="rounded-xl overflow-hidden border border-[var(--line-divider)] bg-white dark:bg-[#0f1115] shadow-sm">
+        <iframe
+          src={pdfUrl}
+          class="w-full min-h-[720px] md:min-h-[840px]"
+          title={i18n(I18nKey.typstPdfPreviewTitle)}
+          loading="lazy"
+        />
+      </div>
+    </div>
+  )}
+</div>

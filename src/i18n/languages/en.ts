@@ -246,4 +246,9 @@ export const en: Translation = {
 	[Key.copyLink]: "Copy Link",
 	[Key.savePoster]: "Save Poster",
 	[Key.scanToRead]: "Scan to Read",
+
+	// Typst viewer
+	[Key.typstNoPdf]: "No Typst PDF available.",
+	[Key.typstOpenPdf]: "Download / Open PDF",
+	[Key.typstPdfPreviewTitle]: "Typst PDF Preview",
 };

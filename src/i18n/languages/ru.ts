@@ -247,4 +247,9 @@ export const ru: Translation = {
 	[Key.copyLink]: "Копировать ссылку",
 	[Key.savePoster]: "Сохранить постер",
 	[Key.scanToRead]: "Сканируйте, чтобы прочитать",
+
+	// Typst viewer
+	[Key.typstNoPdf]: "Нет доступного Typst PDF.",
+	[Key.typstOpenPdf]: "Скачать / открыть PDF",
+	[Key.typstPdfPreviewTitle]: "Предпросмотр Typst PDF",
 };

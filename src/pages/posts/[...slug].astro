@@ -18,6 +18,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import RandomCoverImage from "@/components/common/RandomCoverImage.astro";
 import PostMetadata from "@/components/layout/PostMeta.astro";
+import TypstViewer from "@/components/layout/TypstViewer.astro";
 import SharePoster from "@/components/misc/SharePoster.svelte";
 import { coverImageConfig } from "@/config/coverImageConfig";
 import { licenseConfig } from "@/config/licenseConfig";
@@ -27,6 +28,7 @@ import { sponsorConfig } from "@/config/sponsorConfig";
 import { formatDateToYYYYMMDD } from "@/utils/date-utils";
 import { processCoverImageSync } from "@/utils/image-utils";
 import { url } from "@/utils/url-utils";
+import { compileTypstToPdf } from "@/utils/typst-utils";
 
 export async function getStaticPaths() {
 	const blogEntries = await getSortedPosts();
@@ -44,6 +46,27 @@ const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
 
 const { remarkPluginFrontmatter } = await render(entry);
+
+const hasTypstSource =
+  (entry.data.content || "").trim().toLowerCase().endsWith(".typ");
+let typstPdfUrl: string | null = null;
+let typstError: string | undefined;
+const cleanedBody =
+  typeof entry.body === "string"
+    ? entry.body.replace(/<!--.*?-->/gs, "").trim()
+    : "";
+const hasMarkdownBody = cleanedBody.length > 0;
+
+if (hasTypstSource) {
+	const { pdfUrl, error } = await compileTypstToPdf({
+		typstRelativePath: entry.data.content,
+		entryFilePath: entry.filePath,
+		entryId: entry.id,
+	});
+
+	typstPdfUrl = pdfUrl;
+	typstError = error;
+}
 
 // 处理随机图：如果image为"api"，则从配置的API获取随机图
 const processedImage = processCoverImageSync(entry.data.image, entry.id);
@@ -203,9 +226,19 @@ const jsonLd = {
         )
       }
 
-      <Markdown class="mb-6 markdown-content onload-animation">
-        <Content />
-      </Markdown>
+      {hasTypstSource && (
+        <TypstViewer
+          pdfUrl={typstPdfUrl}
+          sourcePath={entry.data.content}
+          error={typstError}
+        />
+      )}
+
+      {hasMarkdownBody && (
+        <Markdown class="mb-6 markdown-content onload-animation">
+          <Content />
+        </Markdown>
+      )}
 
       {/* 赞助按钮 & 分享按钮 */}
       {

@@ -245,4 +245,9 @@ export const ja: Translation = {
 	[Key.copyLink]: "リンクをコピー",
 	[Key.savePoster]: "ポスターを保存",
 	[Key.scanToRead]: "QRコードで読む",
+
+	// Typst viewer
+	[Key.typstNoPdf]: "表示できる Typst PDF はありません。",
+	[Key.typstOpenPdf]: "PDF をダウンロード / 開く",
+	[Key.typstPdfPreviewTitle]: "Typst PDF プレビュー",
 };
