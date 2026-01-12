@@ -4,11 +4,10 @@ import { i18n } from "@i18n/translation";
 
 interface Props {
   pdfUrl: string | null;
-  sourcePath?: string;
   error?: string;
 }
 
-const { pdfUrl, sourcePath = "", error } = Astro.props;
+const { pdfUrl, error } = Astro.props;
 ---
 <div class="mb-6 flex flex-col gap-4 onload-animation">
   {error && (
