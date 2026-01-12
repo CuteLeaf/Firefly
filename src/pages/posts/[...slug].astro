@@ -47,14 +47,16 @@ const { Content, headings } = await render(entry);
 
 const { remarkPluginFrontmatter } = await render(entry);
 
-const hasTypstSource =
-  (entry.data.content || "").trim().toLowerCase().endsWith(".typ");
+const hasTypstSource = (entry.data.content || "")
+	.trim()
+	.toLowerCase()
+	.endsWith(".typ");
 let typstPdfUrl: string | null = null;
 let typstError: string | undefined;
 const cleanedBody =
-  typeof entry.body === "string"
-    ? entry.body.replace(/<!--.*?-->/gs, "").trim()
-    : "";
+	typeof entry.body === "string"
+		? entry.body.replace(/<!--.*?-->/gs, "").trim()
+		: "";
 const hasMarkdownBody = cleanedBody.length > 0;
 
 if (hasTypstSource) {
