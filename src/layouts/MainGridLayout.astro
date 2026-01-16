@@ -13,6 +13,7 @@ import ImageWrapper from "@/components/common/ImageWrapper.astro";
 import FloatingControls from "@/components/controls/FloatingControls.astro";
 import TypewriterText from "@/components/features/TypewriterText.astro";
 import IconifyLoader from "@/components/misc/IconifyLoader.astro";
+import DevToolsWarning from "@components/features/DevToolsWarning.astro";
 import {
 	backgroundWallpaper,
 	live2dModelConfig,
@@ -437,6 +438,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
 
         <SpineModel></SpineModel>
         {live2dModelConfig.enable && <Live2DWidget config={live2dModelConfig} />}
+        {siteConfig.devtoolsWarning?.enable && <DevToolsWarning />}
     </div>
 </div>
 

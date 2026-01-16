@@ -1,0 +1,177 @@
+---
+import { siteConfig } from "@/config";
+
+const devtoolsWarning = siteConfig.devtoolsWarning || false;
+---
+
+<script is:inline define:vars={{ devtoolsWarning }}>
+  (function () {
+    // 创建样式
+    const style = document.createElement("style");
+    style.textContent = `
+    #devtools-warning {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-150px);
+      background: white;
+      color: #333;
+      padding: 0;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.3s ease;
+      z-index: 999999;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      min-width: 320px;
+      max-width: 400px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #devtools-warning.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    #devtools-warning.hide {
+      transform: translateX(-50%) translateY(-150px);
+      opacity: 0;
+    }
+    #devtools-warning-content {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    #devtools-warning-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    #devtools-warning-text {
+      flex: 1;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.3;
+      text-align: center;
+    }
+    #devtools-warning-progress {
+      height: 4px;
+      background: #f0f0f0;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      border-radius: 0 0 12px 12px;
+    }
+    #devtools-warning-progress-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #ff6b6b, #ff8787);
+      transform-origin: left;
+      transform: scaleX(1);
+    }
+    #devtools-warning-progress-bar.animate {
+      animation: shrink ${devtoolsWarning.time}s linear forwards;
+    }
+    @keyframes shrink {
+      from {
+        transform: scaleX(1);
+      }
+      to {
+        transform: scaleX(0);
+      }
+    }
+  `;
+    document.head.appendChild(style);
+    // 创建警告卡片
+    const warning = document.createElement("div");
+    warning.id = "devtools-warning";
+    warning.innerHTML = `
+    <div id="devtools-warning-content">
+      <div id="devtools-warning-icon">⚠️</div>
+      <div id="devtools-warning-text">${devtoolsWarning.message || "请按规定使用开发者工具"}</div>
+    </div>
+    <div id="devtools-warning-progress">
+      <div id="devtools-warning-progress-bar"></div>
+    </div>
+  `;
+    document.body.appendChild(warning);
+    // 状态管理
+    let hasShown = false;
+    // 显示警告函数
+    function showWarning() {
+      if (hasShown) return;
+      hasShown = true;
+      const progressBar = warning.querySelector(
+        "#devtools-warning-progress-bar"
+      );
+      // 显示卡片
+      warning.classList.add("show");
+      // 等待卡片滑入动画完成后启动进度条
+      const onSlideInComplete = (e) => {
+        // 只响应 transform 属性的过渡
+        if (e.propertyName !== "transform") return;
+        // 启动进度条动画
+        progressBar.classList.add("animate");
+        // 清理监听器
+        warning.removeEventListener("transitionend", onSlideInComplete);
+      };
+      warning.addEventListener("transitionend", onSlideInComplete);
+      // 进度条动画结束后隐藏卡片
+      const onProgressComplete = () => {
+        warning.classList.remove("show");
+        warning.classList.add("hide");
+        // 等待卡片滑出动画完成后移除
+        const onSlideOutComplete = () => {
+          warning.remove();
+        };
+        warning.addEventListener("transitionend", onSlideOutComplete, {
+          once: true,
+        });
+      };
+      progressBar.addEventListener("animationend", onProgressComplete, {
+        once: true,
+      });
+    }
+    // ===== 只监听专门用于打开开发者工具的快捷键 =====
+    document.addEventListener("keydown", (e) => {
+      if (hasShown) return;
+      // F12 - 唯一功能就是打开开发者工具
+      if (e.key === "F12") {
+        showWarning();
+        return;
+      }
+      // Ctrl+Shift+I - 打开开发者工具（检查元素）
+      if (e.ctrlKey && e.shiftKey && e.key.toUpperCase() === "I") {
+        showWarning();
+        return;
+      }
+      // Ctrl+Shift+J - 打开开发者工具（控制台）
+      if (e.ctrlKey && e.shiftKey && e.key.toUpperCase() === "J") {
+        showWarning();
+        return;
+      }
+      // Ctrl+Shift+C - 打开开发者工具（元素选择器）
+      if (e.ctrlKey && e.shiftKey && e.key.toUpperCase() === "C") {
+        showWarning();
+        return;
+      }
+      // Mac: Cmd+Option+I
+      if (e.metaKey && e.altKey && e.key.toUpperCase() === "I") {
+        showWarning();
+        return;
+      }
+      // Mac: Cmd+Option+J
+      if (e.metaKey && e.altKey && e.key.toUpperCase() === "J") {
+        showWarning();
+        return;
+      }
+      // Mac: Cmd+Option+C
+      if (e.metaKey && e.altKey && e.key.toUpperCase() === "C") {
+        showWarning();
+        return;
+      }
+    });
+  })();
+</script>
