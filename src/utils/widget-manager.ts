@@ -9,7 +9,7 @@ import type {
  * 组件映射表 - 将组件类型映射到实际的组件路径
  */
 export const WIDGET_COMPONENT_MAP = {
-	profile: "../components/content/Profile.astro",
+	profile: "../components/widget/Profile.astro",
 	announcement: "../components/widget/Announcement.astro",
 	categories: "../components/widget/Categories.astro",
 	tags: "../components/widget/Tags.astro",

@@ -2,8 +2,8 @@
 import { render } from "astro:content";
 import * as path from "node:path";
 import Comment from "@components/comment/index.astro";
+import Markdown from "@components/common/Markdown.astro";
 import License from "@components/misc/License.astro";
-import Markdown from "@components/misc/Markdown.astro";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
@@ -16,8 +16,8 @@ import {
 import { Icon } from "astro-icon/components";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import PostMetadata from "@/components/content/PostMeta.astro";
-import RandomCoverImage from "@/components/misc/RandomCoverImage.astro";
+import RandomCoverImage from "@/components/common/RandomCoverImage.astro";
+import PostMetadata from "@/components/layout/PostMeta.astro";
 import SharePoster from "@/components/misc/SharePoster.svelte";
 import { coverImageConfig } from "@/config/coverImageConfig";
 import { licenseConfig } from "@/config/licenseConfig";

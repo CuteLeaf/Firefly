@@ -8,7 +8,7 @@
 > 
 > ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen) 
 ![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
-![Astro](https://img.shields.io/badge/Astro-5.16.6-orange)
+![Astro](https://img.shields.io/badge/Astro-5.16.8-orange)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)
 >
 > [![Stars](https://img.shields.io/github/stars/CuteLeaf/Firefly?style=social)](https://github.com/CuteLeaf/Firefly/stargazers)
@@ -22,7 +22,6 @@
 [![爱发电赞助](https://img.shields.io/badge/爱发电-赞助作者-ff69b4.svg)](https://afdian.com/a/cuteleaf)
 
 </div>
-
 
 
 ---
@@ -68,20 +67,21 @@
 - [x] **文章布局** - 支持配置(单列)列表、网格(多列/瀑布流)布局
 - [x] **字体管理** - 支持自定义字体，丰富的字体选择器
 - [x] **页脚配置** - HTML 内容注入，完全自定义
+- [x] **亮暗色模式** - 支持亮色/暗色/跟随系统三种模式
 - [x] **导航栏自定义** - Logo、标题、链接全面自定义
 - [x] **壁纸模式切换** - 横幅壁纸、全屏透明壁纸、纯色背景
-- [x] **主题色自定义** - 360° 色相调节，支持亮色/暗色/跟随系统三种模式
+- [x] **主题色自定义** - 360° 色相调节
 
 ### 页面组件
-- [x] **留言板** - 支持留言页面，集成评论系统
-- [x] **公告栏** - 侧边栏公告提示
+- [x] **留言板** - 支持留言页面
+- [x] **公告栏** - 支持侧边栏公告提示
 - [x] **看板娘** - 支持 Spine 和 Live2D 两种动画引擎
 - [x] **站点统计** - 显示文章、分类、标签数目、文章总字数等数据
 - [x] **站点日历** - 显示当月日历，以及当月的发布文章
 - [x] **赞助页面** - 赞助链接跳转、收款码展示、赞助者列表、文章内赞助按钮
 - [x] **分享海报** - 支持生成精美的文章分享海报
 - [x] **樱花特效** - 支持樱花特效，全屏樱花效果
-- [x] **友情链接** - 精美的友链展示卡片
+- [x] **友情链接** - 精美的友情链接展示页面
 - [x] **广告组件** - 支持自定义侧边栏广告内容
 - [x] **番组计划** - 基于 Bangumi API 的追番和游戏等记录展示
 - [x] **评论系统** - 集成 Twikoo、Waline、Giscus、Disqus、Artalk 评论系统
@@ -96,14 +96,13 @@
 - [x] **增强代码块** - 基于 Expressive Code，支持代码折叠、行号、语言标识
 - [x] **数学公式支持** - KaTeX 渲染引擎，支持行内和块级公式
 - [x] **文章随机封面图** - 支持通过 API 获取随机封面图
-- [x] **Markdown扩展** - 默认支持[GitHub Flavored Markdown](https://github.github.com/gfm/)，还包括了[Admonitions](https://firefly.cuteleaf.cn/posts/markdown-extended/#%E6%8F%90%E9%86%92%E6%A1%86)、[GitHub repository cards](https://firefly.cuteleaf.cn/posts/markdown-extended/#github-%E4%BB%93%E5%BA%93%E5%8D%A1%E7%89%87)、[Expressive Code](http://firefly.cuteleaf.cn/posts/code-examples/)
+- [x] **Markdown扩展** - 更多的 Markdown 扩展语法
 
 ### SEO
 - [x] **SEO 优化** - 完整的 meta 标签和结构化数据
 - [x] **RSS 订阅** - 自动生成 RSS Feed
 - [x] **站点地图** - 自动生成 XML Sitemap，支持页面过滤配置
 - [x] **统计分析** - 集成 Google Analytics、Microsoft Clarity
-
 
 ## 📝计划中...
 
@@ -127,7 +126,9 @@
    git clone https://github.com/Cuteleaf/Firefly.git
    cd Firefly
    ```
-   **先 [Fork](https://github.com/CuteLeaf/Firefly/fork) 到自己仓库在克隆（推荐）**
+   
+   **先 [Fork](https://github.com/CuteLeaf/Firefly/fork) 到自己仓库在克隆（推荐），记得先点 Star 在 Fork 哦！**
+
    ```bash
    git clone https://github.com/you-github-name/Firefly.git
    cd Firefly
@@ -163,7 +164,6 @@
 
    安装命令： `pnpm install`
 
-
 ## 📖 配置说明
 
 > 📚 **详细配置文档**: 查看 [Firefly使用文档](https://docs-firefly.cuteleaf.cn/) 获取完整的配置指南
@@ -183,7 +183,6 @@ const SITE_LANG = "zh_CN";
 - `en` - 英文
 - `ja` - 日文
 - `ru` - 俄文
-
 
 ### 配置文件结构
 
@@ -212,7 +211,6 @@ src/
 │   └── coverImageConfig.ts  # 文章封面图配置
 ```
 
-
 ## ⚙️ 文章 Frontmatter
 
 ```yaml
@@ -229,6 +227,14 @@ pinned: false    # 置顶
 comment: true    # 是否允许评论
 ---
 ```
+
+## 🧩 Markdown 扩展语法
+
+除了 Astro 默认支持的 [GitHub Flavored Markdown](https://github.github.com/gfm/) 之外，还包含了一些额外的 Markdown 功能：
+
+- 提醒块（Admonitions） - 支持 GitHub, Obsidian, VitePress 三种风格主题配置 ([预览和用法](https://firefly.cuteleaf.cn/posts/markdown-extended/))
+- GitHub 仓库卡片 ([预览和用法](https://firefly.cuteleaf.cn/posts/markdown-extended/))
+- 基于 Expressive Code 的增强代码块 ([预览](http://firefly.cuteleaf.cn/posts/code-examples/) / [文档](https://expressive-code.com/))
 
 ## 🧞 指令
 
@@ -248,7 +254,7 @@ comment: true    # 是否允许评论
 
 ## 🙏 致谢
 
-- 非常感谢 [saicaca](https://github.com/saicaca) 开发的 [Fuwari](https://github.com/saicaca/fuwari) 模板，Firefly 就是基于这个模板二次开发
+- 非常感谢 [saicaca](https://github.com/saicaca) 开发的 [fuwari](https://github.com/saicaca/fuwari) 模板，Firefly 就是基于这个模板二次开发
 - 参考了博主 [霞葉](https://kasuha.com) 分享的 [Bangumi 收藏展示](https://kasuha.com/posts/fuwari-enhance-ep2/) 和 [邮箱保护/图片标题](https://kasuha.com/posts/fuwari-enhance-ep1/) 方案
 - 参考了 [Mizuki](https://github.com/matsuzaka-yuki/Mizuki) 的横幅标题/多级菜单导航栏/樱花特效/KaTeX/Fancybox方案
 - 使用了 [Astro](https://astro.build) 和 [Tailwind CSS](https://tailwindcss.com) 构建
@@ -261,6 +267,8 @@ comment: true    # 是否允许评论
 
 本项目遵循 [MIT license](https://mit-license.org/) 开源协议，详细查看 [LICENSE](./LICENSE) 文件
 
+最初 Fork 自 [saicaca/fuwari](https://github.com/saicaca/fuwari)，感谢原作者的贡献，原项目采用 [MIT license](https://mit-license.org/)
+
 **版权声明：**
 - Copyright (c) 2024 [saicaca](https://github.com/saicaca) - [fuwari](https://github.com/saicaca/fuwari)
 - Copyright (c) 2025 [CuteLeaf](https://github.com/CuteLeaf) - [Firefly](https://github.com/CuteLeaf/Firefly) 
@@ -271,11 +279,15 @@ comment: true    # 是否允许评论
 
 感谢以下贡献者对本项目做出的贡献，如有问题或建议，请提交 [Issue](https://github.com/CuteLeaf/Firefly/issues) 或 [Pull Request](https://github.com/CuteLeaf/Firefly/pulls)。
 
-<a href="https://github.com/CuteLeaf/Firefly/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=CuteLeaf/Firefly" />
-</a>
+><a href="https://github.com/CuteLeaf/Firefly/graphs/contributors">
+>  <img src="https://contrib.rocks/image?repo=CuteLeaf/Firefly" />
+></a>
 
-![Alt](https://repobeats.axiom.co/api/embed/6139639d8e88da4d3dc9d45fd43f4e4b2d580086.svg "Repobeats analytics image")
+感谢以下贡献者对原项目 [fuwari](https://github.com/saicaca/fuwari) 做出的贡献，为本项目奠定了基础。
+
+><a href="https://github.com/saicaca/fuwari/graphs/contributors">
+>  <img src="https://contrib.rocks/image?repo=saicaca/fuwari" />
+></a>
 
 ## ⭐ Star History
 

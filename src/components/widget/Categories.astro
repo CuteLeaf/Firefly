@@ -1,10 +1,10 @@
 ---
-import ButtonLink from "@/components/common/controls/ButtonLink.astro";
+import ButtonLink from "@/components/common/ButtonLink.astro";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { getCategoryList } from "@/utils/content-utils";
 import { widgetManager } from "@/utils/widget-manager";
-import WidgetLayout from "./WidgetLayout.astro";
 
 const categories = await getCategoryList();
 

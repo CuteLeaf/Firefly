@@ -1,10 +1,10 @@
 ---
 import { Icon } from "astro-icon/components";
-import DisplaySettings from "@/components/interactive/DisplaySettings.svelte";
-import LayoutSwitchButton from "@/components/interactive/LayoutSwitchButton.svelte";
-import LightDarkSwitch from "@/components/interactive/LightDarkSwitch.svelte";
-import Search from "@/components/interactive/Search.svelte";
-import WallpaperSwitch from "@/components/interactive/WallpaperSwitch.svelte";
+import DisplaySettings from "@/components/controls/DisplaySettings.svelte";
+import LayoutSwitchButton from "@/components/controls/LayoutSwitchButton.svelte";
+import LightDarkSwitch from "@/components/controls/LightDarkSwitch.svelte";
+import Search from "@/components/controls/Search.svelte";
+import WallpaperSwitch from "@/components/controls/WallpaperSwitch.svelte";
 import { backgroundWallpaper, navBarConfig, siteConfig } from "@/config";
 import { LinkPresets } from "@/constants/link-presets";
 import { LinkPreset, type NavBarLink } from "@/types/config";
@@ -23,7 +23,21 @@ const allowLayoutSwitch = siteConfig.postListLayout.allowSwitch;
 
 // 获取导航栏透明模式配置
 const navbarTransparentMode =
-	backgroundWallpaper.banner?.navbar?.transparentMode || "semi";
+	backgroundWallpaper.mode === "banner"
+		? backgroundWallpaper.banner?.navbar?.transparentMode || "semi"
+		: "semi";
+
+// 获取导航栏毛玻璃效果配置
+const navbarEnableBlur =
+	backgroundWallpaper.mode === "banner"
+		? (backgroundWallpaper.banner?.navbar?.enableBlur ?? true)
+		: false;
+
+// 获取导航栏模糊度
+const navbarBlur =
+	backgroundWallpaper.mode === "banner"
+		? (backgroundWallpaper.banner?.navbar?.blur ?? 20)
+		: 0;
 
 // 获取导航栏标题，如果没有设置则使用 siteConfig.title
 const navbarTitle = siteConfig.navbar.title || siteConfig.title;
@@ -43,8 +57,7 @@ let links: NavBarLink[] = navBarConfig.links.map(
 	},
 );
 ---
-<div id="navbar" class="z-50 onload-animation" data-transparent-mode={navbarTransparentMode} data-is-home={isHomePageCheck} data-full-width={navbarWidthFull}>
-    <div class="absolute h-8 left-0 right-0 -top-8 bg-[var(--card-bg)] transition"></div> <!-- used for onload animation -->
+<div id="navbar" class="z-50" style={`--navbar-glass-blur: ${navbarBlur}px;`} data-transparent-mode={navbarTransparentMode} data-enable-blur={String(navbarEnableBlur)} data-is-home={isHomePageCheck} data-full-width={navbarWidthFull}>
     <div class:list={[
         className,
         "!overflow-visible h-[4.5rem] mx-auto flex items-center px-4",
@@ -65,7 +78,7 @@ let links: NavBarLink[] = navBarConfig.links.map(
                 {navbarTitle}
             </div>
         </a>
-        <div class="hidden md:flex items-center space-x-1">
+        <div class="hidden lg:flex items-center space-x-1">
             {links.map((l) => {
                 return <DropdownMenu link={l} />;
             })}
@@ -85,7 +98,7 @@ let links: NavBarLink[] = navBarConfig.links.map(
             {allowLayoutSwitch && <LayoutSwitchButton client:load currentLayout={siteConfig.postListLayout.defaultMode}></LayoutSwitchButton>}
             {/* @ts-ignore */}
             <LightDarkSwitch client:load></LightDarkSwitch>
-            <button aria-label="Menu" name="Nav Menu" class="btn-plain scale-animation rounded-lg w-11 h-11 active:scale-90 md:!hidden" id="nav-menu-switch">
+            <button aria-label="Menu" name="Nav Menu" class="btn-plain scale-animation rounded-lg w-11 h-11 active:scale-90 lg:!hidden" id="nav-menu-switch">
                 <Icon name="material-symbols:menu-rounded" class="text-[1.25rem]"></Icon>
             </button>
         </div>

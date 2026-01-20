@@ -22,11 +22,25 @@ export type SiteConfig = {
 		defaultMode?: LIGHT_DARK_MODE; // 默认模式：浅色、深色或跟随系统
 	};
 
+	// 卡片样式配置
+	card: {
+		// 是否开启卡片边框和阴影立体效果
+		border: boolean;
+	};
+
 	// 字体配置
 	font: FontConfig;
 
 	// 站点开始日期，用于计算运行天数
 	siteStartDate?: string; // 格式: "YYYY-MM-DD"
+
+	// 可选：站点时区，使用 IANA 时区标识，例如 "Asia/Shanghai"、"UTC"
+	timezone?: string;
+
+	// 提醒框配置
+	rehypeCallouts: {
+		theme: "github" | "obsidian" | "vitepress";
+	};
 
 	// 添加bangumi配置
 	bangumi?: {
@@ -510,6 +524,8 @@ export type BackgroundWallpaperConfig = {
 		};
 		navbar?: {
 			transparentMode?: "semi" | "full" | "semifull"; // 导航栏透明模式
+			enableBlur?: boolean; // 是否开启毛玻璃模糊效果
+			blur?: number; // 毛玻璃模糊度
 		};
 		waves?: {
 			enable:

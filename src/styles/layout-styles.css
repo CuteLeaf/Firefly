@@ -298,23 +298,6 @@
     #banner img {
         transition: transform 0.5s ease-out !important;
     }
-    
-    /* 移动端banner加载动画优化 */
-    .onload-animation-fade-in {
-        animation: mobile-fade-in 0.8s ease-out forwards !important;
-    }
-}
-
-/* 移动端专用淡入动画 - 与电脑端保持一致 */
-@keyframes mobile-fade-in {
-    0% {
-        opacity: 0;
-        transform: scale(1.1);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1); /* 与电脑端当前图片缩放保持一致 */
-    }
 }
 
 /* 平板和手机端非首页隐藏banner - 改进的分阶段动画 (1024px以下) */

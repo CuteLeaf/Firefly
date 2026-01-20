@@ -22,7 +22,7 @@ export const coverImageConfig: CoverImageConfig = {
 
 	randomCoverImage: {
 		// 随机封面图功能开关
-		enable: true,
+		enable: false,
 		// 封面图API列表
 		apis: [
 			"https://t.alcy.cc/pc",
@@ -50,7 +50,6 @@ export const coverImageConfig: CoverImageConfig = {
 		 * 水印配置
 		 * - 仅在随机图API成功加载时显示水印
 		 * - 当使用备用图片时，水印文字会自动更新为 "Image API Error"
-		 * - 移动端会自动调整位置（bottom位置会显示在top，避免被裁剪）
 		 */
 		watermark: {
 			// 水印开关
@@ -61,11 +60,11 @@ export const coverImageConfig: CoverImageConfig = {
 			 * 水印位置
 			 * - "top-left": 左上角
 			 * - "top-right": 右上角
-			 * - "bottom-left": 左下角（移动端显示在左上角，桌面端显示在左下角）
-			 * - "bottom-right": 右下角（移动端显示在右上角，桌面端显示在右下角）
+			 * - "bottom-left": 左下角
+			 * - "bottom-right": 右下角
 			 * - "center": 居中
 			 */
-			position: "bottom-right",
+			position: "top-right",
 			// 水印透明度
 			opacity: 0.6,
 			// 字体大小

@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getPostUrlBySlug } from "@utils/url-utils";
-import PostCard from "@/components/content/PostCard.astro";
+import PostCard from "@/components/layout/PostCard.astro";
 import { sidebarLayoutConfig, siteConfig } from "@/config";
 
 const { page } = Astro.props;
@@ -117,50 +117,67 @@ const initialLayoutClass =
     const postListContainer = document.getElementById("post-list-container");
     if (!postListContainer) return;
 
-    // 添加切换动画类
-    postListContainer.classList.add("layout-switching");
+    // Check current layout state
+    const isCurrentGrid = postListContainer.classList.contains("grid-mode");
+    const isCurrentList = postListContainer.classList.contains("list-mode");
+    const currentLayout = isCurrentGrid ? "grid" : (isCurrentList ? "list" : null);
 
-    // 移除现有布局类
-    postListContainer.classList.remove("list-mode", "grid-mode");
-    
-    // 检查是否启用双侧边栏
+    // Common logic vars
     const isBothSidebars = postListContainer.getAttribute("data-both-sidebars") === "true";
     const masonryEnabled = postListContainer.getAttribute("data-masonry-enabled") === "true";
     const gridColumns = parseInt(postListContainer.getAttribute("data-grid-columns") || "2");
 
-    // 添加新布局类
-    if (layout === "grid") {
-      postListContainer.classList.add("grid-mode");
-      postListContainer.classList.remove("flex", "flex-col");
-      
-      // 应用瀑布流布局
-      if (masonryEnabled) {
-        // 瀑布流模式
-        postListContainer.classList.remove("grid", "grid-cols-1", "md:grid-cols-2", "lg:grid-cols-3", "gap-4");
-        applyMasonryLayout();
-      } else {
-        // 普通网格模式
-        postListContainer.classList.add("grid", "grid-cols-1", "md:grid-cols-2", "gap-4");
-        if (!isBothSidebars && gridColumns === 3) {
-          postListContainer.classList.add("lg:grid-cols-3");
+    // Helper to apply layout classes (Pure logic, no animation)
+    const applyClasses = () => {
+        postListContainer.classList.remove("list-mode", "grid-mode");
+        if (layout === "grid") {
+            postListContainer.classList.add("grid-mode");
+            postListContainer.classList.remove("flex", "flex-col");
+            if (masonryEnabled) {
+                postListContainer.classList.remove("grid", "grid-cols-1", "md:grid-cols-2", "lg:grid-cols-3", "gap-4");
+                applyMasonryLayout();
+            } else {
+                postListContainer.classList.add("grid", "grid-cols-1", "md:grid-cols-2", "gap-4");
+                if (!isBothSidebars && gridColumns === 3) {
+                    postListContainer.classList.add("lg:grid-cols-3");
+                }
+                resetMasonryLayout();
+            }
+        } else {
+            postListContainer.classList.add("list-mode");
+            postListContainer.classList.add("flex", "flex-col", "gap-4", "md:gap-4");
+            postListContainer.classList.remove("grid", "grid-cols-1", "md:grid-cols-2", "lg:grid-cols-3");
+            resetMasonryLayout();
         }
-        resetMasonryLayout();
-      }
+    };
 
-    } else {
-      postListContainer.classList.add("list-mode");
-      // 列表模式：单列布局
-      postListContainer.classList.add("flex", "flex-col", "gap-4", "md:gap-4");
-      postListContainer.classList.remove("grid", "grid-cols-1", "md:grid-cols-2", "lg:grid-cols-3");
-      
-      // 重置瀑布流样式
-      resetMasonryLayout();
+    // Case 1: First run (Initialization) - No animation
+    if (!currentLayout) {
+        applyClasses();
+        return;
     }
 
-    // 移除切换动画类
+    // Case 2: Same layout (e.g. Resize) - No animation, just refresh masonry
+    if (currentLayout === layout) {
+        if (layout === "grid" && masonryEnabled) {
+            applyMasonryLayout();
+        }
+        return;
+    }
+
+    // Case 3: Layout Change - Smooth Animation
+    // 1. Fade OUT
+    postListContainer.classList.add("layout-switching");
+    
+    // 2. Change Layout after fade out (200ms match CSS)
     setTimeout(() => {
-      postListContainer.classList.remove("layout-switching");
-    }, 500);
+        applyClasses();
+
+        // 3. Fade IN (Short delay to ensure DOM update)
+        requestAnimationFrame(() => {
+            postListContainer.classList.remove("layout-switching");
+        });
+    }, 200);
   }
 
   function resetMasonryLayout() {
@@ -332,29 +349,25 @@ const initialLayoutClass =
   }
 
   /* 布局切换时的动画效果 */
+  #post-list-container {
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+  }
+  
   #post-list-container.layout-switching {
-    opacity: 0.95;
+    opacity: 0;
+    transform: translateY(10px);
   }
 
+  /* 移除特定模式下的子元素动画，避免布局计算冲突 */
+  /*
   #post-list-container.layout-switching > :global(*) {
     transform: scale(0.98);
   }
 
-  /* 列表模式的特殊动画 - 从左到右 */
   #post-list-container.list-mode > :global(*) {
     animation: fadeInSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
-
-  @keyframes fadeInSlide {
-    from {
-      opacity: 0;
-      transform: translateX(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
+  */
 
   /* List Mode Customization */
   #post-list-container.list-mode :global(.post-card-title) {

@@ -1,0 +1,151 @@
+---
+import { Icon } from "astro-icon/components";
+
+/****
+ * FloatingButton 组件
+ * 用于创建一个悬浮按钮，支持图标、点击事件和可选的辅助标签。
+ */
+
+interface Props {
+	id: string;
+	icon: string;
+	ariaLabel?: string;
+	onclick?: string;
+	class?: string;
+}
+
+const { id, icon, ariaLabel, onclick, class: className = "" } = Astro.props;
+---
+
+<div
+  id={id}
+  class:list={["floating-btn", className, "flex items-center rounded-2xl overflow-hidden transition"]}
+  onclick={onclick}
+>
+  <button
+    aria-label={ariaLabel}
+    class="h-full w-full rounded-2xl"
+  >
+    <Icon name={icon} class="mx-auto" />
+  </button>
+</div>
+
+<style lang="stylus">
+.floating-btn
+    color: var(--primary)
+    font-size: 2.25rem
+    font-weight: bold
+    width: 4rem
+    height: 4rem
+    
+    opacity: 1
+    cursor: pointer
+    pointer-events: auto
+    /* 默认状态（显示）：各属性平滑过渡 */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+    border-radius: 1rem
+    backdrop-filter: blur(12px)
+    background-color: var(--card-bg)
+    border: 1px solid rgba(0, 0, 0, 0.1)
+    flex-shrink: 0
+    overflow: hidden
+    
+    /* 图标样式 */
+    :global(svg)
+        font-size: 1.75rem
+        opacity: 1
+        transition: opacity 0.2s ease 0.1s /* 显示时：延迟出现，通过 delay 避免"先出现icon" */
+
+    &.hide
+        /* 隐藏状态：缩小并收起布局 */
+        transform: scale(0.5)
+        opacity: 0
+        pointer-events: none
+        
+        /* 强制收缩布局占用 */
+        height: 0 !important
+        width: 0 !important
+        margin: 0 !important
+        border-width: 0 !important
+        padding: 0 !important
+        
+        /* 隐藏时：不需要 delay，与布局同时（或稍快）消失 */
+        /* 由于 width/height 也在变，all cover全部。关键是 inner element 必须快 */
+        
+        :global(svg)
+            opacity: 0
+            transition: opacity 0.1s ease /* 隐藏时：立即消失，解决"icon最后消失" */
+        
+    &:active
+        transform: scale(0.9)
+        
+    &:hover
+        transform: scale(1.05)
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15)
+        background-color: rgba(255, 255, 255, 0.95)
+        border-color: rgba(0, 0, 0, 0.2)
+
+/* 暗色主题样式 */
+:global(.dark) .floating-btn
+    background-color: var(--card-bg)
+    border: 1px solid rgba(255, 255, 255, 0.15)
+    color: var(--primary, #60a5fa)
+    
+    &:hover
+        background-color: var(--card-bg)
+        border-color: rgba(255, 255, 255, 0.3)
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3)
+
+/* 响应式调整 */
+@media (max-width: 768px)
+    .floating-btn
+        width: 3rem
+        height: 3rem
+        font-size: 1.5rem
+        border-radius: 0.75rem
+        :global(svg)
+            font-size: 1.25rem
+
+@media (max-width: 480px)
+    .floating-btn
+        width: 2.5rem
+        height: 2.5rem
+        font-size: 1.25rem
+        border-radius: 0.5rem
+        :global(svg)
+            font-size: 1rem
+
+@media (max-width: 360px)
+    .floating-btn
+        width: 2rem
+        height: 2rem
+        font-size: 1rem
+        border-radius: 0.375rem
+        :global(svg)
+            font-size: 0.875rem
+
+@media (max-width: 320px)
+    .floating-btn
+        width: 1.75rem
+        height: 1.75rem
+        font-size: 0.875rem
+        border-radius: 0.25rem
+        :global(svg)
+            font-size: 0.75rem
+
+/* 确保按钮始终在可视区域内 */
+.floating-btn
+    min-width: 0
+    min-height: 0
+    padding: 0.25rem
+    border-radius: 1rem !important
+    
+    &.hide
+        padding: 0
+
+/* 高DPI屏幕优化 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)
+    .floating-btn
+        image-rendering: -webkit-optimize-contrast
+        image-rendering: crisp-edges
+</style>

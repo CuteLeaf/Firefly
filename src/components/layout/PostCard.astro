@@ -2,12 +2,12 @@
 import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
 import { Icon } from "astro-icon/components";
-import RandomCoverImage from "@/components/misc/RandomCoverImage.astro";
+import RandomCoverImage from "@/components/common/RandomCoverImage.astro";
+import PostMetadata from "@/components/layout/PostMeta.astro";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { processCoverImageSync } from "@/utils/image-utils";
 import { getFileDirFromPath, getTagUrl } from "@/utils/url-utils";
-import PostMetadata from "./PostMeta.astro";
 
 interface Props {
 	class?: string;
@@ -139,7 +139,7 @@ const { remarkPluginFrontmatter } = await render(entry);
             <a
               href={getTagUrl(tag)}
               aria-label={`View all posts with the ${tag.trim()} tag`}
-              class="btn-regular h-6 text-xs px-2 py-1 rounded-md border border-[var(--line-divider)]
+              class="btn-regular h-6 text-xs px-2 py-1 rounded-md 
                     transition-all duration-200 hover:scale-105 active:scale-95"
             >
               #{tag.trim()}
@@ -149,7 +149,7 @@ const { remarkPluginFrontmatter } = await render(entry);
       {
         !(tags && tags.length > 0) && (
           <span class="text-[var(--content-meta)] text-xs">
-            {i18n(I18nKey.noTags)}
+            #{i18n(I18nKey.noTags)}
           </span>
         )
       }

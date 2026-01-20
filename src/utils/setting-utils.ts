@@ -544,22 +544,27 @@ function updateNavbarTransparency(mode: WALLPAPER_MODE) {
 	if (!navbar) return;
 
 	let transparentMode: string;
+	let enableBlur: boolean;
 
-	// 根据当前壁纸模式设置导航栏透明模式
+	// 根据当前壁纸模式设置导航栏透明模式和模糊效果
 	if (mode === WALLPAPER_OVERLAY) {
-		// 全屏壁纸模式：固定使用半透明
-		transparentMode = "semi";
-	} else if (mode === WALLPAPER_NONE) {
-		// 纯色背景模式：完全不透明，使用默认背景
+		// 全屏壁纸模式
 		transparentMode = "none";
+		enableBlur = false;
+	} else if (mode === WALLPAPER_NONE) {
+		// 纯色背景模式
+		transparentMode = "none";
+		enableBlur = false;
 	} else {
-		// Banner模式：使用配置的透明模式
+		// Banner模式：使用配置的透明模式和模糊效果
 		transparentMode =
 			backgroundWallpaper.banner?.navbar?.transparentMode || "semi";
+		enableBlur = backgroundWallpaper.banner?.navbar?.enableBlur ?? true;
 	}
 
 	// 更新导航栏的透明模式属性
 	navbar.setAttribute("data-transparent-mode", transparentMode);
+	navbar.setAttribute("data-enable-blur", String(enableBlur));
 
 	// 移除现有的透明模式类
 	navbar.classList.remove(

@@ -122,16 +122,16 @@ const getWatermarkStyles = (
 			classes = "top-2 right-2";
 			break;
 		case "bottom-left":
-			classes = "top-2 left-2 md:top-auto md:bottom-2 md:left-2";
+			classes = "bottom-2 left-2";
 			break;
 		case "bottom-right":
-			classes = "top-2 right-2 md:top-auto md:bottom-2 md:right-2";
+			classes = "bottom-2 right-2";
 			break;
 		case "center":
 			classes = "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2";
 			break;
 		default:
-			classes = "top-2 right-2 md:top-auto md:bottom-2 md:right-2";
+			classes = "bottom-2 right-2";
 	}
 
 	styles = `padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: ${watermark?.fontSize || "0.75rem"}; color: ${watermark?.color || "#ffffff"}; background-color: ${watermark?.backgroundColor || "rgba(0, 0, 0, 0.4)"}; opacity: ${watermark?.opacity || 0.6}; pointer-events: none; z-index: 10; white-space: nowrap; user-select: none;`;

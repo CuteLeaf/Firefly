@@ -1,17 +1,18 @@
 ---
 import type { MarkdownHeading } from "astro";
 import { Icon } from "astro-icon/components";
-import TOCStyles from "@/components/common/styles/TOCStyles.astro";
+import FloatingButton from "@/components/common/FloatingButton.astro";
 import { sidebarLayoutConfig } from "@/config/sidebarConfig";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
+import "@/styles/toc.css";
 
 interface Props {
 	headings: MarkdownHeading[];
 }
 
 let { headings: _ = [] } = Astro.props;
-
+// ... (保留之前的逻辑)
 // 检查侧边栏目录组件是否启用
 const sidebarTocComponent = sidebarLayoutConfig.rightComponents?.find(
 	(c) => c.type === "sidebarToc",
@@ -24,110 +25,62 @@ const showRightSidebarOnPostPage =
 
 <!-- 悬浮TOC按钮 -->
 <div id="floating-toc-wrapper" class="floating-toc-wrapper" data-is-sidebar-toc-enabled={String(isSidebarTocEnabled)} data-sidebar-position={sidebarPosition} data-show-right-sidebar-on-post-page={String(showRightSidebarOnPostPage)}>
-  <div
+  <FloatingButton
     id="floating-toc-btn"
-    class="floating-toc-btn hide flex items-center rounded-2xl overflow-hidden transition"
+    icon="material-symbols:format-list-bulleted"
+    ariaLabel="Table of Contents"
     onclick="window.toggleFloatingTOC()"
-  >
-    <button
-      aria-label="Table of Contents"
-      class="h-[3.75rem] w-[3.75rem] rounded-2xl"
-    >
-      <Icon name="material-symbols:format-list-bulleted" class="mx-auto" />
-    </button>
-  </div>
-</div>
-
-<!-- 悬浮TOC面板 -->
-<div
-  id="floating-toc-panel"
-  class="floating-toc-panel hide fixed w-80 max-h-[24rem] overflow-hidden rounded-2xl shadow-2xl backdrop-blur-lg border border-white/20 bg-white/60 dark:bg-black/60 dark:border-white/10 z-50 md:w-80 w-[calc(100vw-2rem)] md:max-h-[24rem] max-h-[calc(100vh-8rem)]"
-  style="background-color: rgba(var(--card-bg-rgb, 255, 255, 255), 0.6); bottom: calc(13rem + 6rem); right: 2rem;"
->
+    class="hide"
+  />
+  
+  <!-- 悬浮TOC面板 - 移到 Wrapper 内部以便相对定位 -->
   <div
-    class="p-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 backdrop-blur-sm z-10"
+    id="floating-toc-panel"
+    class="floating-toc-panel hide w-80 max-h-[24rem] overflow-hidden rounded-2xl shadow-2xl backdrop-blur-lg border border-white/20 bg-white/60 dark:bg-black/60 dark:border-white/10 md:w-80 w-[calc(100vw-2rem)] md:max-h-[24rem] max-h-[calc(100vh-8rem)]"
     style="background-color: rgba(var(--card-bg-rgb, 255, 255, 255), 0.6);"
-  >
-    <div class="flex items-center justify-between">
-      <h3
-        class="text-lg font-bold text-[var(--primary)] flex items-center gap-2"
-      >
-        {i18n(I18nKey.tableOfContents)}
-      </h3>
-      <button
-        onclick="window.toggleFloatingTOC()"
-        aria-label="Close TOC"
-        class="btn-plain rounded-lg h-8 w-8 active:scale-90"
-      >
-        <Icon name="material-symbols:close" class="text-lg" />
-      </button>
-    </div>
-  </div>
-
-  <div class="toc-scroll-container p-4">
-    <div
-      class="toc-content"
-      id="floating-toc-content"
-      style="width: 100%; max-width: 100%;"
     >
-      <!-- TOC内容将由JavaScript动态生成 -->
+    <div
+        class="p-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 backdrop-blur-sm z-10"
+        style="background-color: rgba(var(--card-bg-rgb, 255, 255, 255), 0.6);"
+    >
+        <div class="flex items-center justify-between">
+        <h3
+            class="text-lg font-bold text-[var(--primary)] flex items-center gap-2"
+        >
+            {i18n(I18nKey.tableOfContents)}
+        </h3>
+        <button
+            onclick="window.toggleFloatingTOC()"
+            aria-label="Close TOC"
+            class="btn-plain rounded-lg h-8 w-8 active:scale-90"
+        >
+            <Icon name="material-symbols:close" class="text-lg" />
+        </button>
+        </div>
+    </div>
+
+    <div class="toc-scroll-container p-4">
+        <div
+        class="toc-content"
+        id="floating-toc-content"
+        style="width: 100%; max-width: 100%;"
+        >
+        <!-- TOC内容将由JavaScript动态生成 -->
+        </div>
     </div>
   </div>
 </div>
 
 <style lang="stylus">
 .floating-toc-wrapper
-	width: 3.75rem
-	height: 3.75rem
-	position: absolute
-	right: 0
-	top: 0
-	pointer-events: none
-
-.floating-toc-btn
-	color: var(--primary)
-	font-size: 2.25rem
-	font-weight: bold
-	border: none
-	position: fixed
-	bottom: 13rem
-	right: 2rem
-	opacity: 1
-	cursor: pointer
-	pointer-events: auto
-	z-index: 1000
-	transition: all 0.3s ease
-	border-radius: 1rem
-	backdrop-filter: blur(12px)
-	background-color: var(--card-bg)
-	border: 1px solid rgba(0, 0, 0, 0.1)
-	
-	&.hide
-		transform: scale(0.9)
-		opacity: 0
-		pointer-events: none
-		
-	&:active
-		transform: scale(0.9)
-		
-	&:hover
-		transform: scale(1.05)
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15)
-		background-color: rgba(255, 255, 255, 0.95)
-		border-color: rgba(0, 0, 0, 0.2)
-
-/* 暗色主题样式 */
-:global(.dark) .floating-toc-btn
-	background-color: var(--card-bg)
-	border: 1px solid rgba(255, 255, 255, 0.15)
-	color: var(--primary, #60a5fa)
-	
-	&:hover
-		background-color: var(--card-bg)
-		border-color: rgba(255, 255, 255, 0.3)
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3)
+	position: relative
+	z-index: 999
+	overflow: visible
 
 .floating-toc-panel
+	position: absolute
+	bottom: calc(100% + 1rem)
+	right: 0
 	transition: all 0.3s ease
 	transform: translateY(20px)
 	opacity: 0
@@ -136,6 +89,7 @@ const showRightSidebarOnPostPage =
 	box-sizing: border-box
 	backdrop-filter: blur(20px)
 	-webkit-backdrop-filter: blur(20px)
+	z-index: 1001
 	
 	&.show
 		transform: translateY(0)
@@ -147,14 +101,7 @@ const showRightSidebarOnPostPage =
 		opacity: 0
 		pointer-events: none
 		visibility: hidden
-		width: 0
-		height: 0
-		max-width: 0
-		max-height: 0
-		margin: 0
-		padding: 0
-
-/* FloatingTOC 特定样式 */
+		
 .toc-scroll-container
 	max-height: calc(24rem - 5rem)
 	
@@ -166,82 +113,19 @@ const showRightSidebarOnPostPage =
 	#floating-active-indicator
 		display: none
 
-/* 响应式调整 */
+/* 响应式调整 - 仅保留 Panel 尺寸调整 */
 @media (max-width: 1024px)
-	.floating-toc-btn
-		right: 1rem
-		bottom: 10rem
-		
 	.floating-toc-panel
-		right: 1rem !important
-		bottom: calc(10rem + 4rem) !important
 		width: calc(100vw - 2rem)
 		max-width: 20rem
 		max-height: 20rem
 
 @media (max-width: 768px)
-	.floating-toc-btn
-		right: 0.75rem
-		bottom: 8rem
-		width: 3rem
-		height: 3rem
-		font-size: 1.5rem
-		border-radius: 0.75rem
-		
 	.floating-toc-panel
-		right: 0.75rem !important
-		bottom: calc(8rem + 4rem) !important
 		width: calc(100vw - 1.5rem)
 		max-width: 20rem
 		max-height: 28rem
-
-
-/* 高缩放比例适配 */
-@media (min-resolution: 2dppx)
-	.floating-toc-btn
-		right: max(0.5rem, 2rem - 2vw)
-		bottom: max(12rem, 16rem - 5vh)
-		
-	.floating-toc-panel
-		right: max(0.5rem, 2rem - 2vw) !important
-		bottom: calc(max(12rem, 16rem - 5vh) + 6rem) !important
-
-
-/* 横屏模式适配 */
-@media (orientation: landscape) and (max-height: 500px)
-	.floating-toc-btn
-		bottom: 6rem
-		right: 0.5rem
-		
-	.floating-toc-panel
-		bottom: calc(6rem + 4rem) !important
-		right: 0.5rem !important
-		max-height: 12rem
-
-/* 确保按钮始终在可视区域内 */
-.floating-toc-btn
-	min-width: 2rem
-	min-height: 2rem
-	padding: 0.25rem
-	max-width: 4rem
-	max-height: 4rem
-	border-radius: 1rem !important
-
-/* 高DPI屏幕优化 */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)
-	.floating-toc-btn
-		image-rendering: -webkit-optimize-contrast
-		image-rendering: crisp-edges
-
-
-/* 确保按钮在容器内正确显示 */
-.floating-toc-wrapper
-	overflow: visible
-	z-index: 999
-
-/* 按钮激活状态 */
-.floating-toc-btn:active
-	transform: scale(0.95)
+		bottom: calc(100% + 1rem)
 
 /* 暗色主题半透明效果 */
 :global(.dark) .floating-toc-panel
@@ -252,8 +136,6 @@ const showRightSidebarOnPostPage =
 :global(.dark) .floating-toc-panel .p-4
 	background-color: rgba(0, 0, 0, 0.8) !important
 </style>
-
-<TOCStyles />
 
 <script>
   import { TOCManager, isPostPage } from "@/utils/tocUtils";

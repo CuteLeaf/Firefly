@@ -1,10 +1,10 @@
 ---
 import { Icon } from "astro-icon/components";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
 import { siteConfig } from "@/config/siteConfig";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { url } from "@/utils/url-utils";
-import WidgetLayout from "./WidgetLayout.astro";
 
 interface Props {
 	class?: string;
@@ -50,7 +50,7 @@ const calendarDataUrl = url("/api/calendar.json");
 const postUrlPrefix = url("/posts/");
 ---
 
-<WidgetLayout id="calendar-widget" class={"!pt-4 [&>.widget-title]:hidden " + className} style={style}>
+<WidgetLayout id="calendar-widget" class={className} style={style}>
   <div class="calendar-container">
     <div class="flex justify-between items-center mb-4">
         <button id="prev-month-btn" class="btn-plain rounded-lg w-8 h-8 flex items-center justify-center hover:bg-[var(--btn-plain-bg-hover)] transition-colors" aria-label="Previous Month">

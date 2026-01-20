@@ -85,15 +85,16 @@ const textData = Array.isArray(text) ? JSON.stringify(text) : text;
 
     private type() {
       const currentText = this.getCurrentText();
+      const segments = this.segmentText(currentText);
 
       if (this.isDeleting) {
         // 删除字符
         if (this.currentIndex > 0) {
           this.currentIndex--;
-          this.element.textContent = currentText.substring(
-            0,
-            this.currentIndex
-          );
+          this.element.textContent = segments
+            .slice(0, this.currentIndex)
+            .join("");
+
           this.timeoutId = window.setTimeout(
             () => this.type(),
             this.deleteSpeed
@@ -106,13 +107,12 @@ const textData = Array.isArray(text) ? JSON.stringify(text) : text;
           this.timeoutId = window.setTimeout(() => this.type(), this.speed);
         }
       } else {
-        // 添加字符
-        if (this.currentIndex < currentText.length) {
+        if (this.currentIndex < segments.length) {
           this.currentIndex++;
-          this.element.textContent = currentText.substring(
-            0,
-            this.currentIndex
-          );
+          this.element.textContent = segments
+            .slice(0, this.currentIndex)
+            .join("");
+
           this.timeoutId = window.setTimeout(() => this.type(), this.speed);
         } else {
           // 打字完成，暂停后开始删除（如果有多条文本）
@@ -133,6 +133,12 @@ const textData = Array.isArray(text) ? JSON.stringify(text) : text;
         clearTimeout(this.timeoutId);
       }
     }
+
+    private segmentText(text: string): string[] {
+      const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+      return Array.from(segmenter.segment(text), s => s.segment);
+    }
+
   }
 
   // 初始化所有打字机效果

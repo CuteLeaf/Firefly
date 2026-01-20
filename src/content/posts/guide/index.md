@@ -77,6 +77,7 @@ published: 2023-09-09
 ---
 ```
 文件：`src/content/posts/my-first-blog-post.md`
+
 URL：`/posts/my-first-blog-post`
 
 #### 示例 2：自定义 Slug
@@ -88,9 +89,10 @@ slug: hello-world
 ---
 ```
 文件：`src/content/posts/my-first-blog-post.md`
+
 URL：`/posts/hello-world`
 
-#### 示例 3：中文标题使用英文 Slug
+#### 示例 3：其他语言文件名使用Slug
 ```yaml
 ---
 title: 如何使用 Firefly 博客主题
@@ -98,7 +100,8 @@ published: 2023-09-09
 slug: how-to-use-firefly-blog-theme
 ---
 ```
-文件：`src/content/posts/firefly-guide.md`
+文件：`src/content/posts/如何使用Firefly博客主题.md`
+
 URL：`/posts/how-to-use-firefly-blog-theme`
 
 ### Slug 使用建议

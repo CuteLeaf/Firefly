@@ -1,17 +1,16 @@
 ---
-import BackToTop from "@components/common/controls/BackToTop.astro";
-import OverlayWallpaper from "@components/interactive/OverlayWallpaper.astro";
+import Live2DWidget from "@components/features/Live2DWidget.astro";
+import OverlayWallpaper from "@components/features/OverlayWallpaper.astro";
+import SpineModel from "@components/features/SpineModel.astro";
 import Footer from "@components/layout/Footer.astro";
 import Navbar from "@components/layout/Navbar.astro";
 import SideBar from "@components/layout/SideBar.astro";
-import Live2DWidget from "@components/widget/Live2DWidget.astro";
-import SpineModel from "@components/widget/SpineModel.astro";
 import type { MarkdownHeading } from "astro";
 import { Icon } from "astro-icon/components";
-import FloatingTOC from "@/components/common/controls/FloatingTOC.astro";
-import TypewriterText from "@/components/content/TypewriterText.astro";
+import ImageWrapper from "@/components/common/ImageWrapper.astro";
+import FloatingControls from "@/components/controls/FloatingControls.astro";
+import TypewriterText from "@/components/features/TypewriterText.astro";
 import IconifyLoader from "@/components/misc/IconifyLoader.astro";
-import ImageWrapper from "@/components/misc/ImageWrapper.astro";
 import {
 	backgroundWallpaper,
 	live2dModelConfig,
@@ -434,14 +433,12 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
             </div>
         </div>
 
-        <BackToTop></BackToTop>
         <SpineModel></SpineModel>
         {live2dModelConfig.enable && <Live2DWidget config={live2dModelConfig} />}
     </div>
 </div>
 
-<!-- 悬浮TOC组件 -->
-<FloatingTOC headings={headings}></FloatingTOC>
+<FloatingControls headings={headings} />
 
 
 </Layout>

@@ -149,26 +149,36 @@
   }
 }
 
-/* ===== 平板适配 ===== */
-@media (min-width: 641px) and (max-width: 1280px) {
+/* ===== 平板适配 (改为与 FloatingControls 对齐) ===== */
+@media (max-width: 1024px) and (min-width: 769px) {
   .aplayer.aplayer-fixed {
-    right: 0.5rem !important;
+    right: 1rem !important;
     bottom: 2rem !important;
   }
   .aplayer.aplayer-fixed .aplayer-body {
-    right: 0.5rem !important;
+    right: 1rem !important;
     bottom: 2rem !important;
   }
 }
 
+/* 高缩放比例适配 (Retina/High DPI) - 保持与 FloatingControls 一致 */
+@media (min-resolution: 2dppx) and (min-width: 769px) {
+  .aplayer.aplayer-fixed {
+    right: max(0.5rem, 2rem - 2vw) !important;
+  }
+  .aplayer.aplayer-fixed .aplayer-body {
+    right: max(0.5rem, 2rem - 2vw) !important;
+  }
+}
+
+
+
 /* 横屏模式适配 */
 @media (orientation: landscape) and (max-height: 640px) {
   .aplayer.aplayer-fixed {
-    right: 0.5rem !important;
     bottom: 2rem !important;
   }
   .aplayer.aplayer-fixed .aplayer-body {
-    right: 0.5rem !important;
     bottom: 2rem !important;
   }
 }

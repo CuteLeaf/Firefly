@@ -182,8 +182,8 @@ export const en: Translation = {
 	// Wallpaper Mode
 	[Key.wallpaperMode]: "Wallpaper Mode",
 	[Key.wallpaperBannerMode]: "Banner Wallpaper",
-	[Key.wallpaperOverlayMode]: "Transparent",
-	[Key.wallpaperNoneMode]: "Solid Color Background",
+	[Key.wallpaperOverlayMode]: "Overlay Wallpaper",
+	[Key.wallpaperNoneMode]: "None Wallpaper",
 
 	// Sponsor Page
 	[Key.sponsor]: "Sponsor",
