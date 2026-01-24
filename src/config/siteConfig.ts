@@ -6,16 +6,14 @@ import { fontConfig } from "./fontConfig";
 const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
-	title: "沈幼楚的博客",
+	title: "Shen YouChu blog - 技术分享与实践",
 	subtitle: "shenyouchu",
-	site_url: "https://blog.shenyouchu.cn",
+	site_url: "https://blog.shenyouchu.cn/",
 	description:
-		"沈幼楚的博客",
+		"沈幼楚的技术分享与实践",
 	keywords: [
-		"Firefly",
-		"Fuwari",
-		"Astro",
-		"ACGN",
+		"Shen YouChu",
+		"blog",
 		"博客",
 		"技术博客",
 		"静态博客",
