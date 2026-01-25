@@ -25,6 +25,11 @@ export function formatDateI18n(
 		options.second = "2-digit";
 	}
 
+	// 如果配置了时区，则将其用于格式化（IANA 时区字符串）
+	if (siteConfig.timezone) {
+		(options as Intl.DateTimeFormatOptions).timeZone = siteConfig.timezone;
+	}
+
 	// 语言代码映射
 	const localeMap: Record<string, string> = {
 		zh_CN: "zh-CN",

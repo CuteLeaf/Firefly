@@ -298,23 +298,6 @@
     #banner img {
         transition: transform 0.5s ease-out !important;
     }
-    
-    /* 移动端banner加载动画优化 */
-    .onload-animation-fade-in {
-        animation: mobile-fade-in 0.8s ease-out forwards !important;
-    }
-}
-
-/* 移动端专用淡入动画 - 与电脑端保持一致 */
-@keyframes mobile-fade-in {
-    0% {
-        opacity: 0;
-        transform: scale(1.1);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1); /* 与电脑端当前图片缩放保持一致 */
-    }
 }
 
 /* 平板和手机端非首页隐藏banner - 改进的分阶段动画 (1024px以下) */
@@ -407,7 +390,6 @@
         -khtml-user-drag: none;
         -moz-user-drag: none;
         -o-user-drag: none;
-        user-drag: none;
         
         /* 触摸优化 - 只针对装饰性图片 */
         pointer-events: none;
@@ -627,9 +609,8 @@
     }
     
     .waves {
-        height: 5vh !important;
-        min-height: 40px !important;
-        max-height: 50px !important;
+        height: 10vh !important;
+        min-height: 60px !important;
     }
 }
 
@@ -659,9 +640,8 @@
     }
     
     .waves {
-        height: 6vh !important;
-        min-height: 50px !important;
-        max-height: 60px !important;
+        height: 17vh !important;
+        min-height: 250px !important;
     }
 }
 
@@ -691,9 +671,8 @@
     }
     
     .waves {
-        height: 8vh !important;
-        min-height: 60px !important;
-        max-height: 80px !important;
+        height: 15vh !important;
+        min-height: 200px !important;
     }
 }
 
@@ -723,8 +702,7 @@
     }
     
     .waves {
-        height: 4vh !important;
-        min-height: 30px !important;
-        max-height: 40px !important;
+        height: 10vh !important;
+        min-height: 50px !important;
     }
 }

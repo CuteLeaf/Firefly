@@ -6,18 +6,21 @@
 # Firefly
 > 美しくモダンな Astro ブログテーマテンプレート
 > 
-> ![Node.js >= 20](https://img.shields.io/badge/node.js-%3E%3D20-brightgreen) 
+> ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen) 
 ![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
-![Astro](https://img.shields.io/badge/Astro-5.16.6-orange)
+![Astro](https://img.shields.io/badge/Astro-5.16.8-orange)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)
 >
 > [![Stars](https://img.shields.io/github/stars/CuteLeaf/Firefly?style=social)](https://github.com/CuteLeaf/Firefly/stargazers)
 [![Forks](https://img.shields.io/github/forks/CuteLeaf/Firefly?style=social)](https://github.com/CuteLeaf/Firefly/network/members)
 [![Issues](https://img.shields.io/github/issues/CuteLeaf/Firefly)](https://github.com/CuteLeaf/Firefly/issues)
 > 
+> [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Z8Z41NQALY)
+> 
 > ![GitHub License](https://img.shields.io/github/license/CuteLeaf/Firefly)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/CuteLeaf/Firefly)
 [![Afdian Sponsor](https://img.shields.io/badge/Afdian-作者を支援-ff69b4.svg)](https://afdian.com/a/cuteleaf)
+
 </div>
 
 
@@ -41,11 +44,11 @@
 <img alt="firefly" src="./images/1.webp" />
 
 >[!TIP]
->重要なレイアウトでは、Fireflyは革新的に左右のデュアルサイドバー、記事グリッド（2列）レイアウト、メーソンリーレイアウトを追加し、
+>重要なレイアウトでは、Fireflyは革新的に左右のデュアルサイドバー、記事グリッド（多列）レイアウト、メーソンリーレイアウトを追加し、
 >
 >サイト統計、カレンダーコンポーネント、記事目次などの小さなウィジェットを追加してサイドバーをより豊かにし、
 >
->同時にFurwaiのレイアウトシステムも保持しており、設定ファイルで自由に切り替えられます。
+>同時にfuwariのレイアウトシステムも保持しており、設定ファイルで自由に切り替えられます。
 >
 >**レイアウト設定とデモの詳細については、[Fireflyレイアウトシステム詳細](https://firefly.cuteleaf.cn/posts/firefly-layout-system/)をご覧ください**
 
@@ -57,27 +60,28 @@
 - [x] **スムーズなアニメーション** - Swupページトランジションアニメーションで滑らかなブラウジング体験
 - [x] **レスポンシブデザイン** - デスクトップ、タブレット、モバイルデバイスに完璧に対応
 - [x] **多言語サポート** - i18n国際化、簡体字中国語、繁体字中国語、英語、日本語、ロシア語をサポート
-- [x] **全文検索** - Pagefindベースのクライアントサイド検索、記事コンテンツのインデックスをサポート。MeiliSearch検索エンジンもサポート
+- [x] **全文検索** - Pagefindベースのクライアントサイド検索、記事コンテンツのインデックスをサポート
 
 ### パーソナライゼーション
-- [x] **サイドバー** - シングルサイドバー、デュアルサイドバー設定をサポート、フロントエンドで自由に切り替え可能
-- [x] **記事レイアウト** - リスト（単列）、グリッド（2列/メーソンリー）レイアウトをサポート、フロントエンドで自由に切り替え可能
+- [x] **サイドバー** - シングルサイドバー、デュアルサイドバー設定をサポート
+- [x] **記事レイアウト** - リスト（単列）、グリッド（多列/メーソンリー）レイアウトをサポート
 - [x] **フォント管理** - カスタムフォントをサポート、豊富なフォントセレクター
 - [x] **フッター設定** - HTMLコンテンツ注入、完全カスタマイズ可能
+- [x] **ライト/ダークモード** - ライト/ダーク/システム追従の3モードをサポート
 - [x] **ナビゲーションバーのカスタマイズ** - ロゴ、タイトル、リンクを完全カスタマイズ
-- [x] **壁紙モード切り替え** - バナー壁紙、フルスクリーン壁紙、単色背景、フロントエンドで自由に切り替え可能
-- [x] **テーマカラーのカスタマイズ** - 360°色相調整、ライト/ダーク/システム追従の3モードをサポート、フロントエンドで自由に切り替え可能
+- [x] **壁紙モード切り替え** - バナー壁紙、フルスクリーン壁紙、単色背景
+- [x] **テーマカラーのカスタマイズ** - 360°色相調整
 
 ### ページコンポーネント
-- [x] **ゲストブック** - ゲストブックページをサポート、コメントシステム統合
-- [x] **お知らせバー** - トップお知らせ通知、閉じる機能とカスタムスタイルをサポート
+- [x] **ゲストブック** - ゲストブックページをサポート
+- [x] **お知らせバー** - サイドバーのお知らせ通知をサポート
 - [x] **マスコット** - SpineとLive2Dの2つのアニメーションエンジンをサポート
-- [x] **サイト統計** - 記事、カテゴリ、タグ数、総文字数、稼働時間、最終更新時刻を表示
+- [x] **サイト統計** - 記事、カテゴリ、タグ数、総文字数などのデータを表示
 - [x] **サイトカレンダー** - 今月のカレンダーと今月公開された記事を表示
-- [x] **スポンサーページ** - 複数の支払い方法、支払いQRコード、スポンサーリスト、記事内スポンサーボタン
-- [x] **シェアポスター** - 記事の要約やQRコードなどを含む美しい記事シェアポスターの生成をサポート
+- [x] **スポンサーページ** - スポンサーリンクのジャンプ、支払いQRコードの表示、スポンサーリスト、記事内スポンサーボタン
+- [x] **シェアポスター** - 美しい記事シェアポスターの生成をサポート
 - [x] **桜エフェクト** - 桜エフェクトをサポート、フルスクリーン桜アニメーション
-- [x] **友人リンク** - 美しい友人リンク表示カード
+- [x] **友人リンク** - 美しい友人リンク展示ページ
 - [x] **広告コンポーネント** - カスタムサイドバー広告コンテンツをサポート
 - [x] **Bangumi** - Bangumi APIベースのアニメとゲーム記録表示
 - [x] **コメントシステム** - Twikoo、Waline、Giscus、Disqus、Artalkコメントシステムを統合
@@ -91,14 +95,13 @@
 - [x] **サイドバー目次** - 記事の目次を動的に表示、アンカージャンプをサポート
 - [x] **強化されたコードブロック** - Expressive Codeベース、コード折りたたみ、行番号、言語識別をサポート
 - [x] **数式サポート** - KaTeXレンダリングエンジン、インラインとブロック数式をサポート
-- [x] **Markdown拡張** - [Markdown拡張機能](https://github.com/saicaca/fuwari?tab=readme-ov-file#-markdown-extended-syntax)
 - [x] **ランダムカバー画像** - APIを介してランダムカバー画像の取得をサポート
+- [x] **Markdown拡張** - より多くのMarkdown拡張構文サポート
 
 ### SEO
 - [x] **SEO最適化** - 完全なメタタグと構造化データ
 - [x] **RSS購読** - RSSフィードを自動生成
 - [x] **サイトマップ** - XMLサイトマップを自動生成、ページフィルタリング設定をサポート
-
 
 ## 📝 予定...
 
@@ -122,7 +125,9 @@
    git clone https://github.com/Cuteleaf/Firefly.git
    cd Firefly
    ```
-   **まず自分のリポジトリに[Fork](https://github.com/CuteLeaf/Firefly/fork)してからクローン（推奨）**
+   
+   **まず自分のリポジトリに[Fork](https://github.com/CuteLeaf/Firefly/fork)してからクローン（推奨）。クローンする前にStarをクリックするのを忘れずに！**
+
    ```bash
    git clone https://github.com/you-github-name/Firefly.git
    cd Firefly
@@ -178,7 +183,6 @@ const SITE_LANG = "zh_CN";
 - `ja` - 日本語
 - `ru` - ロシア語
 
-
 ### 設定ファイル構造
 
 ```
@@ -186,6 +190,7 @@ src/
 ├── config/
 │   ├── index.ts              # 設定インデックスファイル
 │   ├── siteConfig.ts         # サイト基本設定
+│   ├── backgroundWallpaper.ts # 背景壁紙設定
 │   ├── profileConfig.ts      # ユーザープロフィール設定
 │   ├── commentConfig.ts      # コメントシステム設定
 │   ├── announcementConfig.ts # お知らせ設定
@@ -205,7 +210,6 @@ src/
 │   └── coverImageConfig.ts   # 記事カバー画像設定
 ```
 
-
 ## ⚙️ 記事のFrontmatter
 
 ```yaml
@@ -218,26 +222,38 @@ tags: [Foo, Bar]
 category: Front-end
 draft: false
 lang: zh-CN      # 記事の言語が`siteConfig.ts`のサイト言語と異なる場合のみ設定
+pinned: false    # 記事を固定
+comment: true    # コメントを有効化
 ---
 ```
 
-## 🧞 コマンド
+## � Markdown拡張
+
+Astroがデフォルトで対応している[GitHub Flavored Markdown](https://github.github.com/gfm/)に加えて、いくつかの追加のMarkdown機能があります：
+
+- Admonitions（予告ブロック） - GitHub、Obsidian、VitePressの3つのテーマ設定をサポート ([プレビューと使用方法](https://firefly.cuteleaf.cn/posts/))
+- GitHubリポジトリカード ([プレビューと使用方法](https://firefly.cuteleaf.cn/posts/markdown-extended/))
+- Expressive Codeベースの強化コードブロック ([プレビュー](http://firefly.cuteleaf.cn/posts/code-examples/) / [ドキュメント](https://expressive-code.com/))
+
+## �🧞 コマンド
 
 すべてのコマンドはプロジェクトルートディレクトリで実行する必要があります：
 
-| Command                           | Action                            |
-|:----------------------------------|:----------------------------------|
-| `pnpm install`と`pnpm add sharp` | 依存関係をインストール                              |
-| `pnpm dev`                        | `localhost:4321`でローカル開発サーバーを起動      |
-| `pnpm build`                      | `./dist/`にサイトをビルド                   |
-| `pnpm preview`                    | ビルドされたサイトをローカルでプレビュー                        |
-| `pnpm new-post <filename>`        | 新しい記事を作成                             |
-| `pnpm astro ...`                  | `astro add`、`astro check`などのコマンドを実行 |
-| `pnpm astro --help`               | Astro CLIヘルプを表示                   |
+| Command                    | Action                                              |
+|:---------------------------|:----------------------------------------------------|
+| `pnpm install`             | 依存関係をインストール                               |
+| `pnpm dev`                 | `localhost:4321`でローカル開発サーバーを起動        |
+| `pnpm build`               | `./dist/`にサイトをビルド                           |
+| `pnpm preview`             | ビルドされたサイトをローカルでプレビュー            |
+| `pnpm check`               | コード内のエラーをチェック                          |
+| `pnpm format`              | Biomeを使用してコードをフォーマット                 |
+| `pnpm new-post <filename>` | 新しい記事を作成                                    |
+| `pnpm astro ...`           | `astro add`、`astro check`などのコマンドを実行      |
+| `pnpm astro --help`        | Astro CLIヘルプを表示                               |
 
 ## 🙏 謝辞
 
-- [Fuwari](https://github.com/saicaca/fuwari)テンプレートを開発した[saicaca](https://github.com/saicaca)に深く感謝します。Fireflyはこのテンプレートをベースに開発されています
+- [fuwari](https://github.com/saicaca/fuwari)テンプレートを開発した[saicaca](https://github.com/saicaca)に深く感謝します。Fireflyはこのテンプレートをベースに開発されています
 - ブロガー[霞葉](https://kasuha.com)の[Bangumiコレクション表示](https://kasuha.com/posts/fuwari-enhance-ep2/)と[メール保護・画像タイトル](https://kasuha.com/posts/fuwari-enhance-ep1/)案を参考にしました
 - [Mizuki](https://github.com/matsuzaka-yuki/Mizuki)のバナータイトル/多階層メニューナビゲーションバー/桜エフェクト/KaTeX/Fancyboxソリューションを参考にしました
 - [Astro](https://astro.build)と[Tailwind CSS](https://tailwindcss.com)を使用して構築
@@ -248,17 +264,29 @@ lang: zh-CN      # 記事の言語が`siteConfig.ts`のサイト言語と異な�
 
 ## 📝 ライセンス
 
-本プロジェクトは [MIT license](https://mit-license.org/) の下で公開されています。詳細は [LICENSE](../LICENSE) ファイルをご覧ください。[saicaca/fuwari](https://github.com/saicaca/fuwari) からフォークされました。原作者の貢献に感謝します。元のプロジェクトも [MIT license](https://mit-license.org/) を採用しています。
+本プロジェクトは [MIT license](https://mit-license.org/) の下で公開されています。詳細は [LICENSE](../LICENSE) ファイルをご覧ください。
+
+最初は [saicaca/fuwari](https://github.com/saicaca/fuwari) からフォークされました。元の作者の貢献に感謝します。元のプロジェクトは [MIT License](https://mit-license.org/) の下で公開されています。
+
+**著作権表示：**
+- Copyright (c) 2024 [saicaca](https://github.com/saicaca) - [fuwari](https://github.com/saicaca/fuwari)
+- Copyright (c) 2025 [CuteLeaf](https://github.com/CuteLeaf) - [Firefly](https://github.com/CuteLeaf/Firefly)
+
+MITライセンスに基づき、コードの自由な使用、変更、配布が許可されていますが、上記の著作権表示を保持する必要があります。
 
 ## 🍀 貢献者
 
 このプロジェクトに貢献してくれた以下の貢献者に感謝します。質問や提案がある場合は、[Issue](https://github.com/CuteLeaf/Firefly/issues)または[Pull Request](https://github.com/CuteLeaf/Firefly/pulls)を提出してください。
 
-<a href="https://github.com/CuteLeaf/Firefly/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=CuteLeaf/Firefly" />
-</a>
+><a href="https://github.com/CuteLeaf/Firefly/graphs/contributors">
+>  <img src="https://contrib.rocks/image?repo=CuteLeaf/Firefly" />
+></a>
 
-![Alt](https://repobeats.axiom.co/api/embed/6139639d8e88da4d3dc9d45fd43f4e4b2d580086.svg "Repobeats analytics image")
+このプロジェクトの基盤を築いた元のプロジェクト[fuwari](https://github.com/saicaca/fuwari)に貢献してくれた以下の貢献者に感謝します。
+
+><a href="https://github.com/saicaca/fuwari/graphs/contributors">
+>  <img src="https://contrib.rocks/image?repo=saicaca/fuwari" />
+></a>
 
 ## ⭐ Star History
 

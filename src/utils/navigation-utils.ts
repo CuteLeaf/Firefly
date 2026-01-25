@@ -1,3 +1,4 @@
+import { url } from "@/utils/url-utils";
 /**
  * 导航工具函数
  * 提供统一的页面导航功能，支持 Swup 无刷新跳转
@@ -148,7 +149,7 @@ export function getCurrentPath(): string {
  */
 export function isHomePage(): boolean {
 	const path = getCurrentPath();
-	return path === "/" || path === "";
+	return path === url("/") || path === url("");
 }
 
 /**
@@ -156,7 +157,7 @@ export function isHomePage(): boolean {
  */
 export function isPostPage(): boolean {
 	const path = getCurrentPath();
-	return path.startsWith("/posts/");
+	return path.startsWith(url("/posts/"));
 }
 
 /**

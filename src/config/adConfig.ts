@@ -10,15 +10,32 @@ export const adConfig1: AdConfig = {
 		link: "#",
 		external: true,
 	},
-	closable: true, // 是否可关闭
+
+	// 是否允许关闭广告
+	closable: true,
+
+	// 显示次数限制，-1为无限制
 	displayCount: -1,
+
+	// 组件内边距配置，可通过取消注释生效
 	padding: {
-		all: "0", // 零边距，图片占满整个组件
-		// all: "1rem", // 默认边距
-		// top: "0", // 仅顶部无边距
-		// right: "1rem", // 仅右侧无边距
-		// bottom: "1rem", // 仅底部无边距
-		// left: "1rem", // 仅左侧无边距
+		// 零边距，图片占满整个组件
+		all: "0",
+
+		// 四边1rem边距
+		// all: "1rem",
+
+		// 顶部无边距
+		// top: "0",
+
+		// 右侧无边距
+		// right: "1rem",
+
+		// 底部无边距
+		// bottom: "1rem",
+
+		// 左侧无边距
+		// left: "1rem",
 	},
 };
 
@@ -28,7 +45,7 @@ export const adConfig2: AdConfig = {
 	content:
 		"如果您觉得本站内容对您有帮助，欢迎支持我们的创作！您的支持是我们持续更新的动力。",
 	image: {
-		src: "/assets/images/d2.webp",
+		src: "/assets/images/cover.webp",
 		alt: "支持博主",
 		link: "about/",
 		external: false,

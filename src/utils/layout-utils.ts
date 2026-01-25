@@ -1,8 +1,8 @@
-import { siteConfig } from "../config";
+import { backgroundWallpaper } from "../config";
 
 // 背景图片处理工具函数
 export const getBackgroundImages = () => {
-	const bgSrc = siteConfig.backgroundWallpaper.src;
+	const bgSrc = backgroundWallpaper.src;
 
 	if (
 		typeof bgSrc === "object" &&
@@ -43,7 +43,7 @@ export const isBannerSrcObject = (
 
 // 获取默认背景图片
 export const getDefaultBackground = (): string => {
-	const src = siteConfig.backgroundWallpaper.src;
+	const src = backgroundWallpaper.src;
 	if (typeof src === "string") {
 		return src;
 	}

@@ -1,12 +1,19 @@
 ---
-import FancyboxManager from "@components/effects/FancyboxManager.astro";
-import KatexManager from "@components/effects/KatexManager.astro";
-import SakuraEffect from "@components/effects/SakuraEffect.astro";
-import FontManager from "@components/interactive/FontManager.astro";
+import GoogleAnalytics from "@components/analytics/GoogleAnalytics.astro";
+import MicrosoftClarity from "@components/analytics/MicrosoftClarity.astro";
+import FancyboxManager from "@components/features/FancyboxManager.astro";
+import FontManager from "@components/features/FontManager.astro";
+import KatexManager from "@components/features/KatexManager.astro";
+import MusicPlayer from "@components/features/MusicPlayer.astro";
+import SakuraEffect from "@components/features/SakuraEffect.astro";
 import ConfigCarrier from "@components/layout/ConfigCarrier.astro";
-import MusicPlayer from "@components/widget/MusicPlayer.astro";
 
-import { expressiveCodeConfig, profileConfig, siteConfig } from "@/config";
+import {
+	backgroundWallpaper,
+	expressiveCodeConfig,
+	profileConfig,
+	siteConfig,
+} from "@/config";
 import {
 	BANNER_HEIGHT,
 	BANNER_HEIGHT_EXTEND,
@@ -18,9 +25,8 @@ import type { Favicon } from "@/types/config";
 import { getDefaultBackground, isHomePage } from "@/utils/layout-utils";
 import { url } from "@/utils/url-utils";
 
-import "@/styles/navbar.css";
-import "@/styles/layout-styles.css";
-import "@/styles/waves.css";
+import "@/styles/main.css";
+import "@rehype-callouts-theme";
 
 interface Props {
 	title?: string;
@@ -45,7 +51,7 @@ const configHue = siteConfig.themeColor.hue;
 
 // 获取导航栏透明模式配置
 const navbarTransparentMode =
-	siteConfig.backgroundWallpaper?.banner?.navbar?.transparentMode || "semi";
+	backgroundWallpaper.banner?.navbar?.transparentMode || "semi";
 // 判断是否应该显示顶部高光效果（只在full和semifull模式下显示）
 const shouldShowTopHighlight =
 	navbarTransparentMode === "full" || navbarTransparentMode === "semifull";
@@ -57,7 +63,7 @@ if (!banner || typeof banner !== "string" || banner.trim() === "") {
 // TODO don't use post cover as banner for now
 banner = getDefaultBackground();
 
-const enableBanner = siteConfig.backgroundWallpaper.mode === "banner";
+const enableBanner = backgroundWallpaper.mode === "banner";
 
 let pageTitle: string;
 if (title) {
@@ -89,36 +95,12 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
 <!doctype html>
 <html lang={siteLang} class="bg-[var(--page-bg)] text-[14px] md:text-[16px]">
   <head>
-    <!-- Google Tag Manager -->
-    <script is:inline data-swup-ignore-script>
-      (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != "dataLayer" ? "&l=" + l : "";
-        j.async = true;
-        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, "script", "dataLayer", "GTM-P53R3M9S");
-    </script>
-    <!-- End Google Tag Manager -->
-    <!-- Microsoft Clarity -->
-    <script is:inline data-swup-ignore-script type="text/javascript">
-      (function (c, l, a, r, i, t, y) {
-        c[a] =
-          c[a] ||
-          function () {
-            (c[a].q = c[a].q || []).push(arguments);
-          };
-        t = l.createElement(r);
-        t.async = 1;
-        t.src = "https://www.clarity.ms/tag/" + i;
-        y = l.getElementsByTagName(r)[0];
-        y.parentNode.insertBefore(t, y);
-      })(window, document, "clarity", "script", "tx9equrgr6");
-    </script>
-    <!-- End Microsoft Clarity -->
+      {siteConfig.analytics?.googleAnalyticsId && (
+              <GoogleAnalytics analyticsId={siteConfig.analytics.googleAnalyticsId} />
+      )}
+      {siteConfig.analytics?.microsoftClarityId && (
+              <MicrosoftClarity clarityId={siteConfig.analytics.microsoftClarityId} />
+      )}
 
     <title>{pageTitle}</title>
 
@@ -179,9 +161,9 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
         PAGE_WIDTH,
         configHue,
         defaultMode: siteConfig.themeColor.defaultMode ?? "light",
-        defaultWallpaperMode: siteConfig.backgroundWallpaper.mode,
+        defaultWallpaperMode: backgroundWallpaper.mode,
         isWallpaperSwitchable:
-          siteConfig.backgroundWallpaper.switchable ?? true,
+          backgroundWallpaper.switchable ?? true,
         darkTheme: expressiveCodeConfig.darkTheme,
         lightTheme: expressiveCodeConfig.lightTheme,
         baseUrl: import.meta.env.BASE_URL,
@@ -434,7 +416,7 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
   <body
     class="min-h-screen"
     class:list={[
-      { "lg:is-home": isHomePageCheck, "enable-banner": enableBanner },
+      { "lg:is-home": isHomePageCheck, "enable-banner": enableBanner, "enable-card-border": siteConfig.card?.border },
       ...(siteConfig.font.enable && siteConfig.font.selected
         ? (Array.isArray(siteConfig.font.selected)
             ? siteConfig.font.selected
@@ -443,13 +425,6 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
         : []),
     ]}
   >
-    <noscript
-      ><iframe
-        src="https://www.googletagmanager.com/ns.html?id=GTM-KRX3XGVH"
-        height="0"
-        width="0"
-        style="display:none;visibility:hidden"></iframe></noscript
-    >
 
     <!-- 页面顶部渐变高光效果 - 只在full和semifull模式下显示 -->
     {shouldShowTopHighlight && <div class="top-gradient-highlight" />}
@@ -525,7 +500,7 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
     BANNER_HEIGHT_EXTEND,
     // MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
   } from "@/constants/constants";
-  import { siteConfig, expressiveCodeConfig } from "@/config";
+  import { backgroundWallpaper, expressiveCodeConfig, siteConfig } from "@/config";
 
   /* Preload fonts */
   // (async function() {
@@ -574,18 +549,19 @@ function disableAnimation() {
   const bannerEnabled = !!document.getElementById("banner-wrapper");
 
   function setClickOutsideToClose(panel: string, ignores: string[]) {
-    document.addEventListener("click", (event) => {
-      let panelDom = document.getElementById(panel);
-      let tDom = event.target;
-      if (!(tDom instanceof Node)) return; // Ensure the event target is an HTML Node
-      for (let ig of ignores) {
-        let ie = document.getElementById(ig);
-        if (ie == tDom || ie?.contains(tDom)) {
-          return;
-        }
-      }
-      panelDom!.classList.add("float-panel-closed");
-    });
+      document.addEventListener("click", (event) => {
+          let panelDom = document.getElementById(panel);
+          if (!panelDom) return;
+          let tDom = event.target;
+          if (!(tDom instanceof Node)) return; // Ensure the event target is an HTML Node
+          for (let ig of ignores) {
+              let ie = document.getElementById(ig);
+              if (ie == tDom || ie?.contains(tDom)) {
+                  return;
+              }
+          }
+          panelDom.classList.add("float-panel-closed");
+      });
   }
   setClickOutsideToClose("display-setting", [
     "display-setting",
@@ -632,7 +608,7 @@ function disableAnimation() {
   }
 
   function showBanner() {
-    const isBannerMode = siteConfig.backgroundWallpaper.mode === "banner";
+    const isBannerMode = backgroundWallpaper.mode === "banner";
     if (!isBannerMode) return;
 
     // 使用requestAnimationFrame优化DOM操作
@@ -687,6 +663,22 @@ function disableAnimation() {
       }
     });
     window.swup.hooks.on("content:replace", () => {
+      // 更新主网格布局类名
+      const gridClassCarrier = document.getElementById("grid-class-carrier");
+      if (gridClassCarrier) {
+        const gridClass = gridClassCarrier.getAttribute("data-grid-class");
+        const mainGrid = document.getElementById("main-grid");
+        if (mainGrid && gridClass) {
+
+          const currentClasses = mainGrid.className.split(" ");
+          const newClasses = currentClasses.filter(c => !c.startsWith("lg:grid-cols-") && !c.startsWith("md:grid-cols-") && !c.startsWith("grid-cols-"));
+          
+          // 添加新的网格类
+          const gridClasses = gridClass.split(" ");
+          mainGrid.className = [...newClasses, ...gridClasses].join(" ");
+        }
+      }
+
       // 只处理katex元素的容器，使用浏览器原生滚动条
       initCustomScrollbar();
       
@@ -724,31 +716,6 @@ function disableAnimation() {
         }
       }
 
-      // 在页面切换后恢复布局状态（支持文章详情页的布局切换）
-      setTimeout(() => {
-        const savedLayout = localStorage.getItem("postListLayout");
-        if (savedLayout) {
-          const rightSidebar = document.getElementById("right-sidebar");
-          const mainGrid = document.getElementById("main-grid");
-          
-          // 根据保存的布局状态调整侧边栏显示
-          if (savedLayout === "grid") {
-            if (rightSidebar) {
-              rightSidebar.style.display = "none";
-            }
-            if (mainGrid) {
-              mainGrid.classList.add("grid-layout-active");
-            }
-          } else {
-            if (rightSidebar) {
-              rightSidebar.style.display = "";
-            }
-            if (mainGrid) {
-              mainGrid.classList.remove("grid-layout-active");
-            }
-          }
-        }
-      }, 50);
     });
     window.swup.hooks.on("visit:start", (visit: { to: { url: string } }) => {
       // change banner height immediately when a link is clicked
@@ -876,7 +843,7 @@ function disableAnimation() {
       }
 
       // 同步主题状态 - 解决从首页进入文章页面时代码块渲染问题
-      const storedTheme = localStorage.getItem("theme") || "light";
+      const storedTheme = localStorage.getItem("theme") || siteConfig.themeColor.defaultMode || "light";
       let isDark = false;
       
       // 处理 system 模式
@@ -932,66 +899,7 @@ function disableAnimation() {
       }, 200);
     });
 
-    // 全局布局切换监听器 - 支持在任何页面（包括文章详情页）切换布局
-    window.addEventListener("layoutChange", (event: CustomEvent) => {
-      const newLayout = event.detail.layout;
-      const rightSidebar = document.getElementById("right-sidebar");
-      const mainGrid = document.getElementById("main-grid");
-      const postContainer = document.getElementById("post-container");
-      const swupContainer = document.getElementById("swup-container");
-      
-      // 为文章详情页容器添加切换动画
-      if (postContainer) {
-        postContainer.classList.add("layout-switching");
-        setTimeout(() => {
-          postContainer.classList.remove("layout-switching");
-        }, 400);
-      }
-      
-      // 为主内容区添加切换动画
-      if (swupContainer) {
-        swupContainer.classList.add("layout-transitioning");
-        setTimeout(() => {
-          swupContainer.classList.remove("layout-transitioning");
-        }, 500);
-      }
-      
-      // 根据新布局状态调整侧边栏显示
-      if (newLayout === "grid") {
-        if (rightSidebar) {
-          // 简洁的淡出动画
-          rightSidebar.style.transition = "opacity 0.35s ease-in-out, transform 0.35s ease-in-out";
-          rightSidebar.style.opacity = "0";
-          rightSidebar.style.transform = "translateX(15px)";
-          setTimeout(() => {
-            rightSidebar.style.display = "none";
-            rightSidebar.style.opacity = "";
-            rightSidebar.style.transform = "";
-          }, 350);
-        }
-        if (mainGrid) {
-          mainGrid.classList.add("grid-layout-active");
-        }
-      } else {
-        if (rightSidebar) {
-          // 简洁的淡入动画
-          rightSidebar.style.display = "";
-          rightSidebar.style.transition = "opacity 0.35s ease-in-out, transform 0.35s ease-in-out";
-          rightSidebar.style.opacity = "0";
-          rightSidebar.style.transform = "translateX(15px)";
-          setTimeout(() => {
-            rightSidebar.style.opacity = "1";
-            rightSidebar.style.transform = "translateX(0)";
-          }, 50);
-          setTimeout(() => {
-            rightSidebar.style.transition = "";
-          }, 400);
-        }
-        if (mainGrid) {
-          mainGrid.classList.remove("grid-layout-active");
-        }
-      }
-    });
+
   };
   if (window?.swup?.hooks) {
     setup();

@@ -1,44 +1,51 @@
-/* Page transition animations with Swup*/
+/* ==========================================================================
+   Page Transition Animations (Swup) & Global Animations
+   ========================================================================== */
 
-/* 主要内容区域的过渡动画 */
+/* --------------------------------------------------------------------------
+   1. Swup Page Transitions
+   -------------------------------------------------------------------------- */
+
+/* Main Content Transition */
 .transition-main {
     transition: 
-        opacity 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
-        transform 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        opacity 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* 离开动画 - 内容向右上滑出并淡出 */
+/* Leaving Animation */
 .transition-leaving {
     transition:
-        transform 300ms cubic-bezier(0.55, 0.055, 0.675, 0.19),
-        opacity 300ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
+        transform 200ms cubic-bezier(0.55, 0.055, 0.675, 0.19),
+        opacity 200ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
+/* State: Changing (Swup) */
 html.is-changing .transition-main {
     transition: 
-        opacity 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
-        transform 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        opacity 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 html.is-leaving .transition-main {
     transition: 
-        opacity 300ms cubic-bezier(0.55, 0.055, 0.675, 0.19),
-        transform 300ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
+        opacity 200ms cubic-bezier(0.55, 0.055, 0.675, 0.19),
+        transform 200ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
-/* 进入动画 - 从右下角轻微滑入 */
+/* State: Animating (Entering) */
 html.is-animating .transition-main {
     opacity: 0;
     transform: translateY(1.5rem) translateX(0.5rem);
 }
 
-/* 离开动画 - 向左上角滑出 */
+/* State: Leaving */
 html.is-animating.is-leaving .transition-leaving {
     transform: translateY(-1rem) translateX(-0.5rem);
     opacity: 0;
 }
 
-/* Swup fade 动画 - 保持兼容性 */
+/* Swup Fade Fallback */
 html.is-changing .transition-swup-fade {
     transition: all 300ms ease-out;
 }
@@ -48,7 +55,10 @@ html.is-animating .transition-swup-fade {
     transform: translateY(1.5rem);
 }
 
-/* 增强的淡入动画 - 添加侧滑效果 */
+/* --------------------------------------------------------------------------
+   2. Keyframes
+   -------------------------------------------------------------------------- */
+
 @keyframes fade-in-up {
     from {
         opacity: 0;
@@ -60,35 +70,13 @@ html.is-animating .transition-swup-fade {
     }
 }
 
-@keyframes fade-out-down {
-    from {
-        opacity: 1;
-        transform: translateY(0) translateX(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateY(-1rem) translateX(-0.5rem);
-    }
-}
+/* --------------------------------------------------------------------------
+   3. Onload Animations
+   -------------------------------------------------------------------------- */
 
-/* 页面加载动画 */
 .onload-animation {
     opacity: 0;
-    animation: fade-in-up 300ms ease-out forwards;
-}
-
-.onload-animation-fade-in {
-    opacity: 0;
-    animation: fade-in 300ms ease-in forwards;
-}
-
-@keyframes fade-in {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    animation: fade-in-up 200ms ease-out forwards;
 }
 
 /* 渐进式动画延迟 */
@@ -98,173 +86,4 @@ html.is-animating .transition-swup-fade {
 .onload-animation:nth-child(4) { animation-delay: 150ms; }
 .onload-animation:nth-child(5) { animation-delay: 200ms; }
 
-/* 特殊元素的动画 */
-.transition-slide-in {
-    opacity: 0;
-    transform: translateY(20px) translateX(8px);
-    transition: all 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
 
-.transition-slide-in.active {
-    opacity: 1;
-    transform: translateY(0) translateX(0);
-}
-
-/* 卡片动画 */
-.card-animation {
-    opacity: 0;
-    transform: translateY(30px) translateX(10px) scale(0.98);
-    transition: all 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.card-animation.visible {
-    opacity: 1;
-    transform: translateY(0) translateX(0) scale(1);
-}
-
-/* 导航动画 */
-.nav-animation {
-    opacity: 0;
-    transform: translateX(-20px);
-    transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.nav-animation.loaded {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-/* 性能优化 */
-.transition-main,
-.transition-leaving,
-.onload-animation,
-.transition-slide-in,
-.card-animation {
-    backface-visibility: hidden;
-    -webkit-font-smoothing: antialiased;
-}
-
-/* 移动端页面切换性能优化 */
-@media (max-width: 768px) {
-  /* 为所有动画元素添加硬件加速 */
-  .transition-main,
-  .transition-leaving,
-  .onload-animation,
-  .transition-slide-in,
-  .card-animation,
-  .nav-animation,
-  #dynamic-sidebar,
-  .widget-container {
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -webkit-perspective: 1000;
-    perspective: 1000;
-    will-change: transform, opacity;
-  }
-  
-  /* 优化页面切换动画 */
-  html.is-changing .transition-main {
-    transition: 
-      opacity 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
-      transform 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-  
-  html.is-leaving .transition-main {
-    transition: 
-      opacity 200ms cubic-bezier(0.55, 0.055, 0.675, 0.19),
-      transform 200ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
-  }
-  
-  /* 减少移动端动画幅度 */
-  html.is-animating .transition-main {
-    opacity: 0;
-    transform: translateY(0.5rem) translateX(0.2rem);
-  }
-  
-  html.is-animating.is-leaving .transition-leaving {
-    transform: translateY(-0.4rem) translateX(-0.2rem);
-    opacity: 0;
-  }
-  
-  /* 优化侧边栏动画 */
-  #dynamic-sidebar {
-    transition: all 0.2s ease-in-out;
-  }
-  
-  .widget-container {
-    transition: all 0.2s ease-in-out;
-  }
-  
-  /* 防止页面加载时的闪烁 */
-  body {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  /* 优化网格布局切换 */
-  #main-grid {
-    transition: all 0.3s ease-in-out;
-  }
-  
-  /* 防止图片加载时的闪烁 */
-  img {
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-  }
-  
-  /* 优化滚动行为 */
-  html {
-    scroll-behavior: smooth;
-  }
-  
-  /* 减少动画元素的数量 */
-  .onload-animation {
-    animation-duration: 0.3s;
-  }
-  
-  /* 优化字体渲染 */
-  * {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-  }
-}
-
-/* 超小屏幕设备优化 */
-@media (max-width: 480px) {
-  /* 进一步减少动画效果 */
-  html.is-animating .transition-main {
-    transform: translateY(0.3rem) translateX(0.1rem);
-  }
-  
-  html.is-animating.is-leaving .transition-leaving {
-    transform: translateY(-0.2rem) translateX(-0.1rem);
-  }
-  
-  /* 简化侧边栏动画 */
-  #dynamic-sidebar {
-    transition: all 0.15s ease-in-out;
-  }
-  
-  .widget-container {
-    transition: all 0.15s ease-in-out;
-  }
-}
-
-/* 性能优化：为减少动画的用户提供支持 */
-@media (prefers-reduced-motion: reduce) {
-  .transition-main,
-  .transition-leaving,
-  .onload-animation,
-  .transition-slide-in,
-  .card-animation,
-  .nav-animation,
-  #dynamic-sidebar,
-  .widget-container {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}

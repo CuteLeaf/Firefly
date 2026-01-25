@@ -13,6 +13,7 @@ export const ru: Translation = {
 	[Key.searchContent]: "Содержание",
 	[Key.searchViewMore]: "Показать еще ({count} шт)",
 	[Key.other]: "Прочее",
+	[Key.all]: "Все",
 
 	[Key.tags]: "Теги",
 	[Key.categories]: "Категории",
@@ -203,7 +204,7 @@ export const ru: Translation = {
 	[Key.sponsorButtonText]:
 		"Если эта статья помогла вам, пожалуйста, поделитесь или поддержите!",
 
-	[Key.shareOnSocial]: "Поделиться",
+	[Key.shareOnSocial]: "Поделиться статьей",
 	[Key.shareOnSocialDescription]:
 		"Если эта статья помогла вам, пожалуйста, поделитесь ею с другими!",
 
@@ -217,6 +218,7 @@ export const ru: Translation = {
 	[Key.siteStatsLastUpdate]: "Последняя активность",
 	[Key.siteStatsDaysAgo]: "{days} дней назад",
 	[Key.siteStatsDays]: "{days} дней",
+	[Key.today]: "Сегодня",
 
 	// Компонент календаря
 	[Key.calendarSunday]: "Вс",

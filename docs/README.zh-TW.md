@@ -6,18 +6,21 @@
 # Firefly
 > 一款清新美觀的 Astro 部落格主題模板
 > 
-> ![Node.js >= 20](https://img.shields.io/badge/node.js-%3E%3D20-brightgreen) 
+> ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen) 
 ![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
-![Astro](https://img.shields.io/badge/Astro-5.16.6-orange)
+![Astro](https://img.shields.io/badge/Astro-5.16.8-orange)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)
 >
 > [![Stars](https://img.shields.io/github/stars/CuteLeaf/Firefly?style=social)](https://github.com/CuteLeaf/Firefly/stargazers)
 [![Forks](https://img.shields.io/github/forks/CuteLeaf/Firefly?style=social)](https://github.com/CuteLeaf/Firefly/network/members)
 [![Issues](https://img.shields.io/github/issues/CuteLeaf/Firefly)](https://github.com/CuteLeaf/Firefly/issues)
 > 
+> [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Z8Z41NQALY)
+> 
 > ![GitHub License](https://img.shields.io/github/license/CuteLeaf/Firefly)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/CuteLeaf/Firefly)
 [![愛發電贊助](https://img.shields.io/badge/愛發電-贊助作者-ff69b4.svg)](https://afdian.com/a/cuteleaf)
+
 </div>
 
 
@@ -41,11 +44,11 @@
 <img alt="firefly" src="./images/1.webp" />
 
 >[!TIP]
->在重要的版面配置上，Firefly創新性地增加了左右雙側邊欄、文章網格(雙列)版面配置，
+>在重要的版面配置上，Firefly創新性地增加了左右雙側邊欄、文章網格(多列)版面配置，
 >
 >增加了站點統計、日曆元件、文章目錄等小元件，讓側邊欄更加豐富，
 >
->同時也保留了 Furwai 的版面配置系統，可在配置檔案中自由切換。
+>同時也保留了 fuwari 的版面配置系統，可在配置檔案中自由切換。
 >
 >**更多版面配置及示範請查看：[Firefly 版面配置系統詳解](https://firefly.cuteleaf.cn/posts/firefly-layout-system/)**
 
@@ -57,27 +60,28 @@
 - [x] **流暢動畫** - Swup 頁面過渡動畫，提供絲滑的瀏覽體驗
 - [x] **響應式設計** - 完美適配桌面端、平板和行動裝置
 - [x] **多語言支援** - i18n 國際化，支援簡體中文、繁體中文、英文、日文、俄語
-- [x] **全文搜尋** - 基於 Pagefind 的客戶端搜尋，支援文章內容索引。同時支援 MeiliSearch 搜尋引擎
+- [x] **全文搜尋** - 基於 Pagefind 的客戶端搜尋，支援文章內容索引。
 
 ### 個性化
-- [x] **側邊欄** - 支援配置單側邊欄、雙側邊欄，支援前台自由切換
-- [x] **文章版面配置** - 支援配置(單列)列表、網格(二列)版面配置，支援前台自由切換
+- [x] **側邊欄** - 支援配置單側邊欄、雙側邊欄
+- [x] **文章版面配置** - 支援配置(單列)列表、網格(多列/瀑布流)版面配置
 - [x] **字型管理** - 支援自訂字型，豐富的字型選擇器
 - [x] **頁尾配置** - HTML 內容注入，完全自訂
+- [x] **亮暗色模式** - 支援亮色/暗色/跟隨系統三種模式
 - [x] **導覽列自訂** - Logo、標題、連結全面自訂
-- [x] **桌布模式切換** - 橫幅桌布、全螢幕桌布、純色背景，支援前台自由切換
-- [x] **主題色自訂** - 360° 色相調節，支援亮色/暗色/跟隨系統三種模式，支援前台自由切換
+- [x] **桌布模式切換** - 橫幅桌布、全螢幕桌布、純色背景
+- [x] **主題色自訂** - 360° 色相調節
 
 ### 頁面元件
-- [x] **留言板** - 支援留言頁面，整合留言系統
-- [x] **公告欄** - 頂部公告提示，支援關閉和自訂樣式
+- [x] **留言板** - 支援留言頁面
+- [x] **公告欄** - 支援側邊欄公告提示
 - [x] **看板娘** - 支援 Spine 和 Live2D 兩種動畫引擎
-- [x] **站點統計** - 顯示文章、分類、標籤數目、文章總字數、執行時長、最後更新時間
+- [x] **站點統計** - 顯示文章、分類、標籤數目、文章總字數等數據
 - [x] **站點日曆** - 顯示當月日曆，以及當月的發布文章
-- [x] **贊助頁面** - 多種支付方式、收款碼展示、贊助者列表、文章內贊助按鈕
-- [x] **分享海報** - 支援生成精美的文章分享海報，包含文章摘要、二維碼等資訊
+- [x] **贊助頁面** - 贊助連結跳轉、收款碼展示、贊助者列表、文章內贊助按鈕
+- [x] **分享海報** - 支援生成精美的文章分享海報
 - [x] **櫻花特效** - 支援櫻花特效，全螢幕櫻花效果
-- [x] **友情連結** - 精美的友鏈展示卡片
+- [x] **友情連結** - 精美的友情連結展示頁面
 - [x] **廣告元件** - 支援自訂側邊欄廣告內容
 - [x] **番組計畫** - 基於 Bangumi API 的追番和遊戲記錄展示
 - [x] **留言系統** - 整合 Twikoo、Waline、Giscus、Disqus、Artalk 留言系統
@@ -91,14 +95,13 @@
 - [x] **側邊欄目錄** - 動態顯示文章目錄，支援錨點跳轉
 - [x] **增強程式碼區塊** - 基於 Expressive Code，支援程式碼摺疊、行號、語言標識
 - [x] **數學公式支援** - KaTeX 渲染引擎，支援行內和區塊級公式
-- [x] **Markdown擴充** - [Markdown extended features](https://github.com/saicaca/fuwari?tab=readme-ov-file#-markdown-extended-syntax)
 - [x] **文章隨機封面圖** - 支援透過 API 獲取隨機封面圖
+- [x] **Markdown擴充** - 更多的 Markdown 擴充語法
 
 ### SEO
 - [x] **SEO 優化** - 完整的 meta 標籤和結構化資料
 - [x] **RSS 訂閱** - 自動生成 RSS Feed
 - [x] **站點地圖** - 自動生成 XML Sitemap，支援頁面篩選配置
-
 
 ## 📝計畫中...
 
@@ -122,7 +125,9 @@
    git clone https://github.com/Cuteleaf/Firefly.git
    cd Firefly
    ```
-   **先 [Fork](https://github.com/CuteLeaf/Firefly/fork) 到自己儲存庫再克隆（推薦）**
+   
+   **先 [Fork](https://github.com/CuteLeaf/Firefly/fork) 到自己儲存庫再克隆（推薦），記得先點 Star 再 Fork 哦！**
+
    ```bash
    git clone https://github.com/you-github-name/Firefly.git
    cd Firefly
@@ -178,7 +183,6 @@ const SITE_LANG = "zh_CN";
 - `ja` - 日文
 - `ru` - 俄文
 
-
 ### 配置檔案結構
 
 ```
@@ -186,6 +190,7 @@ src/
 ├── config/
 │   ├── index.ts              # 配置索引檔案
 │   ├── siteConfig.ts         # 站點基礎配置
+│   ├── backgroundWallpaper.ts # 背景桌布配置
 │   ├── profileConfig.ts      # 使用者資料配置
 │   ├── commentConfig.ts      # 留言系統配置
 │   ├── announcementConfig.ts # 公告配置
@@ -218,26 +223,36 @@ tags: [Foo, Bar]
 category: Front-end
 draft: false
 lang: zh-CN      # 僅當文章語言與 `siteConfig.ts` 中的網站語言不同時需要設定
+pinned: false    # 置頂
+comment: true    # 是否允許留言
 ---
 ```
+## 🧩 Markdown 擴充語法
 
+除了 Astro 預設支援的 [GitHub Flavored Markdown](https://github.github.com/gfm/) 之外，還包含了一些額外的 Markdown 功能：
+
+- 提醒塊（Admonitions） - 支援 GitHub, Obsidian, VitePress 三種風格主題配置 ([預覽和用法](https://firefly.cuteleaf.cn/posts/markdown-extended/))
+- GitHub 儲存庫卡片 ([預覽和用法](https://firefly.cuteleaf.cn/posts/markdown-extended/))
+- 基於 Expressive Code 的增強程式碼區塊 ([預覽](http://firefly.cuteleaf.cn/posts/code-examples/) / [文檔](https://expressive-code.com/))
 ## 🧞 指令
 
 下列指令均需要在專案根目錄執行：
 
-| Command                           | Action                            |
-|:----------------------------------|:----------------------------------|
-| `pnpm install` 並 `pnpm add sharp` | 安裝依賴                              |
-| `pnpm dev`                        | 在 `localhost:4321` 啟動本地開發伺服器      |
-| `pnpm build`                      | 建置網站至 `./dist/`                   |
-| `pnpm preview`                    | 本地預覽已建置的網站                        |
-| `pnpm new-post <filename>`        | 建立新文章                             |
-| `pnpm astro ...`                  | 執行 `astro add`, `astro check` 等指令 |
-| `pnpm astro --help`               | 顯示 Astro CLI 說明                   |
+| Command                    | Action                                              |
+|:---------------------------|:----------------------------------------------------|
+| `pnpm install`             | 安裝依賴                                            |
+| `pnpm dev`                 | 在 `localhost:4321` 啟動本地開發伺服器              |
+| `pnpm build`               | 建置網站至 `./dist/`                                |
+| `pnpm preview`             | 本地預覽已建置的網站                                |
+| `pnpm check`               | 檢查程式碼中的錯誤                                  |
+| `pnpm format`              | 使用 Biome 格式化您的程式碼                         |
+| `pnpm new-post <filename>` | 建立新文章                                          |
+| `pnpm astro ...`           | 執行 `astro add`, `astro check` 等指令              |
+| `pnpm astro --help`        | 顯示 Astro CLI 說明                                 |
 
 ## 🙏 致謝
 
-- 非常感謝 [saicaca](https://github.com/saicaca) 開發的 [Fuwari](https://github.com/saicaca/fuwari) 模板，Firefly 就是基於這個模板二次開發
+- 非常感謝 [saicaca](https://github.com/saicaca) 開發的 [fuwari](https://github.com/saicaca/fuwari) 範本，Firefly 就是基於這個範本二次開發
 - 參考了部落格主 [霞葉](https://kasuha.com) 分享的 [Bangumi 收藏展示頁面方案](https://kasuha.com/posts/fuwari-enhance-ep2/)
 - 參考了 [Mizuki](https://github.com/matsuzaka-yuki/Mizuki) 的橫幅標題/多級選單導覽列/櫻花特效/KaTeX/Fancybox方案
 - 使用了 [Astro](https://astro.build) 和 [Tailwind CSS](https://tailwindcss.com) 建置
@@ -248,19 +263,27 @@ lang: zh-CN      # 僅當文章語言與 `siteConfig.ts` 中的網站語言不�
 
 ## 📝 許可協議
 
-本項目遵循 [MIT license](https://mit-license.org/) 開源協議，詳細查看 [LICENSE](./LICENSE) 文件，
+本專案遵循 [MIT license](https://mit-license.org/) 開源協議，詳細查看 [LICENSE](../LICENSE) 文件
+最初 Fork 自 [saicaca/fuwari](https://github.com/saicaca/fuwari)，感謝原作者的貢獻，原專案採用 [MIT license](https://mit-license.org/)
+**版權聲明：**
+- Copyright (c) 2024 [saicaca](https://github.com/saicaca) - [fuwari](https://github.com/saicaca/fuwari)
+- Copyright (c) 2025 [CuteLeaf](https://github.com/CuteLeaf) - [Firefly](https://github.com/CuteLeaf/Firefly)
 
-最初 Fork 自 [saicaca/fuwari](https://github.com/saicaca/fuwari)，感謝原作者的貢獻，原項目採用 [MIT license](https://mit-license.org/)。
+根據 MIT 開源協議，你可以自由使用、修改、分發程式碼，但需保留上述版權聲明。
 
 ## 🍀 貢獻者
 
 感謝以下貢獻者對本專案做出的貢獻，如有問題或建議，請提交 [Issue](https://github.com/CuteLeaf/Firefly/issues) 或 [Pull Request](https://github.com/CuteLeaf/Firefly/pulls)。
 
-<a href="https://github.com/CuteLeaf/Firefly/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=CuteLeaf/Firefly" />
-</a>
+><a href="https://github.com/CuteLeaf/Firefly/graphs/contributors">
+>  <img src="https://contrib.rocks/image?repo=CuteLeaf/Firefly" />
+></a>
 
-![Alt](https://repobeats.axiom.co/api/embed/6139639d8e88da4d3dc9d45fd43f4e4b2d580086.svg "Repobeats analytics image")
+感謝以下貢獻者對原專案 [fuwari](https://github.com/saicaca/fuwari) 做出的貢獻，為本專案奠定了基礎。
+
+><a href="https://github.com/saicaca/fuwari/graphs/contributors">
+>  <img src="https://contrib.rocks/image?repo=saicaca/fuwari" />
+></a>
 
 ## ⭐ Star History
 

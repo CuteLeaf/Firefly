@@ -1,0 +1,362 @@
+---
+import type { MarkdownHeading } from "astro";
+import { Icon } from "astro-icon/components";
+import FloatingButton from "@/components/common/FloatingButton.astro";
+import { sidebarLayoutConfig } from "@/config/sidebarConfig";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import "@/styles/toc.css";
+
+interface Props {
+	headings: MarkdownHeading[];
+}
+
+let { headings: _ = [] } = Astro.props;
+// ... (保留之前的逻辑)
+// 检查侧边栏目录组件是否启用
+const sidebarTocComponent = sidebarLayoutConfig.rightComponents?.find(
+	(c) => c.type === "sidebarToc",
+);
+const isSidebarTocEnabled = sidebarTocComponent?.enable ?? false;
+const sidebarPosition = sidebarLayoutConfig.position;
+const showRightSidebarOnPostPage =
+	sidebarLayoutConfig.showRightSidebarOnPostPage;
+---
+
+<!-- 悬浮TOC按钮 -->
+<div id="floating-toc-wrapper" class="floating-toc-wrapper" data-is-sidebar-toc-enabled={String(isSidebarTocEnabled)} data-sidebar-position={sidebarPosition} data-show-right-sidebar-on-post-page={String(showRightSidebarOnPostPage)}>
+  <FloatingButton
+    id="floating-toc-btn"
+    icon="material-symbols:format-list-bulleted"
+    ariaLabel="Table of Contents"
+    onclick="window.toggleFloatingTOC()"
+    class="hide"
+  />
+  
+  <!-- 悬浮TOC面板 - 移到 Wrapper 内部以便相对定位 -->
+  <div
+    id="floating-toc-panel"
+    class="floating-toc-panel hide w-80 max-h-[24rem] overflow-hidden rounded-2xl shadow-2xl backdrop-blur-lg border border-white/20 bg-white/60 dark:bg-black/60 dark:border-white/10 md:w-80 w-[calc(100vw-2rem)] md:max-h-[24rem] max-h-[calc(100vh-8rem)]"
+    style="background-color: rgba(var(--card-bg-rgb, 255, 255, 255), 0.6);"
+    >
+    <div
+        class="p-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 backdrop-blur-sm z-10"
+        style="background-color: rgba(var(--card-bg-rgb, 255, 255, 255), 0.6);"
+    >
+        <div class="flex items-center justify-between">
+        <h3
+            class="text-lg font-bold text-[var(--primary)] flex items-center gap-2"
+        >
+            {i18n(I18nKey.tableOfContents)}
+        </h3>
+        <button
+            onclick="window.toggleFloatingTOC()"
+            aria-label="Close TOC"
+            class="btn-plain rounded-lg h-8 w-8 active:scale-90"
+        >
+            <Icon name="material-symbols:close" class="text-lg" />
+        </button>
+        </div>
+    </div>
+
+    <div class="toc-scroll-container p-4">
+        <div
+        class="toc-content"
+        id="floating-toc-content"
+        style="width: 100%; max-width: 100%;"
+        >
+        <!-- TOC内容将由JavaScript动态生成 -->
+        </div>
+    </div>
+  </div>
+</div>
+
+<style lang="stylus">
+.floating-toc-wrapper
+	position: relative
+	z-index: 999
+	overflow: visible
+
+.floating-toc-panel
+	position: absolute
+	bottom: calc(100% + 1rem)
+	right: 0
+	transition: all 0.3s ease
+	transform: translateY(20px)
+	opacity: 0
+	pointer-events: none
+	overflow: hidden
+	box-sizing: border-box
+	backdrop-filter: blur(20px)
+	-webkit-backdrop-filter: blur(20px)
+	z-index: 1001
+	
+	&.show
+		transform: translateY(0)
+		opacity: 1
+		pointer-events: auto
+		
+	&.hide
+		transform: translateY(20px)
+		opacity: 0
+		pointer-events: none
+		visibility: hidden
+		
+.toc-scroll-container
+	max-height: calc(24rem - 5rem)
+	
+	@media (max-width: 768px)
+		max-height: calc(24rem - 5rem)
+
+/* 移动端隐藏活动指示器 */
+@media (max-width: 768px)
+	#floating-active-indicator
+		display: none
+
+/* 响应式调整 - 仅保留 Panel 尺寸调整 */
+@media (max-width: 1024px)
+	.floating-toc-panel
+		width: calc(100vw - 2rem)
+		max-width: 20rem
+		max-height: 20rem
+
+@media (max-width: 768px)
+	.floating-toc-panel
+		width: calc(100vw - 1.5rem)
+		max-width: 20rem
+		max-height: 28rem
+		bottom: calc(100% + 1rem)
+
+/* 暗色主题半透明效果 */
+:global(.dark) .floating-toc-panel
+	background-color: rgba(0, 0, 0, 0.6) !important
+	backdrop-filter: blur(20px)
+	-webkit-backdrop-filter: blur(20px)
+
+:global(.dark) .floating-toc-panel .p-4
+	background-color: rgba(0, 0, 0, 0.8) !important
+</style>
+
+<script>
+  import { TOCManager, isPostPage } from "@/utils/tocUtils";
+
+  // 从 data 属性读取配置
+  const wrapper = document.querySelector('.floating-toc-wrapper');
+  const isSidebarTocEnabled = wrapper?.getAttribute('data-is-sidebar-toc-enabled') === 'true';
+
+  if (typeof window.FloatingTOC === "undefined") {
+    window.FloatingTOC = {
+      btn: null,
+      panel: null,
+      manager: null,
+      isPostPage: isPostPage // 使用导入的工具函数
+    };
+  }
+
+  // 切换 TOC 面板
+  window.toggleFloatingTOC = function () {
+    const panel = window.FloatingTOC.panel;
+    if (!panel) return;
+
+    const isHidden = panel.classList.contains("hide");
+    if (isHidden) {
+      panel.classList.remove("hide");
+      panel.classList.add("show");
+    } else {
+      panel.classList.remove("show");
+      panel.classList.add("hide");
+    }
+  };
+
+  // 关闭 TOC 面板
+  function closeTOC() {
+    const panel = window.FloatingTOC.panel;
+    if (panel && !panel.classList.contains("hide")) {
+      panel.classList.add("hide");
+      panel.classList.remove("show");
+    }
+  }
+
+  // 设置自动关闭功能
+  function setupAutoClose() {
+    // 监听页面卸载和隐藏
+    window.addEventListener("beforeunload", closeTOC);
+    window.addEventListener("pagehide", closeTOC);
+    window.addEventListener("popstate", closeTOC);
+    
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) closeTOC();
+    });
+
+    // 监听 Astro 页面切换
+    document.addEventListener("astro:page-load", closeTOC);
+    document.addEventListener("astro:before-preparation", closeTOC);
+
+    // 监听 hashchange（排除TOC内部导航）
+    window.addEventListener("hashchange", () => {
+      if (!window.tocInternalNavigation) {
+        closeTOC();
+      }
+      window.tocInternalNavigation = false;
+    });
+
+    // 监听外部链接点击
+    document.addEventListener("click", (e) => {
+      const target = e.target as Element | null;
+      const link = target?.closest("a");
+      if (!link || !link.href) return;
+
+      const href = link.getAttribute("href");
+      const isExternalLink = href && !href.startsWith("#") && !href.startsWith("javascript:");
+      
+      if (isExternalLink && !window.tocInternalNavigation) {
+        const tocPanel = document.getElementById("floating-toc-panel");
+        if (!tocPanel || !tocPanel.contains(link)) {
+          closeTOC();
+        }
+      }
+    });
+
+    // 拦截 history API
+    const originalPushState = history.pushState;
+    const originalReplaceState = history.replaceState;
+
+    history.pushState = function (...args) {
+      closeTOC();
+      return originalPushState.apply(this, args);
+    };
+
+    history.replaceState = function (...args) {
+      closeTOC();
+      return originalReplaceState.apply(this, args);
+    };
+  }
+
+  // 检查是否应该显示悬浮目录
+  function shouldShowFloatingTOC() {
+    // 检查是否为文章页面
+    if (!window.FloatingTOC.isPostPage()) {
+      return false;
+    }
+
+    // 获取侧边栏位置配置
+    const wrapper = document.querySelector('.floating-toc-wrapper');
+    let sidebarPosition = wrapper?.getAttribute('data-sidebar-position') || 'left';
+    const showRightSidebarOnPostPage = wrapper?.getAttribute('data-show-right-sidebar-on-post-page') === 'true';
+
+    // 如果配置了在文章详情页显示右侧边栏，且当前是文章详情页，则视为双侧边栏模式
+    if (sidebarPosition === 'left' && showRightSidebarOnPostPage) {
+        sidebarPosition = 'both';
+    }
+
+    // 如果是单侧边栏模式（左侧），则始终显示悬浮目录（因为右侧边栏不存在）
+    if (sidebarPosition === 'left') {
+        return true;
+    }
+    
+    // 检查屏幕宽度
+    const isSmallScreen = window.innerWidth < 1200;
+    
+    // 显示条件：网格模式 OR 小屏幕 OR 侧边栏目录未启用
+    return  isSmallScreen || !isSidebarTocEnabled;
+  }
+
+  // 更新悬浮目录的显示状态
+  function updateFloatingTOCVisibility() {
+    const btn = window.FloatingTOC.btn;
+    if (!btn) return;
+
+    if (shouldShowFloatingTOC()) {
+      btn.classList.remove("hide");
+    } else {
+      btn.classList.add("hide");
+      // 同时关闭面板
+      closeTOC();
+    }
+  }
+
+  // 初始化 FloatingTOC
+  async function initFloatingTOC() {
+    window.FloatingTOC.btn = document.getElementById("floating-toc-btn");
+    window.FloatingTOC.panel = document.getElementById("floating-toc-panel");
+
+    if (!window.FloatingTOC.btn || !window.FloatingTOC.panel) {
+      return;
+    }
+
+    // 更新显示状态
+    updateFloatingTOCVisibility();
+
+    try {
+      // 清理旧实例
+      if (window.FloatingTOC.manager) {
+        window.FloatingTOC.manager.cleanup();
+      }
+
+      // 创建新实例
+      window.FloatingTOC.manager = new TOCManager({
+        contentId: "floating-toc-content",
+        indicatorId: "floating-active-indicator",
+        maxLevel: 3,
+        scrollOffset: 80,
+      });
+
+      // 初始化
+      window.FloatingTOC.manager.init();
+
+      // 设置点击事件 - 标记为 TOC 内部导航
+      const tocContent = document.getElementById("floating-toc-content");
+      if (tocContent) {
+        tocContent.addEventListener("click", (e) => {
+          const target = e.target as Element | null;
+          const anchor = target?.closest('a[href^="#"]');
+          if (anchor) {
+            window.tocInternalNavigation = true;
+          }
+        }, { capture: true });
+      }
+
+      // 设置自动关闭
+      setupAutoClose();
+    } catch (error) {
+      console.error("Failed to load TOCManager:", error);
+    }
+  }
+
+  // 初始化
+  initFloatingTOC();
+
+  // 监听页面切换事件
+  if (typeof window !== "undefined" && !window.floatingTOCListenersInitialized) {
+    window.floatingTOCListenersInitialized = true;
+
+    // Swup 路由切换
+    document.addEventListener("swup:contentReplaced", () => {
+      setTimeout(initFloatingTOC, 100);
+    });
+    
+    // Astro 页面切换事件
+    document.addEventListener("astro:page-load", () => {
+      setTimeout(initFloatingTOC, 100);
+    });
+    
+    // 浏览器导航事件
+    window.addEventListener("popstate", () => {
+      setTimeout(initFloatingTOC, 200);
+    });
+
+    // 监听布局模式切换（通过自定义事件）
+    window.addEventListener('layoutChange', () => {
+      updateFloatingTOCVisibility();
+    });
+
+    // 监听窗口大小变化
+    let resizeTimeout: ReturnType<typeof setTimeout>;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        updateFloatingTOCVisibility();
+      }, 300);
+    });
+  }
+</script>

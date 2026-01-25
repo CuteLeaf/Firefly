@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getPostUrlBySlug } from "@utils/url-utils";
-import PostCard from "@/components/content/PostCard.astro";
+import PostCard from "@/components/layout/PostCard.astro";
 import { sidebarLayoutConfig, siteConfig } from "@/config";
 
 const { page } = Astro.props;
@@ -15,12 +15,17 @@ type PostEntry = CollectionEntry<"posts">;
 // 检查是否启用双侧边栏
 const isBothSidebars = sidebarLayoutConfig.position === "both";
 const masonryEnabled = siteConfig.postListLayout.grid.masonry;
+const gridColumns = siteConfig.postListLayout.grid.columns || 2;
 
 // 根据配置设置初始布局模式，避免闪烁
 const defaultLayout = siteConfig.postListLayout.defaultMode || "list";
+const gridCols =
+	!isBothSidebars && gridColumns === 3
+		? "md:grid-cols-2 lg:grid-cols-3"
+		: "md:grid-cols-2";
 const initialLayoutClass =
 	defaultLayout === "grid"
-		? "grid grid-cols-1 md:grid-cols-2 gap-4 grid-mode"
+		? `grid grid-cols-1 ${gridCols} gap-4 grid-mode`
 		: "flex flex-col gap-4 md:gap-4 list-mode";
 ---
 
@@ -30,6 +35,7 @@ const initialLayoutClass =
   data-default-layout={defaultLayout}
   data-both-sidebars={isBothSidebars}
   data-masonry-enabled={masonryEnabled}
+  data-grid-columns={gridColumns}
 >
   {
     page.data.map((entry: PostEntry) => (
@@ -56,7 +62,6 @@ const initialLayoutClass =
 <script is:inline define:vars={{ defaultLayout, isBothSidebars }}>
   (function() {
     const savedLayout = localStorage.getItem('postListLayout');
-    const currentLayout = savedLayout || defaultLayout;
     
     // 如果有保存的布局且与默认布局不同，更新容器布局
     if (savedLayout && savedLayout !== defaultLayout) {
@@ -80,29 +85,6 @@ const initialLayoutClass =
         container.style.transition = '';
       }
     }
-    
-    // 始终处理侧边栏显示状态（无论是否有保存的布局）
-    // 使用立即执行确保在页面渲染前应用
-    (function() {
-      const rightSidebar = document.getElementById('right-sidebar');
-      const mainGrid = document.getElementById('main-grid');
-      
-      if (currentLayout === 'grid') {
-        if (isBothSidebars && rightSidebar) {
-          rightSidebar.style.display = 'none';
-        }
-        if (mainGrid) {
-          mainGrid.classList.add('grid-layout-active');
-        }
-      } else {
-        if (isBothSidebars && rightSidebar) {
-          rightSidebar.style.display = '';
-        }
-        if (mainGrid) {
-          mainGrid.classList.remove('grid-layout-active');
-        }
-      }
-    })();
   })();
 </script>
 
@@ -135,66 +117,67 @@ const initialLayoutClass =
     const postListContainer = document.getElementById("post-list-container");
     if (!postListContainer) return;
 
-    // 添加切换动画类
-    postListContainer.classList.add("layout-switching");
+    // Check current layout state
+    const isCurrentGrid = postListContainer.classList.contains("grid-mode");
+    const isCurrentList = postListContainer.classList.contains("list-mode");
+    const currentLayout = isCurrentGrid ? "grid" : (isCurrentList ? "list" : null);
 
-    // 移除现有布局类
-    postListContainer.classList.remove("list-mode", "grid-mode");
-    
-    // 检查是否启用双侧边栏
+    // Common logic vars
     const isBothSidebars = postListContainer.getAttribute("data-both-sidebars") === "true";
     const masonryEnabled = postListContainer.getAttribute("data-masonry-enabled") === "true";
-    const rightSidebar = document.getElementById('right-sidebar');
-    const mainGrid = document.getElementById('main-grid');
+    const gridColumns = parseInt(postListContainer.getAttribute("data-grid-columns") || "2");
 
-    // 添加新布局类
-    if (layout === "grid") {
-      postListContainer.classList.add("grid-mode");
-      postListContainer.classList.remove("flex", "flex-col");
-      
-      // 如果是双侧栏模式，隐藏右侧边栏并调整主网格布局
-      if (isBothSidebars && rightSidebar) {
-        rightSidebar.style.display = 'none';
-        // 标记网格模式状态
-        if (mainGrid) {
-          mainGrid.classList.add('grid-layout-active');
+    // Helper to apply layout classes (Pure logic, no animation)
+    const applyClasses = () => {
+        postListContainer.classList.remove("list-mode", "grid-mode");
+        if (layout === "grid") {
+            postListContainer.classList.add("grid-mode");
+            postListContainer.classList.remove("flex", "flex-col");
+            if (masonryEnabled) {
+                postListContainer.classList.remove("grid", "grid-cols-1", "md:grid-cols-2", "lg:grid-cols-3", "gap-4");
+                applyMasonryLayout();
+            } else {
+                postListContainer.classList.add("grid", "grid-cols-1", "md:grid-cols-2", "gap-4");
+                if (!isBothSidebars && gridColumns === 3) {
+                    postListContainer.classList.add("lg:grid-cols-3");
+                }
+                resetMasonryLayout();
+            }
+        } else {
+            postListContainer.classList.add("list-mode");
+            postListContainer.classList.add("flex", "flex-col", "gap-4", "md:gap-4");
+            postListContainer.classList.remove("grid", "grid-cols-1", "md:grid-cols-2", "lg:grid-cols-3");
+            resetMasonryLayout();
         }
-      }
-      
-      // 应用瀑布流布局
-      if (masonryEnabled) {
-        // 瀑布流模式
-        postListContainer.classList.remove("grid", "grid-cols-1", "md:grid-cols-2", "gap-4");
-        applyMasonryLayout();
-      } else {
-        // 普通网格模式
-        postListContainer.classList.add("grid", "grid-cols-1", "md:grid-cols-2", "gap-4");
-        resetMasonryLayout();
-      }
+    };
 
-    } else {
-      postListContainer.classList.add("list-mode");
-      // 列表模式：单列布局
-      postListContainer.classList.add("flex", "flex-col", "gap-4", "md:gap-4");
-      postListContainer.classList.remove("grid", "grid-cols-1", "md:grid-cols-2");
-      
-      // 重置瀑布流样式
-      resetMasonryLayout();
-
-      // 如果是双侧栏模式，显示右侧边栏并恢复网格布局
-      if (isBothSidebars && rightSidebar) {
-        rightSidebar.style.display = '';
-        // 移除网格模式标记
-        if (mainGrid) {
-          mainGrid.classList.remove('grid-layout-active');
-        }
-      }
+    // Case 1: First run (Initialization) - No animation
+    if (!currentLayout) {
+        applyClasses();
+        return;
     }
 
-    // 移除切换动画类
+    // Case 2: Same layout (e.g. Resize) - No animation, just refresh masonry
+    if (currentLayout === layout) {
+        if (layout === "grid" && masonryEnabled) {
+            applyMasonryLayout();
+        }
+        return;
+    }
+
+    // Case 3: Layout Change - Smooth Animation
+    // 1. Fade OUT
+    postListContainer.classList.add("layout-switching");
+    
+    // 2. Change Layout after fade out (200ms match CSS)
     setTimeout(() => {
-      postListContainer.classList.remove("layout-switching");
-    }, 500);
+        applyClasses();
+
+        // 3. Fade IN (Short delay to ensure DOM update)
+        requestAnimationFrame(() => {
+            postListContainer.classList.remove("layout-switching");
+        });
+    }, 200);
   }
 
   function resetMasonryLayout() {
@@ -233,7 +216,12 @@ const initialLayoutClass =
 
     // 瀑布流配置
     const gap = 16; // 1rem = 16px
-    const colCount = 2; // 固定双列
+    const isBothSidebars = container.getAttribute("data-both-sidebars") === "true";
+    const gridColumns = parseInt(container.getAttribute("data-grid-columns") || "2");
+    let colCount = 2;
+    if (!isBothSidebars && gridColumns === 3 && window.innerWidth >= 1024) {
+        colCount = 3;
+    }
     
     // 重置容器样式以允许绝对定位
     container.style.position = "relative";
@@ -361,28 +349,117 @@ const initialLayoutClass =
   }
 
   /* 布局切换时的动画效果 */
+  #post-list-container {
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+  }
+  
   #post-list-container.layout-switching {
-    opacity: 0.95;
+    opacity: 0;
+    transform: translateY(10px);
   }
 
+  /* 移除特定模式下的子元素动画，避免布局计算冲突 */
+  /*
   #post-list-container.layout-switching > :global(*) {
     transform: scale(0.98);
   }
 
-  /* 列表模式的特殊动画 - 从左到右 */
   #post-list-container.list-mode > :global(*) {
     animation: fadeInSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
+  */
 
-  @keyframes fadeInSlide {
-    from {
-      opacity: 0;
-      transform: translateX(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
+  /* List Mode Customization */
+  #post-list-container.list-mode :global(.post-card-title) {
+    font-size: 1.5rem !important;
+    line-height: 2rem !important;
+  }
+
+  #post-list-container.list-mode :global(.post-card-title::before) {
+    top: 2.25rem !important;
+    height: 1rem !important;
+  }
+
+  /* 列表模式下，有封面的文章，摘要最多显示两行 */
+  #post-list-container.list-mode :global(.has-cover .description) {
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    -webkit-line-clamp: 2 !important;
+    line-clamp: 2 !important;
+  }
+
+  /* Grid Mode Customization */
+  #post-list-container.grid-mode :global(.post-card-wrapper) {
+    flex-direction: column-reverse !important;
+  }
+
+  #post-list-container.grid-mode :global(.post-card-image) {
+    width: 100% !important;
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    border-radius: var(--radius-large) var(--radius-large) 0 0 !important;
+    /*aspect-ratio: 16/9 !important;*/
+  }
+
+  #post-list-container.grid-mode :global(.post-card-content) {
+    width: 100% !important;
+    padding: 1rem !important;
+  }
+
+  #post-list-container.grid-mode :global(.post-card-title) {
+    font-size: 1.125rem !important;
+    line-height: 1.75rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  #post-list-container.grid-mode :global(.post-card-title::before) {
+    display: none !important;
+  }
+
+  #post-list-container.grid-mode :global(.post-card-enter-btn) {
+    display: none !important;
+  }
+
+  #post-list-container.grid-mode :global(.description) {
+    font-size: 0.875rem !important;
+    margin-bottom: 0.75rem !important;
+    padding-right: 0 !important;
+  }
+  /* 网格模式下，有封面的文章，摘要最多显示两行 */
+  #post-list-container.grid-mode :global(.has-cover .description) {
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    -webkit-line-clamp: 3 !important;
+    line-clamp: 3 !important;
+  }
+
+  #post-list-container.grid-mode :global(.post-meta) {
+    margin-bottom: 0.5rem !important;
+    gap: 0.5rem !important;
+  }
+
+  #post-list-container.grid-mode :global(.post-meta .text-xl) {
+    font-size: 1rem !important;
+    line-height: 1.25rem !important;
+  }
+
+  #post-list-container.grid-mode :global(.meta-icon) {
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+    margin-right: 0.25rem !important;
+  }
+
+  #post-list-container.grid-mode :global(.post-meta .text-sm) {
+    font-size: 0.75rem !important;
+    line-height: 1rem !important;
+  }
+
+  #post-list-container.grid-mode :global(.post-meta .pinned-btn) {
+    padding: 0.25rem 0.375rem !important;
   }
 
 </style>

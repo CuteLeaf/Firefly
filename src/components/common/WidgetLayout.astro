@@ -1,0 +1,65 @@
+---
+import { Icon } from "astro-icon/components";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+
+interface Props {
+	id: string;
+	name?: string;
+	isCollapsed?: boolean;
+	collapsedHeight?: string;
+	class?: string;
+	style?: string;
+}
+const { id, name, isCollapsed, collapsedHeight, style } = Astro.props;
+const className = Astro.props.class;
+---
+<widget-layout data-id={id} data-is-collapsed={String(isCollapsed)} class={"pb-4 card-base " + className} style={style}>
+    {name && (
+        <div class="widget-title font-bold transition text-lg text-neutral-900 dark:text-neutral-100 relative ml-8 mt-4 mb-2
+            before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
+            before:absolute before:left-[-16px] before:top-[5.5px] flex items-center justify-between">
+            <span class="widget-name">{name}</span>
+            <slot name="title-icon" />
+        </div>
+    )}
+    <div id={id} class:list={["collapse-wrapper px-4 overflow-hidden", {"collapsed": isCollapsed, "pt-4": !name}]}>
+        <slot></slot>
+    </div>
+    {isCollapsed && <div class="expand-btn px-4 -mb-2">
+        <button class="btn-plain rounded-lg w-full h-9">
+            <div class="text-[var(--primary)] flex items-center justify-center gap-2 -translate-x-2">
+                <Icon name="material-symbols:more-horiz" class="text-[1.75rem]"></Icon> {i18n(I18nKey.more)}
+            </div>
+        </button>
+    </div>}
+</widget-layout>
+
+<style define:vars={{ collapsedHeight }}>
+    .collapsed {
+        height: var(--collapsedHeight);
+    }
+</style>
+
+<script>
+    class WidgetLayout extends HTMLElement {
+        constructor() {
+            super();
+
+            if (this.dataset.isCollapsed !== "true")
+                return;
+
+            const id = this.dataset.id;
+            const btn = this.querySelector('.expand-btn');
+            const wrapper = this.querySelector(`#${id}`)
+            btn!.addEventListener('click', () => {
+                wrapper!.classList.remove('collapsed');
+                btn!.classList.add('hidden');
+            })
+        }
+    }
+
+    if (!customElements.get("widget-layout")) {
+        customElements.define("widget-layout", WidgetLayout);
+    }
+</script>

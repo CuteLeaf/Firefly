@@ -480,7 +480,7 @@ function portal(node: HTMLElement) {
 
 <!-- Trigger Button -->
 <button 
-  class="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-black/5 text-[var(--primary)] rounded-lg font-medium hover:bg-[var(--primary)]/10 hover:scale-105 active:scale-95 transition-all whitespace-nowrap border border-[var(--primary)]/20"
+  class="btn-regular rounded-lg h-12 px-6 gap-2 hover:scale-105 active:scale-95 whitespace-nowrap"
   on:click={generatePoster}
   aria-label="Generate Share Poster"
 >

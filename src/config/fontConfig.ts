@@ -1,8 +1,13 @@
 // 字体配置
 export const fontConfig = {
-	enable: true, // 启用自定义字体功能
-	preload: true, // 预加载字体文件以提高性能
-	selected: ["system"], // 当前选择的字体，支持多个字体组合
+	// 是否启用自定义字体功能
+	enable: true,
+	// 是否预加载字体文件
+	preload: true,
+	// 当前选择的字体，支持多个字体组合
+	selected: ["system"],
+
+	// 字体列表
 	fonts: {
 		// 系统字体
 		system: {
@@ -12,6 +17,7 @@ export const fontConfig = {
 			family:
 				"system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
 		},
+
 		// Google Fonts - Zen Maru Gothic
 		"zen-maru-gothic": {
 			id: "zen-maru-gothic",
@@ -20,6 +26,7 @@ export const fontConfig = {
 			family: "Zen Maru Gothic",
 			display: "swap" as const,
 		},
+
 		// Google Fonts - Inter
 		inter: {
 			id: "inter",
@@ -28,6 +35,7 @@ export const fontConfig = {
 			family: "Inter",
 			display: "swap" as const,
 		},
+
 		// 小米字体 - MiSans Normal
 		"misans-normal": {
 			id: "misans-normal",
@@ -37,6 +45,7 @@ export const fontConfig = {
 			weight: 400,
 			display: "swap" as const,
 		},
+
 		// 小米字体 - MiSans Semibold
 		"misans-semibold": {
 			id: "misans-semibold",
@@ -47,6 +56,8 @@ export const fontConfig = {
 			display: "swap" as const,
 		},
 	},
+
+	// 全局字体回退
 	fallback: [
 		"system-ui",
 		"-apple-system",
@@ -54,5 +65,5 @@ export const fontConfig = {
 		"Segoe UI",
 		"Roboto",
 		"sans-serif",
-	], // 全局字体回退
+	],
 };

@@ -1,0 +1,223 @@
+---
+import { Icon } from "astro-icon/components";
+import { commentConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import { formatDateToYYYYMMDD } from "@/utils/date-utils";
+import { getCategoryUrl, getTagUrl } from "@/utils/url-utils";
+
+export interface Props {
+	published: Date;
+	updated?: Date;
+	category?: string;
+	tags?: string[];
+	hideUpdateDate?: boolean;
+	hideTagsForMobile?: boolean;
+	isHome?: boolean;
+	className?: string;
+	id?: string;
+	words?: number;
+	minutes?: number;
+	showWordCount?: boolean; // 是否显示字数统计，默认false显示标签
+	customPath?: string;
+	pinned?: boolean;
+}
+
+const {
+	published,
+	updated,
+	category,
+	tags,
+	hideUpdateDate,
+	hideTagsForMobile,
+	isHome,
+	className = "",
+	id,
+	words,
+	minutes,
+	showWordCount = false,
+	customPath,
+	pinned,
+} = Astro.props;
+
+const path = customPath || (id ? `/posts/${id}` : "");
+---
+
+<div
+  class:list={[
+    "flex flex-wrap text-neutral-500 dark:text-neutral-400 items-center gap-4 gap-x-4 gap-y-2",
+    className,
+  ]}
+>
+  <!-- pinned -->
+  {
+    pinned && (
+      <div class="pinned-btn flex items-center gap-1 bg-[var(--btn-regular-bg)] text-[var(--btn-content)] rounded-md px-2 py-1.5 font-bold">
+        <Icon name="material-symbols:pinboard" class="text-xl" />
+        <span class="text-sm">{i18n(I18nKey.pinned)}</span>
+      </div>
+    )
+  }
+
+  <!-- publish date -->
+  <div class="flex items-center">
+    <div class="meta-icon">
+      <Icon
+        name="material-symbols:calendar-today-outline-rounded"
+        class="text-xl"
+      />
+    </div>
+    <span class="text-50 text-sm font-medium"
+      >{formatDateToYYYYMMDD(published)}</span
+    >
+  </div>
+
+  <!-- update date -->
+  {
+    !hideUpdateDate && updated && updated.getTime() !== published.getTime() && (
+      <div class="flex items-center">
+        <div class="meta-icon">
+          <Icon
+            name="material-symbols:edit-calendar-outline-rounded"
+            class="text-xl"
+          />
+        </div>
+        <span class="text-50 text-sm font-medium">
+          {formatDateToYYYYMMDD(updated)}
+        </span>
+      </div>
+    )
+  }
+
+  <!-- categories -->
+  <div class="flex items-center">
+    <div class="meta-icon">
+      <Icon name="material-symbols:book-2-outline-rounded" class="text-xl" />
+    </div>
+    <div class="flex flex-row flex-nowrap items-center">
+      <a
+        href={getCategoryUrl(category || "")}
+        aria-label={`View all posts in the ${category} category`}
+        class="link-lg transition text-50 text-sm font-medium
+                            hover:text-[var(--primary)] dark:hover:text-[var(--primary)] whitespace-nowrap"
+      >
+        {category || i18n(I18nKey.uncategorized)}
+      </a>
+    </div>
+  </div>
+
+   <!-- word count and read time (only for post list) -->
+   {
+     showWordCount && words !== undefined && minutes !== undefined && (
+       <>
+         <!-- word count -->
+         <div class="flex items-center">
+           <div class="meta-icon">
+             <Icon
+               name="material-symbols:article-outline-rounded"
+               class="text-xl"
+             />
+           </div>
+           <div class="text-50 text-sm font-medium">
+             {words}
+             {" " + i18n(words === 1 ? I18nKey.wordCount : I18nKey.wordsCount)}
+           </div>
+         </div>
+         
+{/*          <!-- read time -->
+         <div class="flex items-center">
+           <div class="meta-icon">
+             <Icon
+               name="material-symbols:schedule-outline-rounded"
+               class="text-xl"
+             />
+           </div>
+           <div class="text-50 text-sm font-medium">
+             {minutes}
+             {" " +
+               i18n(minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount)}
+           </div>
+         </div> */}
+       </>
+     )
+   }
+
+   <!-- tags (only for post detail page) -->
+   {
+     !showWordCount && (
+       <div class:list={["items-center", {"flex": !hideTagsForMobile, "hidden md:flex": hideTagsForMobile}]}>
+         <div class="meta-icon">
+           <Icon name="material-symbols:tag-rounded" class="text-xl" />
+         </div>
+         <div class="flex flex-row flex-nowrap items-center">
+           {(tags && tags.length > 0) && tags.map((tag, i) => (
+             <div class:list={[{"hidden": i == 0}, "mx-1.5 text-[var(--meta-divider)] text-sm"]}>/</div>
+             <a href={getTagUrl(tag)} aria-label={`View all posts with the ${tag.trim()} tag`}
+                class="link-lg transition text-50 text-sm font-medium
+                             hover:text-[var(--primary)] dark:hover:text-[var(--primary)] whitespace-nowrap">
+               {tag.trim()}
+             </a>
+           ))}
+           {!(tags && tags.length > 0) && <div class="transition text-50 text-sm font-medium">{i18n(I18nKey.noTags)}</div>}
+         </div>
+       </div>
+     )
+   }
+
+  <!-- Twikoo访问量统计（首页不显示，且文章访问量统计启用时显示） -->
+  {
+    !isHome &&
+      commentConfig.type === 'twikoo' &&
+      commentConfig.twikoo?.visitorCount &&
+      id && (
+        <div class="flex items-center">
+          <div class="meta-icon">
+            <Icon
+              name="material-symbols:visibility-outline-rounded"
+              class="text-xl"
+            />
+          </div>
+          <span class="text-50 text-sm font-medium mr-1">
+            {i18n(I18nKey.pageViews)}
+          </span>
+          <span class="text-50 text-sm font-medium" id="twikoo_visitors">
+            {i18n(I18nKey.pageViewsLoading)}
+          </span>
+        </div>
+      )
+  }
+  <!-- Waline访问量统计（首页不显示、仅type为waline时显示） -->
+  {
+    !isHome &&
+      commentConfig.type === 'waline' &&
+      commentConfig.waline?.visitorCount &&
+      id && (
+        <div class="flex items-center">
+          <div class="meta-icon">
+            <Icon name="material-symbols:visibility-outline-rounded" class="text-xl" />
+          </div>
+          <span class="text-50 text-sm font-medium mr-1">
+            {i18n(I18nKey.pageViews)}
+          </span>
+          <span class="text-50 text-sm font-medium waline-pageview-count" data-path={path}>{i18n(I18nKey.pageViewsLoading)}</span>
+        </div>
+      )
+  }
+    <!-- artalk访问量统计（首页不显示、仅type为artalk时显示） -->
+    {
+        !isHome &&
+        commentConfig.type === 'artalk' &&
+        commentConfig.waline?.visitorCount &&
+        id && (
+                    <div class="flex items-center">
+                        <div class="meta-icon">
+                            <Icon name="material-symbols:visibility-outline-rounded" class="text-xl" />
+                        </div>
+                        <span class="text-50 text-sm font-medium mr-1">
+                            {i18n(I18nKey.pageViews)}
+                        </span>
+                        <span class="text-50 text-sm font-medium artalk-pv-count" data-path={path}>{i18n(I18nKey.pageViewsLoading)}</span>
+                    </div>
+        )
+    }
+</div>

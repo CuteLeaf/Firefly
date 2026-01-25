@@ -9,8 +9,13 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 	enable: true,
 
 	// 侧边栏位置：left=左侧，both=双侧
-	// 开启双侧后网格（双列）模式将无法使用，且右侧组件会在宽度低于1200px时隐藏
+	// 开启双侧边栏后，右侧组件会在宽度低于1200px时隐藏
 	position: "both",
+
+	// 使用左侧单侧栏时，是否在文章详情页显示右侧边栏
+	// 当position为left时开启此项后，文章详情页将显示双侧边栏，主页等其他页面保持左侧单侧边栏
+	// 适用在只想用左侧单侧栏，但在文章详情页想用右侧栏的目录等组件的场景
+	showRightSidebarOnPostPage: true,
 
 	// 左侧边栏组件配置列表
 	// 组件位置position：top=顶部，sticky=粘性定位(会跟随页面滚动)

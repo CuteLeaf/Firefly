@@ -1,20 +1,24 @@
 ---
-import BackToTop from "@components/common/controls/BackToTop.astro";
-import OverlayWallpaper from "@components/interactive/OverlayWallpaper.astro";
+import Live2DWidget from "@components/features/Live2DWidget.astro";
+import OverlayWallpaper from "@components/features/OverlayWallpaper.astro";
+import SpineModel from "@components/features/SpineModel.astro";
 import Footer from "@components/layout/Footer.astro";
 import LeftSideBar from "@components/layout/LeftSideBar.astro";
 import Navbar from "@components/layout/Navbar.astro";
 import RightSideBar from "@components/layout/RightSideBar.astro";
 import SideBar from "@components/layout/SideBar.astro";
-import Live2DWidget from "@components/widget/Live2DWidget.astro";
-import SpineModel from "@components/widget/SpineModel.astro";
 import type { MarkdownHeading } from "astro";
 import { Icon } from "astro-icon/components";
-import TypewriterText from "@/components/content/TypewriterText.astro";
-import FloatingTOC from "@/components/interactive/FloatingTOC.astro";
+import ImageWrapper from "@/components/common/ImageWrapper.astro";
+import FloatingControls from "@/components/controls/FloatingControls.astro";
+import TypewriterText from "@/components/features/TypewriterText.astro";
 import IconifyLoader from "@/components/misc/IconifyLoader.astro";
-import ImageWrapper from "@/components/misc/ImageWrapper.astro";
-import { live2dModelConfig, siteConfig } from "@/config";
+import {
+	backgroundWallpaper,
+	live2dModelConfig,
+	sidebarLayoutConfig,
+	siteConfig,
+} from "@/config";
 import {
 	BANNER_HEIGHT,
 	BANNER_HEIGHT_EXTEND,
@@ -53,28 +57,21 @@ const {
 } = Astro.props;
 
 // 检查背景壁纸模式和是否允许切换
-const isBannerMode = siteConfig.backgroundWallpaper.mode === "banner";
-const isOverlayMode = siteConfig.backgroundWallpaper.mode === "overlay";
-const isBackgroundEnabled = siteConfig.backgroundWallpaper.mode !== "none";
-const isWallpaperSwitchable = siteConfig.backgroundWallpaper.switchable ?? true;
+const isBannerMode = backgroundWallpaper.mode === "banner";
+const isOverlayMode = backgroundWallpaper.mode === "overlay";
+const isBackgroundEnabled = backgroundWallpaper.mode !== "none";
+const isWallpaperSwitchable = backgroundWallpaper.switchable ?? true;
 
 // 检查是否启用波浪动画效果
-const wavesConfig = siteConfig.backgroundWallpaper.banner?.waves?.enable;
+const wavesConfig = backgroundWallpaper.banner?.waves?.enable;
 // 处理分设备控制的波浪动画
 const wavesEnabledOnDesktop =
 	typeof wavesConfig === "object" ? wavesConfig.desktop : wavesConfig;
 const wavesEnabledOnMobile =
 	typeof wavesConfig === "object" ? wavesConfig.mobile : wavesConfig;
 
-// 获取波浪效果性能设置
-const performanceConfig =
-	siteConfig.backgroundWallpaper.banner?.waves?.performance;
-const waveQuality = performanceConfig?.quality || "high";
-const hardwareAcceleration = performanceConfig?.hardwareAcceleration ?? true;
-
 // 处理分设备控制的横幅信贷显示
-const creditEnableConfig =
-	siteConfig.backgroundWallpaper.banner?.credit?.enable;
+const creditEnableConfig = backgroundWallpaper.banner?.credit?.enable;
 const creditEnabledOnDesktop =
 	typeof creditEnableConfig === "object"
 		? creditEnableConfig.desktop
@@ -88,7 +85,7 @@ const hasBannerCredit =
 	isBannerMode && isBackgroundEnabled && creditEnableConfig;
 
 // 处理分设备控制的横幅信贷文本和链接
-const creditTextConfig = siteConfig.backgroundWallpaper.banner?.credit?.text;
+const creditTextConfig = backgroundWallpaper.banner?.credit?.text;
 const creditTextDesktop =
 	typeof creditTextConfig === "object"
 		? creditTextConfig.desktop
@@ -98,7 +95,7 @@ const creditTextMobile =
 		? creditTextConfig.mobile
 		: creditTextConfig;
 
-const creditUrlConfig = siteConfig.backgroundWallpaper.banner?.credit?.url;
+const creditUrlConfig = backgroundWallpaper.banner?.credit?.url;
 const creditUrlDesktop =
 	typeof creditUrlConfig === "object"
 		? creditUrlConfig.desktop
@@ -113,7 +110,7 @@ const isHomePageCheck = isHomePage(Astro.url.pathname);
 
 // 随机选择副标题（当打字机关闭且为数组时）
 const getRandomSubtitle = () => {
-	const subtitle = siteConfig.backgroundWallpaper.banner?.homeText?.subtitle;
+	const subtitle = backgroundWallpaper.banner?.homeText?.subtitle;
 	if (Array.isArray(subtitle)) {
 		const randomIndex = Math.floor(Math.random() * subtitle.length);
 		return subtitle[randomIndex];
@@ -123,7 +120,7 @@ const getRandomSubtitle = () => {
 const randomSubtitle = getRandomSubtitle();
 
 // 主页横幅文本只在首页且全局开关为 true 时显示，不区分设备
-const homeTextEnable = siteConfig.backgroundWallpaper.banner?.homeText?.enable;
+const homeTextEnable = backgroundWallpaper.banner?.homeText?.enable;
 const showHomeText = isBannerMode && !!homeTextEnable && isHomePageCheck;
 // 手机端非首页不显示banner的CSS类
 const mobileNonHomeBannerClass = !isHomePageCheck ? "mobile-hide-banner" : "";
@@ -140,7 +137,8 @@ const finalMainPanelTop =
 	isBannerMode && isBackgroundEnabled ? mainPanelTop : "5.5rem";
 
 // 获取响应式侧边栏配置
-const sidebarConfig = getResponsiveSidebarConfig();
+// 传入是否为文章详情页的标志，用于控制是否显示右侧边栏
+const sidebarConfig = getResponsiveSidebarConfig(postSlug !== undefined);
 const { gridCols } = generateGridClasses(sidebarConfig);
 const sidebarClass = generateSidebarClasses(sidebarConfig);
 const rightSidebarClass = sidebarConfig.isBothSidebars
@@ -156,7 +154,7 @@ const transparentClass = shouldEnableTransparency
 	? "wallpaper-transparent"
 	: "";
 
-const navbarWidthFull = siteConfig.navbarWidthFull ?? false;
+const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
 ---
 
 <Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} postSlug={postSlug}>
@@ -169,9 +167,9 @@ const navbarWidthFull = siteConfig.navbarWidthFull ?? false;
 			desktop: typeof backgroundImages.desktop === 'string' ? backgroundImages.desktop : '',
 			mobile: typeof backgroundImages.mobile === 'string' ? backgroundImages.mobile : ''
 		},
-		zIndex: siteConfig.backgroundWallpaper.overlay?.zIndex,
-		opacity: siteConfig.backgroundWallpaper.overlay?.opacity,
-		blur: siteConfig.backgroundWallpaper.overlay?.blur,
+		zIndex: backgroundWallpaper.overlay?.zIndex,
+		opacity: backgroundWallpaper.overlay?.opacity,
+		blur: backgroundWallpaper.overlay?.blur,
 	}} 
 	className={isWallpaperSwitchable && !isOverlayMode ? "hidden opacity-0" : undefined} />
 )}
@@ -204,7 +202,7 @@ const navbarWidthFull = siteConfig.navbarWidthFull ?? false;
             alt="Mobile background image of the blog" 
             class:list={["block lg:hidden object-cover h-full w-full transition duration-700 opacity-100"]}
             src={typeof backgroundImages.mobile === 'string' ? backgroundImages.mobile : (typeof backgroundImages.desktop === 'string' ? backgroundImages.desktop : '')} 
-            position={siteConfig.backgroundWallpaper.banner?.position}
+            position={backgroundWallpaper.banner?.position}
         />
         <!-- Desktop: use desktop-specific image -->
         <ImageWrapper 
@@ -212,7 +210,7 @@ const navbarWidthFull = siteConfig.navbarWidthFull ?? false;
             alt="Desktop background image of the blog" 
             class:list={["hidden lg:block object-cover h-full transition duration-700 opacity-100"]}
             src={typeof backgroundImages.desktop === 'string' ? backgroundImages.desktop : (typeof backgroundImages.mobile === 'string' ? backgroundImages.mobile : '')} 
-            position={siteConfig.backgroundWallpaper.banner?.position}
+            position={backgroundWallpaper.banner?.position}
         />
     </div>
     
@@ -221,19 +219,19 @@ const navbarWidthFull = siteConfig.navbarWidthFull ?? false;
         <div class={`banner-text-overlay absolute inset-0 z-20 flex items-center justify-center ${!showHomeText ? 'hidden' : ''}`}>
             <div class="w-4/5 lg:w-3/4 text-center mb-0">
                 <div class="flex flex-col">
-                    {siteConfig.backgroundWallpaper.banner?.homeText?.title && (
-                        <h1 class="banner-title text-6xl lg:text-8xl text-white drop-shadow-lg mb-2 lg:mb-4">
-                            {siteConfig.backgroundWallpaper.banner.homeText.title}
+                    {backgroundWallpaper.banner?.homeText?.title && (
+                        <h1 class="banner-title font-bold text-white mb-2 lg:mb-4 leading-tight" style={{ fontSize: backgroundWallpaper.banner.homeText.titleSize || "3rem" }}>
+                            {backgroundWallpaper.banner.homeText.title}
                         </h1>
                     )}
-                    {siteConfig.backgroundWallpaper.banner?.homeText?.subtitle && (
-                        <h2 id="banner-subtitle" class="banner-subtitle text-xl lg:text-3xl text-white/90 drop-shadow-md" data-subtitles={JSON.stringify(siteConfig.backgroundWallpaper.banner.homeText.subtitle)}>
-                            {siteConfig.backgroundWallpaper.banner.homeText.typewriter?.enable ? (
+                    {backgroundWallpaper.banner?.homeText?.subtitle && (
+                        <h2 id="banner-subtitle" class="banner-subtitle text-white/90 leading-snug" style={{ fontSize: backgroundWallpaper.banner.homeText.subtitleSize || "1.5rem" }} data-subtitles={JSON.stringify(backgroundWallpaper.banner.homeText.subtitle)}>
+                            {backgroundWallpaper.banner.homeText.typewriter?.enable ? (
                                 <TypewriterText 
-                                    text={siteConfig.backgroundWallpaper.banner.homeText.subtitle}
-                                    speed={siteConfig.backgroundWallpaper.banner.homeText.typewriter.speed}
-                                    deleteSpeed={siteConfig.backgroundWallpaper.banner.homeText.typewriter.deleteSpeed}
-                                    pauseTime={siteConfig.backgroundWallpaper.banner.homeText.typewriter.pauseTime}
+                                    text={backgroundWallpaper.banner.homeText.subtitle}
+                                    speed={backgroundWallpaper.banner.homeText.typewriter.speed}
+                                    deleteSpeed={backgroundWallpaper.banner.homeText.typewriter.deleteSpeed}
+                                    pauseTime={backgroundWallpaper.banner.homeText.typewriter.pauseTime}
                                 />
                             ) : (
                                 randomSubtitle
@@ -279,17 +277,14 @@ const navbarWidthFull = siteConfig.navbarWidthFull ?? false;
     <div class={`waves absolute -bottom-[1px] h-[10vh] max-h-[9.375rem] min-h-[3.125rem] w-full md:h-[15vh] 
         ${!wavesEnabledOnMobile ? 'hidden' : ''} ${!wavesEnabledOnDesktop ? 'md:hidden' : ''} ${wavesEnabledOnDesktop ? 'md:block' : ''}`} 
         id="header-waves" 
-        style={`transform: translateZ(0); will-change: fill; ${hardwareAcceleration ? 'transform: translateZ(0);' : ''}`}
-        data-wave-quality={waveQuality}
-        data-hardware-acceleration={hardwareAcceleration}>
+        style="transform: translateZ(0); will-change: fill;">
         <svg
             class="waves"
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
-            viewBox="0 20 150 32"
+            viewBox="0 24 150 28"
             preserveAspectRatio="none"
-            shape-rendering={waveQuality === 'low' ? 'optimizeSpeed' : 'auto'}
-            style={`transform: translateZ(0); backface-visibility: hidden; ${hardwareAcceleration ? 'will-change: transform;' : ''}`}
+            shape-rendering="geometricPrecision"
         >
             <defs>
                 <path
@@ -298,34 +293,30 @@ const navbarWidthFull = siteConfig.navbarWidthFull ?? false;
                 >
                 </path>
             </defs>
-            <g class="parallax" style={`transform: translateZ(0); ${hardwareAcceleration ? 'will-change: transform;' : ''}`}>
+            <g class="parallax">
                 <use
                     xlink:href="#gentle-wave"
                     x="48"
                     y="0"
-                    class={`opacity-25 fill-[var(--page-bg)] ${waveQuality === 'low' ? 'wave-low-quality' : ''}`}
-                    style={`animation-delay: -2s; animation-duration: ${waveQuality === 'low' ? '10s' : waveQuality === 'medium' ? '8s' : '7s'}; animation-name: ${waveQuality === 'low' ? 'wave-slow' : waveQuality === 'medium' ? 'wave' : 'wave'}; ${hardwareAcceleration ? 'will-change: transform;' : ''}`}
+                    class="opacity-25 fill-[var(--page-bg)]"
                 ></use>
                 <use
                     xlink:href="#gentle-wave"
                     x="48"
                     y="3"
-                    class={`opacity-50 fill-[var(--page-bg)] ${waveQuality === 'low' ? 'wave-low-quality' : ''}`}
-                    style={`animation-delay: -3s; animation-duration: ${waveQuality === 'low' ? '15s' : waveQuality === 'medium' ? '12s' : '10s'}; animation-name: ${waveQuality === 'low' ? 'wave-slow' : waveQuality === 'medium' ? 'wave' : 'wave'}; ${hardwareAcceleration ? 'will-change: transform;' : ''}`}
+                    class="opacity-50 fill-[var(--page-bg)]"
                 ></use>
                 <use
                     xlink:href="#gentle-wave"
                     x="48"
                     y="5"
-                    class={`opacity-75 fill-[var(--page-bg)] ${waveQuality === 'low' ? 'wave-low-quality' : ''}`}
-                    style={`animation-delay: -4s; animation-duration: ${waveQuality === 'low' ? '20s' : waveQuality === 'medium' ? '16s' : '13s'}; animation-name: ${waveQuality === 'low' ? 'wave-slow' : waveQuality === 'medium' ? 'wave' : 'wave'}; ${hardwareAcceleration ? 'will-change: transform;' : ''}`}
+                    class="opacity-65 fill-[var(--page-bg)]"
                 ></use>
                 <use
                     xlink:href="#gentle-wave"
                     x="48"
                     y="7"
-                    class={`fill-[var(--page-bg)] ${waveQuality === 'low' ? 'wave-low-quality' : ''}`}
-                    style={`animation-delay: -5s; animation-duration: ${waveQuality === 'low' ? '30s' : waveQuality === 'medium' ? '25s' : '20s'}; animation-name: ${waveQuality === 'low' ? 'wave-slow' : waveQuality === 'medium' ? 'wave' : 'wave'}; ${hardwareAcceleration ? 'will-change: transform;' : ''}`}
+                    class=" opacity-75 fill-[var(--page-bg)]"
                 ></use>
             </g>
         </svg>
@@ -382,24 +373,32 @@ const navbarWidthFull = siteConfig.navbarWidthFull ?? false;
 
 
             {/* 渲染侧边栏 - 根据配置决定使用单侧或双侧边栏 */}
-            {sidebarConfig.isBothSidebars ? (
-                <>
-                    {/* 左侧边栏 */}
-                    {sidebarConfig.hasLeftComponents && (sidebarConfig.mobileShowSidebar || sidebarConfig.tabletShowSidebar || sidebarConfig.desktopShowSidebar) && (
-                        <LeftSideBar class={`${sidebarClass} ${transparentClass}`} headings={headings}></LeftSideBar>
-                    )}
-                </>
-            ) : (
-                <>
-                    {/* 单侧边栏布局 */}
-                    {(sidebarConfig.mobileShowSidebar || sidebarConfig.tabletShowSidebar || sidebarConfig.desktopShowSidebar) && (
-                        <SideBar class={`${sidebarClass} ${transparentClass}`} headings={headings}></SideBar>
-                    )}
-                </>
-            )}
+            <div id="left-sidebar-wrapper" class="contents">
+                {sidebarConfig.isBothSidebars ? (
+                    <>
+                        {/* 左侧边栏 */}
+                        {sidebarConfig.hasLeftComponents && (sidebarConfig.mobileShowSidebar || sidebarConfig.tabletShowSidebar || sidebarConfig.desktopShowSidebar) && (
+                            <LeftSideBar class={`${sidebarClass} ${transparentClass}`} headings={headings}></LeftSideBar>
+                        )}
+                    </>
+                ) : (
+                    <>
+                        {/* 单侧边栏布局 */}
+                        {(sidebarConfig.mobileShowSidebar || sidebarConfig.tabletShowSidebar || sidebarConfig.desktopShowSidebar) && (
+                            <SideBar class={`${sidebarClass} ${transparentClass}`} headings={headings}></SideBar>
+                        )}
+                    </>
+                )}
+            </div>
                     
             {/* 主内容区 - 始终渲染，确保 Swup 容器存在 */}
             <main id="swup-container" class={`${mainContentClass} transition-main`}>
+                {/* 携带网格布局类名，用于JS更新父容器 */}
+                <div id="grid-class-carrier" data-grid-class={gridCols} class="hidden"></div>
+                {/* 备用 h1 标题 - 当主页横幅文本未启用时，提供隐藏的主标题 */}
+                {isHomePageCheck && !showHomeText && (
+                        <h1 class="sr-only">{siteConfig.title}</h1>
+                )}
                 <div id="content-wrapper" class="onload-animation transition-leaving">
                     <slot></slot>
                     <div class="footer col-span-2 onload-animation hidden lg:block">
@@ -409,8 +408,26 @@ const navbarWidthFull = siteConfig.navbarWidthFull ?? false;
             </main>
             
             {/* 右侧边栏 - 仅双侧边栏模式 */}
-            {sidebarConfig.isBothSidebars && sidebarConfig.hasRightComponents && (sidebarConfig.mobileShowSidebar || sidebarConfig.tabletShowSidebar || sidebarConfig.desktopShowSidebar) && (
-                <RightSideBar class={`${rightSidebarClass} ${transparentClass}`} headings={headings}></RightSideBar>
+            {/* 
+                如果全局配置为双侧栏(position: both)，则使用静态容器(不被swup替换)，避免闪烁。
+                如果全局配置为单侧栏(position: left)，则使用动态容器(被swup替换)，以便在文章页显示右侧栏。
+                注意：为了满足swup要求所有containers必须存在，我们在两种模式下都必须渲染 #right-sidebar-dynamic。
+            */}
+            {sidebarLayoutConfig.position === "both" ? (
+                <>
+                    <div id="right-sidebar-static" class="contents">
+                        {sidebarConfig.isBothSidebars && sidebarConfig.hasRightComponents && (sidebarConfig.mobileShowSidebar || sidebarConfig.tabletShowSidebar || sidebarConfig.desktopShowSidebar) && (
+                            <RightSideBar class={`${rightSidebarClass} ${transparentClass}`} headings={headings}></RightSideBar>
+                        )}
+                    </div>
+                    <div id="right-sidebar-dynamic" class="hidden"></div>
+                </>
+            ) : (
+                <div id="right-sidebar-dynamic" class="contents">
+                    {sidebarConfig.isBothSidebars && sidebarConfig.hasRightComponents && (sidebarConfig.mobileShowSidebar || sidebarConfig.tabletShowSidebar || sidebarConfig.desktopShowSidebar) && (
+                        <RightSideBar class={`${rightSidebarClass} ${transparentClass}`} headings={headings}></RightSideBar>
+                    )}
+                </div>
             )}
 
             <div class="footer col-span-2 onload-animation block lg:hidden">
@@ -418,57 +435,17 @@ const navbarWidthFull = siteConfig.navbarWidthFull ?? false;
             </div>
         </div>
 
-        <BackToTop></BackToTop>
         <SpineModel></SpineModel>
         {live2dModelConfig.enable && <Live2DWidget config={live2dModelConfig} />}
     </div>
 </div>
 
-<!-- 悬浮TOC组件 -->
-<FloatingTOC headings={headings}></FloatingTOC>
+<FloatingControls headings={headings} />
 
-<!-- 立即执行脚本：防止刷新时右侧栏闪烁 -->
-<script is:inline define:vars={{ isBothSidebars: sidebarConfig.isBothSidebars }}>
-  (function() {
-    // 立即检查并应用保存的布局状态
-    const savedLayout = localStorage.getItem('postListLayout');
-    if (savedLayout) {
-      const rightSidebar = document.getElementById('right-sidebar');
-      const mainGrid = document.getElementById('main-grid');
-      
-      if (savedLayout === 'grid') {
-        if (isBothSidebars && rightSidebar) {
-          rightSidebar.style.display = 'none';
-        }
-        if (mainGrid) {
-          mainGrid.classList.add('grid-layout-active');
-        }
-      } else {
-        if (isBothSidebars && rightSidebar) {
-          rightSidebar.style.display = '';
-        }
-        if (mainGrid) {
-          mainGrid.classList.remove('grid-layout-active');
-        }
-      }
-    }
-  })();
-</script>
+
 </Layout>
 
 <style is:global>
-  /* 网格布局激活时，调整主网格为两列布局 */
-  @media (min-width: 1024px) {
-    #main-grid.grid-layout-active {
-      grid-template-columns: 17.5rem 1fr !important;
-    }
-  }
-  
-  /* 确保在网格模式下右侧边栏完全不占空间 */
-  #main-grid.grid-layout-active #right-sidebar {
-    display: none !important;
-  }
-  
   /* 在低于1200px时隐藏右侧边栏 */
   @media (max-width: 1199px) {
     #right-sidebar {
@@ -488,48 +465,21 @@ const navbarWidthFull = siteConfig.navbarWidthFull ?? false;
     }
   }
   
-  /* 文章详情页布局切换动画 - 简洁优雅的淡入淡出 */
-  #post-container {
-    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
-  }
-  
-  #post-container.layout-switching {
-    animation: gentleFade 0.4s ease-in-out;
-  }
-  
-  @keyframes gentleFade {
-    0%, 100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.92;
-      transform: scale(0.995);
-    }
-  }
-  
-  /* 主内容区布局切换动画 - 平滑宽度过渡 */
-  #swup-container {
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  #swup-container.layout-transitioning {
-    animation: smoothWidth 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  @keyframes smoothWidth {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.96;
-    }
-  }
+
   
   /* 右侧栏平滑过渡 */
   #right-sidebar {
     transition: opacity 0.35s ease-in-out, 
                 transform 0.35s ease-in-out;
+  }
+
+  /* 横幅文字阴影 - 更柔和的扩散效果 */
+  .banner-title {
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+  }
+  
+  .banner-subtitle {
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
   }
 </style>
 

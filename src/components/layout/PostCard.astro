@@ -1,0 +1,259 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
+import { Icon } from "astro-icon/components";
+import RandomCoverImage from "@/components/common/RandomCoverImage.astro";
+import PostMetadata from "@/components/layout/PostMeta.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import { processCoverImageSync } from "@/utils/image-utils";
+import { getFileDirFromPath, getTagUrl } from "@/utils/url-utils";
+
+interface Props {
+	class?: string;
+	entry: CollectionEntry<"posts">;
+	title: string;
+	url: string;
+	published: Date;
+	updated?: Date;
+	tags: string[];
+	category: string | null;
+	image: string;
+	description: string;
+	draft: boolean;
+	pinned?: boolean;
+	style: string;
+}
+const {
+	entry,
+	title,
+	url,
+	published,
+	updated,
+	tags,
+	category,
+	image,
+	description,
+	pinned,
+	style,
+} = Astro.props;
+const className = Astro.props.class;
+
+// 处理随机图：如果image为"api"，则从配置的API获取随机图
+const processedImage = processCoverImageSync(image, entry.id);
+const hasCover =
+	processedImage !== undefined &&
+	processedImage !== null &&
+	processedImage !== "";
+
+const coverWidth = "30%";
+
+const { remarkPluginFrontmatter } = await render(entry);
+---
+
+<div
+  class:list={[
+    "post-card-wrapper",
+    hasCover ? "has-cover" : "no-cover",
+    pinned ? "pinned" : "",
+    "card-base flex flex-col-reverse md:flex-col w-full rounded-[var(--radius-large)] overflow-hidden relative",
+    className,
+  ]}
+  style={style}
+>
+  <!-- pinned icon -->
+  <div
+    class:list={[
+      "post-card-content",
+      "pl-6 md:pl-9 pr-6 md:pr-2 pt-6 md:pt-7 pb-6 md:pb-7 relative flex flex-col h-full",
+      {
+        "w-full md:w-[calc(100%_-_52px_-_12px)]": !hasCover,
+        "w-full md:w-[calc(100%_-_var(--coverWidth)_-_1.5rem)]": hasCover,
+      },
+    ]}
+  >
+
+
+    <a
+      href={url}
+      class="post-card-title transition group w-full block font-bold mb-3 text-3xl text-90
+        hover:text-[var(--primary)] dark:hover:text-[var(--primary)]
+        active:text-[var(--title-active)] dark:active:text-[var(--title-active)]
+        before:w-1 before:h-5 before:rounded-md before:bg-[var(--primary)]
+        before:absolute before:top-[35px] before:left-[18px] before:hidden md:before:block"
+    >
+      <!--       {
+        pinned && (
+          <>
+            <Icon
+              name="mdi:pin"
+              class="inline text-[var(--primary)] text-2xl mr-2 -translate-y-0.5"
+            />
+          </>
+        )
+      } -->
+      {title}
+      <Icon
+        class="inline text-[2rem] text-[var(--primary)] md:hidden translate-y-0.5 absolute"
+        name="material-symbols:chevron-right-rounded"
+      />
+      <Icon
+        class="text-[var(--primary)] text-[2rem] transition hidden md:inline absolute translate-y-0.5 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0"
+        name="material-symbols:chevron-right-rounded"
+      />
+    </a>
+
+    <!-- metadata -->
+    <PostMetadata
+      published={published}
+      updated={updated}
+      tags={tags}
+      category={category || undefined}
+      hideTagsForMobile={true}
+      hideUpdateDate={true}
+      words={remarkPluginFrontmatter.words}
+      minutes={remarkPluginFrontmatter.minutes}
+      showWordCount={true}
+      pinned={pinned}
+      className="mb-4 post-meta"
+    />
+
+    <!-- description -->
+    <div
+      class:list={[
+        "transition text-75 mb-3.5 pr-4 description flex-grow",
+        { "line-clamp-2 md:line-clamp-1": !description },
+      ]}
+    >
+      {description || remarkPluginFrontmatter.excerpt}
+    </div>
+
+    <!-- tags -->
+    <div
+      class="text-sm text-black/30 dark:text-white/30 flex flex-wrap gap-2 transition stats mt-auto"
+    >
+      {
+        tags &&
+          tags.length > 0 &&
+          tags.map((tag, _i) => (
+            <a
+              href={getTagUrl(tag)}
+              aria-label={`View all posts with the ${tag.trim()} tag`}
+              class="btn-regular h-6 text-xs px-2 py-1 rounded-md 
+                    transition-all duration-200 hover:scale-105 active:scale-95"
+            >
+              #{tag.trim()}
+            </a>
+          ))
+      }
+      {
+        !(tags && tags.length > 0) && (
+          <span class="text-[var(--content-meta)] text-xs">
+            #{i18n(I18nKey.noTags)}
+          </span>
+        )
+      }
+    </div>
+  </div>
+
+  {
+    hasCover && (
+      <a
+        href={url}
+        aria-label={title}
+        class:list={[
+          "post-card-image",
+          "group",
+          "w-full md:w-[var(--coverWidth)]",
+          "aspect-[2/1] md:aspect-auto",
+          "relative md:absolute md:top-4 md:bottom-4 md:right-4",
+          "rounded-t-[var(--radius-large)] md:rounded-xl overflow-hidden active:scale-95",
+        ]}
+      >
+        <div class="absolute pointer-events-none z-10 w-full h-full group-hover:bg-black/30 group-active:bg-black/50 transition" />
+        <div class="absolute pointer-events-none z-20 w-full h-full flex items-center justify-center ">
+          <Icon
+            name="material-symbols:chevron-right-rounded"
+            class="transition opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 text-white text-5xl"
+          />
+        </div>
+        <RandomCoverImage
+          src={processedImage}
+          basePath={getFileDirFromPath(entry.filePath || '')}
+          alt="Cover Image of the Post"
+          class="w-full h-full"
+          seed={entry.id}
+          preview={true}
+        />
+      </a>
+    )
+  }
+
+  {
+    !hasCover && (
+      <a
+        href={url}
+        aria-label={title}
+        class:list={[
+          "post-card-enter-btn",
+          "!hidden md:!flex btn-regular w-[3.25rem]",
+          "absolute right-3 top-3 bottom-3 rounded-xl bg-[var(--enter-btn-bg)]",
+          "hover:bg-[var(--enter-btn-bg-hover)] active:bg-[var(--enter-btn-bg-active)] active:scale-95",
+        ]}
+      >
+        <Icon
+          name="material-symbols:chevron-right-rounded"
+          class="transition text-[var(--primary)] text-4xl mx-auto"
+        />
+      </a>
+    )
+  }
+</div>
+
+<style define:vars={{ coverWidth }}>
+  /* Grid Mode Styles */
+  :global(.grid-mode) .post-card-wrapper {
+    flex-direction: column-reverse !important;
+    height: 100% !important;
+    justify-content: flex-end !important;
+  }
+
+  :global(.grid-mode) .post-card-content {
+    width: 100% !important;
+    padding-right: 1rem !important;
+    height: auto !important;
+    flex-grow: 1 !important;
+  }
+
+  :global(.grid-mode) .no-cover .post-card-content {
+    padding-right: 1rem !important;
+  }
+
+  :global(.grid-mode) .post-card-image {
+    position: relative !important;
+    top: auto !important;
+    bottom: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    margin: 0 !important;
+    border-radius: var(--radius-large) var(--radius-large) 0 0 !important;
+    max-height: none !important;
+    aspect-ratio: 2/1 !important;
+  }
+
+  :global(.grid-mode) .description {
+    flex-grow: 0 !important;
+  }
+
+  :global(.grid-mode) .stats {
+    margin-top: auto !important;
+  }
+
+  :global(.grid-mode) .has-cover .post-card-content {
+    padding-top: 0.8rem !important;
+  }
+  :global(.grid-mode) .has-cover .post-card-title::before {
+    top: 1.3rem !important;
+  }
+
+</style>

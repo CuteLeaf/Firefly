@@ -3,6 +3,7 @@ import { Icon } from "astro-icon/components";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { url } from "@/utils/url-utils";
 ---
 
 <MainGridLayout title={i18n(I18nKey.notFound)} description={i18n(I18nKey.notFoundDescription)}>
@@ -30,7 +31,7 @@ import MainGridLayout from "@/layouts/MainGridLayout.astro";
             
             <!-- 返回首页按钮 -->
             <a 
-                href="/" 
+                href={url("/")}
                 class="inline-flex items-center gap-2 px-6 py-3 bg-[var(--primary)] text-white rounded-[var(--radius-large)] hover:bg-[var(--btn-content)] transition-colors duration-200 font-medium"
             >
                 <Icon name="material-symbols:home" class="text-xl" />

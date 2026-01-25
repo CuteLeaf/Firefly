@@ -1,9 +1,10 @@
 ---
 import { Icon } from "astro-icon/components";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
 import { siteConfig } from "@/config/siteConfig";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
-import WidgetLayout from "./WidgetLayout.astro";
+import { url } from "@/utils/url-utils";
 
 interface Props {
 	class?: string;
@@ -44,9 +45,12 @@ const yearText = i18n(I18nKey.year);
 
 // 获取当前语言
 const currentLang = siteConfig.lang || "en";
+
+const calendarDataUrl = url("/api/calendar.json");
+const postUrlPrefix = url("/posts/");
 ---
 
-<WidgetLayout id="calendar-widget" class={"!pt-4 [&>.widget-title]:hidden " + className} style={style}>
+<WidgetLayout id="calendar-widget" class={className} style={style}>
   <div class="calendar-container">
     <div class="flex justify-between items-center mb-4">
         <button id="prev-month-btn" class="btn-plain rounded-lg w-8 h-8 flex items-center justify-center hover:bg-[var(--btn-plain-bg-hover)] transition-colors" aria-label="Previous Month">
@@ -100,7 +104,7 @@ const currentLang = siteConfig.lang || "en";
   </div>
 </WidgetLayout>
 
-<script is:inline define:vars={{ monthNames, weekDays, yearText, currentLang }}>
+<script is:inline define:vars={{ monthNames, weekDays, yearText, currentLang, calendarDataUrl, postUrlPrefix }}>
   // State variables
   let displayYear = new Date().getFullYear();
   let displayMonth = new Date().getMonth();
@@ -111,7 +115,7 @@ const currentLang = siteConfig.lang || "en";
 
   async function fetchData() {
     try {
-      const response = await fetch('/api/calendar.json');
+      const response = await fetch(calendarDataUrl);
       allPostsData = await response.json();
       
       // Reconstruct postDateMap and availableYears
@@ -347,7 +351,7 @@ const currentLang = siteConfig.lang || "en";
         const date = new Date(post.published);
         const dateStr = `${date.getMonth() + 1}-${date.getDate()}`;
         return `
-        <a href="/posts/${post.id}/" class="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-[var(--primary)] dark:hover:text-[var(--primary)] transition-colors px-2 py-1 rounded hover:bg-[var(--btn-plain-bg-hover)]">
+        <a href="${postUrlPrefix}${post.id}/" class="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-[var(--primary)] dark:hover:text-[var(--primary)] transition-colors px-2 py-1 rounded hover:bg-[var(--btn-plain-bg-hover)]">
           <span class="truncate">${post.title}</span>
           <span class="text-xs text-neutral-500 dark:text-neutral-400 ml-2 whitespace-nowrap">${dateStr}</span>
         </a>
@@ -402,7 +406,7 @@ const currentLang = siteConfig.lang || "en";
             const date = new Date(post.published);
             const dateStr = `${date.getMonth() + 1}-${date.getDate()}`;
             return `
-            <a href="/posts/${post.id}/" class="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-[var(--primary)] dark:hover:text-[var(--primary)] transition-colors px-2 py-1 rounded hover:bg-[var(--btn-plain-bg-hover)]">
+            <a href="${postUrlPrefix}${post.id}/" class="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-[var(--primary)] dark:hover:text-[var(--primary)] transition-colors px-2 py-1 rounded hover:bg-[var(--btn-plain-bg-hover)]">
               <span class="truncate">${post.title}</span>
               <span class="text-xs text-neutral-500 dark:text-neutral-400 ml-2 whitespace-nowrap">${dateStr}</span>
             </a>

@@ -1,80 +1,40 @@
-/* Water waves animation - 恢复原始效果 */
+/* Water waves animation */
 .waves > .parallax use {
-	animation: wave-default 25s cubic-bezier(0.5, 0.5, 0.45, 0.5) infinite;
+animation: wave 25s cubic-bezier(0.5, 0.5, 0.45, 0.5) infinite;
+transform: translateZ(0);
+will-change: transform;
+backface-visibility: hidden;
 }
 
-/* 性能优化：低质量模式 */
-[data-wave-quality="low"] .waves > .parallax use {
-	animation: wave-slow 30s linear infinite;
-	animation-fill-mode: both;
+.waves > .parallax use:nth-child(1) {
+animation-delay: -2s;
+animation-duration: 7s;
 }
 
-/* 性能优化：中等质量模式 */
-[data-wave-quality="medium"] .waves > .parallax use {
-	animation: wave 20s cubic-bezier(0.4, 0.4, 0.6, 0.4) infinite;
+.waves > .parallax use:nth-child(2) {
+animation-delay: -3s;
+animation-duration: 10s;
 }
 
-/* 性能优化：高质量模式 */
-[data-wave-quality="high"] .waves > .parallax use {
-	animation: wave 15s cubic-bezier(0.5, 0.5, 0.45, 0.5) infinite;
+.waves > .parallax use:nth-child(3) {
+animation-delay: -4s;
+animation-duration: 13s;
 }
 
-/* 硬件加速控制 */
-[data-hardware-acceleration="true"] .waves > .parallax use {
-	transform: translateZ(0);
-	will-change: transform;
-	backface-visibility: hidden;
-}
-
-[data-hardware-acceleration="false"] .waves > .parallax use {
-	will-change: auto;
-	backface-visibility: visible;
-}
-
-@keyframes wave-default {
-	0% {
-		transform: translate3d(-90px, 0, 0);
-	}
-	100% {
-		transform: translate3d(85px, 0, 0);
-	}
-}
-
-@keyframes wave-slow {
-	0% {
-		transform: translate(-90px, 0);
-	}
-	100% {
-		transform: translate(85px, 0);
-	}
+.waves > .parallax use:nth-child(4) {
+animation-delay: -5s;
+animation-duration: 20s;
 }
 
 @keyframes wave {
-	0% {
-		transform: translate3d(-90px, 0, 0);
-	}
-	100% {
-		transform: translate3d(85px, 0, 0);
-	}
+0% {
+transform: translate3d(-90px, 0, 0);
+}
+100% {
+transform: translate3d(85px, 0, 0);
+}
 }
 
-/* 低质量模式的额外优化 */
-.wave-low-quality {
-	animation-timing-function: linear !important;
-	animation-iteration-count: infinite !important;
-}
-
-/* 性能优化：减少重绘 */
-[data-wave-quality="low"] .waves {
-	/* 移除contain属性，避免限制波浪动画 */
-	contain: none;
-}
-
-[data-wave-quality="medium"] .waves {
-	/* 移除contain属性，避免限制波浪动画 */
-	contain: none;
-}
-
-[data-wave-quality="high"] .waves {
-	contain: none;
+.waves {
+contain: none;
 }

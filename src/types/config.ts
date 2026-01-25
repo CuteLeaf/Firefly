@@ -22,34 +22,53 @@ export type SiteConfig = {
 		defaultMode?: LIGHT_DARK_MODE; // 默认模式：浅色、深色或跟随系统
 	};
 
+	// 卡片样式配置
+	card: {
+		// 是否开启卡片边框和阴影立体效果
+		border: boolean;
+	};
+
 	// 字体配置
 	font: FontConfig;
 
 	// 站点开始日期，用于计算运行天数
 	siteStartDate?: string; // 格式: "YYYY-MM-DD"
 
+	// 可选：站点时区，使用 IANA 时区标识，例如 "Asia/Shanghai"、"UTC"
+	timezone?: string;
+
+	// 提醒框配置
+	rehypeCallouts: {
+		theme: "github" | "obsidian" | "vitepress";
+	};
+
 	// 添加bangumi配置
 	bangumi?: {
 		userId?: string; // Bangumi用户ID
 	};
 
-	backgroundWallpaper: BackgroundWallpaperConfig;
 	generateOgImages: boolean;
 	favicon: Array<{
 		src: string;
 		theme?: "light" | "dark";
 		sizes?: string;
 	}>;
-	/** 导航栏Logo图标，可选类型：icon库、图片链接、本地图片 */
-	navbarLogo?: {
-		type: "icon" | "image";
-		value: string; // icon名或图片url
-		alt?: string; // 图片alt文本
+
+	navbar: {
+		/** 导航栏Logo图标，可选类型：icon库、图片链接、本地图片 */
+		logo?: {
+			type: "icon" | "image";
+			value: string; // icon名或图片url
+			alt?: string; // 图片alt文本
+		};
+		title?: string; // 导航栏标题，如果不设置则使用 title
+		widthFull?: boolean; // 导航栏是否占满屏幕宽度
+		followTheme?: boolean; // 导航栏图标和标题是否跟随主题色
 	};
-	navbarTitle?: string; // 导航栏标题，如果不设置则使用 title
-	navbarWidthFull?: boolean; // 导航栏是否占满屏幕宽度
+
 	showLastModified: boolean; // 控制"上次编辑"卡片显示的开关
 	outdatedThreshold?: number; // 文章过期阈值（天数），超过此天数才显示"上次编辑"卡片
+	sharePoster?: boolean; // 是否显示分享海报按钮
 
 	// 页面开关配置
 	pages: {
@@ -66,14 +85,20 @@ export type SiteConfig = {
 			// 网格布局配置，仅在 defaultMode 为 "grid" 或允许切换布局时生效
 			// 是否开启瀑布流布局
 			masonry: boolean;
-			// 网格模式下封面位置："top" 顶部，"right" 右侧
-			coverPosition: "top" | "right";
+			// 网格模式列数：2 或 3，默认为 2。注意：3列模式仅在单侧边栏（或无侧边栏）且屏幕宽度足够时生效
+			columns?: 2 | 3;
 		};
 	};
 
 	// 分页配置
 	pagination: {
 		postsPerPage: number; // 每页显示的文章数量
+	};
+
+	// 统计分析
+	analytics?: {
+		googleAnalyticsId?: string; // Google Analytics ID
+		microsoftClarityId?: string; // Microsoft Clarity ID
 	};
 };
 
@@ -103,35 +128,14 @@ export type NavBarLink = {
 
 export enum NavBarSearchMethod {
 	PageFind = 0,
-	MeiliSearch = 1,
 }
-
-/**
- * MeiliSearch配置
- *
- * @property INDEX_NAME MeiliSearch索引名称
- * @property CONTENT_DIR 需要被索引的内容目录
- * @property MEILI_HOST MeiliSearch服务器地址
- * @property PUBLIC_MEILI_HOST 公共MeiliSearch服务器地址（前端使用）
- * @property PUBLIC_MEILI_SEARCH_KEY 公共MeiliSearch搜索密钥（前端使用）
- */
-export type MeiliSearchConfig = {
-	INDEX_NAME: string;
-	CONTENT_DIR: string;
-	MEILI_HOST: string;
-	PUBLIC_MEILI_HOST: string;
-	PUBLIC_MEILI_SEARCH_KEY: string;
-};
 
 export type NavBarSearchConfig = {
 	method: NavBarSearchMethod;
-	meiliSearchConfig?: MeiliSearchConfig;
 };
 
 export type NavBarConfig = {
 	links: (NavBarLink | LinkPreset)[];
-	searchMethod?: NavBarSearchMethod;
-	meiliSearchConfig?: MeiliSearchConfig;
 };
 
 export type ProfileConfig = {
@@ -351,6 +355,7 @@ export type WidgetComponentConfig = {
 export type SidebarLayoutConfig = {
 	enable: boolean; // 是否启用侧边栏
 	position: "left" | "both"; // 侧边栏位置：左侧或双侧
+	showRightSidebarOnPostPage?: boolean; // 当position为left时，是否在文章详情页显示右侧边栏
 	leftComponents: WidgetComponentConfig[]; // 左侧边栏组件配置列表
 	rightComponents: WidgetComponentConfig[]; // 右侧边栏组件配置列表
 	defaultAnimation: {
@@ -492,6 +497,8 @@ export type BackgroundWallpaperConfig = {
 			enable: boolean; // 是否在首页显示自定义文字（全局开关）
 			title?: string; // 主标题
 			subtitle?: string | string[]; // 副标题，支持单个字符串或字符串数组
+			titleSize?: string; // 主标题字体大小，如 "3.5rem"
+			subtitleSize?: string; // 副标题字体大小，如 "1.5rem"
 			typewriter?: {
 				enable: boolean; // 是否启用打字机效果
 				speed: number; // 打字速度（毫秒）
@@ -521,6 +528,8 @@ export type BackgroundWallpaperConfig = {
 		};
 		navbar?: {
 			transparentMode?: "semi" | "full" | "semifull"; // 导航栏透明模式
+			enableBlur?: boolean; // 是否开启毛玻璃模糊效果
+			blur?: number; // 毛玻璃模糊度
 		};
 		waves?: {
 			enable:
@@ -529,10 +538,6 @@ export type BackgroundWallpaperConfig = {
 						desktop: boolean; // 桌面端是否启用波浪动画效果
 						mobile: boolean; // 移动端是否启用波浪动画效果
 				  }; // 是否启用波浪动画效果，支持布尔值或分别设置桌面端和移动端
-			performance?: {
-				quality: "high" | "medium" | "low"; // 渲染质量：high=高质量，medium=中等质量，low=低质量
-				hardwareAcceleration: boolean; // 是否启用硬件加速
-			}; // 波浪效果性能优化配置
 		};
 	};
 	// 全屏透明覆盖模式特有配置
@@ -579,6 +584,10 @@ export type FriendLink = {
 	tags?: string[]; // 标签数组
 	weight: number; // 权重，数字越大排序越靠前
 	enabled: boolean; // 是否启用
+};
+
+export type FriendsPageConfig = {
+	columns: 2 | 3; // 显示列数：2列或3列
 };
 
 // 音乐播放器配置

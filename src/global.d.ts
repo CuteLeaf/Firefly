@@ -10,6 +10,7 @@ declare global {
 		swup: any;
 		live2dModelInitialized?: boolean;
 		spineModelInitialized?: boolean;
+		floatingTOCListenersInitialized?: boolean;
 		// biome-ignore lint/suspicious/noExplicitAny: External library
 		spinePlayerInstance?: any;
 		pagefind: {

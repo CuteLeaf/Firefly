@@ -1,5 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
 import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
@@ -8,7 +9,6 @@ import {
 	getSortedPosts,
 	getTagList,
 } from "@/utils/content-utils";
-import WidgetLayout from "./WidgetLayout.astro";
 
 interface Props {
 	class?: string;
@@ -56,6 +56,8 @@ const latestPost = posts.reduce((latest, post) => {
 const lastPostDate = latestPost
 	? latestPost.data.published.toISOString()
 	: null;
+
+const todayText = i18n(I18nKey.today);
 
 const stats = [
 	{
@@ -128,7 +130,7 @@ const stats = [
   </div>
 </WidgetLayout>
 
-<script is:inline define:vars={{ siteStartDate, lastPostDate }}>
+<script is:inline define:vars={{ siteStartDate, lastPostDate, todayText }}>
   function updateDynamicStats() {
     const today = new Date();
     
@@ -150,7 +152,17 @@ const stats = [
       
       const lastUpdateElement = document.querySelector('[data-stat-id="last-update"]');
       if (lastUpdateElement) {
-        lastUpdateElement.textContent = daysSinceLastUpdate.toString();
+        if (daysSinceLastUpdate === 0) {
+          lastUpdateElement.textContent = todayText;
+          if (lastUpdateElement.nextElementSibling) {
+            lastUpdateElement.nextElementSibling.style.display = 'none';
+          }
+        } else {
+          lastUpdateElement.textContent = daysSinceLastUpdate.toString();
+          if (lastUpdateElement.nextElementSibling) {
+            lastUpdateElement.nextElementSibling.style.display = '';
+          }
+        }
       }
     }
   }

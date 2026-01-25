@@ -1,15 +1,15 @@
-/* 导入统一变量 */
-@import './variables-unified.styl';
-/* 导入统一动画样式 */
-@import './animation-enhancements.css';
-@import './transition.css';
-/* 导入统一导航栏样式 */
-@import './navbar.css';
 
+@import './variables-unified.styl';
+@import './layout-styles.css';
+@import './navbar.css';
+@import './waves.css';
+@import './transition.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 其他组件样式 */
 
 /* 确保平滑滚动 */
 html {
@@ -194,6 +194,20 @@ html {
     .card-base-transparent {
         @apply rounded-[var(--radius-large)] overflow-hidden bg-[var(--card-bg-transparent)] backdrop-blur-sm transition-colors duration-150;
     }
+
+    /* 开启边框和阴影效果时的样式 */
+    .enable-card-border .card-base {
+        @apply transition-all duration-300 border border-[var(--line-divider)] shadow-sm;
+    }
+    .enable-card-border .card-base-transparent {
+        @apply transition-all duration-300 border border-[var(--line-divider)] shadow-sm;
+    }
+
+    /* 导航栏样式适配 */
+    .enable-card-border #navbar > div:not(.absolute) {
+        @apply transition-all duration-300 border shadow-sm;
+        border-color: var(--line-divider) !important;
+    }
     
     /* 全屏壁纸模式下的半透明效果 */
     .wallpaper-transparent .card-base {
@@ -202,11 +216,7 @@ html {
         /* @apply backdrop-blur-sm; */
     }
     
-    .wallpaper-transparent .float-panel {
-        @apply bg-[var(--card-bg-transparent)];
-        /* 移除高斯模糊以提升性能 */
-        /* @apply backdrop-blur-sm; */
-    }
+ 
     
     .wallpaper-transparent #navbar > div {
     @apply bg-[var(--card-bg-transparent)] backdrop-blur-sm;
@@ -236,7 +246,7 @@ html {
         @apply transition-colors duration-150 rounded-md p-1.5 -m-1.5 expand-animation;
     }
     .float-panel {
-        @apply top-[5.25rem] rounded-[var(--radius-large)] overflow-hidden bg-[var(--float-panel-bg)] transition-colors duration-150 shadow-xl dark:shadow-none
+        @apply top-[5.25rem] rounded-[var(--radius-large)] overflow-hidden bg-[var(--card-bg)] transition-colors duration-150 shadow-xl border border-black/5 dark:border-white/10
     }
     .float-panel-closed {
         @apply -translate-y-1 opacity-0 pointer-events-none
@@ -331,7 +341,7 @@ html {
     }
 
     .dropdown-content {
-        @apply bg-[var(--float-panel-bg)] rounded-[var(--radius-large)] shadow-xl dark:shadow-none border border-black/5 dark:border-white/10 py-2 min-w-[12rem];
+        @apply bg-[var(--card-bg)] rounded-[var(--radius-large)] shadow-xl border border-black/5 dark:border-white/10 py-2 min-w-[12rem];
     }
 
     .dropdown-item {

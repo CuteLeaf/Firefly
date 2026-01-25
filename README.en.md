@@ -6,14 +6,16 @@
 # Firefly
 > A Fresh and Beautiful Astro Blog Theme Template
 > 
-> ![Node.js >= 20](https://img.shields.io/badge/node.js-%3E%3D20-brightgreen) 
+> ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen) 
 ![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
-![Astro](https://img.shields.io/badge/Astro-5.16.6-orange)
+![Astro](https://img.shields.io/badge/Astro-5.16.8-orange)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)
 >
 > [![Stars](https://img.shields.io/github/stars/CuteLeaf/Firefly?style=social)](https://github.com/CuteLeaf/Firefly/stargazers)
 [![Forks](https://img.shields.io/github/forks/CuteLeaf/Firefly?style=social)](https://github.com/CuteLeaf/Firefly/network/members)
 [![Issues](https://img.shields.io/github/issues/CuteLeaf/Firefly)](https://github.com/CuteLeaf/Firefly/issues)
+> 
+> [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Z8Z41NQALY)
 > 
 > ![GitHub License](https://img.shields.io/github/license/CuteLeaf/Firefly)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/CuteLeaf/Firefly)
@@ -41,11 +43,11 @@
 <img alt="firefly" src="./docs/images/1.webp" />
 
 >[!TIP]
->In important layouts, Firefly innovatively adds dual sidebars, article grid (two-column) layout, masonry layout,
+>In important layouts, Firefly innovatively adds dual sidebars, article grid (multi-column) layout, masonry layout,
 >
 >Includes site statistics, calendar component, table of contents and other widgets to enrich the sidebar,
 >
->While also retaining Furwai's layout system, freely switchable in the configuration file.
+>While also retaining fuwari layout system, freely switchable in the configuration file.
 >
 >**For more layout configurations and demos, please see: [Firefly Layout System Details](https://firefly.cuteleaf.cn/posts/firefly-layout-system/)**
 
@@ -57,27 +59,28 @@
 - [x] **Smooth Animations** - Swup page transition animations for silky smooth browsing experience
 - [x] **Responsive Design** - Perfect adaptation for desktop, tablet and mobile devices
 - [x] **Multi-language Support** - i18n internationalization, supports Simplified Chinese, Traditional Chinese, English, Japanese, Russian
-- [x] **Full-text Search** - Client-side search based on Pagefind, supports article content indexing. Also supports MeiliSearch search engine
+- [x] **Full-text Search** - Client-side search based on Pagefind, supports article content indexing.
 
 ### Personalization
-- [x] **Sidebar** - Supports single sidebar, dual sidebar configuration, freely switchable in frontend
-- [x] **Article Layout** - Supports list (single column) and grid (two-column/masonry) layout, freely switchable in frontend
+- [x] **Sidebar** - Supports single sidebar, dual sidebar configuration
+- [x] **Article Layout** - Supports list (single column) and grid (multi-column/masonry) layout
 - [x] **Font Management** - Custom font support with rich font selector
 - [x] **Footer Configuration** - HTML content injection, fully customizable
+- [x] **Light/Dark Mode** - Supports light/dark/system three modes
 - [x] **Navbar Customization** - Logo, title, links fully customizable
-- [x] **Wallpaper Mode Switching** - Banner wallpaper, fullscreen wallpaper, solid background, freely switchable in frontend
-- [x] **Theme Color Customization** - 360° hue adjustment, supports light/dark/system three modes, freely switchable in frontend
+- [x] **Wallpaper Mode Switching** - Banner wallpaper, fullscreen wallpaper, solid background
+- [x] **Theme Color Customization** - 360° hue adjustment
 
 ### Page Components
-- [x] **Guestbook** - Supports guestbook page with integrated comment system
-- [x] **Announcement Bar** - Top announcement notification, supports closing and custom styles
+- [x] **Guestbook** - Supports guestbook page
+- [x] **Announcement Bar** - Supports sidebar announcement notification
 - [x] **Mascot** - Supports both Spine and Live2D animation engines
-- [x] **Site Statistics** - Displays article, category, tag counts, total word count, running time, last update time
+- [x] **Site Statistics** - Displays article, category, tag counts, total word count, etc.
 - [x] **Site Calendar** - Displays current month calendar and published articles for the month
-- [x] **Sponsor Page** - Multiple payment methods, payment QR codes, sponsor list, in-article sponsor button
-- [x] **Share Poster** - Supports generating beautiful article share posters containing article summary, QR code, etc.
+- [x] **Sponsor Page** - Sponsor link redirection, payment QR codes display, sponsor list, in-article sponsor button
+- [x] **Share Poster** - Supports generating beautiful article share posters
 - [x] **Sakura Effect** - Supports sakura effect, fullscreen sakura animation
-- [x] **Friend Links** - Beautiful friend link display cards
+- [x] **Friend Links** - Beautiful friend links display page
 - [x] **Ad Component** - Supports custom sidebar advertising content
 - [x] **Bangumi** - Display anime and game tracking based on Bangumi API
 - [x] **Comment System** - Integrates Twikoo, Waline, Giscus, Disqus, Artalk comment systems
@@ -91,14 +94,13 @@
 - [x] **Sidebar TOC** - Dynamically displays article table of contents, supports anchor jumping
 - [x] **Enhanced Code Blocks** - Based on Expressive Code, supports code folding, line numbers, language identification
 - [x] **Math Formula Support** - KaTeX rendering engine, supports inline and block formulas
-- [x] **Markdown Extensions** - [Markdown extended features](https://github.com/saicaca/fuwari?tab=readme-ov-file#-markdown-extended-syntax)
 - [x] **Random Cover Images** - Supports fetching random cover images via API
+- [x] **Markdown Extensions** - More Markdown extension syntax support
 
 ### SEO
 - [x] **SEO Optimization** - Complete meta tags and structured data
 - [x] **RSS Feed** - Automatically generates RSS Feed
 - [x] **Sitemap** - Automatically generates XML Sitemap with page filtering configuration
-
 
 ## 📝 Planned...
 
@@ -122,7 +124,9 @@ If you have useful features and optimizations, please submit a [Pull Request](ht
    git clone https://github.com/Cuteleaf/Firefly.git
    cd Firefly
    ```
-   **First [Fork](https://github.com/CuteLeaf/Firefly/fork) to your own repository then clone (recommended)**
+   
+   **First [Fork](https://github.com/CuteLeaf/Firefly/fork) to your own repository then clone (recommended). Don't forget to Star before Fork!**
+
    ```bash
    git clone https://github.com/you-github-name/Firefly.git
    cd Firefly
@@ -178,7 +182,6 @@ const SITE_LANG = "zh_CN";
 - `ja` - Japanese
 - `ru` - Russian
 
-
 ### Configuration File Structure
 
 ```
@@ -186,6 +189,7 @@ src/
 ├── config/
 │   ├── index.ts              # Configuration index file
 │   ├── siteConfig.ts         # Site basic configuration
+│   ├── backgroundWallpaper.ts # Background wallpaper configuration
 │   ├── profileConfig.ts      # User profile configuration
 │   ├── commentConfig.ts      # Comment system configuration
 │   ├── announcementConfig.ts # Announcement configuration
@@ -218,26 +222,38 @@ tags: [Foo, Bar]
 category: Front-end
 draft: false
 lang: zh-CN      # Only set when article language differs from site language in `siteConfig.ts`
+pinned: false    # Pin article
+comment: true    # Enable comments
 ---
 ```
+
+## 📖 Markdown Extensions
+
+In addition to the default [GitHub Flavored Markdown](https://github.github.com/gfm/) support in Astro, there are some additional Markdown features:
+
+- Admonitions - Supports configuration for GitHub, Obsidian, and VitePress themes ([Preview and Usage](https://firefly.cuteleaf.cn/posts/markdown-extended/))
+- GitHub Repository Cards ([Preview and Usage](https://firefly.cuteleaf.cn/posts/markdown-extended/))
+- Enhanced Code Blocks based on Expressive Code ([Preview](http://firefly.cuteleaf.cn/posts/code-examples/) / [Documentation](https://expressive-code.com/))
 
 ## 🧞 Commands
 
 All commands need to be executed in the project root directory:
 
-| Command                           | Action                            |
-|:----------------------------------|:----------------------------------|
-| `pnpm install` and `pnpm add sharp` | Install dependencies                              |
-| `pnpm dev`                        | Start local development server at `localhost:4321`      |
-| `pnpm build`                      | Build site to `./dist/`                   |
-| `pnpm preview`                    | Preview built site locally                        |
-| `pnpm new-post <filename>`        | Create new article                             |
-| `pnpm astro ...`                  | Execute `astro add`, `astro check` and other commands |
-| `pnpm astro --help`               | Display Astro CLI help                   |
+| Command                    | Action                                              |
+|:---------------------------|:----------------------------------------------------|
+| `pnpm install`             | Install dependencies                                |
+| `pnpm dev`                 | Start local development server at `localhost:4321`  |
+| `pnpm build`               | Build site to `./dist/`                             |
+| `pnpm preview`             | Preview built site locally                          |
+| `pnpm check`               | Check for errors in code                            |
+| `pnpm format`              | Format your code using Biome                        |
+| `pnpm new-post <filename>` | Create new article                                  |
+| `pnpm astro ...`           | Execute `astro add`, `astro check` and other commands |
+| `pnpm astro --help`        | Display Astro CLI help                              |
 
 ## 🙏 Acknowledgments
 
-- Special thanks to [saicaca](https://github.com/saicaca) for developing the [Fuwari](https://github.com/saicaca/fuwari) template, which Firefly is based on
+- Special thanks to [saicaca](https://github.com/saicaca) for developing the [fuwari](https://github.com/saicaca/fuwari) template, which Firefly is based on
 - Referenced blogger [Kasuka](https://kasuha.com)'s [Bangumi Collection Display](https://kasuha.com/posts/fuwari-enhance-ep2/) and [Email Protection/Image Title](https://kasuha.com/posts/fuwari-enhance-ep1/) solutions
 - Referenced [Mizuki](https://github.com/matsuzaka-yuki/Mizuki)'s banner title, multi-level menu navbar, sakura effect, KaTeX, and Fancybox solutions
 - Built with [Astro](https://astro.build) and [Tailwind CSS](https://tailwindcss.com)
@@ -248,17 +264,29 @@ All commands need to be executed in the project root directory:
 
 ## 📝 License
 
-This project is licensed under the [MIT license](https://mit-license.org/), see the [LICENSE](./LICENSE) file for details. It was originally forked from [saicaca/fuwari](https://github.com/saicaca/fuwari). Thanks to the original author for their contribution. The original project is also licensed under the [MIT license](https://mit-license.org/).
+This project is licensed under the [MIT license](https://mit-license.org/). See the [LICENSE](./LICENSE) file for details.
+
+Originally forked from [saicaca/fuwari](https://github.com/saicaca/fuwari). Thanks to the original author for their contributions. The original project is licensed under the [MIT License](https://mit-license.org/)
+
+**Copyright Notice:**
+- Copyright (c) 2024 [saicaca](https://github.com/saicaca) - [fuwari](https://github.com/saicaca/fuwari)
+- Copyright (c) 2025 [CuteLeaf](https://github.com/CuteLeaf) - [Firefly](https://github.com/CuteLeaf/Firefly)
+
+Under the MIT license, you are free to use, modify, and distribute the code, but you must retain the above copyright notice.
 
 ## 🍀 Contributors
 
 Thanks to the following contributors for their contributions to this project. If you have any questions or suggestions, please submit an [Issue](https://github.com/CuteLeaf/Firefly/issues) or [Pull Request](https://github.com/CuteLeaf/Firefly/pulls).
 
-<a href="https://github.com/CuteLeaf/Firefly/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=CuteLeaf/Firefly" />
-</a>
+><a href="https://github.com/CuteLeaf/Firefly/graphs/contributors">
+>  <img src="https://contrib.rocks/image?repo=CuteLeaf/Firefly" />
+></a>
 
-![Alt](https://repobeats.axiom.co/api/embed/6139639d8e88da4d3dc9d45fd43f4e4b2d580086.svg "Repobeats analytics image")
+Thanks to the following contributors for their contributions to the original project [fuwari](https://github.com/saicaca/fuwari), which laid the foundation for this project.
+
+><a href="https://github.com/saicaca/fuwari/graphs/contributors">
+>  <img src="https://contrib.rocks/image?repo=saicaca/fuwari" />
+></a>
 
 ## ⭐ Star History
 

@@ -1,9 +1,9 @@
 ---
 import { getEntry, render } from "astro:content";
 import Comment from "@components/comment/index.astro";
-import Markdown from "@components/misc/Markdown.astro";
-import Icon from "@/components/misc/Icon.astro";
-import { getEnabledFriends } from "@/config";
+import Markdown from "@components/common/Markdown.astro";
+import Icon from "@/components/common/Icon.astro";
+import { friendsPageConfig, getEnabledFriends } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
@@ -18,6 +18,7 @@ const { Content } = await render(friendsPost);
 
 // 使用配置文件中的友链数据，按权重排序
 const items = getEnabledFriends();
+const allTags = [...new Set(items.flatMap((item) => item.tags || []))].sort();
 
 // 页面标题和描述
 const title = i18n(I18nKey.friends);
@@ -30,92 +31,104 @@ const description = i18n(I18nKey.friendsDescription);
   >
     <div class="card-base z-10 px-9 py-6 relative w-full">
       <!-- 页面标题和描述 -->
-      <div class="mb-8">
+      <div class="mb-4">
         <div class="flex items-center gap-3 mb-3">
-          <div class="h-8 w-8 rounded-lg bg-[var(--primary)] flex items-center justify-center text-white dark:text-black/70">
-            <Icon icon="material-symbols:group" class="text-[1.5rem]"></Icon>
+          <div
+            class="h-8 w-8 rounded-lg bg-[var(--primary)] flex items-center justify-center text-white dark:text-black/70"
+          >
+            <Icon icon="material-symbols:group" class="text-[1.5rem]" />
           </div>
           <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
             {title}
           </h1>
         </div>
-        {description && (
-          <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
-            {description}
-          </p>
-        )}
+        {
+          description && (
+            <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
+              {description}
+            </p>
+          )
+        }
       </div>
-      
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-8 my-4">
+
+      <!-- 标签筛选 -->
+      {
+        items.length > 0 && (
+          <friend-filter class="flex flex-wrap gap-2 mb-6">
+            <button
+              data-tag="all"
+              class="btn-regular px-3 py-1.5 rounded-lg bg-[var(--primary)] text-white hover:bg-[var(--primary)] transition-colors duration-200 text-sm font-medium"
+            >
+              {i18n(I18nKey.all)}
+            </button>
+            {allTags.map((tag) => (
+              <button
+                data-tag={tag}
+                class="btn-regular px-3 py-1.5 rounded-lg bg-[var(--btn-regular-bg)] text-[var(--btn-content)] hover:bg-[var(--btn-regular-bg-hover)] transition-colors duration-200 text-sm font-medium"
+              >
+                {tag}
+              </button>
+            ))}
+          </friend-filter>
+        )
+      }
+
+      <div class={`grid grid-cols-1 sm:grid-cols-2 ${friendsPageConfig.columns === 2 ? 'lg:grid-cols-2' : 'lg:grid-cols-3'} gap-3 my-4`}>
         {
           items.map((item) => (
-            <div class="flex flex-nowrap items-stretch h-24 sm:h-28 gap-3 sm:gap-4 rounded-[var(--radius-large)]">
-              <div class="w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 rounded-lg overflow-hidden bg-zinc-200 dark:bg-zinc-900">
+            <a
+              href={item.siteurl}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-tags={item.tags?.join(",")}
+              class="friend-card group flex items-center gap-3 p-2.5 rounded-xl border border-[var(--line-divider)] hover:border-[var(--primary)] hover:bg-[var(--card-bg)] transition-all duration-300 hover:shadow-lg relative overflow-hidden"
+            >
+              {/* 背景装饰 - 仅悬停显示 */}
+              <div class="absolute inset-0 bg-[var(--primary)] opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none" />
+
+              {/* 头像 */}
+              <div class="relative w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-black/5 dark:border-white/5 group-hover:scale-105 transition-transform duration-300">
                 <img
                   src={item.imgurl}
-                  alt="站点头像"
+                  alt={item.title}
                   class="w-full h-full object-cover"
                 />
               </div>
-              <div class="grow w-full flex flex-col justify-between min-w-0">
-                <div class="min-w-0 flex-1">
-                  <a
-                    href={item.siteurl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="font-bold transition text-base sm:text-lg text-neutral-900 dark:text-neutral-100 mb-1 hover:text-[var(--primary)] block truncate"
-                  >
+
+              {/* 内容 */}
+              <div class="grow min-w-0 flex flex-col justify-center gap-0.5">
+                <div class="flex items-center justify-between">
+                  <div class="font-bold text-base text-neutral-900 dark:text-neutral-100 group-hover:text-[var(--primary)] transition-colors truncate pr-4">
                     {item.title}
-                  </a>
-                  <div class="text-50 text-xs sm:text-sm font-medium line-clamp-2 leading-relaxed">
-                    {item.desc}
                   </div>
+                  {/* 外部链接图标 */}
+                  <Icon
+                    icon="material-symbols:arrow-outward-rounded"
+                    class="text-[var(--primary)] text-lg opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
+                  />
                 </div>
+
                 <div
-                  class:list={[
-                    "items-center flex-shrink-0 mt-1 sm:mt-2",
-                    { flex: true, "hidden md:flex": false },
-                  ]}
+                  class="text-sm text-neutral-500 dark:text-neutral-400 line-clamp-1"
+                  title={item.desc}
                 >
-                  <div class="flex flex-row items-center gap-1 overflow-hidden">
-                    {item.tags &&
-                      item.tags.length > 0 &&
-                      item.tags.map((tag) => (
-                        <span class="btn-regular h-5 sm:h-6 text-xs px-1.5 sm:px-2 rounded-md whitespace-nowrap flex-shrink-0">
-                          {tag}
-                        </span>
-                      ))}
-                    {!(item.tags && item.tags.length > 0) && (
-                      <div class="transition text-50 text-xs sm:text-sm font-medium">
-                        {i18n(I18nKey.noTags)}
-                      </div>
-                    )}
-                  </div>
+                  {item.desc}
+                </div>
+
+                {/* 标签 */}
+                <div class="flex flex-wrap gap-1 mt-1">
+                  {item.tags && item.tags.length > 0
+                    ? item.tags
+                        .slice(0, 3)
+                        .map((tag) => (
+                          <span class="text-[0.65rem] px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 transition-colors duration-300">
+                            {tag}
+                          </span>
+                        ))
+                    : null}
                 </div>
               </div>
-              <a
-                href={item.siteurl}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="flex btn-regular w-[3.25rem] rounded-lg bg-[var(--enter-btn-bg)] hover:bg-[var(--enter-btn-bg-hover)] active:bg-[var(--enter-btn-bg-active)] active:scale-95 flex-shrink-0"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                  aria-hidden="true"
-                  role="img"
-                  class="transition text-[var(--primary)] text-2xl sm:text-4xl mx-auto iconify iconify--material-symbols"
-                  width="1em"
-                  height="1em"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M12.6 12L8.7 8.1q-.275-.275-.275-.7t.275-.7t.7-.275t.7.275l4.6 4.6q.15.15.213.325t.062.375t-.062.375t-.213.325l-4.6 4.6q-.275.275-.7.275t-.7-.275t-.275-.7t.275-.7z"
-                  />
-                </svg>
-              </a>
-            </div>
+            </a>
           ))
         }
       </div>
@@ -129,4 +142,71 @@ const description = i18n(I18nKey.friendsDescription);
   <div class="mt-4">
     <Comment post={friendsPost} customPath="/friends/" />
   </div>
+
+  <script slot="head" is:inline>
+    if (!customElements.get("friend-filter")) {
+      class FriendFilter extends HTMLElement {
+        constructor() {
+          super();
+        }
+
+        connectedCallback() {
+          this.addEventListener("click", this.handleClick);
+        }
+
+        disconnectedCallback() {
+          this.removeEventListener("click", this.handleClick);
+        }
+
+        handleClick(e) {
+          const target = e.target;
+          const button = target.closest("button");
+          if (!button) return;
+
+          const selectedTag = button.dataset.tag;
+          const filters = this.querySelectorAll("button");
+          const container = this.closest(".card-base");
+          if (!container) return;
+
+          const cards = container.querySelectorAll(".friend-card");
+
+          filters.forEach((f) => {
+            f.classList.remove("bg-[var(--primary)]", "text-white");
+            f.classList.remove("hover:bg-[var(--primary)]");
+            f.classList.add(
+              "bg-[var(--btn-regular-bg)]",
+              "text-[var(--btn-content)]"
+            );
+            f.classList.add("hover:bg-[var(--btn-regular-bg-hover)]");
+
+            if (f === button) {
+              f.classList.remove(
+                "bg-[var(--btn-regular-bg)]",
+                "text-[var(--btn-content)]"
+              );
+              f.classList.remove("hover:bg-[var(--btn-regular-bg-hover)]");
+              f.classList.add("bg-[var(--primary)]", "text-white");
+              f.classList.add("hover:bg-[var(--primary)]");
+            }
+          });
+
+          cards.forEach((card) => {
+            const cardEl = card;
+            const tags = (cardEl.dataset.tags || "").split(",");
+            if (
+              selectedTag === "all" ||
+              (selectedTag && tags.includes(selectedTag))
+            ) {
+              cardEl.style.display = "";
+              cardEl.classList.add("animate-fade-in-up");
+            } else {
+              cardEl.style.display = "none";
+              cardEl.classList.remove("animate-fade-in-up");
+            }
+          });
+        }
+      }
+      customElements.define("friend-filter", FriendFilter);
+    }
+  </script>
 </MainGridLayout>

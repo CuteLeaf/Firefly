@@ -13,6 +13,7 @@ export const en: Translation = {
 	[Key.searchContent]: "Content",
 	[Key.searchViewMore]: "View more results ({count} more)",
 	[Key.other]: "Other",
+	[Key.all]: "All",
 
 	[Key.tags]: "Tags",
 	[Key.categories]: "Categories",
@@ -181,8 +182,8 @@ export const en: Translation = {
 	// Wallpaper Mode
 	[Key.wallpaperMode]: "Wallpaper Mode",
 	[Key.wallpaperBannerMode]: "Banner Wallpaper",
-	[Key.wallpaperOverlayMode]: "Transparent",
-	[Key.wallpaperNoneMode]: "Solid Color Background",
+	[Key.wallpaperOverlayMode]: "Overlay Wallpaper",
+	[Key.wallpaperNoneMode]: "None Wallpaper",
 
 	// Sponsor Page
 	[Key.sponsor]: "Sponsor",
@@ -202,7 +203,7 @@ export const en: Translation = {
 	[Key.sponsorButtonText]:
 		"If this article helped you, please share or support!",
 
-	[Key.shareOnSocial]: "Share",
+	[Key.shareOnSocial]: "Share Article",
 	[Key.shareOnSocialDescription]:
 		"If this article helped you, please share it with others!",
 
@@ -216,6 +217,7 @@ export const en: Translation = {
 	[Key.siteStatsLastUpdate]: "Last Activity",
 	[Key.siteStatsDaysAgo]: "{days} days ago",
 	[Key.siteStatsDays]: "{days} days",
+	[Key.today]: "Today",
 
 	// Calendar Component
 	[Key.calendarSunday]: "Sun",
