@@ -75,17 +75,10 @@ const getComponentsByPosition = (components: WidgetComponentConfig[]) => {
 	return { topComponents, stickyComponents };
 };
 
-// 获取动画延迟（硬编码）
-const getAnimationDelay = (index: number): string => {
-	const delay = index * 50;
-	return `${delay}ms`;
-};
-
 // 动态构建组件 props
 const getComponentProps = (config: WidgetComponentConfig, index: number) => {
 	const baseProps: any = {
-		class: "onload-animation",
-		style: `animation-delay: ${getAnimationDelay(index)}`,
+		class: "",
 	};
 
 	// 添加 showOnPostPage 标记class

@@ -374,15 +374,15 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
             <div id="left-sidebar-wrapper" class="contents">
                 {sidebarConfig.isBothSidebars ? (
                     <>
-                        {/* 左侧边栏 */}
-                        {sidebarConfig.hasLeftComponents && (sidebarConfig.mobileShowSidebar || sidebarConfig.tabletShowSidebar || sidebarConfig.desktopShowSidebar) && (
+                        {/* 左侧边栏 - 769px及以上显示 */}
+                        {sidebarConfig.hasLeftComponents && (
                             <SideBar side="left" class={`${sidebarClass} ${transparentClass}`} headings={headings}></SideBar>
                         )}
                     </>
                 ) : (
                     <>
-                        {/* 单侧边栏布局 */}
-                        {(sidebarConfig.mobileShowSidebar || sidebarConfig.tabletShowSidebar || sidebarConfig.desktopShowSidebar) && (
+                        {/* 单侧边栏 - 769px及以上显示 */}
+                        {sidebarConfig.hasLeftComponents && (
                             <SideBar class={`${sidebarClass} ${transparentClass}`} headings={headings}></SideBar>
                         )}
                     </>
@@ -399,36 +399,44 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
                 )}
                 <div id="content-wrapper" class="onload-animation transition-leaving">
                     <slot></slot>
-                    <div class="footer col-span-2 onload-animation hidden lg:block">
+                    <div class="footer col-span-1 lg:col-span-2 onload-animation hidden lg:block">
                         <Footer></Footer>
                     </div>
                 </div>
             </main>
             
             {/* 右侧边栏 - 仅双侧边栏模式 */}
-            {/* 
+            {/*
                 如果全局配置为双侧栏(position: both)，则使用静态容器(不被swup替换)，避免闪烁。
                 如果全局配置为单侧栏(position: left)，则使用动态容器(被swup替换)，以便在文章页显示右侧栏。
                 注意：为了满足swup要求所有containers必须存在，我们在两种模式下都必须渲染 #right-sidebar-dynamic。
+                右侧边栏在1200px以下隐藏（CSS处理）。
             */}
             {sidebarLayoutConfig.position === "both" ? (
                 <>
                     <div id="right-sidebar-static" class="contents">
-                        {sidebarConfig.isBothSidebars && sidebarConfig.hasRightComponents && (sidebarConfig.mobileShowSidebar || sidebarConfig.tabletShowSidebar || sidebarConfig.desktopShowSidebar) && (
+                        {sidebarConfig.isBothSidebars && sidebarConfig.hasRightComponents && (
                             <SideBar side="right" class={`${rightSidebarClass} ${transparentClass}`} headings={headings}></SideBar>
                         )}
                     </div>
-                    <div id="right-sidebar-dynamic" class="hidden"></div>
+                    <div id="right-sidebar-dynamic" class="hidden transition-swup-fade"></div>
                 </>
             ) : (
-                <div id="right-sidebar-dynamic" class="contents">
-                    {sidebarConfig.isBothSidebars && sidebarConfig.hasRightComponents && (sidebarConfig.mobileShowSidebar || sidebarConfig.tabletShowSidebar || sidebarConfig.desktopShowSidebar) && (
+                <div id="right-sidebar-dynamic" class="contents transition-swup-fade">
+                    {sidebarConfig.isBothSidebars && sidebarConfig.hasRightComponents && (
                         <SideBar side="right" class={`${rightSidebarClass} ${transparentClass}`} headings={headings}></SideBar>
                     )}
                 </div>
             )}
 
-            <div class="footer col-span-2 onload-animation block lg:hidden">
+            {/* 移动端底部组件 - 768px及以下显示 */}
+            {sidebarLayoutConfig.mobileBottomComponents && sidebarLayoutConfig.mobileBottomComponents.length > 0 && (
+                <div id="mobile-bottom-sidebar" class="col-span-1 block md:hidden">
+                    <SideBar side="bottom" class={`${transparentClass}`} headings={headings}></SideBar>
+                </div>
+            )}
+
+            <div class="footer col-span-1 lg:col-span-2 onload-animation block lg:hidden">
                 <Footer></Footer>
             </div>
         </div>
@@ -444,38 +452,27 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
 </Layout>
 
 <style is:global>
-  /* 在低于1200px时隐藏右侧边栏 */
-  @media (max-width: 1199px) {
-    #right-sidebar {
-      display: none !important;
-    }
-    
-    /* 同时调整网格布局 */
-    #main-grid {
-      grid-template-columns: 17.5rem 1fr !important;
-    }
-  }
-  
-  /* 在1024px-1199px之间，确保平板端也正确显示 */
-  @media (min-width: 1024px) and (max-width: 1199px) {
-    #main-grid {
-      grid-template-columns: 17.5rem 1fr !important;
-    }
-  }
-  
-
-  
   /* 右侧栏平滑过渡 */
   #right-sidebar {
-    transition: opacity 0.35s ease-in-out, 
+    transition: opacity 0.35s ease-in-out,
                 transform 0.35s ease-in-out;
+  }
+
+
+  @keyframes swupFadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0.95;
+    }
   }
 
   /* 横幅文字阴影 - 更柔和的扩散效果 */
   .banner-title {
     text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
   }
-  
+
   .banner-subtitle {
     text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
   }
