@@ -1003,10 +1003,21 @@ function disableAnimation() {
   // 更新侧边栏组件的可见性
   function updateSidebarComponentsVisibility() {
     const isPostPage = window.location.pathname.includes("/posts/") || window.location.pathname.includes("/post/");
+
+    // 处理 showOnPostPage === false 的组件
     const widgetsToHideOnPost = document.querySelectorAll(".widget-hide-on-post");
     widgetsToHideOnPost.forEach((widget) => {
-      // showOnPostPage: false 表示在文章页不显示
       if (isPostPage) {
+        widget.classList.add("hidden");
+      } else {
+        widget.classList.remove("hidden");
+      }
+    });
+
+    // 处理 showOnNonPostPage === false 的组件
+    const widgetsToHideOnNonPost = document.querySelectorAll(".widget-hide-on-non-post");
+    widgetsToHideOnNonPost.forEach((widget) => {
+      if (!isPostPage) {
         widget.classList.add("hidden");
       } else {
         widget.classList.remove("hidden");

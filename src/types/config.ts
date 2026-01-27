@@ -341,6 +341,7 @@ export type WidgetComponentConfig = {
 	position: "top" | "sticky"; // 组件位置：top=固定在顶部，sticky=粘性定位（可滚动）
 	configId?: string; // 配置ID，用于广告组件指定使用哪个配置
 	showOnPostPage?: boolean; // 是否在文章详情页显示
+	showOnNonPostPage?: boolean; // 是否在非文章详情页显示
 	responsive?: {
 		hidden?: ("mobile" | "tablet" | "desktop")[]; // 在指定设备上隐藏
 		collapseThreshold?: number; // 折叠阈值
@@ -353,6 +354,7 @@ export type MobileBottomComponentConfig = {
 	enable: boolean; // 是否启用该组件
 	configId?: string; // 配置ID，用于广告组件指定使用哪个配置
 	showOnPostPage?: boolean; // 是否在文章详情页显示
+	showOnNonPostPage?: boolean; // 是否在非文章详情页显示
 	responsive?: {
 		hidden?: ("mobile" | "tablet" | "desktop")[]; // 在指定设备上隐藏
 		collapseThreshold?: number; // 折叠阈值

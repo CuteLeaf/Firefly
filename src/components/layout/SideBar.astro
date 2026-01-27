@@ -41,9 +41,11 @@ const className = Astro.props.class;
 const getComponents = () => {
 	if (side === "left") {
 		return sidebarLayoutConfig.leftComponents;
-	} else if (side === "right") {
+	}
+	if (side === "right") {
 		return sidebarLayoutConfig.rightComponents;
-	} else if (side === "bottom") {
+	}
+	if (side === "bottom") {
 		return sidebarLayoutConfig.mobileBottomComponents;
 	}
 	return [];
@@ -55,7 +57,7 @@ const filterAndSortComponents = (components: WidgetComponentConfig[] | any[]) =>
 		.filter((comp) => {
 			// 检查是否启用
 			if (!comp.enable) return false;
-			// 不进行 showOnPostPage 过滤，所有启用的组件都渲染
+			// 不进行 showOnPostPage/showOnNonPostPage 过滤，所有启用的组件都渲染
 			return true;
 		})
 		.sort((a, b) => {
@@ -88,9 +90,12 @@ const getComponentProps = (config: WidgetComponentConfig, index: number) => {
 		style: `animation-delay: ${getAnimationDelay(index)}`,
 	};
 
-	// 添加 showOnPostPage 标记class
+	// 添加 showOnPostPage 和 showOnNonPostPage 标记class
 	if (config.showOnPostPage === false) {
 		baseProps.class = `${baseProps.class} widget-hide-on-post`;
+	}
+	if (config.showOnNonPostPage === false) {
+		baseProps.class = `${baseProps.class} widget-hide-on-non-post`;
 	}
 
 	// 特殊处理 SidebarTOC 组件
