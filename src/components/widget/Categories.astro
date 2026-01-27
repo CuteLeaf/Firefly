@@ -4,21 +4,21 @@ import WidgetLayout from "@/components/common/WidgetLayout.astro";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { getCategoryList } from "@/utils/content-utils";
-import { widgetManager } from "@/utils/widget-manager";
+import { sidebarLayoutConfig } from "@/config";
 
 const categories = await getCategoryList();
 
 const COLLAPSED_HEIGHT = "7.5rem";
 
-// 使用统一的组件管理器检查是否应该折叠
-const allComponents = [
-	...widgetManager.getConfig().leftComponents,
-	...widgetManager.getConfig().rightComponents,
-];
-const categoriesComponent = allComponents.find((c) => c.type === "categories");
-const isCollapsed = categoriesComponent
-	? widgetManager.isCollapsed(categoriesComponent, categories.length)
-	: false;
+// 从配置中获取分类组件的折叠阈值
+const categoriesComponent = [
+	...sidebarLayoutConfig.leftComponents,
+	...sidebarLayoutConfig.rightComponents,
+	...sidebarLayoutConfig.mobileBottomComponents,
+].find((c) => c.type === "categories");
+
+const collapseThreshold = categoriesComponent?.responsive?.collapseThreshold;
+const isCollapsed = collapseThreshold ? categories.length >= collapseThreshold : false;
 
 interface Props {
 	class?: string;

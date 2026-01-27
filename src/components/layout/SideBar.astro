@@ -75,10 +75,17 @@ const getComponentsByPosition = (components: WidgetComponentConfig[]) => {
 	return { topComponents, stickyComponents };
 };
 
+// 获取动画延迟（硬编码）
+const getAnimationDelay = (index: number): string => {
+	const delay = index * 50;
+	return `${delay}ms`;
+};
+
 // 动态构建组件 props
 const getComponentProps = (config: WidgetComponentConfig, index: number) => {
 	const baseProps: any = {
-		class: "",
+		class: "onload-animation",
+		style: `animation-delay: ${getAnimationDelay(index)}`,
 	};
 
 	// 添加 showOnPostPage 标记class
@@ -114,11 +121,13 @@ const bottomComponents = isMobileBottom ? filteredComponents : [];
 		<div id={`${side}-sidebar`} class:list={[className, "flex flex-col w-full pt-0"]}>
 			{/* Mobile bottom components - 直接渲染所有组件，不分组 */}
 			{isMobileBottom ? (
-				bottomComponents.map((comp, index) => {
-					const Component = componentMap[comp.type];
-					if (!Component) return null;
-					return <Component {...getComponentProps(comp, index)} />;
-				})
+				<div class="flex flex-col w-full gap-4">
+					{bottomComponents.map((comp, index) => {
+						const Component = componentMap[comp.type];
+						if (!Component) return null;
+						return <Component {...getComponentProps(comp, index)} />;
+					})}
+				</div>
 			) : (
 				<>
 					{/* Top components */}

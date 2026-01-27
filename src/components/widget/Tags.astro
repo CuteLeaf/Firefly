@@ -6,21 +6,21 @@ import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { getTagList } from "@/utils/content-utils";
 import { getTagUrl } from "@/utils/url-utils";
-import { widgetManager } from "@/utils/widget-manager";
+import { sidebarLayoutConfig } from "@/config";
 
 const tags = await getTagList();
 
 const COLLAPSED_HEIGHT = "7.5rem";
 
-// 使用统一的组件管理器检查是否应该折叠
-const allComponents = [
-	...widgetManager.getConfig().leftComponents,
-	...widgetManager.getConfig().rightComponents,
-];
-const tagsComponent = allComponents.find((c) => c.type === "tags");
-const isCollapsed = tagsComponent
-	? widgetManager.isCollapsed(tagsComponent, tags.length)
-	: false;
+// 从配置中获取标签组件的折叠阈值
+const tagsComponent = [
+	...sidebarLayoutConfig.leftComponents,
+	...sidebarLayoutConfig.rightComponents,
+	...sidebarLayoutConfig.mobileBottomComponents,
+].find((c) => c.type === "tags");
+
+const collapseThreshold = tagsComponent?.responsive?.collapseThreshold;
+const isCollapsed = collapseThreshold ? tags.length >= collapseThreshold : false;
 
 interface Props {
 	class?: string;

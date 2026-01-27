@@ -663,6 +663,9 @@ function disableAnimation() {
       }
     });
     window.swup.hooks.on("content:replace", () => {
+      // 更新侧边栏组件的可见性（根据新页面的 URL）
+      updateSidebarComponentsVisibility();
+
       // 更新主网格布局类名
       const gridClassCarrier = document.getElementById("grid-class-carrier");
       if (gridClassCarrier) {
@@ -672,7 +675,7 @@ function disableAnimation() {
 
           const currentClasses = mainGrid.className.split(" ");
           const newClasses = currentClasses.filter(c => !c.startsWith("lg:grid-cols-") && !c.startsWith("md:grid-cols-") && !c.startsWith("grid-cols-"));
-          
+
           // 添加新的网格类
           const gridClasses = gridClass.split(" ");
           mainGrid.className = [...newClasses, ...gridClasses].join(" ");
@@ -681,7 +684,7 @@ function disableAnimation() {
 
       // 只处理katex元素的容器，使用浏览器原生滚动条
       initCustomScrollbar();
-      
+
       // 重新初始化图标加载器
       import("@/utils/icon-loader").then(({ initIconLoader }) => {
         initIconLoader();
@@ -758,7 +761,7 @@ function disableAnimation() {
       // Control mobile banner visibility based on page with improved staging animation
       // 只在移动端（1024px以下）处理banner隐藏
       const isMobile = window.innerWidth < 1024;
-      
+
       // 在移动端禁用文章列表容器的过渡动画，防止与主内容区位置变化冲突
       if (isMobile) {
         const postListContainer = document.getElementById("post-list-container");
@@ -776,7 +779,7 @@ function disableAnimation() {
         if (isHomePage) {
           // 首页：禁用主内容区域的过渡动画，防止文章列表下移
           mainContentWrapper.style.transition = "none";
-          
+
           // 先显示banner，然后移除隐藏类让其优雅出现
           bannerWrapper.style.display = "";
           setTimeout(() => {
@@ -997,16 +1000,32 @@ function disableAnimation() {
     initCustomScrollbar();
   }
 
+  // 更新侧边栏组件的可见性
+  function updateSidebarComponentsVisibility() {
+    const isPostPage = window.location.pathname.includes("/posts/") || window.location.pathname.includes("/post/");
+    const widgetsToHideOnPost = document.querySelectorAll(".widget-hide-on-post");
+    widgetsToHideOnPost.forEach((widget) => {
+      // showOnPostPage: false 表示在文章页不显示
+      if (isPostPage) {
+        widget.classList.add("hidden");
+      } else {
+        widget.classList.remove("hidden");
+      }
+    });
+  }
+
   // Initialize wallpaper mode
   import { initWallpaperMode, initThemeListener } from "@/utils/setting-utils";
   import { initIconLoader } from "@/utils/icon-loader";
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
+      updateSidebarComponentsVisibility();
       initWallpaperMode();
       initThemeListener();
       initIconLoader();
     });
   } else {
+    updateSidebarComponentsVisibility();
     initWallpaperMode();
     initThemeListener();
     initIconLoader();

@@ -68,7 +68,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			// 响应式配置
 			responsive: {
 				// 折叠阈值：当标签数量超过20个时自动折叠
-				collapseThreshold: 20,
+				collapseThreshold: 5,
 			},
 		},
 		{
@@ -131,28 +131,59 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 		},
 	],
 
-	// 默认动画配置
-	defaultAnimation: {
-		// 是否启用默认动画
-		enable: true,
-		// 基础延迟时间（毫秒）
-		baseDelay: 0,
-		// 递增延迟时间（毫秒），每个组件依次增加的延迟
-		increment: 50,
-	},
-
-	// 响应式布局配置
-	responsive: {
-		// 不同设备的布局模式
-		// hidden:不显示侧边栏   drawer:抽屉模式(移动端不显示)   sidebar:显示侧边栏
-		// 使用 Tailwind 标准断点：mobile(<768px), tablet(768px-1023px), desktop(>=1024px)
-		layout: {
-			// 移动端：<768px
-			mobile: "sidebar",
-			// 平板端：768px-1023px
-			tablet: "sidebar",
-			// 桌面端：>=1024px
-			desktop: "sidebar",
+	// 移动端底部组件配置列表
+	// 这些组件只在移动端(<768px)显示在页面底部，独立于左右侧边栏配置
+	mobileBottomComponents: [
+		{
+			// 组件类型：用户资料组件
+			type: "profile",
+			// 是否启用该组件
+			enable: true,
+			// 是否在文章详情页显示
+			showOnPostPage: true,
 		},
-	},
+		{
+			// 组件类型：公告组件
+			type: "announcement",
+			// 是否启用该组件
+			enable: true,
+			// 是否在文章详情页显示
+			showOnPostPage: true,
+		},
+				{
+			// 组件类型：分类组件
+			type: "categories",
+			// 是否启用该组件
+			enable: true,
+			// 是否在文章详情页显示
+			showOnPostPage: true,
+			// 响应式配置
+			responsive: {
+				// 折叠阈值：当分类数量超过5个时自动折叠
+				collapseThreshold: 5,
+			},
+		},
+		{
+			// 组件类型：标签组件
+			type: "tags",
+			// 是否启用该组件
+			enable: true,
+			// 是否在文章详情页显示
+			showOnPostPage: true,
+			// 响应式配置
+			responsive: {
+				// 折叠阈值：当标签数量超过20个时自动折叠
+				collapseThreshold: 20,
+			},
+		},
+				{
+			// 组件类型：站点统计组件
+			type: "stats",
+			// 是否启用该组件
+			enable: true,
+			// 是否在文章详情页显示
+			showOnPostPage: true,
+		},
+
+	],
 };

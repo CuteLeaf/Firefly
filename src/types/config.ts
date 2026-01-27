@@ -348,24 +348,25 @@ export type WidgetComponentConfig = {
 	customProps?: Record<string, unknown>; // 自定义属性，用于扩展组件功能
 };
 
+export type MobileBottomComponentConfig = {
+	type: WidgetComponentType; // 组件类型
+	enable: boolean; // 是否启用该组件
+	configId?: string; // 配置ID，用于广告组件指定使用哪个配置
+	showOnPostPage?: boolean; // 是否在文章详情页显示
+	responsive?: {
+		hidden?: ("mobile" | "tablet" | "desktop")[]; // 在指定设备上隐藏
+		collapseThreshold?: number; // 折叠阈值
+	};
+	customProps?: Record<string, unknown>; // 自定义属性，用于扩展组件功能
+};
+
 export type SidebarLayoutConfig = {
 	enable: boolean; // 是否启用侧边栏
 	position: "left" | "both"; // 侧边栏位置：左侧或双侧
 	showRightSidebarOnPostPage?: boolean; // 当position为left时，是否在文章详情页显示右侧边栏
 	leftComponents: WidgetComponentConfig[]; // 左侧边栏组件配置列表
 	rightComponents: WidgetComponentConfig[]; // 右侧边栏组件配置列表
-	defaultAnimation: {
-		enable: boolean; // 是否启用默认动画
-		baseDelay: number; // 基础延迟时间（毫秒）
-		increment: number; // 每个组件递增的延迟时间（毫秒）
-	};
-	responsive: {
-		layout: {
-			mobile: "hidden" | "bottom" | "drawer" | "sidebar"; // 移动端布局模式
-			tablet: "hidden" | "sidebar" | "bottom" | "drawer"; // 平板端布局模式
-			desktop: "sidebar"; // 桌面端布局模式
-		};
-	};
+	mobileBottomComponents: MobileBottomComponentConfig[]; // 移动端底部组件配置列表（<768px显示）
 };
 
 export type SakuraConfig = {
