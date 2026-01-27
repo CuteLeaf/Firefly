@@ -19,12 +19,10 @@ const sidebarTocComponent = sidebarLayoutConfig.rightComponents?.find(
 );
 const isSidebarTocEnabled = sidebarTocComponent?.enable ?? false;
 const sidebarPosition = sidebarLayoutConfig.position;
-const showRightSidebarOnPostPage =
-	sidebarLayoutConfig.showRightSidebarOnPostPage;
 ---
 
 <!-- 悬浮TOC按钮 -->
-<div id="floating-toc-wrapper" class="floating-toc-wrapper" data-is-sidebar-toc-enabled={String(isSidebarTocEnabled)} data-sidebar-position={sidebarPosition} data-show-right-sidebar-on-post-page={String(showRightSidebarOnPostPage)}>
+<div id="floating-toc-wrapper" class="floating-toc-wrapper" data-is-sidebar-toc-enabled={String(isSidebarTocEnabled)} data-sidebar-position={sidebarPosition}>
   <FloatingButton
     id="floating-toc-btn"
     icon="material-symbols:format-list-bulleted"
@@ -241,24 +239,19 @@ const showRightSidebarOnPostPage =
 
     // 获取侧边栏位置配置
     const wrapper = document.querySelector('.floating-toc-wrapper');
-    let sidebarPosition = wrapper?.getAttribute('data-sidebar-position') || 'left';
-    const showRightSidebarOnPostPage = wrapper?.getAttribute('data-show-right-sidebar-on-post-page') === 'true';
+    const sidebarPosition = wrapper?.getAttribute('data-sidebar-position') || 'left';
 
-    // 如果配置了在文章详情页显示右侧边栏，且当前是文章详情页，则视为双侧边栏模式
-    if (sidebarPosition === 'left' && showRightSidebarOnPostPage) {
-        sidebarPosition = 'both';
-    }
-
-    // 如果是单侧边栏模式（左侧），则始终显示悬浮目录（因为右侧边栏不存在）
+    // 如果实际配置是单侧边栏（left），则始终显示悬浮目录
+    // 因为右侧边栏被 CSS 隐藏，需要浮动目录来提供目录功能
     if (sidebarPosition === 'left') {
-        return true;
+      return true;
     }
-    
-    // 检查屏幕宽度
+
+    // 双侧边栏模式（position: "both"）时，根据屏幕宽度和侧边栏目录启用状态决定
     const isSmallScreen = window.innerWidth < 1200;
-    
-    // 显示条件：网格模式 OR 小屏幕 OR 侧边栏目录未启用
-    return  isSmallScreen || !isSidebarTocEnabled;
+
+    // 显示条件：小屏幕 OR 侧边栏目录未启用
+    return isSmallScreen || !isSidebarTocEnabled;
   }
 
   // 更新悬浮目录的显示状态

@@ -8,73 +8,34 @@ import Profile from "@/components/widget/Profile.astro";
 import SidebarTOC from "@/components/widget/SidebarTOC.astro";
 import SiteStats from "@/components/widget/SiteStats.astro";
 import Tags from "@/components/widget/Tags.astro";
-import type { WidgetComponentConfig } from "@/types/config";
-import { widgetManager } from "@/utils/widget-manager";
+import { sidebarLayoutConfig } from "@/config";
+import type {
+	MobileBottomComponentConfig,
+	WidgetComponentConfig,
+	WidgetComponentType,
+} from "@/types/config";
 
 interface Props {
 	class?: string;
 	headings?: MarkdownHeading[];
+	side?: "left" | "right" | "bottom";
 }
 
-const { class: className, headings } = Astro.props;
+// 侧边栏位置常量
+const SIDEBAR_SIDE = {
+	LEFT: "left",
+	RIGHT: "right",
+	BOTTOM: "bottom",
+} as const;
 
-// 获取配置的侧边栏位置
-const sidebarPosition = widgetManager.getConfig().position;
-const targetSidebar = sidebarPosition === "left" ? "left" : undefined;
+// 组件位置常量
+const COMPONENT_POSITION = {
+	TOP: "top",
+	STICKY: "sticky",
+} as const;
 
-// 获取配置的组件列表 - 根据 position 配置决定显示哪一侧
-const topComponents = widgetManager.getComponentsByPosition(
-	"top",
-	targetSidebar,
-);
-const stickyComponents = widgetManager.getComponentsByPosition(
-	"sticky",
-	targetSidebar,
-);
-
-// 组件类型到ID的映射
-const componentTypeToId = {
-	stats: "site-stats",
-	calendar: "calendar-widget",
-	sidebarToc: "sidebar-toc",
-	profile: "profile",
-	announcement: "announcement",
-	categories: "categories",
-	tags: "tags",
-	advertisement: "advertisement",
-};
-
-// 提取客户端需要的数据
-const sidebarConfig = {
-	shouldShowSidebar: {
-		mobile: widgetManager.shouldShowSidebar("mobile"),
-		tablet: widgetManager.shouldShowSidebar("tablet"),
-		desktop: widgetManager.shouldShowSidebar("desktop"),
-	},
-	breakpoints: {
-		mobile: 768,
-		tablet: 1024,
-		desktop: 1280,
-	},
-};
-
-// 提取组件的 showOnPostPage 配置
-const componentsConfig = (() => {
-	const components =
-		targetSidebar === "left"
-			? widgetManager.getConfig().leftComponents
-			: [
-					...widgetManager.getConfig().leftComponents,
-					...widgetManager.getConfig().rightComponents,
-				];
-
-	return components
-		.filter((c) => c.enable)
-		.map((c) => ({
-			id: componentTypeToId[c.type as keyof typeof componentTypeToId],
-			showOnPostPage: c.showOnPostPage ?? true,
-		}));
-})();
+// 动画延迟配置
+const ANIMATION_DELAY_UNIT = 50; // ms
 
 // 组件映射表
 const componentMap = {
@@ -86,190 +47,152 @@ const componentMap = {
 	advertisement: Advertisement,
 	stats: SiteStats,
 	calendar: Calendar,
+} satisfies Record<WidgetComponentType, any>;
+
+// 获取侧边栏位置
+const side = (Astro.props.side ||
+	SIDEBAR_SIDE.LEFT) as (typeof SIDEBAR_SIDE)[keyof typeof SIDEBAR_SIDE];
+const className = Astro.props.class;
+
+// 根据 side 属性获取对应的组件列表
+const getComponents = (): (
+	| WidgetComponentConfig
+	| MobileBottomComponentConfig
+)[] => {
+	if (side === SIDEBAR_SIDE.LEFT) {
+		return sidebarLayoutConfig.leftComponents;
+	}
+	if (side === SIDEBAR_SIDE.RIGHT) {
+		return sidebarLayoutConfig.rightComponents;
+	}
+	if (side === SIDEBAR_SIDE.BOTTOM) {
+		return sidebarLayoutConfig.mobileBottomComponents;
+	}
+	return [];
 };
 
-// 渲染组件的辅助函数
-function renderComponent(
-	component: WidgetComponentConfig,
+// 过滤并排序组件（不再进行 showOnPostPage 过滤，交由客户端处理）
+const filterAndSortComponents = (
+	components: (WidgetComponentConfig | MobileBottomComponentConfig)[],
+) => {
+	return components.filter((comp) => comp.enable);
+};
+
+// 分离 top 和 sticky 位置的组件（保持原始数组顺序）
+const getComponentsByPosition = (
+	components: (WidgetComponentConfig | MobileBottomComponentConfig)[],
+) => {
+	const topComponents = components.filter(
+		(c) => "position" in c && c.position === COMPONENT_POSITION.TOP,
+	) as WidgetComponentConfig[];
+	const stickyComponents = components.filter(
+		(c) => "position" in c && c.position === COMPONENT_POSITION.STICKY,
+	) as WidgetComponentConfig[];
+	return { topComponents, stickyComponents };
+};
+
+// 获取动画延迟（硬编码）
+const getAnimationDelay = (index: number): string => {
+	return `${index * ANIMATION_DELAY_UNIT}ms`;
+};
+
+// 动态构建组件 props
+const getComponentProps = (
+	config: WidgetComponentConfig | MobileBottomComponentConfig,
 	index: number,
-	_components: WidgetComponentConfig[],
-) {
-	const ComponentToRender =
-		componentMap[component.type as keyof typeof componentMap];
-	if (!ComponentToRender) return null;
-
-	// 使用配置的侧边栏位置，如果是 both 则默认为 left
-	const sidebar = targetSidebar || "left";
-	const componentClass = widgetManager.getComponentClass(
-		component,
-		sidebar,
-		index,
-	);
-	const componentStyle = widgetManager.getComponentStyle(component, index);
-
-	return {
-		Component: ComponentToRender,
-		props: {
-			class: componentClass,
-			style: componentStyle,
-			headings: headings ?? [],
-			configId: component.configId, // 传递configId给Advertisement组件
-			...component.customProps,
-		},
+): Record<string, unknown> => {
+	const baseProps: Record<string, unknown> = {
+		class: "onload-animation",
+		style: `animation-delay: ${getAnimationDelay(index)}`,
 	};
-}
+
+	// 添加 showOnPostPage 和 showOnNonPostPage 标记class（仅WidgetComponentConfig有这些属性）
+	if ("showOnPostPage" in config && config.showOnPostPage === false) {
+		baseProps.class = `${baseProps.class} widget-hide-on-post`;
+	}
+	if ("showOnNonPostPage" in config && config.showOnNonPostPage === false) {
+		baseProps.class = `${baseProps.class} widget-hide-on-non-post`;
+	}
+
+	// 特殊处理 SidebarTOC 组件
+	if (config.type === "sidebarToc") {
+		return { ...baseProps, headings: Astro.props.headings || [] };
+	}
+
+	// 特殊处理 Advertisement 组件
+	if (
+		config.type === "advertisement" &&
+		"configId" in config &&
+		config.configId
+	) {
+		return { ...baseProps, configId: config.configId };
+	}
+
+	return baseProps;
+};
+
+// 获取所有需要渲染的组件
+const allComponents = getComponents();
+const filteredComponents = filterAndSortComponents(allComponents);
+
+// 对于移动端底部组件，直接使用所有组件，不进行position分组
+const isMobileBottom = side === SIDEBAR_SIDE.BOTTOM;
+const { topComponents, stickyComponents } = !isMobileBottom
+	? getComponentsByPosition(filteredComponents)
+	: { topComponents: [], stickyComponents: [] };
+const bottomComponents = isMobileBottom ? filteredComponents : [];
 ---
 
-<div id="sidebar" class:list={[className, "w-full"]}>
-  <!-- 顶部固定组件区域 -->
-  {
-    topComponents.length > 0 && (
-      <div class="flex flex-col w-full gap-4 mb-4">
-        {topComponents.map((component, index) => {
-          const renderData = renderComponent(component, index, topComponents);
-          if (!renderData) return null;
+{
+	(topComponents.length > 0 || stickyComponents.length > 0 || bottomComponents.length > 0) && (
+		<div id={`${side}-sidebar`} class:list={[className, "flex flex-col w-full pt-0"]}>
+			{/* Mobile bottom components - 直接渲染所有组件，不分组 */}
+			{isMobileBottom ? (
+				<div class="flex flex-col w-full gap-4">
+					{bottomComponents.map((comp, index) => {
+						const Component = componentMap[comp.type];
+						if (!Component) return null;
+						const props = getComponentProps(comp, index) as any;
+						return <Component {...props} />;
+					})}
+				</div>
+			) : (
+				<>
+					{/* Top components */}
+					{topComponents.length > 0 && (
+						<div class="flex flex-col w-full gap-4 mb-4">
+							{topComponents.map((comp, index) => {
+								const Component = componentMap[comp.type];
+								if (!Component) return null;
+								const props = getComponentProps(comp, index) as any;
+								return <Component {...props} />;
+							})}
+						</div>
+					)}
 
-          const { Component, props } = renderData;
-          return <Component {...props} />;
-        })}
-      </div>
-    )
-  }
-
-  <!-- 粘性组件区域 -->
-  {
-    stickyComponents.length > 0 && (
-      <div
-        id="sidebar-sticky"
-        class="transition-all duration-700 flex flex-col w-full gap-4 sticky top-4"
-      >
-        {stickyComponents.map((component, index) => {
-          const renderData = renderComponent(
-            component,
-            index,
-            stickyComponents
-          );
-          if (!renderData) return null;
-
-          const { Component, props } = renderData;
-          return <Component {...props} />;
-        })}
-      </div>
-    )
-  }
-</div>
-
-<!-- 响应式样式和JavaScript -->
-<style>
-  /* 响应式断点样式 */
-  @media (max-width: 768px) {
-    #sidebar {
-      display: var(--sidebar-mobile-display, block);
-    }
-  }
-
-  @media (min-width: 769px) and (max-width: 1024px) {
-    #sidebar {
-      display: var(--sidebar-tablet-display, block);
-    }
-  }
-
-  @media (min-width: 1025px) {
-    #sidebar {
-      display: var(--sidebar-desktop-display, block);
-    }
-  }
-</style>
-
-<script is:inline define:vars={{ sidebarConfig, componentsConfig }}>
-  // 根据 showOnPostPage 配置控制组件显示
-  function toggleComponentsVisibility() {
-    const isPostPage = window.location.pathname.includes("/posts/");
-    
-    const sidebar = document.getElementById('sidebar');
-    if (!sidebar) return;
-    
-    const widgets = sidebar.querySelectorAll('widget-layout');
-    
-    widgets.forEach((widget) => {
-      const widgetId = widget.getAttribute('data-id');
-      const componentConfig = componentsConfig.find(c => c.id === widgetId);
-      
-      if (componentConfig) {
-        // 特殊处理：侧边栏TOC只在文章详情页显示
-        if (widgetId === 'sidebar-toc') {
-          widget.style.display = isPostPage ? '' : 'none';
-        }
-        // 其他组件的 showOnPostPage 含义：
-        // true: 在文章页和非文章页都显示（默认行为）
-        // false: 只在非文章页显示，文章页隐藏
-        else if (isPostPage && !componentConfig.showOnPostPage) {
-          widget.style.display = 'none';
-        } else {
-          widget.style.display = '';
-        }
-      }
-    });
-  }
-
-  // 响应式布局管理
-  class SidebarManager {
-    constructor() {
-      this.config = sidebarConfig;
-      this.init();
-    }
-
-    init() {
-      this.updateResponsiveDisplay();
-      toggleComponentsVisibility();
-      
-      window.addEventListener("resize", () => this.updateResponsiveDisplay());
-
-      // 监听SWUP内容替换事件
-      if (typeof window !== "undefined" && window.swup) {
-        window.swup.hooks.on("content:replace", () => {
-          // 延迟执行以确保DOM已更新
-          setTimeout(() => {
-            this.updateResponsiveDisplay();
-            toggleComponentsVisibility();
-          }, 100);
-        });
-      }
-    }
-
-    updateResponsiveDisplay() {
-      const breakpoints = this.config.breakpoints;
-      const width = window.innerWidth;
-
-      let deviceType;
-      if (width < breakpoints.mobile) {
-        deviceType = "mobile";
-      } else if (width < breakpoints.tablet) {
-        deviceType = "tablet";
-      } else {
-        deviceType = "desktop";
-      }
-
-      const shouldShow = this.config.shouldShowSidebar[deviceType];
-      const sidebar = document.getElementById("sidebar");
-
-      if (sidebar) {
-        sidebar.style.setProperty(
-          `--sidebar-${deviceType}-display`,
-          shouldShow ? "block" : "none"
-        );
-      }
-    }
-  }
-
-  // 页面加载时执行
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      toggleComponentsVisibility();
-      new SidebarManager();
-    });
-  } else {
-    toggleComponentsVisibility();
-    new SidebarManager();
-  }
-</script>
+					{/* Sticky components */}
+					{stickyComponents.length > 0 && (
+						<div
+							id={`${side}-sidebar-sticky`}
+							class:list={[
+								"transition-all duration-700 flex flex-col w-full mt-0",
+								"sticky",
+								topComponents.length > 0 ? "top-4 gap-4" : "top-0",
+							]}
+						>
+							{stickyComponents.map((comp, index) => {
+								const Component = componentMap[comp.type];
+								if (!Component) return null;
+								const props = getComponentProps(
+									comp,
+									topComponents.length + index
+								) as any;
+								return <Component {...props} />;
+							})}
+						</div>
+					)}
+				</>
+			)}
+		</div>
+	)
+}

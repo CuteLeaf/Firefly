@@ -1,296 +1,160 @@
-import { sidebarLayoutConfig } from "../config";
-import { widgetManager } from "./widget-manager";
+import { sidebarLayoutConfig } from "@/config";
 
-// 响应式侧边栏配置
-export const getResponsiveSidebarConfig = (isPostPage = false) => {
-	const globalSidebarEnabled = sidebarLayoutConfig.enable;
-	let sidebarPosition = sidebarLayoutConfig.position || "left";
+export interface ResponsiveSidebarConfig {
+	isBothSidebars: boolean;
+	hasLeftComponents: boolean;
+	hasRightComponents: boolean;
+	mobileShowSidebar: boolean;
+	tabletShowSidebar: boolean;
+	desktopShowSidebar: boolean;
+}
 
-	// 如果配置了在文章详情页显示右侧边栏，且当前是文章详情页，则强制使用双侧边栏模式
-	if (
-		sidebarPosition === "left" &&
-		isPostPage &&
-		sidebarLayoutConfig.showRightSidebarOnPostPage
-	) {
-		sidebarPosition = "both";
-	}
+/**
+ * 获取响应式侧边栏配置
+ *
+ * 响应式布局（硬编码）：
+ * - 768px及以下: 隐藏侧栏，显示底部mobileBottomComponents
+ * - 769px-1199px: 显示左侧栏，隐藏右侧栏
+ * - 1200px及以上: 根据position配置显示侧栏
+ */
+export function getResponsiveSidebarConfig(): ResponsiveSidebarConfig {
+	const isBothSidebars =
+		sidebarLayoutConfig.enable && sidebarLayoutConfig.position === "both";
 
-	const isBothSidebars = sidebarPosition === "both";
+	const hasLeftComponents =
+		sidebarLayoutConfig.enable &&
+		sidebarLayoutConfig.leftComponents.some((comp) => comp.enable);
+
+	// 当position为left时，右侧组件不参与布局计算（即使启用也会被CSS隐藏）
+	const hasRightComponents =
+		sidebarLayoutConfig.enable &&
+		sidebarLayoutConfig.position === "both" &&
+		sidebarLayoutConfig.rightComponents.some((comp) => comp.enable);
+
+	// 响应式布局由 CSS 处理，这里仅用于判断是否有组件
+	const mobileShowSidebar = false; // 768px及以下不显示侧边栏
+	const tabletShowSidebar = sidebarLayoutConfig.enable; // 769px及以上显示
+	const desktopShowSidebar = sidebarLayoutConfig.enable; // 1200px及以上显示
 
 	return {
-		globalSidebarEnabled,
-		sidebarPosition,
 		isBothSidebars,
-		mobileShowSidebar:
-			globalSidebarEnabled && widgetManager.shouldShowSidebar("mobile"),
-		tabletShowSidebar:
-			globalSidebarEnabled && widgetManager.shouldShowSidebar("tablet"),
-		desktopShowSidebar:
-			globalSidebarEnabled && widgetManager.shouldShowSidebar("desktop"),
-		// 检查左右侧边栏是否有组件
-		hasLeftComponents:
-			isBothSidebars && widgetManager.hasComponentsInSidebar("left"),
-		hasRightComponents:
-			isBothSidebars && widgetManager.hasComponentsInSidebar("right"),
-		// 检查各设备上左右侧边栏是否有可见组件
-		hasLeftComponentsMobile:
-			isBothSidebars &&
-			widgetManager.hasVisibleComponentsInSidebar("left", "mobile"),
-		hasLeftComponentsTablet:
-			isBothSidebars &&
-			widgetManager.hasVisibleComponentsInSidebar("left", "tablet"),
-		hasLeftComponentsDesktop:
-			isBothSidebars &&
-			widgetManager.hasVisibleComponentsInSidebar("left", "desktop"),
-		hasRightComponentsMobile:
-			isBothSidebars &&
-			widgetManager.hasVisibleComponentsInSidebar("right", "mobile"),
-		hasRightComponentsTablet:
-			isBothSidebars &&
-			widgetManager.hasVisibleComponentsInSidebar("right", "tablet"),
-		hasRightComponentsDesktop:
-			isBothSidebars &&
-			widgetManager.hasVisibleComponentsInSidebar("right", "desktop"),
-	};
-};
-
-// 生成网格布局类名
-export const generateGridClasses = (
-	config: ReturnType<typeof getResponsiveSidebarConfig>,
-) => {
-	const {
+		hasLeftComponents,
+		hasRightComponents,
 		mobileShowSidebar,
 		tabletShowSidebar,
 		desktopShowSidebar,
-		isBothSidebars,
-		hasLeftComponentsMobile,
-		hasLeftComponentsTablet,
-		hasLeftComponentsDesktop,
-		hasRightComponentsMobile,
-		hasRightComponentsTablet,
-		hasRightComponentsDesktop,
-	} = config;
+	};
+}
 
-	let gridCols = "";
+/**
+ * 生成网格列数CSS类
+ *
+ * 响应式设计：
+ * - 768px及以下: 单列布局（grid-cols-1），隐藏侧栏，显示底部组件
+ * - 769px-1199px: 2列布局（左侧栏 + 内容），隐藏右侧栏
+ * - 1200px及以上: 3列或2列布局（根据是否有右侧栏）
+ */
+export function generateGridClasses(config: ResponsiveSidebarConfig): {
+	gridCols: string;
+} {
+	let gridCols = "grid-cols-1";
 
-	if (isBothSidebars) {
-		// 双侧边栏布局 - 根据各设备上实际可见组件决定布局
-		// 移动端
-		let mobileGrid = "grid-cols-1";
-		if (
-			mobileShowSidebar &&
-			hasLeftComponentsMobile &&
-			hasRightComponentsMobile
-		) {
-			mobileGrid = "grid-cols-1";
-		} else if (
-			mobileShowSidebar &&
-			(hasLeftComponentsMobile || hasRightComponentsMobile)
-		) {
-			mobileGrid = "grid-cols-1";
-		}
-
-		// 平板端
-		let tabletGrid = "md:grid-cols-1";
-		if (
-			tabletShowSidebar &&
-			hasLeftComponentsTablet &&
-			hasRightComponentsTablet
-		) {
-			tabletGrid = "md:grid-cols-[17.5rem_1fr_17.5rem]";
-		} else if (tabletShowSidebar && hasLeftComponentsTablet) {
-			tabletGrid = "md:grid-cols-[17.5rem_1fr]";
-		} else if (tabletShowSidebar && hasRightComponentsTablet) {
-			tabletGrid = "md:grid-cols-[1fr_17.5rem]";
-		}
-
-		// 桌面端
-		let desktopGrid = "lg:grid-cols-1";
-		if (
-			desktopShowSidebar &&
-			hasLeftComponentsDesktop &&
-			hasRightComponentsDesktop
-		) {
-			desktopGrid = "lg:grid-cols-[17.5rem_1fr_17.5rem]";
-		} else if (desktopShowSidebar && hasLeftComponentsDesktop) {
-			desktopGrid = "lg:grid-cols-[17.5rem_1fr]";
-		} else if (desktopShowSidebar && hasRightComponentsDesktop) {
-			desktopGrid = "lg:grid-cols-[1fr_17.5rem]";
-		}
-
-		gridCols = `${mobileGrid} ${tabletGrid} ${desktopGrid}`.trim();
-	} else {
-		// 单侧边栏布局（左侧）
-		gridCols = `
-			grid-cols-1
-			${tabletShowSidebar ? "md:grid-cols-[17.5rem_1fr]" : "md:grid-cols-1"}
-			${desktopShowSidebar ? "lg:grid-cols-[17.5rem_1fr]" : "lg:grid-cols-1"}
-		`
-			.trim()
-			.replace(/\s+/g, " ");
+	if (
+		config.isBothSidebars &&
+		config.hasLeftComponents &&
+		config.hasRightComponents
+	) {
+		// 双侧边栏: 1200px+显示左+中+右，769-1199px显示左+中，768-以下单列
+		gridCols =
+			"grid-cols-1 md:grid-cols-[17.5rem_1fr] xl:grid-cols-[17.5rem_1fr_17.5rem]";
+	} else if (config.hasLeftComponents && !config.hasRightComponents) {
+		// 仅左侧边栏: 769px+显示左+中，768-以下单列
+		gridCols = "grid-cols-1 md:grid-cols-[17.5rem_1fr]";
+	} else if (!config.hasLeftComponents && config.hasRightComponents) {
+		// 仅右侧边栏: 1200px+显示中+右，769-1199px显示中，768-以下单列
+		gridCols = "grid-cols-1 xl:grid-cols-[1fr_17.5rem]";
 	}
 
 	return { gridCols };
-};
+}
 
-// 生成侧边栏类名（用于单侧边栏或双侧边栏中的左侧）
-export const generateSidebarClasses = (
-	config: ReturnType<typeof getResponsiveSidebarConfig>,
-) => {
-	const {
-		mobileShowSidebar,
-		tabletShowSidebar,
-		desktopShowSidebar,
-		isBothSidebars,
-	} = config;
+/**
+ * 生成侧边栏容器CSS类
+ */
+export function generateSidebarClasses(): string {
+	const classes = [
+		"mb-4",
+		// 768px及以下隐藏，769px及以上显示
+		"hidden",
+		"md:block",
+		"md:col-span-1",
+		"md:max-w-[17.5rem]",
+		"md:row-start-1",
+		"md:row-end-2",
+		"md:col-start-1",
+		"onload-animation",
+	];
 
-	if (isBothSidebars) {
-		// 左侧边栏
-		return `
-			mb-4 row-start-2 row-end-3 col-span-2 onload-animation
-			${mobileShowSidebar ? "block" : "hidden"}
-			${tabletShowSidebar ? "md:block md:row-start-1 md:row-end-2 md:max-w-[17.5rem] md:col-start-1 md:col-end-2" : "md:hidden"}
-			${desktopShowSidebar ? "lg:block lg:row-start-1 lg:row-end-2 lg:max-w-[17.5rem] lg:col-start-1 lg:col-end-2" : "lg:hidden"}
-		`
-			.trim()
-			.replace(/\s+/g, " ");
+	return classes.join(" ");
+}
+
+/**
+ * 生成右侧边栏CSS类
+ */
+export function generateRightSidebarClasses(): string {
+	const classes = [
+		"mb-4",
+		// 1200px以下隐藏，1200px及以上显示
+		"hidden",
+		"xl:block",
+		"xl:row-start-1",
+		"xl:row-end-2",
+		"xl:col-span-1",
+		"xl:max-w-[17.5rem]",
+		"onload-animation",
+		"xl:col-start-3", // 右侧边栏在第3列
+	];
+
+	return classes.join(" ");
+}
+
+/**
+ * 生成主内容区CSS类
+ */
+export function generateMainContentClasses(
+	config: ResponsiveSidebarConfig,
+): string {
+	const classes = [
+		"transition-main",
+		// 768px及以下: 单列布局
+		"col-span-1",
+	];
+
+	if (
+		config.isBothSidebars &&
+		config.hasLeftComponents &&
+		config.hasRightComponents
+	) {
+		// 769-1199px: 左 + 中，1200px+: 左 + 中 + 右
+		classes.push("md:col-span-1");
+		classes.push("md:col-start-2");
+		classes.push("xl:col-span-1");
+		classes.push("xl:col-start-2");
+		classes.push("xl:col-end-3");
+	} else if (config.hasLeftComponents && !config.hasRightComponents) {
+		// 769px+: 左 + 中
+		classes.push("md:col-span-1");
+		classes.push("md:col-start-2");
+	} else if (!config.hasLeftComponents && config.hasRightComponents) {
+		// 1200px+: 中 + 右
+		classes.push("xl:col-span-1");
+		classes.push("xl:col-start-1");
+	} else {
+		classes.push("col-span-1");
 	}
 
-	// 单侧边栏（左侧）
-	return `
-		mb-4 row-start-2 row-end-3 col-span-2 onload-animation
-		${mobileShowSidebar ? "block" : "hidden"}
-		${tabletShowSidebar ? "md:block md:row-start-1 md:row-end-2 md:max-w-[17.5rem] md:col-start-1 md:col-end-2" : "md:hidden"}
-		${desktopShowSidebar ? "lg:block lg:row-start-1 lg:row-end-2 lg:max-w-[17.5rem] lg:col-start-1 lg:col-end-2" : "lg:hidden"}
-	`
-		.trim()
-		.replace(/\s+/g, " ");
-};
+	classes.push("min-w-0");
+	classes.push("overflow-hidden");
 
-// 生成右侧边栏类名（仅用于双侧边栏）
-export const generateRightSidebarClasses = (
-	config: ReturnType<typeof getResponsiveSidebarConfig>,
-) => {
-	const {
-		mobileShowSidebar,
-		tabletShowSidebar,
-		desktopShowSidebar,
-		hasLeftComponentsTablet,
-		hasLeftComponentsDesktop,
-		hasRightComponentsMobile,
-		hasRightComponentsTablet,
-		hasRightComponentsDesktop,
-	} = config;
-
-	// 根据是否有左侧边栏决定列位置
-	const tabletCol = hasLeftComponentsTablet
-		? "md:col-start-3 md:col-end-4"
-		: "md:col-start-2 md:col-end-3";
-	const desktopCol = hasLeftComponentsDesktop
-		? "lg:col-start-3 lg:col-end-4"
-		: "lg:col-start-2 lg:col-end-3";
-
-	// 根据是否有可见组件决定显示
-	const mobileDisplay =
-		mobileShowSidebar && hasRightComponentsMobile ? "block" : "hidden";
-	const tabletDisplay =
-		tabletShowSidebar && hasRightComponentsTablet
-			? `md:block md:row-start-1 md:row-end-2 md:max-w-[17.5rem] ${tabletCol}`
-			: "md:hidden";
-	const desktopDisplay =
-		desktopShowSidebar && hasRightComponentsDesktop
-			? `lg:block lg:row-start-1 lg:row-end-2 lg:max-w-[17.5rem] ${desktopCol}`
-			: "lg:hidden";
-
-	return `
-		mb-4 row-start-3 row-end-4 col-span-2 onload-animation
-		${mobileDisplay}
-		${tabletDisplay}
-		${desktopDisplay}
-	`
-		.trim()
-		.replace(/\s+/g, " ");
-};
-
-// 生成主内容类名
-export const generateMainContentClasses = (
-	config: ReturnType<typeof getResponsiveSidebarConfig>,
-) => {
-	const {
-		mobileShowSidebar,
-		tabletShowSidebar,
-		desktopShowSidebar,
-		isBothSidebars,
-		hasLeftComponentsMobile,
-		hasLeftComponentsTablet,
-		hasLeftComponentsDesktop,
-		hasRightComponentsMobile,
-		hasRightComponentsTablet,
-		hasRightComponentsDesktop,
-	} = config;
-
-	if (isBothSidebars) {
-		// 双侧边栏布局：主内容区位置根据各设备上实际可见组件调整
-		let mobileCol = "col-span-1";
-		let tabletCol = "md:col-span-1";
-		let desktopCol = "lg:col-span-1";
-
-		// 移动端
-		if (
-			mobileShowSidebar &&
-			hasLeftComponentsMobile &&
-			hasRightComponentsMobile
-		) {
-			mobileCol = "col-span-2";
-		} else if (
-			mobileShowSidebar &&
-			(hasLeftComponentsMobile || hasRightComponentsMobile)
-		) {
-			mobileCol = "col-span-2";
-		}
-
-		// 平板端
-		if (
-			tabletShowSidebar &&
-			hasLeftComponentsTablet &&
-			hasRightComponentsTablet
-		) {
-			// 三栏布局:主内容在中间
-			tabletCol = "md:col-start-2 md:col-end-3";
-		} else if (tabletShowSidebar && hasLeftComponentsTablet) {
-			// 左侧边栏+主内容
-			tabletCol = "md:col-start-2 md:col-end-3";
-		} else if (tabletShowSidebar && hasRightComponentsTablet) {
-			// 主内容+右侧边栏
-			tabletCol = "md:col-start-1 md:col-end-2";
-		}
-
-		// 桌面端
-		if (
-			desktopShowSidebar &&
-			hasLeftComponentsDesktop &&
-			hasRightComponentsDesktop
-		) {
-			// 三栏布局:主内容在中间
-			desktopCol = "lg:col-start-2 lg:col-end-3";
-		} else if (desktopShowSidebar && hasLeftComponentsDesktop) {
-			// 左侧边栏+主内容
-			desktopCol = "lg:col-start-2 lg:col-end-3";
-		} else if (desktopShowSidebar && hasRightComponentsDesktop) {
-			// 主内容+右侧边栏
-			desktopCol = "lg:col-start-1 lg:col-end-2";
-		}
-
-		return `transition-swup-fade overflow-hidden w-full ${mobileCol} ${tabletCol} ${desktopCol}`.trim();
-	}
-
-	// 单侧边栏（左侧）：主内容在右边
-	return `
-		transition-swup-fade overflow-hidden w-full
-		${mobileShowSidebar ? "col-span-2" : "col-span-1"}
-		${tabletShowSidebar ? "md:col-start-2 md:col-end-3" : "md:col-span-1"}
-		${desktopShowSidebar ? "lg:col-start-2 lg:col-end-3" : "lg:col-span-1"}
-	`
-		.trim()
-		.replace(/\s+/g, " ");
-};
+	return classes.join(" ");
+}
