@@ -371,7 +371,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
 
 
             {/* 渲染侧边栏 - 根据配置决定使用单侧或双侧边栏 */}
-            <div id="left-sidebar-wrapper" class="contents">
+            <div id="left-sidebar-wrapper" class="contents" style="contain: layout style paint;">
                 {sidebarConfig.isBothSidebars ? (
                     <>
                         {/* 左侧边栏 - 769px及以上显示 */}
@@ -431,7 +431,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
 
             {/* 移动端底部组件 - 768px及以下显示 */}
             {sidebarLayoutConfig.mobileBottomComponents && sidebarLayoutConfig.mobileBottomComponents.length > 0 && (
-                <div id="mobile-bottom-sidebar" class="col-span-1 block md:hidden">
+                <div id="mobile-bottom-sidebar" class="col-span-1 block md:hidden mt-4">
                     <SideBar side="bottom" class={`${transparentClass}`} headings={headings}></SideBar>
                 </div>
             )}
