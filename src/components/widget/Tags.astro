@@ -20,7 +20,7 @@ const tagsComponent = [
 ].find((c) => c.type === "tags");
 
 const collapseThreshold = tagsComponent?.responsive?.collapseThreshold;
-const isCollapsed = collapseThreshold ? tags.length >= collapseThreshold : false;
+const isCollapsed = collapseThreshold ? tags.length > collapseThreshold : false;
 
 interface Props {
 	class?: string;

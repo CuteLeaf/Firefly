@@ -49,22 +49,6 @@ const { headings: _headings = [], class: className, style } = Astro.props;
     const tocContent = document.getElementById("sidebar-toc-content");
     if (!tocContent) return;
 
-    // 检查是否为文章页面
-    const isCurrentlyPostPage = window.location.pathname.includes("/posts/");
-    const sidebarTocWidget = document.getElementById("sidebar-toc");
-    
-    if (!isCurrentlyPostPage) {
-      // 非文章页，隐藏侧边栏目录
-      if (sidebarTocWidget) {
-        sidebarTocWidget.style.display = 'none';
-      }
-      return;
-    } else {
-      // 文章页，显示侧边栏目录
-      if (sidebarTocWidget) {
-        sidebarTocWidget.style.display = '';
-      }
-    }
 
     try {
       // 清理旧实例

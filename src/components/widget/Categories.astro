@@ -18,7 +18,7 @@ const categoriesComponent = [
 ].find((c) => c.type === "categories");
 
 const collapseThreshold = categoriesComponent?.responsive?.collapseThreshold;
-const isCollapsed = collapseThreshold ? categories.length >= collapseThreshold : false;
+const isCollapsed = collapseThreshold ? categories.length > collapseThreshold : false;
 
 interface Props {
 	class?: string;
