@@ -25,8 +25,10 @@ export function getResponsiveSidebarConfig(): ResponsiveSidebarConfig {
 		sidebarLayoutConfig.enable &&
 		sidebarLayoutConfig.leftComponents.some((comp) => comp.enable);
 
+	// 当position为left时，右侧组件不参与布局计算（即使启用也会被CSS隐藏）
 	const hasRightComponents =
 		sidebarLayoutConfig.enable &&
+		sidebarLayoutConfig.position === "both" &&
 		sidebarLayoutConfig.rightComponents.some((comp) => comp.enable);
 
 	// 响应式布局由 CSS 处理，这里仅用于判断是否有组件

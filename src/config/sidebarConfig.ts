@@ -2,7 +2,6 @@ import type { SidebarLayoutConfig } from "../types/config";
 
 /**
  * 侧边栏布局配置
- * 用于控制侧边栏组件的显示、排序、动画和响应式行为
  */
 export const sidebarLayoutConfig: SidebarLayoutConfig = {
 	// 是否启用侧边栏功能
