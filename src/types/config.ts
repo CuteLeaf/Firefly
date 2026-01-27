@@ -332,8 +332,7 @@ export type WidgetComponentType =
 	| "sidebarToc"
 	| "advertisement"
 	| "stats"
-	| "calendar"
-	| "custom";
+	| "calendar";
 
 export type WidgetComponentConfig = {
 	type: WidgetComponentType; // 组件类型
