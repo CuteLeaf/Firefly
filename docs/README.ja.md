@@ -1,5 +1,5 @@
 
-<img src="./images/1131.png" width = "405" height = "511" alt="Firefly" align=right />
+<img src="./images/1131.png" width = "320" height = "500" alt="Firefly" align=right />
 
 <div align="center">
 
@@ -31,7 +31,7 @@
 [**🍀私のブログ**](https://blog.cuteleaf.cn)
 
 📖 README：
-**[简体中文](../README.md)** | **[繁體中文](README.zh-TW.md)** | **[English](../README.en.md)** | **[日本語](README.ja.md)** | **[Русский](README.ru.md)** 
+**[简体中文](../README.zh.md)** | **[繁體中文](README.zh-TW.md)** | **[English](../README.md)** | **[日本語](README.ja.md)** | **[Русский](README.ru.md)** 
 
 ⚡ 静的サイト生成：Astroベースの超高速読み込み速度とSEO最適化
 
