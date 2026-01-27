@@ -14,14 +14,10 @@ import { sidebarLayoutConfig } from "@/config";
 interface Props {
 	class?: string;
 	headings?: MarkdownHeading[];
-	side?: "left" | "right";
+	side?: "left" | "right" | "bottom";
 }
 
-// 获取当前页面是否为文章详情页（通过 Astro.url 判断）
-const isPostPage = Astro.url.pathname.includes("/posts/") || Astro.url.pathname.includes("/post/");
-const side = Astro.props.side || "left";
-
-// 组件映射
+// 组件映射表
 const componentMap: Record<WidgetComponentType, any> = {
 	profile: Profile,
 	announcement: Announcement,
@@ -34,35 +30,37 @@ const componentMap: Record<WidgetComponentType, any> = {
 	custom: null,
 };
 
-// 根据侧边栏类型过滤允许的组件类型
-const getAllowedComponentTypes = (side: string): WidgetComponentType[] => {
+// 获取当前页面是否为文章详情页
+const isPostPage = Astro.url.pathname.includes("/posts/") || Astro.url.pathname.includes("/post/");
+
+// 获取侧边栏位置
+const side = Astro.props.side || "left";
+const className = Astro.props.class;
+
+// 根据 side 属性获取对应的组件列表
+const getComponents = () => {
 	if (side === "left") {
-		return ["profile", "announcement", "categories", "tags", "advertisement"];
-	} else {
-		return ["stats", "calendar", "sidebarToc", "advertisement"];
+		return sidebarLayoutConfig.leftComponents;
+	} else if (side === "right") {
+		return sidebarLayoutConfig.rightComponents;
+	} else if (side === "bottom") {
+		return sidebarLayoutConfig.mobileBottomComponents;
 	}
+	return [];
 };
 
-// 获取动画延迟（用于渐进式渲染）
-const getAnimationDelay = (index: number): string => {
-	return `${100 + index * 50}ms`;
-};
-
-// 过滤并排序组件
-const filterAndSortComponents = (
-	components: WidgetComponentConfig[],
-	isPostPage: boolean
-) => {
+// 过滤并排序组件（不再进行 showOnPostPage 过滤，交由客户端处理）
+const filterAndSortComponents = (components: WidgetComponentConfig[] | any[]) => {
 	return components
 		.filter((comp) => {
 			// 检查是否启用
 			if (!comp.enable) return false;
-			// 根据页面类型显示
-			if (isPostPage && !comp.showOnPostPage) return false;
-			if (!isPostPage && !comp.showOnNonPostPage) return false;
+			// 不进行 showOnPostPage 过滤，所有启用的组件都渲染
 			return true;
 		})
 		.sort((a, b) => {
+			// 如果没有position字段（移动端底部组件），按原顺序排列
+			if (!a.position || !b.position) return 0;
 			// top 位置的组件优先于 sticky
 			if (a.position === "top" && b.position === "sticky") return -1;
 			if (a.position === "sticky" && b.position === "top") return 1;
@@ -77,20 +75,11 @@ const getComponentsByPosition = (components: WidgetComponentConfig[]) => {
 	return { topComponents, stickyComponents };
 };
 
-const className = Astro.props.class;
-
-// 根据 side 属性获取对应的组件列表
-const components = side === "left" ? sidebarLayoutConfig.leftComponents : sidebarLayoutConfig.rightComponents;
-const allowedTypes = getAllowedComponentTypes(side);
-
-// 过滤并排序组件（只保留该侧边栏允许的组件类型）
-const filteredComponents = filterAndSortComponents(
-	components.filter((comp) => allowedTypes.includes(comp.type)),
-	isPostPage
-);
-
-// 分离 top 和 sticky 组件
-const { topComponents, stickyComponents } = getComponentsByPosition(filteredComponents);
+// 获取动画延迟（硬编码）
+const getAnimationDelay = (index: number): string => {
+	const delay = index * 50;
+	return `${delay}ms`;
+};
 
 // 动态构建组件 props
 const getComponentProps = (config: WidgetComponentConfig, index: number) => {
@@ -98,6 +87,11 @@ const getComponentProps = (config: WidgetComponentConfig, index: number) => {
 		class: "onload-animation",
 		style: `animation-delay: ${getAnimationDelay(index)}`,
 	};
+
+	// 添加 showOnPostPage 标记class
+	if (config.showOnPostPage === false) {
+		baseProps.class = `${baseProps.class} widget-hide-on-post`;
+	}
 
 	// 特殊处理 SidebarTOC 组件
 	if (config.type === "sidebarToc") {
@@ -111,38 +105,66 @@ const getComponentProps = (config: WidgetComponentConfig, index: number) => {
 
 	return baseProps;
 };
+
+// 获取所有需要渲染的组件
+const allComponents = getComponents();
+const filteredComponents = filterAndSortComponents(allComponents);
+const { topComponents, stickyComponents } = getComponentsByPosition(filteredComponents);
+
+// 对于移动端底部组件，直接使用所有组件，不进行position分组
+const isMobileBottom = side === "bottom";
+const bottomComponents = isMobileBottom ? filteredComponents : [];
 ---
 
-{topComponents.length > 0 || stickyComponents.length > 0 ? (
-	<div id={`${side}-sidebar`} class:list={[className, "flex flex-col w-full gap-4"]}>
-		<!-- Top components -->
-		{topComponents.map((comp, index) => {
-			const Component = componentMap[comp.type];
-			if (!Component) return null;
-			return (
-				<Component {...getComponentProps(comp, index)} />
-			);
-		})}
-
-		<!-- Sticky components -->
-		{stickyComponents.length > 0 && (
-			<div
-				id={`${side}-sidebar-sticky`}
-				class="transition-all duration-700 flex flex-col w-full gap-4 sticky top-4"
-			>
-				{stickyComponents.map((comp, index) => {
+{
+	(topComponents.length > 0 || stickyComponents.length > 0 || bottomComponents.length > 0) && (
+		<div id={`${side}-sidebar`} class:list={[className, "flex flex-col w-full pt-0"]}>
+			{/* Mobile bottom components - 直接渲染所有组件，不分组 */}
+			{isMobileBottom ? (
+				bottomComponents.map((comp, index) => {
 					const Component = componentMap[comp.type];
 					if (!Component) return null;
-					return (
-						<Component
-							{...getComponentProps(
-								comp,
-								topComponents.length + index
-							)}
-						/>
-					);
-				})}
-			</div>
-		)}
-	</div>
-) : null}
+					return <Component {...getComponentProps(comp, index)} />;
+				})
+			) : (
+				<>
+					{/* Top components */}
+					{topComponents.length > 0 && (
+						<div class="flex flex-col w-full gap-4 mb-4">
+							{topComponents.map((comp, index) => {
+								const Component = componentMap[comp.type];
+								if (!Component) return null;
+								return <Component {...getComponentProps(comp, index)} />;
+							})}
+						</div>
+					)}
+
+					{/* Sticky components */}
+					{stickyComponents.length > 0 && (
+						<div
+							id={`${side}-sidebar-sticky`}
+							class:list={[
+								"transition-all duration-700 flex flex-col w-full mt-0",
+								"sticky",
+								topComponents.length > 0 ? "top-4 gap-4" : "top-0",
+							]}
+						>
+							{stickyComponents.map((comp, index) => {
+								const Component = componentMap[comp.type];
+								if (!Component) return null;
+								return (
+									<Component
+										{...getComponentProps(
+											comp,
+											topComponents.length + index
+										)}
+									/>
+								);
+							})}
+						</div>
+					)}
+				</>
+			)}
+		</div>
+	)
+}
