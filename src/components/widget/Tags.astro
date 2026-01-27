@@ -2,11 +2,11 @@
 
 import ButtonTag from "@/components/common/ButtonTag.astro";
 import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import { sidebarLayoutConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { getTagList } from "@/utils/content-utils";
 import { getTagUrl } from "@/utils/url-utils";
-import { sidebarLayoutConfig } from "@/config";
 
 const tags = await getTagList();
 

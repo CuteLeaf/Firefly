@@ -11,17 +11,15 @@ export interface ResponsiveSidebarConfig {
 
 /**
  * 获取响应式侧边栏配置
- * @param isPostPage - 是否为文章详情页
  *
  * 响应式布局（硬编码）：
  * - 768px及以下: 隐藏侧栏，显示底部mobileBottomComponents
  * - 769px-1199px: 显示左侧栏，隐藏右侧栏
  * - 1200px及以上: 根据position配置显示侧栏
  */
-export function getResponsiveSidebarConfig(isPostPage: boolean): ResponsiveSidebarConfig {
+export function getResponsiveSidebarConfig(): ResponsiveSidebarConfig {
 	const isBothSidebars =
-		sidebarLayoutConfig.enable &&
-		sidebarLayoutConfig.position === "both";
+		sidebarLayoutConfig.enable && sidebarLayoutConfig.position === "both";
 
 	const hasLeftComponents =
 		sidebarLayoutConfig.enable &&
@@ -59,9 +57,14 @@ export function generateGridClasses(config: ResponsiveSidebarConfig): {
 } {
 	let gridCols = "grid-cols-1";
 
-	if (config.isBothSidebars && config.hasLeftComponents && config.hasRightComponents) {
+	if (
+		config.isBothSidebars &&
+		config.hasLeftComponents &&
+		config.hasRightComponents
+	) {
 		// 双侧边栏: 1200px+显示左+中+右，769-1199px显示左+中，768-以下单列
-		gridCols = "grid-cols-1 md:grid-cols-[17.5rem_1fr] xl:grid-cols-[17.5rem_1fr_17.5rem]";
+		gridCols =
+			"grid-cols-1 md:grid-cols-[17.5rem_1fr] xl:grid-cols-[17.5rem_1fr_17.5rem]";
 	} else if (config.hasLeftComponents && !config.hasRightComponents) {
 		// 仅左侧边栏: 769px+显示左+中，768-以下单列
 		gridCols = "grid-cols-1 md:grid-cols-[17.5rem_1fr]";
@@ -76,7 +79,7 @@ export function generateGridClasses(config: ResponsiveSidebarConfig): {
 /**
  * 生成侧边栏容器CSS类
  */
-export function generateSidebarClasses(config: ResponsiveSidebarConfig): string {
+export function generateSidebarClasses(): string {
 	const classes = [
 		"mb-4",
 		// 768px及以下隐藏，769px及以上显示
@@ -96,7 +99,7 @@ export function generateSidebarClasses(config: ResponsiveSidebarConfig): string 
 /**
  * 生成右侧边栏CSS类
  */
-export function generateRightSidebarClasses(config: ResponsiveSidebarConfig): string {
+export function generateRightSidebarClasses(): string {
 	const classes = [
 		"mb-4",
 		// 1200px以下隐藏，1200px及以上显示
@@ -116,14 +119,20 @@ export function generateRightSidebarClasses(config: ResponsiveSidebarConfig): st
 /**
  * 生成主内容区CSS类
  */
-export function generateMainContentClasses(config: ResponsiveSidebarConfig): string {
-	let classes = [
+export function generateMainContentClasses(
+	config: ResponsiveSidebarConfig,
+): string {
+	const classes = [
 		"transition-main",
 		// 768px及以下: 单列布局
 		"col-span-1",
 	];
 
-	if (config.isBothSidebars && config.hasLeftComponents && config.hasRightComponents) {
+	if (
+		config.isBothSidebars &&
+		config.hasLeftComponents &&
+		config.hasRightComponents
+	) {
 		// 769-1199px: 左 + 中，1200px+: 左 + 中 + 右
 		classes.push("md:col-span-1");
 		classes.push("md:col-start-2");

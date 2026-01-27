@@ -1,10 +1,10 @@
 ---
 import ButtonLink from "@/components/common/ButtonLink.astro";
 import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import { sidebarLayoutConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { getCategoryList } from "@/utils/content-utils";
-import { sidebarLayoutConfig } from "@/config";
 
 const categories = await getCategoryList();
 
@@ -18,7 +18,9 @@ const categoriesComponent = [
 ].find((c) => c.type === "categories");
 
 const collapseThreshold = categoriesComponent?.responsive?.collapseThreshold;
-const isCollapsed = collapseThreshold ? categories.length > collapseThreshold : false;
+const isCollapsed = collapseThreshold
+	? categories.length > collapseThreshold
+	: false;
 
 interface Props {
 	class?: string;

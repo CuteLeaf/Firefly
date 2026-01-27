@@ -135,12 +135,11 @@ const finalMainPanelTop =
 	isBannerMode && isBackgroundEnabled ? mainPanelTop : "5.5rem";
 
 // 获取响应式侧边栏配置
-// 传入是否为文章详情页的标志，用于控制是否显示右侧边栏
-const sidebarConfig = getResponsiveSidebarConfig(postSlug !== undefined);
+const sidebarConfig = getResponsiveSidebarConfig();
 const { gridCols } = generateGridClasses(sidebarConfig);
-const sidebarClass = generateSidebarClasses(sidebarConfig);
+const sidebarClass = generateSidebarClasses();
 const rightSidebarClass = sidebarConfig.isBothSidebars
-	? generateRightSidebarClasses(sidebarConfig)
+	? generateRightSidebarClasses()
 	: "";
 const mainContentClass = generateMainContentClasses(sidebarConfig);
 
