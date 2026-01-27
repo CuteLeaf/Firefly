@@ -21,19 +21,24 @@ interface Props {
 	side?: "left" | "right" | "bottom";
 }
 
-// 组件类型定义
-type ComponentType =
-	| typeof Profile
-	| typeof Announcement
-	| typeof Categories
-	| typeof Tags
-	| typeof SidebarTOC
-	| typeof Advertisement
-	| typeof SiteStats
-	| typeof Calendar;
+// 侧边栏位置常量
+const SIDEBAR_SIDE = {
+	LEFT: "left",
+	RIGHT: "right",
+	BOTTOM: "bottom",
+} as const;
+
+// 组件位置常量
+const COMPONENT_POSITION = {
+	TOP: "top",
+	STICKY: "sticky",
+} as const;
+
+// 动画延迟配置
+const ANIMATION_DELAY_UNIT = 50; // ms
 
 // 组件映射表
-const componentMap: Record<WidgetComponentType, ComponentType | null> = {
+const componentMap = {
 	profile: Profile,
 	announcement: Announcement,
 	categories: Categories,
@@ -42,10 +47,11 @@ const componentMap: Record<WidgetComponentType, ComponentType | null> = {
 	advertisement: Advertisement,
 	stats: SiteStats,
 	calendar: Calendar,
-};
+} satisfies Record<WidgetComponentType, any>;
 
 // 获取侧边栏位置
-const side = Astro.props.side || "left";
+const side = (Astro.props.side ||
+	SIDEBAR_SIDE.LEFT) as (typeof SIDEBAR_SIDE)[keyof typeof SIDEBAR_SIDE];
 const className = Astro.props.class;
 
 // 根据 side 属性获取对应的组件列表
@@ -53,13 +59,13 @@ const getComponents = (): (
 	| WidgetComponentConfig
 	| MobileBottomComponentConfig
 )[] => {
-	if (side === "left") {
+	if (side === SIDEBAR_SIDE.LEFT) {
 		return sidebarLayoutConfig.leftComponents;
 	}
-	if (side === "right") {
+	if (side === SIDEBAR_SIDE.RIGHT) {
 		return sidebarLayoutConfig.rightComponents;
 	}
-	if (side === "bottom") {
+	if (side === SIDEBAR_SIDE.BOTTOM) {
 		return sidebarLayoutConfig.mobileBottomComponents;
 	}
 	return [];
@@ -69,42 +75,25 @@ const getComponents = (): (
 const filterAndSortComponents = (
 	components: (WidgetComponentConfig | MobileBottomComponentConfig)[],
 ) => {
-	return components
-		.filter((comp) => {
-			// 检查是否启用
-			if (!comp.enable) return false;
-			// 不进行 showOnPostPage/showOnNonPostPage 过滤，所有启用的组件都渲染
-			return true;
-		})
-		.sort((a, b) => {
-			// 如果没有position字段（移动端底部组件），按原顺序排列
-			const aHasPosition = "position" in a;
-			const bHasPosition = "position" in b;
-			if (!aHasPosition || !bHasPosition) return 0;
-			// top 位置的组件优先于 sticky
-			if (a.position === "top" && b.position === "sticky") return -1;
-			if (a.position === "sticky" && b.position === "top") return 1;
-			return 0;
-		});
+	return components.filter((comp) => comp.enable);
 };
 
-// 分离 top 和 sticky 位置的组件
+// 分离 top 和 sticky 位置的组件（保持原始数组顺序）
 const getComponentsByPosition = (
 	components: (WidgetComponentConfig | MobileBottomComponentConfig)[],
 ) => {
 	const topComponents = components.filter(
-		(c) => "position" in c && c.position === "top",
+		(c) => "position" in c && c.position === COMPONENT_POSITION.TOP,
 	) as WidgetComponentConfig[];
 	const stickyComponents = components.filter(
-		(c) => "position" in c && c.position === "sticky",
+		(c) => "position" in c && c.position === COMPONENT_POSITION.STICKY,
 	) as WidgetComponentConfig[];
 	return { topComponents, stickyComponents };
 };
 
 // 获取动画延迟（硬编码）
 const getAnimationDelay = (index: number): string => {
-	const delay = index * 50;
-	return `${delay}ms`;
+	return `${index * ANIMATION_DELAY_UNIT}ms`;
 };
 
 // 动态构建组件 props
@@ -145,11 +134,12 @@ const getComponentProps = (
 // 获取所有需要渲染的组件
 const allComponents = getComponents();
 const filteredComponents = filterAndSortComponents(allComponents);
-const { topComponents, stickyComponents } =
-	getComponentsByPosition(filteredComponents);
 
 // 对于移动端底部组件，直接使用所有组件，不进行position分组
-const isMobileBottom = side === "bottom";
+const isMobileBottom = side === SIDEBAR_SIDE.BOTTOM;
+const { topComponents, stickyComponents } = !isMobileBottom
+	? getComponentsByPosition(filteredComponents)
+	: { topComponents: [], stickyComponents: [] };
 const bottomComponents = isMobileBottom ? filteredComponents : [];
 ---
 
