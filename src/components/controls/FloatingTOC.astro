@@ -22,7 +22,7 @@ const sidebarPosition = sidebarLayoutConfig.position;
 ---
 
 <!-- 悬浮TOC按钮 -->
-<div id="floating-toc-wrapper" class="floating-toc-wrapper" data-is-sidebar-toc-enabled={String(isSidebarTocEnabled)} data-sidebar-position={sidebarPosition}>
+<div id="floating-toc-wrapper" class="floating-toc-wrapper" data-is-sidebar-toc-enabled={String(isSidebarTocEnabled)} data-sidebar-position={sidebarPosition} data-show-right-sidebar-on-post={String(sidebarLayoutConfig.showRightSidebarOnPostPage ?? false)}>
   <FloatingButton
     id="floating-toc-btn"
     icon="material-symbols:format-list-bulleted"
@@ -237,21 +237,21 @@ const sidebarPosition = sidebarLayoutConfig.position;
       return false;
     }
 
-    // 获取侧边栏位置配置
     const wrapper = document.querySelector('.floating-toc-wrapper');
     const sidebarPosition = wrapper?.getAttribute('data-sidebar-position') || 'left';
+    const showRightSidebarOnPost = wrapper?.getAttribute('data-show-right-sidebar-on-post') === 'true';
 
-    // 如果实际配置是单侧边栏（left），则始终显示悬浮目录
-    // 因为右侧边栏被 CSS 隐藏，需要浮动目录来提供目录功能
-    if (sidebarPosition === 'left') {
-      return true;
+    // 双侧边栏模式或单侧边栏但在文章页启用了右侧边栏
+    const effectiveIsBothSidebars = sidebarPosition === 'both' || (sidebarPosition === 'left' && showRightSidebarOnPost);
+
+    if (effectiveIsBothSidebars) {
+      // 在有效的双侧边栏时，小屏幕或侧边栏目录未启用时显示悬浮目录
+      const isSmallScreen = window.innerWidth < 1200;
+      return isSmallScreen || !isSidebarTocEnabled;
     }
 
-    // 双侧边栏模式（position: "both"）时，根据屏幕宽度和侧边栏目录启用状态决定
-    const isSmallScreen = window.innerWidth < 1200;
-
-    // 显示条件：小屏幕 OR 侧边栏目录未启用
-    return isSmallScreen || !isSidebarTocEnabled;
+    // 单侧边栏模式（且未启用showRightSidebarOnPostPage）时，始终显示悬浮目录
+    return true;
   }
 
   // 更新悬浮目录的显示状态
