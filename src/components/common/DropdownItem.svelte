@@ -10,6 +10,7 @@ interface Props {
 	isLast?: boolean;
 	class?: string;
 	onclick?: (event: MouseEvent) => void;
+	role?: string;
 	children?: Snippet;
 }
 
@@ -18,6 +19,7 @@ let {
 	isLast = false,
 	class: className = "",
 	onclick,
+	role,
 	children,
 	...restProps
 }: Props = $props();
@@ -33,9 +35,10 @@ const allClasses = $derived.by(() => {
 });
 </script>
 
-<button 
+<button
 	class={allClasses}
 	{onclick}
+	{role}
 	{...restProps}
 >
 	{#if children}

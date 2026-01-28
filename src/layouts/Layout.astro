@@ -95,16 +95,15 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
 <!doctype html>
 <html lang={siteLang} class="bg-[var(--page-bg)] text-[14px] md:text-[16px]">
   <head>
-      {siteConfig.analytics?.googleAnalyticsId && (
-              <GoogleAnalytics analyticsId={siteConfig.analytics.googleAnalyticsId} />
-      )}
-      {siteConfig.analytics?.microsoftClarityId && (
-              <MicrosoftClarity clarityId={siteConfig.analytics.microsoftClarityId} />
-      )}
+    <meta charset="UTF-8" />
+    {siteConfig.analytics?.googleAnalyticsId && (
+            <GoogleAnalytics analyticsId={siteConfig.analytics.googleAnalyticsId} />
+    )}
+    {siteConfig.analytics?.microsoftClarityId && (
+            <MicrosoftClarity clarityId={siteConfig.analytics.microsoftClarityId} />
+    )}
 
     <title>{pageTitle}</title>
-
-    <meta charset="UTF-8" />
     <meta
       name="description"
       content={description || siteConfig.description || pageTitle}
