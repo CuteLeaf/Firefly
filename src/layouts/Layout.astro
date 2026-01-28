@@ -666,22 +666,6 @@ function disableAnimation() {
       // 更新侧边栏组件的可见性（根据新页面的 URL）
       updateSidebarComponentsVisibility();
 
-      // 更新主网格布局类名
-      const gridClassCarrier = document.getElementById("grid-class-carrier");
-      if (gridClassCarrier) {
-        const gridClass = gridClassCarrier.getAttribute("data-grid-class");
-        const mainGrid = document.getElementById("main-grid");
-        if (mainGrid && gridClass) {
-
-          const currentClasses = mainGrid.className.split(" ");
-          const newClasses = currentClasses.filter(c => !c.startsWith("lg:grid-cols-") && !c.startsWith("md:grid-cols-") && !c.startsWith("grid-cols-"));
-
-          // 添加新的网格类
-          const gridClasses = gridClass.split(" ");
-          mainGrid.className = [...newClasses, ...gridClasses].join(" ");
-        }
-      }
-
       // 只处理katex元素的容器，使用浏览器原生滚动条
       initCustomScrollbar();
 
@@ -822,6 +806,10 @@ function disableAnimation() {
       }
     });
     window.swup.hooks.on("page:view", () => {
+      // 更新网格列数和侧边栏组件可见性
+      updateMainGridCols();
+      updateSidebarComponentsVisibility();
+
       // hide the temp high element when the transition is done
       const heightExtend = document.getElementById("page-height-extend");
       if (heightExtend) {
@@ -1000,6 +988,50 @@ function disableAnimation() {
     initCustomScrollbar();
   }
 
+  // 更新主网格的网格列数
+  function updateMainGridCols() {
+    const mainGrid = document.getElementById("main-grid");
+    if (!mainGrid) return;
+
+    // 检查当前页面是否为文章详情页
+    const isPostPage = window.location.pathname.includes("/posts/") || window.location.pathname.includes("/post/");
+
+    // 获取配置值（需要从 siteConfig 中获取）
+    const sidebarPosition = mainGrid.getAttribute("data-sidebar-position") || "left";
+    const showRightSidebarOnPostPage = mainGrid.getAttribute("data-show-right-sidebar-on-post") === "true";
+
+    // 判断是否应该显示双侧边栏
+    const shouldBothSidebars =
+      (sidebarPosition === "both") ||
+      (isPostPage && sidebarPosition === "left" && showRightSidebarOnPostPage);
+
+    // 定义网格类
+    let newGridClasses = "";
+    if (shouldBothSidebars) {
+      // 双侧边栏: grid-cols-1 md:grid-cols-[17.5rem_1fr] xl:grid-cols-[17.5rem_1fr_17.5rem]
+      newGridClasses = "grid-cols-1 md:grid-cols-[17.5rem_1fr] xl:grid-cols-[17.5rem_1fr_17.5rem]";
+    } else {
+      // 单侧边栏: grid-cols-1 md:grid-cols-[17.5rem_1fr]
+      newGridClasses = "grid-cols-1 md:grid-cols-[17.5rem_1fr]";
+    }
+
+    // 移除所有网格列数相关的类
+    const classesToRemove = [
+      "grid-cols-1",
+      "md:grid-cols-[17.5rem_1fr]",
+      "xl:grid-cols-[17.5rem_1fr_17.5rem]",
+      "md:grid-cols-2",
+      "lg:grid-cols-3"
+    ];
+
+    classesToRemove.forEach(cls => mainGrid.classList.remove(cls));
+
+    // 添加新的网格列数类
+    newGridClasses.split(" ").forEach(cls => {
+      if (cls) mainGrid.classList.add(cls);
+    });
+  }
+
   // 更新侧边栏组件的可见性
   function updateSidebarComponentsVisibility() {
     const isPostPage = window.location.pathname.includes("/posts/") || window.location.pathname.includes("/post/");
@@ -1030,12 +1062,14 @@ function disableAnimation() {
   import { initIconLoader } from "@/utils/icon-loader";
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
+      updateMainGridCols();
       updateSidebarComponentsVisibility();
       initWallpaperMode();
       initThemeListener();
       initIconLoader();
     });
   } else {
+    updateMainGridCols();
     updateSidebarComponentsVisibility();
     initWallpaperMode();
     initThemeListener();

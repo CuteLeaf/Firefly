@@ -47,7 +47,7 @@ const componentMap = {
 	advertisement: Advertisement,
 	stats: SiteStats,
 	calendar: Calendar,
-} satisfies Record<WidgetComponentType, any>;
+} satisfies Record<WidgetComponentType, typeof Profile>;
 
 // 获取侧边栏位置
 const side = (Astro.props.side ||

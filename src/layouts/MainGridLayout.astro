@@ -29,6 +29,7 @@ import {
 	generateRightSidebarClasses,
 	generateSidebarClasses,
 	getResponsiveSidebarConfig,
+	type ResponsiveSidebarConfig,
 } from "@/utils/responsive-utils";
 import Layout from "./Layout.astro";
 
@@ -106,6 +107,9 @@ const creditUrlMobile =
 // 检查是否为首页
 const isHomePageCheck = isHomePage(Astro.url.pathname);
 
+// 检查是否在文章详情页
+const isPostPage = !!postSlug;
+
 // 随机选择副标题（当打字机关闭且为数组时）
 const getRandomSubtitle = () => {
 	const subtitle = backgroundWallpaper.banner?.homeText?.subtitle;
@@ -136,12 +140,35 @@ const finalMainPanelTop =
 
 // 获取响应式侧边栏配置
 const sidebarConfig = getResponsiveSidebarConfig();
-const { gridCols } = generateGridClasses(sidebarConfig);
+
+// 检查是否应该显示右侧边栏（在文章页面，且position为left且showRightSidebarOnPostPage为true时）
+const shouldShowRightSidebarOnPostPage: boolean =
+	isPostPage &&
+	sidebarLayoutConfig.position === "left" &&
+	!!sidebarLayoutConfig.showRightSidebarOnPostPage;
+
+// 在文章页面且启用了showRightSidebarOnPostPage时，要确保有右侧组件并参与网格计算
+const effectiveIsBothSidebars: boolean =
+	sidebarConfig.isBothSidebars || shouldShowRightSidebarOnPostPage;
+const effectiveHasRightComponents: boolean =
+	sidebarConfig.hasRightComponents ||
+	(shouldShowRightSidebarOnPostPage &&
+		sidebarLayoutConfig.rightComponents.some((comp) => comp.enable)) ||
+	false;
+
+// 使用effective值重新生成网格类，确保在文章页面显示右侧栏时有正确的网格
+const updatedGridConfig: ResponsiveSidebarConfig = {
+	...sidebarConfig,
+	isBothSidebars: effectiveIsBothSidebars,
+	hasRightComponents: effectiveHasRightComponents,
+};
+
+const { gridCols } = generateGridClasses(updatedGridConfig);
 const sidebarClass = generateSidebarClasses();
-const rightSidebarClass = sidebarConfig.isBothSidebars
+const rightSidebarClass = effectiveIsBothSidebars
 	? generateRightSidebarClasses()
 	: "";
-const mainContentClass = generateMainContentClasses(sidebarConfig);
+const mainContentClass = generateMainContentClasses(updatedGridConfig);
 
 // 检查是否应该启用半透明效果
 const shouldEnableTransparency = isOverlayMode && isBackgroundEnabled;
@@ -326,7 +353,10 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
 <div class={`absolute w-full z-30 pointer-events-none ${mobileNonHomeBannerClass ? 'mobile-main-no-banner' : ''} ${!(isBannerMode && isBackgroundEnabled) ? 'no-banner-layout' : ''} ${transparentClass}`} style={`top: ${finalMainPanelTop}`}>
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
     <div class="relative max-w-[var(--page-width)] mx-auto pointer-events-auto">
-        <div id="main-grid" class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-[auto_1fr_auto] lg:grid-rows-[auto] mx-auto gap-4 px-2 md:px-4 ${!sidebarConfig.mobileShowSidebar ? 'mobile-no-sidebar' : ''}`}
+        <div id="main-grid"
+          class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-[auto_1fr_auto] lg:grid-rows-[auto] mx-auto gap-4 px-2 md:px-4 ${!sidebarConfig.mobileShowSidebar ? 'mobile-no-sidebar' : ''}`}
+          data-sidebar-position={sidebarLayoutConfig.position}
+          data-show-right-sidebar-on-post={sidebarLayoutConfig.showRightSidebarOnPostPage ? "true" : "false"}
         >
             <!-- Background image credit - Desktop -->
             {hasBannerCredit && creditEnabledOnDesktop && <a 
@@ -414,7 +444,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
             {sidebarLayoutConfig.position === "both" ? (
                 <>
                     <div id="right-sidebar-static" class="contents">
-                        {sidebarConfig.isBothSidebars && sidebarConfig.hasRightComponents && (
+                        {effectiveIsBothSidebars && effectiveHasRightComponents && (
                             <SideBar side="right" class={`${rightSidebarClass} ${transparentClass}`} headings={headings}></SideBar>
                         )}
                     </div>
@@ -422,7 +452,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
                 </>
             ) : (
                 <div id="right-sidebar-dynamic" class="contents transition-swup-fade">
-                    {sidebarConfig.isBothSidebars && sidebarConfig.hasRightComponents && (
+                    {effectiveIsBothSidebars && effectiveHasRightComponents && (
                         <SideBar side="right" class={`${rightSidebarClass} ${transparentClass}`} headings={headings}></SideBar>
                     )}
                 </div>
