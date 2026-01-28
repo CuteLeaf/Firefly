@@ -989,45 +989,31 @@ function disableAnimation() {
   }
 
   // 检查当前页面是否为文章详情页
-  function isCurrentPagePost() {
-    return window.location.pathname.includes("/posts/") || window.location.pathname.includes("/post/");
-  }
+  const isCurrentPagePost = () =>
+    window.location.pathname.includes("/posts/") || window.location.pathname.includes("/post/");
 
   // 更新主网格的网格列数
   function updateMainGridCols() {
     const mainGrid = document.getElementById("main-grid");
     if (!mainGrid) return;
 
-    // 检查当前页面是否为文章详情页
     const isPostPage = isCurrentPagePost();
-
-    // 获取配置值（需要从 siteConfig 中获取）
     const sidebarPosition = mainGrid.getAttribute("data-sidebar-position") || "left";
     const showRightSidebarOnPostPage = mainGrid.getAttribute("data-show-right-sidebar-on-post") === "true";
 
-    // 判断是否应该显示双侧边栏
     const shouldBothSidebars =
-      (sidebarPosition === "both") ||
-      (isPostPage && sidebarPosition === "left" && showRightSidebarOnPostPage);
+      sidebarPosition === "both" || (isPostPage && sidebarPosition === "left" && showRightSidebarOnPostPage);
 
-    // 定义网格类
     const newGridClasses = shouldBothSidebars
       ? "grid-cols-1 md:grid-cols-[17.5rem_1fr] xl:grid-cols-[17.5rem_1fr_17.5rem]"
       : "grid-cols-1 md:grid-cols-[17.5rem_1fr]";
 
-    // 移除所有网格列数相关的类
-    const classesToRemove = [
-      "grid-cols-1",
-      "md:grid-cols-[17.5rem_1fr]",
-      "xl:grid-cols-[17.5rem_1fr_17.5rem]",
-    ];
+    // 移除旧类并添加新类
+    ["grid-cols-1", "md:grid-cols-[17.5rem_1fr]", "xl:grid-cols-[17.5rem_1fr_17.5rem]"].forEach(
+      cls => mainGrid.classList.remove(cls)
+    );
 
-    classesToRemove.forEach(cls => mainGrid.classList.remove(cls));
-
-    // 添加新的网格列数类
-    newGridClasses.split(" ").forEach(cls => {
-      if (cls) mainGrid.classList.add(cls);
-    });
+    newGridClasses.split(" ").forEach(cls => cls && mainGrid.classList.add(cls));
   }
 
   // 更新侧边栏组件的可见性
@@ -1035,23 +1021,13 @@ function disableAnimation() {
     const isPostPage = isCurrentPagePost();
 
     // 处理 showOnPostPage === false 的组件
-    const widgetsToHideOnPost = document.querySelectorAll(".widget-hide-on-post");
-    widgetsToHideOnPost.forEach((widget) => {
-      if (isPostPage) {
-        widget.classList.add("hidden");
-      } else {
-        widget.classList.remove("hidden");
-      }
+    document.querySelectorAll(".widget-hide-on-post").forEach((widget) => {
+      isPostPage ? widget.classList.add("hidden") : widget.classList.remove("hidden");
     });
 
     // 处理 showOnNonPostPage === false 的组件
-    const widgetsToHideOnNonPost = document.querySelectorAll(".widget-hide-on-non-post");
-    widgetsToHideOnNonPost.forEach((widget) => {
-      if (!isPostPage) {
-        widget.classList.add("hidden");
-      } else {
-        widget.classList.remove("hidden");
-      }
+    document.querySelectorAll(".widget-hide-on-non-post").forEach((widget) => {
+      !isPostPage ? widget.classList.add("hidden") : widget.classList.remove("hidden");
     });
   }
 

@@ -141,13 +141,12 @@ const finalMainPanelTop =
 // 获取响应式侧边栏配置
 const sidebarConfig = getResponsiveSidebarConfig();
 
-// 检查是否应该显示右侧边栏（在文章页面，且position为left且showRightSidebarOnPostPage为true时）
+// 在文章页面且启用了showRightSidebarOnPostPage时，要确保有右侧组件并参与网格计算
 const shouldShowRightSidebarOnPostPage: boolean =
 	isPostPage &&
 	sidebarLayoutConfig.position === "left" &&
 	!!sidebarLayoutConfig.showRightSidebarOnPostPage;
 
-// 在文章页面且启用了showRightSidebarOnPostPage时，要确保有右侧组件并参与网格计算
 const effectiveIsBothSidebars: boolean =
 	sidebarConfig.isBothSidebars || shouldShowRightSidebarOnPostPage;
 const effectiveHasRightComponents: boolean =
@@ -155,7 +154,7 @@ const effectiveHasRightComponents: boolean =
 	(shouldShowRightSidebarOnPostPage &&
 		sidebarLayoutConfig.rightComponents.some((comp) => comp.enable));
 
-// 使用effective值重新生成网格类，确保在文章页面显示右侧栏时有正确的网格
+// 使用effective值重新生成网格类
 const updatedGridConfig: ResponsiveSidebarConfig = {
 	...sidebarConfig,
 	isBothSidebars: effectiveIsBothSidebars,
@@ -398,22 +397,14 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
             </a>}
 
 
-            {/* 渲染侧边栏 - 根据配置决定使用单侧或双侧边栏 */}
+            {/* 渲染侧边栏 - 769px及以上显示 */}
             <div id="left-sidebar-wrapper" class="contents" style="contain: layout style paint;">
-                {sidebarConfig.isBothSidebars ? (
-                    <>
-                        {/* 左侧边栏 - 769px及以上显示 */}
-                        {sidebarConfig.hasLeftComponents && (
-                            <SideBar side="left" class={`${sidebarClass} ${transparentClass}`} headings={headings}></SideBar>
-                        )}
-                    </>
-                ) : (
-                    <>
-                        {/* 单侧边栏 - 769px及以上显示 */}
-                        {sidebarConfig.hasLeftComponents && (
-                            <SideBar class={`${sidebarClass} ${transparentClass}`} headings={headings}></SideBar>
-                        )}
-                    </>
+                {sidebarConfig.hasLeftComponents && (
+                    <SideBar
+                        side={sidebarConfig.isBothSidebars ? "left" : undefined}
+                        class={`${sidebarClass} ${transparentClass}`}
+                        headings={headings}
+                    />
                 )}
             </div>
                     
