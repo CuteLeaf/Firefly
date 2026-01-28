@@ -988,13 +988,18 @@ function disableAnimation() {
     initCustomScrollbar();
   }
 
+  // 检查当前页面是否为文章详情页
+  function isCurrentPagePost() {
+    return window.location.pathname.includes("/posts/") || window.location.pathname.includes("/post/");
+  }
+
   // 更新主网格的网格列数
   function updateMainGridCols() {
     const mainGrid = document.getElementById("main-grid");
     if (!mainGrid) return;
 
     // 检查当前页面是否为文章详情页
-    const isPostPage = window.location.pathname.includes("/posts/") || window.location.pathname.includes("/post/");
+    const isPostPage = isCurrentPagePost();
 
     // 获取配置值（需要从 siteConfig 中获取）
     const sidebarPosition = mainGrid.getAttribute("data-sidebar-position") || "left";
@@ -1006,22 +1011,15 @@ function disableAnimation() {
       (isPostPage && sidebarPosition === "left" && showRightSidebarOnPostPage);
 
     // 定义网格类
-    let newGridClasses = "";
-    if (shouldBothSidebars) {
-      // 双侧边栏: grid-cols-1 md:grid-cols-[17.5rem_1fr] xl:grid-cols-[17.5rem_1fr_17.5rem]
-      newGridClasses = "grid-cols-1 md:grid-cols-[17.5rem_1fr] xl:grid-cols-[17.5rem_1fr_17.5rem]";
-    } else {
-      // 单侧边栏: grid-cols-1 md:grid-cols-[17.5rem_1fr]
-      newGridClasses = "grid-cols-1 md:grid-cols-[17.5rem_1fr]";
-    }
+    const newGridClasses = shouldBothSidebars
+      ? "grid-cols-1 md:grid-cols-[17.5rem_1fr] xl:grid-cols-[17.5rem_1fr_17.5rem]"
+      : "grid-cols-1 md:grid-cols-[17.5rem_1fr]";
 
     // 移除所有网格列数相关的类
     const classesToRemove = [
       "grid-cols-1",
       "md:grid-cols-[17.5rem_1fr]",
       "xl:grid-cols-[17.5rem_1fr_17.5rem]",
-      "md:grid-cols-2",
-      "lg:grid-cols-3"
     ];
 
     classesToRemove.forEach(cls => mainGrid.classList.remove(cls));
@@ -1034,7 +1032,7 @@ function disableAnimation() {
 
   // 更新侧边栏组件的可见性
   function updateSidebarComponentsVisibility() {
-    const isPostPage = window.location.pathname.includes("/posts/") || window.location.pathname.includes("/post/");
+    const isPostPage = isCurrentPagePost();
 
     // 处理 showOnPostPage === false 的组件
     const widgetsToHideOnPost = document.querySelectorAll(".widget-hide-on-post");
