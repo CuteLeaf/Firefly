@@ -18,7 +18,13 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 
 	// 左侧边栏组件配置列表
 	// 组件的渲染顺序完全取决于它们在配置数组中出现的顺序，但top的组件会优先于sticky位置的组件渲染
-	// 组件位置position：top=固定顶部，sticky=粘性定位(会跟随页面滚动)
+	// type 组件类型
+	// enable 是否启用该组件
+	// position 组件位置：top固定顶部，sticky粘性定位(会跟随页面滚动)
+	// showOnPostPage 是否在文章详情页显示该组件
+	// showOnNonPostPage 是否在非文章详情页显示该组件（除文章详情页外都显示）
+	// configId 组件配置ID（目前仅广告组件使用），用于区分不同的广告配置
+	// responsive 响应式配置（部分组件可用，可用来设定部分组件需要的参数）
 	leftComponents: [
 		{
 			// 组件类型：用户资料组件
