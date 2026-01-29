@@ -114,8 +114,8 @@ onMount(() => {
 });
 </script>
 
-<div class="relative z-50" role="menu" tabindex="-1">
-    <button aria-label="Light/Dark Mode" role="menuitem" class="relative btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="scheme-switch">
+<div class="relative z-50">
+    <button aria-label="Light/Dark Mode" aria-haspopup="menu" class="relative btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="scheme-switch">
         <div class="absolute" class:opacity-0={displayedMode !== LIGHT_MODE}>
             <Icon icon="material-symbols:wb-sunny-outline-rounded" class="text-[1.25rem]"></Icon>
         </div>
@@ -123,9 +123,10 @@ onMount(() => {
             <Icon icon="material-symbols:dark-mode-outline-rounded" class="text-[1.25rem]"></Icon>
         </div>
     </button>
-    <div id="theme-mode-panel" class="absolute transition float-panel-closed top-11 -right-2 pt-5 z-50">
+    <div id="theme-mode-panel" class="absolute transition float-panel-closed top-11 -right-2 pt-5 z-50" role="menu" aria-labelledby="scheme-switch">
         <DropdownPanel>
             <DropdownItem
+                role="menuitem"
                 isActive={mode === LIGHT_MODE}
                 isLast={false}
                 onclick={() => switchScheme(LIGHT_MODE)}
@@ -134,6 +135,7 @@ onMount(() => {
                 {i18n(I18nKey.lightMode)}
             </DropdownItem>
             <DropdownItem
+                role="menuitem"
                 isActive={mode === DARK_MODE}
                 isLast={false}
                 onclick={() => switchScheme(DARK_MODE)}
@@ -142,6 +144,7 @@ onMount(() => {
                 {i18n(I18nKey.darkMode)}
             </DropdownItem>
             <DropdownItem
+                role="menuitem"
                 isActive={mode === SYSTEM_MODE}
                 isLast={true}
                 onclick={() => switchScheme(SYSTEM_MODE)}

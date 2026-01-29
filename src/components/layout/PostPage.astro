@@ -59,27 +59,30 @@ const initialLayoutClass =
 </div>
 
 <!-- 立即执行脚本：防止刷新时的布局闪烁 -->
-<script is:inline define:vars={{ defaultLayout, isBothSidebars }}>
+<script is:inline define:vars={{ defaultLayout, isBothSidebars, gridColumns }}>
   (function() {
     const savedLayout = localStorage.getItem('postListLayout');
-    
+
     // 如果有保存的布局且与默认布局不同，更新容器布局
     if (savedLayout && savedLayout !== defaultLayout) {
       const container = document.getElementById('post-list-container');
-      
+
       if (container) {
         // 禁用过渡动画
         container.style.transition = 'none';
-        
+
         // 移除所有布局类
-        container.classList.remove('list-mode', 'grid-mode', 'flex', 'flex-col', 'grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-4', 'md:gap-4');
-        
+        container.classList.remove('list-mode', 'grid-mode', 'flex', 'flex-col', 'grid', 'grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3', 'gap-4', 'md:gap-4');
+
         if (savedLayout === 'grid') {
           container.classList.add('grid-mode', 'grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-4');
+          if (!isBothSidebars && gridColumns === 3) {
+            container.classList.add('lg:grid-cols-3');
+          }
         } else {
           container.classList.add('list-mode', 'flex', 'flex-col', 'gap-4', 'md:gap-4');
         }
-        
+
         // 强制重排后恢复过渡动画
         container.offsetHeight;
         container.style.transition = '';

@@ -32,7 +32,7 @@ import rehypeFigure from "./src/plugins/rehype-figure.mjs";
 
 // https://astro.build/config
 export default defineConfig({
-	site: siteConfig.site_url,
+	site: https://blog.owouo.me,
 
 	base: "/",
 	trailingSlash: "always",
@@ -45,7 +45,7 @@ export default defineConfig({
 			animationClass: "transition-swup-", // see https://swup.js.org/options/#animationselector
 			// the default value `transition-` cause transition delay
 			// when the Tailwind class `transition-all` is used
-			containers: ["main", "#right-sidebar-dynamic", "#floating-toc-wrapper"],
+			containers: ["#swup-container", "#right-sidebar-dynamic", "#floating-toc-wrapper"],
 			smoothScrolling: false,
 			cache: true,
 			preload: true,

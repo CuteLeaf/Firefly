@@ -1,147 +1,177 @@
 .custom-md {
-    h1 {
-        @apply text-3xl;
+  h1 {
+    @apply text-3xl;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    .anchor {
+      @apply transition -m-0.5 ml-[0.2ch] p-0.5 select-none opacity-0 no-underline !important;
+
+      .anchor-icon {
+        @apply mx-[0.45ch] !important;
+      }
     }
 
-    h1, h2, h3, h4, h5, h6 {
-        .anchor {
-            @apply transition -m-0.5 ml-[0.2ch] p-0.5 select-none opacity-0 no-underline !important;
+    &:hover {
+      .anchor {
+        @apply opacity-100 !important;
+      }
+    }
+  }
 
-            .anchor-icon {
-                @apply mx-[0.45ch] !important;
-            }
-        }
+  a:not(.no-styling) {
+    @apply relative bg-none font-medium text-[var(--primary)] underline decoration-[var(--link-underline)] decoration-1 decoration-dashed underline-offset-4;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
 
-        &:hover {
-            .anchor {
-                @apply opacity-100 !important;
-            }
-        }
+    &:hover,
+    &:active {
+      @apply decoration-transparent;
+      background: var(--btn-plain-bg-hover);
+      border-bottom: 1px dashed var(--link-hover);
+      text-decoration: none;
+    }
+  }
+
+  code {
+    @apply bg-[var(--inline-code-bg)] text-[var(--inline-code-color)] px-1 py-0.5 rounded-md overflow-hidden;
+
+    font-family:
+      "JetBrains Mono Variable",
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      Liberation Mono,
+      Courier New,
+      monospace;
+
+    &:before {
+      content: none;
     }
 
-    a:not(.no-styling) {
-        @apply relative bg-none font-medium text-[var(--primary)]
-        underline decoration-[var(--link-underline)] decoration-1 decoration-dashed underline-offset-4;
-        box-decoration-break: clone;
-        -webkit-box-decoration-break: clone;
-    
-        &:hover, &:active {
-            @apply decoration-transparent;
-            background: var(--btn-plain-bg-hover);
-            border-bottom: 1px dashed var(--link-hover);
-            text-decoration: none;
-        }
+    &:after {
+      content: none;
     }
 
-    code {
-        @apply bg-[var(--inline-code-bg)] text-[var(--inline-code-color)] px-1 py-0.5 rounded-md overflow-hidden;
+    counter-reset: line;
 
-        font-family: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
-        &:before {
-            content:none;
-        }
-        &:after {
-            content:none;
-        }
+    span.line {
+      &:before {
+        @apply text-white/25 mr-4 w-4 inline-block;
+        content: counter(line);
+        counter-increment: line;
+        direction: rtl;
+      }
 
-        counter-reset: line;
-        span.line {
-            &:before {
-                @apply text-white/25 mr-4 w-4 inline-block;
-                content: counter(line);
-                counter-increment: line;
-                direction: rtl;
-            }
-            &:last-child:empty, &:last-child:has(> span:empty:only-child) {
-                display: none;
-            }
-        }
+      &:last-child:empty,
+      &:last-child:has(> span:empty:only-child) {
+        display: none;
+      }
     }
+  }
 
-    .copy-btn {
-        @apply opacity-0 shadow-md shadow-black/30 absolute active:scale-90 h-8 w-8 top-3 right-3 text-sm rounded-lg transition-all ease-in-out z-20 cursor-pointer border-0;
-        background: var(--btn-regular-bg);
-    }
-    .copy-btn:hover {
-        background: var(--btn-regular-bg-hover);
-    }
-    .frame:hover .copy-btn {
-        opacity: 1;
-    }
+  .copy-btn {
+    @apply opacity-0 shadow-md shadow-black/30 absolute active:scale-90 h-8 w-8 top-3 right-3 text-sm rounded-lg transition-all ease-in-out z-20 cursor-pointer border-0;
+    background: var(--btn-regular-bg);
+  }
 
-    .copy-btn-icon {
-        @apply absolute top-1/2 left-1/2 transition -translate-x-1/2 -translate-y-1/2 w-4 h-4 fill-white pointer-events-none;
-        fill: var(--btn-content);
-    }
-    .copy-btn .copy-icon {
-        @apply opacity-100 fill-white dark:fill-white/75;
-        fill: var(--btn-content);
-    }
-    .copy-btn.success .copy-icon {
-        @apply opacity-0 fill-[var(--deep-text)]
-     
-    }
-    .copy-btn .success-icon {
-        @apply opacity-0 fill-white;
-        fill: var(--btn-content);
-   
-    }
-    .copy-btn.success .success-icon {
-        @apply opacity-100
-    
-    }
+  .copy-btn:hover {
+    background: var(--btn-regular-bg-hover);
+  }
 
-    .expressive-code {
-        @apply my-4;
+  .frame:hover .copy-btn {
+    opacity: 1;
+  }
+
+  .copy-btn-icon {
+    @apply absolute top-1/2 left-1/2 transition -translate-x-1/2 -translate-y-1/2 w-4 h-4 fill-white pointer-events-none;
+    fill: var(--btn-content);
+  }
+
+  .copy-btn .copy-icon {
+    @apply opacity-100 fill-white dark:fill-white/75;
+    fill: var(--btn-content);
+  }
+
+  .copy-btn.success .copy-icon {
+    @apply opacity-0 fill-[var(--deep-text)];
+  }
+
+  .copy-btn .success-icon {
+    @apply opacity-0 fill-white;
+    fill: var(--btn-content);
+  }
+
+  .copy-btn.success .success-icon {
+    @apply opacity-100;
+  }
+
+  .expressive-code {
+    @apply my-4;
+  }
+
+  ul,
+  ol {
+    li::marker {
+      @apply text-[var(--primary)];
     }
+  }
 
+  blockquote {
+    @apply not-italic border-transparent relative;
+    font-weight: inherit;
 
-    ul, ol {
-        li::marker {
-            @apply text-[var(--primary)];
-        }
-    }
-
-    blockquote {
-        @apply not-italic border-transparent relative;
-        font-weight: inherit;
-
-        &:before {
-            @apply content-[''] absolute -left-1 block transition bg-[var(--btn-regular-bg)] h-full w-1 rounded-full;
-        }
-
-        /* Remove the double quotes from default styles */
-        p:before, p:after {
-            @apply content-none;
-        }
-
+    &:before {
+      @apply content-[''] absolute -left-1 block transition bg-[var(--btn-regular-bg)] h-full w-1 rounded-full;
     }
 
-    .katex-display-container {
-        max-width: 100%;
-        overflow-x: auto;
-        margin: 1em 0;
+    /* Remove the double quotes from default styles */
+    p:before,
+    p:after {
+      @apply content-none;
     }
-    
+  }
+
+  .katex-display-container {
+    max-width: 100%;
+    overflow-x: auto;
+    margin: 1em 0;
+  }
 }
 
-/* 修复代码块内列表项标记颜色问题 */
-.custom-md .expressive-code ul li::marker,
-.custom-md .expressive-code ol li::marker {
-    @apply text-inherit;
-}
+.custom-md {
+  table {
+    @apply w-full my-4;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: var(--radius-large);
+    overflow: hidden;
+  }
 
-/* 修复表格对齐问题 */
-.custom-md {  
-    table {  
-        th[align="left"], td[align="left"] {  
-            text-align: left;  
-        }  
-        th[align="center"], td[align="center"] {  
-            text-align: center;  
-        }  
-        th[align="right"], td[align="right"] {  
-            text-align: right;  
-        }  
-    }  
+  th,
+  td {
+    @apply px-3 py-2 text-left;
+    min-width: 120px;
+    border: none;
+    word-break: break-word;
+  }
+
+  th {
+    @apply bg-[var(--btn-regular-bg)] font-semibold text-[var(--btn-content)] border-b border-[var(--line-color)];
+  }
+
+  td {
+    @apply bg-[var(--card-bg)];
+  }
+
+  tr:nth-child(even) td {
+    @apply bg-[var(--btn-plain-bg-active)];
+  }
 }

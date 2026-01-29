@@ -69,20 +69,9 @@ const style = Astro.props.style;
     if (widgetLayout) {
       // 隐藏整个widget-layout元素
       widgetLayout.style.display = "none";
-      // 保存关闭状态到localStorage
-      localStorage.setItem("announcementClosed", "true");
+     
     }
   }
-
-  // 页面加载时检查是否已关闭
-  document.addEventListener("DOMContentLoaded", function () {
-    const widgetLayout = document.querySelector(
-      'widget-layout[data-id="announcement"]'
-    ) as HTMLElement | null;
-    if (widgetLayout && localStorage.getItem("announcementClosed") === "true") {
-      widgetLayout.style.display = "none";
-    }
-  });
 
   // 使公告栏函数全局可用
   window.closeAnnouncement = closeAnnouncement;
