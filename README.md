@@ -1,10 +1,10 @@
 
-<img src="./docs/images/1131.png" width = "320" height = "500" alt="Firefly" align=right />
+<img src="./docs/images/1131.png" width = "350" height = "500" alt="Firefly" align=right />
 
 <div align="center">
 
 # Firefly
-> A Fresh and Beautiful Astro Blog Theme Template
+> A Fresh and Beautiful Astro Static Blog Theme Template
 > 
 > ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen) 
 ![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
@@ -24,13 +24,13 @@
 
 
 ---
+📖 README:
+**[简体中文](README.zh.md)** | **[繁體中文](docs/README.zh-TW.md)** | **[English](README.md)** | **[日本語](docs/README.ja.md)** | **[Русский](docs/README.ru.md)** 
+
 🚀 Quick Guide:
 [**🖥️Live Demo**](https://firefly.cuteleaf.cn/) /
 [**📝Documentation**](https://docs-firefly.cuteleaf.cn/) /
 [**🍀My Blog**](https://blog.cuteleaf.cn)
-
-📖 README:
-**[简体中文](README.zh.md)** | **[繁體中文](docs/README.zh-TW.md)** | **[English](README.md)** | **[日本語](docs/README.ja.md)** | **[Русский](docs/README.ru.md)** 
 
 ⚡ Static Site Generation: Ultra-fast loading speed and SEO optimization based on Astro
 
@@ -43,13 +43,13 @@
 <img alt="firefly" src="./docs/images/1.webp" />
 
 >[!TIP]
->In important layouts, Firefly innovatively adds dual sidebars, article grid (multi-column) layout, masonry layout,
+>Firefly is a fresh and beautiful personal blog theme template based on the Astro framework and the Fuwari template, designed for tech enthusiasts and content creators. This theme integrates modern web technology stacks, provides rich functional modules and highly customizable interfaces, allowing you to easily create a professional and beautiful personal blog website.
 >
->Includes site statistics, calendar component, table of contents and other widgets to enrich the sidebar,
->
->While also retaining fuwari layout system, freely switchable in the configuration file.
+>In important layouts, Firefly innovatively adds dual sidebars, article grid (multi-column) layout, masonry layout, includes site statistics, calendar component, table of contents and other widgets to enrich the sidebar, while also retaining the original fuwari layout, which can be freely switched in the configuration file according to your preferences.
 >
 >**For more layout configurations and demos, please see: [Firefly Layout System Details](https://firefly.cuteleaf.cn/posts/firefly-layout-system/)**
+>
+>Firefly supports i18n multi-language switching, but except for Simplified Chinese, other languages are AI-translated. If there are any errors, welcome to submit [Pull Request](https://github.com/CuteLeaf/Firefly/pulls) for correction.
 
 ## ✨ Features
 
@@ -62,7 +62,7 @@
 - [x] **Full-text Search** - Client-side search based on Pagefind, supports article content indexing.
 
 ### Personalization
-- [x] **Sidebar** - Supports single sidebar, dual sidebar configuration
+- [x] **Dynamic Sidebar** - Supports single sidebar, dual sidebar configuration
 - [x] **Article Layout** - Supports list (single column) and grid (multi-column/masonry) layout
 - [x] **Font Management** - Custom font support with rich font selector
 - [x] **Footer Configuration** - HTML content injection, fully customizable
@@ -101,12 +101,7 @@
 - [x] **SEO Optimization** - Complete meta tags and structured data
 - [x] **RSS Feed** - Automatically generates RSS Feed
 - [x] **Sitemap** - Automatically generates XML Sitemap with page filtering configuration
-
-## 📝 Planned...
-
-- [ ] **Refactor Live2D Mascot**
-- [ ] **Continuous Animation Smoothness Optimization**
-- [ ] More features in continuous development...
+- [x] **Analytics** - Integrates Google Analytics, Microsoft Clarity
 
 If you have useful features and optimizations, please submit a [Pull Request](https://github.com/CuteLeaf/Firefly/pulls)
 
@@ -254,7 +249,7 @@ All commands need to be executed in the project root directory:
 ## 🙏 Acknowledgments
 
 - Special thanks to [saicaca](https://github.com/saicaca) for developing the [fuwari](https://github.com/saicaca/fuwari) template, which Firefly is based on
-- Referenced blogger [Kasuka](https://kasuha.com)'s [Bangumi Collection Display](https://kasuha.com/posts/fuwari-enhance-ep2/) and [Email Protection/Image Title](https://kasuha.com/posts/fuwari-enhance-ep1/) solutions
+- Referenced blogger [霞葉](https://kasuha.com)'s [Bangumi Collection Display](https://kasuha.com/posts/fuwari-enhance-ep2/) and [Email Protection/Image Title](https://kasuha.com/posts/fuwari-enhance-ep1/) solutions
 - Referenced [Mizuki](https://github.com/matsuzaka-yuki/Mizuki)'s banner title, multi-level menu navbar, sakura effect, KaTeX, and Fancybox solutions
 - Built with [Astro](https://astro.build) and [Tailwind CSS](https://tailwindcss.com)
 - Uses [MetingJS](https://github.com/metowolf/MetingJS) and [APlayer](https://github.com/MoePlayer/APlayer) music player

@@ -1,10 +1,10 @@
 
-<img src="./images/1131.png" width = "320" height = "500" alt="Firefly" align=right />
+<img src="./images/1131.png" width = "350" height = "500" alt="Firefly" align=right />
 
 <div align="center">
 
 # Firefly
-> 美しくモダンな Astro ブログテーマテンプレート
+> 美しくモダンな Astro 静的ブログテーマテンプレート
 > 
 > ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen) 
 ![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
@@ -25,13 +25,13 @@
 
 
 ---
+📖 README：
+**[简体中文](../README.zh.md)** | **[繁體中文](README.zh-TW.md)** | **[English](../README.md)** | **[日本語](README.ja.md)** | **[Русский](README.ru.md)** 
+
 🚀 クイックガイド：
 [**🖥️ライブデモ**](https://firefly.cuteleaf.cn/) /
 [**📝ドキュメント**](https://docs-firefly.cuteleaf.cn/) /
 [**🍀私のブログ**](https://blog.cuteleaf.cn)
-
-📖 README：
-**[简体中文](../README.zh.md)** | **[繁體中文](README.zh-TW.md)** | **[English](../README.md)** | **[日本語](README.ja.md)** | **[Русский](README.ru.md)** 
 
 ⚡ 静的サイト生成：Astroベースの超高速読み込み速度とSEO最適化
 
@@ -44,13 +44,13 @@
 <img alt="firefly" src="./images/1.webp" />
 
 >[!TIP]
->重要なレイアウトでは、Fireflyは革新的に左右のデュアルサイドバー、記事グリッド（多列）レイアウト、メーソンリーレイアウトを追加し、
+>Fireflyは、AstroフレームワークとFuwariテンプレートをベースに開発された、清新で美しい個人ブログテーマテンプレートです。技術愛好家やコンテンツクリエイター向けに設計されています。このテーマはモダンなWeb技術スタックを統合し、豊富な機能モジュールと高度にカスタマイズ可能なインターフェースを提供し、プロフェッショナルで美しい個人ブログウェブサイトを簡単に作成できます。
 >
->サイト統計、カレンダーコンポーネント、記事目次などの小さなウィジェットを追加してサイドバーをより豊かにし、
->
->同時にfuwariのレイアウトシステムも保持しており、設定ファイルで自由に切り替えられます。
+>重要なレイアウトでは、Fireflyは革新的に左右のデュアルサイドバー、記事グリッド（多列）レイアウト、メーソンリーレイアウトを追加し、サイト統計、カレンダーコンポーネント、記事目次などの小さなウィジェットを追加してサイドバーをより豊かにし、同時にfuwariのレイアウトシステムも保持しており、設定ファイルで自由に切り替えられます。
 >
 >**レイアウト設定とデモの詳細については、[Fireflyレイアウトシステム詳細](https://firefly.cuteleaf.cn/posts/firefly-layout-system/)をご覧ください**
+>
+>Fireflyはi18n多言語切り替えをサポートしていますが、簡体字中国語以外はAI翻訳です。誤りがある場合は、[Pull Request](https://github.com/CuteLeaf/Firefly/pulls)を提出して修正してください。
 
 ## ✨ 機能
 
@@ -63,7 +63,7 @@
 - [x] **全文検索** - Pagefindベースのクライアントサイド検索、記事コンテンツのインデックスをサポート
 
 ### パーソナライゼーション
-- [x] **サイドバー** - シングルサイドバー、デュアルサイドバー設定をサポート
+- [x] **動的サイドバー** - シングルサイドバー、デュアルサイドバー設定をサポート
 - [x] **記事レイアウト** - リスト（単列）、グリッド（多列/メーソンリー）レイアウトをサポート
 - [x] **フォント管理** - カスタムフォントをサポート、豊富なフォントセレクター
 - [x] **フッター設定** - HTMLコンテンツ注入、完全カスタマイズ可能
@@ -102,12 +102,7 @@
 - [x] **SEO最適化** - 完全なメタタグと構造化データ
 - [x] **RSS購読** - RSSフィードを自動生成
 - [x] **サイトマップ** - XMLサイトマップを自動生成、ページフィルタリング設定をサポート
-
-## 📝 予定...
-
-- [ ] **Live2Dマスコットのリファクタリング**
-- [ ] **アニメーションの滑らかさの継続的な最適化**
-- [ ] より多くの機能が継続的に改善中...
+- [x] **統計分析** - Google Analytics、Microsoft Clarityを統合
 
 便利な機能や最適化があれば、[Pull Request](https://github.com/CuteLeaf/Firefly/pulls)を提出してください
 
@@ -231,7 +226,7 @@ comment: true    # コメントを有効化
 
 Astroがデフォルトで対応している[GitHub Flavored Markdown](https://github.github.com/gfm/)に加えて、いくつかの追加のMarkdown機能があります：
 
-- Admonitions（予告ブロック） - GitHub、Obsidian、VitePressの3つのテーマ設定をサポート ([プレビューと使用方法](https://firefly.cuteleaf.cn/posts/))
+- Admonitions（予告ブロック） - GitHub、Obsidian、VitePressの3つのテーマ設定をサポート ([プレビューと使用方法](https://firefly.cuteleaf.cn/posts/markdown-extended/))
 - GitHubリポジトリカード ([プレビューと使用方法](https://firefly.cuteleaf.cn/posts/markdown-extended/))
 - Expressive Codeベースの強化コードブロック ([プレビュー](http://firefly.cuteleaf.cn/posts/code-examples/) / [ドキュメント](https://expressive-code.com/))
 
