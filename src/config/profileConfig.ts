@@ -2,17 +2,9 @@ import type { ProfileConfig } from "../types/config";
 
 export const profileConfig: ProfileConfig = {
 	// 头像
-<<<<<<< HEAD
 	avatar: "/assets/images/avatar.jpg",
 	// 名字
 	name: "悠游",
-=======
-	avatar: "/assets/images/avatar.webp",
-
-	// 名字
-	name: "Firefly",
-
->>>>>>> 8da442d26e62ab48f81ed3ed9b59585abf459b8d
 	// 个人签名
 	bio: "Hello, I'm 悠游.",
 
