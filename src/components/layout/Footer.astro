@@ -35,31 +35,36 @@ if (footerConfig.enable) {
   class="transition border-dashed border-[oklch(85%_0.01_var(--hue))] dark:border-white/15 rounded-2xl mb-12 flex flex-col items-center justify-center px-6"
 >
   <div class="transition text-50 text-sm text-center">
-    {customFooterHtml && <div class="mb-2" set:html={customFooterHtml} />}
-    &copy; <span id="copyright-year">{currentYear}</span>
-    {profileConfig.name}. All Rights Reserved. /
-    <a
-      class="transition link text-[var(--primary)] font-medium"
-      target="_blank"
-      href={url("rss.xml")}
-      >RSS</a
-    > /
-    <a
-      class="transition link text-[var(--primary)] font-medium"
-      target="_blank"
-      href={url("sitemap-index.xml")}>Sitemap</a
-    ><br />
-    Powered by
-    <a
-      class="transition link text-[var(--primary)] font-medium"
-      target="_blank"
-      href="https://astro.build">Astro</a
-    > &
-    <a
-      class="transition link text-[var(--primary)] font-medium"
-      target="_blank"
-      href="https://github.com/CuteLeaf/Firefly">Firefly</a
-    ><br />
+    <div class="mb-2">
+      {customFooterHtml && <div set:html={customFooterHtml} />}
+    </div>
+    <div class="m-0.5">
+      &copy; <span id="copyright-year">{currentYear}</span>
+      {profileConfig.name}. All Rights Reserved. /
+      <a
+        class="transition link text-[var(--primary)] font-medium"
+        target="_blank"
+        href={url("rss.xml")}>RSS</a
+      > /
+      <a
+        class="transition link text-[var(--primary)] font-medium"
+        target="_blank"
+        href={url("sitemap-index.xml")}>Sitemap</a
+      >
+    </div>
+    <div class="m-0.5">
+      Powered by
+      <a
+        class="transition link text-[var(--primary)] font-medium"
+        target="_blank"
+        href="https://astro.build">Astro</a
+      > &
+      <a
+        class="transition link text-[var(--primary)] font-medium"
+        target="_blank"
+        href="https://github.com/CuteLeaf/Firefly">Firefly</a
+      >
+    </div>
     <!-- 
       注意：请勿随意修改或删除 "Powered by Astro & Firefly" 部分，这是对开源项目的尊重和支持。
       如果您需要在底部增加内容，请在src/config/footerConfig.ts中修改enable属性为true，然后编辑src/config/FooterConfig.html文件。
