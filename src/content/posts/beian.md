@@ -2,7 +2,7 @@
 title: 我的网站备案啦！
 published: 2026-01-31
 description: 我的网站备案啦！
-image: /assets/images/beian.jpg
+image: /assets/images/c7261ec206aadaaebdc1b81df86daccb.jpg
 tags: [备案]
 author: 沈幼楚
 category: 备案
