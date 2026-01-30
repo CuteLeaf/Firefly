@@ -184,6 +184,18 @@ export default defineConfig({
 			},
 		},
 		build: {
+			// 启用资源压缩和优化
+			minify: "terser",
+			terserOptions: {
+				compress: {
+					drop_console: false, // 生产环境可改为true移除console
+					drop_debugger: true,
+				},
+				mangle: true,
+				format: {
+					comments: false,
+				},
+			},
 			rollupOptions: {
 				onwarn(warning, warn) {
 					// temporarily suppress this warning
@@ -196,6 +208,15 @@ export default defineConfig({
 					warn(warning);
 				},
 			},
+			// CSS 优化
+			cssCodeSplit: true,
+			cssMinify: true,
+			// 资源大小限制 - 减少内联资源
+			assetsInlineLimit: 4096,
+			// 减少源映射大小（可选，生产环境改为false）
+			sourcemap: false,
+			// 并行处理构建
+			workers: 4,
 		},
 	},
 });
