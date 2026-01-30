@@ -1,0 +1,1 @@
+import{C as s,z as a,D as r,E as n,F as i,H as o,G as e,I as t,J as u}from"./utils.CJQZrHOt.js";import{B as f}from"./branches.QMhmkc9g.js";function c(c,m,v=!1){a&&r();var l=new f(c);function p(s,r){if(a){if(s===(i(c)===o)){var n=e();return t(n),l.anchor=n,u(!1),l.ensure(s,r),void u(!0)}}l.ensure(s,r)}s(()=>{var s=!1;m((a,r=!0)=>{s=!0,p(r,a)}),s||p(!1,null)},v?n:0)}export{c as i};
