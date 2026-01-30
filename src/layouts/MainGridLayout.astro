@@ -429,7 +429,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
                 如果全局配置为双侧栏(position: both)，则使用静态容器(不被swup替换)，避免闪烁。
                 如果全局配置为单侧栏(position: left)，则使用动态容器(被swup替换)，以便在文章页显示右侧栏。
                 注意：为了满足swup要求所有containers必须存在，我们在两种模式下都必须渲染 #right-sidebar-dynamic。
-                右侧边栏在1200px以下隐藏（CSS处理）。
+                右侧边栏在1280px以下隐藏（CSS处理）。
             */}
             {sidebarLayoutConfig.position === "both" ? (
                 <>

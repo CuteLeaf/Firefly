@@ -246,7 +246,7 @@ const sidebarPosition = sidebarLayoutConfig.position;
 
     if (effectiveIsBothSidebars) {
       // 在有效的双侧边栏时，小屏幕或侧边栏目录未启用时显示悬浮目录
-      const isSmallScreen = window.innerWidth < 1200;
+      const isSmallScreen = window.innerWidth < 1280;
       return isSmallScreen || !isSidebarTocEnabled;
     }
 

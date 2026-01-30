@@ -8,7 +8,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 	enable: true,
 
 	// 侧边栏位置：left=左侧，both=双侧
-	// 开启双侧边栏后，右侧组件会在宽度低于1200px时隐藏
+	// 开启双侧边栏后，右侧组件会在宽度低于1280px时隐藏
 	position: "both",
 
 	// 使用左侧单侧栏时，是否在文章详情页显示右侧边栏
