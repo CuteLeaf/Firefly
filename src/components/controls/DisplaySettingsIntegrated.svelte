@@ -179,9 +179,8 @@ $effect(() => {
             <div class="space-y-1 px-1">
                 <button
                     class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
-                    class:ring-1={wallpaperMode === WALLPAPER_BANNER}
-                    class:ring-[var(--primary)]={wallpaperMode === WALLPAPER_BANNER}
                     class:opacity-60={wallpaperMode !== WALLPAPER_BANNER}
+                    class:bg-[var(--btn-regular-bg-hover)]={wallpaperMode === WALLPAPER_BANNER}
                     onclick={() => switchWallpaperMode(WALLPAPER_BANNER)}
                 >
                     <Icon icon="material-symbols:image-outline" class="text-[1.25rem] flex-shrink-0"></Icon>
@@ -192,9 +191,8 @@ $effect(() => {
                 </button>
                 <button
                     class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
-                    class:ring-1={wallpaperMode === WALLPAPER_OVERLAY}
-                    class:ring-[var(--primary)]={wallpaperMode === WALLPAPER_OVERLAY}
                     class:opacity-60={wallpaperMode !== WALLPAPER_OVERLAY}
+                    class:bg-[var(--btn-regular-bg-hover)]={wallpaperMode === WALLPAPER_OVERLAY}
                     onclick={() => switchWallpaperMode(WALLPAPER_OVERLAY)}
                 >
                     <Icon icon="material-symbols:wallpaper" class="text-[1.25rem] flex-shrink-0"></Icon>
@@ -205,9 +203,8 @@ $effect(() => {
                 </button>
                 <button
                     class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
-                    class:ring-1={wallpaperMode === WALLPAPER_NONE}
-                    class:ring-[var(--primary)]={wallpaperMode === WALLPAPER_NONE}
                     class:opacity-60={wallpaperMode !== WALLPAPER_NONE}
+                    class:bg-[var(--btn-regular-bg-hover)]={wallpaperMode === WALLPAPER_NONE}
                     onclick={() => switchWallpaperMode(WALLPAPER_NONE)}
                 >
                     <Icon icon="material-symbols:hide-image-outline" class="text-[1.25rem] flex-shrink-0"></Icon>
@@ -239,9 +236,8 @@ $effect(() => {
                 <button
                     aria-label={i18n(I18nKey.postListLayoutList)}
                     class="flex-1 btn-regular rounded-md py-2 px-3 flex items-center justify-center gap-2 active:scale-95 transition-all relative overflow-hidden"
-                    class:ring-1={currentLayout === 'list'}
-                    class:ring-[var(--primary)]={currentLayout === 'list'}
                     class:opacity-60={currentLayout !== 'list'}
+                    class:bg-[var(--btn-regular-bg-hover)]={currentLayout === 'list'}
                     disabled={isSwitching}
                     onclick={switchLayout}
                     title={i18n(I18nKey.postListLayoutList)}
@@ -257,9 +253,8 @@ $effect(() => {
                 <button
                     aria-label={i18n(I18nKey.postListLayoutGrid)}
                     class="flex-1 btn-regular rounded-md py-2 px-3 flex items-center justify-center gap-2 active:scale-95 transition-all relative overflow-hidden"
-                    class:ring-1={currentLayout === 'grid'}
-                    class:ring-[var(--primary)]={currentLayout === 'grid'}
                     class:opacity-60={currentLayout !== 'grid'}
+                    class:bg-[var(--btn-regular-bg-hover)]={currentLayout === 'grid'}
                     disabled={isSwitching}
                     onclick={switchLayout}
                     title={i18n(I18nKey.postListLayoutGrid)}
