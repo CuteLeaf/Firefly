@@ -21,7 +21,9 @@ import type { WALLPAPER_MODE } from "@/types/config";
 let hue = $state(getHue());
 const defaultHue = getDefaultHue();
 let wallpaperMode: WALLPAPER_MODE = $state(backgroundWallpaper.mode);
+const defaultWallpaperMode = backgroundWallpaper.mode;
 let currentLayout: "list" | "grid" = $state("list");
+const defaultLayout = siteConfig.postListLayout.defaultMode;
 let mounted = $state(false);
 let isSmallScreen = $state(
 	typeof window !== "undefined" ? window.innerWidth < 1200 : false,
@@ -33,6 +35,22 @@ const allowLayoutSwitch = siteConfig.postListLayout.allowSwitch;
 
 function resetHue() {
 	hue = getDefaultHue();
+}
+
+function resetWallpaperMode() {
+	wallpaperMode = defaultWallpaperMode;
+	setWallpaperMode(defaultWallpaperMode);
+}
+
+function resetLayout() {
+	currentLayout = defaultLayout;
+	localStorage.setItem("postListLayout", defaultLayout);
+
+	// 触发自定义事件，通知页面布局已改变
+	const event = new CustomEvent("layoutChange", {
+		detail: { layout: defaultLayout },
+	});
+	window.dispatchEvent(event);
 }
 
 function switchWallpaperMode(newMode: WALLPAPER_MODE) {
@@ -140,11 +158,17 @@ $effect(() => {
     <!-- Wallpaper Mode Section -->
     {#if isWallpaperSwitchable}
         <div class="mb-3 mt-2">
-            <div class="font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3 mb-2
+            <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3 mb-2
                 before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
                 before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2"
             >
                 {i18n(I18nKey.wallpaperMode)}
+                <button aria-label="Reset to Default" class="btn-regular w-7 h-7 rounded-md  active:scale-90"
+                        class:opacity-0={wallpaperMode === defaultWallpaperMode} class:pointer-events-none={wallpaperMode === defaultWallpaperMode} on:click={resetWallpaperMode}>
+                    <div class="text-[var(--btn-content)]">
+                        <Icon icon="fa6-solid:arrow-rotate-left" class="text-[0.875rem]"></Icon>
+                    </div>
+                </button>
             </div>
             <div class="space-y-1 px-1">
                 <button
@@ -193,11 +217,17 @@ $effect(() => {
     <!-- Layout Switch Section -->
     {#if allowLayoutSwitch && !isSmallScreen}
         <div class="mb-2 px-1 mt-2">
-            <div class="font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3 mb-2
+            <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3 mb-2
                 before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
                 before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2"
             >
                 {i18n(I18nKey.postListLayout)}
+                <button aria-label="Reset to Default" class="btn-regular w-7 h-7 rounded-md  active:scale-90"
+                        class:opacity-0={currentLayout === defaultLayout} class:pointer-events-none={currentLayout === defaultLayout} on:click={resetLayout}>
+                    <div class="text-[var(--btn-content)]">
+                        <Icon icon="fa6-solid:arrow-rotate-left" class="text-[0.875rem]"></Icon>
+                    </div>
+                </button>
             </div>
             <div class="flex gap-2">
                 <button

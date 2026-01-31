@@ -186,7 +186,7 @@ export const en: Translation = {
 	[Key.wallpaperNoneMode]: "None Wallpaper",
 
 	// Post List Layout
-	[Key.postListLayout]: "Post Layout",
+	[Key.postListLayout]: "Post List Layout",
 	[Key.postListLayoutList]: "List",
 	[Key.postListLayoutGrid]: "Grid",
 

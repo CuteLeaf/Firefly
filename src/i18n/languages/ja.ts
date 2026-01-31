@@ -185,7 +185,7 @@ export const ja: Translation = {
 	[Key.wallpaperNoneMode]: "単色背景",
 
 	// 投稿リストレイアウト
-	[Key.postListLayout]: "投稿レイアウト",
+	[Key.postListLayout]: "投稿リストレイアウト",
 	[Key.postListLayoutList]: "リスト",
 	[Key.postListLayoutGrid]: "グリッド",
 

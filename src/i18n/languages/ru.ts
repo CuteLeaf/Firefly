@@ -187,7 +187,7 @@ export const ru: Translation = {
 	[Key.wallpaperNoneMode]: "Однотонный фон",
 
 	// Макет списка сообщений
-	[Key.postListLayout]: "Макет сообщения",
+	[Key.postListLayout]: "Макет списка сообщений",
 	[Key.postListLayoutList]: "Список",
 	[Key.postListLayoutGrid]: "Сетка",
 
