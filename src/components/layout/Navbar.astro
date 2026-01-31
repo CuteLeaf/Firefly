@@ -1,10 +1,8 @@
 ---
 import { Icon } from "astro-icon/components";
-import DisplaySettings from "@/components/controls/DisplaySettings.svelte";
-import LayoutSwitchButton from "@/components/controls/LayoutSwitchButton.svelte";
+import DisplaySettings from "@/components/controls/DisplaySettingsIntegrated.svelte";
 import LightDarkSwitch from "@/components/controls/LightDarkSwitch.svelte";
 import Search from "@/components/controls/Search.svelte";
-import WallpaperSwitch from "@/components/controls/WallpaperSwitch.svelte";
 import { backgroundWallpaper, navBarConfig, siteConfig } from "@/config";
 import { LinkPresets } from "@/constants/link-presets";
 import { LinkPreset, type NavBarLink } from "@/types/config";
@@ -14,12 +12,6 @@ import DropdownMenu from "./DropdownMenu.astro";
 import NavMenuPanel from "./NavMenuPanel.astro";
 
 const className = Astro.props.class;
-
-// 检查是否允许切换壁纸模式
-const isWallpaperSwitchable = backgroundWallpaper.switchable ?? true;
-
-// 检查是否允许切换布局（双侧栏模式下也允许切换，但切换到网格时会自动隐藏右侧边栏）
-const allowLayoutSwitch = siteConfig.postListLayout.allowSwitch;
 
 // 获取导航栏透明模式配置
 const navbarTransparentMode =
@@ -94,9 +86,6 @@ let links: NavBarLink[] = navBarConfig.links.map(
                     </button>
             )}
             {/* @ts-ignore */}
-            {isWallpaperSwitchable && <WallpaperSwitch client:load></WallpaperSwitch>}
-            {allowLayoutSwitch && <LayoutSwitchButton client:load currentLayout={siteConfig.postListLayout.defaultMode}></LayoutSwitchButton>}
-            {/* @ts-ignore */}
             <LightDarkSwitch client:load></LightDarkSwitch>
             <button aria-label="Menu" name="Nav Menu" class="btn-plain scale-animation rounded-lg w-11 h-11 active:scale-90 lg:!hidden" id="nav-menu-switch">
                 <Icon name="material-symbols:menu-rounded" class="text-[1.25rem]"></Icon>
@@ -125,16 +114,6 @@ function loadButtonScript() {
             let menuPanel = document.getElementById("nav-menu-panel");
             if (menuPanel) {
                 menuPanel.classList.toggle("float-panel-closed");
-            }
-        };
-    }
-
-    let wallpaperSwitchBtn = document.getElementById("wallpaper-mode-switch");
-    if (wallpaperSwitchBtn) {
-        wallpaperSwitchBtn.onclick = function () {
-            let wallpaperPanel = document.getElementById("wallpaper-mode-panel");
-            if (wallpaperPanel) {
-                wallpaperPanel.classList.toggle("float-panel-closed");
             }
         };
     }

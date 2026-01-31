@@ -235,7 +235,7 @@ body:has(#banner-wrapper) .dropdown-content,
 body:has(#banner-wrapper) .float-panel,
 body.wallpaper-transparent .dropdown-content,
 body.wallpaper-transparent .float-panel {
-    background: rgba(255, 255, 255, 0.9) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
     box-shadow: var(--shadow-md) !important;
     border: 1px solid rgba(0, 0, 0, 0.05) !important;
 }
@@ -247,7 +247,7 @@ body.wallpaper-transparent .float-panel {
 :root.dark body:has(#banner-wrapper) .float-panel,
 :root.dark body.wallpaper-transparent .dropdown-content,
 :root.dark body.wallpaper-transparent .float-panel {
-    background: rgba(23, 23, 23, 0.9) !important;
+    background: rgba(23, 23, 23, 0.95) !important;
     box-shadow: var(--shadow-md) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }

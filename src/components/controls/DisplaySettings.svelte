@@ -4,6 +4,11 @@ import { i18n } from "@i18n/translation";
 import Icon from "@iconify/svelte";
 import { getDefaultHue, getHue, setHue } from "@utils/setting-utils";
 
+/**
+ * 主题色设置面板
+ * 目前已弃用，已集成至DisplaySettingsIntegrated.svelte，当前文件保留以备将来可能的单独使用
+ */
+
 let hue = getHue();
 const defaultHue = getDefaultHue();
 

@@ -14,6 +14,11 @@ import DropdownPanel from "@/components/common/DropdownPanel.svelte";
 import { backgroundWallpaper } from "@/config";
 import type { WALLPAPER_MODE } from "@/types/config";
 
+/**
+ * 壁纸模式切换按钮
+ * 目前已弃用，已集成至DisplaySettingsIntegrated.svelte，当前文件保留以备将来可能的单独使用
+ */
+
 let mode: WALLPAPER_MODE = $state(backgroundWallpaper.mode);
 
 // 在组件挂载时从localStorage读取保存的模式
