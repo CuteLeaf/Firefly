@@ -231,6 +231,12 @@ enum I18nKey {
 	copyLink = "copyLink",
 	savePoster = "savePoster",
 	scanToRead = "scanToRead",
+
+	// 代码块折叠配置
+	codeCollapsibleShowMore = "codeCollapsibleShowMore",
+	codeCollapsibleShowLess = "codeCollapsibleShowLess",
+	codeCollapsibleExpanded = "codeCollapsibleExpanded",
+	codeCollapsibleCollapsed = "codeCollapsibleCollapsed",
 }
 
 export default I18nKey;

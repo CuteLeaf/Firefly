@@ -245,4 +245,10 @@ export const ja: Translation = {
 	[Key.copyLink]: "リンクをコピー",
 	[Key.savePoster]: "ポスターを保存",
 	[Key.scanToRead]: "QRコードで読む",
+
+	// コードブロック折りたたみ設定
+	[Key.codeCollapsibleShowMore]: "もっと表示",
+	[Key.codeCollapsibleShowLess]: "少なく表示",
+	[Key.codeCollapsibleExpanded]: "コードブロックが展開されました",
+	[Key.codeCollapsibleCollapsed]: "コードブロックが折りたたまれました",
 };

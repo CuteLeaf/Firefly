@@ -10,14 +10,3 @@ const className = Astro.props.class;
 <div data-pagefind-body class={`prose dark:prose-invert prose-base !max-w-none custom-md ${className}`}>
     <slot/>
 </div>
-
-<script>
-import { handleCodeCopy } from "@/utils/code-copy-utils";
-
-document.addEventListener("click", function (e: MouseEvent) {
-    const target = e.target as Element | null;
-    if (target && target.classList.contains("copy-btn")) {
-        handleCodeCopy(target);
-    }
-});
-</script>

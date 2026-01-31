@@ -247,4 +247,10 @@ export const ru: Translation = {
 	[Key.copyLink]: "Копировать ссылку",
 	[Key.savePoster]: "Сохранить постер",
 	[Key.scanToRead]: "Сканируйте, чтобы прочитать",
+
+	// Конфигурация блоков коллапсируемого кода
+	[Key.codeCollapsibleShowMore]: "Показать больше",
+	[Key.codeCollapsibleShowLess]: "Показать меньше",
+	[Key.codeCollapsibleExpanded]: "Блок кода развернут",
+	[Key.codeCollapsibleCollapsed]: "Блок кода свернут",
 };

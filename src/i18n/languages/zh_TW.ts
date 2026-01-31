@@ -239,4 +239,10 @@ export const zh_TW: Translation = {
 	[Key.copyLink]: "複製連結",
 	[Key.savePoster]: "保存海報",
 	[Key.scanToRead]: "掃碼閱讀文章",
+
+	// 代碼區塊折疊配置
+	[Key.codeCollapsibleShowMore]: "顯示更多",
+	[Key.codeCollapsibleShowLess]: "顯示更少",
+	[Key.codeCollapsibleExpanded]: "代碼區塊已展開",
+	[Key.codeCollapsibleCollapsed]: "代碼區塊已折疊",
 };

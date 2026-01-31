@@ -246,4 +246,10 @@ export const en: Translation = {
 	[Key.copyLink]: "Copy Link",
 	[Key.savePoster]: "Save Poster",
 	[Key.scanToRead]: "Scan to Read",
+
+	// Code Block Collapsible Configuration
+	[Key.codeCollapsibleShowMore]: "Show more",
+	[Key.codeCollapsibleShowLess]: "Show less",
+	[Key.codeCollapsibleExpanded]: "Code block expanded",
+	[Key.codeCollapsibleCollapsed]: "Code block collapsed",
 };

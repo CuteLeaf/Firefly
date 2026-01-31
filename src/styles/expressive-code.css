@@ -1,9 +1,35 @@
 .expressive-code {
-    .frame {
-        @apply !shadow-none;
+  .frame {
+    @apply !shadow-none;
+  }
+
+  .title {
+    font-family:
+      "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, Monaco,
+      Consolas, "Liberation Mono", "Courier New", monospace;
+  }
+
+  /* Language Badge 样式适配主题色和亮暗色 */
+  /* 覆盖 expressive-code-language-badge 插件的默认样式 */
+  [data-language]::before {
+    color: var(--btn-content) !important;
+    background: var(--btn-regular-bg) !important;
+  }
+
+  /* 折叠按钮样式适配主题色和亮暗色 */
+  /* 只针对底部的toggle按钮，不改header-toggle */
+  .ec-collapse__toggle {
+    color: var(--btn-content) !important;
+    background-color: var(--btn-regular-bg) !important;
+    border-color: var(--line-color) !important;
+
+    &:hover {
+      background-color: var(--btn-regular-bg-hover) !important;
     }
 
-    .title {
-        font-family: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    &:active {
+      background-color: var(--btn-regular-bg-active) !important;
     }
+  }
 }
+

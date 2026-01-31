@@ -18,8 +18,10 @@ import remarkMath from "remark-math";
 import rehypeCallouts from "rehype-callouts";
 import remarkSectionize from "remark-sectionize";
 import { expressiveCodeConfig, siteConfig } from "./src/config";
-import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button.js";
-// import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge.ts";
+import { i18n } from "./src/i18n/translation";
+import I18nKey from "./src/i18n/i18nKey";
+import { pluginLanguageBadge } from "expressive-code-language-badge"; /* Language Badge */
+import { pluginCollapsible } from "expressive-code-collapsible"; /* Collapsible */
 import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.mjs";
 import { rehypeMermaid } from "./src/plugins/rehype-mermaid.mjs";
 import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
@@ -45,7 +47,11 @@ export default defineConfig({
 			animationClass: "transition-swup-", // see https://swup.js.org/options/#animationselector
 			// the default value `transition-` cause transition delay
 			// when the Tailwind class `transition-all` is used
-			containers: ["#swup-container", "#right-sidebar-dynamic", "#floating-toc-wrapper"],
+			containers: [
+				"#swup-container",
+				"#right-sidebar-dynamic",
+				"#floating-toc-wrapper",
+			],
 			smoothScrolling: false,
 			cache: true,
 			preload: true,
@@ -75,10 +81,23 @@ export default defineConfig({
 			useDarkModeMediaQuery: false,
 			themeCssSelector: (theme) => `[data-theme='${theme.name}']`,
 			plugins: [
+				pluginLanguageBadge(),
 				pluginCollapsibleSections(),
 				pluginLineNumbers(),
-				// pluginLanguageBadge(),
-				pluginCustomCopyButton(),
+				// pluginCollapsible 配置 - 从expressiveCodeConfig读取设置，使用i18n文本
+				...(expressiveCodeConfig.pluginCollapsible?.enable === true
+					? [
+							pluginCollapsible({
+								lineThreshold: expressiveCodeConfig.pluginCollapsible.lineThreshold || 15,
+								previewLines: expressiveCodeConfig.pluginCollapsible.previewLines || 8,
+								defaultCollapsed: expressiveCodeConfig.pluginCollapsible.defaultCollapsed ?? true,
+								expandButtonText: i18n(I18nKey.codeCollapsibleShowMore),
+								collapseButtonText: i18n(I18nKey.codeCollapsibleShowLess),
+								expandedAnnouncement: i18n(I18nKey.codeCollapsibleExpanded),
+								collapsedAnnouncement: i18n(I18nKey.codeCollapsibleCollapsed),
+							}),
+						]
+					: []),
 			],
 			defaultProps: {
 				wrap: false,
@@ -100,9 +119,17 @@ export default defineConfig({
 					insHue: 180,
 					markHue: 250,
 				},
+				languageBadge: {
+					fontSize: "0.75rem",
+					fontWeight: "bold",
+					borderRadius: "0.25rem",
+					opacity: "1",
+					borderWidth: "0px",
+					borderColor: "transparent",
+				},
 			},
 			frames: {
-				showCopyToClipboardButton: false,
+				showCopyToClipboardButton: true,
 			},
 		}),
 		svelte(),

@@ -77,42 +77,6 @@
     }
   }
 
-  .copy-btn {
-    @apply opacity-0 shadow-md shadow-black/30 absolute active:scale-90 h-8 w-8 top-3 right-3 text-sm rounded-lg transition-all ease-in-out z-20 cursor-pointer border-0;
-    background: var(--btn-regular-bg);
-  }
-
-  .copy-btn:hover {
-    background: var(--btn-regular-bg-hover);
-  }
-
-  .frame:hover .copy-btn {
-    opacity: 1;
-  }
-
-  .copy-btn-icon {
-    @apply absolute top-1/2 left-1/2 transition -translate-x-1/2 -translate-y-1/2 w-4 h-4 fill-white pointer-events-none;
-    fill: var(--btn-content);
-  }
-
-  .copy-btn .copy-icon {
-    @apply opacity-100 fill-white dark:fill-white/75;
-    fill: var(--btn-content);
-  }
-
-  .copy-btn.success .copy-icon {
-    @apply opacity-0 fill-[var(--deep-text)];
-  }
-
-  .copy-btn .success-icon {
-    @apply opacity-0 fill-white;
-    fill: var(--btn-content);
-  }
-
-  .copy-btn.success .success-icon {
-    @apply opacity-100;
-  }
-
   .expressive-code {
     @apply my-4;
   }
