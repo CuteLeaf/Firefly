@@ -1,0 +1,1 @@
+import{s as n}from"./navBarConfig.BmtWP5W4.js";import{r as a,j as r,z as s,a as e,e as o}from"./zh_TW.CljpqaUS.js";const t=o,u={en:o,en_us:o,en_gb:o,en_au:o,zh_cn:e,zh_tw:s,ja:r,ja_jp:r,ru:a,ru_ru:a};function _(a){return function(n){return u[n.toLowerCase()]||t}(n.lang||"en")[a]}export{_ as i};
