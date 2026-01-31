@@ -59,8 +59,8 @@ import FloatingButton from "@/components/common/FloatingButton.astro";
             window.pageYOffset || document.documentElement.scrollTop;
           const scrollPercent = calculateScrollProgress();
 
-          // 当滚动超过200px时显示按钮
-          if (scrollTop > 200) {
+          // 当滚动超过300px时显示按钮
+          if (scrollTop > 300) {
             this.wrapper.classList.remove("hide");
           } else {
             this.wrapper.classList.add("hide");
