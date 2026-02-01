@@ -155,6 +155,14 @@ export const siteConfig: SiteConfig = {
 	// 在src/config/fontConfig.ts中配置具体字体
 	font: fontConfig,
 
+	// 启用开发者工具提示信息
+	devtoolsWarning: {
+		enable: true, // 是否启用
+		message:
+			"请按本站规定合法使用开发者工具", // 提示信息内容，留空为默认
+		time: 2, // 提示信息显示时间，单位秒
+	},
+
 	// 站点语言，在本配置文件顶部SITE_LANG定义
 	lang: SITE_LANG,
 };
