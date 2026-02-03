@@ -20,7 +20,7 @@ const { filters, activeFilter, sectionId } = Astro.props;
       class:list={[
         "px-3 py-1 rounded-full text-xs font-medium transition-all duration-200",
         {
-          "bg-[var(--primary)] text-white shadow-md": filter.value === activeFilter,
+          "bg-(--primary) text-white shadow-md": filter.value === activeFilter,
           "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600": filter.value !== activeFilter
         }
       ]}
@@ -48,12 +48,12 @@ const { filters, activeFilter, sectionId } = Astro.props;
         // Update active filter button for this section
         const sectionButtons = document.querySelectorAll(`[data-section="${currentSectionId}"][data-filter]`);
         sectionButtons.forEach(btn => {
-          btn.classList.remove('bg-[var(--primary)]', 'text-white', 'shadow-md');
+          btn.classList.remove('bg-(--primary)', 'text-white', 'shadow-md');
           btn.classList.add('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200', 'dark:bg-gray-700', 'dark:text-gray-300', 'dark:hover:bg-gray-600');
         });
 
         this.classList.remove('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200', 'dark:bg-gray-700', 'dark:text-gray-300', 'dark:hover:bg-gray-600');
-        this.classList.add('bg-[var(--primary)]', 'text-white', 'shadow-md');
+        this.classList.add('bg-(--primary)', 'text-white', 'shadow-md');
 
         // Filter items
         const items = document.querySelectorAll(`[data-item-section="${currentSectionId}"]`);

@@ -21,7 +21,6 @@
     "@astrojs/rss": "^4.0.15",
     "@astrojs/sitemap": "^3.6.1",
     "@astrojs/svelte": "7.2.5",
-    "@astrojs/tailwind": "^6.0.2",
     "@expressive-code/core": "^0.41.6",
     "@expressive-code/plugin-collapsible-sections": "^0.41.6",
     "@expressive-code/plugin-line-numbers": "^0.41.6",
@@ -68,7 +67,6 @@
     "sharp": "^0.34.5",
     "stylus": "^0.64.0",
     "svelte": "^5.46.1",
-    "tailwindcss": "^3.4.19",
     "typescript": "^5.9.2",
     "unist-util-visit": "^5.0.0"
   },
@@ -77,12 +75,14 @@
     "@biomejs/biome": "2.3.12",
     "@iconify-json/mdi": "^1.2.3",
     "@rollup/plugin-yaml": "^4.1.2",
+    "@tailwindcss/vite": "^4.1.18",
     "@types/hast": "^3.0.4",
     "@types/mdast": "^4.0.4",
     "@types/qrcode": "^1.5.6",
     "@types/sanitize-html": "^2.16.0",
     "postcss-import": "^16.1.1",
-    "postcss-nesting": "^13.0.2"
+    "postcss-nesting": "^13.0.2",
+    "tailwindcss": "^4.1.18"
   },
   "packageManager": "pnpm@9.14.4"
 }

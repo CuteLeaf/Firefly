@@ -25,7 +25,7 @@ let {
 }: Props = $props();
 
 const baseClasses =
-	"flex transition whitespace-nowrap items-center !justify-start w-full btn-plain scale-animation rounded-lg h-9 px-3 font-medium active:scale-95";
+	"flex transition whitespace-nowrap items-center justify-start! w-full btn-plain scale-animation rounded-lg h-9 px-3 font-medium active:scale-95";
 
 // 使用 $derived 使类名响应式
 const allClasses = $derived.by(() => {

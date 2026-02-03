@@ -208,7 +208,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
 
 <!-- Navbar -->
 <slot slot="head" name="head"></slot>
-<div id="top-row" class="z-50 pointer-events-none relative transition-all duration-700 mx-auto" class:list={[navbarWidthFull ? "" : "max-w-[var(--page-width)] px-0 md:px-4"]}>
+<div id="top-row" class="z-50 pointer-events-none relative transition-all duration-700 mx-auto" class:list={[navbarWidthFull ? "" : "max-w-(--page-width) px-0 md:px-4"]}>
     <div id="navbar-wrapper" class="pointer-events-auto sticky top-0 transition-all">
         <Navbar></Navbar>
     </div>
@@ -296,7 +296,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
     
     <!-- Water waves effect - 始终渲染以便动态切换 -->
     {(wavesEnabledOnDesktop || wavesEnabledOnMobile) ? (
-    <div class={`waves absolute -bottom-[1px] h-[10vh] max-h-[9.375rem] min-h-[3.125rem] w-full md:h-[15vh] 
+    <div class={`waves absolute -bottom-px h-[10vh] max-h-37.5 min-h-12.5 w-full md:h-[15vh] 
         ${!wavesEnabledOnMobile ? 'hidden' : ''} ${!wavesEnabledOnDesktop ? 'md:hidden' : ''} ${wavesEnabledOnDesktop ? 'md:block' : ''}`} 
         id="header-waves" 
         style="transform: translateZ(0); will-change: fill;">
@@ -320,25 +320,25 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
                     xlink:href="#gentle-wave"
                     x="48"
                     y="0"
-                    class="opacity-25 fill-[var(--page-bg)]"
+                    class="opacity-25 fill-(--page-bg)"
                 ></use>
                 <use
                     xlink:href="#gentle-wave"
                     x="48"
                     y="3"
-                    class="opacity-50 fill-[var(--page-bg)]"
+                    class="opacity-50 fill-(--page-bg)"
                 ></use>
                 <use
                     xlink:href="#gentle-wave"
                     x="48"
                     y="5"
-                    class="opacity-65 fill-[var(--page-bg)]"
+                    class="opacity-65 fill-(--page-bg)"
                 ></use>
                 <use
                     xlink:href="#gentle-wave"
                     x="48"
                     y="7"
-                    class=" opacity-75 fill-[var(--page-bg)]"
+                    class=" opacity-75 fill-(--page-bg)"
                 ></use>
             </g>
         </svg>
@@ -350,7 +350,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
 <!-- Main content -->
 <div class={`absolute w-full z-30 pointer-events-none ${mobileNonHomeBannerClass ? 'mobile-main-no-banner' : ''} ${!(isBannerMode && isBackgroundEnabled) ? 'no-banner-layout' : ''} ${transparentClass}`} style={`top: ${finalMainPanelTop}`}>
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
-    <div class="relative max-w-[var(--page-width)] mx-auto pointer-events-auto">
+    <div class="relative max-w-(--page-width) mx-auto pointer-events-auto">
         <div id="main-grid"
           class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-[auto_1fr_auto] lg:grid-rows-[auto] mx-auto gap-4 px-2 md:px-4 ${!sidebarConfig.mobileShowSidebar ? 'mobile-no-sidebar' : ''}`}
           data-sidebar-position={sidebarLayoutConfig.position}
@@ -365,7 +365,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
                 aria-label="Visit image source"
                 class:list={[
                     "group onload-animation transition-all absolute justify-center items-center rounded-full " +
-                    "px-3 right-4 -top-[3.25rem] bg-black/60 hover:bg-black/70 h-9 hidden md:flex", 
+                    "px-3 right-4 -top-13 bg-black/60 hover:bg-black/70 h-9 hidden md:flex", 
                     {"hover:pr-9 active:bg-black/80": creditUrlDesktop}
                 ]}
             >
@@ -385,7 +385,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
                 aria-label="Visit image source"
                 class:list={[
                     "group onload-animation transition-all absolute justify-center items-center rounded-full " +
-                    "px-3 right-4 -top-[3.25rem] bg-black/60 hover:bg-black/70 h-9 flex md:hidden", 
+                    "px-3 right-4 -top-13 bg-black/60 hover:bg-black/70 h-9 flex md:hidden", 
                     {"hover:pr-9 active:bg-black/80": creditUrlMobile}
                 ]}
             >

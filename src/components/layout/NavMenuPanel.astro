@@ -27,26 +27,26 @@ const processedLinks = Astro.props.links.map((link: NavBarLink) => ({
                 <div class="mobile-dropdown" data-mobile-dropdown>
                     <button 
                         class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-8 w-full text-left
-                            hover:bg-[var(--btn-plain-bg-hover)] active:bg-[var(--btn-plain-bg-active)] transition"
+                            hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
                         data-mobile-dropdown-trigger
                         aria-expanded="false"
                     >
-                        <div class="flex items-center transition text-black/75 dark:text-white/75 font-bold group-hover:text-[var(--primary)] group-active:text-[var(--primary)]">
+                        <div class="flex items-center transition text-black/75 dark:text-white/75 font-bold group-hover:text-(--primary) group-active:text-(--primary)">
                             {link.icon && <Icon icon={link.icon} class="text-[1.1rem] mr-2" />}
                             {link.name}
                         </div>
                         <Icon icon="material-symbols:keyboard-arrow-down-rounded"
-                              class="transition text-[1.25rem] text-[var(--primary)] mobile-dropdown-arrow duration-200"
+                              class="transition text-[1.25rem] text-(--primary) mobile-dropdown-arrow duration-200"
                         />
                     </button>
                     <div class="mobile-submenu" data-mobile-submenu>
                         {link.children.map((child) => (
                             <a href={child.external ? child.url : url(child.url)} 
                                class="group flex justify-between items-center py-2 pl-6 pr-1 rounded-lg gap-8
-                                   hover:bg-[var(--btn-plain-bg-hover)] active:bg-[var(--btn-plain-bg-active)] transition"
+                                   hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
                                target={child.external ? "_blank" : null}
                             >
-                                <div class="flex items-center transition text-black/60 dark:text-white/60 font-medium group-hover:text-[var(--primary)] group-active:text-[var(--primary)]">
+                                <div class="flex items-center transition text-black/60 dark:text-white/60 font-medium group-hover:text-(--primary) group-active:text-(--primary)">
                                     {child.icon && <Icon icon={child.icon} class="text-[1.1rem] mr-2" />}
                                     {child.name}
                                 </div>
@@ -60,16 +60,16 @@ const processedLinks = Astro.props.links.map((link: NavBarLink) => ({
             ) : (
                 <!-- 普通链接项目 -->
                 <a href={link.external ? link.url : url(link.url)} class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-8
-                    hover:bg-[var(--btn-plain-bg-hover)] active:bg-[var(--btn-plain-bg-active)] transition
+                    hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition
                 "
                    target={link.external ? "_blank" : null}
                 >
-                    <div class="flex items-center transition text-black/75 dark:text-white/75 font-bold group-hover:text-[var(--primary)] group-active:text-[var(--primary)]">
+                    <div class="flex items-center transition text-black/75 dark:text-white/75 font-bold group-hover:text-(--primary) group-active:text-(--primary)">
                         {link.icon && <Icon icon={link.icon} class="text-[1.1rem] mr-2" />}
                         {link.name}
                     </div>
                     {!link.external && <Icon icon="material-symbols:chevron-right-rounded"
-                          class="transition text-[1.25rem] text-[var(--primary)]"
+                          class="transition text-[1.25rem] text-(--primary)"
                     />}
                     {link.external && <Icon icon="fa6-solid:arrow-up-right-from-square"
                           class="transition text-[0.75rem] text-black/25 dark:text-white/25 -translate-x-1"
@@ -81,6 +81,8 @@ const processedLinks = Astro.props.links.map((link: NavBarLink) => ({
 </div>
 
 <style>
+    @reference "../../styles/main.css";
+
     .mobile-submenu {
         @apply max-h-0 overflow-hidden transition-all duration-300 ease-in-out;
     }

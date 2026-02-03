@@ -13,12 +13,12 @@ const recentPosts = posts.slice(0, 6);
 <MainGridLayout title={i18n(I18nKey.rss)} description={i18n(I18nKey.rssDescription)}>
     <div class="onload-animation">
         <!-- RSS 标题和介绍 -->
-        <div class="card-base rounded-[var(--radius-large)] p-8 mb-6">
+        <div class="card-base rounded-(--radius-large) p-8 mb-6">
             <div class="text-center">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-[var(--primary)] rounded-2xl mb-4">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-(--primary) rounded-2xl mb-4">
                     <Icon name="material-symbols:rss-feed" class="text-white text-3xl" />
                 </div>
-                <h1 class="text-3xl font-bold text-[var(--primary)] mb-3">{i18n(I18nKey.rss)}</h1>
+                <h1 class="text-3xl font-bold text-(--primary) mb-3">{i18n(I18nKey.rss)}</h1>
                 <p class="text-75 max-w-2xl mx-auto">
                     {i18n(I18nKey.rssSubtitle)}
                 </p>
@@ -26,10 +26,10 @@ const recentPosts = posts.slice(0, 6);
         </div>
 
         <!-- RSS 链接复制区域 -->
-        <div class="card-base rounded-[var(--radius-large)] p-6 mb-6">
+        <div class="card-base rounded-(--radius-large) p-6 mb-6">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div class="flex items-center">
-                    <div class="w-12 h-12 bg-[var(--primary)] rounded-xl flex items-center justify-center mr-4">
+                    <div class="w-12 h-12 bg-(--primary) rounded-xl flex items-center justify-center mr-4">
                         <Icon name="material-symbols:link" class="text-white text-xl" />
                     </div>
                     <div>
@@ -38,12 +38,12 @@ const recentPosts = posts.slice(0, 6);
                     </div>
                 </div>
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                    <code class="bg-[var(--card-bg)] px-3 py-2 rounded-lg text-sm font-mono text-75 border border-[var(--line-divider)] break-all">
+                    <code class="bg-(--card-bg) px-3 py-2 rounded-lg text-sm font-mono text-75 border border-(--line-divider) break-all">
                         {Astro.site}rss.xml
                     </code>
                     <button 
                         id="copy-rss-btn"
-                        class="px-4 py-2 bg-[var(--primary)] text-white rounded-lg hover:opacity-80 transition-all duration-200 font-medium text-sm whitespace-nowrap"
+                        class="px-4 py-2 bg-(--primary) text-white rounded-lg hover:opacity-80 transition-all duration-200 font-medium text-sm whitespace-nowrap"
                         data-url={`${Astro.site}rss.xml`}
                         data-copied-text={i18n(I18nKey.rssCopied)}
                         data-failed-text={i18n(I18nKey.rssCopyFailed)}
@@ -55,15 +55,15 @@ const recentPosts = posts.slice(0, 6);
         </div>
 
         <!-- 最新文章预览 -->
-        <div class="card-base rounded-[var(--radius-large)] p-6 mb-6">
+        <div class="card-base rounded-(--radius-large) p-6 mb-6">
             <h2 class="text-xl font-bold text-90 mb-4 flex items-center">
-                <Icon name="material-symbols:article" class="mr-2 text-[var(--primary)]" />
+                <Icon name="material-symbols:article" class="mr-2 text-(--primary)" />
                 {i18n(I18nKey.rssLatestPosts)}
             </h2>
             <div class="space-y-4">
                 {recentPosts.map((post) => (
-                    <article class="bg-[var(--card-bg)] rounded-xl p-4 border border-[var(--line-divider)] hover:border-[var(--primary)] transition-all duration-300">
-                        <h3 class="text-lg font-semibold text-90 mb-2 hover:text-[var(--primary)] transition-colors">
+                    <article class="bg-(--card-bg) rounded-xl p-4 border border-(--line-divider) hover:border-(--primary) transition-all duration-300">
+                        <h3 class="text-lg font-semibold text-90 mb-2 hover:text-(--primary) transition-colors">
                             <a href={`/posts/${post.id}/`} class="hover:underline">
                                 {post.data.title}
                             </a>
@@ -84,9 +84,9 @@ const recentPosts = posts.slice(0, 6);
         </div>
 
         <!-- RSS 说明 -->
-        <div class="card-base rounded-[var(--radius-large)] p-6">
+        <div class="card-base rounded-(--radius-large) p-6">
             <h2 class="text-xl font-bold text-90 mb-4 flex items-center">
-                <Icon name="material-symbols:help-outline" class="mr-2 text-[var(--primary)]" />
+                <Icon name="material-symbols:help-outline" class="mr-2 text-(--primary)" />
                 {i18n(I18nKey.rssWhatIsRSS)}
             </h2>
             <div class="text-75 space-y-3">

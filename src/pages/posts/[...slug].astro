@@ -109,7 +109,7 @@ const jsonLd = {
     set:html={JSON.stringify(jsonLd)}
   />
   <div
-    class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative mb-4"
+    class="flex w-full rounded-(--radius-large) overflow-hidden relative mb-4"
   >
     <div
       id="post-container"
@@ -162,8 +162,8 @@ const jsonLd = {
           class="transition w-full block font-bold mb-3
                     text-3xl md:text-[2.25rem]/[2.75rem]
                     text-black/90 dark:text-white/90
-                    md:before:w-1 before:h-5 before:rounded-md before:bg-[var(--primary)]
-                    before:absolute before:top-[0.75rem] before:left-[-1.125rem]"
+                    md:before:w-1 before:h-5 before:rounded-md before:bg-(--primary)
+                    before:absolute before:top-3 before:-left-4.5"
         >
           {entry.data.title}
         </h1>
@@ -181,7 +181,7 @@ const jsonLd = {
         />
         {
           !processedImage && (
-            <div class="border-[var(--line-divider)] border-dashed border-b-[1px] mt-3 mb-5" />
+            <div class="border-(--line-divider) border-dashed border-b mt-3 mb-5" />
           )
         }
       </div>
@@ -211,10 +211,10 @@ const jsonLd = {
       {
         (siteConfig.sharePoster || (sponsorConfig.showButtonInPost && siteConfig.pages.sponsor)) && (
           <div class="mb-6 rounded-xl onload-animation">
-            <div class="p-6 bg-[var(--license-block-bg)] rounded-xl">
+            <div class="p-6 bg-(--license-block-bg) rounded-xl">
               <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="flex items-center gap-3 flex-1">
-                  <div class="h-12 w-12 rounded-lg bg-[var(--primary)] flex items-center justify-center text-white dark:text-black/70 flex-shrink-0">
+                  <div class="h-12 w-12 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70 shrink-0">
                     <Icon
                       name={sponsorConfig.showButtonInPost &&
                       siteConfig.pages.sponsor
@@ -260,7 +260,7 @@ const jsonLd = {
                     sponsorConfig.showButtonInPost && siteConfig.pages.sponsor && (
                       <a
                         href={url("/sponsor/")}
-                        class="inline-flex items-center gap-2 px-6 py-3 bg-[var(--primary)] text-white dark:text-black/70 rounded-lg font-medium hover:bg-[var(--primary)]/80 hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
+                        class="inline-flex items-center gap-2 px-6 py-3 bg-(--primary) text-white dark:text-black/70 rounded-lg font-medium hover:bg-(--primary)/80 hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
                       >
                         <span>{i18n(I18nKey.sponsor)}</span>
                         <Icon name="fa6-solid:arrow-right" class="text-sm" />
@@ -309,7 +309,7 @@ const jsonLd = {
             <div class="transition h-9 w-9 rounded-lg overflow-hidden relative flex items-center justify-center mr-0">
               <Icon
                 name="material-symbols:history-rounded"
-                class="text-4xl text-[var(--primary)] transition-transform group-hover:translate-x-0.5 bg-[var(--enter-btn-bg)] p-2 rounded-md"
+                class="text-4xl text-(--primary) transition-transform group-hover:translate-x-0.5 bg-(--enter-btn-bg) p-2 rounded-md"
               />
             </div>
 
@@ -352,12 +352,12 @@ const jsonLd = {
     >
       {
         entry.data.nextSlug && (
-          <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center !justify-start gap-4">
+          <div class="btn-card rounded-2xl w-full h-15 max-w-full px-4 flex items-center justify-start! gap-4">
             <Icon
               name="material-symbols:chevron-left-rounded"
-              class="text-[2rem] text-[var(--primary)]"
+              class="text-[2rem] text-(--primary)"
             />
-            <div class="overflow-hidden transition overflow-ellipsis whitespace-nowrap max-w-[calc(100%_-_3rem)] text-black/75 dark:text-white/75">
+            <div class="overflow-hidden transition text-ellipsis whitespace-nowrap max-w-[calc(100%-3rem)] text-black/75 dark:text-white/75">
               {entry.data.nextTitle}
             </div>
           </div>
@@ -374,13 +374,13 @@ const jsonLd = {
     >
       {
         entry.data.prevSlug && (
-          <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center !justify-end gap-4">
-            <div class="overflow-hidden transition overflow-ellipsis whitespace-nowrap max-w-[calc(100%_-_3rem)] text-black/75 dark:text-white/75">
+          <div class="btn-card rounded-2xl w-full h-15 max-w-full px-4 flex items-center justify-end! gap-4">
+            <div class="overflow-hidden transition text-ellipsis whitespace-nowrap max-w-[calc(100%-3rem)] text-black/75 dark:text-white/75">
               {entry.data.prevTitle}
             </div>
             <Icon
               name="material-symbols:chevron-right-rounded"
-              class="text-[2rem] text-[var(--primary)]"
+              class="text-[2rem] text-(--primary)"
             />
           </div>
         )

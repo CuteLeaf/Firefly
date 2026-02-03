@@ -56,7 +56,7 @@ const { remarkPluginFrontmatter } = await render(entry);
     "post-card-wrapper",
     hasCover ? "has-cover" : "no-cover",
     pinned ? "pinned" : "",
-    "card-base flex flex-col-reverse md:flex-col w-full rounded-[var(--radius-large)] overflow-hidden relative",
+    "card-base flex flex-col-reverse md:flex-col w-full rounded-(--radius-large) overflow-hidden relative",
     className,
   ]}
   style={style}
@@ -67,8 +67,8 @@ const { remarkPluginFrontmatter } = await render(entry);
       "post-card-content",
       "pl-6 md:pl-9 pr-6 md:pr-2 pt-6 md:pt-7 pb-6 md:pb-7 relative flex flex-col h-full",
       {
-        "w-full md:w-[calc(100%_-_52px_-_12px)]": !hasCover,
-        "w-full md:w-[calc(100%_-_var(--coverWidth)_-_1.5rem)]": hasCover,
+        "w-full md:w-[calc(100%-52px-12px)]": !hasCover,
+        "w-full md:w-[calc(100%-var(--coverWidth)-1.5rem)]": hasCover,
       },
     ]}
   >
@@ -77,9 +77,9 @@ const { remarkPluginFrontmatter } = await render(entry);
     <a
       href={url}
       class="post-card-title transition group w-full block font-bold mb-3 text-3xl text-90
-        hover:text-[var(--primary)] dark:hover:text-[var(--primary)]
-        active:text-[var(--title-active)] dark:active:text-[var(--title-active)]
-        before:w-1 before:h-5 before:rounded-md before:bg-[var(--primary)]
+        hover:text-(--primary) dark:hover:text-(--primary)
+        active:text-(--title-active) dark:active:text-(--title-active)
+        before:w-1 before:h-5 before:rounded-md before:bg-(--primary)
         before:absolute before:top-[35px] before:left-[18px] before:hidden md:before:block"
     >
       <!--       {
@@ -87,18 +87,18 @@ const { remarkPluginFrontmatter } = await render(entry);
           <>
             <Icon
               name="mdi:pin"
-              class="inline text-[var(--primary)] text-2xl mr-2 -translate-y-0.5"
+              class="inline text-(--primary) text-2xl mr-2 -translate-y-0.5"
             />
           </>
         )
       } -->
       {title}
       <Icon
-        class="inline text-[2rem] text-[var(--primary)] md:hidden translate-y-0.5 absolute"
+        class="inline text-[2rem] text-(--primary) md:hidden translate-y-0.5 absolute"
         name="material-symbols:chevron-right-rounded"
       />
       <Icon
-        class="text-[var(--primary)] text-[2rem] transition hidden md:inline absolute translate-y-0.5 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0"
+        class="text-(--primary) text-[2rem] transition hidden md:inline absolute translate-y-0.5 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0"
         name="material-symbols:chevron-right-rounded"
       />
     </a>
@@ -121,7 +121,7 @@ const { remarkPluginFrontmatter } = await render(entry);
     <!-- description -->
     <div
       class:list={[
-        "transition text-75 mb-3.5 pr-4 description flex-grow",
+        "transition text-75 mb-3.5 pr-4 description grow",
         { "line-clamp-2 md:line-clamp-1": !description },
       ]}
     >
@@ -148,7 +148,7 @@ const { remarkPluginFrontmatter } = await render(entry);
       }
       {
         !(tags && tags.length > 0) && (
-          <span class="text-[var(--content-meta)] text-xs">
+          <span class="text-(--content-meta) text-xs">
             #{i18n(I18nKey.noTags)}
           </span>
         )
@@ -164,10 +164,10 @@ const { remarkPluginFrontmatter } = await render(entry);
         class:list={[
           "post-card-image",
           "group",
-          "w-full md:w-[var(--coverWidth)]",
-          "aspect-[2/1] md:aspect-auto",
+          "w-full md:w-(--coverWidth)",
+          "aspect-2/1 md:aspect-auto",
           "relative md:absolute md:top-4 md:bottom-4 md:right-4",
-          "rounded-t-[var(--radius-large)] md:rounded-xl overflow-hidden active:scale-95",
+          "rounded-t-(--radius-large) md:rounded-xl overflow-hidden active:scale-95",
         ]}
       >
         <div class="absolute pointer-events-none z-10 w-full h-full group-hover:bg-black/30 group-active:bg-black/50 transition" />
@@ -196,14 +196,14 @@ const { remarkPluginFrontmatter } = await render(entry);
         aria-label={title}
         class:list={[
           "post-card-enter-btn",
-          "!hidden md:!flex btn-regular w-[3.25rem]",
-          "absolute right-3 top-3 bottom-3 rounded-xl bg-[var(--enter-btn-bg)]",
-          "hover:bg-[var(--enter-btn-bg-hover)] active:bg-[var(--enter-btn-bg-active)] active:scale-95",
+          "hidden! md:flex! btn-regular w-13",
+          "absolute right-3 top-3 bottom-3 rounded-xl bg-(--enter-btn-bg)",
+          "hover:bg-(--enter-btn-bg-hover) active:bg-(--enter-btn-bg-active) active:scale-95",
         ]}
       >
         <Icon
           name="material-symbols:chevron-right-rounded"
-          class="transition text-[var(--primary)] text-4xl mx-auto"
+          class="transition text-(--primary) text-4xl mx-auto"
         />
       </a>
     )

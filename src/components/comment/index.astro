@@ -34,18 +34,18 @@ let commentService: string = commentConfig?.type || "none";
       <!-- 评论区装饰性背景 -->
       <div class="absolute top-0 right-0 w-32 h-32 opacity-5 pointer-events-none">
         <svg viewBox="0 0 100 100" class="w-full h-full">
-          <circle cx="50" cy="50" r="40" fill="currentColor" class="text-[var(--primary)]" />
-          <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="2" class="text-[var(--primary)]" />
-          <circle cx="50" cy="50" r="10" fill="currentColor" class="text-[var(--primary)]" />
+          <circle cx="50" cy="50" r="40" fill="currentColor" class="text-(--primary)" />
+          <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="2" class="text-(--primary)" />
+          <circle cx="50" cy="50" r="10" fill="currentColor" class="text-(--primary)" />
         </svg>
       </div>
       <!-- 评论区标题 -->
       <div class="relative z-10 mb-6">
         <div class="flex items-center gap-3 mb-2">
-          <div class="w-1 h-6 bg-gradient-to-b from-[var(--primary)] to-transparent rounded-full"></div>
-          <h3 class="text-xl font-bold text-[var(--btn-content)]">{i18n(Key.commentSection)}</h3>
+          <div class="w-1 h-6 bg-linear-to-b from-(--primary) to-transparent rounded-full"></div>
+          <h3 class="text-xl font-bold text-(--btn-content)">{i18n(Key.commentSection)}</h3>
         </div>
-        <p class="text-sm text-[var(--content-meta)] ml-4">{i18n(Key.commentSubtitle)}</p>
+        <p class="text-sm text-(--content-meta) ml-4">{i18n(Key.commentSubtitle)}</p>
       </div>
       <!-- 评论内容区域 -->
       <div class="relative z-10">
@@ -55,9 +55,9 @@ let commentService: string = commentConfig?.type || "none";
         {commentService === "disqus" && <Disqus identifier={slug} url={url} title={'title' in post.data ? post.data.title : slug} />}
           {commentService === "artalk" && <Artalk path={path} />}
         {commentService === "none" && (
-          <div class="text-center py-8 text-[var(--content-meta)]">
-            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--btn-regular-bg)] flex items-center justify-center">
-              <svg class="w-8 h-8 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="text-center py-8 text-(--content-meta)">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-(--btn-regular-bg) flex items-center justify-center">
+              <svg class="w-8 h-8 text-(--primary)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
               </svg>
             </div>

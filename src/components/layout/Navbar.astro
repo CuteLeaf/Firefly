@@ -59,18 +59,18 @@ let links: NavBarLink[] = navBarConfig.links.map(
 <div id="navbar" class="z-50" style={`--navbar-glass-blur: ${navbarBlur}px;`} data-transparent-mode={navbarTransparentMode} data-enable-blur={String(navbarEnableBlur)} data-is-home={isHomePageCheck} data-full-width={navbarWidthFull}>
     <div class:list={[
         className,
-        "!overflow-visible h-[4.5rem] mx-auto flex items-center px-4",
-        navbarWidthFull ? "" : "justify-between max-w-[var(--page-width)]"
+        "overflow-visible! h-18 mx-auto flex items-center px-4",
+        navbarWidthFull ? "" : "justify-between max-w-(--page-width)"
     ]}>
-        <a href={url('/')} class="btn-plain scale-animation rounded-lg h-[3.25rem] px-5 font-bold active:scale-95">
+        <a href={url('/')} class="btn-plain scale-animation rounded-lg h-13 px-5 font-bold active:scale-95">
             <div class:list={[
                 "flex flex-row items-center text-md",
-                siteConfig.navbar.followTheme ? "text-[var(--primary)]" : "dark:text-white text-black"
+                siteConfig.navbar.followTheme ? "text-(--primary)" : "dark:text-white text-black"
             ]}>
                                 {siteConfig.navbar.logo?.type === "icon" ? (
                                     <Icon name={siteConfig.navbar.logo.value || "material-symbols:home-pin-outline"} class="text-[1.75rem] mb-1 mr-2" />
                                 ) : siteConfig.navbar.logo?.type === "image" ? (
-                                    <img src={url(siteConfig.navbar.logo.value)} alt={siteConfig.navbar.logo.alt || siteConfig.title} class="h-[1.75rem] w-[1.75rem] mb-1 mr-2 object-contain" loading="lazy" />
+                                    <img src={url(siteConfig.navbar.logo.value)} alt={siteConfig.navbar.logo.alt || siteConfig.title} class="h-7 w-7 mb-1 mr-2 object-contain" loading="lazy" />
                                 ) : (
                                     <Icon name="material-symbols:home-pin-outline" class="text-[1.75rem] mb-1 mr-2" />
                                 )}
@@ -94,7 +94,7 @@ let links: NavBarLink[] = navBarConfig.links.map(
             )}
             {/* @ts-ignore */}
             <LightDarkSwitch client:load></LightDarkSwitch>
-            <button aria-label="Menu" name="Nav Menu" class="btn-plain scale-animation rounded-lg w-11 h-11 active:scale-90 lg:!hidden" id="nav-menu-switch">
+            <button aria-label="Menu" name="Nav Menu" class="btn-plain scale-animation rounded-lg w-11 h-11 active:scale-90 lg:hidden!" id="nav-menu-switch">
                 <Icon name="material-symbols:menu-rounded" class="text-[1.25rem]"></Icon>
             </button>
         </div>

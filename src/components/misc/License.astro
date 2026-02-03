@@ -26,12 +26,12 @@ const postUrl = sourceLink || decodeURIComponent(Astro.url.toString());
 ---
 
 <div
-  class={`relative transition overflow-hidden bg-[var(--license-block-bg)] py-5 px-6 ${className}`}
+  class={`relative transition overflow-hidden bg-(--license-block-bg) py-5 px-6 ${className}`}
 >
   <div class="transition font-bold text-black/75 dark:text-white/75">
     {title}
   </div>
-  <a href={postUrl} class="link text-[var(--primary)]">
+  <a href={postUrl} class="link text-(--primary)">
     {postUrl}
   </a>
   <div class="flex gap-6 mt-2">
@@ -58,7 +58,7 @@ const postUrl = sourceLink || decodeURIComponent(Astro.url.toString());
       <a
         href={licenseName ? licenseUrl || undefined : licenseConf.url}
         target="_blank"
-        class="link text-[var(--primary)] line-clamp-2"
+        class="link text-(--primary) line-clamp-2"
         >{licenseName || licenseConf.name}</a
       >
     </div>

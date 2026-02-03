@@ -20,7 +20,7 @@ const { tabs, activeTab } = Astro.props;
         class:list={[
           "whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200",
           {
-            "border-[var(--primary)] text-[var(--primary)]": tab.id === activeTab,
+            "border-(--primary) text-(--primary)": tab.id === activeTab,
             "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300": tab.id !== activeTab
           }
         ]}
@@ -50,12 +50,12 @@ const { tabs, activeTab } = Astro.props;
 
         // Update active tab
         tabButtons.forEach(btn => {
-          btn.classList.remove('border-[var(--primary)]', 'text-[var(--primary)]');
+          btn.classList.remove('border-(--primary)', 'text-(--primary)');
           btn.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300', 'dark:text-gray-400', 'dark:hover:text-gray-300');
         });
 
         currentButton.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300', 'dark:text-gray-400', 'dark:hover:text-gray-300');
-        currentButton.classList.add('border-[var(--primary)]', 'text-[var(--primary)]');
+        currentButton.classList.add('border-(--primary)', 'text-(--primary)');
 
         // Show/hide sections
         sections.forEach(section => {

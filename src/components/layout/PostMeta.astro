@@ -52,7 +52,7 @@ const path = customPath || (id ? `/posts/${id}` : "");
   <!-- pinned -->
   {
     pinned && (
-      <div class="pinned-btn flex items-center gap-1 bg-[var(--btn-regular-bg)] text-[var(--btn-content)] rounded-md px-2 py-1.5 font-bold">
+      <div class="pinned-btn flex items-center gap-1 bg-(--btn-regular-bg) text-(--btn-content) rounded-md px-2 py-1.5 font-bold">
         <Icon name="material-symbols:pinboard" class="text-xl" />
         <span class="text-sm">{i18n(I18nKey.pinned)}</span>
       </div>
@@ -99,7 +99,7 @@ const path = customPath || (id ? `/posts/${id}` : "");
         href={getCategoryUrl(category || "")}
         aria-label={`View all posts in the ${category} category`}
         class="link-lg transition text-50 text-sm font-medium
-                            hover:text-[var(--primary)] dark:hover:text-[var(--primary)] whitespace-nowrap"
+                            hover:text-(--primary) dark:hover:text-(--primary) whitespace-nowrap"
       >
         {category || i18n(I18nKey.uncategorized)}
       </a>
@@ -151,10 +151,10 @@ const path = customPath || (id ? `/posts/${id}` : "");
          </div>
          <div class="flex flex-row flex-nowrap items-center">
            {(tags && tags.length > 0) && tags.map((tag, i) => (
-             <div class:list={[{"hidden": i == 0}, "mx-1.5 text-[var(--meta-divider)] text-sm"]}>/</div>
+             <div class:list={[{"hidden": i == 0}, "mx-1.5 text-(--meta-divider) text-sm"]}>/</div>
              <a href={getTagUrl(tag)} aria-label={`View all posts with the ${tag.trim()} tag`}
                 class="link-lg transition text-50 text-sm font-medium
-                             hover:text-[var(--primary)] dark:hover:text-[var(--primary)] whitespace-nowrap">
+                             hover:text-(--primary) dark:hover:text-(--primary) whitespace-nowrap">
                {tag.trim()}
              </a>
            ))}

@@ -137,20 +137,20 @@ $effect(() => {
     {#if showThemeColor}
     <div class="flex flex-row gap-2 mt-2 mb-2 items-center justify-between">
         <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
-            before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
+            before:w-1 before:h-4 before:rounded-md before:bg-(--primary)
             before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2"
         >
             {i18n(I18nKey.themeColor)}
             <button aria-label="Reset to Default" class="btn-regular w-7 h-7 rounded-md  active:scale-90"
                     class:opacity-0={hue === defaultHue} class:pointer-events-none={hue === defaultHue} onclick={resetHue}>
-                <div class="text-[var(--btn-content)]">
+                <div class="text-(--btn-content)">
                     <Icon icon="fa6-solid:arrow-rotate-left" class="text-[0.875rem]"></Icon>
                 </div>
             </button>
         </div>
         <div class="flex gap-1">
-            <div id="hueValue" class="transition bg-[var(--btn-regular-bg)] w-10 h-7 rounded-md flex justify-center
-            font-bold text-sm items-center text-[var(--btn-content)]">
+            <div id="hueValue" class="transition bg-(--btn-regular-bg) w-10 h-7 rounded-md flex justify-center
+            font-bold text-sm items-center text-(--btn-content)">
                 {hue}
             </div>
         </div>
@@ -165,13 +165,13 @@ $effect(() => {
     {#if isWallpaperSwitchable}
         <div class="mt-2 mb-2">
             <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3 mb-2
-                before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
+                before:w-1 before:h-4 before:rounded-md before:bg-(--primary)
                 before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2"
             >
                 {i18n(I18nKey.wallpaperMode)}
                 <button aria-label="Reset to Default" class="btn-regular w-7 h-7 rounded-md  active:scale-90"
                         class:opacity-0={wallpaperMode === defaultWallpaperMode} class:pointer-events-none={wallpaperMode === defaultWallpaperMode} onclick={resetWallpaperMode}>
-                    <div class="text-[var(--btn-content)]">
+                    <div class="text-(--btn-content)">
                         <Icon icon="fa6-solid:arrow-rotate-left" class="text-[0.875rem]"></Icon>
                     </div>
                 </button>
@@ -180,37 +180,37 @@ $effect(() => {
                 <button
                     class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
                     class:opacity-60={wallpaperMode !== WALLPAPER_BANNER}
-                    class:bg-[var(--btn-regular-bg-hover)]={wallpaperMode === WALLPAPER_BANNER}
+                    class:bg-(--btn-regular-bg-hover)={wallpaperMode === WALLPAPER_BANNER}
                     onclick={() => switchWallpaperMode(WALLPAPER_BANNER)}
                 >
-                    <Icon icon="material-symbols:image-outline" class="text-[1.25rem] flex-shrink-0"></Icon>
+                    <Icon icon="material-symbols:image-outline" class="text-[1.25rem] shrink-0"></Icon>
                     <span class="text-sm flex-1">{i18n(I18nKey.wallpaperBannerMode)}</span>
                     {#if wallpaperMode === WALLPAPER_BANNER}
-                        <Icon icon="material-symbols:check-circle" class="text-[1rem] flex-shrink-0 text-[var(--primary)]"></Icon>
+                        <Icon icon="material-symbols:check-circle" class="text-[1rem] shrink-0 text-(--primary)"></Icon>
                     {/if}
                 </button>
                 <button
                     class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
                     class:opacity-60={wallpaperMode !== WALLPAPER_OVERLAY}
-                    class:bg-[var(--btn-regular-bg-hover)]={wallpaperMode === WALLPAPER_OVERLAY}
+                    class:bg-(--btn-regular-bg-hover)={wallpaperMode === WALLPAPER_OVERLAY}
                     onclick={() => switchWallpaperMode(WALLPAPER_OVERLAY)}
                 >
-                    <Icon icon="material-symbols:wallpaper" class="text-[1.25rem] flex-shrink-0"></Icon>
+                    <Icon icon="material-symbols:wallpaper" class="text-[1.25rem] shrink-0"></Icon>
                     <span class="text-sm flex-1">{i18n(I18nKey.wallpaperOverlayMode)}</span>
                     {#if wallpaperMode === WALLPAPER_OVERLAY}
-                        <Icon icon="material-symbols:check-circle" class="text-[1rem] flex-shrink-0 text-[var(--primary)]"></Icon>
+                        <Icon icon="material-symbols:check-circle" class="text-[1rem] shrink-0 text-(--primary)"></Icon>
                     {/if}
                 </button>
                 <button
                     class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
                     class:opacity-60={wallpaperMode !== WALLPAPER_NONE}
-                    class:bg-[var(--btn-regular-bg-hover)]={wallpaperMode === WALLPAPER_NONE}
+                    class:bg-(--btn-regular-bg-hover)={wallpaperMode === WALLPAPER_NONE}
                     onclick={() => switchWallpaperMode(WALLPAPER_NONE)}
                 >
-                    <Icon icon="material-symbols:hide-image-outline" class="text-[1.25rem] flex-shrink-0"></Icon>
+                    <Icon icon="material-symbols:hide-image-outline" class="text-[1.25rem] shrink-0"></Icon>
                     <span class="text-sm flex-1">{i18n(I18nKey.wallpaperNoneMode)}</span>
                     {#if wallpaperMode === WALLPAPER_NONE}
-                        <Icon icon="material-symbols:check-circle" class="text-[1rem] flex-shrink-0 text-[var(--primary)]"></Icon>
+                        <Icon icon="material-symbols:check-circle" class="text-[1rem] shrink-0 text-(--primary)"></Icon>
                     {/if}
                 </button>
             </div>
@@ -221,13 +221,13 @@ $effect(() => {
     {#if allowLayoutSwitch && !isSmallScreen}
         <div class="mt-2 mb-2">
             <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3 mb-2
-                before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
+                before:w-1 before:h-4 before:rounded-md before:bg-(--primary)
                 before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2"
             >
                 {i18n(I18nKey.postListLayout)}
                 <button aria-label="Reset to Default" class="btn-regular w-7 h-7 rounded-md  active:scale-90"
                         class:opacity-0={currentLayout === defaultLayout} class:pointer-events-none={currentLayout === defaultLayout} onclick={resetLayout}>
-                    <div class="text-[var(--btn-content)]">
+                    <div class="text-(--btn-content)">
                         <Icon icon="fa6-solid:arrow-rotate-left" class="text-[0.875rem]"></Icon>
                     </div>
                 </button>
@@ -237,7 +237,7 @@ $effect(() => {
                     aria-label={i18n(I18nKey.postListLayoutList)}
                     class="flex-1 btn-regular rounded-md py-2 px-3 flex items-center justify-center gap-2 active:scale-95 transition-all relative overflow-hidden"
                     class:opacity-60={currentLayout !== 'list'}
-                    class:bg-[var(--btn-regular-bg-hover)]={currentLayout === 'list'}
+                    class:bg-(--btn-regular-bg-hover)={currentLayout === 'list'}
                     disabled={isSwitching}
                     onclick={switchLayout}
                     title={i18n(I18nKey.postListLayoutList)}
@@ -247,14 +247,14 @@ $effect(() => {
                     </svg>
                     <span class="text-xs font-medium">{i18n(I18nKey.postListLayoutList)}</span>
                     {#if currentLayout === 'list'}
-                        <Icon icon="material-symbols:check-circle" class="text-[1rem] flex-shrink-0 text-[var(--primary)]"></Icon>
+                        <Icon icon="material-symbols:check-circle" class="text-[1rem] shrink-0 text-(--primary)"></Icon>
                     {/if}
                 </button>
                 <button
                     aria-label={i18n(I18nKey.postListLayoutGrid)}
                     class="flex-1 btn-regular rounded-md py-2 px-3 flex items-center justify-center gap-2 active:scale-95 transition-all relative overflow-hidden"
                     class:opacity-60={currentLayout !== 'grid'}
-                    class:bg-[var(--btn-regular-bg-hover)]={currentLayout === 'grid'}
+                    class:bg-(--btn-regular-bg-hover)={currentLayout === 'grid'}
                     disabled={isSwitching}
                     onclick={switchLayout}
                     title={i18n(I18nKey.postListLayoutGrid)}
@@ -264,7 +264,7 @@ $effect(() => {
                     </svg>
                     <span class="text-xs font-medium">{i18n(I18nKey.postListLayoutGrid)}</span>
                     {#if currentLayout === 'grid'}
-                        <Icon icon="material-symbols:check-circle" class="text-[1rem] flex-shrink-0 text-[var(--primary)]"></Icon>
+                        <Icon icon="material-symbols:check-circle" class="text-[1rem] shrink-0 text-(--primary)"></Icon>
                     {/if}
                 </button>
             </div>

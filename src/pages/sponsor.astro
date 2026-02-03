@@ -20,12 +20,12 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
 ---
 
 <MainGridLayout title={title} description={description}>
-  <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+  <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
     <div class="card-base z-10 px-9 py-6 relative w-full">
       <!-- 页面标题和描述 -->
       <div class="mb-8">
         <div class="flex items-center gap-3 mb-3">
-            <div class="h-8 w-8 rounded-lg bg-[var(--primary)] flex items-center justify-center text-white dark:text-black/70">
+            <div class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70">
                 <Icon icon="material-symbols:favorite" class="text-[1.5rem]"></Icon>
             </div>
           <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
@@ -38,11 +38,11 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
           </p>
         )}
         {sponsorConfig.usage && (
-          <div class="mb-8 p-4 rounded-lg bg-[var(--primary)]/8 dark:bg-[var(--btn-regular-bg)] border border-[var(--primary)]/30 dark:border-none backdrop-blur-sm shadow-sm usage-info-box">
+          <div class="mb-8 p-4 rounded-lg bg-(--primary)/8 dark:bg-(--btn-regular-bg) border border-(--primary)/30 dark:border-none backdrop-blur-xs shadow-xs usage-info-box">
             <div class="flex items-start gap-2">
-              <Icon icon="material-symbols:info-outline" class="text-[var(--primary)] text-lg flex-shrink-0 mt-0.5" />
+              <Icon icon="material-symbols:info-outline" class="text-(--primary) text-lg shrink-0 mt-0.5" />
               <p class="text-sm text-neutral-700 dark:text-neutral-200 leading-relaxed">
-                <span class="font-semibold text-[var(--primary)]"></span>
+                <span class="font-semibold text-(--primary)"></span>
                 {sponsorConfig.usage}
               </p>
             </div>
@@ -54,7 +54,7 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
       <div class="mb-8">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {enabledMethods.map((method) => (
-                      <div class="flex flex-col items-center p-6 rounded-lg bg-neutral-50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 hover:border-[var(--primary)] transition-colors">
+                      <div class="flex flex-col items-center p-6 rounded-lg bg-neutral-50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 hover:border-(--primary) transition-colors">
                         <!-- 图标和名称 -->
                         <div class="flex items-center gap-3 mb-4">
                           {method.icon && (
@@ -89,7 +89,7 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
                             href={method.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="inline-flex items-center gap-2 px-4 py-2 bg-[var(--primary)] text-white dark:text-black/70 rounded-lg font-medium hover:bg-[var(--primary)]/90 active:scale-95 transition-all"
+                            class="inline-flex items-center gap-2 px-4 py-2 bg-(--primary) text-white dark:text-black/70 rounded-lg font-medium hover:bg-(--primary)/90 active:scale-95 transition-all"
                           >
                             <span>{i18n(I18nKey.sponsorGoTo)}</span>
                             <Icon icon="fa6-solid:arrow-up-right-from-square" class="text-sm" />
@@ -105,7 +105,7 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
       {showSponsorsList && (
         <div>
           <div class="flex items-center gap-3 mb-6">
-            <Icon icon="material-symbols:emoji-people-rounded" size="xl" class="text-[var(--primary)]" />
+            <Icon icon="material-symbols:emoji-people-rounded" size="xl" class="text-(--primary)" />
             <h2 class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
               {i18n(I18nKey.sponsorList)}
             </h2>
@@ -113,7 +113,7 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
           {sponsors.length > 0 ? (
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {sponsors.map((sponsor) => (
-                <div class="relative p-5 rounded-lg bg-neutral-50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 hover:border-[var(--primary)] transition-all duration-200 hover:shadow-md">
+                <div class="relative p-5 rounded-lg bg-neutral-50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 hover:border-(--primary) transition-all duration-200 hover:shadow-md">
                   <!-- 内容 -->
                   <div class="flex flex-col h-full">
                     <!-- 头部：姓名和金额 -->
@@ -122,7 +122,7 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
                         {sponsor.name}
                       </span>
                       {sponsor.amount && (
-                        <span class="inline-flex items-center px-3 py-1 text-sm font-bold text-[var(--primary)] bg-[var(--primary)]/10 dark:bg-[var(--primary)]/20 rounded-full">
+                        <span class="inline-flex items-center px-3 py-1 text-sm font-bold text-(--primary) bg-(--primary)/10 dark:bg-(--primary)/20 rounded-full">
                           {sponsor.amount}
                         </span>
                       )}
