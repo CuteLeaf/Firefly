@@ -460,32 +460,35 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
   @reference "../styles/main.css";
 
   @layer components {
-    .enable-banner.is-home #banner-wrapper {
-      @apply h-(--banner-height-home) translate-y-(--banner-height-extend);
+    .enable-banner.lg\:is-home #banner-wrapper {
+      height: var(--banner-height-home);
+      transform: translateY(var(--banner-height-extend));
     }
     .enable-banner #banner-wrapper {
-      @apply h-(--banner-height-home);
+      height: var(--banner-height-home);
     }
 
-    .enable-banner.is-home #banner {
-      @apply h-(--banner-height-home) translate-y-0;
+    .enable-banner.lg\:is-home #banner {
+      height: var(--banner-height-home);
+      transform: translateY(0);
     }
     .enable-banner #banner {
-      @apply h-(--banner-height-home) translate-y-(--bannerOffset);
+      height: var(--banner-height-home);
+      transform: translateY(var(--bannerOffset));
     }
-    .enable-banner.is-home #main-grid {
-      @apply translate-y-(--banner-height-extend);
+    .enable-banner.lg\:is-home #main-grid {
+      transform: translateY(var(--banner-height-extend));
     }
     .enable-banner #top-row {
       @apply h-[calc(var(--banner-height-home)-4.5rem)] transition-all duration-300;
     }
-    .enable-banner.is-home #sidebar-sticky {
+    .enable-banner.lg\:is-home #sidebar-sticky {
       @apply top-[calc(1rem_-_var(--banner-height-extend))];
     }
-    .enable-banner.is-home #left-sidebar-sticky {
+    .enable-banner.lg\:is-home #left-sidebar-sticky {
       @apply top-[calc(1rem_-_var(--banner-height-extend))];
     }
-    .enable-banner.is-home #right-sidebar-sticky {
+    .enable-banner.lg\:is-home #right-sidebar-sticky {
       @apply top-[calc(1rem_-_var(--banner-height-extend))];
     }
     .navbar-hidden {

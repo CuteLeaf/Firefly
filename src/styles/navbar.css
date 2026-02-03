@@ -62,7 +62,7 @@
     body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"]>div {
         backdrop-filter: none !important;
         background: transparent !important;
-        border: 1px solid transparent !important;
+        border: none !important;
         border-radius: 0 0 0.75rem 0.75rem !important;
         box-shadow: none !important;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
@@ -113,7 +113,7 @@
     body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"]>div {
         backdrop-filter: none !important;
         background: transparent !important;
-        border: 1px solid transparent !important;
+        border: none !important;
         border-radius: 0 0 0.75rem 0.75rem !important;
         box-shadow: none !important;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
@@ -156,7 +156,7 @@
     :root.dark #banner-wrapper~* #navbar[data-transparent-mode="semifull"]>div,
     :root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"]>div {
         background: transparent !important;
-        border: 1px solid transparent !important;
+        border: none !important;
         box-shadow: none !important;
     }
 
@@ -194,7 +194,7 @@
     :root.dark #banner-wrapper~* #navbar[data-transparent-mode="semifull"][data-is-home="true"]>div,
     :root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"]>div {
         background: transparent !important;
-        border: 1px solid transparent !important;
+        border: none !important;
         box-shadow: none !important;
     }
 
