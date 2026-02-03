@@ -85,9 +85,9 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		waves: {
 			enable: {
 				// 桌面端是否启用波浪动画效果
-				desktop: true,
+				desktop: false,
 				// 移动端是否启用波浪动画效果
-				mobile: true,
+				mobile: false,
 			},
 		},
 	},
