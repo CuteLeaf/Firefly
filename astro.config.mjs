@@ -208,13 +208,6 @@ export default defineConfig({
 				"@rehype-callouts-theme": `rehype-callouts/theme/${siteConfig.rehypeCallouts.theme}`,
 			},
 		},
-		css: {
-			preprocessorOptions: {
-				stylus: {
-					additionalData: `@import "${process.cwd().replace(/\\/g, '/')}/src/styles/variables.styl"\n@import "${process.cwd().replace(/\\/g, '/')}/src/styles/markdown-extend.styl"\n`,
-				},
-			},
-		},
 		build: {
 			// 启用资源压缩和优化
 			minify: "terser",
