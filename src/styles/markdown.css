@@ -1,3 +1,5 @@
+@reference "tailwindcss";
+
 .custom-md {
   h1 {
     @apply text-3xl;
@@ -10,22 +12,22 @@
   h5,
   h6 {
     .anchor {
-      @apply transition -m-0.5 ml-[0.2ch] p-0.5 select-none opacity-0 no-underline !important;
+      @apply !transition !-m-0.5 !ml-[0.2ch] !p-0.5 !select-none !opacity-0 !no-underline;
 
       .anchor-icon {
-        @apply mx-[0.45ch] !important;
+        @apply !mx-[0.45ch];
       }
     }
 
     &:hover {
       .anchor {
-        @apply opacity-100 !important;
+        @apply !opacity-100;
       }
     }
   }
 
   a:not(.no-styling) {
-    @apply relative bg-none font-medium text-[var(--primary)] underline decoration-[var(--link-underline)] decoration-1 decoration-dashed underline-offset-4;
+    @apply relative bg-none font-medium text-(--primary) underline decoration-(--link-underline) decoration-1 decoration-dashed underline-offset-4;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
 
@@ -39,7 +41,7 @@
   }
 
   code {
-    @apply bg-[var(--inline-code-bg)] text-[var(--inline-code-color)] px-1 py-0.5 rounded-md overflow-hidden;
+    @apply bg-(--inline-code-bg) text-(--inline-code-color) px-1 py-0.5 rounded-md overflow-hidden;
 
     font-family:
       "JetBrains Mono Variable",
@@ -84,7 +86,7 @@
   ul,
   ol {
     li::marker {
-      @apply text-[var(--primary)];
+      @apply text-(--primary);
     }
   }
 
@@ -93,7 +95,7 @@
     font-weight: inherit;
 
     &:before {
-      @apply content-[''] absolute -left-1 block transition bg-[var(--btn-regular-bg)] h-full w-1 rounded-full;
+      @apply content-[''] absolute -left-1 block transition bg-(--btn-regular-bg) h-full w-1 rounded-full;
     }
 
     /* Remove the double quotes from default styles */
@@ -128,14 +130,14 @@
   }
 
   th {
-    @apply bg-[var(--btn-regular-bg)] font-semibold text-[var(--btn-content)] border-b border-[var(--line-color)];
+    @apply bg-(--btn-regular-bg) font-semibold text-(--btn-content) border-b border-(--line-color);
   }
 
   td {
-    @apply bg-[var(--card-bg)];
+    @apply bg-(--card-bg);
   }
 
   tr:nth-child(even) td {
-    @apply bg-[var(--btn-plain-bg-active)];
+    @apply bg-(--btn-plain-bg-active);
   }
 }

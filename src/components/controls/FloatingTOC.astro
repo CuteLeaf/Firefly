@@ -34,16 +34,16 @@ const sidebarPosition = sidebarLayoutConfig.position;
   <!-- 悬浮TOC面板 - 移到 Wrapper 内部以便相对定位 -->
   <div
     id="floating-toc-panel"
-    class="floating-toc-panel hide w-80 max-h-[24rem] overflow-hidden rounded-2xl shadow-2xl backdrop-blur-lg border border-white/20 bg-white/60 dark:bg-black/60 dark:border-white/10 md:w-80 w-[calc(100vw-2rem)] md:max-h-[24rem] max-h-[calc(100vh-8rem)]"
+    class="floating-toc-panel hide w-80 max-h-96 overflow-hidden rounded-2xl shadow-2xl backdrop-blur-lg border border-white/20 bg-white/60 dark:bg-black/60 dark:border-white/10 md:w-80 w-[calc(100vw-2rem)] md:max-h-96 max-h-[calc(100vh-8rem)]"
     style="background-color: rgba(var(--card-bg-rgb, 255, 255, 255), 0.6);"
     >
     <div
-        class="p-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 backdrop-blur-sm z-10"
+        class="p-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 backdrop-blur-xs z-10"
         style="background-color: rgba(var(--card-bg-rgb, 255, 255, 255), 0.6);"
     >
         <div class="flex items-center justify-between">
         <h3
-            class="text-lg font-bold text-[var(--primary)] flex items-center gap-2"
+            class="text-lg font-bold text-(--primary) flex items-center gap-2"
         >
             {i18n(I18nKey.tableOfContents)}
         </h3>

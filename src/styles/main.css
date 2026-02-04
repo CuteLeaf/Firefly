@@ -1,15 +1,45 @@
-
-@import './variables-unified.styl';
+@import 'tailwindcss';
 @import './layout-styles.css';
 @import './navbar.css';
 @import './waves.css';
-@import './transition.css';
+@import './transition.css'; 
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@plugin '@tailwindcss/typography';
 
-/* 其他组件样式 */
+/* 暗色模式选择器配置 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Tailwind v4 配置 - 从 tailwind.config.cjs 迁移 */
+@theme {
+  --font-sans:
+    'Roboto', 'sans-serif', ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* 自定义工具类 - Tailwind v4 使用 @utility 定义 */
+@utility expand-animation {
+  position: relative;
+  z-index: 0;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    scale: 0.85;
+    z-index: -10;
+    transition: all 0.15s ease-out;
+  }
+  &:hover::before {
+    background-color: var(--btn-plain-bg-hover);
+    scale: 1;
+  }
+  &:active::before {
+    background-color: var(--btn-plain-bg-active);
+  }
+  &:active {
+    background: none;
+  }
+}
 
 /* 确保平滑滚动 */
 html {
@@ -189,29 +219,29 @@ html {
     }
     
     .card-base {
-        @apply rounded-[var(--radius-large)] overflow-hidden bg-[var(--card-bg)] transition-colors duration-150;
+        @apply rounded-(--radius-large) overflow-hidden bg-(--card-bg) transition-colors duration-150;
     }
     .card-base-transparent {
-        @apply rounded-[var(--radius-large)] overflow-hidden bg-[var(--card-bg-transparent)] backdrop-blur-sm transition-colors duration-150;
+        @apply rounded-(--radius-large) overflow-hidden bg-(--card-bg-transparent) backdrop-blur-xs transition-colors duration-150;
     }
 
     /* 开启边框和阴影效果时的样式 */
     .enable-card-border .card-base {
-        @apply transition-all duration-300 border border-[var(--line-divider)] shadow-sm;
+        @apply transition-all duration-300 border border-(--line-divider) shadow-xs;
     }
     .enable-card-border .card-base-transparent {
-        @apply transition-all duration-300 border border-[var(--line-divider)] shadow-sm;
+        @apply transition-all duration-300 border border-(--line-divider) shadow-xs;
     }
 
     /* 导航栏样式适配 */
     .enable-card-border #navbar > div:not(.absolute) {
-        @apply transition-all duration-300 border shadow-sm;
+        @apply transition-all duration-300 border shadow-xs;
         border-color: var(--line-divider) !important;
     }
     
     /* 全屏壁纸模式下的半透明效果 */
     .wallpaper-transparent .card-base {
-        @apply bg-[var(--card-bg-transparent)];
+        @apply bg-(--card-bg-transparent);
         /* 移除高斯模糊以提升性能，大量重叠的 backdrop-filter 会导致 GPU 占用过高 */
         /* @apply backdrop-blur-sm; */
     }
@@ -219,12 +249,12 @@ html {
  
     
     .wallpaper-transparent #navbar > div {
-    @apply bg-[var(--card-bg-transparent)] backdrop-blur-sm;
+    @apply bg-(--card-bg-transparent) backdrop-blur-xs;
     border-radius: 0 0 var(--radius-large) var(--radius-large) !important;
 }
     
     .wallpaper-transparent .btn-card {
-        @apply bg-[var(--card-bg-transparent)];
+        @apply bg-(--card-bg-transparent);
         /* 移除高斯模糊以提升性能 */
         /* @apply backdrop-blur-sm; */
     }
@@ -235,10 +265,6 @@ html {
     .card-shadow {
         @apply drop-shadow-[0_2px_4px_rgba(0,0,0,0.005)]
     }
-    .expand-animation {
-        @apply relative before:ease-out before:transition active:bg-none hover:before:bg-[var(--btn-plain-bg-hover)] active:before:bg-[var(--btn-plain-bg-active)] z-0
-        before:absolute before:rounded-[inherit] before:inset-0 before:scale-[0.85] hover:before:scale-100 before:-z-10
-    }
     .link {
         @apply transition-colors duration-150 rounded-md p-1 -m-1 expand-animation;
     }
@@ -246,7 +272,7 @@ html {
         @apply transition-colors duration-150 rounded-md p-1.5 -m-1.5 expand-animation;
     }
     .float-panel {
-        @apply top-[5.25rem] rounded-[var(--radius-large)] overflow-hidden bg-[var(--card-bg)] transition-colors duration-150 shadow-xl border border-black/5 dark:border-white/10
+        @apply top-21 rounded-(--radius-large) overflow-hidden bg-(--card-bg) transition-colors duration-150 shadow-xl border border-black/5 dark:border-white/10
     }
     .float-panel-closed {
         @apply -translate-y-1 opacity-0 pointer-events-none
@@ -255,37 +281,37 @@ html {
         @apply pointer-events-none
     }
     .search-panel mark {
-        @apply bg-transparent text-[var(--primary)]
+        @apply bg-transparent text-(--primary)
     }
 
     .btn-card {
-        @apply transition-colors duration-150 flex items-center justify-center bg-[var(--card-bg)] hover:bg-[var(--btn-card-bg-hover)]
-        active:bg-[var(--btn-card-bg-active)]
+        @apply transition-colors duration-150 flex items-center justify-center bg-(--card-bg) hover:bg-(--btn-card-bg-hover)
+        active:bg-(--btn-card-bg-active)
     }
     .btn-card.disabled {
         @apply pointer-events-none text-black/10 dark:text-white/10
     }
     .btn-plain {
         @apply transition-colors duration-150 relative flex items-center justify-center bg-none
-        text-black/75 hover:text-[var(--primary)] dark:text-white/75 dark:hover:text-[var(--primary)];
+        text-black/75 hover:text-(--primary) dark:text-white/75 dark:hover:text-(--primary);
         &:not(.scale-animation) {
-            @apply hover:bg-[var(--btn-plain-bg-hover)] active:bg-[var(--btn-plain-bg-active)]
+            @apply hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active)
         }
         &.scale-animation {
             @apply expand-animation;
         }
     }
     .current-theme-btn {
-        @apply bg-[var(--btn-plain-bg-hover)] text-[var(--primary)];
+        @apply bg-(--btn-plain-bg-hover) text-(--primary);
     }
     .btn-regular {
-        @apply transition-colors duration-150 flex items-center justify-center bg-[var(--btn-regular-bg)] hover:bg-[var(--btn-regular-bg-hover)] active:bg-[var(--btn-regular-bg-active)]
-        text-[var(--btn-content)] dark:text-white/75
+        @apply transition-colors duration-150 flex items-center justify-center bg-(--btn-regular-bg) hover:bg-(--btn-regular-bg-hover) active:bg-(--btn-regular-bg-active)
+        text-(--btn-content) dark:text-white/75
     }
 
     .link-underline {
-        @apply transition-colors duration-150 underline decoration-2 decoration-dashed decoration-[var(--link-underline)]
-        hover:decoration-[var(--link-hover)] active:decoration-[var(--link-active)] underline-offset-[0.25rem]
+        @apply transition-colors duration-150 underline decoration-2 decoration-dashed decoration-(--link-underline)
+        hover:decoration-(--link-hover) active:decoration-(--link-active) underline-offset-[0.25rem]
     }
 
     .toc-hide,
@@ -341,11 +367,11 @@ html {
     }
 
     .dropdown-content {
-        @apply bg-[var(--card-bg)] rounded-[var(--radius-large)] shadow-xl border border-black/5 dark:border-white/10 py-2 min-w-[12rem];
+        @apply bg-(--card-bg) rounded-(--radius-large) shadow-xl border border-black/5 dark:border-white/10 py-2 min-w-48;
     }
 
     .dropdown-item {
-        @apply flex items-center justify-between px-4 py-2.5 text-black/75 dark:text-white/75 hover:text-[var(--primary)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors duration-150 font-medium;
+        @apply flex items-center justify-between px-4 py-2.5 text-black/75 dark:text-white/75 hover:text-(--primary) hover:bg-(--btn-plain-bg-hover) transition-colors duration-150 font-medium;
     }
 
     .dropdown-item:first-child {
@@ -382,19 +408,19 @@ html {
     }
 
     .dropdown-item:focus {
-        @apply outline-none;
+        @apply outline-hidden;
     }
 
     .mobile-dropdown button:focus {
-        @apply outline-none;
+        @apply outline-hidden;
     }
 
     .meta-icon {
-        @apply w-8 h-8 transition-colors duration-150 rounded-md flex items-center justify-center bg-[var(--btn-regular-bg)]
-        text-[var(--btn-content)] mr-2
+        @apply w-8 h-8 transition-colors duration-150 rounded-md flex items-center justify-center bg-(--btn-regular-bg)
+        text-(--btn-content) mr-2
     }
     .with-divider {
-        @apply before:content-['/'] before:ml-1.5 before:mr-1.5 before:text-[var(--meta-divider)] before:text-sm
+        @apply before:content-['/'] before:ml-1.5 before:mr-1.5 before:text-(--meta-divider) before:text-sm
         before:font-medium before:first-of-type:hidden before:transition-colors before:duration-150
     }
 
@@ -454,11 +480,11 @@ html {
 
 /* 文章列表布局切换样式 */
 .post-list-layout-switch {
-  @apply flex items-center gap-2 mb-6 p-3 bg-[var(--card-bg)] rounded-lg border border-[var(--line-divider)];
+  @apply flex items-center gap-2 mb-6 p-3 bg-(--card-bg) rounded-lg border border-(--line-divider);
 }
 
 .post-list-layout-switch span {
-  @apply text-sm text-[var(--text-secondary)];
+  @apply text-sm text-(--text-secondary);
 }
 
 .post-list-layout-switch .layout-buttons {
@@ -470,11 +496,11 @@ html {
 }
 
 .post-list-layout-switch button.active {
-  @apply bg-[var(--primary)] text-white;
+  @apply bg-(--primary) text-white;
 }
 
 .post-list-layout-switch button:not(.active) {
-  @apply bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)];
+  @apply bg-(--bg-secondary) text-(--text-secondary) hover:bg-(--bg-hover);
 }
 
 /* 网格模式下的文章卡片样式调整 */
@@ -540,5 +566,5 @@ html {
 
 /* 分页信息样式 */
 .pagination-info {
-  @apply text-sm text-[var(--text-secondary)] text-center mb-2;
+  @apply text-sm text-(--text-secondary) text-center mb-2;
 }

@@ -80,13 +80,15 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 			<div class="flex items-center">
 				{processedLink.icon && <Icon name={processedLink.icon} class="text-[1.1rem] mr-2 navbar-icon" />}
 				{processedLink.name}
-				{processedLink.external && <Icon name="fa6-solid:arrow-up-right-from-square" class="text-[0.875rem] transition -translate-y-[1px] ml-1 text-black/[0.2] dark:text-white/[0.2]" />}
+				{processedLink.external && <Icon name="fa6-solid:arrow-up-right-from-square" class="text-[0.875rem] transition -translate-y-px ml-1 text-black/20 dark:text-white/20" />}
 			</div>
 		</a>
 	)}
 </div>
 
 <style>
+	@reference "../../styles/main.css";
+
 	.dropdown-container {
 		@apply relative;
 	}

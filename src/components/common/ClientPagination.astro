@@ -66,7 +66,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
     <div class="mobile-pagination items-center gap-3">
       <button
         type="button"
-        class="btn-card overflow-hidden rounded-lg text-[var(--primary)] w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
         data-page="prev"
         data-section={sectionId}
         disabled={currentPage === 1}
@@ -76,15 +76,15 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
       </button>
 
       <!-- 移动端页码信息 -->
-      <div class="bg-[var(--card-bg)] flex items-center rounded-lg px-4 h-11 gap-1.5">
-        <span class="mobile-current-page text-base font-bold text-[var(--primary)]">{currentPage}</span>
+      <div class="bg-(--card-bg) flex items-center rounded-lg px-4 h-11 gap-1.5">
+        <span class="mobile-current-page text-base font-bold text-(--primary)">{currentPage}</span>
         <span class="text-sm text-neutral-500 dark:text-neutral-500">/</span>
         <span class="mobile-total-pages text-base font-bold text-neutral-700 dark:text-neutral-300">{totalPages}</span>
       </div>
 
       <button
         type="button"
-        class="btn-card overflow-hidden rounded-lg text-[var(--primary)] w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
         data-page="next"
         data-section={sectionId}
         disabled={currentPage === totalPages}
@@ -98,7 +98,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
     <div class="desktop-pagination items-center gap-3">
       <button
         type="button"
-        class="btn-card overflow-hidden rounded-lg text-[var(--primary)] w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
         data-page="prev"
         data-section={sectionId}
         disabled={currentPage === 1}
@@ -107,7 +107,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
         <Icon name="material-symbols:chevron-left-rounded" class="text-[1.75rem]" />
       </button>
 
-      <div class="bg-[var(--card-bg)] flex flex-row rounded-lg items-center text-neutral-700 dark:text-neutral-300 font-bold" data-page-numbers={sectionId}>
+      <div class="bg-(--card-bg) flex flex-row rounded-lg items-center text-neutral-700 dark:text-neutral-300 font-bold" data-page-numbers={sectionId}>
         {pageNumbers.map((pageItem) => (
           pageItem === '...' ? (
             <Icon name="material-symbols:more-horiz" class="mx-1" />
@@ -117,7 +117,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
               class:list={[
                 "rounded-lg overflow-hidden w-11 h-11 flex items-center justify-center font-bold",
                 {
-                  "bg-[var(--primary)] text-white dark:text-black/70": pageItem === currentPage,
+                  "bg-(--primary) text-white dark:text-black/70": pageItem === currentPage,
                   "btn-card active:scale-[0.85]": pageItem !== currentPage
                 }
               ]}
@@ -134,7 +134,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
 
       <button
         type="button"
-        class="btn-card overflow-hidden rounded-lg text-[var(--primary)] w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
         data-page="next"
         data-section={sectionId}
         disabled={currentPage === totalPages}
@@ -281,7 +281,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
           } else {
             const button = document.createElement('button');
             button.className = pageItem === currentPage
-              ? 'rounded-lg overflow-hidden w-11 h-11 flex items-center justify-center font-bold bg-[var(--primary)] text-white dark:text-black/70'
+              ? 'rounded-lg overflow-hidden w-11 h-11 flex items-center justify-center font-bold bg-(--primary) text-white dark:text-black/70'
               : 'rounded-lg overflow-hidden w-11 h-11 flex items-center justify-center font-bold btn-card active:scale-[0.85]';
             button.dataset.page = pageItem.toString();
             button.dataset.section = sectionId;

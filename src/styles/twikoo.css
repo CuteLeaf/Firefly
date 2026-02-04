@@ -1,3 +1,5 @@
+@reference "tailwindcss";
+
 :root {
   --tk-text: black;
   --code-block-text: #333; /* 调整为深色但在浅色背景下仍然舒适的值 */
@@ -9,7 +11,7 @@ html.dark {
 }
 
 .tk-comments {
-  @apply text-[var(--tk-text)];
+  @apply text-(--tk-text);
 }
 
 .tk-submit {
@@ -24,10 +26,10 @@ html.dark {
     @apply flex-col-reverse;
     .tk-input {
       textarea {
-        @apply rounded-[var(--radius-large)] py-4 px-6 !min-h-[150px] focus:border-[var(--primary)]
-               border-[var(--line-divider)] bg-[var(--card-bg)] text-[var(--btn-content)]
-               placeholder:text-[var(--content-meta)] transition-all duration-300
-               focus:ring-2 focus:ring-[var(--primary)] focus:ring-opacity-20;
+        @apply rounded-(--radius-large) py-4 px-6 min-h-[150px]! focus:border-(--primary)
+               border-(--line-divider) bg-(--card-bg) text-(--btn-content)
+               placeholder:text-(--content-meta) transition-all duration-300
+               focus:ring-2 focus:ring-(--primary)/20;
         resize: vertical;
       }
     }
@@ -46,64 +48,64 @@ html.dark {
 /* 表情和图片按钮样式优化 */
 .tk-owo,
 .tk-upload {
-  @apply rounded-lg p-2 hover:bg-[var(--btn-plain-bg-hover)] transition-colors duration-200
-         border border-[var(--line-divider)] bg-[var(--card-bg)] text-[var(--btn-content)]
-         hover:border-[var(--primary)] hover:shadow-sm;
+  @apply rounded-lg p-2 hover:bg-(--btn-plain-bg-hover) transition-colors duration-200
+         border border-(--line-divider) bg-(--card-bg) text-(--btn-content)
+         hover:border-(--primary) hover:shadow-xs;
 }
 
 .tk-owo:hover,
 .tk-upload:hover {
-  @apply bg-[var(--btn-plain-bg-hover)] border-[var(--primary)] shadow-sm;
+  @apply bg-(--btn-plain-bg-hover) border-(--primary) shadow-xs;
 }
 
 /* Meta */
 .tk-meta-input {
   @apply relative mt-4;
   div {
-    @apply min-h-12 rounded-lg border border-[var(--line-divider)] bg-[var(--card-bg)] overflow-hidden
-           hover:border-[var(--primary)] hover:shadow-sm transition-all duration-200 flex items-center;
+    @apply min-h-12 rounded-lg border border-(--line-divider) bg-(--card-bg) overflow-hidden
+           hover:border-(--primary) hover:shadow-xs transition-all duration-200 flex items-center;
 
     .el-input-group__prepend {
-      @apply !bg-[var(--btn-regular-bg)] !text-[var(--btn-content)] px-4 font-medium text-sm
-             border-r border-[var(--line-divider)] flex items-center justify-center min-w-[80px] flex-shrink-0
+      @apply bg-(--btn-regular-bg)! text-(--btn-content)! px-4 font-medium text-sm
+             border-r border-(--line-divider) flex items-center justify-center min-w-[80px] shrink-0
              rounded-l-lg rounded-r-none;
       min-height: inherit;
     }
 
     input {
-      @apply px-4 bg-transparent text-[var(--btn-content)] placeholder:text-[var(--content-meta)]
-             focus:!border-[var(--primary)] transition-all duration-200 flex-1
+      @apply px-4 bg-transparent text-(--btn-content) placeholder:text-(--content-meta)
+             focus:!border-(--primary) transition-all duration-200 flex-1
              rounded-r-lg rounded-l-none;
       min-height: inherit;
 
       &::placeholder {
-        @apply text-[var(--content-meta)] opacity-70;
+        @apply text-(--content-meta) opacity-70;
       }
 
       &:focus {
-        @apply outline-none;
+        @apply outline-hidden;
       }
     }
 
     &:focus-within {
-      @apply border-[var(--primary)] shadow-md;
+      @apply border-(--primary) shadow-md;
     }
   }
 }
 
 /* Button */
 .tk-row.actions {
-  @apply w-full !ml-0 !mt-6 flex gap-3 justify-end;
+  @apply w-full ml-0! mt-6! flex gap-3 justify-end;
   .__markdown {
     @apply !hidden;
   }
   .tk-send,
   .tk-cancel {
     @apply border-none rounded-lg px-6 py-2 h-10 font-medium transition-all duration-300
-           !bg-[var(--btn-regular-bg)] hover:!bg-[var(--btn-regular-bg-hover)]
-           active:!bg-[var(--btn-regular-bg-active)] disabled:!bg-[var(--btn-regular-bg)]
-           !text-[var(--btn-content)] disabled:!text-[var(--content-meta)]
-           hover:scale-105 active:scale-95 shadow-sm hover:shadow-md;
+           bg-(--btn-regular-bg)! hover:bg-(--btn-regular-bg-hover)!
+           active:bg-(--btn-regular-bg-active)! disabled:bg-(--btn-regular-bg)!
+           text-(--btn-content)! disabled:text-(--content-meta)!
+           hover:scale-105 active:scale-95 shadow-xs hover:shadow-md;
   }
 }
 
@@ -152,16 +154,16 @@ html.dark {
   @apply hidden; /* 隐藏默认标题，使用自定义标题 */
 
   .__comments svg {
-    @apply fill-[var(--primary)];
+    @apply fill-(--primary);
   }
 }
 
 .tk-comment {
-  @apply border-[1px] border-[var(--line-divider)] p-4 rounded-2xl hover:shadow-lg hover:border-[var(--primary)] transition-all duration-300;
+  @apply border-[1px] border-(--line-divider) p-4 rounded-2xl hover:shadow-lg hover:border-(--primary) transition-all duration-300;
   background: linear-gradient(135deg, var(--card-bg) 0%, rgba(var(--primary), 0.02) 100%);
 
   .tk-action-icon svg {
-    @apply fill-[var(--primary)] hover:scale-110 transition-transform duration-200;
+    @apply fill-(--primary) hover:scale-110 transition-transform duration-200;
   }
 
   &:hover {
@@ -173,11 +175,11 @@ html.dark {
 
 .tk-meta {
   .tk-tag {
-    @apply border-none rounded-lg text-[var(--btn-content)];
+    @apply border-none rounded-lg text-(--btn-content);
   }
 
   .tk-tag-green {
-    @apply bg-[var(--btn-regular-bg)] dark:bg-[var(--primary)] dark:text-[var(--deep-text)];
+    @apply bg-(--btn-regular-bg) dark:bg-(--primary) dark:text-(--deep-text);
   }
 }
 
@@ -188,11 +190,11 @@ html.dark {
     Make the picture type emoticons display without wrapping
   */
   img {
-    @apply inline !align-bottom;
+    @apply inline align-bottom!;
   }
 
   a {
-    @apply underline text-[var(--primary)] font-medium;
+    @apply underline text-(--primary) font-medium;
   }
 
   .tk-ruser {
@@ -200,11 +202,11 @@ html.dark {
   }
 
   :not(pre) > code {
-    @apply bg-[var(--inline-code-bg)] rounded-md text-[--inline-code-color] px-1 py-0.5 font-semibold;
+    @apply bg-(--inline-code-bg) rounded-md text-(--inline-code-color) px-1 py-0.5 font-semibold;
   }
 
   li {
-    @apply before:content-["•"] before:text-[var(--primary)];
+    @apply before:content-["•"] before:text-(--primary);
   }
 }
 
@@ -213,10 +215,10 @@ html.dark {
 
 
   .tk-comment {
-    @apply border-l-4 border-l-[var(--btn-regular-bg)] p-3 border-opacity-30 hover:border-[var(--primary)] transition-all duration-300;
+    @apply border-l-4 border-l-(--btn-regular-bg)/30 p-3 hover:border-(--primary) transition-all duration-300;
     .tk-content {
       > span:first-of-type {
-        @apply text-xs text-[var(--content-meta)];
+        @apply text-xs text-(--content-meta);
       }
     }
   }
@@ -230,12 +232,12 @@ html.dark {
 
 .twikoo .code-block {
   pre {
-    @apply !rounded-xl;
+    @apply rounded-xl!;
   }
 
   /* Code block fall back */
   pre:not([class]) {
-    @apply bg-[var(--codeblock-bg)] overflow-auto p-2 text-[var(--code-block-text)];
+    @apply bg-(--codeblock-bg) overflow-auto p-2 text-(--code-block-text);
   }
 
   .copy-btn-icon {
@@ -246,7 +248,7 @@ html.dark {
 
 .tk-expand-wrap .tk-expand,
 .tk-collapse-wrap .tk-expand {
-  @apply border-[1px]  border-[var(--line-divider)] rounded-lg mt-1 bg-[var(--btn-regular-bg)] text-[var(--btn-content)] hover:text-[var(--primary)] hover:bg-[var(--btn-regular-bg-hover)];
+  @apply border-[1px] border-(--line-divider) rounded-lg mt-1 bg-(--btn-regular-bg) text-(--btn-content) hover:text-(--primary) hover:bg-(--btn-regular-bg-hover);
 }
 
 /* by @SirTamago

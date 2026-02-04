@@ -53,15 +53,15 @@ const postUrlPrefix = url("/posts/");
 <WidgetLayout id="calendar-widget" class={className} style={style}>
   <div class="calendar-container">
     <div class="flex justify-between items-center mb-4">
-        <button id="prev-month-btn" class="btn-plain rounded-lg w-8 h-8 flex items-center justify-center hover:bg-[var(--btn-plain-bg-hover)] transition-colors" aria-label="Previous Month">
+        <button id="prev-month-btn" class="btn-plain rounded-lg w-8 h-8 flex items-center justify-center hover:bg-(--btn-plain-bg-hover) transition-colors" aria-label="Previous Month">
             <Icon name="fa6-solid:chevron-left" class="text-sm" />
         </button>
-        <div id="current-month-display" class="text-lg font-bold text-neutral-900 dark:text-neutral-100 cursor-pointer hover:text-[var(--primary)] transition-colors select-none"></div>
+        <div id="current-month-display" class="text-lg font-bold text-neutral-900 dark:text-neutral-100 cursor-pointer hover:text-(--primary) transition-colors select-none"></div>
         <div class="flex gap-2">
-            <button id="reset-month-btn" class="btn-plain rounded-lg w-8 h-8 flex items-center justify-center hover:bg-[var(--btn-plain-bg-hover)] transition-colors" aria-label="Back to Today">
+            <button id="reset-month-btn" class="btn-plain rounded-lg w-8 h-8 flex items-center justify-center hover:bg-(--btn-plain-bg-hover) transition-colors" aria-label="Back to Today">
                 <Icon name="fa6-solid:arrow-rotate-left" class="text-sm" />
             </button>
-            <button id="next-month-btn" class="btn-plain rounded-lg w-8 h-8 flex items-center justify-center hover:bg-[var(--btn-plain-bg-hover)] transition-colors" aria-label="Next Month">
+            <button id="next-month-btn" class="btn-plain rounded-lg w-8 h-8 flex items-center justify-center hover:bg-(--btn-plain-bg-hover) transition-colors" aria-label="Next Month">
                 <Icon name="fa6-solid:chevron-right" class="text-sm" />
             </button>
         </div>
@@ -247,7 +247,7 @@ const postUrlPrefix = url("/posts/");
       }
       
       if (isToday) {
-        classes.push("ring-2 ring-[var(--primary)]");
+        classes.push("ring-2 ring-(--primary)");
       }
       
       return `
@@ -257,8 +257,8 @@ const postUrlPrefix = url("/posts/");
           data-has-post="${hasPost}"
         >
           ${day || ''}
-          ${hasPost ? '<span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--primary)]"></span>' : ''}
-          ${hasPost && count > 1 ? `<span class="absolute top-0 right-0 text-[10px] text-[var(--primary)] font-bold">${count}</span>` : ''}
+          ${hasPost ? '<span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-(--primary)"></span>' : ''}
+          ${hasPost && count > 1 ? `<span class="absolute top-0 right-0 text-[10px] text-(--primary) font-bold">${count}</span>` : ''}
         </div>
       `;
     }).join('');
@@ -293,15 +293,15 @@ const postUrlPrefix = url("/posts/");
       const isCurrent = index === displayMonth;
       const hasPost = monthsWithPosts.has(index);
       const classes = [
-        "p-2 text-center text-sm rounded cursor-pointer hover:bg-[var(--btn-plain-bg-hover)] transition-colors relative"
+        "p-2 text-center text-sm rounded cursor-pointer hover:bg-(--btn-plain-bg-hover) transition-colors relative"
       ];
       if (isCurrent) {
-        classes.push("text-[var(--primary)] font-bold bg-[var(--btn-plain-bg-hover)]");
+        classes.push("text-(--primary) font-bold bg-(--btn-plain-bg-hover)");
       } else {
         classes.push("text-neutral-700 dark:text-neutral-300");
       }
       
-      const dotHtml = hasPost ? '<span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--primary)]"></span>' : '';
+      const dotHtml = hasPost ? '<span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-(--primary)"></span>' : '';
       
       return `<div class="${classes.join(' ')}" data-month="${index}">${name}${dotHtml}</div>`;
     }).join('');
@@ -322,10 +322,10 @@ const postUrlPrefix = url("/posts/");
     container.innerHTML = availableYears.map(year => {
       const isCurrent = year === displayYear;
       const classes = [
-        "p-2 text-center text-sm rounded cursor-pointer hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
+        "p-2 text-center text-sm rounded cursor-pointer hover:bg-(--btn-plain-bg-hover) transition-colors"
       ];
       if (isCurrent) {
-        classes.push("text-[var(--primary)] font-bold bg-[var(--btn-plain-bg-hover)]");
+        classes.push("text-(--primary) font-bold bg-(--btn-plain-bg-hover)");
       } else {
         classes.push("text-neutral-700 dark:text-neutral-300");
       }
@@ -351,7 +351,7 @@ const postUrlPrefix = url("/posts/");
         const date = new Date(post.published);
         const dateStr = `${date.getMonth() + 1}-${date.getDate()}`;
         return `
-        <a href="${postUrlPrefix}${post.id}/" class="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-[var(--primary)] dark:hover:text-[var(--primary)] transition-colors px-2 py-1 rounded hover:bg-[var(--btn-plain-bg-hover)]">
+        <a href="${postUrlPrefix}${post.id}/" class="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-(--primary) dark:hover:text-(--primary) transition-colors px-2 py-1 rounded hover:bg-(--btn-plain-bg-hover)">
           <span class="truncate">${post.title}</span>
           <span class="text-xs text-neutral-500 dark:text-neutral-400 ml-2 whitespace-nowrap">${dateStr}</span>
         </a>
@@ -382,7 +382,7 @@ const postUrlPrefix = url("/posts/");
         // 切换选中状态
         if (currentSelectedDay === dayElement) {
           // 取消选中，恢复显示当月所有文章
-          dayElement.classList.remove('bg-[var(--primary)]', 'bg-opacity-10');
+          dayElement.classList.remove('calendar-day-selected');
           currentSelectedDay = null;
           showMonthlyPosts(currentMonthPosts);
           return;
@@ -390,11 +390,11 @@ const postUrlPrefix = url("/posts/");
         
         // 移除之前选中的样式
         if (currentSelectedDay) {
-          currentSelectedDay.classList.remove('bg-[var(--primary)]', 'bg-opacity-10');
+          currentSelectedDay.classList.remove('calendar-day-selected');
         }
         
         // 添加选中样式
-        dayElement.classList.add('bg-[var(--primary)]', 'bg-opacity-10');
+        dayElement.classList.add('calendar-day-selected');
         currentSelectedDay = dayElement;
         
         // 获取该日期的文章
@@ -406,7 +406,7 @@ const postUrlPrefix = url("/posts/");
             const date = new Date(post.published);
             const dateStr = `${date.getMonth() + 1}-${date.getDate()}`;
             return `
-            <a href="${postUrlPrefix}${post.id}/" class="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-[var(--primary)] dark:hover:text-[var(--primary)] transition-colors px-2 py-1 rounded hover:bg-[var(--btn-plain-bg-hover)]">
+            <a href="${postUrlPrefix}${post.id}/" class="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-(--primary) dark:hover:text-(--primary) transition-colors px-2 py-1 rounded hover:bg-(--btn-plain-bg-hover)">
               <span class="truncate">${post.title}</span>
               <span class="text-xs text-neutral-500 dark:text-neutral-400 ml-2 whitespace-nowrap">${dateStr}</span>
             </a>
@@ -492,5 +492,10 @@ const postUrlPrefix = url("/posts/");
   
   .calendar-day[data-has-post="true"]:hover {
     transform: translateY(-2px);
+  }
+
+  /* 自定义选中日期样式，替代 bg-opacity-10 */
+  .calendar-day-selected {
+    background-color: oklch(from var(--primary) l c h / 0.1);
   }
 </style>

@@ -27,14 +27,14 @@ const description = i18n(I18nKey.friendsDescription);
 
 <MainGridLayout title={title} description={description}>
   <div
-    class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32"
+    class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32"
   >
     <div class="card-base z-10 px-9 py-6 relative w-full">
       <!-- 页面标题和描述 -->
       <div class="mb-4">
         <div class="flex items-center gap-3 mb-3">
           <div
-            class="h-8 w-8 rounded-lg bg-[var(--primary)] flex items-center justify-center text-white dark:text-black/70"
+            class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70"
           >
             <Icon icon="material-symbols:group" class="text-[1.5rem]" />
           </div>
@@ -57,14 +57,14 @@ const description = i18n(I18nKey.friendsDescription);
           <friend-filter class="flex flex-wrap gap-2 mb-6">
             <button
               data-tag="all"
-              class="btn-regular px-3 py-1.5 rounded-lg bg-[var(--primary)] text-white hover:bg-[var(--primary)] transition-colors duration-200 text-sm font-medium"
+              class="btn-regular px-3 py-1.5 rounded-lg bg-(--primary) text-white hover:bg-(--primary) transition-colors duration-200 text-sm font-medium"
             >
               {i18n(I18nKey.all)}
             </button>
             {allTags.map((tag) => (
               <button
                 data-tag={tag}
-                class="btn-regular px-3 py-1.5 rounded-lg bg-[var(--btn-regular-bg)] text-[var(--btn-content)] hover:bg-[var(--btn-regular-bg-hover)] transition-colors duration-200 text-sm font-medium"
+                class="btn-regular px-3 py-1.5 rounded-lg bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) transition-colors duration-200 text-sm font-medium"
               >
                 {tag}
               </button>
@@ -81,13 +81,13 @@ const description = i18n(I18nKey.friendsDescription);
               target="_blank"
               rel="noopener noreferrer"
               data-tags={item.tags?.join(",")}
-              class="friend-card group flex items-center gap-3 p-2.5 rounded-xl border border-[var(--line-divider)] hover:border-[var(--primary)] hover:bg-[var(--card-bg)] transition-all duration-300 hover:shadow-lg relative overflow-hidden"
+              class="friend-card group flex items-center gap-3 p-2.5 rounded-xl border border-(--line-divider) hover:border-(--primary) hover:bg-(--card-bg) transition-all duration-300 hover:shadow-lg relative overflow-hidden"
             >
               {/* 背景装饰 - 仅悬停显示 */}
-              <div class="absolute inset-0 bg-[var(--primary)] opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none" />
+              <div class="absolute inset-0 bg-(--primary) opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none" />
 
               {/* 头像 */}
-              <div class="relative w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-black/5 dark:border-white/5 group-hover:scale-105 transition-transform duration-300">
+              <div class="relative w-16 h-16 shrink-0 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-black/5 dark:border-white/5 group-hover:scale-105 transition-transform duration-300">
                 <img
                   src={item.imgurl}
                   alt={item.title}
@@ -98,13 +98,13 @@ const description = i18n(I18nKey.friendsDescription);
               {/* 内容 */}
               <div class="grow min-w-0 flex flex-col justify-center gap-0.5">
                 <div class="flex items-center justify-between">
-                  <div class="font-bold text-base text-neutral-900 dark:text-neutral-100 group-hover:text-[var(--primary)] transition-colors truncate pr-4">
+                  <div class="font-bold text-base text-neutral-900 dark:text-neutral-100 group-hover:text-(--primary) transition-colors truncate pr-4">
                     {item.title}
                   </div>
                   {/* 外部链接图标 */}
                   <Icon
                     icon="material-symbols:arrow-outward-rounded"
-                    class="text-[var(--primary)] text-lg opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
+                    class="text-(--primary) text-lg opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
                   />
                 </div>
 
@@ -171,22 +171,22 @@ const description = i18n(I18nKey.friendsDescription);
           const cards = container.querySelectorAll(".friend-card");
 
           filters.forEach((f) => {
-            f.classList.remove("bg-[var(--primary)]", "text-white");
-            f.classList.remove("hover:bg-[var(--primary)]");
+            f.classList.remove("bg-(--primary)", "text-white");
+            f.classList.remove("hover:bg-(--primary)");
             f.classList.add(
-              "bg-[var(--btn-regular-bg)]",
-              "text-[var(--btn-content)]"
+              "bg-(--btn-regular-bg)",
+              "text-(--btn-content)"
             );
-            f.classList.add("hover:bg-[var(--btn-regular-bg-hover)]");
+            f.classList.add("hover:bg-(--btn-regular-bg-hover)");
 
             if (f === button) {
               f.classList.remove(
-                "bg-[var(--btn-regular-bg)]",
-                "text-[var(--btn-content)]"
+                "bg-(--btn-regular-bg)",
+                "text-(--btn-content)"
               );
-              f.classList.remove("hover:bg-[var(--btn-regular-bg-hover)]");
-              f.classList.add("bg-[var(--primary)]", "text-white");
-              f.classList.add("hover:bg-[var(--primary)]");
+              f.classList.remove("hover:bg-(--btn-regular-bg-hover)");
+              f.classList.add("bg-(--primary)", "text-white");
+              f.classList.add("hover:bg-(--primary)");
             }
           });
 

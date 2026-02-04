@@ -7,16 +7,16 @@ import { url } from "@/utils/url-utils";
 ---
 
 <MainGridLayout title={i18n(I18nKey.notFound)} description={i18n(I18nKey.notFoundDescription)}>
-    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-96">
+    <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-96">
         <div class="card-base z-10 px-9 py-12 relative w-full flex flex-col items-center justify-center text-center">
             <!-- 404 大号数字 -->
-            <div class="text-8xl md:text-9xl font-bold text-[var(--primary)] opacity-20 mb-4">
+            <div class="text-8xl md:text-9xl font-bold text-(--primary) opacity-20 mb-4">
                 {i18n(I18nKey.notFound)}
             </div>
             
             <!-- 404 图标 -->
             <div class="mb-6">
-                <Icon name="material-symbols:error-outline" class="text-6xl text-[var(--primary)]" />
+                <Icon name="material-symbols:error-outline" class="text-6xl text-(--primary)" />
             </div>
             
             <!-- 标题 -->
@@ -32,7 +32,7 @@ import { url } from "@/utils/url-utils";
             <!-- 返回首页按钮 -->
             <a 
                 href={url("/")}
-                class="inline-flex items-center gap-2 px-6 py-3 bg-[var(--primary)] text-white rounded-[var(--radius-large)] hover:bg-[var(--btn-content)] transition-colors duration-200 font-medium"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-(--primary) text-white rounded-(--radius-large) hover:bg-(--btn-content) transition-colors duration-200 font-medium"
             >
                 <Icon name="material-symbols:home" class="text-xl" />
                 {i18n(I18nKey.backToHome)}
@@ -40,10 +40,10 @@ import { url } from "@/utils/url-utils";
             
             <!-- 装饰性元素 -->
             <div class="absolute top-4 left-4 opacity-10">
-                <Icon name="material-symbols:sentiment-sad" class="text-4xl text-[var(--primary)]" />
+                <Icon name="material-symbols:sentiment-sad" class="text-4xl text-(--primary)" />
             </div>
             <div class="absolute bottom-4 right-4 opacity-10">
-                <Icon name="material-symbols:search-off" class="text-4xl text-[var(--primary)]" />
+                <Icon name="material-symbols:search-off" class="text-4xl text-(--primary)" />
             </div>
         </div>
     </div>

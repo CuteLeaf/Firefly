@@ -58,8 +58,8 @@
     /* 主内容区域位置调整 - 向上移动以部分遮挡banner */
     /* 仅在 banner 模式下应用，其他模式（全屏壁纸/纯色）使用默认的 5.5rem */
     body.enable-banner .absolute.w-full.z-30:not(.no-banner-layout):not(.mobile-main-no-banner) {
-        top: 65vh !important; /* 向上移动5vh，部分遮挡banner */
-        min-height: calc(100vh - 65vh) !important;
+        top: 35vh !important; /* 小屏手机，提升至与波浪平行 */
+        min-height: calc(100vh - 35vh) !important;
     }
     
     /* 横幅文本覆盖层优化 */
@@ -113,8 +113,8 @@
     /* 主内容区域位置调整 - 向上移动以部分遮挡banner */
     /* 仅在 banner 模式下应用，其他模式（全屏壁纸/纯色）使用默认的 5.5rem */
     body.enable-banner .absolute.w-full.z-30:not(.no-banner-layout):not(.mobile-main-no-banner) {
-        top: 70vh !important; /* 向上移动5vh，部分遮挡banner */
-        min-height: calc(100vh - 70vh) !important;
+        top: 38vh !important; /* 大屏手机，提升至与波浪平行 */
+        min-height: calc(100vh - 38vh) !important;
     }
     
     /* 横幅文本覆盖层优化 */
@@ -168,8 +168,8 @@
     /* 主内容区域位置调整 - 向上移动以部分遮挡banner */
     /* 仅在 banner 模式下应用，其他模式（全屏壁纸/纯色）使用默认的 5.5rem */
     body.enable-banner .absolute.w-full.z-30:not(.no-banner-layout):not(.mobile-main-no-banner) {
-        top: 67vh !important; /* 向上移动5vh，部分遮挡banner */
-        min-height: calc(100vh - 67vh) !important;
+        top: 36vh !important; /* 小平板，提升至与波浪平行 */
+        min-height: calc(100vh - 36vh) !important;
     }
     
     /* 横幅文本覆盖层优化 */
@@ -222,8 +222,8 @@
     /* 主内容区域位置调整 - 向上移动以部分遮挡banner */
     /* 仅在 banner 模式下应用，其他模式（全屏壁纸/纯色）使用默认的 5.5rem */
     body.enable-banner .absolute.w-full.z-30:not(.no-banner-layout):not(.mobile-main-no-banner) {
-        top: 65vh !important; /* 向上移动5vh，部分遮挡banner */
-        min-height: calc(100vh - 65vh) !important;
+        top: 33vh !important; /* 平板端，提升至与波浪平行 */
+        min-height: calc(100vh - 33vh) !important;
     }
     
     /* 横幅文本覆盖层优化 */
@@ -447,8 +447,8 @@
     /* 主内容区域位置调整 - 确保在banner下面，但不影响非首页 */
     /* 仅在 banner 模式下应用，其他模式（全屏壁纸/纯色）使用默认的 5.5rem */
     body.enable-banner .absolute.w-full.z-30:not(.mobile-main-no-banner):not(.no-banner-layout) {
-        top: 60vh !important; /* 与banner高度对应 */
-        min-height: calc(100vh - 60vh) !important;
+        top: 32vh !important; /* 横屏模式，提升至与波浪平行 */
+        min-height: calc(100vh - 32vh) !important;
     }
     
     .banner-container {

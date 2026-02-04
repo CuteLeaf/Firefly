@@ -88,7 +88,7 @@ export function generateSidebarClasses(): string {
 		"hidden",
 		"md:block",
 		"md:col-span-1",
-		"md:max-w-[17.5rem]",
+		"md:max-w-70",
 		"md:row-start-1",
 		"md:row-end-2",
 		"md:col-start-1",
@@ -110,7 +110,7 @@ export function generateRightSidebarClasses(): string {
 		"xl:row-start-1",
 		"xl:row-end-2",
 		"xl:col-span-1",
-		"xl:max-w-[17.5rem]",
+		"xl:max-w-70",
 		"onload-animation",
 		"xl:col-start-3", // 右侧边栏在第3列
 	];
