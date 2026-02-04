@@ -13,7 +13,7 @@ interface Props {
 let { class: className = "", children, ...restProps }: Props = $props();
 </script>
 
-<div class={`card-base float-panel p-2 ${className}`.trim()} {...restProps}>
+<div class={`float-panel p-2 ${className}`.trim()} {...restProps}>
 	{#if children}
 		{@render children()}
 	{/if}

@@ -222,7 +222,7 @@ html {
         @apply rounded-(--radius-large) overflow-hidden bg-(--card-bg) transition-colors duration-150;
     }
     .card-base-transparent {
-        @apply rounded-(--radius-large) overflow-hidden bg-(--card-bg-transparent) backdrop-blur-xs transition-colors duration-150;
+        @apply rounded-(--radius-large) overflow-hidden bg-(--card-bg-transparent) transition-colors duration-150;
     }
 
     /* 开启边框和阴影效果时的样式 */
@@ -241,22 +241,16 @@ html {
     
     /* 全屏壁纸模式下的半透明效果 */
     .wallpaper-transparent .card-base {
-        @apply bg-(--card-bg-transparent);
-        /* 移除高斯模糊以提升性能，大量重叠的 backdrop-filter 会导致 GPU 占用过高 */
-        /* @apply backdrop-blur-sm; */
+        background-color: var(--card-bg-transparent) !important;
     }
-    
  
     
     .wallpaper-transparent #navbar > div {
-    @apply bg-(--card-bg-transparent) backdrop-blur-xs;
-    border-radius: 0 0 var(--radius-large) var(--radius-large) !important;
-}
+        background-color: var(--card-bg-transparent) !important;
+    }
     
     .wallpaper-transparent .btn-card {
-        @apply bg-(--card-bg-transparent);
-        /* 移除高斯模糊以提升性能 */
-        /* @apply backdrop-blur-sm; */
+        background-color: var(--card-bg-transparent) !important;
     }
     
     h1, h2, h3, h4, h5, h6, p, a, span, li, ul, ol, blockquote, code, pre, table, th, td, strong {
