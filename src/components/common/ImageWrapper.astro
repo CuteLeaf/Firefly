@@ -15,7 +15,15 @@ interface Props {
 	fetchpriority?: "high" | "low" | "auto";
 }
 
-const { id, src, alt, position = "center", basePath = "/", loading = "lazy", fetchpriority = "auto" } = Astro.props;
+const {
+	id,
+	src,
+	alt,
+	position = "center",
+	basePath = "/",
+	loading = "lazy",
+	fetchpriority = "auto",
+} = Astro.props;
 const className = Astro.props.class;
 
 const isLocal = !(
