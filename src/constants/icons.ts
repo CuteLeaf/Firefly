@@ -2,9 +2,6 @@
  * 自动生成的图标数据文件
  * 由 scripts/generate-icons.js 在构建时生成
  * 请勿手动编辑此文件
- * 
- * 生成时间: 2026-02-05T07:39:47.871Z
- * 图标数量: 16
  */
 
 const iconSvgData: Record<string, string> = {

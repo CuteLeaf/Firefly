@@ -160,9 +160,6 @@ function generateIconsFile(iconsMap) {
  * 自动生成的图标数据文件
  * 由 scripts/generate-icons.js 在构建时生成
  * 请勿手动编辑此文件
- * 
- * 生成时间: ${new Date().toISOString()}
- * 图标数量: ${iconsMap.size}
  */
 
 const iconSvgData: Record<string, string> = {
