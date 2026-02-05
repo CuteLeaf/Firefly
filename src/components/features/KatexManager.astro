@@ -1,16 +1,57 @@
 ---
+// KaTeX 完全异步加载，不阻塞渲染
+const katexCssUrl = '/_astro/katex.BiiwfapS.css'; // 使用实际打包后的文件名
 ---
-<script>
-    // KaTeX 样式按需加载
-    function loadKatex() {
-        if (document.querySelector('.katex')) {
-            import('katex/dist/katex.css');
+
+<script define:vars={{ katexCssUrl }}>
+    // 异步非阻塞加载 KaTeX CSS
+    function loadKatexCSS() {
+        // 检查页面是否包含 KaTeX 元素
+        if (!document.querySelector('.katex')) {
+            return;
         }
+
+        // 检查是否已加载
+        if (document.getElementById('katex-css')) {
+            return;
+        }
+
+        // 使用 preload + media 技巧实现非阻塞加载
+        const link = document.createElement('link');
+        link.id = 'katex-css';
+        link.rel = 'preload';
+        link.as = 'style';
+        link.href = katexCssUrl;
+        link.onload = function() {
+            this.onload = null;
+            this.rel = 'stylesheet';
+        };
+        
+        document.head.appendChild(link);
+
+        // 降级方案：支持不支持 preload 的浏览器
+        const noscript = document.createElement('noscript');
+        const fallbackLink = document.createElement('link');
+        fallbackLink.rel = 'stylesheet';
+        fallbackLink.href = katexCssUrl;
+        noscript.appendChild(fallbackLink);
+        document.head.appendChild(noscript);
     }
 
-    // 初始化
-    loadKatex();
+    // requestIdleCallback 确保在浏览器空闲时加载
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadKatexCSS);
+    } else {
+        // 降级到 setTimeout
+        setTimeout(loadKatexCSS, 100);
+    }
 
     // Swup 页面切换支持
-    document.addEventListener('swup:content:replace', loadKatex);
+    document.addEventListener('swup:content:replace', function() {
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(loadKatexCSS);
+        } else {
+            setTimeout(loadKatexCSS, 100);
+        }
+    });
 </script>

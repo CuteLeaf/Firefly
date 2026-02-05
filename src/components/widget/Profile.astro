@@ -25,6 +25,8 @@ import { url } from "@/utils/url-utils";
       src={profileConfig.avatar || ""}
       alt="Profile Image of the Author"
       class="mx-auto lg:w-full h-full lg:mt-0"
+      loading="eager"
+      fetchpriority="high"
     />
   </a>
   <div class="px-2">
