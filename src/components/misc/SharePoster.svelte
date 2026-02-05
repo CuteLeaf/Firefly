@@ -484,7 +484,7 @@ function portal(node: HTMLElement) {
   on:click={generatePoster}
   aria-label="Generate Share Poster"
 >
-  <Icon icon="material-symbols:share" width="20" height="20" />
+  <Icon icon="material-symbols:share" size="md" />
   <span>{i18n(I18nKey.shareArticle)}</span>
 </button>
 
@@ -495,7 +495,7 @@ function portal(node: HTMLElement) {
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div use:portal class="fixed inset-0 z-9999 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 transition-opacity" on:click={closeModal}>
-    <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-sm w-full max-h-[90vh] overflow-y-auto flex flex-col shadow-2xl transform transition-all" on:click|stopPropagation>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-[440px] w-full max-h-[90vh] overflow-y-auto flex flex-col shadow-2xl transform transition-all" on:click={(e) => e.stopPropagation()}>
       
       <div class="p-6 flex justify-center bg-gray-50 dark:bg-gray-900 min-h-[200px] items-center">
         {#if posterImage}
@@ -514,10 +514,10 @@ function portal(node: HTMLElement) {
           on:click={copyLink}
         >
           {#if copied}
-            <Icon icon="material-symbols:check" width="20" height="20" />
+            <Icon icon="material-symbols:check" size="md" />
             <span>{i18n(I18nKey.copied)}</span>
           {:else}
-            <Icon icon="material-symbols:link" width="20" height="20" />
+            <Icon icon="material-symbols:link" size="md" />
             <span>{i18n(I18nKey.copyLink)}</span>
           {/if}
         </button>
@@ -527,7 +527,7 @@ function portal(node: HTMLElement) {
           on:click={downloadPoster}
           disabled={!posterImage}
         >
-          <Icon icon="material-symbols:download" width="20" height="20" />
+          <Icon icon="material-symbols:download" size="md" />
           {i18n(I18nKey.savePoster)}
         </button>
       </div>
