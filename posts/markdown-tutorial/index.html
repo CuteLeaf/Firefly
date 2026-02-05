@@ -231,59 +231,7 @@ const baseUrl = "/";
           }
         });
       })();
-    })();</script><!-- defines global css variables. This will be applied to <html> <body> and some other elements idk why --><script>(function(){const katexCssUrl = "/_astro/katex.BiiwfapS.css";
-
-    // 异步非阻塞加载 KaTeX CSS
-    function loadKatexCSS() {
-        // 检查页面是否包含 KaTeX 元素
-        if (!document.querySelector('.katex')) {
-            return;
-        }
-
-        // 检查是否已加载
-        if (document.getElementById('katex-css')) {
-            return;
-        }
-
-        // 使用 preload + media 技巧实现非阻塞加载
-        const link = document.createElement('link');
-        link.id = 'katex-css';
-        link.rel = 'preload';
-        link.as = 'style';
-        link.href = katexCssUrl;
-        link.onload = function() {
-            this.onload = null;
-            this.rel = 'stylesheet';
-        };
-        
-        document.head.appendChild(link);
-
-        // 降级方案：支持不支持 preload 的浏览器
-        const noscript = document.createElement('noscript');
-        const fallbackLink = document.createElement('link');
-        fallbackLink.rel = 'stylesheet';
-        fallbackLink.href = katexCssUrl;
-        noscript.appendChild(fallbackLink);
-        document.head.appendChild(noscript);
-    }
-
-    // requestIdleCallback 确保在浏览器空闲时加载
-    if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadKatexCSS);
-    } else {
-        // 降级到 setTimeout
-        setTimeout(loadKatexCSS, 100);
-    }
-
-    // Swup 页面切换支持
-    document.addEventListener('swup:content:replace', function() {
-        if ('requestIdleCallback' in window) {
-            requestIdleCallback(loadKatexCSS);
-        } else {
-            setTimeout(loadKatexCSS, 100);
-        }
-    });
-})();</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Markdown 教程","description":"一个简明的 Markdown 博客示例。","keywords":["文章示例"],"author":{"@type":"Person","name":"Firefly","url":"https://firefly.cuteleaf.cn/"},"datePublished":"1970-01-01","inLanguage":"zh-CN"}</script><link rel="alternate" type="application/rss+xml" title="Firefly" href="https://firefly.cuteleaf.cn/rss.xml"><!-- Font Manager --><!-- 字体样式表链接 --><!-- 字体预加载链接 --><!-- 全局字体样式 --><style>
+    })();</script><!-- defines global css variables. This will be applied to <html> <body> and some other elements idk why --><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Markdown 教程","description":"一个简明的 Markdown 博客示例。","keywords":["文章示例"],"author":{"@type":"Person","name":"Firefly","url":"https://firefly.cuteleaf.cn/"},"datePublished":"1970-01-01","inLanguage":"zh-CN"}</script><link rel="alternate" type="application/rss+xml" title="Firefly" href="https://firefly.cuteleaf.cn/rss.xml"><!-- Font Manager --><!-- 字体样式表链接 --><!-- 字体预加载链接 --><!-- 全局字体样式 --><style>
     :root {
       --font-family-custom: ;
       --font-family-fallback: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif;
@@ -301,7 +249,8 @@ const baseUrl = "/";
     .font-system-enabled {
       /* 字体相关的全局样式可以在这里添加 */
     }
-  </style><script type="module">if(document.fonts&&void 0!==document.fonts.ready&&document.fonts.ready.then(()=>{console.log("All fonts have been loaded"),document.dispatchEvent(new CustomEvent("fontsLoaded"))}).catch(e=>{console.warn("Font loading failed:",e)}),"undefined"!=typeof PerformanceObserver){const n=new PerformanceObserver(e=>{e.getEntries().forEach(e=>{e.entryType})});try{n.observe({entryTypes:["resource"]})}catch(e){}}</script><link rel="stylesheet" href="/_astro/_page_.Dae0ZVFG.css">
+  </style><script type="module">if(document.fonts&&void 0!==document.fonts.ready&&document.fonts.ready.then(()=>{console.log("All fonts have been loaded"),document.dispatchEvent(new CustomEvent("fontsLoaded"))}).catch(e=>{console.warn("Font loading failed:",e)}),"undefined"!=typeof PerformanceObserver){const n=new PerformanceObserver(e=>{e.getEntries().forEach(e=>{e.entryType})});try{n.observe({entryTypes:["resource"]})}catch(e){}}</script><link rel="stylesheet" href="/_astro/_slug_.BHXxHCKA.css">
+<link rel="stylesheet" href="/_astro/_page_.Dae0ZVFG.css">
 <link rel="stylesheet" href="/_astro/_page_.BjZTYwzf.css">
 <link rel="stylesheet" href="/_astro/about.CLMvY_Mt.css">
 <style>.responsive-pagination[data-astro-cid-zhblusy6]{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}.mobile-pagination[data-astro-cid-zhblusy6]{display:flex;padding:0 1rem}.desktop-pagination[data-astro-cid-zhblusy6]{display:none}@media(min-width:768px){.mobile-pagination[data-astro-cid-zhblusy6]{display:none}.desktop-pagination[data-astro-cid-zhblusy6]{display:flex}}@media(max-width:640px){.mobile-pagination[data-astro-cid-zhblusy6]{padding:0 .5rem}.mobile-pagination[data-astro-cid-zhblusy6] button[data-astro-cid-zhblusy6]{padding:.25rem}}@media(max-width:480px){.mobile-pagination[data-astro-cid-zhblusy6]{padding:0 .25rem}.mobile-pagination[data-astro-cid-zhblusy6] .space-x-1[data-astro-cid-zhblusy6]>[data-astro-cid-zhblusy6]+[data-astro-cid-zhblusy6]{margin-left:.125rem}}.responsive-pagination[data-astro-cid-zhblusy6] button[data-astro-cid-zhblusy6]{transition:all .2s ease-in-out}@media(prefers-contrast:high){.responsive-pagination[data-astro-cid-zhblusy6] button[data-astro-cid-zhblusy6]{border:1px solid currentColor}}@media(prefers-reduced-motion:reduce){.responsive-pagination[data-astro-cid-zhblusy6] button[data-astro-cid-zhblusy6]{transition:none}}@media(hover:none)and (pointer:coarse){.responsive-pagination[data-astro-cid-zhblusy6] button[data-astro-cid-zhblusy6]{min-height:44px;min-width:44px}.mobile-pagination[data-astro-cid-zhblusy6] button[data-astro-cid-zhblusy6]{min-height:40px;min-width:40px}}@media(max-width:768px)and (orientation:landscape){.mobile-pagination[data-astro-cid-zhblusy6]{padding:0 .5rem}.mobile-pagination[data-astro-cid-zhblusy6] button[data-astro-cid-zhblusy6]{padding:.25rem}}.line-clamp-2[data-astro-cid-rkgclaxv]{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}

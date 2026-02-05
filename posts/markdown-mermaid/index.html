@@ -231,59 +231,7 @@ const baseUrl = "/";
           }
         });
       })();
-    })();</script><!-- defines global css variables. This will be applied to <html> <body> and some other elements idk why --><script>(function(){const katexCssUrl = "/_astro/katex.BiiwfapS.css";
-
-    // 异步非阻塞加载 KaTeX CSS
-    function loadKatexCSS() {
-        // 检查页面是否包含 KaTeX 元素
-        if (!document.querySelector('.katex')) {
-            return;
-        }
-
-        // 检查是否已加载
-        if (document.getElementById('katex-css')) {
-            return;
-        }
-
-        // 使用 preload + media 技巧实现非阻塞加载
-        const link = document.createElement('link');
-        link.id = 'katex-css';
-        link.rel = 'preload';
-        link.as = 'style';
-        link.href = katexCssUrl;
-        link.onload = function() {
-            this.onload = null;
-            this.rel = 'stylesheet';
-        };
-        
-        document.head.appendChild(link);
-
-        // 降级方案：支持不支持 preload 的浏览器
-        const noscript = document.createElement('noscript');
-        const fallbackLink = document.createElement('link');
-        fallbackLink.rel = 'stylesheet';
-        fallbackLink.href = katexCssUrl;
-        noscript.appendChild(fallbackLink);
-        document.head.appendChild(noscript);
-    }
-
-    // requestIdleCallback 确保在浏览器空闲时加载
-    if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadKatexCSS);
-    } else {
-        // 降级到 setTimeout
-        setTimeout(loadKatexCSS, 100);
-    }
-
-    // Swup 页面切换支持
-    document.addEventListener('swup:content:replace', function() {
-        if ('requestIdleCallback' in window) {
-            requestIdleCallback(loadKatexCSS);
-        } else {
-            setTimeout(loadKatexCSS, 100);
-        }
-    });
-})();</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Markdown Mermaid 图表","description":"一个包含 Mermaid 的 Markdown 博客文章简单示例。","keywords":["Markdown","博客","Mermaid","Firefly"],"author":{"@type":"Person","name":"Firefly","url":"https://firefly.cuteleaf.cn/"},"datePublished":"1970-01-01","inLanguage":"zh-CN"}</script><link rel="alternate" type="application/rss+xml" title="Firefly" href="https://firefly.cuteleaf.cn/rss.xml"><!-- Font Manager --><!-- 字体样式表链接 --><!-- 字体预加载链接 --><!-- 全局字体样式 --><style>
+    })();</script><!-- defines global css variables. This will be applied to <html> <body> and some other elements idk why --><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Markdown Mermaid 图表","description":"一个包含 Mermaid 的 Markdown 博客文章简单示例。","keywords":["Markdown","博客","Mermaid","Firefly"],"author":{"@type":"Person","name":"Firefly","url":"https://firefly.cuteleaf.cn/"},"datePublished":"1970-01-01","inLanguage":"zh-CN"}</script><link rel="alternate" type="application/rss+xml" title="Firefly" href="https://firefly.cuteleaf.cn/rss.xml"><!-- Font Manager --><!-- 字体样式表链接 --><!-- 字体预加载链接 --><!-- 全局字体样式 --><style>
     :root {
       --font-family-custom: ;
       --font-family-fallback: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif;
@@ -301,7 +249,8 @@ const baseUrl = "/";
     .font-system-enabled {
       /* 字体相关的全局样式可以在这里添加 */
     }
-  </style><script type="module">if(document.fonts&&void 0!==document.fonts.ready&&document.fonts.ready.then(()=>{console.log("All fonts have been loaded"),document.dispatchEvent(new CustomEvent("fontsLoaded"))}).catch(e=>{console.warn("Font loading failed:",e)}),"undefined"!=typeof PerformanceObserver){const n=new PerformanceObserver(e=>{e.getEntries().forEach(e=>{e.entryType})});try{n.observe({entryTypes:["resource"]})}catch(e){}}</script><link rel="stylesheet" href="/_astro/_page_.Dae0ZVFG.css">
+  </style><script type="module">if(document.fonts&&void 0!==document.fonts.ready&&document.fonts.ready.then(()=>{console.log("All fonts have been loaded"),document.dispatchEvent(new CustomEvent("fontsLoaded"))}).catch(e=>{console.warn("Font loading failed:",e)}),"undefined"!=typeof PerformanceObserver){const n=new PerformanceObserver(e=>{e.getEntries().forEach(e=>{e.entryType})});try{n.observe({entryTypes:["resource"]})}catch(e){}}</script><link rel="stylesheet" href="/_astro/_slug_.BHXxHCKA.css">
+<link rel="stylesheet" href="/_astro/_page_.Dae0ZVFG.css">
 <link rel="stylesheet" href="/_astro/_page_.BjZTYwzf.css">
 <link rel="stylesheet" href="/_astro/about.CLMvY_Mt.css">
 <style>.responsive-pagination[data-astro-cid-zhblusy6]{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}.mobile-pagination[data-astro-cid-zhblusy6]{display:flex;padding:0 1rem}.desktop-pagination[data-astro-cid-zhblusy6]{display:none}@media(min-width:768px){.mobile-pagination[data-astro-cid-zhblusy6]{display:none}.desktop-pagination[data-astro-cid-zhblusy6]{display:flex}}@media(max-width:640px){.mobile-pagination[data-astro-cid-zhblusy6]{padding:0 .5rem}.mobile-pagination[data-astro-cid-zhblusy6] button[data-astro-cid-zhblusy6]{padding:.25rem}}@media(max-width:480px){.mobile-pagination[data-astro-cid-zhblusy6]{padding:0 .25rem}.mobile-pagination[data-astro-cid-zhblusy6] .space-x-1[data-astro-cid-zhblusy6]>[data-astro-cid-zhblusy6]+[data-astro-cid-zhblusy6]{margin-left:.125rem}}.responsive-pagination[data-astro-cid-zhblusy6] button[data-astro-cid-zhblusy6]{transition:all .2s ease-in-out}@media(prefers-contrast:high){.responsive-pagination[data-astro-cid-zhblusy6] button[data-astro-cid-zhblusy6]{border:1px solid currentColor}}@media(prefers-reduced-motion:reduce){.responsive-pagination[data-astro-cid-zhblusy6] button[data-astro-cid-zhblusy6]{transition:none}}@media(hover:none)and (pointer:coarse){.responsive-pagination[data-astro-cid-zhblusy6] button[data-astro-cid-zhblusy6]{min-height:44px;min-width:44px}.mobile-pagination[data-astro-cid-zhblusy6] button[data-astro-cid-zhblusy6]{min-height:40px;min-width:40px}}@media(max-width:768px)and (orientation:landscape){.mobile-pagination[data-astro-cid-zhblusy6]{padding:0 .5rem}.mobile-pagination[data-astro-cid-zhblusy6] button[data-astro-cid-zhblusy6]{padding:.25rem}}.line-clamp-2[data-astro-cid-rkgclaxv]{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -448,7 +397,7 @@ body.wallpaper-transparent .usage-info-box{background-color:rgba(var(--primary-r
              <a href="/archive/?tag=Mermaid" aria-label="View all posts with the Mermaid tag" class="link-lg transition text-50 text-sm font-medium
                              hover:text-(--primary) dark:hover:text-(--primary) whitespace-nowrap"> Mermaid </a><div class="mx-1.5 text-(--meta-divider) text-sm">/</div>
              <a href="/archive/?tag=Firefly" aria-label="View all posts with the Firefly tag" class="link-lg transition text-50 text-sm font-medium
-                             hover:text-(--primary) dark:hover:text-(--primary) whitespace-nowrap"> Firefly </a>  </div> </div> <!-- Twikoo访问量统计（首页不显示，且文章访问量统计启用时显示） -->  <!-- Waline访问量统计（首页不显示、仅type为waline时显示） -->  <!-- artalk访问量统计（首页不显示、仅type为artalk时显示） -->  </div> <div class="border-(--line-divider) border-dashed border-b mt-3 mb-5"></div> </div> <!-- always show cover as long as it has one -->  <div data-pagefind-body class="prose dark:prose-invert prose-base max-w-none! custom-md mb-6 markdown-content onload-animation">  <section><h1 id="markdown-中-mermaid-图表完整指南">Markdown 中 Mermaid 图表完整指南<a class="anchor" href="#markdown-中-mermaid-图表完整指南"><span class="anchor-icon" data-pagefind-ignore="">#</span></a></h1><p>本文演示如何在 Markdown 文档中使用 Mermaid 创建各种复杂图表，包括流程图、时序图、甘特图、类图和状态图。</p><section><h2 id="流程图示例">流程图示例<a class="anchor" href="#流程图示例"><span class="anchor-icon" data-pagefind-ignore="">#</span></a></h2><p>流程图非常适合表示流程或算法步骤。</p><div class="mermaid-diagram-container"><div class="mermaid-wrapper" id="mermaid-8fam5l"><div class="mermaid" data-mermaid-code="graph TD
+                             hover:text-(--primary) dark:hover:text-(--primary) whitespace-nowrap"> Firefly </a>  </div> </div> <!-- Twikoo访问量统计（首页不显示，且文章访问量统计启用时显示） -->  <!-- Waline访问量统计（首页不显示、仅type为waline时显示） -->  <!-- artalk访问量统计（首页不显示、仅type为artalk时显示） -->  </div> <div class="border-(--line-divider) border-dashed border-b mt-3 mb-5"></div> </div> <!-- always show cover as long as it has one -->  <div data-pagefind-body class="prose dark:prose-invert prose-base max-w-none! custom-md mb-6 markdown-content onload-animation">  <section><h1 id="markdown-中-mermaid-图表完整指南">Markdown 中 Mermaid 图表完整指南<a class="anchor" href="#markdown-中-mermaid-图表完整指南"><span class="anchor-icon" data-pagefind-ignore="">#</span></a></h1><p>本文演示如何在 Markdown 文档中使用 Mermaid 创建各种复杂图表，包括流程图、时序图、甘特图、类图和状态图。</p><section><h2 id="流程图示例">流程图示例<a class="anchor" href="#流程图示例"><span class="anchor-icon" data-pagefind-ignore="">#</span></a></h2><p>流程图非常适合表示流程或算法步骤。</p><div class="mermaid-diagram-container"><div class="mermaid-wrapper" id="mermaid-nqfczd"><div class="mermaid" data-mermaid-code="graph TD
     A[开始] --> B{条件检查}
     B -->|是| C[处理步骤 1]
     B -->|否| D[处理步骤 2]
@@ -824,7 +773,7 @@ body.wallpaper-transparent .usage-info-box{background-color:rgba(var(--primary-r
 		initialize();
 	}
 })();
-</script></div></section><section><h2 id="时序图示例">时序图示例<a class="anchor" href="#时序图示例"><span class="anchor-icon" data-pagefind-ignore="">#</span></a></h2><p>时序图显示对象之间随时间的交互。</p><div class="mermaid-diagram-container"><div class="mermaid-wrapper" id="mermaid-02m1yc"><div class="mermaid" data-mermaid-code="sequenceDiagram
+</script></div></section><section><h2 id="时序图示例">时序图示例<a class="anchor" href="#时序图示例"><span class="anchor-icon" data-pagefind-ignore="">#</span></a></h2><p>时序图显示对象之间随时间的交互。</p><div class="mermaid-diagram-container"><div class="mermaid-wrapper" id="mermaid-72zdvt"><div class="mermaid" data-mermaid-code="sequenceDiagram
     participant User as 用户
     participant WebApp as 网页应用
     participant Server as 服务器
@@ -1212,7 +1161,7 @@ body.wallpaper-transparent .usage-info-box{background-color:rgba(var(--primary-r
 		initialize();
 	}
 })();
-</script></div></section><section><h2 id="甘特图示例">甘特图示例<a class="anchor" href="#甘特图示例"><span class="anchor-icon" data-pagefind-ignore="">#</span></a></h2><p>甘特图非常适合显示项目进度和时间线。</p><div class="mermaid-diagram-container"><div class="mermaid-wrapper" id="mermaid-txqodn"><div class="mermaid" data-mermaid-code="gantt
+</script></div></section><section><h2 id="甘特图示例">甘特图示例<a class="anchor" href="#甘特图示例"><span class="anchor-icon" data-pagefind-ignore="">#</span></a></h2><p>甘特图非常适合显示项目进度和时间线。</p><div class="mermaid-diagram-container"><div class="mermaid-wrapper" id="mermaid-tvrh1x"><div class="mermaid" data-mermaid-code="gantt
     title 网站开发项目时间线
     dateFormat  YYYY-MM-DD
     axisFormat  %m/%d
@@ -1600,7 +1549,7 @@ body.wallpaper-transparent .usage-info-box{background-color:rgba(var(--primary-r
 		initialize();
 	}
 })();
-</script></div></section><section><h2 id="类图示例">类图示例<a class="anchor" href="#类图示例"><span class="anchor-icon" data-pagefind-ignore="">#</span></a></h2><p>类图显示系统的静态结构，包括类、属性、方法及其关系。</p><div class="mermaid-diagram-container"><div class="mermaid-wrapper" id="mermaid-3ip5hk"><div class="mermaid" data-mermaid-code="classDiagram
+</script></div></section><section><h2 id="类图示例">类图示例<a class="anchor" href="#类图示例"><span class="anchor-icon" data-pagefind-ignore="">#</span></a></h2><p>类图显示系统的静态结构，包括类、属性、方法及其关系。</p><div class="mermaid-diagram-container"><div class="mermaid-wrapper" id="mermaid-2a9m8w"><div class="mermaid" data-mermaid-code="classDiagram
     class User {
         +String username
         +String password
@@ -2020,7 +1969,7 @@ body.wallpaper-transparent .usage-info-box{background-color:rgba(var(--primary-r
 		initialize();
 	}
 })();
-</script></div></section><section><h2 id="状态图示例">状态图示例<a class="anchor" href="#状态图示例"><span class="anchor-icon" data-pagefind-ignore="">#</span></a></h2><p>状态图显示对象在其生命周期中经历的状态序列。</p><div class="mermaid-diagram-container"><div class="mermaid-wrapper" id="mermaid-sa2cmd"><div class="mermaid" data-mermaid-code="stateDiagram-v2
+</script></div></section><section><h2 id="状态图示例">状态图示例<a class="anchor" href="#状态图示例"><span class="anchor-icon" data-pagefind-ignore="">#</span></a></h2><p>状态图显示对象在其生命周期中经历的状态序列。</p><div class="mermaid-diagram-container"><div class="mermaid-wrapper" id="mermaid-c8fpqj"><div class="mermaid" data-mermaid-code="stateDiagram-v2
     [*] --> 草稿
     
     草稿 --> 审核中 : 提交
@@ -2400,7 +2349,7 @@ body.wallpaper-transparent .usage-info-box{background-color:rgba(var(--primary-r
 		initialize();
 	}
 })();
-</script></div></section><section><h2 id="饼图示例">饼图示例<a class="anchor" href="#饼图示例"><span class="anchor-icon" data-pagefind-ignore="">#</span></a></h2><p>饼图非常适合显示比例和百分比数据。</p><div class="mermaid-diagram-container"><div class="mermaid-wrapper" id="mermaid-2js9v5"><div class="mermaid" data-mermaid-code="pie title 网站流量来源分析
+</script></div></section><section><h2 id="饼图示例">饼图示例<a class="anchor" href="#饼图示例"><span class="anchor-icon" data-pagefind-ignore="">#</span></a></h2><p>饼图非常适合显示比例和百分比数据。</p><div class="mermaid-diagram-container"><div class="mermaid-wrapper" id="mermaid-lcqo1c"><div class="mermaid" data-mermaid-code="pie title 网站流量来源分析
     &#x22;搜索引擎&#x22; : 45.6
     &#x22;直接访问&#x22; : 30.1
     &#x22;社交媒体&#x22; : 15.3
