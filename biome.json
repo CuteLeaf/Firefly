@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.14/schema.json",
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -12,7 +12,8 @@
       "!**/src/**/*.css",
       "!**/src/public/**/*",
       "!**/dist/**/*",
-      "!**/node_modules/**/*"
+      "!**/node_modules/**/*",
+      "!**/src/constants/icons.ts"
     ]
   },
   "formatter": {
