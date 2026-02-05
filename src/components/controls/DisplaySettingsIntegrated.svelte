@@ -6,7 +6,6 @@ import {
 } from "@constants/constants";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
-import Icon from "@iconify/svelte";
 import {
 	getDefaultHue,
 	getHue,
@@ -15,6 +14,7 @@ import {
 	setWallpaperMode,
 } from "@utils/setting-utils";
 import { onMount } from "svelte";
+import Icon from "@/components/common/Icon.svelte";
 import { backgroundWallpaper, siteConfig } from "@/config";
 import type { WALLPAPER_MODE } from "@/types/config";
 
@@ -144,7 +144,7 @@ $effect(() => {
             <button aria-label="Reset to Default" class="btn-regular w-7 h-7 rounded-md  active:scale-90"
                     class:opacity-0={hue === defaultHue} class:pointer-events-none={hue === defaultHue} onclick={resetHue}>
                 <div class="text-(--btn-content)">
-                    <Icon icon="fa6-solid:arrow-rotate-left" class="text-[0.875rem]"></Icon>
+                    <Icon icon="fa7-solid:arrow-rotate-left" class="text-[0.875rem]"></Icon>
                 </div>
             </button>
         </div>
@@ -172,7 +172,7 @@ $effect(() => {
                 <button aria-label="Reset to Default" class="btn-regular w-7 h-7 rounded-md  active:scale-90"
                         class:opacity-0={wallpaperMode === defaultWallpaperMode} class:pointer-events-none={wallpaperMode === defaultWallpaperMode} onclick={resetWallpaperMode}>
                     <div class="text-(--btn-content)">
-                        <Icon icon="fa6-solid:arrow-rotate-left" class="text-[0.875rem]"></Icon>
+                        <Icon icon="fa7-solid:arrow-rotate-left" class="text-[0.875rem]"></Icon>
                     </div>
                 </button>
             </div>
@@ -228,7 +228,7 @@ $effect(() => {
                 <button aria-label="Reset to Default" class="btn-regular w-7 h-7 rounded-md  active:scale-90"
                         class:opacity-0={currentLayout === defaultLayout} class:pointer-events-none={currentLayout === defaultLayout} onclick={resetLayout}>
                     <div class="text-(--btn-content)">
-                        <Icon icon="fa6-solid:arrow-rotate-left" class="text-[0.875rem]"></Icon>
+                        <Icon icon="fa7-solid:arrow-rotate-left" class="text-[0.875rem]"></Icon>
                     </div>
                 </button>
             </div>

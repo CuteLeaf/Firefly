@@ -1,5 +1,5 @@
 ---
-import Icon from "@/components/common/Icon.astro";
+import { Icon } from "astro-icon/components";
 import BangumiSection from "@/components/pages/bangumi/BangumiSection.astro";
 import TabNav from "@/components/pages/bangumi/TabNav.astro";
 import { siteConfig } from "@/config";
@@ -194,7 +194,7 @@ const activeTab = tabs[0]?.id || "anime";
             <div class="mb-6">
                 <div class="flex items-center gap-3 mb-3">
                     <div class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70">
-                        <Icon icon="material-symbols:movie" class="text-[1.5rem]"></Icon>
+                        <Icon name="material-symbols:movie" class="text-[1.5rem]"></Icon>
                     </div>
                     <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
                         {i18n(I18nKey.bangumi)}
@@ -226,7 +226,7 @@ const activeTab = tabs[0]?.id || "anime";
       ) : (
         <div class="text-center py-16">
           <div class="inline-flex items-center justify-center w-16 h-16 bg-(--btn-regular-bg) rounded-full mb-6 border border-(--line-divider)">
-            <Icon icon="material-symbols:settings" class="text-[2rem] text-(--btn-content)" />
+            <Icon name="material-symbols:settings" class="text-[2rem] text-(--btn-content)" />
           </div>
           <h2 class="text-xl font-semibold text-black/80 dark:text-white/80 mb-3">
             {isUserIdConfigured ? i18n(I18nKey.bangumiEmpty) : "未配置 Bangumi 用户ID"}

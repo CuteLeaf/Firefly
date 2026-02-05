@@ -1,5 +1,5 @@
 ---
-import Icon from "@/components/common/Icon.astro";
+import { Icon } from "astro-icon/components";
 import { siteConfig, sponsorConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
@@ -26,7 +26,7 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
       <div class="mb-8">
         <div class="flex items-center gap-3 mb-3">
             <div class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70">
-                <Icon icon="material-symbols:favorite" class="text-[1.5rem]"></Icon>
+                <Icon name="material-symbols:favorite" class="text-[1.5rem]"></Icon>
             </div>
           <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
             {title}
@@ -40,7 +40,7 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
         {sponsorConfig.usage && (
           <div class="mb-8 p-4 rounded-lg bg-(--primary)/8 dark:bg-(--btn-regular-bg) border border-(--primary)/30 dark:border-none backdrop-blur-xs shadow-xs usage-info-box">
             <div class="flex items-start gap-2">
-              <Icon icon="material-symbols:info-outline" class="text-(--primary) text-lg shrink-0 mt-0.5" />
+              <Icon name="material-symbols:info-outline" class="text-(--primary) text-lg shrink-0 mt-0.5" />
               <p class="text-sm text-neutral-700 dark:text-neutral-200 leading-relaxed">
                 <span class="font-semibold text-(--primary)"></span>
                 {sponsorConfig.usage}
@@ -58,7 +58,7 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
                         <!-- 图标和名称 -->
                         <div class="flex items-center gap-3 mb-4">
                           {method.icon && (
-                            <Icon icon={method.icon} size="2xl" class="text-neutral-900 dark:text-neutral-100 transition-colors" />
+                            <Icon name={method.icon} class="text-2xl text-neutral-900 dark:text-neutral-100 transition-colors" />
                           )}
                           <h3 class="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
                             {method.name}
@@ -92,7 +92,7 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
                             class="inline-flex items-center gap-2 px-4 py-2 bg-(--primary) text-white dark:text-black/70 rounded-lg font-medium hover:bg-(--primary)/90 active:scale-95 transition-all"
                           >
                             <span>{i18n(I18nKey.sponsorGoTo)}</span>
-                            <Icon icon="fa6-solid:arrow-up-right-from-square" class="text-sm" />
+                            <Icon name="fa7-solid:arrow-up-right-from-square" class="text-sm" />
                           </a>
                         )}
                       </div>
@@ -105,7 +105,7 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
       {showSponsorsList && (
         <div>
           <div class="flex items-center gap-3 mb-6">
-            <Icon icon="material-symbols:emoji-people-rounded" size="xl" class="text-(--primary)" />
+            <Icon name="material-symbols:emoji-people-rounded" class="text-xl text-(--primary)" />
             <h2 class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
               {i18n(I18nKey.sponsorList)}
             </h2>

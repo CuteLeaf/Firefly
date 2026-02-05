@@ -2,7 +2,7 @@
 import { getEntry, render } from "astro:content";
 import Comment from "@components/comment/index.astro";
 import Markdown from "@components/common/Markdown.astro";
-import Icon from "@/components/common/Icon.astro";
+import { Icon } from "astro-icon/components";
 import { commentConfig, siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
@@ -38,7 +38,7 @@ const description = i18n(I18nKey.guestbookDescription);
       <div class="mb-8">
         <div class="flex items-center gap-3 mb-3">
           <div class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70">
-            <Icon icon="material-symbols:chat" class="text-[1.5rem]"></Icon>
+            <Icon name="material-symbols:chat" class="text-[1.5rem]"></Icon>
           </div>
           <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
             {title}

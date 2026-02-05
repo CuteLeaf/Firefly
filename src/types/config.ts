@@ -701,7 +701,7 @@ export type MusicPlayerConfig = {
 // 赞助方式类型
 export type SponsorMethod = {
 	name: string; // 赞助方式名称，如 "支付宝"、"微信"、"PayPal"
-	icon?: string; // 图标名称（Iconify 格式），如 "fa6-brands:alipay"
+	icon?: string; // 图标名称（Iconify 格式），如 "fa7-brands:alipay"
 	qrCode?: string; // 收款码图片路径（相对于 public 目录），可选
 	link?: string; // 赞助链接 URL，可选。如果提供，会显示跳转按钮
 	description?: string; // 描述文本

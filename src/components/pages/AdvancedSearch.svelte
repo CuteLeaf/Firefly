@@ -1,8 +1,8 @@
 <script lang="ts">
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
-import Icon from "@iconify/svelte";
 import { onMount } from "svelte";
+import Icon from "@/components/common/Icon.svelte";
 import type { SearchResult } from "@/global";
 import { url as formatUrl } from "@/utils/url-utils";
 

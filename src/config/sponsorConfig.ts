@@ -21,7 +21,7 @@ export const sponsorConfig: SponsorConfig = {
 	methods: [
 		{
 			name: "支付宝",
-			icon: "fa6-brands:alipay",
+			icon: "fa7-brands:alipay",
 			// 收款码图片路径（需要放在 public 目录下）
 			qrCode: "/assets/images/sponsor/alipay.png",
 			link: "",
@@ -30,7 +30,7 @@ export const sponsorConfig: SponsorConfig = {
 		},
 		{
 			name: "微信",
-			icon: "fa6-brands:weixin",
+			icon: "fa7-brands:weixin",
 			qrCode: "/assets/images/sponsor/wechat.png",
 			link: "",
 			description: "使用 微信 扫码赞助",
