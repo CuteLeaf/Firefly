@@ -3,7 +3,7 @@ import type { MusicPlayerConfig } from "../types/config";
 // 音乐播放器配置
 export const musicPlayerConfig: MusicPlayerConfig = {
 	// 使用方式："meting" 使用 Meting API，"local" 使用本地音乐列表
-	mode: "meting",
+	mode: "local",
 
 	// 默认音量 (0-1)
 	volume: 0.7,
@@ -42,23 +42,11 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 			{
 				name: "使一颗心免于哀伤",
 				artist: "知更鸟 / HOYO-MiX / Chevy",
-				url: "/assets/music/使一颗心免于哀伤-哼唱.mav",
+				url: "/assets/music/使一颗心免于哀伤-哼唱.wav",
 				cover: "/assets/music/cover/109951169585655912.webp",
 				// 歌词内容，支持 LRC 格式
 				lrc: "",
 			},
 		],
-	},
-
-
-	// 响应式配置
-	responsive: {
-		// 移动端配置
-		mobile: {
-			// 在移动端是否隐藏
-			hide: false,
-			// 移动端断点（小于此宽度时应用移动端配置）
-			breakpoint: 768,
-		},
 	},
 };

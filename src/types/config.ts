@@ -643,19 +643,6 @@ export type MusicPlayerConfig = {
 			lrc?: string; // 歌词内容，支持 LRC 格式
 		}>;
 	};
-
-
-	// 响应式配置
-	responsive?: {
-		// 移动端配置
-		mobile?: {
-			// 在移动端是否隐藏
-			hide?: boolean;
-
-			// 移动端断点（小于此宽度时应用移动端配置）
-			breakpoint?: number;
-		};
-	};
 };
 
 // 赞助方式类型
