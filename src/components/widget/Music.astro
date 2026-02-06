@@ -112,7 +112,7 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
         </button>
         
         <!-- Play/Pause (Feature) -->
-        <button class="btn-play w-12 h-12 bg-[var(--primary)] text-white rounded-full flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 shadow-md shadow-[var(--primary)]/30">
+        <button class="btn-play w-12 h-12 bg-[var(--btn-regular-bg)] hover:bg-[var(--btn-regular-bg-hover)] active:bg-[var(--btn-regular-bg-active)] text-[var(--primary)] rounded-full flex items-center justify-center transition-all duration-300">
             <Icon name="material-symbols:play-arrow-rounded" class="icon-play text-3xl ml-0.5" />
             <Icon name="material-symbols:pause-rounded" class="icon-pause text-3xl hidden" />
         </button>
@@ -353,10 +353,14 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
         function updatePlayState(isPlaying) {
             state.isPlaying = isPlaying;
             if (isPlaying) {
+                ui.btnPlay.classList.add('bg-[var(--primary)]', 'text-white');
+                ui.btnPlay.classList.remove('bg-[var(--btn-regular-bg)]', 'hover:bg-[var(--btn-regular-bg-hover)]', 'active:bg-[var(--btn-regular-bg-active)]', 'text-[var(--primary)]');
                 ui.iconPlay.classList.add('hidden');
                 ui.iconPause.classList.remove('hidden');
                 ui.cover.style.animationPlayState = 'running';
             } else {
+                ui.btnPlay.classList.remove('bg-[var(--primary)]', 'text-white');
+                ui.btnPlay.classList.add('bg-[var(--btn-regular-bg)]', 'hover:bg-[var(--btn-regular-bg-hover)]', 'active:bg-[var(--btn-regular-bg-active)]', 'text-[var(--primary)]');
                 ui.iconPlay.classList.remove('hidden');
                 ui.iconPause.classList.add('hidden');
                 ui.cover.style.animationPlayState = 'paused';
