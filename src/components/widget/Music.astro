@@ -1,7 +1,16 @@
 ---
 import { Icon } from "astro-icon/components";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
 import { musicPlayerConfig } from "@/config/musicConfig";
 import { url } from "@/utils/url-utils";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+
+interface Props {
+    class?: string;
+    style?: string;
+}
+const { class: className, style } = Astro.props;
 
 const config = musicPlayerConfig;
 
@@ -28,24 +37,27 @@ const playerConfigStr = JSON.stringify({
     volume: config.volume ?? 0.7,
     playMode: config.playMode ?? 'list'
 });
+
+const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
 ---
 
-<!-- Music Widget Card -->
-<div id="music-player-widget" class="card-base p-5 w-full relative transition-all duration-300">
-    
-    <!-- Top Row: Cover & Info -->
+<WidgetLayout id={widgetId + "-layout"} class={className} style={style} name={i18n(I18nKey.music)}>
+    <!-- Music Widget Card -->
+    <div id={widgetId} class="music-player-widget w-full relative transition-all duration-300">
+        
+        <!-- Top Row: Cover & Info -->
     <div class="flex items-start gap-4 mb-2">
         <!-- Circular Cover -->
         <div class="relative shrink-0 w-14 h-14 group">
              <div class="w-full h-full rounded-full overflow-hidden shadow-lg border-2 border-white dark:border-neutral-700 relative z-10 bg-neutral-100 dark:bg-neutral-800">
-                <img id="music-cover" src="" alt="Cover" class="w-full h-full object-cover animate-spin-slow" style="animation-play-state: paused;" />
+                <img class="music-cover w-full h-full object-cover animate-spin-slow" src="" alt="Cover" style="animation-play-state: paused;" />
              </div>
         </div>
 
         <!-- Info Section -->
         <div class="flex-1 min-w-0 flex flex-col pt-0.5">
             <div class="flex items-center justify-between">
-                <h3 id="music-title" class="font-bold text-base text-neutral-800 dark:text-neutral-100 truncate pr-2 leading-tight">
+                <h3 class="music-title font-bold text-base text-neutral-800 dark:text-neutral-100 truncate pr-2 leading-tight">
                     Music
                 </h3>
                 <!-- Top Right: Volume & Actions -->
@@ -53,74 +65,74 @@ const playerConfigStr = JSON.stringify({
                     <!-- Volume (Hover to expand) -->
                     <div class="flex items-center gap-2 group/volume bg-transparent">
                         <div class="w-0 overflow-hidden group-hover/volume:w-14 transition-all duration-300 ease-out">
-                            <div class="h-1 bg-neutral-200 dark:bg-neutral-600 rounded-full cursor-pointer relative" id="vol-container">
-                                <div id="vol-bar" class="absolute left-0 top-0 h-full bg-[var(--primary)] rounded-full w-[70%]"></div>
+                            <div class="vol-container h-1 bg-neutral-200 dark:bg-neutral-600 rounded-full cursor-pointer relative">
+                                <div class="vol-bar absolute left-0 top-0 h-full bg-[var(--primary)] rounded-full w-[70%]"></div>
                             </div>
                         </div>
-                        <button id="btn-mute" class="hover:text-[var(--primary)] transition-colors p-0.5" title="Volume">
-                            <Icon name="material-symbols:volume-up-rounded" class="text-lg" id="icon-vol-high" />
-                            <Icon name="material-symbols:volume-off-rounded" class="text-lg hidden" id="icon-vol-mute" />
+                        <button class="btn-mute hover:text-[var(--primary)] transition-colors p-0.5" title="Volume">
+                            <Icon name="material-symbols:volume-up-rounded" class="icon-vol-high text-lg" />
+                            <Icon name="material-symbols:volume-off-rounded" class="icon-vol-mute text-lg hidden" />
                         </button>
                     </div>
                  </div>
             </div>
             
-            <p id="music-artist" class="text-xs font-medium text-neutral-500 dark:text-neutral-400 truncate mt-0.5">
+            <p class="music-artist text-xs font-medium text-neutral-500 dark:text-neutral-400 truncate mt-0.5">
                 No playing
             </p>
             
             <!-- Time Display -->
             <div class="text-[10px] font-mono text-neutral-400 mt-1 flex items-center gap-1">
-                <span id="current-time">0:00</span>
+                <span class="current-time">0:00</span>
                 <span class="opacity-50">/</span>
-                <span id="total-time">0:00</span>
+                <span class="total-time">0:00</span>
             </div>
         </div>
     </div>
 
     <!-- Progress Bar (Slim) -->
-    <div class="relative w-full h-1 bg-neutral-100 dark:bg-neutral-700/50 rounded-full cursor-pointer touch-none mb-4 group mt-2" id="progress-container">
-        <div id="progress-bar" class="absolute left-0 top-0 h-full bg-[var(--primary)] rounded-full w-0 transition-[width] duration-100"></div>
+    <div class="progress-container relative w-full h-1 bg-neutral-100 dark:bg-neutral-700/50 rounded-full cursor-pointer touch-none mb-4 group mt-2">
+        <div class="progress-bar absolute left-0 top-0 h-full bg-[var(--primary)] rounded-full w-0 transition-[width] duration-100"></div>
         <!-- Hover Thumb -->
-        <div class="absolute top-1/2 -mt-1.5 -ml-1.5 w-3 h-3 bg-[var(--primary)] ring-2 ring-white dark:ring-neutral-800 rounded-full shadow-sm scale-0 group-hover:scale-100 transition-transform duration-200" id="progress-thumb"></div>
+        <div class="progress-thumb absolute top-1/2 -mt-1.5 -ml-1.5 w-3 h-3 bg-[var(--primary)] ring-2 ring-white dark:ring-neutral-800 rounded-full shadow-sm scale-0 group-hover:scale-100 transition-transform duration-200"></div>
     </div>
 
     <!-- Controls Row -->
     <div class="flex items-center justify-between px-1 select-none">
         <!-- Repeat Mode -->
-        <button id="btn-repeat" class="text-neutral-300 dark:text-neutral-600 hover:text-[var(--primary)] transition-colors p-2 active:scale-95" title="Switch Mode">
-            <Icon name="material-symbols:repeat-rounded" class="text-xl" id="icon-repeat" />
-            <Icon name="material-symbols:repeat-one-rounded" class="text-xl hidden" id="icon-repeat-one" />
-            <Icon name="material-symbols:shuffle-rounded" class="text-xl hidden" id="icon-shuffle" />
+        <button class="btn-repeat text-neutral-300 dark:text-neutral-600 hover:text-[var(--primary)] transition-colors p-2 active:scale-95" title="Switch Mode">
+            <Icon name="material-symbols:repeat-rounded" class="icon-repeat text-xl" />
+            <Icon name="material-symbols:repeat-one-rounded" class="icon-repeat-one text-xl hidden" />
+            <Icon name="material-symbols:shuffle-rounded" class="icon-shuffle text-xl hidden" />
         </button>
 
         <!-- Prev -->
-        <button id="btn-prev" class="text-neutral-600 dark:text-neutral-300 hover:text-[var(--primary)] transition-colors p-2 active:scale-95" title="Previous">
+        <button class="btn-prev text-neutral-600 dark:text-neutral-300 hover:text-[var(--primary)] transition-colors p-2 active:scale-95" title="Previous">
             <Icon name="material-symbols:skip-previous-rounded" class="text-3xl" />
         </button>
         
         <!-- Play/Pause (Feature) -->
-        <button id="btn-play" class="w-12 h-12 bg-[var(--primary)] text-white rounded-full flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 shadow-md shadow-[var(--primary)]/30">
-            <Icon name="material-symbols:play-arrow-rounded" class="text-3xl ml-0.5" id="icon-play" />
-            <Icon name="material-symbols:pause-rounded" class="text-3xl hidden" id="icon-pause" />
+        <button class="btn-play w-12 h-12 bg-[var(--primary)] text-white rounded-full flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 shadow-md shadow-[var(--primary)]/30">
+            <Icon name="material-symbols:play-arrow-rounded" class="icon-play text-3xl ml-0.5" />
+            <Icon name="material-symbols:pause-rounded" class="icon-pause text-3xl hidden" />
         </button>
         
         <!-- Next -->
-        <button id="btn-next" class="text-neutral-600 dark:text-neutral-300 hover:text-[var(--primary)] transition-colors p-2 active:scale-95" title="Next">
+        <button class="btn-next text-neutral-600 dark:text-neutral-300 hover:text-[var(--primary)] transition-colors p-2 active:scale-95" title="Next">
             <Icon name="material-symbols:skip-next-rounded" class="text-3xl" />
         </button>
 
         <!-- Playlist Toggle Arrow -->
-        <button id="btn-drawer-toggle" class="text-neutral-400 hover:text-[var(--primary)] transition-all duration-300 p-2 transform active:scale-95" title="Playlist">
+        <button class="btn-drawer-toggle text-neutral-400 hover:text-[var(--primary)] transition-all duration-300 p-2 transform active:scale-95" title="Playlist">
             <Icon name="mdi:playlist-music" class="text-xl" />
         </button>
     </div>
 
     <!-- Playlist Drawer (Accordion) -->
-    <div id="playlist-drawer" class="grid transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] grid-rows-[0fr] opacity-0">
+    <div class="playlist-drawer grid transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] grid-rows-[0fr] opacity-0">
         <div class="overflow-hidden min-h-0">
              <div class="mt-2 pt-2 border-t border-neutral-100 dark:border-white/5 mx-1">
-                <div class="max-h-48 overflow-y-auto custom-scrollbar pr-1 pb-1 flex flex-col gap-1" id="playlist-container">
+                <div class="playlist-container max-h-48 overflow-y-auto custom-scrollbar pr-1 pb-1 flex flex-col gap-1">
                     <!-- Items -->
                 </div>
             </div>
@@ -128,17 +140,18 @@ const playerConfigStr = JSON.stringify({
     </div>
 
     <!-- Hidden Audio -->
-    <audio id="audio-player" class="hidden" crossorigin="anonymous"></audio>
+    <audio class="audio-player hidden" crossorigin="anonymous"></audio>
 
     <!-- Loading Overlay -->
-     <div id="music-loading" class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/60 dark:bg-[#1e1e1e]/60 backdrop-blur-[2px] transition-opacity duration-300 opacity-0 pointer-events-none rounded-xl">
+     <div class="music-loading absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/60 dark:bg-[#1e1e1e]/60 backdrop-blur-[2px] transition-opacity duration-300 opacity-0 pointer-events-none rounded-xl">
         <div class="w-8 h-8 text-[var(--primary)] animate-spin">
             <Icon name="material-symbols:sync-rounded" class="text-3xl" />
         </div>
     </div>
-</div>
+    </div>
+</WidgetLayout>
 
-<template id="playlist-item-template">
+<template id={`playlist-item-template-${widgetId}`}>
     <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-neutral-50 dark:hover:bg-white/5 transition-colors group">
         <div class="w-8 h-8 rounded-md overflow-hidden shrink-0 relative bg-neutral-200 dark:bg-neutral-700">
             <img src="" class="item-cover w-full h-full object-cover" loading="lazy" />
@@ -154,40 +167,44 @@ const playerConfigStr = JSON.stringify({
     </div>
 </template>
 
-<script define:vars={{ playerConfigStr }} is:inline>
+<script define:vars={{ playerConfigStr, widgetId }} is:inline>
     (function () {
         const config = JSON.parse(playerConfigStr);
+        const widget = document.getElementById(widgetId);
+        
+        // If widget not found (e.g. removed), stop
+        if (!widget) return;
 
         const ui = {
-            widget: document.getElementById('music-player-widget'),
-            loading: document.getElementById('music-loading'),
-            cover: document.getElementById('music-cover'),
-            title: document.getElementById('music-title'),
-            artist: document.getElementById('music-artist'),
-            progressBar: document.getElementById('progress-bar'),
-            progressThumb: document.getElementById('progress-thumb'),
-            progressContainer: document.getElementById('progress-container'),
-            currentTime: document.getElementById('current-time'),
-            totalTime: document.getElementById('total-time'),
-            btnPlay: document.getElementById('btn-play'),
-            iconPlay: document.getElementById('icon-play'),
-            iconPause: document.getElementById('icon-pause'),
-            btnPrev: document.getElementById('btn-prev'),
-            btnNext: document.getElementById('btn-next'),
-            btnRepeat: document.getElementById('btn-repeat'),
-            iconRepeat: document.getElementById('icon-repeat'),
-            iconRepeatOne: document.getElementById('icon-repeat-one'),
-            iconShuffle: document.getElementById('icon-shuffle'),
-            btnMute: document.getElementById('btn-mute'),
-            iconVolHigh: document.getElementById('icon-vol-high'),
-            iconVolMute: document.getElementById('icon-vol-mute'),
-            volContainer: document.getElementById('vol-container'),
-            volBar: document.getElementById('vol-bar'),
-            btnDrawer: document.getElementById('btn-drawer-toggle'),
-            playlistDrawer: document.getElementById('playlist-drawer'),
-            playlistContainer: document.getElementById('playlist-container'),
-            audio: document.getElementById('audio-player'),
-            itemTemplate: document.getElementById('playlist-item-template')
+            widget: widget,
+            loading: widget.querySelector('.music-loading'),
+            cover: widget.querySelector('.music-cover'),
+            title: widget.querySelector('.music-title'),
+            artist: widget.querySelector('.music-artist'),
+            progressBar: widget.querySelector('.progress-bar'),
+            progressThumb: widget.querySelector('.progress-thumb'),
+            progressContainer: widget.querySelector('.progress-container'),
+            currentTime: widget.querySelector('.current-time'),
+            totalTime: widget.querySelector('.total-time'),
+            btnPlay: widget.querySelector('.btn-play'),
+            iconPlay: widget.querySelector('.icon-play'),
+            iconPause: widget.querySelector('.icon-pause'),
+            btnPrev: widget.querySelector('.btn-prev'),
+            btnNext: widget.querySelector('.btn-next'),
+            btnRepeat: widget.querySelector('.btn-repeat'),
+            iconRepeat: widget.querySelector('.icon-repeat'),
+            iconRepeatOne: widget.querySelector('.icon-repeat-one'),
+            iconShuffle: widget.querySelector('.icon-shuffle'),
+            btnMute: widget.querySelector('.btn-mute'),
+            iconVolHigh: widget.querySelector('.icon-vol-high'),
+            iconVolMute: widget.querySelector('.icon-vol-mute'),
+            volContainer: widget.querySelector('.vol-container'),
+            volBar: widget.querySelector('.vol-bar'),
+            btnDrawer: widget.querySelector('.btn-drawer-toggle'),
+            playlistDrawer: widget.querySelector('.playlist-drawer'),
+            playlistContainer: widget.querySelector('.playlist-container'),
+            audio: widget.querySelector('.audio-player'),
+            itemTemplate: document.getElementById(`playlist-item-template-${widgetId}`)
         };
 
         const state = {

@@ -20,6 +20,7 @@ export const zh_TW: Translation = {
 	[Key.recentPosts]: "最新文章",
 	[Key.postList]: "文章列表",
 	[Key.tableOfContents]: "目錄",
+	[Key.music]: "音樂",
 
 	// 公告欄
 	[Key.announcement]: "公告",

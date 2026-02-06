@@ -20,6 +20,7 @@ export const ja: Translation = {
 	[Key.recentPosts]: "最近の投稿",
 	[Key.postList]: "投稿リスト",
 	[Key.tableOfContents]: "目次",
+	[Key.music]: "音楽",
 
 	// お知らせ
 	[Key.announcement]: "お知らせ",
