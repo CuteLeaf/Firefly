@@ -207,6 +207,12 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
             itemTemplate: document.getElementById(`playlist-item-template-${widgetId}`)
         };
 
+        // Verify all critical UI elements exist (may be null during Swup page transitions)
+        const _critical = [ui.btnPlay, ui.audio, ui.btnRepeat, ui.btnMute, ui.volContainer,
+            ui.btnDrawer, ui.progressContainer, ui.btnNext, ui.btnPrev, ui.loading,
+            ui.cover, ui.title, ui.artist, ui.playlistContainer, ui.itemTemplate];
+        if (_critical.some(function(el) { return !el; })) return;
+
         const state = {
             playlist: [],
             currentIndex: 0,

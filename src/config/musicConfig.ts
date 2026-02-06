@@ -3,7 +3,7 @@ import type { MusicPlayerConfig } from "../types/config";
 // 音乐播放器配置
 export const musicPlayerConfig: MusicPlayerConfig = {
 	// 使用方式："meting" 使用 Meting API，"local" 使用本地音乐列表
-	mode: "local",
+	mode: "meting",
 
 	// 默认音量 (0-1)
 	volume: 0.7,
