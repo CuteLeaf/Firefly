@@ -341,7 +341,8 @@ export type WidgetComponentType =
 	| "sidebarToc"
 	| "advertisement"
 	| "stats"
-	| "calendar";
+	| "calendar"
+	| "music";
 
 export type WidgetComponentConfig = {
 	type: WidgetComponentType; // 组件类型
@@ -599,11 +600,14 @@ export type FriendsPageConfig = {
 
 // 音乐播放器配置
 export type MusicPlayerConfig = {
-	// 基础功能开关
-	enable: boolean; // 启用音乐播放器功能
-
 	// 使用方式：'meting' 或 'local'
 	mode?: "meting" | "local"; // "meting" 使用 Meting API，"local" 使用本地音乐列表
+
+	// 默认音量 (0-1)
+	volume?: number;
+
+	// 播放模式：'list'=列表循环, 'one'=单曲循环, 'random'=随机播放
+	playMode?: "list" | "one" | "random";
 
 	// Meting API 配置
 	meting?: {
@@ -640,50 +644,6 @@ export type MusicPlayerConfig = {
 		}>;
 	};
 
-	// APlayer 配置选项
-	player?: {
-		// 是否固定模式（固定在页面底部）
-		fixed?: boolean;
-
-		// 是否迷你模式
-		mini?: boolean;
-
-		// 是否自动播放
-		autoplay?: boolean;
-
-		// 主题色
-		theme?: string;
-
-		// 循环模式：'all'=列表循环, 'one'=单曲循环, 'none'=不循环
-		loop?: "all" | "one" | "none";
-
-		// 播放顺序：'list'=列表顺序, 'random'=随机播放
-		order?: "list" | "random";
-
-		// 预加载：'none'=不预加载, 'metadata'=预加载元数据, 'auto'=自动
-		preload?: "none" | "metadata" | "auto";
-
-		// 默认音量 (0-1)
-		volume?: number;
-
-		// 是否互斥播放（同时只能播放一个播放器）
-		mutex?: boolean;
-
-		// 歌词类型：0=不显示, 1=显示（需要提供 lrc 字段）, 2=显示（从 HTML 内容读取）, 3=异步加载（从 API 获取）
-		lrcType?: 0 | 1 | 2 | 3;
-
-		// 歌词是否默认隐藏（当 lrcType 不为 0 时，可以通过此选项控制初始显示状态）
-		lrcHidden?: boolean;
-
-		// 播放列表是否默认折叠
-		listFolded?: boolean;
-
-		// 播放列表最大高度
-		listMaxHeight?: string;
-
-		// localStorage 存储键名
-		storageName?: string;
-	};
 
 	// 响应式配置
 	responsive?: {

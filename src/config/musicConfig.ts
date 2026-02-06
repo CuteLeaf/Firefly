@@ -2,11 +2,14 @@ import type { MusicPlayerConfig } from "../types/config";
 
 // 音乐播放器配置
 export const musicPlayerConfig: MusicPlayerConfig = {
-	// 音乐播放器功能开关
-	enable: false,
-
 	// 使用方式："meting" 使用 Meting API，"local" 使用本地音乐列表
-	mode: "local",
+	mode: "meting",
+
+	// 默认音量 (0-1)
+	volume: 0.7,
+
+	// 播放模式：'list'=列表循环, 'one'=单曲循环, 'random'=随机播放
+	playMode: "list",
 
 	// Meting API 配置
 	meting: {
@@ -47,34 +50,6 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 		],
 	},
 
-	// APlayer 配置选项
-	player: {
-		// 是否自动播放  浏览器可能会阻止，需用户交互一次网页后才自动播放
-		autoplay: false,
-		// 主题色
-		theme: "var(--btn-regular-bg)",
-		// 循环模式：'all'=列表循环, 'one'=单曲循环, 'none'=不循环
-		loop: "all",
-		// 播放顺序：'list'=列表顺序, 'random'=随机播放
-		order: "list",
-		// 预加载：'none'=不预加载, 'metadata'=预加载元数据, 'auto'=自动
-		preload: "auto",
-		// 默认音量 (0-1)
-		volume: 0.7,
-		// 是否互斥播放（同时只能播放一个播放器）
-		mutex: true,
-		// local歌词类型：0=不显示, 1=显示（需要提供 lrc 字段）, 2=显示（从 HTML 内容读取）
-		lrcType: 1,
-		// 歌词是否默认隐藏（当 lrcType 不为 0 时，可以通过此选项控制初始显示状态）
-		// true=默认隐藏（用户可以通过歌词按钮手动显示）, false=默认显示
-		lrcHidden: true,
-		// 播放列表是否默认折叠
-		listFolded: false,
-		// 播放列表最大高度
-		listMaxHeight: "340px",
-		// localStorage 存储键名
-		storageName: "aplayer-setting",
-	},
 
 	// 响应式配置
 	responsive: {
