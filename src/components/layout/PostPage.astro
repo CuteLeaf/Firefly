@@ -412,6 +412,10 @@ const initialLayoutClass =
     padding: 1rem !important;
   }
 
+  #post-list-container.grid-mode :global(.no-cover .post-card-content) {
+    padding-right: 4.5rem !important;
+  }
+
   #post-list-container.grid-mode :global(.post-card-title) {
     font-size: 1.125rem !important;
     line-height: 1.75rem !important;
@@ -419,10 +423,6 @@ const initialLayoutClass =
   }
 
   #post-list-container.grid-mode :global(.post-card-title::before) {
-    display: none !important;
-  }
-
-  #post-list-container.grid-mode :global(.post-card-enter-btn) {
     display: none !important;
   }
 

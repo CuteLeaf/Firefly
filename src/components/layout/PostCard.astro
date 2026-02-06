@@ -196,7 +196,7 @@ const { remarkPluginFrontmatter } = await render(entry);
         aria-label={title}
         class:list={[
           "post-card-enter-btn",
-          "hidden! md:flex! btn-regular w-13",
+          "hidden md:flex btn-regular w-13",
           "absolute right-3 top-3 bottom-3 rounded-xl bg-(--enter-btn-bg)",
           "hover:bg-(--enter-btn-bg-hover) active:bg-(--enter-btn-bg-active) active:scale-95",
         ]}
@@ -220,13 +220,8 @@ const { remarkPluginFrontmatter } = await render(entry);
 
   :global(.grid-mode) .post-card-content {
     width: 100% !important;
-    padding-right: 1rem !important;
     height: auto !important;
     flex-grow: 1 !important;
-  }
-
-  :global(.grid-mode) .no-cover .post-card-content {
-    padding-right: 1rem !important;
   }
 
   :global(.grid-mode) .post-card-image {
