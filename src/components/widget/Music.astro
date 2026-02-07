@@ -2,13 +2,13 @@
 import { Icon } from "astro-icon/components";
 import WidgetLayout from "@/components/common/WidgetLayout.astro";
 import { musicPlayerConfig } from "@/config/musicConfig";
-import { url } from "@/utils/url-utils";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
+import { url } from "@/utils/url-utils";
 
 interface Props {
-    class?: string;
-    style?: string;
+	class?: string;
+	style?: string;
 }
 const { class: className, style } = Astro.props;
 
@@ -23,26 +23,28 @@ const localPlaylist =
 					artist: song.artist,
 					url: isFullUrl(song.url) ? song.url : url(song.url),
 					pic: song.cover
-						? (isFullUrl(song.cover) ? song.cover : url(song.cover))
+						? isFullUrl(song.cover)
+							? song.cover
+							: url(song.cover)
 						: undefined,
-					lrc: song.lrc
+					lrc: song.lrc,
 				};
-		  })
+			})
 		: [];
 
 const playerConfigStr = JSON.stringify({
-    mode: config.mode,
-    meting: config.meting,
-    localPlaylist: localPlaylist,
-    volume: config.volume ?? 0.7,
-    playMode: config.playMode ?? 'list',
-    showLyrics: config.showLyrics ?? true
+	mode: config.mode,
+	meting: config.meting,
+	localPlaylist: localPlaylist,
+	volume: config.volume ?? 0.7,
+	playMode: config.playMode ?? "list",
+	showLyrics: config.showLyrics ?? true,
 });
 
-const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
+const widgetId = `music-widget-${Math.random().toString(36).substring(2, 9)}`;
 ---
 
-<WidgetLayout id={widgetId + "-layout"} class={className} style={style} name={i18n(I18nKey.music)}>
+<WidgetLayout id={`${widgetId}-layout`} class={className} style={style} name={i18n(I18nKey.music)}>
     <!-- Music Widget Card -->
     <div id={widgetId} class="music-player-widget w-full relative transition-all duration-300">
         
