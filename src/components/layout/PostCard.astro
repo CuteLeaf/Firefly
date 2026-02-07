@@ -94,11 +94,11 @@ const { remarkPluginFrontmatter } = await render(entry);
       } -->
       {title}
       <Icon
-        class="inline text-[2rem] text-(--primary) md:hidden translate-y-0.5 absolute"
+        class="inline-block text-[2rem] text-(--primary) md:hidden align-middle -translate-y-[2px]"
         name="material-symbols:chevron-right-rounded"
       />
       <Icon
-        class="text-(--primary) text-[2rem] transition hidden md:inline absolute translate-y-0.5 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0"
+        class="text-(--primary) text-[2rem] transition hidden md:inline-block opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 align-middle -translate-y-[2px]"
         name="material-symbols:chevron-right-rounded"
       />
     </a>
@@ -121,7 +121,7 @@ const { remarkPluginFrontmatter } = await render(entry);
     <!-- description -->
     <div
       class:list={[
-        "transition text-75 mb-3.5 pr-4 description grow",
+        "transition text-75 mb-3.5 md:pr-4 description grow",
         { "line-clamp-2 md:line-clamp-1": !description },
       ]}
     >

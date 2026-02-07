@@ -11,8 +11,6 @@ Firefly 项目中所有可复用组件的集中管理。组件按照功能和职
 - `Footer.astro` - 页脚组件
 - `Navbar.astro` - 导航栏组件
 - `SideBar.astro` - 侧边栏组件
-- `LeftSideBar.astro` - 左侧边栏组件
-- `RightSideBar.astro` - 右侧边栏组件
 - `PostPage.astro` - 文章页面布局组件
 - `PostCard.astro` - 文章卡片组件
 - `PostMeta.astro` - 文章元数据组件
@@ -36,6 +34,7 @@ Firefly 项目中所有可复用组件的集中管理。组件按照功能和职
 - `Search.svelte` - 搜索功能组件
 - `ArchivePanel.svelte` - 归档面板组件
 - `DisplaySettings.svelte` - 显示设置组件
+- `DisplaySettingsIntegrated.svelte` - 集成显示设置组件
 - `WallpaperSwitch.svelte` - 壁纸模式切换组件
 
 ### 🔧 common/ - 公共可复用组件
@@ -46,7 +45,7 @@ Firefly 项目中所有可复用组件的集中管理。组件按照功能和职
 - `DropdownPanel.astro`/`.svelte` - 下拉面板容器
 - `DropdownItem.astro`/`.svelte` - 下拉选项
 - `FloatingButton.astro` - 悬浮按钮基础组件
-- `Icon.astro` - 图标组件（带加载状态和错误处理）
+- `Icon.svelte` - 图标组件（带加载状态和错误处理）
 - `ButtonLink.astro` - 链接按钮
 - `ButtonTag.astro` - 标签按钮
 - `WidgetLayout.astro` - 小部件布局容器
@@ -69,9 +68,13 @@ Firefly 项目中所有可复用组件的集中管理。组件按照功能和职
 - `Announcement.astro` - 公告组件
 - `Calendar.astro` - 日历组件
 - `Categories.astro` - 分类组件
+- `Music.astro` - 音乐播放器小部件
+- `Profile.astro` - 个人信息/社交链接小部件
 - `SidebarTOC.astro` - 侧边栏目录组件
 - `SiteStats.astro` - 站点统计组件
 - `Tags.astro` - 标签组件
+- `Live2DWidget.astro` - Live2D 看板娘组件
+- `SpineModel.astro` - Spine 看板娘组件
 
 ### ✨ features/ - 全局功能特效组件
 
@@ -82,17 +85,12 @@ Firefly 项目中所有可复用组件的集中管理。组件按照功能和职
 - `KatexManager.astro` - Katex 数学公式渲染管理
 - `FontManager.astro` - 字体加载和管理
 
-**视觉特效**
+**功能组件**
 - `SakuraEffect.astro` - 樱花飘落特效
 - `TypewriterText.astro` - 打字机动画效果
 - `OverlayWallpaper.astro` - 背景壁纸覆盖层
-
-**交互式看板娘**
 - `Live2DWidget.astro` - Live2D 看板娘组件
 - `SpineModel.astro` - Spine 看板娘组件
-
-**功能组件**
-- `MusicPlayer.astro` - 音乐播放器
 
 ### 📃 pages/ - 页面特定组件
 
@@ -128,7 +126,6 @@ Firefly 项目中所有可复用组件的集中管理。组件按照功能和职
 
 其他辅助和工具类组件。
 
-- `IconifyLoader.astro` - Iconify 图标库加载器
 - `License.astro` - 许可证信息显示
 - `SharePoster.svelte` - 分享海报生成
 
