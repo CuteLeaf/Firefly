@@ -86,7 +86,7 @@
 - [x] **番組計畫** - 基於 Bangumi API 的追番和遊戲記錄展示
 - [x] **留言系統** - 整合 Twikoo、Waline、Giscus、Disqus、Artalk 留言系統
 - [x] **訪問量統計** - 支援呼叫 Waline、Twikoo 自帶的訪問量追蹤
-- [x] **音樂播放器** - 基於 APlayer，支援本地音樂和 Meting API 線上音樂
+- [x] **音樂播放器** - Material Design 3 設計風格的音樂播放器
 
 ### 內容增強
 - [x] **圖片燈箱** - Fancybox 圖片預覽功能
@@ -251,7 +251,6 @@ comment: true    # 是否允許留言
 - 參考了部落格主 [霞葉](https://kasuha.com) 分享的 [Bangumi 收藏展示](https://kasuha.com/posts/fuwari-enhance-ep2/) 和 [圖片標題](https://kasuha.com/posts/fuwari-enhance-ep1/) 方案
 - 參考了 [Mizuki](https://github.com/matsuzaka-yuki/Mizuki) 的橫幅標題/多級選單導覽列/櫻花特效/KaTeX/Fancybox方案
 - 使用了 [Astro](https://astro.build) 和 [Tailwind CSS](https://tailwindcss.com) 建置
-- 使用了 [MetingJS](https://github.com/metowolf/MetingJS) 和 [APlayer](https://github.com/MoePlayer/APlayer) 音樂播放器
 - 使用了b站up [公公的日常](https://space.bilibili.com/3546750017080050) 提供的Q版 `流螢` 看板娘切片資料模型
 - 圖示來自 [Iconify](https://iconify.design/)
 - 流螢部分相關圖片素材版權歸遊戲 [《崩壞：星穹鐵道》](https://sr.mihoyo.com/) 開發商 [米哈遊](https://www.mihoyo.com/) 所有

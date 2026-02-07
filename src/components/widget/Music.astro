@@ -49,8 +49,9 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
     <div class="flex items-start gap-4 mb-2">
         <!-- Circular Cover -->
         <div class="relative shrink-0 w-14 h-14 group">
-             <div class="w-full h-full rounded-full overflow-hidden shadow-lg border-2 border-white dark:border-neutral-700 relative z-10 bg-neutral-100 dark:bg-neutral-800">
-                <img class="music-cover w-full h-full object-cover animate-spin-slow" src="" alt="Cover" style="animation-play-state: paused;" />
+             <div class="w-full h-full rounded-full overflow-hidden shadow-lg border-2 border-white dark:border-neutral-700 relative z-10 bg-[var(--primary)]/10 flex items-center justify-center">
+                <Icon name="material-symbols:music-note-rounded" class="text-2xl text-[var(--primary)] opacity-40 absolute" />
+                <img class="music-cover w-full h-full object-cover animate-spin-slow relative z-10 opacity-0 transition-opacity duration-300" src="" alt="Cover" style="animation-play-state: paused;" />
              </div>
         </div>
 
@@ -331,7 +332,15 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
 
             ui.title.innerText = track.name;
             ui.artist.innerText = track.artist;
-            ui.cover.src = track.pic || ''; 
+            
+            if (track.pic) {
+                ui.cover.classList.add('opacity-0');
+                ui.cover.src = track.pic;
+            } else {
+                ui.cover.src = '';
+                ui.cover.classList.add('opacity-0');
+            }
+            
             ui.audio.src = track.url;
             
             // Reset cover rotation
@@ -359,13 +368,13 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
         function updatePlayState(isPlaying) {
             state.isPlaying = isPlaying;
             if (isPlaying) {
-                ui.btnPlay.classList.add('bg-[var(--primary)]', 'text-white');
+                ui.btnPlay.classList.add('bg-[var(--primary)]', 'text-white', 'hover:brightness-110');
                 ui.btnPlay.classList.remove('bg-[var(--btn-regular-bg)]', 'hover:bg-[var(--btn-regular-bg-hover)]', 'active:bg-[var(--btn-regular-bg-active)]', 'text-[var(--primary)]');
                 ui.iconPlay.classList.add('hidden');
                 ui.iconPause.classList.remove('hidden');
                 ui.cover.style.animationPlayState = 'running';
             } else {
-                ui.btnPlay.classList.remove('bg-[var(--primary)]', 'text-white');
+                ui.btnPlay.classList.remove('bg-[var(--primary)]', 'text-white', 'hover:brightness-110');
                 ui.btnPlay.classList.add('bg-[var(--btn-regular-bg)]', 'hover:bg-[var(--btn-regular-bg-hover)]', 'active:bg-[var(--btn-regular-bg-active)]', 'text-[var(--primary)]');
                 ui.iconPlay.classList.remove('hidden');
                 ui.iconPause.classList.add('hidden');
@@ -524,6 +533,13 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
         ui.btnPlay.addEventListener('click', togglePlay);
         ui.btnNext.addEventListener('click', () => playNext(false));
         ui.btnPrev.addEventListener('click', playPrev);
+
+        ui.cover.addEventListener('load', () => {
+             ui.cover.classList.remove('opacity-0');
+        });
+        ui.cover.addEventListener('error', () => {
+             ui.cover.classList.add('opacity-0');
+        });
         
         ui.audio.addEventListener('timeupdate', () => {
              if (isNaN(ui.audio.duration)) return;

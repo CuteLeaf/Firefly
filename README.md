@@ -85,7 +85,7 @@
 - [x] **Bangumi** - Display anime and game tracking based on Bangumi API
 - [x] **Comment System** - Integrates Twikoo, Waline, Giscus, Disqus, Artalk comment systems
 - [x] **Visit Counter** - Supports calling Waline, Twikoo built-in visit tracking
-- [x] **Music Player** - Based on APlayer, supports local music and Meting API online music
+- [x] **Music Player** - Material Design 3 style music player
 
 ### Content Enhancement
 - [x] **Image Lightbox** - Fancybox image preview functionality
@@ -252,7 +252,6 @@ All commands need to be executed in the project root directory:
 - Referenced blogger [霞葉](https://kasuha.com)'s [Bangumi Collection Display](https://kasuha.com/posts/fuwari-enhance-ep2/) and [Email Protection/Image Title](https://kasuha.com/posts/fuwari-enhance-ep1/) solutions
 - Referenced [Mizuki](https://github.com/matsuzaka-yuki/Mizuki)'s banner title, multi-level menu navbar, sakura effect, KaTeX, and Fancybox solutions
 - Built with [Astro](https://astro.build) and [Tailwind CSS](https://tailwindcss.com)
-- Uses [MetingJS](https://github.com/metowolf/MetingJS) and [APlayer](https://github.com/MoePlayer/APlayer) music player
 - Uses Chibi `Firefly` mascot spine model provided by Bilibili creator [公公的日常](https://space.bilibili.com/3546750017080050)
 - Icons from [Iconify](https://iconify.design/)
 - Firefly-related image assets are copyrighted by [miHoYo](https://www.mihoyo.com/), the developer of ["Honkai: Star Rail"](https://sr.mihoyo.com/).
