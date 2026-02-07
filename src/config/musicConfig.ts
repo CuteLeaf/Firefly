@@ -2,6 +2,7 @@ import type { MusicPlayerConfig } from "../types/config";
 
 // 音乐播放器配置
 export const musicPlayerConfig: MusicPlayerConfig = {
+	// 如果不需要音乐播放器，在sidebarConfig.ts侧边栏配置把音乐组件禁用即可
 	// 使用方式："meting" 使用 Meting API，"local" 使用本地音乐列表
 	mode: "meting",
 
