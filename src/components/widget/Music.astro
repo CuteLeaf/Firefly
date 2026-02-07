@@ -35,7 +35,8 @@ const playerConfigStr = JSON.stringify({
     meting: config.meting,
     localPlaylist: localPlaylist,
     volume: config.volume ?? 0.7,
-    playMode: config.playMode ?? 'list'
+    playMode: config.playMode ?? 'list',
+    showLyrics: config.showLyrics ?? true
 });
 
 const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
@@ -56,37 +57,46 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
         </div>
 
         <!-- Info Section -->
-        <div class="flex-1 min-w-0 flex flex-col pt-0.5">
-            <div class="flex items-center justify-between">
-                <h3 class="music-title font-bold text-base text-neutral-800 dark:text-neutral-100 truncate pr-2 leading-tight">
-                    Music
-                </h3>
-                <!-- Top Right: Volume & Actions -->
-                 <div class="flex items-center gap-2 shrink-0 text-neutral-400">
-                    <!-- Volume (Hover to expand) -->
-                    <div class="flex items-center gap-2 group/volume bg-transparent">
-                        <div class="w-0 overflow-hidden group-hover/volume:w-14 transition-all duration-300 ease-out">
-                            <div class="vol-container h-1 bg-neutral-200 dark:bg-neutral-600 rounded-full cursor-pointer relative">
-                                <div class="vol-bar absolute left-0 top-0 h-full bg-[var(--primary)] rounded-full w-[70%]"></div>
-                            </div>
-                        </div>
-                        <button class="btn-mute hover:text-[var(--primary)] transition-colors p-0.5" title="Volume">
-                            <Icon name="material-symbols:volume-up-rounded" class="icon-vol-high text-lg" />
-                            <Icon name="material-symbols:volume-off-rounded" class="icon-vol-mute text-lg hidden" />
-                        </button>
-                    </div>
-                 </div>
+        <div class="flex-1 min-w-0 flex flex-col pt-0.5 overflow-hidden">
+            <div class="flex items-center justify-between overflow-hidden gap-2">
+                <div class="flex-1 min-w-0 overflow-hidden relative">
+                    <h3 class="music-title font-bold text-base text-neutral-800 dark:text-neutral-100 leading-tight truncate">
+                        Music
+                    </h3>
+                </div>
+                <!-- Top Right: Lyric Toggle -->
+                <button class={`btn-lrc-toggle hover:text-[var(--primary)] transition-all duration-300 p-0.5 transform active:scale-95 text-neutral-400 shrink-0 ${!config.showLyrics ? 'hidden' : ''}`} title="Lyrics">
+                    <Icon name="material-symbols:subtitles-off-outline-rounded" class="icon-lrc-off text-lg" />
+                    <Icon name="material-symbols:subtitles-outline-rounded" class="icon-lrc-on text-lg hidden" />
+                </button>
             </div>
             
-            <p class="music-artist text-xs font-medium text-neutral-500 dark:text-neutral-400 truncate mt-0.5">
-                No playing
-            </p>
+            <div class="min-w-0 overflow-hidden mt-0.5">
+                <p class="music-artist text-xs font-medium text-neutral-500 dark:text-neutral-400 truncate">
+                    No playing
+                </p>
+            </div>
             
-            <!-- Time Display -->
-            <div class="text-[10px] font-mono text-neutral-400 mt-1 flex items-center gap-1">
-                <span class="current-time">0:00</span>
-                <span class="opacity-50">/</span>
-                <span class="total-time">0:00</span>
+            <!-- Time Display & Volume -->
+            <div class="mt-1 flex items-center gap-3 text-neutral-400">
+                <div class="text-[10px] font-mono flex items-center gap-1 shrink-0">
+                    <span class="current-time">0:00</span>
+                    <span class="opacity-50">/</span>
+                    <span class="total-time">0:00</span>
+                </div>
+                
+                <!-- Volume (Always visible) -->
+                <div class="flex items-center gap-1 bg-transparent">
+                    <button class="btn-mute hover:text-[var(--primary)] transition-colors p-0.5" title="Volume">
+                        <Icon name="material-symbols:volume-up-rounded" class=" icon-vol-high text-lg" />
+                        <Icon name="material-symbols:volume-off-rounded" class="icon-vol-mute text-lg hidden" />
+                    </button>
+                    <div class="w-16 transition-all duration-300 ease-out">
+                        <div class="vol-container h-1 w-16 bg-neutral-200 dark:bg-neutral-600 rounded-full cursor-pointer relative ml-1">
+                            <div class="vol-bar absolute left-0 top-0 h-full bg-[var(--primary)] rounded-full w-[70%]"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -127,6 +137,17 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
         <button class="btn-drawer-toggle text-neutral-400 hover:text-[var(--primary)] transition-all duration-300 p-2 transform active:scale-95" title="Playlist">
             <Icon name="mdi:playlist-music" class="text-xl" />
         </button>
+    </div>
+
+    <!-- Lyrics Drawer -->
+    <div class="lrc-drawer grid transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] grid-rows-[0fr] opacity-0">
+        <div class="overflow-hidden min-h-0">
+            <div class="mt-2 pt-2 border-t border-neutral-100 dark:border-white/5 mx-1">
+                <div class="lrc-container h-48 overflow-y-auto custom-scrollbar flex flex-col items-center gap-2 p-4 py-24 text-center relative scroll-smooth">
+                    <div class="text-neutral-400 text-sm py-10">No lyrics available</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Playlist Drawer (Accordion) -->
@@ -201,6 +222,11 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
             iconVolMute: widget.querySelector('.icon-vol-mute'),
             volContainer: widget.querySelector('.vol-container'),
             volBar: widget.querySelector('.vol-bar'),
+            btnLrc: widget.querySelector('.btn-lrc-toggle'),
+            iconLrcOn: widget.querySelector('.icon-lrc-on'),
+            iconLrcOff: widget.querySelector('.icon-lrc-off'),
+            lrcDrawer: widget.querySelector('.lrc-drawer'),
+            lrcContainer: widget.querySelector('.lrc-container'),
             btnDrawer: widget.querySelector('.btn-drawer-toggle'),
             playlistDrawer: widget.querySelector('.playlist-drawer'),
             playlistContainer: widget.querySelector('.playlist-container'),
@@ -210,7 +236,8 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
 
         // Verify all critical UI elements exist (may be null during Swup page transitions)
         const _critical = [ui.btnPlay, ui.audio, ui.btnRepeat, ui.btnMute, ui.volContainer,
-            ui.btnDrawer, ui.progressContainer, ui.btnNext, ui.btnPrev, ui.loading,
+            ui.btnDrawer, ui.btnLrc, ui.lrcDrawer, ui.lrcContainer,
+            ui.progressContainer, ui.btnNext, ui.btnPrev, ui.loading,
             ui.cover, ui.title, ui.artist, ui.playlistContainer, ui.itemTemplate];
         if (_critical.some(function(el) { return !el; })) return;
 
@@ -220,8 +247,14 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
             isPlaying: false,
             isLoading: false,
             playMode: 0, // 0: List, 1: One, 2: Rand
-            lastVolume: config.volume, // default volume
-            isMuted: false
+            lastVolume: localStorage.getItem('music-player-volume') !== null 
+                ? parseFloat(localStorage.getItem('music-player-volume')) 
+                : (config.volume ?? 0.7),
+            isMuted: false,
+            lyrics: [], // Parsed lyrics: {time: seconds, text: string}
+            currentLrcIndex: -1,
+            isUserScrolling: false,
+            scrollTimeout: null
         };
 
         // Initialize state from config
@@ -250,6 +283,97 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
             return `${min}:${sec.toString().padStart(2, '0')}`;
         }
 
+        function parseLRC(lrc) {
+            if (!lrc) return [];
+            const lines = lrc.split('\n');
+            const result = [];
+            const timeReg = /\[(\d{2}):(\d{2})\.(\d{2,3})\]/g;
+            
+            lines.forEach(line => {
+                const matches = Array.from(line.matchAll(timeReg));
+                if (matches.length > 0) {
+                    const text = line.replace(timeReg, '').trim();
+                    if (text) {
+                        matches.forEach(match => {
+                            const m = parseInt(match[1]);
+                            const s = parseInt(match[2]);
+                            const ms = parseInt(match[3]);
+                            const time = m * 60 + s + ms / (match[3].length === 3 ? 1000 : 100);
+                            result.push({ time, text });
+                        });
+                    }
+                }
+            });
+            return result.sort((a, b) => a.time - b.time);
+        }
+
+        function renderLyrics(lrcText) {
+            state.lyrics = parseLRC(lrcText);
+            ui.lrcContainer.innerHTML = '';
+            
+            if (state.lyrics.length === 0) {
+                ui.lrcContainer.innerHTML = '<div class="text-neutral-400 text-sm py-10">No lyrics available</div>';
+                return;
+            }
+
+            state.lyrics.forEach((line, index) => {
+                const lineEl = document.createElement('div');
+                lineEl.className = 'lrc-line transition-all duration-300 text-sm text-neutral-400 py-1 cursor-pointer hover:text-[var(--primary)]';
+                lineEl.innerText = line.text;
+                lineEl.dataset.index = index;
+                lineEl.onclick = () => {
+                    ui.audio.currentTime = line.time;
+                };
+                ui.lrcContainer.appendChild(lineEl);
+            });
+        }
+
+        function updateLyricSync(currentTime, forceScroll = false) {
+            if (!state.lyrics || state.lyrics.length === 0) return;
+
+            let index = -1;
+            for (let i = 0; i < state.lyrics.length; i++) {
+                if (currentTime >= state.lyrics[i].time) {
+                    index = i;
+                } else {
+                    break;
+                }
+            }
+
+            // Always update UI classes when index changes
+            if (index !== state.currentLrcIndex) {
+                 const lines = ui.lrcContainer.querySelectorAll('.lrc-line');
+                 lines.forEach((line, i) => {
+                     if (i === index) {
+                         line.classList.add('text-[var(--primary)]', 'font-bold', 'text-base');
+                         line.classList.remove('text-neutral-400', 'text-sm');
+                     } else {
+                         line.classList.remove('text-[var(--primary)]', 'font-bold', 'text-base');
+                         line.classList.add('text-neutral-400', 'text-sm');
+                     }
+                 });
+                 state.currentLrcIndex = index;
+            }
+
+            // Handle scrolling separately so it can be forced even if index hasn't changed
+            if (index !== -1 && (!state.isUserScrolling || forceScroll)) {
+                const line = ui.lrcContainer.querySelector(`.lrc-line[data-index="${index}"]`);
+                if (line) {
+                    const containerHeight = ui.lrcContainer.clientHeight;
+                    // Use line.offsetTop relative to its offsetParent (the container with relative)
+                    const lineOffset = line.offsetTop;
+                    const lineHeight = line.offsetHeight;
+                    
+                    const targetScroll = lineOffset - (containerHeight / 2) + (lineHeight / 2);
+                    
+                    ui.lrcContainer.scrollTo({
+                        top: targetScroll,
+                        behavior: forceScroll ? 'auto' : 'smooth'
+                    });
+                }
+            }
+        }
+
         // Core Init
         async function init() {
             setLoading(true);
@@ -276,7 +400,7 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
                 }
             } catch (e) {
                 console.error("Music Init Error", e);
-                ui.title.innerText = "Error";
+                ui.title.innerText = config.mode === 'meting' ? "API Error" : "Error";
             } finally {
                 setLoading(false);
             }
@@ -284,19 +408,35 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
 
         async function fetchMetingData() {
             if (!config.meting) return;
-            const { api, server, type, id, auth } = config.meting;
-            let url = api.replace(':server', server).replace(':type', type).replace(':id', id).replace(':r', Math.random());
-            if (auth) url += `&auth=${auth}`;
+            const { api, server, type, id, auth, fallbackApis } = config.meting;
+            
+            const apis = [api, ...(fallbackApis || [])];
+            
+            for (const baseApi of apis) {
+                if (!baseApi) continue;
+                try {
+                    let fetchUrl = baseApi.replace(':server', server).replace(':type', type).replace(':id', id).replace(':r', Math.random());
+                    if (auth) fetchUrl += `&auth=${auth}`;
 
-            const res = await fetch(url);
-            const data = await res.json();
-            state.playlist = Array.isArray(data) ? data.map(item => ({
-                name: item.title || item.name || 'Unknown',
-                artist: item.author || item.artist || 'Unknown',
-                url: item.url,
-                pic: item.pic || item.cover || '',
-                lrc: item.lrc
-            })) : [];
+                    const res = await fetch(fetchUrl);
+                    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                    const data = await res.json();
+                    
+                    if (Array.isArray(data) && data.length > 0) {
+                        state.playlist = data.map(item => ({
+                            name: item.title || item.name || 'Unknown',
+                            artist: item.author || item.artist || 'Unknown',
+                            url: item.url,
+                            pic: item.pic || item.cover || '',
+                            lrc: item.lrc
+                        }));
+                        return; // Found data, exit loop
+                    }
+                } catch (e) {
+                    console.warn(`Meting API fetch failed for ${baseApi}`, e);
+                }
+            }
+            throw new Error("All Meting APIs failed");
         }
 
         function renderPlaylist() {
@@ -331,7 +471,9 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
             const track = state.playlist[index];
 
             ui.title.innerText = track.name;
+            ui.title.title = track.name;
             ui.artist.innerText = track.artist;
+            ui.artist.title = track.artist;
             
             if (track.pic) {
                 ui.cover.classList.add('opacity-0');
@@ -353,6 +495,24 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
             ui.progressBar.style.width = '0%';
             ui.currentTime.innerText = '0:00';
             ui.totalTime.innerText = '0:00';
+
+            // Reset Lyrics
+            state.lyrics = [];
+            state.currentLrcIndex = -1;
+            ui.lrcContainer.innerHTML = '<div class="text-neutral-400 text-sm py-10">Loading lyrics...</div>';
+            
+            if (track.lrc) {
+                if (track.lrc.startsWith('http')) {
+                    fetch(track.lrc)
+                        .then(res => res.text())
+                        .then(text => renderLyrics(text))
+                        .catch(() => ui.lrcContainer.innerHTML = '<div class="text-neutral-400 text-sm py-10">Failed to load lyrics</div>');
+                } else {
+                    renderLyrics(track.lrc);
+                }
+            } else {
+                ui.lrcContainer.innerHTML = '<div class="text-neutral-400 text-sm py-10">No lyrics available</div>';
+            }
 
             updatePlaylistUI();
 
@@ -506,10 +666,39 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
              state.isMuted = false;
              ui.audio.muted = false;
              ui.audio.volume = val;
+             localStorage.setItem('music-player-volume', val.toString());
              updateVolumeUI();
         });
 
         // Drawer Logic
+        ui.btnLrc.addEventListener('click', () => {
+             const isOpen = ui.lrcDrawer.style.gridTemplateRows === '1fr';
+             if (isOpen) {
+                 ui.lrcDrawer.style.gridTemplateRows = '0fr';
+                 ui.lrcDrawer.classList.remove('opacity-100');
+                 ui.lrcDrawer.classList.add('opacity-0');
+                 ui.btnLrc.classList.remove('text-[var(--primary)]');
+                 ui.btnLrc.classList.add('text-neutral-400');
+                 ui.iconLrcOn.classList.add('hidden');
+                 ui.iconLrcOff.classList.remove('hidden');
+             } else {
+                 // Close playlist if open
+                 ui.playlistDrawer.style.gridTemplateRows = '0fr';
+                 ui.playlistDrawer.classList.remove('opacity-100');
+                 ui.playlistDrawer.classList.add('opacity-0');
+                 ui.btnDrawer.classList.remove('text-[var(--primary)]');
+                 ui.btnDrawer.classList.add('text-neutral-400');
+
+                 ui.lrcDrawer.style.gridTemplateRows = '1fr';
+                 ui.lrcDrawer.classList.add('opacity-100');
+                 ui.lrcDrawer.classList.remove('opacity-0');
+                 ui.btnLrc.classList.add('text-[var(--primary)]');
+                 ui.btnLrc.classList.remove('text-neutral-400');
+                 ui.iconLrcOn.classList.remove('hidden');
+                 ui.iconLrcOff.classList.add('hidden');
+             }
+        });
+
         ui.btnDrawer.addEventListener('click', () => {
              const isOpen = ui.playlistDrawer.style.gridTemplateRows === '1fr';
              if (isOpen) {
@@ -520,6 +709,13 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
                  ui.btnDrawer.classList.add('text-neutral-400');
                  ui.btnDrawer.classList.remove('text-[var(--primary)]');
              } else {
+                 // Close lyrics if open
+                 ui.lrcDrawer.style.gridTemplateRows = '0fr';
+                 ui.lrcDrawer.classList.remove('opacity-100');
+                 ui.lrcDrawer.classList.add('opacity-0');
+                 ui.btnLrc.classList.remove('text-[var(--primary)]');
+                 ui.btnLrc.classList.add('text-neutral-400');
+
                  ui.playlistDrawer.style.gridTemplateRows = '1fr';
                  ui.playlistDrawer.classList.add('opacity-100');
                  ui.playlistDrawer.classList.remove('opacity-0');
@@ -533,6 +729,23 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
         ui.btnPlay.addEventListener('click', togglePlay);
         ui.btnNext.addEventListener('click', () => playNext(false));
         ui.btnPrev.addEventListener('click', playPrev);
+
+        ui.lrcContainer.addEventListener('wheel', () => {
+             state.isUserScrolling = true;
+             resetScrollTimeout();
+        });
+        ui.lrcContainer.addEventListener('touchstart', () => {
+             state.isUserScrolling = true;
+             resetScrollTimeout();
+        });
+
+        function resetScrollTimeout() {
+            clearTimeout(state.scrollTimeout);
+            state.scrollTimeout = setTimeout(() => {
+                state.isUserScrolling = false;
+                updateLyricSync(ui.audio.currentTime, true); // Snap back immediately
+            }, 3000); // Wait for 3 seconds of no activity
+        }
 
         ui.cover.addEventListener('load', () => {
              ui.cover.classList.remove('opacity-0');
@@ -552,6 +765,8 @@ const widgetId = 'music-widget-' + Math.random().toString(36).substring(2, 9);
              
              ui.currentTime.innerText = formatTime(currentTime);
              ui.totalTime.innerText = formatTime(duration);
+
+             updateLyricSync(currentTime);
         });
 
         ui.audio.addEventListener('ended', () => playNext(true));

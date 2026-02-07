@@ -609,6 +609,9 @@ export type MusicPlayerConfig = {
 	// 播放模式：'list'=列表循环, 'one'=单曲循环, 'random'=随机播放
 	playMode?: "list" | "one" | "random";
 
+	// 是否显示歌词
+	showLyrics?: boolean;
+
 	// Meting API 配置
 	meting?: {
 		// Meting API 地址
@@ -628,9 +631,6 @@ export type MusicPlayerConfig = {
 
 		// 备用 API 配置（当主 API 失败时使用）
 		fallbackApis?: string[];
-
-		// MetingJS 脚本路径（默认使用 CDN，也可配置为本地路径）
-		jsPath?: string;
 	};
 
 	// 本地音乐配置（当 mode 为 'local' 时使用）

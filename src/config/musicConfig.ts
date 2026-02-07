@@ -11,6 +11,9 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	// 播放模式：'list'=列表循环, 'one'=单曲循环, 'random'=随机播放
 	playMode: "list",
 
+	// 是否显启用歌词
+	showLyrics: true,
+
 	// Meting API 配置
 	meting: {
 		// Meting API 地址
@@ -29,23 +32,21 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 			"https://api.injahow.cn/meting/?server=:server&type=:type&id=:id",
 			"https://api.moeyao.cn/meting/?server=:server&type=:type&id=:id",
 		],
-		// MetingJS 脚本路径
-		// 默认使用 CDN：https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js
-		// 备用CDN：https://unpkg.com/meting@2/dist/Meting.min.js
-		// 也可配置为本地路径
-		jsPath: "https://unpkg.com/meting@2/dist/Meting.min.js",
 	},
 
 	// 本地音乐配置（当 mode 为 'local' 时使用）
+	// 1. 支持传入歌词文件的路径
+	// lrc: "/assets/music/lrc/使一颗心免于哀伤-哼唱.lrc",
+	// 2. 或者直接填入歌词字符串内容
+	// lrc: "[00:00.00]歌词内容...",
 	local: {
 		playlist: [
 			{
 				name: "使一颗心免于哀伤",
 				artist: "知更鸟 / HOYO-MiX / Chevy",
-				url: "/assets/music/使一颗心免于哀伤-哼唱.wav",
+				url: "/assets/music/使一颗心免于哀伤-哼唱.mp3",
 				cover: "/assets/music/cover/109951169585655912.webp",
-				// 歌词内容，支持 LRC 格式
-				lrc: "",
+          		lrc: "", 
 			},
 		],
 	},
