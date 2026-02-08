@@ -10,6 +10,6 @@ interface Props {
 const { class: className } = Astro.props;
 ---
 
-<div class:list={["float-panel p-2", className]}>
+<div class:list={["float-panel p-2", className]} role="none">
 	<slot />
 </div>

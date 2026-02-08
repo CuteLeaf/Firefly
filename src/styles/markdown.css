@@ -112,32 +112,3 @@
   }
 }
 
-.custom-md {
-  table {
-    @apply w-full my-4;
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: var(--radius-large);
-    overflow: hidden;
-  }
-
-  th,
-  td {
-    @apply px-3 py-2 text-left;
-    min-width: 120px;
-    border: none;
-    word-break: break-word;
-  }
-
-  th {
-    @apply bg-(--btn-regular-bg) font-semibold text-(--btn-content) border-b border-(--line-color);
-  }
-
-  td {
-    @apply bg-(--card-bg);
-  }
-
-  tr:nth-child(even) td {
-    @apply bg-(--btn-plain-bg-active);
-  }
-}

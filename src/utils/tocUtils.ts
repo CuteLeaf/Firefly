@@ -122,13 +122,36 @@ export class TOCManager {
 				heading1Count++;
 			}
 
-			const headingText = (heading.textContent || "").replace(/#+\s*$/, "");
+			let headingText = (heading.textContent || "")
+				.replace(/#+\s*$/, "")
+				.trim();
+
+			// Fallback for empty text (e.g. dynamic subtitle)
+			if (!headingText) {
+				const dataSubtitles = heading.getAttribute("data-subtitles");
+				if (dataSubtitles) {
+					try {
+						const subtitles = JSON.parse(dataSubtitles);
+						headingText = Array.isArray(subtitles) ? subtitles[0] : subtitles;
+					} catch {
+						// ignore
+					}
+				}
+			}
+
+			if (!headingText) {
+				headingText =
+					heading.id === "banner-subtitle"
+						? "Banner Subtitle"
+						: heading.id || "Heading";
+			}
 
 			tocHTML += `
         <a 
           href="#${heading.id}" 
           class="px-2 flex gap-2 relative transition w-full min-h-9 rounded-xl hover:bg-(--toc-btn-hover) active:bg-(--toc-btn-active) py-2 ${depthClass}"
           data-heading-id="${heading.id}"
+          aria-label="${headingText}"
         >
           <div class="transition w-5 h-5 shrink-0 rounded-lg text-xs flex items-center justify-center font-bold ${depth === this.minDepth ? "bg-(--toc-badge-bg) text-(--btn-content)" : ""}">
             ${badgeContent}
