@@ -612,6 +612,9 @@ export type MusicPlayerConfig = {
 	// 是否显示歌词
 	showLyrics?: boolean;
 
+	// 是否在导航栏显示音乐播放器
+	showInNavbar?: boolean;
+
 	// Meting API 配置
 	meting?: {
 		// Meting API 地址

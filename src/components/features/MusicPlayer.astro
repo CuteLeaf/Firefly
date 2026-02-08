@@ -1,0 +1,842 @@
+---
+import { Icon } from "astro-icon/components";
+import { musicPlayerConfig } from "@/config/musicConfig";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import { url } from "@/utils/url-utils";
+
+interface Props {
+	class?: string;
+	style?: string;
+	id?: string;
+}
+const { class: className, style, id } = Astro.props;
+
+const config = musicPlayerConfig;
+
+const localPlaylist =
+	config.mode === "local" && config.local?.playlist
+		? config.local.playlist.map((song) => {
+				const isFullUrl = (path: string) => /^https?:\/\//.test(path);
+				return {
+					name: song.name,
+					artist: song.artist,
+					url: isFullUrl(song.url) ? song.url : url(song.url),
+					pic: song.cover
+						? isFullUrl(song.cover)
+							? song.cover
+							: url(song.cover)
+						: undefined,
+					lrc: song.lrc,
+				};
+			})
+		: [];
+
+const playerConfigStr = JSON.stringify({
+	mode: config.mode,
+	meting: config.meting,
+	localPlaylist: localPlaylist,
+	volume: config.volume ?? 0.7,
+	playMode: config.playMode ?? "list",
+	showLyrics: config.showLyrics ?? true,
+	i18n: {
+		noPlaying: i18n(I18nKey.musicNoPlaying),
+		lyrics: i18n(I18nKey.musicLyrics),
+		volume: i18n(I18nKey.musicVolume),
+		playMode: i18n(I18nKey.musicPlayMode),
+		prev: i18n(I18nKey.musicPrev),
+		next: i18n(I18nKey.musicNext),
+		playlist: i18n(I18nKey.musicPlaylist),
+		noLyrics: i18n(I18nKey.musicNoLyrics),
+		loadingLyrics: i18n(I18nKey.musicLoadingLyrics),
+		failedLyrics: i18n(I18nKey.musicFailedLyrics),
+		noSongs: i18n(I18nKey.musicNoSongs),
+		error: i18n(I18nKey.musicError),
+		play: i18n(I18nKey.musicPlay),
+		pause: i18n(I18nKey.musicPause),
+		progress: i18n(I18nKey.musicProgress),
+		noCover: i18n(I18nKey.musicNoCover),
+	},
+});
+
+const widgetId =
+	id || `music-widget-${Math.random().toString(36).substring(2, 9)}`;
+---
+
+<div id={widgetId} class:list={["music-player-widget w-full relative transition-all duration-300", className]} style={style} role="region" aria-label={i18n(I18nKey.music)}>
+    
+    <!-- Top Row: Cover & Info -->
+<div class="flex items-center gap-2 mb-2 px-1">
+    <!-- Circular Cover -->
+    <div class="relative shrink-0 w-14 h-14 group">
+            <div class="w-full h-full rounded-full overflow-hidden shadow-lg border-2 border-white dark:border-neutral-700 relative z-10 bg-[var(--primary)]/10 flex items-center justify-center">
+            <Icon name="material-symbols:music-note-rounded" class="text-2xl text-[var(--primary)] opacity-40 absolute" aria-hidden="true" />
+            <img class="music-cover w-full h-full object-cover animate-spin-slow relative z-10 opacity-0 transition-opacity duration-300" src="" alt={i18n(I18nKey.musicCover)} style="animation-play-state: paused;" />
+            </div>
+    </div>
+
+    <!-- Info Section -->
+    <div class="flex-1 min-w-0 flex flex-col overflow-hidden">
+        <div class="flex items-center justify-between overflow-hidden gap-2">
+            <div class="flex-1 min-w-0 overflow-hidden relative">
+                <h3 class="music-title font-bold text-base text-neutral-800 dark:text-neutral-100 leading-tight truncate">
+                    {i18n(I18nKey.music)}
+                </h3>
+            </div>
+            <!-- Top Right: Lyric Toggle -->
+            <button class={`btn-lrc-toggle hover:text-[var(--primary)] transition-all duration-300 p-0.5 pr-2 transform active:scale-95 text-neutral-400 shrink-0 ${!config.showLyrics ? 'hidden' : ''}`} title={i18n(I18nKey.musicLyrics)} aria-label={i18n(I18nKey.musicLyrics)}>
+                <Icon name="material-symbols:subtitles-off-outline-rounded" class="icon-lrc-off text-xl" aria-hidden="true" />
+                <Icon name="material-symbols:subtitles-outline-rounded" class="icon-lrc-on text-xl hidden" aria-hidden="true" />
+            </button>
+        </div>
+        
+        <div class="min-w-0 overflow-hidden">
+            <p class="music-artist text-xs font-medium text-neutral-500 dark:text-neutral-400 truncate">
+                {i18n(I18nKey.musicNoPlaying)}
+            </p>
+        </div>
+        
+        <!-- Time Display & Volume -->
+        <div class="flex items-center gap-3 text-neutral-400 h-5">
+            <div class="text-[10px] font-mono flex items-center gap-1 shrink-0 h-full" aria-live="polite">
+                <span class="current-time">0:00</span>
+                <span class="opacity-50" aria-hidden="true">/</span>
+                <span class="total-time">0:00</span>
+            </div>
+            
+            <!-- Volume (Always visible) -->
+            <div class="flex items-center gap-1 bg-transparent h-full">
+                <button class="btn-mute hover:text-[var(--primary)] transition-colors p-0.5 rounded-md flex items-center" title={i18n(I18nKey.musicVolume)} aria-label={i18n(I18nKey.musicVolume)}>
+                    <Icon name="material-symbols:volume-up-rounded" class=" icon-vol-high text-lg" aria-hidden="true" />
+                    <Icon name="material-symbols:volume-off-rounded" class="icon-vol-mute text-lg hidden" aria-hidden="true" />
+                </button>
+                <div class="w-16 transition-all duration-300 ease-out flex items-center">
+                    <div class="vol-container h-1 w-16 bg-neutral-200 dark:bg-neutral-600 rounded-full cursor-pointer relative ml-1" role="slider" aria-label={i18n(I18nKey.musicVolume)} aria-valuemin="0" aria-valuemax="100" aria-valuenow="70">
+                        <div class="vol-bar absolute left-0 top-0 h-full bg-[var(--primary)] rounded-full w-[70%]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Progress Bar (Slim) -->
+<div class="progress-container relative w-full h-1 bg-neutral-100 dark:bg-neutral-700/50 rounded-full cursor-pointer touch-none mb-2 group mt-2" role="slider" aria-label={i18n(I18nKey.musicProgress)} aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div class="progress-bar absolute left-0 top-0 h-full bg-[var(--primary)] rounded-full w-0 transition-[width] duration-100"></div>
+    <!-- Hover Thumb -->
+    <div class="progress-thumb absolute top-1/2 -mt-1.5 -ml-1.5 w-3 h-3 bg-[var(--primary)] ring-2 ring-white dark:ring-neutral-800 rounded-full shadow-sm scale-0 group-hover:scale-100 transition-transform duration-200"></div>
+</div>
+
+<!-- Controls Row -->
+<div class="flex items-center justify-between px-1 select-none">
+    <!-- Repeat Mode -->
+    <button class="btn-repeat text-neutral-300 dark:text-neutral-600 hover:text-[var(--primary)] transition-colors p-2 active:scale-95" title={i18n(I18nKey.musicPlayMode)} aria-label={i18n(I18nKey.musicPlayMode)}>
+        <Icon name="material-symbols:repeat-rounded" class="icon-repeat text-xl" aria-hidden="true" />
+        <Icon name="material-symbols:repeat-one-rounded" class="icon-repeat-one text-xl hidden" aria-hidden="true" />
+        <Icon name="material-symbols:shuffle-rounded" class="icon-shuffle text-xl hidden" aria-hidden="true" />
+    </button>
+
+    <!-- Prev -->
+    <button class="btn-prev text-neutral-600 dark:text-neutral-300 hover:text-[var(--primary)] transition-colors p-2 active:scale-95" title={i18n(I18nKey.musicPrev)} aria-label={i18n(I18nKey.musicPrev)}>
+        <Icon name="material-symbols:skip-previous-rounded" class="text-3xl" aria-hidden="true" />
+    </button>
+    
+    <!-- Play/Pause (Feature) -->
+    <button class="btn-play w-12 h-12 bg-[var(--btn-regular-bg)] hover:bg-[var(--btn-regular-bg-hover)] active:bg-[var(--btn-regular-bg-active)] text-[var(--primary)] rounded-full flex items-center justify-center transition-all duration-300" title={i18n(I18nKey.musicPlay)} aria-label={i18n(I18nKey.musicPlay)}>
+        <Icon name="material-symbols:play-arrow-rounded" class="icon-play text-3xl ml-0.5" aria-hidden="true" />
+        <Icon name="material-symbols:pause-rounded" class="icon-pause text-3xl hidden" aria-hidden="true" />
+    </button>
+    
+    <!-- Next -->
+    <button class="btn-next text-neutral-600 dark:text-neutral-300 hover:text-[var(--primary)] transition-colors p-2 active:scale-95" title={i18n(I18nKey.musicNext)} aria-label={i18n(I18nKey.musicNext)}>
+        <Icon name="material-symbols:skip-next-rounded" class="text-3xl" aria-hidden="true" />
+    </button>
+
+    <!-- Playlist Toggle Arrow -->
+    <button class="btn-drawer-toggle text-neutral-400 hover:text-[var(--primary)] transition-all duration-300 p-2 transform active:scale-95" title={i18n(I18nKey.musicPlaylist)} aria-label={i18n(I18nKey.musicPlaylist)}>
+        <Icon name="mdi:playlist-music" class="text-xl" aria-hidden="true" />
+    </button>
+</div>
+
+<!-- Lyrics Drawer -->
+<div class="lrc-drawer grid transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] grid-rows-[0fr] opacity-0">
+    <div class="overflow-hidden min-h-0">
+        <div class="mt-2 pt-2 border-t border-neutral-100 dark:border-white/5 mx-1">
+            <div class="lrc-container h-48 overflow-y-auto custom-scrollbar flex flex-col items-center gap-2 p-4 py-24 text-center relative scroll-smooth" role="listbox" aria-label={i18n(I18nKey.musicLyrics)}>
+                <div class="text-neutral-400 text-sm py-10" role="option">{i18n(I18nKey.musicNoLyrics)}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Playlist Drawer (Accordion) -->
+<div class="playlist-drawer grid transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] grid-rows-[0fr] opacity-0">
+    <div class="overflow-hidden min-h-0">
+            <div class="mt-2 pt-2 border-t border-neutral-100 dark:border-white/5 mx-1">
+            <div class="playlist-container max-h-48 overflow-y-auto custom-scrollbar pr-1 pb-1 flex flex-col gap-1" role="listbox" aria-label={i18n(I18nKey.musicPlaylist)}>
+                <!-- Items -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden Audio -->
+<audio class="audio-player hidden" crossorigin="anonymous" title={i18n(I18nKey.musicAudioPlayer)}></audio>
+
+<!-- Loading Overlay -->
+    <div class="music-loading absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/60 dark:bg-[#1e1e1e]/60 backdrop-blur-[2px] transition-opacity duration-300 opacity-0 pointer-events-none rounded-xl" aria-busy="true" aria-hidden="true">
+    <div class="w-8 h-8 text-[var(--primary)] animate-spin">
+        <Icon name="material-symbols:sync-rounded" class="text-3xl" aria-hidden="true" />
+    </div>
+</div>
+</div>
+
+<template id={`playlist-item-template-${widgetId}`}>
+<div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-neutral-50 dark:hover:bg-white/5 transition-colors group">
+    <div class="w-8 h-8 rounded-md overflow-hidden shrink-0 relative bg-neutral-200 dark:bg-neutral-700">
+        <img src="" class="item-cover w-full h-full object-cover" loading="lazy" alt="" />
+        <!-- Active Indicator overlay -->
+        <div class="item-active-overlay absolute inset-0 bg-[var(--primary)]/20 hidden items-center justify-center">
+                <Icon name="material-symbols:graphic-eq-rounded" class="text-[var(--primary)] text-sm" />
+        </div>
+    </div>
+    <div class="flex-1 min-w-0">
+        <div class="item-title text-xs font-bold text-neutral-700 dark:text-neutral-200 truncate group-hover:text-[var(--primary)] transition-colors"></div>
+        <div class="item-artist text-[10px] text-neutral-400 truncate"></div>
+    </div>
+</div>
+</template>
+
+<script define:vars={{ playerConfigStr, widgetId }} is:inline>
+(function () {
+    const config = JSON.parse(playerConfigStr);
+    const widget = document.getElementById(widgetId);
+    
+    // If widget not found (e.g. removed), stop
+    if (!widget) return;
+
+    const ui = {
+        widget: widget,
+        loading: widget.querySelector('.music-loading'),
+        cover: widget.querySelector('.music-cover'),
+        title: widget.querySelector('.music-title'),
+        artist: widget.querySelector('.music-artist'),
+        progressBar: widget.querySelector('.progress-bar'),
+        progressThumb: widget.querySelector('.progress-thumb'),
+        progressContainer: widget.querySelector('.progress-container'),
+        currentTime: widget.querySelector('.current-time'),
+        totalTime: widget.querySelector('.total-time'),
+        btnPlay: widget.querySelector('.btn-play'),
+        iconPlay: widget.querySelector('.icon-play'),
+        iconPause: widget.querySelector('.icon-pause'),
+        btnPrev: widget.querySelector('.btn-prev'),
+        btnNext: widget.querySelector('.btn-next'),
+        btnRepeat: widget.querySelector('.btn-repeat'),
+        iconRepeat: widget.querySelector('.icon-repeat'),
+        iconRepeatOne: widget.querySelector('.icon-repeat-one'),
+        iconShuffle: widget.querySelector('.icon-shuffle'),
+        btnMute: widget.querySelector('.btn-mute'),
+        iconVolHigh: widget.querySelector('.icon-vol-high'),
+        iconVolMute: widget.querySelector('.icon-vol-mute'),
+        volContainer: widget.querySelector('.vol-container'),
+        volBar: widget.querySelector('.vol-bar'),
+        btnLrc: widget.querySelector('.btn-lrc-toggle'),
+        iconLrcOn: widget.querySelector('.icon-lrc-on'),
+        iconLrcOff: widget.querySelector('.icon-lrc-off'),
+        lrcDrawer: widget.querySelector('.lrc-drawer'),
+        lrcContainer: widget.querySelector('.lrc-container'),
+        btnDrawer: widget.querySelector('.btn-drawer-toggle'),
+        playlistDrawer: widget.querySelector('.playlist-drawer'),
+        playlistContainer: widget.querySelector('.playlist-container'),
+        audio: widget.querySelector('.audio-player'),
+        itemTemplate: document.getElementById(`playlist-item-template-${widgetId}`)
+    };
+
+    // Verify all critical UI elements exist (may be null during Swup page transitions)
+    const _critical = [ui.btnPlay, ui.audio, ui.btnRepeat, ui.btnMute, ui.volContainer,
+        ui.btnDrawer, ui.btnLrc, ui.lrcDrawer, ui.lrcContainer,
+        ui.progressContainer, ui.btnNext, ui.btnPrev, ui.loading,
+        ui.cover, ui.title, ui.artist, ui.playlistContainer, ui.itemTemplate];
+    if (_critical.some(function(el) { return !el; })) return;
+
+    const state = {
+        playlist: [],
+        currentIndex: 0,
+        isPlaying: false,
+        isLoading: false,
+        playMode: 0, // 0: List, 1: One, 2: Rand
+        lastVolume: localStorage.getItem('music-player-volume') !== null 
+            ? parseFloat(localStorage.getItem('music-player-volume')) 
+            : (config.volume ?? 0.7),
+        isMuted: false,
+        lyrics: [], // Parsed lyrics: {time: seconds, text: string}
+        currentLrcIndex: -1,
+        isUserScrolling: false,
+        scrollTimeout: null
+    };
+
+    // Initialize state from config
+    if (config.playMode === 'random') {
+            state.playMode = 2; // Rand
+    } else if (config.playMode === 'one') {
+            state.playMode = 1; // One
+    } else {
+            state.playMode = 0; // List (default)
+    }
+
+    // UI Helpers
+    function setLoading(bool) {
+        state.isLoading = bool;
+        if (bool) {
+            ui.loading.classList.remove('opacity-0', 'pointer-events-none');
+        } else {
+            ui.loading.classList.add('opacity-0', 'pointer-events-none');
+        }
+    }
+
+    function formatTime(seconds) {
+        if (!seconds || isNaN(seconds)) return "0:00";
+        const min = Math.floor(seconds / 60);
+        const sec = Math.floor(seconds % 60);
+        return `${min}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    function parseLRC(lrc) {
+        if (!lrc) return [];
+        const lines = lrc.split('\n');
+        const result = [];
+        const timeReg = /\[(\d{2}):(\d{2})\.(\d{2,3})\]/g;
+        
+        lines.forEach(line => {
+            const matches = Array.from(line.matchAll(timeReg));
+            if (matches.length > 0) {
+                const text = line.replace(timeReg, '').trim();
+                if (text) {
+                    matches.forEach(match => {
+                        const m = parseInt(match[1]);
+                        const s = parseInt(match[2]);
+                        const ms = parseInt(match[3]);
+                        const time = m * 60 + s + ms / (match[3].length === 3 ? 1000 : 100);
+                        result.push({ time, text });
+                    });
+                }
+            }
+        });
+        return result.sort((a, b) => a.time - b.time);
+    }
+
+    function renderLyrics(lrcText) {
+        state.lyrics = parseLRC(lrcText);
+        ui.lrcContainer.innerHTML = '';
+        
+        if (state.lyrics.length === 0) {
+            ui.lrcContainer.innerHTML = `<div class="text-neutral-400 text-sm py-10" role="option">${config.i18n.noLyrics}</div>`;
+            return;
+        }
+
+        state.lyrics.forEach((line, index) => {
+            const lineEl = document.createElement('div');
+            lineEl.className = 'lrc-line transition-all duration-300 text-sm text-neutral-400 py-1 cursor-pointer hover:text-[var(--primary)]';
+            lineEl.innerText = line.text;
+            lineEl.dataset.index = index;
+            lineEl.setAttribute('role', 'option');
+            lineEl.setAttribute('aria-label', line.text);
+            lineEl.onclick = () => {
+                ui.audio.currentTime = line.time;
+            };
+            ui.lrcContainer.appendChild(lineEl);
+        });
+    }
+
+    function updateLyricSync(currentTime, forceScroll = false) {
+        if (!state.lyrics || state.lyrics.length === 0) return;
+
+        let index = -1;
+        for (let i = 0; i < state.lyrics.length; i++) {
+            if (currentTime >= state.lyrics[i].time) {
+                index = i;
+            } else {
+                break;
+            }
+        }
+
+        // Always update UI classes when index changes
+        if (index !== state.currentLrcIndex) {
+                const lines = ui.lrcContainer.querySelectorAll('.lrc-line');
+                lines.forEach((line, i) => {
+                    if (i === index) {
+                        line.classList.add('text-[var(--primary)]', 'font-bold', 'text-base');
+                        line.classList.remove('text-neutral-400', 'text-sm');
+                    } else {
+                        line.classList.remove('text-[var(--primary)]', 'font-bold', 'text-base');
+                        line.classList.add('text-neutral-400', 'text-sm');
+                    }
+                });
+                state.currentLrcIndex = index;
+        }
+
+        // Handle scrolling separately so it can be forced even if index hasn't changed
+        if (index !== -1 && (!state.isUserScrolling || forceScroll)) {
+            const line = ui.lrcContainer.querySelector(`.lrc-line[data-index="${index}"]`);
+            if (line) {
+                const containerHeight = ui.lrcContainer.clientHeight;
+                // Use line.offsetTop relative to its offsetParent (the container with relative)
+                const lineOffset = line.offsetTop;
+                const lineHeight = line.offsetHeight;
+                
+                const targetScroll = lineOffset - (containerHeight / 2) + (lineHeight / 2);
+                
+                ui.lrcContainer.scrollTo({
+                    top: targetScroll,
+                    behavior: forceScroll ? 'auto' : 'smooth'
+                });
+            }
+        }
+    }
+
+    // Core Init
+    async function init() {
+        setLoading(true);
+        try {
+            if (config.mode === 'meting' && config.meting) {
+                await fetchMetingData();
+            } else if (config.mode === 'local') {
+                state.playlist = config.localPlaylist || [];
+            }
+
+            if (state.playlist.length > 0) {
+                renderPlaylist();
+                // If random mode is initial setting, shuffle start
+                let startIndex = 0;
+                if (state.playMode === 2) {
+                    startIndex = Math.floor(Math.random() * state.playlist.length);
+                }
+                
+                loadTrack(startIndex, false);
+                initVolume();
+                updateModeUI(); // Reflect initial mode in UI
+            } else {
+                ui.title.innerText = config.i18n.noSongs;
+            }
+        } catch (e) {
+            console.error("Music Init Error", e);
+            ui.title.innerText = config.i18n.error;
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async function fetchMetingData() {
+        if (!config.meting) return;
+        const { api, server, type, id, auth, fallbackApis } = config.meting;
+        
+        const apis = [api, ...(fallbackApis || [])];
+        
+        for (const baseApi of apis) {
+            if (!baseApi) continue;
+            try {
+                let fetchUrl = baseApi.replace(':server', server).replace(':type', type).replace(':id', id).replace(':r', Math.random());
+                if (auth) fetchUrl += `&auth=${auth}`;
+
+                const res = await fetch(fetchUrl);
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                const data = await res.json();
+                
+                if (Array.isArray(data) && data.length > 0) {
+                    state.playlist = data.map(item => ({
+                        name: item.title || item.name || 'Unknown',
+                        artist: item.author || item.artist || 'Unknown',
+                        url: item.url,
+                        pic: item.pic || item.cover || '',
+                        lrc: item.lrc
+                    }));
+                    return; // Found data, exit loop
+                }
+            } catch (e) {
+                console.warn(`Meting API fetch failed for ${baseApi}`, e);
+            }
+        }
+        throw new Error("All Meting APIs failed");
+    }
+
+    function renderPlaylist() {
+        ui.playlistContainer.innerHTML = '';
+        state.playlist.forEach((track, idx) => {
+            const clone = ui.itemTemplate.content.cloneNode(true);
+            const itemEl = clone.querySelector('.playlist-item');
+            const img = clone.querySelector('.item-cover');
+            const title = clone.querySelector('.item-title');
+            const artist = clone.querySelector('.item-artist');
+            
+            img.src = track.pic || '';
+            img.alt = `${track.name} - ${track.artist}`;
+            title.innerText = track.name;
+            artist.innerText = track.artist;
+            
+            // Active State logic handled in updatePlaylistUI
+            itemEl.dataset.index = idx;
+            itemEl.setAttribute('role', 'option');
+            itemEl.setAttribute('aria-label', `${track.name} - ${track.artist}`);
+            itemEl.onclick = () => {
+                if (state.currentIndex === idx && !ui.audio.paused) {
+                    togglePlay();
+                } else {
+                    loadTrack(idx, true);
+                }
+            };
+            ui.playlistContainer.appendChild(clone);
+        });
+    }
+
+    function loadTrack(index, autoPlay = false) {
+        if (index < 0 || index >= state.playlist.length) return;
+        state.currentIndex = index;
+        const track = state.playlist[index];
+
+        ui.title.innerText = track.name;
+        ui.title.title = track.name;
+        ui.artist.innerText = track.artist;
+        ui.artist.title = track.artist;
+        
+        if (track.pic) {
+            ui.cover.classList.add('opacity-0');
+            ui.cover.src = track.pic;
+            ui.cover.alt = `${track.name} - ${track.artist}`;
+        } else {
+            ui.cover.src = '';
+            ui.cover.classList.add('opacity-0');
+            ui.cover.alt = config.i18n.noCover;
+        }
+        
+        ui.audio.src = track.url;
+        
+        // Reset cover rotation
+        ui.cover.classList.remove('animate-spin-slow');
+        void ui.cover.offsetWidth;
+        ui.cover.classList.add('animate-spin-slow');
+        ui.cover.style.animationPlayState = 'paused';
+        
+        // Reset Progress
+        ui.progressBar.style.width = '0%';
+        ui.progressContainer.setAttribute('aria-valuenow', '0');
+        ui.currentTime.innerText = '0:00';
+        ui.totalTime.innerText = '0:00';
+
+        // Reset Lyrics
+        state.lyrics = [];
+        state.currentLrcIndex = -1;
+        ui.lrcContainer.innerHTML = `<div class="text-neutral-400 text-sm py-10">${config.i18n.loadingLyrics}</div>`;
+        
+        if (track.lrc) {
+            if (track.lrc.startsWith('http')) {
+                fetch(track.lrc)
+                    .then(res => res.text())
+                    .then(text => renderLyrics(text))
+                    .catch(() => ui.lrcContainer.innerHTML = `<div class="text-neutral-400 text-sm py-10">${config.i18n.failedLyrics}</div>`);
+            } else {
+                renderLyrics(track.lrc);
+            }
+        } else {
+            ui.lrcContainer.innerHTML = `<div class="text-neutral-400 text-sm py-10">${config.i18n.noLyrics}</div>`;
+        }
+
+        updatePlaylistUI();
+
+        if (autoPlay) {
+            ui.audio.play().then(() => {
+                updatePlayState(true);
+            }).catch(e => console.warn(e));
+        } else {
+            updatePlayState(false);
+        }
+    }
+
+    function updatePlayState(isPlaying) {
+        state.isPlaying = isPlaying;
+        if (isPlaying) {
+            ui.btnPlay.classList.add('bg-[var(--primary)]', 'text-white', 'hover:brightness-110');
+            ui.btnPlay.classList.remove('bg-[var(--btn-regular-bg)]', 'hover:bg-[var(--btn-regular-bg-hover)]', 'active:bg-[var(--btn-regular-bg-active)]', 'text-[var(--primary)]');
+            ui.iconPlay.classList.add('hidden');
+            ui.iconPause.classList.remove('hidden');
+            ui.cover.style.animationPlayState = 'running';
+            ui.btnPlay.setAttribute('aria-label', config.i18n.pause);
+            ui.btnPlay.title = config.i18n.pause;
+        } else {
+            ui.btnPlay.classList.remove('bg-[var(--primary)]', 'text-white', 'hover:brightness-110');
+            ui.btnPlay.classList.add('bg-[var(--btn-regular-bg)]', 'hover:bg-[var(--btn-regular-bg-hover)]', 'active:bg-[var(--btn-regular-bg-active)]', 'text-[var(--primary)]');
+            ui.iconPlay.classList.remove('hidden');
+            ui.iconPause.classList.add('hidden');
+            ui.cover.style.animationPlayState = 'paused';
+            ui.btnPlay.setAttribute('aria-label', config.i18n.play);
+            ui.btnPlay.title = config.i18n.play;
+        }
+    }
+
+    function togglePlay() {
+        if (ui.audio.paused) {
+            ui.audio.play().then(() => updatePlayState(true));
+        } else {
+            ui.audio.pause();
+            updatePlayState(false);
+        }
+    }
+
+    function playNext(auto = false) {
+        let nextIndex;
+        if (state.playMode === 1 && auto) { 
+            // Single Loop
+            ui.audio.currentTime = 0;
+            ui.audio.play(); 
+            return;
+        } else if (state.playMode === 2) { 
+            // Random
+            nextIndex = Math.floor(Math.random() * state.playlist.length);
+        } else {
+            // List Loop
+            nextIndex = (state.currentIndex + 1) % state.playlist.length;
+        }
+        loadTrack(nextIndex, true);
+    }
+
+    function playPrev() {
+        let prevIndex = (state.currentIndex - 1 + state.playlist.length) % state.playlist.length;
+        if (state.playMode === 2) {
+                prevIndex = Math.floor(Math.random() * state.playlist.length);
+        }
+        loadTrack(prevIndex, true);
+    }
+
+    function updatePlaylistUI() {
+            const items = ui.playlistContainer.querySelectorAll('.playlist-item');
+            items.forEach(el => {
+                const idx = parseInt(el.dataset.index);
+                const overlay = el.querySelector('.item-active-overlay');
+                const title = el.querySelector('.item-title');
+                if (idx === state.currentIndex) {
+                    el.classList.add('bg-neutral-100', 'dark:bg-white/10');
+                    el.setAttribute('aria-current', 'true');
+                    overlay.classList.remove('hidden');
+                    overlay.classList.add('flex');
+                    title.classList.add('text-[var(--primary)]');
+                } else {
+                    el.classList.remove('bg-neutral-100', 'dark:bg-white/10');
+                    el.removeAttribute('aria-current');
+                    overlay.classList.add('hidden');
+                    overlay.classList.remove('flex');
+                    title.classList.remove('text-[var(--primary)]');
+                }
+            });
+    }
+
+    // Mode Logic
+    // Mode 0: List (Def), Mode 1: One, Mode 2: Rand
+    // Button Repeat: Cycle 0 -> 1 -> 2 -> 0
+    
+    function updateModeUI() {
+        const primaryColor = 'text-[var(--primary)]';
+
+        // Always primary color if we want to indicate it's interactable, or conditionally
+        // Usually Loop List is 'inactive' (grey) or 'active' (primary). 
+        // Let's make: List=Grey (default), One=Primary, Rand=Primary
+        
+        if (state.playMode === 0) {
+                ui.btnRepeat.className = `p-2 active:scale-95 transition-colors text-neutral-300 dark:text-neutral-600 hover:text-[var(--primary)]`;
+                ui.iconRepeat.classList.remove('hidden');
+                ui.iconRepeatOne.classList.add('hidden');
+                ui.iconShuffle.classList.add('hidden');
+        } else if (state.playMode === 1) {
+                ui.btnRepeat.className = `p-2 active:scale-95 transition-colors ${primaryColor}`;
+                ui.iconRepeat.classList.add('hidden');
+                ui.iconRepeatOne.classList.remove('hidden');
+                ui.iconShuffle.classList.add('hidden');
+        } else {
+                ui.btnRepeat.className = `p-2 active:scale-95 transition-colors ${primaryColor}`;
+                ui.iconRepeat.classList.add('hidden');
+                ui.iconRepeatOne.classList.add('hidden');
+                ui.iconShuffle.classList.remove('hidden');
+        }
+    }
+
+    ui.btnRepeat.addEventListener('click', () => {
+            // Cycle: 0 -> 1 -> 2 -> 0
+            state.playMode = (state.playMode + 1) % 3;
+            updateModeUI();
+    });
+
+    // Volume Logic
+    function initVolume() {
+        ui.audio.volume = state.lastVolume;
+        updateVolumeUI();
+    }
+
+    function updateVolumeUI() {
+        const pct = state.isMuted ? 0 : state.lastVolume * 100;
+        ui.volBar.style.width = `${pct}%`;
+        ui.volContainer.setAttribute('aria-valuenow', Math.round(pct).toString());
+        
+        if (state.isMuted || state.lastVolume === 0) {
+            ui.iconVolHigh.classList.add('hidden');
+            ui.iconVolMute.classList.remove('hidden');
+        } else {
+            ui.iconVolHigh.classList.remove('hidden');
+            ui.iconVolMute.classList.add('hidden');
+        }
+    }
+
+    ui.btnMute.addEventListener('click', () => {
+        state.isMuted = !state.isMuted;
+        ui.audio.muted = state.isMuted;
+        updateVolumeUI();
+    });
+
+    ui.volContainer.addEventListener('click', (e) => {
+            const rect = ui.volContainer.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            let val = x / rect.width;
+            val = Math.max(0, Math.min(1, val));
+            
+            state.lastVolume = val;
+            state.isMuted = false;
+            ui.audio.muted = false;
+            ui.audio.volume = val;
+            localStorage.setItem('music-player-volume', val.toString());
+            updateVolumeUI();
+    });
+
+    // Drawer Logic
+    ui.btnLrc.addEventListener('click', () => {
+            const isOpen = ui.lrcDrawer.style.gridTemplateRows === '1fr';
+            if (isOpen) {
+                ui.lrcDrawer.style.gridTemplateRows = '0fr';
+                ui.lrcDrawer.classList.remove('opacity-100');
+                ui.lrcDrawer.classList.add('opacity-0');
+                ui.btnLrc.classList.remove('text-[var(--primary)]');
+                ui.btnLrc.classList.add('text-neutral-400');
+                ui.iconLrcOn.classList.add('hidden');
+                ui.iconLrcOff.classList.remove('hidden');
+            } else {
+                // Close playlist if open
+                ui.playlistDrawer.style.gridTemplateRows = '0fr';
+                ui.playlistDrawer.classList.remove('opacity-100');
+                ui.playlistDrawer.classList.add('opacity-0');
+                ui.btnDrawer.classList.remove('text-[var(--primary)]');
+                ui.btnDrawer.classList.add('text-neutral-400');
+
+                ui.lrcDrawer.style.gridTemplateRows = '1fr';
+                ui.lrcDrawer.classList.add('opacity-100');
+                ui.lrcDrawer.classList.remove('opacity-0');
+                ui.btnLrc.classList.add('text-[var(--primary)]');
+                ui.btnLrc.classList.remove('text-neutral-400');
+                ui.iconLrcOn.classList.remove('hidden');
+                ui.iconLrcOff.classList.add('hidden');
+            }
+    });
+
+    ui.btnDrawer.addEventListener('click', () => {
+            const isOpen = ui.playlistDrawer.style.gridTemplateRows === '1fr';
+            if (isOpen) {
+                ui.playlistDrawer.style.gridTemplateRows = '0fr';
+                ui.playlistDrawer.classList.remove('opacity-100');
+                ui.playlistDrawer.classList.add('opacity-0');
+                
+                ui.btnDrawer.classList.add('text-neutral-400');
+                ui.btnDrawer.classList.remove('text-[var(--primary)]');
+            } else {
+                // Close lyrics if open
+                ui.lrcDrawer.style.gridTemplateRows = '0fr';
+                ui.lrcDrawer.classList.remove('opacity-100');
+                ui.lrcDrawer.classList.add('opacity-0');
+                ui.btnLrc.classList.remove('text-[var(--primary)]');
+                ui.btnLrc.classList.add('text-neutral-400');
+
+                ui.playlistDrawer.style.gridTemplateRows = '1fr';
+                ui.playlistDrawer.classList.add('opacity-100');
+                ui.playlistDrawer.classList.remove('opacity-0');
+                
+                ui.btnDrawer.classList.remove('text-neutral-400');
+                ui.btnDrawer.classList.add('text-[var(--primary)]');
+            }
+    });
+
+    // Core Events
+    ui.btnPlay.addEventListener('click', togglePlay);
+    ui.btnNext.addEventListener('click', () => playNext(false));
+    ui.btnPrev.addEventListener('click', playPrev);
+
+    ui.lrcContainer.addEventListener('wheel', () => {
+            state.isUserScrolling = true;
+            resetScrollTimeout();
+    });
+    ui.lrcContainer.addEventListener('touchstart', () => {
+            state.isUserScrolling = true;
+            resetScrollTimeout();
+    });
+
+    function resetScrollTimeout() {
+        clearTimeout(state.scrollTimeout);
+        state.scrollTimeout = setTimeout(() => {
+            state.isUserScrolling = false;
+            updateLyricSync(ui.audio.currentTime, true); // Snap back immediately
+        }, 3000); // Wait for 3 seconds of no activity
+    }
+
+    ui.cover.addEventListener('load', () => {
+            ui.cover.classList.remove('opacity-0');
+    });
+    ui.cover.addEventListener('error', () => {
+            ui.cover.classList.add('opacity-0');
+    });
+    
+    ui.audio.addEventListener('timeupdate', () => {
+            if (isNaN(ui.audio.duration)) return;
+            const currentTime = ui.audio.currentTime;
+            const duration = ui.audio.duration;
+            const progress = (currentTime / duration) * 100;
+            
+            ui.progressBar.style.width = `${progress}%`;
+            ui.progressThumb.style.left = `${progress}%`;
+            ui.progressContainer.setAttribute('aria-valuenow', Math.round(progress).toString());
+            
+            ui.currentTime.innerText = formatTime(currentTime);
+            ui.totalTime.innerText = formatTime(duration);
+
+            updateLyricSync(currentTime);
+    });
+
+    ui.audio.addEventListener('ended', () => playNext(true));
+    ui.audio.addEventListener('error', () => { /* Handle error */ });
+    
+    // Global Mutual Exclusion
+    window.addEventListener('firefly-music-play', (e) => {
+        if (e.detail.id !== widgetId && !ui.audio.paused) {
+            ui.audio.pause();
+            updatePlayState(false);
+        }
+    });
+
+    ui.audio.addEventListener('play', () => {
+        window.dispatchEvent(new CustomEvent('firefly-music-play', { detail: { id: widgetId } }));
+    });
+    
+    // Seek
+    ui.progressContainer.addEventListener('click', (e) => {
+        if (!ui.audio.duration) return;
+        const rect = ui.progressContainer.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const percent = Math.min(Math.max(clickX / rect.width, 0), 1);
+        ui.audio.currentTime = percent * ui.audio.duration;
+    });
+
+    init();
+})();
+</script>
+
+<style>
+    @keyframes spin-slow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    .animate-spin-slow {
+        animation: spin-slow 10s linear infinite;
+    }
+</style>
