@@ -71,6 +71,8 @@ let links: NavBarLink[] = navBarConfig.links.map(
                                     <Icon name={siteConfig.navbar.logo.value || "material-symbols:home-pin-outline"} class="text-[1.75rem] mb-1 mr-2" />
                                 ) : siteConfig.navbar.logo?.type === "image" ? (
                                     <img src={url(siteConfig.navbar.logo.value)} alt={siteConfig.navbar.logo.alt || siteConfig.title} class="h-7 w-7 mb-1 mr-2 object-contain" fetchpriority="high" />
+                                ) : siteConfig.navbar.logo?.type === "url" ? (
+                                    <img src={siteConfig.navbar.logo.value} alt={siteConfig.navbar.logo.alt || siteConfig.title} class="h-7 w-7 mb-1 mr-2 object-contain" fetchpriority="high" />
                                 ) : (
                                     <Icon name="material-symbols:home-pin-outline" class="text-[1.75rem] mb-1 mr-2" />
                                 )}

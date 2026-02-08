@@ -61,10 +61,10 @@ export const siteConfig: SiteConfig = {
 	// 导航栏配置
 	navbar: {
 		// 导航栏Logo
-		// 支持三种类型：Astro图标库，本地图片，网络图片
-		// { type: "icon", value: "material-symbols:home-pin-outline" }
-		// { type: "image", value: "/assets/images/logo.webp", alt: "Firefly Logo" }
-		// { type: "image", value: "https://example.com/logo.png", alt: "Firefly Logo" }
+		// 支持三种类型：
+		// 1. Astro图标库: { type: "icon", value: "material-symbols:home-pin-outline" }
+		// 2. 本地图片: { type: "image", value: "/assets/images/logo.webp", alt: "Firefly Logo" }
+		// 3. 网络图片: { type: "url", value: "https://example.com/logo.png", alt: "Firefly Logo" }
 		logo: {
 			type: "image",
 			value: "/assets/images/firefly.png",
