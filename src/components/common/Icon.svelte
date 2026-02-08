@@ -36,10 +36,10 @@ const sizeClasses: Record<string, string> = {
 	"2xl": "text-2xl",
 };
 
-const sizeClass = sizeClasses[size] || sizeClasses.md;
-const colorStyle = color ? `color: ${color};` : "";
-const combinedStyle = `${colorStyle}${style}`;
-const combinedClass = `${sizeClass} ${className}`.trim();
+const sizeClass = $derived(sizeClasses[size] || sizeClasses.md);
+const colorStyle = $derived(color ? `color: ${color};` : "");
+const combinedStyle = $derived(`${colorStyle}${style}`);
+const combinedClass = $derived(`${sizeClass} ${className}`.trim());
 
 // 获取内联 SVG
 const svgContent = $derived(getIconSvg(icon));
