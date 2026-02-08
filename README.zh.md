@@ -88,7 +88,7 @@
 - [x] **番组计划** - 基于 Bangumi API 的追番和游戏等记录展示
 - [x] **评论系统** - 集成 Twikoo、Waline、Giscus、Disqus、Artalk 评论系统
 - [x] **访问量统计** - 支持调用 Waline、Twikoo 自带的访问量追踪
-- [x] **音乐播放器** - 基于 APlayer，支持本地音乐和 Meting API 在线音乐
+- [x] **音乐播放器** - Material Design 3 设计风格的音乐播放器
 
 ### 内容增强
 - [x] **图片灯箱** - Fancybox 图片预览功能
@@ -255,7 +255,6 @@ comment: true    # 是否允许评论
 - 参考了博主 [霞葉](https://kasuha.com) 分享的 [Bangumi 收藏展示](https://kasuha.com/posts/fuwari-enhance-ep2/) 和 [邮箱保护/图片标题](https://kasuha.com/posts/fuwari-enhance-ep1/) 方案
 - 参考了 [Mizuki](https://github.com/matsuzaka-yuki/Mizuki) 的横幅标题/多级菜单导航栏/樱花特效/KaTeX/Fancybox方案
 - 使用了 [Astro](https://astro.build) 和 [Tailwind CSS](https://tailwindcss.com) 构建
-- 使用了 [MetingJS](https://github.com/metowolf/MetingJS) 和 [APlayer](https://github.com/MoePlayer/APlayer) 音乐播放器
 - 使用了b站up [公公的日常](https://space.bilibili.com/3546750017080050) 提供的Q版 `流萤` 看板娘切片数据模型
 - 图标来自 [Iconify](https://iconify.design/)
 - 流萤部分相关图片素材版权归游戏 [《崩坏：星穹铁道》](https://sr.mihoyo.com/) 开发商 [米哈游](https://www.mihoyo.com/) 所有

@@ -6,11 +6,11 @@ import {
 } from "@constants/constants";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
-import Icon from "@iconify/svelte";
 import { getStoredWallpaperMode, setWallpaperMode } from "@utils/setting-utils";
 import { onMount } from "svelte";
 import DropdownItem from "@/components/common/DropdownItem.svelte";
 import DropdownPanel from "@/components/common/DropdownPanel.svelte";
+import Icon from "@/components/common/Icon.svelte";
 import { backgroundWallpaper } from "@/config";
 import type { WALLPAPER_MODE } from "@/types/config";
 
@@ -35,13 +35,13 @@ function switchWallpaperMode(newMode: WALLPAPER_MODE) {
 <!-- z-50 make the panel higher than other float panels -->
 <div class="relative z-50">
 	<button aria-label="Wallpaper Mode" aria-haspopup="menu" class="relative btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="wallpaper-mode-switch">
-		<div class="absolute" class:opacity-0={mode !== WALLPAPER_BANNER}>
+		<div class="absolute inset-0 flex items-center justify-center" class:opacity-0={mode !== WALLPAPER_BANNER}>
 			<Icon icon="material-symbols:image-outline" class="text-[1.25rem]"></Icon>
 		</div>
-		<div class="absolute" class:opacity-0={mode !== WALLPAPER_OVERLAY}>
+		<div class="absolute inset-0 flex items-center justify-center" class:opacity-0={mode !== WALLPAPER_OVERLAY}>
 			<Icon icon="material-symbols:wallpaper" class="text-[1.25rem]"></Icon>
 		</div>
-		<div class="absolute" class:opacity-0={mode !== WALLPAPER_NONE}>
+		<div class="absolute inset-0 flex items-center justify-center" class:opacity-0={mode !== WALLPAPER_NONE}>
 			<Icon icon="material-symbols:hide-image-outline" class="text-[1.25rem]"></Icon>
 		</div>
 	</button>

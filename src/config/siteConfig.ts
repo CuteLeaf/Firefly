@@ -61,10 +61,10 @@ export const siteConfig: SiteConfig = {
 	// 导航栏配置
 	navbar: {
 		// 导航栏Logo
-		// 支持三种类型：Astro图标库，本地图片，网络图片
-		// { type: "icon", value: "material-symbols:home-pin-outline" }
-		// { type: "image", value: "/assets/images/logo.webp", alt: "Firefly Logo" }
-		// { type: "image", value: "https://example.com/logo.png", alt: "Firefly Logo" }
+		// 支持三种类型：
+		// 1. Astro图标库: { type: "icon", value: "material-symbols:home-pin-outline" }
+		// 2. 本地图片: { type: "image", value: "/assets/images/logo.webp", alt: "Firefly Logo" }
+		// 3. 网络图片: { type: "url", value: "https://example.com/logo.png", alt: "Firefly Logo" }
 		logo: {
 			type: "image",
 			value: "/assets/images/firefly.png",
@@ -106,7 +106,7 @@ export const siteConfig: SiteConfig = {
 	// bangumi配置
 	bangumi: {
 		// Bangumi用户ID
-		userId: "1163581",
+		userId: "1143164",
 	},
 
 	// 页面开关配置 - 控制特定页面的访问权限，设为false会返回404
@@ -146,9 +146,9 @@ export const siteConfig: SiteConfig = {
 	// 统计分析
 	analytics: {
 		// Google Analytics ID
-		googleAnalyticsId: "G-P7GBNJKJKL",
+		googleAnalyticsId: "",
 		// Microsoft Clarity ID
-		microsoftClarityId: "tx9equrgr6",
+		microsoftClarityId: "",
 	},
 
 	// 字体配置

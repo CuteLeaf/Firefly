@@ -92,13 +92,11 @@ const { remarkPluginFrontmatter } = await render(entry);
           </>
         )
       } -->
-      {title}
-      <Icon
-        class="inline text-[2rem] text-(--primary) md:hidden translate-y-0.5 absolute"
+      {title}<Icon
+        class="inline-block text-[2rem] text-(--primary) md:hidden align-middle -translate-y-[2px] -ml-1"
         name="material-symbols:chevron-right-rounded"
-      />
-      <Icon
-        class="text-(--primary) text-[2rem] transition hidden md:inline absolute translate-y-0.5 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0"
+      /><Icon
+        class="text-(--primary) text-[2rem] transition hidden md:inline-block opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:-translate-x-1 align-middle -translate-y-[2px]"
         name="material-symbols:chevron-right-rounded"
       />
     </a>
@@ -121,7 +119,7 @@ const { remarkPluginFrontmatter } = await render(entry);
     <!-- description -->
     <div
       class:list={[
-        "transition text-75 mb-3.5 pr-4 description grow",
+        "transition text-75 mb-3.5 md:pr-4 description grow",
         { "line-clamp-2 md:line-clamp-1": !description },
       ]}
     >
@@ -196,7 +194,7 @@ const { remarkPluginFrontmatter } = await render(entry);
         aria-label={title}
         class:list={[
           "post-card-enter-btn",
-          "hidden! md:flex! btn-regular w-13",
+          "hidden md:flex btn-regular w-13",
           "absolute right-3 top-3 bottom-3 rounded-xl bg-(--enter-btn-bg)",
           "hover:bg-(--enter-btn-bg-hover) active:bg-(--enter-btn-bg-active) active:scale-95",
         ]}
@@ -220,13 +218,8 @@ const { remarkPluginFrontmatter } = await render(entry);
 
   :global(.grid-mode) .post-card-content {
     width: 100% !important;
-    padding-right: 1rem !important;
     height: auto !important;
     flex-grow: 1 !important;
-  }
-
-  :global(.grid-mode) .no-cover .post-card-content {
-    padding-right: 1rem !important;
   }
 
   :global(.grid-mode) .post-card-image {

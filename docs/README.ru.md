@@ -86,7 +86,7 @@
 - [x] **Bangumi** - Отображение отслеживания аниме и игр на основе Bangumi API
 - [x] **Система комментариев** - Интеграция систем комментариев Twikoo, Waline, Giscus, Disqus, Artalk
 - [x] **Счетчик посещений** - Поддержка вызова встроенного отслеживания посещений Waline, Twikoo
-- [x] **Музыкальный плеер** - На основе APlayer, поддержка локальной музыки и онлайн-музыки через Meting API
+- [x] **Музыкальный плеер** - Музыкальный плеер в стиле Material Design 3
 
 ### Улучшение контента
 - [x] **Лайтбокс изображений** - Функция предварительного просмотра изображений Fancybox
@@ -254,7 +254,6 @@ comment: true    # Включить комментарии
 - Использованы решения [Bangumi Collection Display](https://kasuha.com/posts/fuwari-enhance-ep2/) и [Email Protection/Image Title](https://kasuha.com/posts/fuwari-enhance-ep1/), которыми поделился блогер [霞葉](https://kasuha.com)
 - За основу взяты решения [Mizuki](https://github.com/matsuzaka-yuki/Mizuki) для заголовка баннера, многоуровневой панели навигации меню, эффекта сакуры, KaTeX и Fancybox
 - Построено с использованием [Astro](https://astro.build) и [Tailwind CSS](https://tailwindcss.com)
-- Использует музыкальный плеер [MetingJS](https://github.com/metowolf/MetingJS) и [APlayer](https://github.com/MoePlayer/APlayer)
 - Использует модель маскота в стиле Чиби `Firefly` spine, предоставленную создателем Bilibili [公公的日常](https://space.bilibili.com/3546750017080050)
 - Иконки от [Iconify](https://iconify.design/)
 - Авторские права на изображения Firefly принадлежат компании [miHoYo](https://www.mihoyo.com/), разработчику игры ["Honkai: Star Rail"](https://sr.mihoyo.com/).

@@ -1,5 +1,5 @@
 ---
-import Icon from "@/components/common/Icon.astro";
+import { Icon } from "astro-icon/components";
 import { LinkPresets } from "@/constants/link-presets";
 import { LinkPreset, type NavBarLink } from "@/types/config";
 import { url } from "@/utils/url-utils";
@@ -32,10 +32,10 @@ const processedLinks = Astro.props.links.map((link: NavBarLink) => ({
                         aria-expanded="false"
                     >
                         <div class="flex items-center transition text-black/75 dark:text-white/75 font-bold group-hover:text-(--primary) group-active:text-(--primary)">
-                            {link.icon && <Icon icon={link.icon} class="text-[1.1rem] mr-2" />}
+                            {link.icon && <Icon name={link.icon} class="text-[1.1rem] mr-2" />}
                             {link.name}
                         </div>
-                        <Icon icon="material-symbols:keyboard-arrow-down-rounded"
+                        <Icon name="material-symbols:keyboard-arrow-down-rounded"
                               class="transition text-[1.25rem] text-(--primary) mobile-dropdown-arrow duration-200"
                         />
                     </button>
@@ -47,10 +47,10 @@ const processedLinks = Astro.props.links.map((link: NavBarLink) => ({
                                target={child.external ? "_blank" : null}
                             >
                                 <div class="flex items-center transition text-black/60 dark:text-white/60 font-medium group-hover:text-(--primary) group-active:text-(--primary)">
-                                    {child.icon && <Icon icon={child.icon} class="text-[1.1rem] mr-2" />}
+                                    {child.icon && <Icon name={child.icon} class="text-[1.1rem] mr-2" />}
                                     {child.name}
                                 </div>
-                                {child.external && <Icon icon="fa6-solid:arrow-up-right-from-square"
+                                {child.external && <Icon name="fa7-solid:arrow-up-right-from-square"
                                       class="transition text-[0.75rem] text-black/25 dark:text-white/25 -translate-x-1"
                                 />}
                             </a>
@@ -65,13 +65,13 @@ const processedLinks = Astro.props.links.map((link: NavBarLink) => ({
                    target={link.external ? "_blank" : null}
                 >
                     <div class="flex items-center transition text-black/75 dark:text-white/75 font-bold group-hover:text-(--primary) group-active:text-(--primary)">
-                        {link.icon && <Icon icon={link.icon} class="text-[1.1rem] mr-2" />}
+                        {link.icon && <Icon name={link.icon} class="text-[1.1rem] mr-2" />}
                         {link.name}
                     </div>
-                    {!link.external && <Icon icon="material-symbols:chevron-right-rounded"
+                    {!link.external && <Icon name="material-symbols:chevron-right-rounded"
                           class="transition text-[1.25rem] text-(--primary)"
                     />}
-                    {link.external && <Icon icon="fa6-solid:arrow-up-right-from-square"
+                    {link.external && <Icon name="fa7-solid:arrow-up-right-from-square"
                           class="transition text-[0.75rem] text-black/25 dark:text-white/25 -translate-x-1"
                     />}
                 </a>

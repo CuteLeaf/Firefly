@@ -66,10 +66,11 @@ export default defineConfig({
 		}),
 		icon({
 			include: {
-				"preprocess: vitePreprocess(),": ["*"],
-				"fa6-brands": ["*"],
-				"fa6-regular": ["*"],
-				"fa6-solid": ["*"],
+				"material-symbols": ["*"],
+				"fa7-brands": ["*"],
+				"fa7-regular": ["*"],
+				"fa7-solid": ["*"],
+				"simple-icons": ["*"], 
 				mdi: ["*"],
 			},
 		}),
@@ -202,17 +203,12 @@ export default defineConfig({
 		],
 	},
 	vite: {
-		plugins: [tailwindcss()],
+		plugins: [
+			tailwindcss(),
+		],
 		resolve: {
 			alias: {
 				"@rehype-callouts-theme": `rehype-callouts/theme/${siteConfig.rehypeCallouts.theme}`,
-			},
-		},
-		css: {
-			preprocessorOptions: {
-				stylus: {
-					additionalData: `@import "${process.cwd().replace(/\\/g, '/')}/src/styles/variables.styl"\n@import "${process.cwd().replace(/\\/g, '/')}/src/styles/markdown-extend.styl"\n`,
-				},
 			},
 		},
 		build: {

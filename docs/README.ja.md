@@ -86,7 +86,7 @@
 - [x] **Bangumi** - Bangumi APIベースのアニメとゲーム記録表示
 - [x] **コメントシステム** - Twikoo、Waline、Giscus、Disqus、Artalkコメントシステムを統合
 - [x] **訪問者数統計** - Waline、Twikoo組み込みの訪問追跡を呼び出し可能
-- [x] **音楽プレーヤー** - APlayerベース、ローカル音楽とMeting APIオンライン音楽をサポート
+- [x] **音楽プレーヤー** - Material Design 3 デザインの音楽プレーヤー
 
 ### コンテンツ拡張
 - [x] **画像ライトボックス** - Fancybox画像プレビュー機能
@@ -252,7 +252,6 @@ Astroがデフォルトで対応している[GitHub Flavored Markdown](https://g
 - ブロガー[霞葉](https://kasuha.com)の[Bangumiコレクション表示](https://kasuha.com/posts/fuwari-enhance-ep2/)と[メール保護・画像タイトル](https://kasuha.com/posts/fuwari-enhance-ep1/)案を参考にしました
 - [Mizuki](https://github.com/matsuzaka-yuki/Mizuki)のバナータイトル/多階層メニューナビゲーションバー/桜エフェクト/KaTeX/Fancyboxソリューションを参考にしました
 - [Astro](https://astro.build)と[Tailwind CSS](https://tailwindcss.com)を使用して構築
-- [MetingJS](https://github.com/metowolf/MetingJS)と[APlayer](https://github.com/MoePlayer/APlayer)音楽プレーヤーを使用
 - Bilibili UP主[公公的日常](https://space.bilibili.com/3546750017080050)が提供するQ版`蛍`マスコットスライスデータモデルを使用
 - アイコンは[Iconify](https://iconify.design/)から
 - 蛍関連の画像素材の著作権はゲーム[「崩壊：スターレイル」](https://sr.mihoyo.com/)の開発元[miHoYo](https://www.mihoyo.com/)に帰属します。

@@ -29,21 +29,20 @@ const { headings } = Astro.props;
     
     /* 默认桌面端位置 - 对应 BackToTop 的位置 */
     right: 2rem;
-    bottom: 8rem;
+    bottom: 4rem;
   }
 
   /* 响应式调整 - 保持原有的位置逻辑 */
   @media (max-width: 1024px) {
     .floating-controls-container {
       right: 1rem;
-      bottom: 6rem;
+      bottom: 4rem;
     }
   }
 
   @media (max-width: 768px) {
     .floating-controls-container {
       right: 0.75rem;
-      bottom: 8rem; 
       bottom: 4rem;
       gap: 0.5rem;
     }
@@ -60,14 +59,14 @@ const { headings } = Astro.props;
   @media (min-resolution: 2dppx) {
     .floating-controls-container {
       right: max(0.5rem, 2rem - 2vw);
-      bottom: max(7rem, 8rem - 5vh);
+      bottom: max(3rem, 4rem - 5vh);
     }
   }
   
   /* 横屏模式适配 */
   @media (orientation: landscape) and (max-height: 500px) {
     .floating-controls-container {
-      bottom: 6rem; /* BackToTop landscape bottom: 8rem? No, let's check source */
+      bottom: 4rem; 
     }
   }
 
@@ -75,7 +74,7 @@ const { headings } = Astro.props;
   @media (max-width: 320px) {
     .floating-controls-container {
         right: 0.125rem;
-        bottom: 5rem;
+        bottom: 4rem;
     }
   }
 </style>

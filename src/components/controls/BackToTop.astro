@@ -3,26 +3,13 @@ import FloatingButton from "@/components/common/FloatingButton.astro";
 ---
 
 <!-- There can't be a filter on parent element, or it will break `fixed` -->
-<div id="back-to-top-wrapper" class="back-to-top-wrapper hide">
-  <FloatingButton
-    id="back-to-top-btn"
-    icon="material-symbols:keyboard-arrow-up-rounded"
-    ariaLabel="Back to Top"
-    onclick="backToTop()"
-    class=""
-  />
-  <!-- 圆形进度条 -->
-  <svg class="progress-ring" viewBox="0 0 120 120">
-    <circle cx="60" cy="60" r="40" class="progress-ring-bg"></circle>
-    <circle
-      cx="60"
-      cy="60"
-      r="40"
-      class="progress-ring-circle"
-      style="--progress: 0%"
-    ></circle>
-  </svg>
-</div>
+<FloatingButton
+  id="back-to-top-btn"
+  icon="material-symbols:keyboard-arrow-up-rounded"
+  ariaLabel="Back to Top"
+  onclick="backToTop()"
+  class="hide" 
+/>
 
 <script is:raw is:inline>
   function backToTop() {
@@ -30,25 +17,16 @@ import FloatingButton from "@/components/common/FloatingButton.astro";
     window.scroll({ top: 0, behavior: "smooth" });
   }
 
-  function calculateScrollProgress() {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-    return Math.min(scrollPercent, 100);
-  }
-
   // 响应式返回顶部按钮管理器
   if (typeof window.BackToTopManager === "undefined") {
     window.BackToTopManager = class BackToTopManager {
       constructor() {
-        this.wrapper = document.getElementById("back-to-top-wrapper");
         this.button = document.getElementById("back-to-top-btn");
-        this.progressRing = document.querySelector(".progress-ring-circle");
         this.init();
       }
 
       init() {
-        if (!this.button || !this.wrapper) return;
+        if (!this.button) return; // wrapper checks removed as it is now flexible
 
         this.setupScrollListener();
       }
@@ -57,18 +35,12 @@ import FloatingButton from "@/components/common/FloatingButton.astro";
         const updateVisibility = () => {
           const scrollTop =
             window.pageYOffset || document.documentElement.scrollTop;
-          const scrollPercent = calculateScrollProgress();
 
-          // 当滚动超过300px时显示按钮
-          if (scrollTop > 300) {
-            this.wrapper.classList.remove("hide");
+          // 当滚动超过200px时显示按钮
+          if (scrollTop > 200) {
+            this.button.classList.remove("hide");
           } else {
-            this.wrapper.classList.add("hide");
-          }
-
-          // 更新进度条
-          if (this.progressRing) {
-            this.progressRing.style.setProperty("--progress", scrollPercent + "%");
+            this.button.classList.add("hide");
           }
         };
 
@@ -91,118 +63,3 @@ import FloatingButton from "@/components/common/FloatingButton.astro";
     new BackToTopManager();
   }
 </script>
-
-<style is:global>
-  #back-to-top-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 4rem;
-    height: 4rem;
-    opacity: 1;
-    pointer-events: auto;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  #back-to-top-wrapper.hide {
-    transform: scale(0.5);
-    opacity: 0;
-    pointer-events: none;
-    height: 0 !important;
-    width: 0 !important;
-    margin: 0 !important;
-    border-width: 0 !important;
-    padding: 0 !important;
-  }
-
-  #back-to-top-wrapper #back-to-top-btn {
-    width: 100%;
-    height: 100%;
-  }
-
-  /* 圆形进度条样式 */
-  .progress-ring {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    transform: rotate(-90deg);
-    pointer-events: none;
-  }
-
-  .progress-ring-bg {
-    fill: none;
-    stroke: rgba(0, 0, 0, 0.08);
-    stroke-width: 4;
-  }
-
-  .progress-ring-circle {
-    fill: none;
-    stroke: var(--primary);
-    stroke-width: 4;
-    stroke-linecap: round;
-    stroke-dasharray: 251.33; /* 2 * π * 40 */
-    stroke-dashoffset: calc(251.33 * (1 - var(--progress, 0%) / 100%));
-    transition: stroke-dashoffset 0.3s ease;
-    opacity: 0.8;
-  }
-
-  /* 暗色主题 */
-  :global(.dark) .progress-ring-bg {
-    stroke: rgba(255, 255, 255, 0.1);
-  }
-
-  :global(.dark) .progress-ring-circle {
-    opacity: 0.9;
-  }
-
-  /* 响应式调整 */
-  @media (max-width: 768px) {
-    #back-to-top-wrapper {
-      width: 3rem;
-      height: 3rem;
-    }
-
-    .progress-ring-bg,
-    .progress-ring-circle {
-      stroke-width: 3;
-    }
-  }
-
-  @media (max-width: 480px) {
-    #back-to-top-wrapper {
-      width: 2.5rem;
-      height: 2.5rem;
-    }
-
-    .progress-ring-bg,
-    .progress-ring-circle {
-      stroke-width: 2.5;
-    }
-  }
-
-  @media (max-width: 360px) {
-    #back-to-top-wrapper {
-      width: 2rem;
-      height: 2rem;
-    }
-
-    .progress-ring-bg,
-    .progress-ring-circle {
-      stroke-width: 2;
-    }
-  }
-
-  @media (max-width: 320px) {
-    #back-to-top-wrapper {
-      width: 1.75rem;
-      height: 1.75rem;
-    }
-
-    .progress-ring-bg,
-    .progress-ring-circle {
-      stroke-width: 1.5;
-    }
-  }
-</style>

@@ -1,16 +1,4 @@
 ---
+// KaTeX CSS - 直接在文章页加载
+import "katex/dist/katex.min.css";
 ---
-<script>
-    // KaTeX 样式按需加载
-    function loadKatex() {
-        if (document.querySelector('.katex')) {
-            import('katex/dist/katex.css');
-        }
-    }
-
-    // 初始化
-    loadKatex();
-
-    // Swup 页面切换支持
-    document.addEventListener('swup:content:replace', loadKatex);
-</script>

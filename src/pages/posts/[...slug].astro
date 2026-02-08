@@ -3,6 +3,7 @@ import { render } from "astro:content";
 import * as path from "node:path";
 import Comment from "@components/comment/index.astro";
 import Markdown from "@components/common/Markdown.astro";
+import KatexManager from "@components/features/KatexManager.astro";
 import License from "@components/misc/License.astro";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
@@ -102,6 +103,9 @@ const jsonLd = {
   postSlug={entry.id}
   headings={headings}
 >
+  <!-- KaTeX 按需加载 - 仅在文章页面 -->
+  <KatexManager slot="head" />
+  
   <script
     is:inline
     slot="head"
@@ -263,7 +267,7 @@ const jsonLd = {
                         class="inline-flex items-center gap-2 px-6 py-3 bg-(--primary) text-white dark:text-black/70 rounded-lg font-medium hover:bg-(--primary)/80 hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
                       >
                         <span>{i18n(I18nKey.sponsor)}</span>
-                        <Icon name="fa6-solid:arrow-right" class="text-sm" />
+                        <Icon name="fa7-solid:arrow-right" class="text-sm" />
                       </a>
                     )
                   }
