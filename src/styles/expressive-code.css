@@ -33,3 +33,20 @@
   }
 }
 
+/* 透明模式下的代码块样式 */
+body.wallpaper-transparent .expressive-code,
+body.wallpaper-transparent .expressive-code * {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+body.wallpaper-transparent .expressive-code .frame {
+  background-color: var(--card-bg-transparent) !important;
+  background: var(--card-bg-transparent) !important;
+}
+
+body.wallpaper-transparent .expressive-code > * > * {
+  background: var(--card-bg-transparent) !important;
+  background-color: var(--card-bg-transparent) !important;
+}
+
