@@ -167,6 +167,35 @@ const rightSidebarClass = effectiveIsBothSidebars
 	: "";
 const mainContentClass = generateMainContentClasses(updatedGridConfig);
 
+const footerClass = [
+	"footer",
+	"col-span-1",
+	"md:col-span-2",
+	"onload-animation",
+];
+
+if (
+	updatedGridConfig.isBothSidebars &&
+	updatedGridConfig.hasLeftComponents &&
+	updatedGridConfig.hasRightComponents
+) {
+	footerClass.push("xl:col-start-2 xl:col-span-1");
+} else if (
+	updatedGridConfig.hasLeftComponents &&
+	!updatedGridConfig.hasRightComponents
+) {
+	footerClass.push("xl:col-start-2 xl:col-span-1");
+} else if (
+	!updatedGridConfig.hasLeftComponents &&
+	updatedGridConfig.hasRightComponents
+) {
+	footerClass.push("xl:col-start-1 xl:col-span-1");
+} else {
+	footerClass.push("xl:col-start-1 xl:col-span-1");
+}
+
+const footerClassName = footerClass.join(" ");
+
 // 检查是否应该启用半透明效果
 const shouldEnableTransparency = isOverlayMode && isBackgroundEnabled;
 
@@ -414,9 +443,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
                 )}
                 <div id="content-wrapper" class="onload-animation transition-leaving">
                     <slot></slot>
-                    <div class="footer col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-3 onload-animation hidden lg:block">
-                        <Footer></Footer>
-                    </div>
+
                 </div>
             </main>
             
@@ -451,7 +478,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
                 </div>
             )}
 
-            <div class="footer col-span-1 md:col-span-2 lg:col-span-2 onload-animation block lg:hidden">
+            <div class={footerClassName}>
                 <Footer></Footer>
             </div>
         </div>
