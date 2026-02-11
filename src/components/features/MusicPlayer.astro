@@ -27,7 +27,11 @@ const localPlaylist =
 							? song.cover
 							: url(song.cover)
 						: undefined,
-					lrc: song.lrc,
+					lrc: song.lrc
+						? isFullUrl(song.lrc)
+							? song.lrc
+							: url(song.lrc)
+						: undefined,
 				};
 			})
 		: [];
@@ -528,7 +532,11 @@ const widgetId =
         ui.lrcContainer.innerHTML = `<div class="text-neutral-400 text-sm py-10">${config.i18n.loadingLyrics}</div>`;
         
         if (track.lrc) {
-            if (track.lrc.startsWith('http')) {
+            const isLrcUrl = /^(https?:)?\/\//.test(track.lrc)
+                || track.lrc.startsWith('/')
+                || /\.(lrc|txt)(\?|#|$)/i.test(track.lrc);
+
+            if (isLrcUrl) {
                 fetch(track.lrc)
                     .then(res => res.text())
                     .then(text => renderLyrics(text))
