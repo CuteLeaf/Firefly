@@ -1,4 +1,6 @@
 import { coverImageConfig } from "@/config/coverImageConfig";
+import { siteConfig } from "@/config/siteConfig";
+import type { ImageFormat } from "@/types/config";
 
 const { randomCoverImage } = coverImageConfig;
 
@@ -161,4 +163,36 @@ export function generateApiUrls(seed?: string): string[] {
 
 		return apiUrl;
 	});
+}
+
+/**
+ * 获取图片优化格式配置
+ * 根据 siteConfig.imageOptimization.formats 返回对应的格式数组
+ */
+export function getImageFormats(): ImageFormat[] {
+	const formatConfig = siteConfig.imageOptimization?.formats ?? "both";
+	switch (formatConfig) {
+		case "avif":
+			return ["avif"];
+		case "webp":
+			return ["webp"];
+		case "both":
+		default:
+			return ["avif", "webp"];
+	}
+}
+
+/**
+ * 获取图片优化质量配置
+ */
+export function getImageQuality(): number {
+	return siteConfig.imageOptimization?.quality ?? 80;
+}
+
+/**
+ * 获取图片回退格式
+ */
+export function getFallbackFormat(): "avif" | "webp" {
+	const formatConfig = siteConfig.imageOptimization?.formats ?? "both";
+	return formatConfig === "avif" ? "avif" : "webp";
 }

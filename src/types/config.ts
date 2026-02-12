@@ -100,6 +100,22 @@ export type SiteConfig = {
 		googleAnalyticsId?: string; // Google Analytics ID
 		microsoftClarityId?: string; // Microsoft Clarity ID
 	};
+
+	// 图片优化配置
+	imageOptimization?: {
+		/**
+		 * 输出图片格式
+		 * - "avif": 仅输出 AVIF 格式（最小体积，兼容性较低）
+		 * - "webp": 仅输出 WebP 格式（体积适中，兼容性好）
+		 * - "both": 同时输出 AVIF 和 WebP（推荐，浏览器自动选择最佳格式）
+		 */
+		formats?: "avif" | "webp" | "both";
+		/**
+		 * 图片压缩质量 (1-100)
+		 * 值越低体积越小但质量越差，推荐 70-85
+		 */
+		quality?: number;
+	};
 };
 
 export type Favicon = {

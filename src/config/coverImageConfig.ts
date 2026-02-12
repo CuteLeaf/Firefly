@@ -30,7 +30,7 @@ export const coverImageConfig: CoverImageConfig = {
 			"https://uapis.cn/api/v1/random/image?category=acg&type=pc",
 		],
 		// 备用图片路径
-		fallback: "/assets/images/cover.webp",
+		fallback: "assets/images/cover.webp",
 
 		/**
 		 * 加载指示器配置

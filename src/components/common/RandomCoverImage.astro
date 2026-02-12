@@ -2,7 +2,7 @@
 import { Image, Picture } from "astro:assets";
 import * as path from "node:path";
 import { coverImageConfig } from "@/config/coverImageConfig";
-import { generateApiUrls } from "@/utils/image-utils";
+import { generateApiUrls, getImageFormats, getImageQuality, getFallbackFormat } from "@/utils/image-utils";
 import { url } from "@/utils/url-utils";
 import type { ResponsiveImageLayout, ImageFormat } from "@/types/config";
 
@@ -36,9 +36,13 @@ const {
 	fallback,
 	layout = "constrained",
 	usePicture = true,
-	formats = ["avif", "webp"],
+	formats = getImageFormats(),
 	loading = "lazy",
 } = Astro.props;
+
+// 获取配置的质量和回退格式
+const configQuality = getImageQuality();
+const fallbackFormat = getFallbackFormat();
 const className = Astro.props.class;
 
 const isLocal = !(
@@ -58,7 +62,7 @@ const isRandomApiImage =
 // https://github.com/withastro/astro/issues/3373
 let img: ImageMetadata | null = null;
 if (isLocal) {
-	const files = import.meta.glob<ImageMetadata>("../../**", {
+	const files = import.meta.glob<ImageMetadata>("../../**/*.{png,jpg,jpeg,webp,avif}", {
 		import: "default",
 	});
 	let normalizedPath = path
@@ -187,9 +191,10 @@ const watermarkStyles = showWatermark
       height={preview ? 300 : 800}
       loading={loading}
       formats={formats}
-      quality={preview ? 80 : 90}
-      widths={preview ? [200, 400, 600] : [800, 1200, 1600, 2000]}
-      sizes={preview ? "(max-width: 768px) 100vw, 28vw" : "(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"}
+      fallbackFormat={fallbackFormat}
+      quality={preview ? Math.round(configQuality * 0.9) : configQuality}
+      widths={preview ? [320, 480, 640, 960] : [800, 1200, 1600, 2000]}
+      sizes={preview ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 320px" : "(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"}
       {...(layout && { layout })}
     />
   )}
@@ -205,10 +210,10 @@ const watermarkStyles = showWatermark
       width={preview ? 400 : 1200}
       height={preview ? 300 : 800}
       loading={loading}
-      format="webp"
-      quality={preview ? 80 : 90}
-      widths={preview ? [200, 400, 600] : [800, 1200, 1600, 2000]}
-      sizes={preview ? "(max-width: 768px) 100vw, 28vw" : "(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"}
+      format={fallbackFormat}
+      quality={preview ? Math.round(configQuality * 0.9) : configQuality}
+      widths={preview ? [320, 480, 640, 960] : [800, 1200, 1600, 2000]}
+      sizes={preview ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 320px" : "(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"}
       {...(layout && { layout })}
       onloadstart={`(function(img){
         const container = img.parentElement;

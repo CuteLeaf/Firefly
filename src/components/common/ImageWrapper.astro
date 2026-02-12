@@ -3,6 +3,7 @@ import { Image, Picture } from "astro:assets";
 import * as path from "node:path";
 import type { ImageMetadata } from "astro";
 import { url } from "@/utils/url-utils";
+import { getImageFormats, getImageQuality, getFallbackFormat } from "@/utils/image-utils";
 import type { ResponsiveImageLayout, ImageFormat } from "@/types/config";
 
 interface Props {
@@ -33,11 +34,13 @@ const {
 	fetchpriority = "auto",
 	layout = "constrained",
 	usePicture = true,
-	formats = ["avif", "webp"],
+	formats = getImageFormats(),
 	widths,
 	sizes,
-	quality,
+	quality = getImageQuality(),
 } = Astro.props;
+
+const fallbackFormat = getFallbackFormat();
 const className = Astro.props.class;
 
 const isLocal = !(
@@ -52,7 +55,7 @@ const isPublic = src.startsWith("/");
 // https://github.com/withastro/astro/issues/3373
 let img: ImageMetadata | null = null;
 if (isLocal) {
-	const files = import.meta.glob<ImageMetadata>("../../**", {
+	const files = import.meta.glob<ImageMetadata>("../../**/*.{png,jpg,jpeg,webp,avif}", {
 		import: "default",
 	});
 	let normalizedPath = path
@@ -63,8 +66,9 @@ if (isLocal) {
 		console.error(
 			`\n[ERROR] Image file not found: ${normalizedPath.replace("../../", "src/")}`,
 		);
+	} else {
+		img = await file();
 	}
-	img = await file();
 }
 
 const imageClass = "w-full h-full object-cover";
@@ -89,6 +93,7 @@ const responsiveProps = {
             loading={loading}
             fetchpriority={fetchpriority}
             formats={formats}
+            fallbackFormat={fallbackFormat}
             {...responsiveProps}
         />
     )}
