@@ -114,6 +114,7 @@ const imageStyle = `object-position: ${position};${blur > 0 ? ` filter: blur(${b
 					widths={[1280, 1920, 2560]}
 					sizes="100vw"
 					loading="eager"
+					fetchpriority="high"
 					quality={desktopQuality}
 				/>
 			) : (
@@ -122,6 +123,8 @@ const imageStyle = `object-position: ${position};${blur > 0 ? ` filter: blur(${b
 					alt="Desktop wallpaper"
 					class="absolute inset-0 w-full h-full object-cover"
 					style={imageStyle}
+					loading="eager"
+					fetchpriority="high"
 				/>
 			)}
 		</div>
@@ -141,6 +144,7 @@ const imageStyle = `object-position: ${position};${blur > 0 ? ` filter: blur(${b
 					widths={[640, 750, 1080]}
 					sizes="100vw"
 					loading="eager"
+					fetchpriority="high"
 					quality={mobileQuality}
 				/>
 			) : (
@@ -149,6 +153,8 @@ const imageStyle = `object-position: ${position};${blur > 0 ? ` filter: blur(${b
 					alt="Mobile wallpaper"
 					class="absolute inset-0 w-full h-full object-cover"
 					style={imageStyle}
+					loading="eager"
+					fetchpriority="high"
 				/>
 			)}
 		</div>

@@ -258,6 +258,7 @@ const mobileQuality = Math.round(configQuality * 0.9);
             widths={[640, 750, 1080]}
             sizes="100vw"
             loading="eager"
+            fetchpriority="high"
             quality={mobileQuality}
         />
         <!-- Desktop: use desktop-specific image -->
@@ -270,6 +271,7 @@ const mobileQuality = Math.round(configQuality * 0.9);
             widths={[1280, 1920, 2560]}
             sizes="100vw"
             loading="eager"
+            fetchpriority="high"
             quality={configQuality}
         />
     </div>
