@@ -84,21 +84,8 @@ const { remarkPluginFrontmatter } = await render(entry);
         before:w-1 before:h-5 before:rounded-md before:bg-(--primary)
         before:absolute before:top-[35px] before:left-[18px] before:hidden md:before:block"
     >
-      <!--       {
-        pinned && (
-          <>
-            <Icon
-              name="mdi:pin"
-              class="inline text-(--primary) text-2xl mr-2 -translate-y-0.5"
-            />
-          </>
-        )
-      } -->
       {title}<Icon
-        class="inline-block text-[2rem] text-(--primary) md:hidden align-middle -translate-y-[2px] -ml-1"
-        name="material-symbols:chevron-right-rounded"
-      /><Icon
-        class="text-(--primary) text-[2rem] transition hidden md:inline-block opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:-translate-x-1 align-middle -translate-y-[2px]"
+        class="inline text-[2rem] text-(--primary) md:hidden align-middle -translate-y-[2px] -ml-1"
         name="material-symbols:chevron-right-rounded"
       />
     </a>
