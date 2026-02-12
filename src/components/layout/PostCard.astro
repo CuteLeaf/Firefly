@@ -23,6 +23,7 @@ interface Props {
 	draft: boolean;
 	pinned?: boolean;
 	style: string;
+	loading?: "lazy" | "eager";
 }
 const {
 	entry,
@@ -36,6 +37,7 @@ const {
 	description,
 	pinned,
 	style,
+	loading = "lazy",
 } = Astro.props;
 const className = Astro.props.class;
 
@@ -182,6 +184,7 @@ const { remarkPluginFrontmatter } = await render(entry);
           class="w-full h-full"
           seed={entry.id}
           preview={true}
+          loading={loading}
         />
       </a>
     )

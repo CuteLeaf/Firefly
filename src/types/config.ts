@@ -676,3 +676,9 @@ export type SponsorConfig = {
 	showSponsorsList?: boolean; // 是否显示赞助者列表，默认 true
 	showButtonInPost?: boolean; // 是否在文章详情页底部显示赞助按钮，默认 true
 };
+
+// 响应式图像布局类型
+export type ResponsiveImageLayout = "constrained" | "full-width" | "none";
+
+// 图像格式类型
+export type ImageFormat = "avif" | "webp" | "png" | "jpg" | "jpeg" | "gif";

@@ -1,9 +1,10 @@
 ---
-import { Image } from "astro:assets";
+import { Image, Picture } from "astro:assets";
 import * as path from "node:path";
 import { coverImageConfig } from "@/config/coverImageConfig";
 import { generateApiUrls } from "@/utils/image-utils";
 import { url } from "@/utils/url-utils";
+import type { ResponsiveImageLayout, ImageFormat } from "@/types/config";
 
 const { randomCoverImage } = coverImageConfig;
 
@@ -17,6 +18,11 @@ interface Props {
 	seed?: string; // 用于生成随机图API的种子（文章slug）
 	preview?: boolean; // 是否是预览模式（文章列表页），true为预览模式（小尺寸），false为详情页（大尺寸）
 	fallback?: string; // 图片加载失败时的备用图片
+	// 响应式图像属性
+	layout?: ResponsiveImageLayout;
+	usePicture?: boolean;
+	formats?: ImageFormat[];
+	loading?: "lazy" | "eager";
 }
 
 const {
@@ -28,6 +34,10 @@ const {
 	seed,
 	preview = false,
 	fallback,
+	layout = "constrained",
+	usePicture = true,
+	formats = ["avif", "webp"],
+	loading = "lazy",
 } = Astro.props;
 const className = Astro.props.class;
 
@@ -163,11 +173,11 @@ const watermarkStyles = showWatermark
     </div>
   )}
   
-  <!-- 本地图片：使用 Astro Image 组件 -->
-  {isLocal && img && (
-    <Image 
-      src={img} 
-      alt={alt || ""} 
+  <!-- 本地图片：使用 Astro Image 或 Picture 组件 -->
+  {isLocal && img && usePicture && (
+    <Picture
+      src={img}
+      alt={alt || ""}
       class:list={[
         imageClass,
         preview ? 'random-cover-preview-image' : 'random-cover-full-image'
@@ -175,11 +185,31 @@ const watermarkStyles = showWatermark
       style={imageStyle}
       width={preview ? 400 : 1200}
       height={preview ? 300 : 800}
-      loading="lazy"
+      loading={loading}
+      formats={formats}
+      quality={preview ? 80 : 90}
+      widths={preview ? [200, 400, 600] : [800, 1200, 1600, 2000]}
+      sizes={preview ? "(max-width: 768px) 100vw, 28vw" : "(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"}
+      {...(layout && { layout })}
+    />
+  )}
+  {isLocal && img && !usePicture && (
+    <Image
+      src={img}
+      alt={alt || ""}
+      class:list={[
+        imageClass,
+        preview ? 'random-cover-preview-image' : 'random-cover-full-image'
+      ]}
+      style={imageStyle}
+      width={preview ? 400 : 1200}
+      height={preview ? 300 : 800}
+      loading={loading}
       format="webp"
       quality={preview ? 80 : 90}
       widths={preview ? [200, 400, 600] : [800, 1200, 1600, 2000]}
       sizes={preview ? "(max-width: 768px) 100vw, 28vw" : "(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"}
+      {...(layout && { layout })}
       onloadstart={`(function(img){
         const container = img.parentElement;
         if (container) {
@@ -214,15 +244,15 @@ const watermarkStyles = showWatermark
   
   <!-- 远程图片（包括随机图API和普通远程图片） -->
   {!isLocal && (
-    <img 
-      src={isPublic ? url(src) : src} 
-      alt={alt || ""} 
+    <img
+      src={isPublic ? url(src) : src}
+      alt={alt || ""}
       class:list={[
         imageClass,
         preview ? 'random-cover-preview-image' : 'random-cover-full-image'
       ]}
       style={imageStyle}
-      loading="lazy"
+      loading={loading}
       decoding="async"
       data-preview={preview ? "true" : "false"}
       data-seed={seed || ""}
