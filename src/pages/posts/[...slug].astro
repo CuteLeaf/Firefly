@@ -73,6 +73,30 @@ if (processedImage) {
 	}
 }
 
+// 处理头像URL
+let posterAvatarUrl: string | null = profileConfig.avatar || null;
+if (posterAvatarUrl) {
+	const isLocalAvatar = !(
+		posterAvatarUrl.startsWith("/") ||
+		posterAvatarUrl.startsWith("http") ||
+		posterAvatarUrl.startsWith("https") ||
+		posterAvatarUrl.startsWith("data:")
+	);
+	if (isLocalAvatar) {
+		const files = import.meta.glob<ImageMetadata>("../../**", {
+			import: "default",
+		});
+		const normalizedPath = path
+			.normalize(path.join("../../", posterAvatarUrl))
+			.replace(/\\/g, "/");
+		const file = files[normalizedPath];
+		if (file) {
+			const img = await file();
+			posterAvatarUrl = img.src;
+		}
+	}
+}
+
 dayjs.extend(utc);
 
 const jsonLd = {
@@ -255,7 +279,7 @@ const jsonLd = {
                         coverImage={posterCoverUrl}
                         url={Astro.url.href}
                         siteTitle={siteConfig.title}
-                        avatar={profileConfig.avatar}
+                        avatar={posterAvatarUrl}
                       />
                     )
                   }
