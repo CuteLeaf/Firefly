@@ -167,7 +167,7 @@ const { remarkPluginFrontmatter } = await render(entry);
           "w-full md:w-(--coverWidth)",
           "aspect-2/1 md:aspect-auto",
           "relative md:absolute md:top-4 md:bottom-4 md:right-4",
-          "rounded-t-(--radius-large) md:rounded-xl overflow-hidden active:scale-95",
+          "rounded-t-(--radius-large) md:rounded-xl overflow-hidden",
         ]}
       >
         <div class="absolute pointer-events-none z-10 w-full h-full group-hover:bg-black/30 group-active:bg-black/50 transition" />
@@ -181,7 +181,7 @@ const { remarkPluginFrontmatter } = await render(entry);
           src={processedImage}
           basePath={getFileDirFromPath(entry.filePath || '')}
           alt="Cover Image of the Post"
-          class="w-full h-full"
+          class="w-full h-full transition-transform group-active:scale-105"
           preview={true}
           loading={loading}
         />
