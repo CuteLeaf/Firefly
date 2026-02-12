@@ -28,7 +28,9 @@ export const coverImageConfig: CoverImageConfig = {
 			"https://www.dmoe.cc/random.php",
 			"https://uapis.cn/api/v1/random/image?category=acg&type=pc",
 		],
-		// API失败时的回退图片（相对于src目录）
+		// API失败时的回退图片
 		fallback: "assets/images/cover.webp",
+		// 是否显示加载动画
+		showLoading: false,
 	},
 };

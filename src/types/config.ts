@@ -324,6 +324,7 @@ export type CoverImageConfig = {
 		enable: boolean; // 是否启用随机图功能
 		apis: string[]; // 随机图API列表
 		fallback?: string; // API失败时的回退图片路径（相对于src目录）
+		showLoading?: boolean; // 是否显示加载动画
 	};
 };
 

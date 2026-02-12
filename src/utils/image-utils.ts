@@ -60,7 +60,6 @@ export function getImageFormats(): ImageFormat[] {
 			return ["avif"];
 		case "webp":
 			return ["webp"];
-		case "both":
 		default:
 			return ["avif", "webp"];
 	}
