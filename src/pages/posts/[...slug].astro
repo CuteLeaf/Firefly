@@ -17,7 +17,7 @@ import {
 import { Icon } from "astro-icon/components";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import RandomCoverImage from "@/components/common/RandomCoverImage.astro";
+import CoverImage from "@/components/common/CoverImage.astro";
 import PostMetadata from "@/components/layout/PostMeta.astro";
 import SharePoster from "@/components/misc/SharePoster.svelte";
 import { coverImageConfig } from "@/config/coverImageConfig";
@@ -195,12 +195,11 @@ const jsonLd = {
       {
         processedImage && coverImageConfig.enableInPost && (
           <div style="margin-top:1rem;">
-            <RandomCoverImage
+            <CoverImage
               id="post-cover"
               src={processedImage}
               basePath={getFileDirFromPath(entry.filePath || '')}
               class="mb-8 rounded-xl banner-container onload-animation"
-              seed={entry.id}
               preview={false}
             />
           </div>

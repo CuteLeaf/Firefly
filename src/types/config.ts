@@ -322,29 +322,8 @@ export type CoverImageConfig = {
 	enableInPost: boolean; // 是否在文章详情页显示封面图
 	randomCoverImage: {
 		enable: boolean; // 是否启用随机图功能
-		apis: string[]; // 随机图API列表，支持 {seed} 占位符，会替换为文章slug或时间戳
-		fallback?: string; // 当API请求失败时的备用图片路径
-		// 加载指示器配置
-		loading?: {
-			// 加载指示器开关
-			enable: boolean;
-			image?: string; // 自定义加载图片路径（相对于public目录），默认 "/assets/images/loading.gif"
-			backgroundColor?: string; // 加载指示器背景颜色，默认与loading.gif背景色一致 (#fefefe)
-		};
-		watermark?: {
-			enable: boolean; // 是否显示水印
-			text?: string; // 水印文本，默认为"随机图"
-			position?:
-				| "top-left"
-				| "top-right"
-				| "bottom-left"
-				| "bottom-right"
-				| "center"; // 水印位置
-			opacity?: number; // 水印透明度 0-1，默认0.6
-			fontSize?: string; // 字体大小，默认"0.75rem"
-			color?: string; // 文字颜色，默认为白色
-			backgroundColor?: string; // 背景颜色，默认为半透明黑色
-		};
+		apis: string[]; // 随机图API列表
+		fallback?: string; // API失败时的回退图片路径（相对于src目录）
 	};
 };
 
