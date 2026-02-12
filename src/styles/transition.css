@@ -9,28 +9,28 @@
 /* Main Content Transition */
 .transition-main {
     transition: 
-        opacity 80ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
-        transform 80ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        opacity 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* Leaving Animation */
 .transition-leaving {
     transition:
-        transform 80ms cubic-bezier(0.55, 0.055, 0.675, 0.19),
-        opacity 80ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
+        transform 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19),
+        opacity 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
 /* State: Changing (Swup) */
 html.is-changing .transition-main {
     transition: 
-        opacity 80ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
-        transform 80ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        opacity 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 html.is-leaving .transition-main {
     transition: 
-        opacity 80ms cubic-bezier(0.55, 0.055, 0.675, 0.19),
-        transform 80ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
+        opacity 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19),
+        transform 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
 /* State: Animating (Entering) */
@@ -47,7 +47,7 @@ html.is-animating.is-leaving .transition-leaving {
 
 /* Swup Fade Fallback */
 html.is-changing .transition-swup-fade {
-    transition: all 80ms ease-out;
+    transition: all 120ms ease-out;
 }
 
 html.is-animating .transition-swup-fade {
@@ -76,12 +76,12 @@ html.is-animating .transition-swup-fade {
 
 .onload-animation {
     opacity: 0;
-    animation: fade-in-up 80ms ease-out forwards;
+    animation: fade-in-up 120ms ease-out forwards;
 }
 
 /* 渐进式动画延迟 */
 .onload-animation:nth-child(1) { animation-delay: 0ms; }
-.onload-animation:nth-child(2) { animation-delay: 20ms; }
-.onload-animation:nth-child(3) { animation-delay: 40ms; }
-.onload-animation:nth-child(4) { animation-delay: 60ms; }
-.onload-animation:nth-child(5) { animation-delay: 80ms; }
+.onload-animation:nth-child(2) { animation-delay: 30ms; }
+.onload-animation:nth-child(3) { animation-delay: 60ms; }
+.onload-animation:nth-child(4) { animation-delay: 90ms; }
+.onload-animation:nth-child(5) { animation-delay: 120ms; }
