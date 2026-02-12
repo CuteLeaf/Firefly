@@ -41,6 +41,7 @@
 🔧 Highly Configurable: Most features can be customized through configuration files
 
 <img alt="firefly" src="./docs/images/1.webp" />
+<img alt="Lighthouse" src="./docs/images/Lighthouse.png" />
 
 >[!TIP]
 >Firefly is a fresh and beautiful personal blog theme template based on the Astro framework and the Fuwari template, designed for tech enthusiasts and content creators. This theme integrates modern web technology stacks, provides rich functional modules and highly customizable interfaces, allowing you to easily create a professional and beautiful personal blog website.

@@ -42,6 +42,7 @@
 🔧 高度可配置: 大部分功能模組均可透過配置檔案自訂
 
 <img alt="firefly" src="./images/1.webp" />
+<img alt="Lighthouse" src="./images/Lighthouse.png" />
 
 >[!TIP]
 >Firefly 是一款基於 Astro 框架和 Fuwari 模板開發的清新美觀且現代化個人部落格主題模板，專為技術愛好者和內容創作者設計。該主題融合了現代 Web 技術棧，提供了豐富的功能模組和高度可定制的界面，讓您能夠輕鬆打造出專業且美觀的個人部落格網站。
