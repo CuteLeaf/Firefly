@@ -1,7 +1,13 @@
 ---
-import { Image } from "astro:assets";
+import { Image, Picture } from "astro:assets";
 import * as path from "node:path";
 import type { ImageMetadata } from "astro";
+import type { ImageFormat, ResponsiveImageLayout } from "@/types/config";
+import {
+	getFallbackFormat,
+	getImageFormats,
+	getImageQuality,
+} from "@/utils/image-utils";
 import { url } from "@/utils/url-utils";
 
 interface Props {
@@ -13,6 +19,13 @@ interface Props {
 	basePath?: string;
 	loading?: "lazy" | "eager";
 	fetchpriority?: "high" | "low" | "auto";
+	// 响应式图像属性
+	layout?: ResponsiveImageLayout;
+	usePicture?: boolean;
+	formats?: ImageFormat[];
+	widths?: number[];
+	sizes?: string;
+	quality?: number;
 }
 
 const {
@@ -23,7 +36,15 @@ const {
 	basePath = "/",
 	loading = "lazy",
 	fetchpriority = "auto",
+	layout = "constrained",
+	usePicture = true,
+	formats = getImageFormats(),
+	widths,
+	sizes,
+	quality = getImageQuality(),
 } = Astro.props;
+
+const fallbackFormat = getFallbackFormat();
 const className = Astro.props.class;
 
 const isLocal = !(
@@ -38,9 +59,12 @@ const isPublic = src.startsWith("/");
 // https://github.com/withastro/astro/issues/3373
 let img: ImageMetadata | null = null;
 if (isLocal) {
-	const files = import.meta.glob<ImageMetadata>("../../**", {
-		import: "default",
-	});
+	const files = import.meta.glob<ImageMetadata>(
+		"../../**/*.{png,jpg,jpeg,webp,avif}",
+		{
+			import: "default",
+		},
+	);
 	let normalizedPath = path
 		.normalize(path.join("../../", basePath, src))
 		.replace(/\\/g, "/");
@@ -49,15 +73,47 @@ if (isLocal) {
 		console.error(
 			`\n[ERROR] Image file not found: ${normalizedPath.replace("../../", "src/")}`,
 		);
+	} else {
+		img = await file();
 	}
-	img = await file();
 }
 
 const imageClass = "w-full h-full object-cover";
 const imageStyle = `object-position: ${position}`;
+
+// 构建响应式图像属性
+const responsiveProps = {
+	...(layout && { layout }),
+	...(widths && { widths }),
+	...(sizes && { sizes }),
+	...(quality && { quality }),
+};
 ---
 <div id={id} class:list={[className, 'overflow-hidden relative']}>
     <div class="transition absolute inset-0 dark:bg-black/10 pointer-events-none"></div>
-    {isLocal && img && <Image src={img} alt={alt || ""} class={imageClass} style={imageStyle} loading={loading} fetchpriority={fetchpriority} />}
+    {isLocal && img && usePicture && (
+        <Picture
+            src={img}
+            alt={alt || ""}
+            class={imageClass}
+            style={imageStyle}
+            loading={loading}
+            fetchpriority={fetchpriority}
+            formats={formats}
+            fallbackFormat={fallbackFormat}
+            {...responsiveProps}
+        />
+    )}
+    {isLocal && img && !usePicture && (
+        <Image
+            src={img}
+            alt={alt || ""}
+            class={imageClass}
+            style={imageStyle}
+            loading={loading}
+            fetchpriority={fetchpriority}
+            {...responsiveProps}
+        />
+    )}
     {!isLocal && <img src={isPublic ? url(src) : src} alt={alt || ""} class={imageClass} style={imageStyle} loading={loading} fetchpriority={fetchpriority} />}
 </div>

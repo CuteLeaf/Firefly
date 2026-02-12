@@ -38,7 +38,7 @@ const initialLayoutClass =
   data-grid-columns={gridColumns}
 >
   {
-    page.data.map((entry: PostEntry) => (
+    page.data.map((entry: PostEntry, index: number) => (
       <PostCard
         entry={entry}
         title={entry.data.title}
@@ -51,6 +51,7 @@ const initialLayoutClass =
         description={entry.data.description}
         draft={entry.data.draft}
         pinned={entry.data.pinned}
+        loading={index < 2 ? "eager" : "lazy"}
         class:list="onload-animation post-card-item"
         style={`animation-delay: calc(var(--content-delay) + ${delay++ * interval}ms);`}
       />

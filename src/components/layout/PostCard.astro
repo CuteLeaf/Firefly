@@ -2,7 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
 import { Icon } from "astro-icon/components";
-import RandomCoverImage from "@/components/common/RandomCoverImage.astro";
+import CoverImage from "@/components/common/CoverImage.astro";
 import PostMetadata from "@/components/layout/PostMeta.astro";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
@@ -23,6 +23,7 @@ interface Props {
 	draft: boolean;
 	pinned?: boolean;
 	style: string;
+	loading?: "lazy" | "eager";
 }
 const {
 	entry,
@@ -36,6 +37,7 @@ const {
 	description,
 	pinned,
 	style,
+	loading = "lazy",
 } = Astro.props;
 const className = Astro.props.class;
 
@@ -165,7 +167,7 @@ const { remarkPluginFrontmatter } = await render(entry);
           "w-full md:w-(--coverWidth)",
           "aspect-2/1 md:aspect-auto",
           "relative md:absolute md:top-4 md:bottom-4 md:right-4",
-          "rounded-t-(--radius-large) md:rounded-xl overflow-hidden active:scale-95",
+          "rounded-t-(--radius-large) md:rounded-xl overflow-hidden",
         ]}
       >
         <div class="absolute pointer-events-none z-10 w-full h-full group-hover:bg-black/30 group-active:bg-black/50 transition" />
@@ -175,13 +177,13 @@ const { remarkPluginFrontmatter } = await render(entry);
             class="transition opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 text-white text-5xl"
           />
         </div>
-        <RandomCoverImage
+        <CoverImage
           src={processedImage}
           basePath={getFileDirFromPath(entry.filePath || '')}
           alt="Cover Image of the Post"
-          class="w-full h-full"
-          seed={entry.id}
+          class="w-full h-full transition-transform group-active:scale-105"
           preview={true}
+          loading={loading}
         />
       </a>
     )

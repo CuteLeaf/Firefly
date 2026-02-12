@@ -38,6 +38,13 @@ export default defineConfig({
 
 	base: "/",
 	trailingSlash: "always",
+
+	// 图像优化配置
+	image: {
+		// 全局响应式布局
+		experimentalLayout: "constrained",
+	},
+
 	integrations: [
 		swup({
 			theme: false,

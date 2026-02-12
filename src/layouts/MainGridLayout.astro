@@ -21,6 +21,7 @@ import {
 	BANNER_HEIGHT_EXTEND,
 	MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
 } from "@/constants/constants";
+import { getImageQuality } from "@/utils/image-utils";
 import { getBackgroundImages, isHomePage } from "@/utils/layout-utils";
 import {
 	generateGridClasses,
@@ -205,6 +206,10 @@ const transparentClass = shouldEnableTransparency
 	: "";
 
 const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
+
+// 获取图片质量配置
+const configQuality = getImageQuality();
+const mobileQuality = Math.round(configQuality * 0.9);
 ---
 
 <Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} postSlug={postSlug}>
@@ -245,19 +250,29 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
     <!-- 背景图片显示 -->
     <div class="relative h-full w-full">
         <!-- Mobile: use mobile-specific image -->
-        <ImageWrapper 
-            alt="Mobile background image of the blog" 
+        <ImageWrapper
+            alt="Mobile background image of the blog"
             class:list={["block lg:hidden object-cover h-full w-full transition duration-700 opacity-100"]}
-            src={typeof backgroundImages.mobile === 'string' ? backgroundImages.mobile : (typeof backgroundImages.desktop === 'string' ? backgroundImages.desktop : '')} 
+            src={typeof backgroundImages.mobile === 'string' ? backgroundImages.mobile : (typeof backgroundImages.desktop === 'string' ? backgroundImages.desktop : '')}
             position={backgroundWallpaper.banner?.position}
+            widths={[640, 750, 1080]}
+            sizes="100vw"
+            loading="eager"
+            fetchpriority="high"
+            quality={mobileQuality}
         />
         <!-- Desktop: use desktop-specific image -->
-        <ImageWrapper 
-            id="banner" 
-            alt="Desktop background image of the blog" 
+        <ImageWrapper
+            id="banner"
+            alt="Desktop background image of the blog"
             class:list={["hidden lg:block object-cover h-full transition duration-700 opacity-100"]}
-            src={typeof backgroundImages.desktop === 'string' ? backgroundImages.desktop : (typeof backgroundImages.mobile === 'string' ? backgroundImages.mobile : '')} 
+            src={typeof backgroundImages.desktop === 'string' ? backgroundImages.desktop : (typeof backgroundImages.mobile === 'string' ? backgroundImages.mobile : '')}
             position={backgroundWallpaper.banner?.position}
+            widths={[1280, 1920, 2560]}
+            sizes="100vw"
+            loading="eager"
+            fetchpriority="high"
+            quality={configQuality}
         />
     </div>
     
