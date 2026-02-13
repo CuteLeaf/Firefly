@@ -71,7 +71,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
 /* 移动端横幅优化 - 小屏手机 (320px - 480px) */
 @media (max-width: 480px) {
     /* Banner wrapper 高度优化 - 优先保持banner显示 - 仅在首页应用 */
-    #banner-wrapper:not(.mobile-hide-banner) {
+    #wallpaper-wrapper:not(.mobile-hide-banner) {
         height: 70vh !important; /* 保持较大高度优先显示banner */
         min-height: 450px;
         max-height: none; /* 移除最大高度限制 */
@@ -126,7 +126,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
 /* 移动端横幅优化 - 大屏手机 (481px - 640px) */
 @media (min-width: 481px) and (max-width: 640px) {
     /* Banner wrapper 高度优化 - 优先保持banner显示 - 仅在首页应用 */
-    #banner-wrapper:not(.mobile-hide-banner) {
+    #wallpaper-wrapper:not(.mobile-hide-banner) {
         height: 75vh !important;
         min-height: 500px;
         max-height: none; /* 移除最大高度限制 */
@@ -181,7 +181,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
 /* 移动端横幅优化 - 超大屏手机/小平板 (641px - 767px) */
 @media (min-width: 641px) and (max-width: 767px) {
     /* Banner wrapper 高度优化 - 仅在首页应用 */
-    #banner-wrapper:not(.mobile-hide-banner) {
+    #wallpaper-wrapper:not(.mobile-hide-banner) {
         height: 72vh !important;
         min-height: 520px;
         max-height: none; /* 移除最大高度限制 */
@@ -236,7 +236,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
 /* 平板设备横幅优化 (768px - 1023px) - Tailwind md 断点 */
 @media (min-width: 768px) and (max-width: 1023px) {
     /* Banner wrapper 高度优化 - 仅在首页应用 */
-    #banner-wrapper:not(.mobile-hide-banner) {
+    #wallpaper-wrapper:not(.mobile-hide-banner) {
         height: 70vh !important;
         min-height: 500px;
         top: 0 !important; /* 移动端从顶部开始，避免被导航栏覆盖 */
@@ -325,7 +325,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
 
 /* 平板和手机端非首页隐藏banner - 改进的分阶段动画 (1024px以下) */
 @media (max-width: 1023px) {
-    #banner-wrapper {
+    #wallpaper-wrapper {
         transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease-out;
         transform-origin: top center;
         /* 硬件加速优化 */
@@ -462,7 +462,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
 
 /* 移动端横屏优化 */
 @media (max-width: 1023px) and (orientation: landscape) {
-    #banner-wrapper:not(.mobile-hide-banner) {
+    #wallpaper-wrapper:not(.mobile-hide-banner) {
         top: 0 !important; /* 横屏模式从顶部开始，避免被导航栏覆盖 */
         height: 60vh !important;
     }
@@ -608,7 +608,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
 /* 基于屏幕高度的banner优化 - 优先显示banner */
 /* 极小高度屏幕 (高度 ≤ 500px) */
 @media (max-height: 500px) {
-    #banner-wrapper {
+    #wallpaper-wrapper {
         height: 85vh !important; /* 占用更多高度确保banner显示 */
         min-height: 350px !important;
     }
@@ -639,7 +639,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
 
 /* 小高度屏幕 (高度 501px - 600px) */
 @media (min-height: 501px) and (max-height: 600px) {
-    #banner-wrapper {
+    #wallpaper-wrapper {
         height: 80vh !important;
         min-height: 400px !important;
     }
@@ -670,7 +670,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
 
 /* 中等高度屏幕 (高度 601px - 700px) */
 @media (min-height: 601px) and (max-height: 700px) {
-    #banner-wrapper {
+    #wallpaper-wrapper {
         height: 75vh !important;
         min-height: 450px !important;
     }
@@ -701,7 +701,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
 
 /* 横屏模式特殊处理 - 优先显示banner */
 @media (orientation: landscape) and (max-height: 500px) {
-    #banner-wrapper {
+    #wallpaper-wrapper {
         height: 90vh !important; /* 横屏时占用更多高度 */
         min-height: 300px !important;
     }
@@ -728,4 +728,36 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
         height: 10vh !important;
         min-height: 50px !important;
     }
+}
+
+/* ============================================
+ * Overlay 模式 - 全屏壁纸
+ * 通过 .wallpaper-overlay 类切换显示模式
+ * ============================================ */
+#wallpaper-wrapper.wallpaper-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: var(--overlay-z-index, -1) !important;
+    opacity: var(--overlay-opacity, 0.8) !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+    top: 0 !important;
+    min-height: unset !important;
+    max-height: unset !important;
+    transform: none !important;
+    transition: opacity 0.6s ease !important;
+}
+
+/* Overlay 模式下图片模糊效果 */
+#wallpaper-wrapper.wallpaper-overlay img {
+    filter: blur(var(--overlay-blur, 0px));
+}
+
+/* Overlay 模式隐藏 Banner 专属元素 */
+#wallpaper-wrapper.wallpaper-overlay .banner-text-overlay,
+#wallpaper-wrapper.wallpaper-overlay .waves,
+#wallpaper-wrapper.wallpaper-overlay #header-waves {
+    display: none !important;
 }

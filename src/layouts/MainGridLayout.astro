@@ -1,6 +1,6 @@
 ---
 import Live2DWidget from "@components/features/Live2DWidget.astro";
-import OverlayWallpaper from "@components/features/OverlayWallpaper.astro";
+
 import SpineModel from "@components/features/SpineModel.astro";
 import Footer from "@components/layout/Footer.astro";
 import Navbar from "@components/layout/Navbar.astro";
@@ -218,20 +218,6 @@ const mobileQuality = Math.round(configQuality * 0.9);
 <Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} postSlug={postSlug}>
 
 
-<!-- 全屏透明覆盖壁纸 - 如果允许切换则始终渲染，否则只渲染当前模式 -->
-{(isWallpaperSwitchable || isOverlayMode) && (
-	<OverlayWallpaper config={{
-		src: {
-			desktop: backgroundImages.desktop[0] || '',
-			mobile: backgroundImages.mobile[0] || ''
-		},
-		zIndex: backgroundWallpaper.overlay?.zIndex,
-		opacity: backgroundWallpaper.overlay?.opacity,
-		blur: backgroundWallpaper.overlay?.blur,
-	}}
-	className={isWallpaperSwitchable && !isOverlayMode ? "hidden opacity-0" : undefined} />
-)}
-
 <!-- 为全屏壁纸模式添加body类 -->
 {shouldEnableTransparency && (
 	<script>
@@ -247,9 +233,18 @@ const mobileQuality = Math.round(configQuality * 0.9);
     </div>
 </div>
 
-<!-- Banner - 如果允许切换则始终渲染，否则只渲染当前模式 -->
-{(isWallpaperSwitchable || isBannerMode) && (
-<div id="banner-wrapper" class={`absolute z-10 w-full transition duration-700 overflow-hidden ${mobileNonHomeBannerClass}`} style={isWallpaperSwitchable ? `top: -${BANNER_HEIGHT_EXTEND}vh; display: none;` : `top: -${BANNER_HEIGHT_EXTEND}vh`}>
+<!-- Wallpaper - 如果允许切换则始终渲染，否则只渲染当前模式 -->
+{(isWallpaperSwitchable || isBannerMode || isOverlayMode) && (
+<div id="wallpaper-wrapper" class:list={[
+	`absolute z-10 w-full transition duration-700 overflow-hidden ${mobileNonHomeBannerClass}`,
+	(isOverlayMode && !isWallpaperSwitchable) || (isWallpaperSwitchable && !isBannerMode) ? 'wallpaper-overlay' : ''
+]} style={
+	isWallpaperSwitchable
+		? `top: -${BANNER_HEIGHT_EXTEND}vh; display: none; --overlay-opacity: ${backgroundWallpaper.overlay?.opacity ?? 0.8}; --overlay-z-index: ${backgroundWallpaper.overlay?.zIndex ?? -1}; --overlay-blur: ${backgroundWallpaper.overlay?.blur ?? 0}px;`
+		: isOverlayMode
+			? `--overlay-opacity: ${backgroundWallpaper.overlay?.opacity ?? 0.8}; --overlay-z-index: ${backgroundWallpaper.overlay?.zIndex ?? -1}; --overlay-blur: ${backgroundWallpaper.overlay?.blur ?? 0}px;`
+			: `top: -${BANNER_HEIGHT_EXTEND}vh`
+}>
     <!-- 背景图片显示 -->
     <div class="relative h-full w-full" id="banner-images-container" data-mobile-count={backgroundImages.mobile.length} data-desktop-count={backgroundImages.desktop.length}>
         <!-- Mobile: 渲染所有移动端图片 -->

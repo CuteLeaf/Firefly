@@ -1,4 +1,5 @@
 import {
+	BANNER_HEIGHT_EXTEND,
 	DARK_MODE,
 	DEFAULT_THEME,
 	LIGHT_MODE,
@@ -363,37 +364,32 @@ function ensureWallpaperState(mode: WALLPAPER_MODE) {
 }
 
 function showBannerMode() {
-	// 隐藏全屏壁纸（通过CSS类和display控制）
-	const overlayContainer = document.querySelector(
-		"[data-overlay-wallpaper]",
-	) as HTMLElement;
-	if (overlayContainer) {
-		overlayContainer.style.display = "none";
-		overlayContainer.classList.add("hidden");
-		overlayContainer.classList.add("opacity-0");
-		overlayContainer.classList.remove("opacity-100");
-	}
+	// 显示 wallpaper-wrapper 并切换为 banner 模式
+	const wallpaperWrapper = document.getElementById("wallpaper-wrapper");
+	if (wallpaperWrapper) {
+		// 移除 overlay 模式类
+		wallpaperWrapper.classList.remove("wallpaper-overlay");
 
-	// 显示banner壁纸（通过CSS类和display控制）
-	const bannerWrapper = document.getElementById("banner-wrapper");
-	if (bannerWrapper) {
+		// 恢复 banner 模式的 top 定位
+		wallpaperWrapper.style.top = `-${BANNER_HEIGHT_EXTEND}vh`;
+
 		// 检查当前是否为首页
 		const isHomePage = checkIsHomePage(window.location.pathname);
 		const isMobile = window.innerWidth < 1024;
 
 		// 移动端非首页时，不显示banner；桌面端始终显示
 		if (isMobile && !isHomePage) {
-			bannerWrapper.style.display = "none";
-			bannerWrapper.classList.add("mobile-hide-banner");
+			wallpaperWrapper.style.display = "none";
+			wallpaperWrapper.classList.add("mobile-hide-banner");
 		} else {
 			// 首页或桌面端：先设置display，然后使用requestAnimationFrame确保渲染
-			bannerWrapper.style.display = "block";
-			bannerWrapper.style.setProperty("display", "block", "important");
+			wallpaperWrapper.style.display = "block";
+			wallpaperWrapper.style.setProperty("display", "block", "important");
 			requestAnimationFrame(() => {
-				bannerWrapper.classList.remove("hidden");
-				bannerWrapper.classList.remove("opacity-0");
-				bannerWrapper.classList.add("opacity-100");
-				bannerWrapper.classList.remove("mobile-hide-banner");
+				wallpaperWrapper.classList.remove("hidden");
+				wallpaperWrapper.classList.remove("opacity-0");
+				wallpaperWrapper.classList.add("opacity-100");
+				wallpaperWrapper.classList.remove("mobile-hide-banner");
 			});
 		}
 	}
@@ -459,28 +455,21 @@ function showBannerMode() {
 }
 
 function showOverlayMode() {
-	// 显示全屏壁纸（通过CSS类和display控制）
-	const overlayContainer = document.querySelector(
-		"[data-overlay-wallpaper]",
-	) as HTMLElement;
-	if (overlayContainer) {
-		// 先设置display，然后使用requestAnimationFrame确保渲染
-		overlayContainer.style.display = "block";
-		overlayContainer.style.setProperty("display", "block", "important");
+	// 切换 wallpaper-wrapper 为 overlay 模式
+	const wallpaperWrapper = document.getElementById("wallpaper-wrapper");
+	if (wallpaperWrapper) {
+		// 添加 overlay 模式类
+		wallpaperWrapper.classList.add("wallpaper-overlay");
+		// 显示壁纸
+		wallpaperWrapper.style.display = "block";
+		wallpaperWrapper.style.setProperty("display", "block", "important");
+		wallpaperWrapper.style.top = "";
 		requestAnimationFrame(() => {
-			overlayContainer.classList.remove("hidden");
-			overlayContainer.classList.remove("opacity-0");
-			overlayContainer.classList.add("opacity-100");
+			wallpaperWrapper.classList.remove("hidden");
+			wallpaperWrapper.classList.remove("opacity-0");
+			wallpaperWrapper.classList.add("opacity-100");
+			wallpaperWrapper.classList.remove("mobile-hide-banner");
 		});
-	}
-
-	// 隐藏banner壁纸（通过CSS类和display控制）
-	const bannerWrapper = document.getElementById("banner-wrapper");
-	if (bannerWrapper) {
-		bannerWrapper.style.display = "none";
-		bannerWrapper.classList.add("hidden");
-		bannerWrapper.classList.add("opacity-0");
-		bannerWrapper.classList.remove("opacity-100");
 	}
 
 	// 隐藏横幅图片来源文本
@@ -503,23 +492,14 @@ function showOverlayMode() {
 }
 
 function hideAllWallpapers() {
-	// 隐藏所有壁纸（通过CSS类和display控制）
-	const bannerWrapper = document.getElementById("banner-wrapper");
-	const overlayContainer = document.querySelector(
-		"[data-overlay-wallpaper]",
-	) as HTMLElement;
+	// 隐藏壁纸
+	const wallpaperWrapper = document.getElementById("wallpaper-wrapper");
 
-	if (bannerWrapper) {
-		bannerWrapper.style.display = "none";
-		bannerWrapper.classList.add("hidden");
-		bannerWrapper.classList.add("opacity-0");
-	}
-
-	if (overlayContainer) {
-		overlayContainer.style.display = "none";
-		overlayContainer.classList.add("hidden");
-		overlayContainer.classList.add("opacity-0");
-		overlayContainer.classList.remove("opacity-100");
+	if (wallpaperWrapper) {
+		wallpaperWrapper.style.display = "none";
+		wallpaperWrapper.classList.add("hidden");
+		wallpaperWrapper.classList.add("opacity-0");
+		wallpaperWrapper.classList.remove("wallpaper-overlay");
 	}
 
 	// 隐藏横幅图片来源文本

@@ -4,7 +4,7 @@
  * 模式说明：
  * ============================================
  * 1. 壁纸模式 (backgroundWallpaper.mode):
- *    - "banner": 横幅壁纸模式 (有 #banner-wrapper)
+ *    - "banner": 横幅壁纸模式 (有 #wallpaper-wrapper)
  *    - "overlay": 全屏壁纸模式 (body.wallpaper-transparent)
  *    - "none": 纯色背景无壁纸
  * 
@@ -36,8 +36,8 @@
 @media (min-width: 1024px) {
 
     /* "semi" */
-    #banner-wrapper~* #navbar[data-transparent-mode="semi"]>div,
-    body:has(#banner-wrapper) #navbar[data-transparent-mode="semi"]>div {
+    #wallpaper-wrapper~* #navbar[data-transparent-mode="semi"]>div,
+    body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semi"]>div {
         backdrop-filter: blur(var(--navbar-glass-blur, 20px)) !important;
         background: rgba(255, 255, 255, var(--opacity-55)) !important;
         border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
@@ -47,8 +47,8 @@
     }
 
     /* "full" */
-    #banner-wrapper~* #navbar[data-transparent-mode="full"]>div,
-    body:has(#banner-wrapper) #navbar[data-transparent-mode="full"]>div {
+    #wallpaper-wrapper~* #navbar[data-transparent-mode="full"]>div,
+    body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="full"]>div {
         backdrop-filter: none !important;
         background: transparent !important;
         border: none !important;
@@ -58,8 +58,8 @@
     }
 
     /* "semifull" (static) */
-    #banner-wrapper~* #navbar[data-transparent-mode="semifull"]>div,
-    body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"]>div {
+    #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"]>div,
+    body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]>div {
         backdrop-filter: none !important;
         background: transparent !important;
         border: none !important;
@@ -69,8 +69,8 @@
     }
 
     /* "semifull" (scrolled) */
-    #banner-wrapper~* #navbar[data-transparent-mode="semifull"].scrolled>div,
-    body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"].scrolled>div {
+    #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"].scrolled>div,
+    body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"].scrolled>div {
         backdrop-filter: blur(var(--navbar-glass-blur, 20px)) !important;
         background: rgba(255, 255, 255, var(--opacity-55)) !important;
         border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
@@ -87,8 +87,8 @@
 @media (max-width: 1023px) {
 
     /* "semi" */
-    #banner-wrapper~* #navbar[data-transparent-mode="semi"][data-is-home="true"]>div,
-    body:has(#banner-wrapper) #navbar[data-transparent-mode="semi"][data-is-home="true"]>div {
+    #wallpaper-wrapper~* #navbar[data-transparent-mode="semi"][data-is-home="true"]>div,
+    body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semi"][data-is-home="true"]>div {
         backdrop-filter: blur(var(--navbar-glass-blur, 20px)) !important;
         background: rgba(255, 255, 255, var(--opacity-55)) !important;
         border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
@@ -98,8 +98,8 @@
     }
 
     /* "full" */
-    #banner-wrapper~* #navbar[data-transparent-mode="full"][data-is-home="true"]>div,
-    body:has(#banner-wrapper) #navbar[data-transparent-mode="full"][data-is-home="true"]>div {
+    #wallpaper-wrapper~* #navbar[data-transparent-mode="full"][data-is-home="true"]>div,
+    body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="full"][data-is-home="true"]>div {
         backdrop-filter: none !important;
         background: transparent !important;
         border: none !important;
@@ -109,8 +109,8 @@
     }
 
     /* "semifull" (static) */
-    #banner-wrapper~* #navbar[data-transparent-mode="semifull"][data-is-home="true"]>div,
-    body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"]>div {
+    #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"][data-is-home="true"]>div,
+    body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"]>div {
         backdrop-filter: none !important;
         background: transparent !important;
         border: none !important;
@@ -120,8 +120,8 @@
     }
 
     /* "semifull" (scrolled) */
-    #banner-wrapper~* #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled>div,
-    body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled>div {
+    #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled>div,
+    body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled>div {
         backdrop-filter: blur(var(--navbar-glass-blur, 20px)) !important;
         background: rgba(255, 255, 255, var(--opacity-55)) !important;
         border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
@@ -137,32 +137,32 @@
 @media (min-width: 1024px) {
 
     /* "semi" */
-    :root.dark #banner-wrapper~* #navbar[data-transparent-mode="semi"]>div,
-    :root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="semi"]>div {
+    :root.dark #wallpaper-wrapper~* #navbar[data-transparent-mode="semi"]>div,
+    :root.dark body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semi"]>div {
         background: rgba(0, 0, 0, var(--opacity-55)) !important;
         border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
 
     /* "full" */
-    :root.dark #banner-wrapper~* #navbar[data-transparent-mode="full"]>div,
-    :root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="full"]>div {
+    :root.dark #wallpaper-wrapper~* #navbar[data-transparent-mode="full"]>div,
+    :root.dark body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="full"]>div {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
     }
 
     /* "semifull" (static) */
-    :root.dark #banner-wrapper~* #navbar[data-transparent-mode="semifull"]>div,
-    :root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"]>div {
+    :root.dark #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"]>div,
+    :root.dark body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]>div {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
     }
 
     /* "semifull" (scrolled) */
-    :root.dark #banner-wrapper~* #navbar[data-transparent-mode="semifull"].scrolled>div,
-    :root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"].scrolled>div {
+    :root.dark #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"].scrolled>div,
+    :root.dark body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"].scrolled>div {
         background: rgba(0, 0, 0, var(--opacity-55)) !important;
         border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
@@ -175,32 +175,32 @@
 @media (max-width: 1023px) {
 
     /* "semi" */
-    :root.dark #banner-wrapper~* #navbar[data-transparent-mode="semi"][data-is-home="true"]>div,
-    :root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="semi"][data-is-home="true"]>div {
+    :root.dark #wallpaper-wrapper~* #navbar[data-transparent-mode="semi"][data-is-home="true"]>div,
+    :root.dark body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semi"][data-is-home="true"]>div {
         background: rgba(0, 0, 0, var(--opacity-55)) !important;
         border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
 
     /* "full" */
-    :root.dark #banner-wrapper~* #navbar[data-transparent-mode="full"][data-is-home="true"]>div,
-    :root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="full"][data-is-home="true"]>div {
+    :root.dark #wallpaper-wrapper~* #navbar[data-transparent-mode="full"][data-is-home="true"]>div,
+    :root.dark body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="full"][data-is-home="true"]>div {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
     }
 
     /* "semifull" (static) */
-    :root.dark #banner-wrapper~* #navbar[data-transparent-mode="semifull"][data-is-home="true"]>div,
-    :root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"]>div {
+    :root.dark #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"][data-is-home="true"]>div,
+    :root.dark body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"]>div {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
     }
 
     /* "semifull" (scrolled) */
-    :root.dark #banner-wrapper~* #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled>div,
-    :root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled>div {
+    :root.dark #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled>div,
+    :root.dark body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled>div {
         background: rgba(0, 0, 0, var(--opacity-55)) !important;
         border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
@@ -211,28 +211,28 @@
 /* ============================================
  * 关闭毛玻璃模糊效果 - Banner模式
  * ============================================ */
-body:has(#banner-wrapper) #navbar[data-transparent-mode="semi"][data-enable-blur="false"]>div,
-body:has(#banner-wrapper) #navbar[data-transparent-mode="semi"][data-enable-blur="false"].scrolled>div {
+body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semi"][data-enable-blur="false"]>div,
+body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semi"][data-enable-blur="false"].scrolled>div {
     backdrop-filter: none !important;
 }
 
-body:has(#banner-wrapper) #navbar[data-transparent-mode="full"][data-enable-blur="false"]>div,
-body:has(#banner-wrapper) #navbar[data-transparent-mode="full"][data-enable-blur="false"].scrolled>div {
+body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="full"][data-enable-blur="false"]>div,
+body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="full"][data-enable-blur="false"].scrolled>div {
     backdrop-filter: none !important;
 }
 
-body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"][data-enable-blur="false"]>div,
-body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"][data-enable-blur="false"].scrolled>div {
+body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-enable-blur="false"]>div,
+body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-enable-blur="false"].scrolled>div {
     backdrop-filter: none !important;
 }
 
 
 /* 调整下拉菜单和浮动面板的背景透明度 */
 /* 亮色主题 */
-#banner-wrapper~* .dropdown-content,
-#banner-wrapper~* .float-panel,
-body:has(#banner-wrapper) .dropdown-content,
-body:has(#banner-wrapper) .float-panel,
+#wallpaper-wrapper~* .dropdown-content,
+#wallpaper-wrapper~* .float-panel,
+body:has(#wallpaper-wrapper) .dropdown-content,
+body:has(#wallpaper-wrapper) .float-panel,
 body.wallpaper-transparent .dropdown-content,
 body.wallpaper-transparent .float-panel {
     background: rgba(255, 255, 255, 0.95) !important;
@@ -241,10 +241,10 @@ body.wallpaper-transparent .float-panel {
 }
 
 /* 暗色主题 */
-:root.dark #banner-wrapper~* .dropdown-content,
-:root.dark #banner-wrapper~* .float-panel,
-:root.dark body:has(#banner-wrapper) .dropdown-content,
-:root.dark body:has(#banner-wrapper) .float-panel,
+:root.dark #wallpaper-wrapper~* .dropdown-content,
+:root.dark #wallpaper-wrapper~* .float-panel,
+:root.dark body:has(#wallpaper-wrapper) .dropdown-content,
+:root.dark body:has(#wallpaper-wrapper) .float-panel,
 :root.dark body.wallpaper-transparent .dropdown-content,
 :root.dark body.wallpaper-transparent .float-panel {
     background: rgba(23, 23, 23, 0.95) !important;
@@ -261,7 +261,7 @@ body.wallpaper-transparent .float-panel {
  * ============================================ */
 @media (min-width: 1024px) {
     #navbar-wrapper #navbar[data-full-width="true"] > div,
-    body:has(#banner-wrapper) #navbar-wrapper #navbar[data-full-width="true"] > div,
+    body:has(#wallpaper-wrapper) #navbar-wrapper #navbar[data-full-width="true"] > div,
     body.wallpaper-transparent #navbar-wrapper #navbar[data-full-width="true"] > div,
     #navbar-wrapper #navbar[data-full-width="true"].scrolled > div {
         border-radius: 0 !important;
