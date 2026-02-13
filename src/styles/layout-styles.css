@@ -1,23 +1,23 @@
 /* Layout specific styles */
 
 /* User controlled visibility - 通过 html 属性控制，在渲染前就生效 */
-/* 用户关闭时隐藏 */
+/* 用户关闭时隐藏水波纹 */
 html[data-waves-enabled="false"] #header-waves {
     display: none !important;
 }
 
-/* 用户开启时强制显示（覆盖默认的 hidden 类） */
+/* 用户开启时显示水波纹（覆盖默认的 hidden 类） */
 html[data-waves-enabled="true"] #header-waves {
     display: block !important;
 }
 
+/* 用户关闭时隐藏横幅标题 */
 html[data-banner-title-enabled="false"] .banner-text-overlay {
     display: none !important;
 }
 
-html[data-banner-title-enabled="true"] .banner-text-overlay {
-    display: flex !important;
-}
+/* 注意：不使用 data-banner-title-enabled="true" 强制显示，
+   因为横幅标题只应在首页显示，由页面本身的 hidden 类控制 */
 
 .banner-text-overlay.user-hidden {
     display: none !important;

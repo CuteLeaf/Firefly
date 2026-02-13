@@ -29,7 +29,7 @@ export const coverImageConfig: CoverImageConfig = {
 			"https://uapis.cn/api/v1/random/image?category=acg&type=pc",
 		],
 		// API失败时的回退图片
-		fallback: "assets/images/cover.webp",
+		fallback: "assets/images/cover.avif",
 		// 是否显示加载动画
 		showLoading: false,
 	},
