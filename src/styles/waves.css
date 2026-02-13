@@ -1,11 +1,9 @@
 /* Water waves animation */
 .waves > .parallax use {
 animation: wave 25s cubic-bezier(0.5, 0.5, 0.45, 0.5) infinite;
-transform: translate3d(0, 0, 0);
+transform: translateZ(0);
 will-change: transform;
 backface-visibility: hidden;
-/* 强制创建独立合成层，避免页面切换时重绘影响 */
-isolation: isolate;
 }
 
 .waves > .parallax use:nth-child(1) {
@@ -37,38 +35,6 @@ transform: translate3d(85px, 0, 0);
 }
 }
 
-/* 波浪容器基础样式 */
 .waves {
-contain: layout style;
-isolation: isolate;
+contain: none;
 }
-
-/* 页面切换时的波浪动画保护 - 确保动画在独立合成层持续运行 */
-html.is-changing #header-waves,
-html.is-animating #header-waves,
-html.is-leaving #header-waves,
-html.is-page-transitioning #header-waves {
-/* 强制创建独立的合成层 */
-transform: translate3d(0, 0, 0);
-/* 隔离渲染上下文，防止页面重绘影响 */
-contain: strict;
-/* 确保在顶层合成 */
-z-index: 5;
-/* 优化渲染性能 */
-content-visibility: auto;
-}
-
-/* 确保页面切换时动画持续运行 */
-html.is-changing .waves > .parallax use,
-html.is-animating .waves > .parallax use,
-html.is-leaving .waves > .parallax use,
-html.is-page-transitioning .waves > .parallax use {
-/* 确保动画不被中断 */
-animation-play-state: running !important;
-/* 强制 GPU 合成层 */
-transform: translate3d(0, 0, 0);
-will-change: transform;
-/* 隔离元素，防止重绘传播 */
-contain: layout style;
-}
-

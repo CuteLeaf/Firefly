@@ -502,10 +502,8 @@
     /* 硬件加速，确保与背景同步渲染 */
     transform: translateZ(0);
     will-change: transform;
-    /* 使用 layout style 隔离，保持动画范围但隔离重绘 */
-    contain: layout style;
-    /* 创建独立的堆叠上下文 */
-    isolation: isolate;
+    /* 移除contain属性，避免限制动画渲染范围 */
+    contain: none;
 }
 
 .waves svg {
@@ -528,12 +526,10 @@
 #header-waves {
     /* 确保波浪容器与页面背景在同一合成层 */
     isolation: isolate;
-    /* 使用 layout style 隔离以优化性能 */
-    contain: layout style;
+    /* 移除contain属性，避免限制波浪动画 */
+    contain: none;
     /* 精确对齐 */
     margin-bottom: -1px;
-    /* 强制 GPU 合成层 */
-    transform: translate3d(0, 0, 0);
 }
 
 /* 主题切换时的额外保护 */
