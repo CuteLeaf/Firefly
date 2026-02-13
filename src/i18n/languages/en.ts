@@ -204,6 +204,11 @@ export const en: Translation = {
 	[Key.wallpaperOverlayMode]: "Overlay Wallpaper",
 	[Key.wallpaperNoneMode]: "None Wallpaper",
 
+	// Banner Settings
+	[Key.bannerSettings]: "Banner Settings",
+	[Key.bannerTitle]: "Banner Title",
+	[Key.wavesAnimation]: "Waves Animation",
+
 	// Post List Layout
 	[Key.postListLayout]: "Post List Layout",
 	[Key.postListLayoutList]: "List",

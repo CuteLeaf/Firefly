@@ -196,6 +196,11 @@ export const zh_CN: Translation = {
 	[Key.wallpaperOverlayMode]: "全屏透明",
 	[Key.wallpaperNoneMode]: "纯色背景",
 
+	// 横幅设置
+	[Key.bannerSettings]: "横幅设置",
+	[Key.bannerTitle]: "横幅标题",
+	[Key.wavesAnimation]: "水波纹动画",
+
 	// 文章布局
 	[Key.postListLayout]: "文章布局",
 	[Key.postListLayoutList]: "列表",

@@ -1,5 +1,28 @@
 /* Layout specific styles */
 
+/* User controlled visibility - 通过 html 属性控制，在渲染前就生效 */
+/* 用户关闭时隐藏 */
+html[data-waves-enabled="false"] #header-waves {
+    display: none !important;
+}
+
+/* 用户开启时强制显示（覆盖默认的 hidden 类） */
+html[data-waves-enabled="true"] #header-waves {
+    display: block !important;
+}
+
+html[data-banner-title-enabled="false"] .banner-text-overlay {
+    display: none !important;
+}
+
+html[data-banner-title-enabled="true"] .banner-text-overlay {
+    display: flex !important;
+}
+
+.banner-text-overlay.user-hidden {
+    display: none !important;
+}
+
 /* Banner text styles */
 .banner-title {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
@@ -58,7 +81,7 @@
     /* 主内容区域位置调整 - 向上移动以部分遮挡banner */
     /* 仅在 banner 模式下应用，其他模式（全屏壁纸/纯色）使用默认的 5.5rem */
     body.enable-banner .absolute.w-full.z-30:not(.no-banner-layout):not(.mobile-main-no-banner) {
-        top: 35vh !important; /* 小屏手机，提升至与波浪平行 */
+        top: 35vh !important; /* 小屏手机，提升至与水波纹平行 */
         min-height: calc(100vh - 35vh) !important;
     }
     
@@ -92,7 +115,7 @@
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7) !important;
     }
     
-    /* 波浪效果高度调整 - 与文章列表提升同步 */
+    /* 水波纹效果高度调整 - 与文章列表提升同步 */
     .waves {
         height: 13vh !important;
         min-height: 100px !important;
@@ -113,7 +136,7 @@
     /* 主内容区域位置调整 - 向上移动以部分遮挡banner */
     /* 仅在 banner 模式下应用，其他模式（全屏壁纸/纯色）使用默认的 5.5rem */
     body.enable-banner .absolute.w-full.z-30:not(.no-banner-layout):not(.mobile-main-no-banner) {
-        top: 38vh !important; /* 大屏手机，提升至与波浪平行 */
+        top: 38vh !important; /* 大屏手机，提升至与水波纹平行 */
         min-height: calc(100vh - 38vh) !important;
     }
     
@@ -147,7 +170,7 @@
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7) !important;
     }
     
-    /* 波浪效果高度调整 - 与文章列表提升同步 */
+    /* 水波纹效果高度调整 - 与文章列表提升同步 */
     .waves {
         height: 15vh !important;
         min-height: 110px !important;
@@ -168,7 +191,7 @@
     /* 主内容区域位置调整 - 向上移动以部分遮挡banner */
     /* 仅在 banner 模式下应用，其他模式（全屏壁纸/纯色）使用默认的 5.5rem */
     body.enable-banner .absolute.w-full.z-30:not(.no-banner-layout):not(.mobile-main-no-banner) {
-        top: 36vh !important; /* 小平板，提升至与波浪平行 */
+        top: 36vh !important; /* 小平板，提升至与水波纹平行 */
         min-height: calc(100vh - 36vh) !important;
     }
     
@@ -202,7 +225,7 @@
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7) !important;
     }
     
-    /* 波浪效果高度调整 - 与文章列表提升同步 */
+    /* 水波纹效果高度调整 - 与文章列表提升同步 */
     .waves {
         height: 16vh !important;
         min-height: 115px !important;
@@ -222,7 +245,7 @@
     /* 主内容区域位置调整 - 向上移动以部分遮挡banner */
     /* 仅在 banner 模式下应用，其他模式（全屏壁纸/纯色）使用默认的 5.5rem */
     body.enable-banner .absolute.w-full.z-30:not(.no-banner-layout):not(.mobile-main-no-banner) {
-        top: 33vh !important; /* 平板端，提升至与波浪平行 */
+        top: 33vh !important; /* 平板端，提升至与水波纹平行 */
         min-height: calc(100vh - 33vh) !important;
     }
     
@@ -256,7 +279,7 @@
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7) !important;
     }
     
-    /* 波浪效果高度调整 - 与文章列表提升同步 */
+    /* 水波纹效果高度调整 - 与文章列表提升同步 */
     .waves {
         height: 17vh !important;
         min-height: 120px !important;
@@ -284,7 +307,7 @@
         transition: transform 1s ease-out !important;
     }
     
-    /* 波浪效果恢复默认 */
+    /* 水波纹效果恢复默认 */
     .waves {
         height: 15vh !important;
         min-height: 80px !important;
@@ -447,7 +470,7 @@
     /* 主内容区域位置调整 - 确保在banner下面，但不影响非首页 */
     /* 仅在 banner 模式下应用，其他模式（全屏壁纸/纯色）使用默认的 5.5rem */
     body.enable-banner .absolute.w-full.z-30:not(.mobile-main-no-banner):not(.no-banner-layout) {
-        top: 32vh !important; /* 横屏模式，提升至与波浪平行 */
+        top: 32vh !important; /* 横屏模式，提升至与水波纹平行 */
         min-height: calc(100vh - 32vh) !important;
     }
     
@@ -516,17 +539,17 @@
     backface-visibility: hidden;
 }
 
-/* 波浪填充色主题切换优化 */
+/* 水波纹填充色主题切换优化 */
 .waves use {
     /* 确保填充色与页面背景同步更新 */
     will-change: fill;
 }
 
-/* 波浪与背景同步切换优化 - 解决交界线闪烁 */
+/* 水波纹与背景同步切换优化 - 解决交界线闪烁 */
 #header-waves {
-    /* 确保波浪容器与页面背景在同一合成层 */
+    /* 确保水波纹容器与页面背景在同一合成层 */
     isolation: isolate;
-    /* 移除contain属性，避免限制波浪动画 */
+    /* 移除contain属性，避免限制水波纹动画 */
     contain: none;
     /* 精确对齐 */
     margin-bottom: -1px;

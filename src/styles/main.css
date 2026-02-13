@@ -163,7 +163,7 @@ html {
         contain: layout style paint !important;
     }
     
-    /* 波浪效果精确同步处理 - 仅在非 View Transitions 模式下 */
+    /* 水波纹效果精确同步处理 - 仅在非 View Transitions 模式下 */
     .is-theme-transitioning:not(.use-view-transition) svg use {
         /* 禁用过渡但保持动画 */
         transition: none;
@@ -198,7 +198,7 @@ html {
         backdrop-filter: none !important;
     }
     
-    /* 波浪容器的颜色传递 */
+    /* 水波纹容器的颜色传递 */
     .is-theme-transitioning #header-waves {
         /* 设置当前颜色为页面背景色，供SVG继承 */
         color: var(--page-bg);

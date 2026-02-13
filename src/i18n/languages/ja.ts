@@ -203,6 +203,11 @@ export const ja: Translation = {
 	[Key.wallpaperOverlayMode]: "透明",
 	[Key.wallpaperNoneMode]: "単色背景",
 
+	// バナー設定
+	[Key.bannerSettings]: "バナー設定",
+	[Key.bannerTitle]: "バナータイトル",
+	[Key.wavesAnimation]: "波アニメーション",
+
 	// 投稿リストレイアウト
 	[Key.postListLayout]: "投稿リストレイアウト",
 	[Key.postListLayoutList]: "リスト",

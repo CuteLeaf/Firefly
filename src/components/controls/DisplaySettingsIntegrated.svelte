@@ -10,8 +10,14 @@ import {
 	getDefaultHue,
 	getHue,
 	getStoredWallpaperMode,
+	getStoredWavesEnabled,
+	getDefaultWavesEnabled,
+	getStoredBannerTitleEnabled,
+	getDefaultBannerTitleEnabled,
 	setHue,
 	setWallpaperMode,
+	setWavesEnabled,
+	setBannerTitleEnabled,
 } from "@utils/setting-utils";
 import { onMount } from "svelte";
 import Icon from "@/components/common/Icon.svelte";
@@ -29,12 +35,24 @@ let isSmallScreen = $state(
 	typeof window !== "undefined" ? window.innerWidth < 1200 : false,
 );
 let isSwitching = $state(false);
+let wavesEnabled = $state(true);
+const defaultWavesEnabled = getDefaultWavesEnabled();
+let bannerTitleEnabled = $state(true);
+const defaultBannerTitleEnabled = getDefaultBannerTitleEnabled();
 
 const isWallpaperSwitchable = backgroundWallpaper.switchable ?? true;
 const allowLayoutSwitch = siteConfig.postListLayout.allowSwitch;
 const showThemeColor = !siteConfig.themeColor.fixed;
+// 是否允许用户切换水波纹动画（只看 switchable 配置）
+const isWavesSwitchable = backgroundWallpaper.banner?.waves?.switchable ?? false;
+// 检查是否启用横幅标题配置
+const isBannerTitleEnabled = backgroundWallpaper.banner?.homeText?.enable ?? false;
+// 是否允许用户切换横幅标题
+const isBannerTitleSwitchable = isBannerTitleEnabled && (backgroundWallpaper.banner?.homeText?.switchable ?? false);
+// 是否有任何横幅设置可显示（后续添加新设置时在此处添加条件）
+const hasBannerSettings = isWavesSwitchable || isBannerTitleSwitchable;
 const hasAnyContent =
-	showThemeColor || isWallpaperSwitchable || allowLayoutSwitch;
+	showThemeColor || isWallpaperSwitchable || allowLayoutSwitch || hasBannerSettings;
 
 function resetHue() {
 	hue = getDefaultHue();
@@ -54,6 +72,21 @@ function resetLayout() {
 		detail: { layout: defaultLayout },
 	});
 	window.dispatchEvent(event);
+}
+
+function resetWavesEnabled() {
+	wavesEnabled = defaultWavesEnabled;
+	setWavesEnabled(defaultWavesEnabled);
+}
+
+function toggleWavesEnabled() {
+	wavesEnabled = !wavesEnabled;
+	setWavesEnabled(wavesEnabled);
+}
+
+function toggleBannerTitleEnabled() {
+	bannerTitleEnabled = !bannerTitleEnabled;
+	setBannerTitleEnabled(bannerTitleEnabled);
 }
 
 function switchWallpaperMode(newMode: WALLPAPER_MODE) {
@@ -93,6 +126,12 @@ onMount(() => {
 
 	// 从localStorage读取保存的壁纸模式
 	wallpaperMode = getStoredWallpaperMode();
+
+	// 从localStorage读取水波纹动画状态
+	wavesEnabled = getStoredWavesEnabled();
+
+	// 从localStorage读取横幅标题状态
+	bannerTitleEnabled = getStoredBannerTitleEnabled();
 
 	// 从localStorage读取用户偏好布局
 	const savedLayout = localStorage.getItem("postListLayout");
@@ -215,6 +254,58 @@ $effect(() => {
                         <Icon icon="material-symbols:check-circle" class="text-[1rem] shrink-0 text-(--primary)"></Icon>
                     {/if}
                 </button>
+            </div>
+        </div>
+    {/if}
+
+    <!-- Banner Settings Section -->
+    {#if wallpaperMode === WALLPAPER_BANNER && hasBannerSettings}
+        <div class="mt-2 mb-2">
+            <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3 mb-2
+                before:w-1 before:h-4 before:rounded-md before:bg-(--primary)
+                before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2"
+            >
+                {i18n(I18nKey.bannerSettings)}
+            </div>
+            <div class="space-y-1 px-1">
+                <!-- Banner Title Switch -->
+                {#if isBannerTitleSwitchable}
+                <button
+                    class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
+                    class:bg-(--btn-regular-bg-hover)={bannerTitleEnabled}
+                    onclick={toggleBannerTitleEnabled}
+                >
+                    <Icon icon="material-symbols:titlecase-rounded" class="text-[1.25rem] shrink-0"></Icon>
+                    <span class="text-sm flex-1">{i18n(I18nKey.bannerTitle)}</span>
+                    <div class="w-10 h-5 rounded-full transition-all duration-200 relative"
+                         class:bg-(--primary)={bannerTitleEnabled}
+                         class:bg-neutral-300={!bannerTitleEnabled}
+                         class:dark:bg-neutral-600={!bannerTitleEnabled}>
+                        <div class="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all duration-200"
+                             class:left-0.5={!bannerTitleEnabled}
+                             class:left-5={bannerTitleEnabled}></div>
+                    </div>
+                </button>
+                {/if}
+                <!-- Waves Animation Switch -->
+                {#if isWavesSwitchable}
+                <button
+                    class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
+                    class:bg-(--btn-regular-bg-hover)={wavesEnabled}
+                    onclick={toggleWavesEnabled}
+                >
+                    <Icon icon="material-symbols:airwave-rounded" class="text-[1.25rem] shrink-0"></Icon>
+                    <span class="text-sm flex-1">{i18n(I18nKey.wavesAnimation)}</span>
+                    <div class="w-10 h-5 rounded-full transition-all duration-200 relative"
+                         class:bg-(--primary)={wavesEnabled}
+                         class:bg-neutral-300={!wavesEnabled}
+                         class:dark:bg-neutral-600={!wavesEnabled}>
+                        <div class="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all duration-200"
+                             class:left-0.5={!wavesEnabled}
+                             class:left-5={wavesEnabled}></div>
+                    </div>
+                </button>
+                {/if}
             </div>
         </div>
     {/if}

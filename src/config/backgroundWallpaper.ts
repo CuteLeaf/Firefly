@@ -27,6 +27,8 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		homeText: {
 			// 是否启用主页横幅文字
 			enable: true,
+			// 是否允许用户通过控制面板切换横幅标题显示
+			switchable: true,
 			// 主页横幅主标题
 			title: "Lovely firefly!",
 			// 主页横幅主标题字体大小
@@ -85,14 +87,16 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 			// 毛玻璃模糊度
 			blur: 3,
 		},
-		// 波浪动画效果配置，开启可能会影响页面性能，请根据自己的喜好开启
+		// 水波纹动画效果配置，开启会影响页面性能，请根据自己的喜好开启
 		waves: {
 			enable: {
-				// 桌面端是否启用波浪动画效果
+				// 桌面端是否启用水波纹动画效果
 				desktop: true,
-				// 移动端是否启用波浪动画效果
+				// 移动端是否启用水波纹动画效果
 				mobile: true,
 			},
+			// 是否允许用户通过控制面板切换水波纹动画
+			switchable: true,
 		},
 	},
 	// 全屏透明覆盖模式特有配置
