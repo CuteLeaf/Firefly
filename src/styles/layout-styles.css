@@ -12,14 +12,19 @@ html[data-waves-enabled="true"] #header-waves {
 }
 
 /* 用户关闭时隐藏横幅标题 */
-html[data-banner-title-enabled="false"] .banner-text-overlay {
+html[data-banner-title-enabled="false"] .banner-home-text-overlay {
     display: none !important;
 }
 
 /* 注意：不使用 data-banner-title-enabled="true" 强制显示，
    因为横幅标题只应在首页显示，由页面本身的 hidden 类控制 */
 
-.banner-text-overlay.user-hidden {
+.banner-home-text-overlay.user-hidden {
+    display: none !important;
+}
+
+/* 页面切换期间隐藏首页横幅文案，避免与文章元信息层重叠闪现 */
+html.is-page-transitioning .banner-home-text-overlay {
     display: none !important;
 }
 
@@ -86,7 +91,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
     }
     
     /* 横幅文本覆盖层优化 */
-    .banner-text-overlay {
+    .banner-home-text-overlay {
         align-items: center !important; /* 垂直居中 */
         justify-content: center !important; /* 水平居中 */
         padding: 1rem !important;
@@ -94,7 +99,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
     }
     
     /* 文本容器优化 */
-    .banner-text-overlay > div {
+    .banner-home-text-overlay > div {
         margin-bottom: 0 !important; /* 移除底部边距，保持居中 */
         width: 95% !important; /* 增加文本宽度利用率 */
         text-align: center !important; /* 确保文字居中 */
@@ -141,7 +146,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
     }
     
     /* 横幅文本覆盖层优化 */
-    .banner-text-overlay {
+    .banner-home-text-overlay {
         align-items: center !important; /* 垂直居中 */
         justify-content: center !important; /* 水平居中 */
         padding: 1.5rem !important;
@@ -149,7 +154,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
     }
     
     /* 文本容器优化 */
-    .banner-text-overlay > div {
+    .banner-home-text-overlay > div {
         margin-bottom: 0 !important; /* 移除底部边距，保持居中 */
         width: 90% !important;
         text-align: center !important; /* 确保文字居中 */
@@ -196,7 +201,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
     }
     
     /* 横幅文本覆盖层优化 */
-    .banner-text-overlay {
+    .banner-home-text-overlay {
         align-items: center !important; /* 垂直居中 */
         justify-content: center !important; /* 水平居中 */
         padding: 1.75rem !important;
@@ -204,7 +209,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
     }
     
     /* 文本容器优化 */
-    .banner-text-overlay > div {
+    .banner-home-text-overlay > div {
         margin-bottom: 0 !important; /* 移除底部边距，保持居中 */
         width: 88% !important;
         text-align: center !important; /* 确保文字居中 */
@@ -250,7 +255,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
     }
     
     /* 横幅文本覆盖层优化 */
-    .banner-text-overlay {
+    .banner-home-text-overlay {
         align-items: center !important; /* 垂直居中 */
         justify-content: center !important; /* 水平居中 */
         padding: 2rem !important;
@@ -258,7 +263,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
     }
     
     /* 文本容器优化 */
-    .banner-text-overlay > div {
+    .banner-home-text-overlay > div {
         margin-bottom: 0 !important; /* 移除底部边距，保持居中 */
         width: 85% !important;
         text-align: center !important; /* 确保文字居中 */
@@ -289,14 +294,14 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
 
 /* 桌面端保持居中 (1024px+) - Tailwind lg 断点 */
 @media (min-width: 1024px) {
-    .banner-text-overlay {
+    .banner-home-text-overlay {
         align-items: center !important; /* 垂直居中 */
         justify-content: center !important; /* 水平居中 */
         padding: 2rem !important;
         text-align: center !important; /* 文字居中对齐 */
     }
     
-    .banner-text-overlay > div {
+    .banner-home-text-overlay > div {
         margin-bottom: 0 !important;
         width: 75% !important;
         text-align: center !important; /* 确保文字居中 */
@@ -392,7 +397,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
         user-select: none;
     }
 
-    .banner-text-overlay {
+    .banner-home-text-overlay {
         /* 文字渲染优化 */
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
@@ -479,7 +484,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
         min-height: 300px;
     }
 
-    .banner-text-overlay {
+    .banner-home-text-overlay {
         padding: 1rem 1.5rem;
         align-items: center !important; /* 垂直居中 */
         justify-content: center !important; /* 水平居中 */
@@ -499,7 +504,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
 
 /* 移动端暗色模式优化 */
 @media (max-width: 1023px) and (prefers-color-scheme: dark) {
-    .banner-text-overlay {
+    .banner-home-text-overlay {
         background: linear-gradient(
             to top,
             rgba(0, 0, 0, 0.8) 0%,
@@ -613,7 +618,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
         min-height: 350px !important;
     }
     
-    .banner-text-overlay {
+    .banner-home-text-overlay {
         padding: 1rem !important;
         align-items: center !important; /* 垂直居中 */
         justify-content: center !important; /* 水平居中 */
@@ -644,7 +649,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
         min-height: 400px !important;
     }
     
-    .banner-text-overlay {
+    .banner-home-text-overlay {
         padding: 1.5rem !important;
         align-items: center !important; /* 垂直居中 */
         justify-content: center !important; /* 水平居中 */
@@ -675,7 +680,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
         min-height: 450px !important;
     }
     
-    .banner-text-overlay {
+    .banner-home-text-overlay {
         padding: 2rem !important;
         align-items: center !important; /* 垂直居中 */
         justify-content: center !important; /* 水平居中 */
@@ -706,7 +711,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
         min-height: 300px !important;
     }
     
-    .banner-text-overlay {
+    .banner-home-text-overlay {
         padding: 1rem 2rem !important;
         align-items: center !important; /* 垂直居中 */
         justify-content: center !important; /* 水平居中 */
@@ -760,7 +765,7 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
 }
 
 /* Overlay 模式隐藏 Banner 专属元素 */
-#wallpaper-wrapper.wallpaper-overlay .banner-text-overlay,
+#wallpaper-wrapper.wallpaper-overlay .banner-home-text-overlay,
 #wallpaper-wrapper.wallpaper-overlay .waves,
 #wallpaper-wrapper.wallpaper-overlay #header-waves {
     display: none !important;

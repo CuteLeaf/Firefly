@@ -46,6 +46,14 @@ const { Content, headings } = await render(entry);
 
 const { remarkPluginFrontmatter } = await render(entry);
 
+const bannerPostMeta = {
+	title: entry.data.title,
+	published: entry.data.published,
+	updated: entry.data.updated,
+	words: remarkPluginFrontmatter.words,
+	minutes: remarkPluginFrontmatter.minutes,
+};
+
 // 处理随机图：如果image为"api"，则从配置的API获取随机图
 const processedImage = processCoverImageSync(entry.data.image, entry.id);
 
@@ -126,6 +134,7 @@ const jsonLd = {
   setOGTypeArticle={true}
   postSlug={entry.id}
   headings={headings}
+  bannerPostMeta={bannerPostMeta}
 >
   <!-- KaTeX 按需加载 - 仅在文章页面 -->
   <KatexManager slot="head" />

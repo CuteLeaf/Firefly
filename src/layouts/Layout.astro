@@ -89,7 +89,6 @@ if (!lang) {
 const siteLang = lang.replace("_", "-");
 
 // 使用固定的banner偏移量，position配置用于图片定位
-const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
 ---
 
 <!doctype html>
@@ -366,7 +365,7 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
 
           // 处理banner homeText元素
           const bannerTextOverlay = document.querySelector(
-            ".banner-text-overlay"
+            ".banner-home-text-overlay"
           );
           if (bannerTextOverlay) {
             const isHomePage =
@@ -421,7 +420,11 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
   <body
     class="min-h-screen"
     class:list={[
-      { "lg:is-home": isHomePageCheck, "enable-banner": enableBanner, "enable-card-border": siteConfig.card?.border },
+      {
+        "lg:is-home": isHomePageCheck,
+        "enable-banner": enableBanner,
+        "enable-card-border": siteConfig.card?.border,
+      },
       ...(siteConfig.font.enable && siteConfig.font.selected
         ? (Array.isArray(siteConfig.font.selected)
             ? siteConfig.font.selected
@@ -449,7 +452,6 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
 <style
   is:global
   define:vars={{
-    bannerOffset,
     "banner-height-home": `${BANNER_HEIGHT_HOME}vh`,
     "banner-height": `${BANNER_HEIGHT}vh`,
   }}
@@ -457,25 +459,20 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
   @reference "../styles/main.css";
 
   @layer components {
-    .enable-banner.lg\:is-home #wallpaper-wrapper {
+    .enable-banner #wallpaper-wrapper {
       height: var(--banner-height-home);
       transform: translateY(var(--banner-height-extend));
     }
-    .enable-banner #wallpaper-wrapper {
-      height: var(--banner-height-home);
-    }
 
-    .enable-banner.lg\:is-home #banner {
+    .enable-banner #banner {
       height: var(--banner-height-home);
       transform: translateY(0);
     }
-    .enable-banner #banner {
-      height: var(--banner-height-home);
-      transform: translateY(var(--bannerOffset));
-    }
-    .enable-banner.lg\:is-home #main-grid {
+
+    .enable-banner #main-grid {
       transform: translateY(var(--banner-height-extend));
     }
+
     .enable-banner #top-row {
       height: calc(var(--banner-height-home) - 4.5rem);
       @apply transition-all duration-300;
@@ -483,13 +480,13 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
   }
 
   @layer utilities {
-    .enable-banner.lg\:is-home #sidebar-sticky {
+    .enable-banner #sidebar-sticky {
       top: calc(1rem - var(--banner-height-extend)) !important;
     }
-    .enable-banner.lg\:is-home #left-sidebar-sticky {
+    .enable-banner #left-sidebar-sticky {
       top: calc(1rem - var(--banner-height-extend)) !important;
     }
-    .enable-banner.lg\:is-home #right-sidebar-sticky {
+    .enable-banner #right-sidebar-sticky {
       top: calc(1rem - var(--banner-height-extend)) !important;
     }
     .navbar-hidden {
@@ -660,8 +657,8 @@ function disableAnimation() {
       // 简化navbar处理逻辑
       if (bannerEnabled) {
         const navbar = document.getElementById("navbar-wrapper");
-        if (navbar && document.body.classList.contains("lg:is-home")) {
-          const threshold = window.innerHeight * (BANNER_HEIGHT / 100) - 88;
+        if (navbar) {
+          const threshold = window.innerHeight * (BANNER_HEIGHT_HOME / 100) - 88;
           if (document.documentElement.scrollTop >= threshold) {
             navbar.classList.add("navbar-hidden");
           }
@@ -722,7 +719,7 @@ function disableAnimation() {
       }
 
       // Control banner text visibility based on page
-      const bannerTextOverlay = document.querySelector(".banner-text-overlay");
+      const bannerTextOverlay = document.querySelector(".banner-home-text-overlay");
       if (bannerTextOverlay) {
         if (isHomePage) {
           bannerTextOverlay.classList.remove("hidden");
@@ -938,11 +935,7 @@ function disableAnimation() {
 
     if (bannerEnabled && navbar) {
       operations.push(() => {
-        const isHome =
-          document.body.classList.contains("lg:is-home") &&
-          window.innerWidth >= 1024;
-        const currentBannerHeight = isHome ? BANNER_HEIGHT_HOME : BANNER_HEIGHT;
-        const threshold = window.innerHeight * (currentBannerHeight / 100) - 88;
+        const threshold = window.innerHeight * (BANNER_HEIGHT_HOME / 100) - 88;
 
         if (scrollTop >= threshold) {
           navbar.classList.add("navbar-hidden");

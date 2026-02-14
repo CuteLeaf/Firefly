@@ -141,21 +141,41 @@ const textData = Array.isArray(text) ? JSON.stringify(text) : text;
 
   }
 
-  // 初始化所有打字机效果
-  document.addEventListener("DOMContentLoaded", () => {
+  function initTypewriterElements() {
     const typewriterElements = document.querySelectorAll(".typewriter");
     typewriterElements.forEach((element) => {
-      new TypewriterEffect(element as HTMLElement);
+      const el = element as HTMLElement & { __typewriterInstance?: TypewriterEffect };
+      if (el.__typewriterInstance) {
+        el.__typewriterInstance.destroy();
+      }
+      el.textContent = "";
+      el.__typewriterInstance = new TypewriterEffect(el);
     });
-  });
+  }
 
-  // 支持页面切换时重新初始化
-  document.addEventListener("swup:contentReplaced", () => {
-    const typewriterElements = document.querySelectorAll(".typewriter");
-    typewriterElements.forEach((element) => {
-      new TypewriterEffect(element as HTMLElement);
-    });
-  });
+  // 初始化所有打字机效果
+  function runInitWithDelay() {
+    initTypewriterElements();
+    // 兼容 banner 显隐晚于内容替换的场景
+    setTimeout(initTypewriterElements, 220);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", runInitWithDelay);
+  } else {
+    runInitWithDelay();
+  }
+
+  // 支持页面切换时重新初始化（兼容不同 swup 事件名）
+  document.addEventListener("swup:contentReplaced", runInitWithDelay);
+  document.addEventListener("swup:content:replace", runInitWithDelay);
+  document.addEventListener("swup:page:view", runInitWithDelay);
+
+  // swup hooks（若可用）
+  if (typeof window !== "undefined" && window.swup?.hooks) {
+    window.swup.hooks.on("content:replace", runInitWithDelay);
+    window.swup.hooks.on("page:view", runInitWithDelay);
+  }
 </script>
 
 <style>

@@ -225,21 +225,14 @@ function initSemifullScrollDetection() {
     const transparentMode = navbar.getAttribute('data-transparent-mode');
     if (transparentMode !== 'semifull') return;
 
-    const isHomePage = navbar.getAttribute('data-is-home') === 'true';
-
-    // 如果不是首页，移除滚动事件监听器并设置为半透明状态
-    if (!isHomePage) {
-        // 移除之前的滚动事件监听器（如果存在）
-        if (window.semifullScrollHandler) {
-            window.removeEventListener('scroll', window.semifullScrollHandler as () => void);
-            window.semifullScrollHandler = undefined;
-        }
-        // 设置为半透明状态
-        navbar.classList.add('scrolled');
-        return;
+    // 无论首页/非首页，semifull 都由滚动位置决定是否进入 scrolled 状态
+    // 先移除之前的滚动监听器，避免重复绑定
+    if (window.semifullScrollHandler) {
+        window.removeEventListener('scroll', window.semifullScrollHandler as () => void);
+        window.semifullScrollHandler = undefined;
     }
 
-    // 移除现有的scrolled类，重置状态
+    // 初始状态不强制加 scrolled，保持透明；滚动后再切换
     navbar.classList.remove('scrolled');
 
     let ticking = false;

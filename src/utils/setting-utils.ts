@@ -401,7 +401,7 @@ function showBannerMode() {
 	if (creditMobile) creditMobile.style.display = "";
 
 	// 显示横幅首页文本（如果启用且是首页）
-	const bannerTextOverlay = document.querySelector(".banner-text-overlay");
+	const bannerTextOverlay = document.querySelector(".banner-home-text-overlay");
 	if (bannerTextOverlay) {
 		// 检查是否启用 homeText
 		const homeTextEnabled = backgroundWallpaper.banner?.homeText?.enable;
@@ -479,7 +479,7 @@ function showOverlayMode() {
 	if (creditMobile) creditMobile.style.display = "none";
 
 	// 隐藏横幅首页文本
-	const bannerTextOverlay = document.querySelector(".banner-text-overlay");
+	const bannerTextOverlay = document.querySelector(".banner-home-text-overlay");
 	if (bannerTextOverlay) {
 		bannerTextOverlay.classList.add("hidden");
 	}
@@ -509,7 +509,7 @@ function hideAllWallpapers() {
 	if (creditMobile) creditMobile.style.display = "none";
 
 	// 隐藏横幅首页文本
-	const bannerTextOverlay = document.querySelector(".banner-text-overlay");
+	const bannerTextOverlay = document.querySelector(".banner-home-text-overlay");
 	if (bannerTextOverlay) {
 		bannerTextOverlay.classList.add("hidden");
 	}
@@ -748,7 +748,7 @@ export function applyBannerTitleEnabledToDocument(enabled: boolean): void {
 	);
 	// 同时更新元素样式（兼容性）
 	const bannerTextOverlay = document.querySelector(
-		".banner-text-overlay",
+		".banner-home-text-overlay",
 	) as HTMLElement;
 	if (bannerTextOverlay) {
 		if (enabled) {
