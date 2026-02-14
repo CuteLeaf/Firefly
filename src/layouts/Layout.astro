@@ -493,6 +493,22 @@ const siteLang = lang.replace("_", "-");
       @apply opacity-0 -translate-y-16;
     }
   }
+
+  @media (max-width: 1023px) {
+    body.enable-banner:not(.lg\:is-home) #main-grid {
+      transform: none !important;
+    }
+
+    body.enable-banner:not(.lg\:is-home) #top-row {
+      height: auto !important;
+    }
+
+    body.enable-banner:not(.lg\:is-home) #sidebar-sticky,
+    body.enable-banner:not(.lg\:is-home) #left-sidebar-sticky,
+    body.enable-banner:not(.lg\:is-home) #right-sidebar-sticky {
+      top: 1rem !important;
+    }
+  }
 </style>
 
 <script>
