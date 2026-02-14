@@ -448,19 +448,31 @@ const mobileQuality = Math.round(configQuality * 0.9);
                         {bannerPostMeta.title}
                     </h1>
                     <div class="banner-post-meta-list flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-white/90 text-sm md:text-base">
-                        <span>{formatDateToYYYYMMDD(bannerPostMeta.published)}</span>
+                        <span class="inline-flex items-center gap-1.5">
+                            <Icon name="material-symbols:calendar-month-outline-rounded" class="text-[1.05em]" />
+                            <span>{i18n(I18nKey.publishedAt)} {formatDateToYYYYMMDD(bannerPostMeta.published)}</span>
+                        </span>
                         {bannerPostMeta.updated &&
                             bannerPostMeta.updated.getTime() !== bannerPostMeta.published.getTime() && (
-                                <span>{formatDateToYYYYMMDD(bannerPostMeta.updated)}</span>
+                                <span class="inline-flex items-center gap-1.5">
+                                    <Icon name="material-symbols:update-rounded" class="text-[1.05em]" />
+                                    <span>{i18n(I18nKey.updatedAt)} {formatDateToYYYYMMDD(bannerPostMeta.updated)}</span>
+                                </span>
                             )}
                         {typeof bannerPostMeta.words === "number" && (
-                            <span>
-                                {bannerPostMeta.words} {i18n(bannerPostMeta.words === 1 ? I18nKey.wordCount : I18nKey.wordsCount)}
+                            <span class="inline-flex items-center gap-1.5">
+                                <Icon name="material-symbols:ink-pen-outline-rounded" class="text-[1.05em]" />
+                                <span>
+                                    {bannerPostMeta.words} {i18n(bannerPostMeta.words === 1 ? I18nKey.wordCount : I18nKey.wordsCount)}
+                                </span>
                             </span>
                         )}
                         {typeof bannerPostMeta.minutes === "number" && (
-                            <span>
-                                {bannerPostMeta.minutes} {i18n(bannerPostMeta.minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount)}
+                            <span class="inline-flex items-center gap-1.5">
+                                <Icon name="material-symbols:schedule-outline-rounded" class="text-[1.05em]" />
+                                <span>
+                                    {bannerPostMeta.minutes} {i18n(bannerPostMeta.minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount)} · {i18n(I18nKey.readTime)}
+                                </span>
                             </span>
                         )}
                     </div>

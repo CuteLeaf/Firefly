@@ -70,6 +70,8 @@ enum I18nKey {
 
 	author = "author",
 	publishedAt = "publishedAt",
+	updatedAt = "updatedAt",
+	readTime = "readTime",
 	license = "license",
 	friends = "friends",
 	friendsDescription = "friendsDescription",
