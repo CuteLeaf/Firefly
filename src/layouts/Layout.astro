@@ -93,7 +93,7 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
 ---
 
 <!doctype html>
-<html lang={siteLang} class="bg-(--page-bg) text-[14px] md:text-[16px]">
+<html lang={siteLang} class="bg-(--page-bg) text-[14px] md:text-[16px]" data-overlayscrollbars-initialize>
   <head>
     <meta charset="UTF-8" />
     {siteConfig.analytics?.googleAnalyticsId && (
@@ -419,6 +419,7 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
     <FontManager />
   </head>
   <body
+    data-overlayscrollbars-initialize
     class="min-h-screen"
     class:list={[
       { "lg:is-home": isHomePageCheck, "enable-banner": enableBanner, "enable-card-border": siteConfig.card?.border },
@@ -499,6 +500,7 @@ const bannerOffset = `${BANNER_HEIGHT_EXTEND / 2}vh`;
 </style>
 
 <script>
+  import { OverlayScrollbars } from "overlayscrollbars";
   import { pathsEqual, url } from "@/utils/url-utils";
   import {
     BANNER_HEIGHT,
@@ -590,6 +592,39 @@ function disableAnimation() {
     "theme-mode-panel",
     "scheme-switch",
   ]);
+
+  function initOverlayScrollbars() {
+    const bodyElement = document.querySelector("body");
+    if (!bodyElement) return;
+
+    const win = window as typeof window & {
+      __fireflyBodyOverlayScrollbar?: {
+        destroy?: () => void;
+        update?: (force?: boolean) => void;
+      };
+    };
+
+    if (win.__fireflyBodyOverlayScrollbar) {
+      return;
+    }
+
+    win.__fireflyBodyOverlayScrollbar = OverlayScrollbars(
+      {
+        target: bodyElement,
+        cancel: {
+          nativeScrollbarsOverlaid: true,
+        },
+      },
+      {
+        scrollbars: {
+          theme: "scrollbar-base scrollbar-auto py-1",
+          autoHide: "move",
+          autoHideDelay: 500,
+          autoHideSuspend: false,
+        },
+      }
+    );
+  }
 
   function initCustomScrollbar() {
     // 只处理katex元素的滚动条，使用浏览器原生滚动条
@@ -987,10 +1022,12 @@ function disableAnimation() {
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
       showBanner();
+      initOverlayScrollbars();
       initCustomScrollbar();
     });
   } else {
     showBanner();
+    initOverlayScrollbars();
     initCustomScrollbar();
   }
 
