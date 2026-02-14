@@ -656,7 +656,9 @@ export function getDefaultWavesEnabled(): boolean {
 		// 如果是分设备配置，检查当前设备
 		const isMobile =
 			typeof window !== "undefined" ? window.innerWidth < 768 : false;
-		return isMobile ? (wavesConfig.mobile ?? false) : (wavesConfig.desktop ?? false);
+		return isMobile
+			? (wavesConfig.mobile ?? false)
+			: (wavesConfig.desktop ?? false);
 	}
 	return wavesConfig ?? false;
 }
@@ -740,7 +742,10 @@ export function applyBannerTitleEnabledToDocument(enabled: boolean): void {
 		return;
 	}
 	// 更新 html 属性，CSS 会立即生效
-	document.documentElement.setAttribute("data-banner-title-enabled", String(enabled));
+	document.documentElement.setAttribute(
+		"data-banner-title-enabled",
+		String(enabled),
+	);
 	// 同时更新元素样式（兼容性）
 	const bannerTextOverlay = document.querySelector(
 		".banner-text-overlay",

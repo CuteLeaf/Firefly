@@ -752,6 +752,10 @@ html[data-banner-title-enabled="false"] .banner-text-overlay {
 
 /* Overlay 模式下图片模糊效果 */
 #wallpaper-wrapper.wallpaper-overlay img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
     filter: blur(var(--overlay-blur, 0px));
 }
 

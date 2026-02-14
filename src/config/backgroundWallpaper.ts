@@ -12,24 +12,24 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	 * 2. src 目录（不以 "/" 开头，自动优化但会增加构建时间，推荐）："assets/images/banner.avif"
 	 * 3. 远程 URL："https://example.com/banner.jpg"
 	 * 注意：远程URL和public目录的图片不会被优化，请确保图片体积足够小以免影响加载速度
-	 * 
+	 *
 	 * 建议不要替换d1-d6，m1-m6这些默认示例图片，但你可以删除掉节省空间
 	 * 因为以后可能会更换示例图片，导致你自定义的图片被覆盖
 	 * 所以建议使用自己的图片的时候命名为其他名称，不要使用d1-d6，m1-m6这些名称
-	 * 
+	 *
 	 * 如果只使用一张图片或者使用随机图API，推荐直接使用字符串格式：
 	 * desktop: "https://t.alcy.cc/pc",   // 随机图API
 	 * desktop: "https://example.com/d1.avif", // 单张图片
-	 * 
+	 *
 	 * mobile: "https://t.alcy.cc/mp", // 随机图API
 	 * mobile: "https://example.com/m1.avif", // 单张图片
-	 * 
+	 *
 	 * 支持配置多张图片（数组），每次刷新页面随机显示一张：
 	 * desktop: [
 	 * "assets/images/d1.avif",
 	 * "assets/images/d2.avif",
 	 * ],
-	 * 
+	 *
 	 * mobile:[
 	 *   "assets/images/m1.avif",
 	 *   "assets/images/m2.avif",
@@ -44,7 +44,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 			"assets/images/DesktopWallpaper/d3.avif",
 			"assets/images/DesktopWallpaper/d4.avif",
 			"assets/images/DesktopWallpaper/d5.avif",
-			"assets/images/DesktopWallpaper/d6.avif"
+			"assets/images/DesktopWallpaper/d6.avif",
 		],
 		// 移动背景图片（支持单张或多张随机）
 		// mobile: "https://example.com/m1.avif",
@@ -54,7 +54,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 			"assets/images/MobileWallpaper/m3.avif",
 			"assets/images/MobileWallpaper/m4.avif",
 			"assets/images/MobileWallpaper/m5.avif",
-			"assets/images/MobileWallpaper/m6.avif"
+			"assets/images/MobileWallpaper/m6.avif",
 		],
 	},
 	// Banner模式特有配置

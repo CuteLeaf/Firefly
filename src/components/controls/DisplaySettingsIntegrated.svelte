@@ -7,17 +7,17 @@ import {
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import {
+	getDefaultBannerTitleEnabled,
 	getDefaultHue,
+	getDefaultWavesEnabled,
 	getHue,
+	getStoredBannerTitleEnabled,
 	getStoredWallpaperMode,
 	getStoredWavesEnabled,
-	getDefaultWavesEnabled,
-	getStoredBannerTitleEnabled,
-	getDefaultBannerTitleEnabled,
+	setBannerTitleEnabled,
 	setHue,
 	setWallpaperMode,
 	setWavesEnabled,
-	setBannerTitleEnabled,
 } from "@utils/setting-utils";
 import { onMount } from "svelte";
 import Icon from "@/components/common/Icon.svelte";
@@ -44,15 +44,22 @@ const isWallpaperSwitchable = backgroundWallpaper.switchable ?? true;
 const allowLayoutSwitch = siteConfig.postListLayout.allowSwitch;
 const showThemeColor = !siteConfig.themeColor.fixed;
 // 是否允许用户切换水波纹动画（只看 switchable 配置）
-const isWavesSwitchable = backgroundWallpaper.banner?.waves?.switchable ?? false;
+const isWavesSwitchable =
+	backgroundWallpaper.banner?.waves?.switchable ?? false;
 // 检查是否启用横幅标题配置
-const isBannerTitleEnabled = backgroundWallpaper.banner?.homeText?.enable ?? false;
+const isBannerTitleEnabled =
+	backgroundWallpaper.banner?.homeText?.enable ?? false;
 // 是否允许用户切换横幅标题
-const isBannerTitleSwitchable = isBannerTitleEnabled && (backgroundWallpaper.banner?.homeText?.switchable ?? false);
+const isBannerTitleSwitchable =
+	isBannerTitleEnabled &&
+	(backgroundWallpaper.banner?.homeText?.switchable ?? false);
 // 是否有任何横幅设置可显示（后续添加新设置时在此处添加条件）
 const hasBannerSettings = isWavesSwitchable || isBannerTitleSwitchable;
 const hasAnyContent =
-	showThemeColor || isWallpaperSwitchable || allowLayoutSwitch || hasBannerSettings;
+	showThemeColor ||
+	isWallpaperSwitchable ||
+	allowLayoutSwitch ||
+	hasBannerSettings;
 
 function resetHue() {
 	hue = getDefaultHue();

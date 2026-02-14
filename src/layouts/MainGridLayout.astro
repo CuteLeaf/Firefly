@@ -70,7 +70,8 @@ const wavesEnabledOnDesktop =
 const wavesEnabledOnMobile =
 	typeof wavesConfig === "object" ? wavesConfig.mobile : wavesConfig;
 // 是否需要渲染水波纹元素（任一设备启用 或 允许用户切换）
-const shouldRenderWaves = wavesEnabledOnDesktop || wavesEnabledOnMobile || wavesSwitchable;
+const shouldRenderWaves =
+	wavesEnabledOnDesktop || wavesEnabledOnMobile || wavesSwitchable;
 
 // 处理分设备控制的横幅信贷显示
 const creditEnableConfig = backgroundWallpaper.banner?.credit?.enable;
