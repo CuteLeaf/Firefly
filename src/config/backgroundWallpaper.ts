@@ -19,25 +19,25 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	 *
 	 * 如果只使用一张图片或者使用随机图API，推荐直接使用字符串格式：
 	 * desktop: "https://t.alcy.cc/pc",   // 随机图API
-	 * desktop: "https://example.com/d1.avif", // 单张图片
+	 * desktop: "assets/images/DesktopWallpaper/d1.avif", // 单张图片
 	 *
 	 * mobile: "https://t.alcy.cc/mp", // 随机图API
-	 * mobile: "https://example.com/m1.avif", // 单张图片
+	 * mobile: "assets/images/MobileWallpaper/m1.avif", // 单张图片
 	 *
 	 * 支持配置多张图片（数组），每次刷新页面随机显示一张：
 	 * desktop: [
-	 * "assets/images/d1.avif",
-	 * "assets/images/d2.avif",
+	 * "assets/images/DesktopWallpaper/d1.avif",
+	 * "assets/images/DesktopWallpaper/d2.avif",
 	 * ],
 	 *
 	 * mobile:[
-	 *   "assets/images/m1.avif",
-	 *   "assets/images/m2.avif",
+	 *   "assets/images/MobileWallpaper/m1.avif",
+	 *   "assets/images/MobileWallpaper/m2.avif",
 	 * ],
 	 */
 	src: {
 		// 桌面背景图片（支持单张或多张随机）
-		// desktop: "https://example.com/d1.avif",
+		// desktop: "assets/images/DesktopWallpaper/d1.avif",
 		desktop: [
 			"assets/images/DesktopWallpaper/d1.avif",
 			"assets/images/DesktopWallpaper/d2.avif",
@@ -47,7 +47,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 			"assets/images/DesktopWallpaper/d6.avif",
 		],
 		// 移动背景图片（支持单张或多张随机）
-		// mobile: "https://example.com/m1.avif",
+		// mobile: "assets/images/MobileWallpaper/m1.avif",
 		mobile: [
 			"assets/images/MobileWallpaper/m1.avif",
 			"assets/images/MobileWallpaper/m2.avif",

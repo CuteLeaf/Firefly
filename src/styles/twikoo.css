@@ -162,8 +162,16 @@ html.dark {
   @apply border-[1px] border-(--line-divider) p-4 rounded-2xl hover:shadow-lg hover:border-(--primary) transition-all duration-300;
   background: linear-gradient(135deg, var(--card-bg) 0%, rgba(var(--primary), 0.02) 100%);
 
-  .tk-action-icon svg {
-    @apply fill-(--primary) hover:scale-110 transition-transform duration-200;
+  .tk-action-icon {
+    @apply text-(--primary)!;
+    
+    svg {
+      @apply fill-(--primary) hover:scale-110 transition-transform duration-200;
+    }
+  }
+
+  .tk-action-count {
+    @apply text-(--primary)!;
   }
 
   &:hover {
@@ -294,6 +302,16 @@ Make the emoji component display correctly when there are too many emoji packs
   display: flex !important;
   justify-content: center !important;
 
+}
+
+/* Transparent Mode Adaption */
+body.wallpaper-transparent .tk-input textarea,
+body.wallpaper-transparent .tk-meta-input div,
+body.wallpaper-transparent .tk-owo,
+body.wallpaper-transparent .tk-upload,
+body.wallpaper-transparent .tk-expand-wrap .tk-expand,
+body.wallpaper-transparent .tk-collapse-wrap .tk-expand {
+  background-color: var(--card-bg-transparent) !important;
 }
 
 
