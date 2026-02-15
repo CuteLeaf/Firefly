@@ -277,10 +277,27 @@ const mobileQuality = Math.round(configQuality * 0.9);
 			: `top: -${BANNER_HEIGHT_EXTEND}vh`
 }>
     <!-- 背景图片显示 -->
-    <div class="relative h-full w-full" id="banner-images-container" data-mobile-count={backgroundImages.mobile.length} data-desktop-count={backgroundImages.desktop.length}>
-        <!-- Mobile: 渲染所有移动端图片 -->
-        {backgroundImages.mobile.map((src, index) => (
-            <div class={`banner-image-mobile absolute inset-0 ${index === 0 ? "block lg:hidden" : "hidden"}`}>
+    <div class="relative h-full w-full" id="banner-images-container"
+         data-mobile-count={backgroundImages.mobile.length}
+         data-desktop-count={backgroundImages.desktop.length}>
+        <!-- Mobile: 默认渲染第一张，其余放入 template 避免浏览器预加载 -->
+        {backgroundImages.mobile.length > 0 && (
+            <div class="banner-image-slot-mobile absolute inset-0 block lg:hidden">
+                <ImageWrapper
+                    alt="Mobile background image of the blog"
+                    class="object-cover h-full w-full"
+                    src={backgroundImages.mobile[0]}
+                    position={backgroundWallpaper.banner?.position}
+                    widths={[640, 750, 1080]}
+                    sizes="100vw"
+                    loading="eager"
+                    fetchpriority="high"
+                    quality={mobileQuality}
+                />
+            </div>
+        )}
+        {backgroundImages.mobile.slice(1).map((src) => (
+            <template class="banner-tpl-mobile">
                 <ImageWrapper
                     alt="Mobile background image of the blog"
                     class="object-cover h-full w-full"
@@ -288,80 +305,80 @@ const mobileQuality = Math.round(configQuality * 0.9);
                     position={backgroundWallpaper.banner?.position}
                     widths={[640, 750, 1080]}
                     sizes="100vw"
-                    loading={index === 0 ? "eager" : "lazy"}
-                    fetchpriority={index === 0 ? "high" : "low"}
+                    loading="eager"
+                    fetchpriority="high"
                     quality={mobileQuality}
                 />
-            </div>
+            </template>
         ))}
-        <!-- Desktop: 渲染所有桌面端图片 -->
-        {backgroundImages.desktop.map((src, index) => (
-            <div class={`banner-image-desktop absolute inset-0 ${index === 0 ? "hidden lg:block" : "hidden"}`}>
+        <!-- Desktop: 默认渲染第一张，其余放入 template -->
+        {backgroundImages.desktop.length > 0 && (
+            <div class="banner-image-slot-desktop absolute inset-0 hidden lg:block">
                 <ImageWrapper
-                    id={index === 0 ? "banner" : undefined}
+                    id="banner"
+                    alt="Desktop background image of the blog"
+                    class="object-cover h-full"
+                    src={backgroundImages.desktop[0]}
+                    position={backgroundWallpaper.banner?.position}
+                    widths={[1280, 1920, 2560]}
+                    sizes="100vw"
+                    loading="eager"
+                    fetchpriority="high"
+                    quality={configQuality}
+                />
+            </div>
+        )}
+        {backgroundImages.desktop.slice(1).map((src) => (
+            <template class="banner-tpl-desktop">
+                <ImageWrapper
+                    id="banner"
                     alt="Desktop background image of the blog"
                     class="object-cover h-full"
                     src={src}
                     position={backgroundWallpaper.banner?.position}
                     widths={[1280, 1920, 2560]}
                     sizes="100vw"
-                    loading={index === 0 ? "eager" : "lazy"}
-                    fetchpriority={index === 0 ? "high" : "low"}
+                    loading="eager"
+                    fetchpriority="high"
                     quality={configQuality}
                 />
-            </div>
+            </template>
         ))}
     </div>
 
     <!-- 客户端随机选择图片脚本 -->
     <script is:inline>
         (function randomizeBannerImage() {
-            function selectRandomImage() {
-                const container = document.getElementById('banner-images-container');
-                if (!container) return;
+            var container = document.getElementById('banner-images-container');
+            if (!container) return;
 
-                const mobileCount = parseInt(container.dataset.mobileCount || '0', 10);
-                const desktopCount = parseInt(container.dataset.desktopCount || '0', 10);
-                const isMobile = window.innerWidth < 1024;
+            var mobileCount = parseInt(container.dataset.mobileCount || '0', 10);
+            var desktopCount = parseInt(container.dataset.desktopCount || '0', 10);
 
-                // 检查是否已经选择过（F5刷新会重置全局变量，Swup切换不会）
-                if (typeof window.__bannerRandomIndex === 'undefined') {
-                    window.__bannerRandomIndex = {
-                        mobile: mobileCount > 1 ? Math.floor(Math.random() * mobileCount) : 0,
-                        desktop: desktopCount > 1 ? Math.floor(Math.random() * desktopCount) : 0
-                    };
-                }
+            if (mobileCount <= 1 && desktopCount <= 1) return;
 
-                const randomMobileIndex = window.__bannerRandomIndex.mobile;
-                const randomDesktopIndex = window.__bannerRandomIndex.desktop;
-
-                // 应用移动端图片选择
-                if (mobileCount > 0) {
-                    const mobileImages = container.querySelectorAll('.banner-image-mobile');
-                    mobileImages.forEach((img, i) => {
-                        if (i === randomMobileIndex) {
-                            img.style.display = isMobile ? 'block' : 'none';
-                        } else {
-                            img.style.display = 'none';
-                        }
-                    });
-                }
-
-                // 应用桌面端图片选择
-                if (desktopCount > 0) {
-                    const desktopImages = container.querySelectorAll('.banner-image-desktop');
-                    desktopImages.forEach((img, i) => {
-                        if (i === randomDesktopIndex) {
-                            img.style.display = isMobile ? 'none' : 'block';
-                        } else {
-                            img.style.display = 'none';
-                        }
-                    });
-                }
+            // F5 刷新重置，Swup 切换保留
+            if (typeof window.__bannerRandomIndex === 'undefined') {
+                window.__bannerRandomIndex = {
+                    mobile: mobileCount > 1 ? Math.floor(Math.random() * mobileCount) : 0,
+                    desktop: desktopCount > 1 ? Math.floor(Math.random() * desktopCount) : 0
+                };
             }
 
-            // 立即执行
-            selectRandomImage();
+            // 从 template 替换默认图片（index 0 = 已渲染的默认图，>0 = template）
+            function applyRandom(slotClass, tplClass, randomIndex) {
+                if (randomIndex === 0) return;
+                var slot = container.querySelector('.' + slotClass);
+                var templates = container.querySelectorAll('.' + tplClass);
+                if (!slot || !templates.length) return;
+                var tpl = templates[randomIndex - 1];
+                if (!tpl) return;
+                slot.innerHTML = '';
+                slot.appendChild(tpl.content.cloneNode(true));
+            }
+
+            applyRandom('banner-image-slot-mobile', 'banner-tpl-mobile', window.__bannerRandomIndex.mobile);
+            applyRandom('banner-image-slot-desktop', 'banner-tpl-desktop', window.__bannerRandomIndex.desktop);
         })();
     </script>
     
