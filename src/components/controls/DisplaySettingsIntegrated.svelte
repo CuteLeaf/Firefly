@@ -57,8 +57,9 @@ const isBannerTitleSwitchable =
 const hasBannerSettings = isWavesSwitchable || isBannerTitleSwitchable;
 // 横幅设置是否全部为默认值（用于控制恢复默认按钮的显隐）
 let bannerSettingsIsDefault = $derived(
-	(!isBannerTitleSwitchable || bannerTitleEnabled === defaultBannerTitleEnabled) &&
-	(!isWavesSwitchable || wavesEnabled === defaultWavesEnabled)
+	(!isBannerTitleSwitchable ||
+		bannerTitleEnabled === defaultBannerTitleEnabled) &&
+		(!isWavesSwitchable || wavesEnabled === defaultWavesEnabled),
 );
 const hasAnyContent =
 	showThemeColor ||
@@ -92,7 +93,10 @@ function resetWavesEnabled() {
 }
 
 function resetBannerSettings() {
-	if (isBannerTitleSwitchable && bannerTitleEnabled !== defaultBannerTitleEnabled) {
+	if (
+		isBannerTitleSwitchable &&
+		bannerTitleEnabled !== defaultBannerTitleEnabled
+	) {
 		bannerTitleEnabled = defaultBannerTitleEnabled;
 		setBannerTitleEnabled(defaultBannerTitleEnabled);
 	}
