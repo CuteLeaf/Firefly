@@ -55,6 +55,11 @@ const isBannerTitleSwitchable =
 	(backgroundWallpaper.banner?.homeText?.switchable ?? false);
 // 是否有任何横幅设置可显示（后续添加新设置时在此处添加条件）
 const hasBannerSettings = isWavesSwitchable || isBannerTitleSwitchable;
+// 横幅设置是否全部为默认值（用于控制恢复默认按钮的显隐）
+let bannerSettingsIsDefault = $derived(
+	(!isBannerTitleSwitchable || bannerTitleEnabled === defaultBannerTitleEnabled) &&
+	(!isWavesSwitchable || wavesEnabled === defaultWavesEnabled)
+);
 const hasAnyContent =
 	showThemeColor ||
 	isWallpaperSwitchable ||
@@ -84,6 +89,17 @@ function resetLayout() {
 function resetWavesEnabled() {
 	wavesEnabled = defaultWavesEnabled;
 	setWavesEnabled(defaultWavesEnabled);
+}
+
+function resetBannerSettings() {
+	if (isBannerTitleSwitchable && bannerTitleEnabled !== defaultBannerTitleEnabled) {
+		bannerTitleEnabled = defaultBannerTitleEnabled;
+		setBannerTitleEnabled(defaultBannerTitleEnabled);
+	}
+	if (isWavesSwitchable && wavesEnabled !== defaultWavesEnabled) {
+		wavesEnabled = defaultWavesEnabled;
+		setWavesEnabled(defaultWavesEnabled);
+	}
 }
 
 function toggleWavesEnabled() {
@@ -273,6 +289,12 @@ $effect(() => {
                 before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2"
             >
                 {i18n(I18nKey.bannerSettings)}
+                <button aria-label="Reset to Default" class="btn-regular w-7 h-7 rounded-md  active:scale-90"
+                        class:opacity-0={bannerSettingsIsDefault} class:pointer-events-none={bannerSettingsIsDefault} onclick={resetBannerSettings}>
+                    <div class="text-(--btn-content)">
+                        <Icon icon="fa7-solid:arrow-rotate-left" class="text-[0.875rem]"></Icon>
+                    </div>
+                </button>
             </div>
             <div class="space-y-1 px-1">
                 <!-- Banner Title Switch -->
