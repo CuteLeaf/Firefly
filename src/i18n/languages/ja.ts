@@ -207,7 +207,7 @@ export const ja: Translation = {
 
 	// バナー設定
 	[Key.bannerSettings]: "バナー設定",
-	[Key.bannerTitle]: "バナータイトル",
+	[Key.bannerTitle]: "ホームバナータイトル",
 	[Key.wavesAnimation]: "波アニメーション",
 
 	// 投稿リストレイアウト
