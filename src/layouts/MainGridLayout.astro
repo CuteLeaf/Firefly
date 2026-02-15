@@ -10,9 +10,6 @@ import { Icon } from "astro-icon/components";
 import ImageWrapper from "@/components/common/ImageWrapper.astro";
 import FloatingControls from "@/components/controls/FloatingControls.astro";
 import TypewriterText from "@/components/features/TypewriterText.astro";
-import I18nKey from "@/i18n/i18nKey";
-import { i18n } from "@/i18n/translation";
-import { formatDateToYYYYMMDD } from "@/utils/date-utils";
 import {
 	backgroundWallpaper,
 	live2dModelConfig,
@@ -24,6 +21,9 @@ import {
 	BANNER_HEIGHT_EXTEND,
 	MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
 } from "@/constants/constants";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import { formatDateToYYYYMMDD } from "@/utils/date-utils";
 import { getImageQuality } from "@/utils/image-utils";
 import { getBackgroundImages, isHomePage } from "@/utils/layout-utils";
 import {
@@ -663,7 +663,6 @@ const mobileQuality = Math.round(configQuality * 0.9);
                 transform 0.35s ease-in-out;
   }
 
-
   @keyframes swupFadeOut {
     from {
       opacity: 1;
@@ -673,47 +672,5 @@ const mobileQuality = Math.round(configQuality * 0.9);
     }
   }
 
-  /* 横幅文字阴影 - 更柔和的扩散效果 */
-  .banner-title {
-    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
-  }
-
-  .banner-subtitle {
-    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
-  }
-
-  .banner-dim-overlay {
-    background: rgba(0, 0, 0, 0.2);
-  }
-
-  .banner-post-title {
-    font-size: clamp(2rem, 4vw, 3rem);
-    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.65);
-  }
-
-  .banner-page-title {
-    font-size: clamp(2rem, 4vw, 3rem);
-    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.65);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    vertical-align: middle;
-    line-height: 1.2;
-  }
-
-  /* .banner-page-title-icon {
-    font-size: 1.2em;
-    line-height: 1;
-    vertical-align: middle;
-    transform: translateY(0.08em);
-  } */
-
-  .banner-page-title-text {
-    line-height: 1.2;
-  }
-
-  .banner-post-meta-list {
-    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
-  }
 </style>
 

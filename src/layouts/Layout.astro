@@ -663,12 +663,24 @@ function disableAnimation() {
 		}
 	})
 */
-    window.swup.hooks.on("link:click", () => {
+    window.swup.hooks.on("link:click", (_visit: any, { el }: { el: HTMLAnchorElement }) => {
       // Remove the delay for the first time page load
       document.documentElement.style.setProperty("--content-delay", "0ms");
 
-      // 添加页面切换保护，防止导航栏闪烁
-      document.documentElement.classList.add("is-page-transitioning");
+      // 同页链接点击不需要过渡保护
+      const targetHref = el.getAttribute("href") || "";
+      const targetPathname = (() => {
+        try {
+          return new URL(targetHref, window.location.origin).pathname;
+        } catch {
+          return targetHref;
+        }
+      })();
+      const isSamePage = pathsEqual(targetPathname, window.location.pathname);
+      if (!isSamePage) {
+        // 添加页面切换保护，防止导航栏闪烁
+        document.documentElement.classList.add("is-page-transitioning");
+      }
 
       // 简化navbar处理逻辑
       if (bannerEnabled) {

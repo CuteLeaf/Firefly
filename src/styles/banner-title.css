@@ -1,0 +1,42 @@
+/* 横幅文字阴影 - 更柔和的扩散效果 */
+.banner-title {
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+}
+
+.banner-subtitle {
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+}
+
+.banner-dim-overlay {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.banner-post-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.65);
+}
+
+.banner-page-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.65);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    line-height: 1.2;
+}
+
+/* .banner-page-title-icon {
+    font-size: 1.2em;
+    line-height: 1;
+    vertical-align: middle;
+    transform: translateY(0.08em);
+  } */
+
+.banner-page-title-text {
+    line-height: 1.2;
+}
+
+.banner-post-meta-list {
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+}
