@@ -248,13 +248,28 @@ comment: true    # 是否允許留言
 
 ## 🙏 致謝
 
-- 非常感謝 [saicaca](https://github.com/saicaca) 開發的 [fuwari](https://github.com/saicaca/fuwari) 範本，Firefly 就是基於這個範本二次開發
-- 參考了部落格主 [霞葉](https://kasuha.com) 分享的 [Bangumi 收藏展示](https://kasuha.com/posts/fuwari-enhance-ep2/) 和 [圖片標題](https://kasuha.com/posts/fuwari-enhance-ep1/) 方案
-- 參考了 [Mizuki](https://github.com/matsuzaka-yuki/Mizuki) 的橫幅標題/多級選單導覽列/櫻花特效/KaTeX/Fancybox方案
-- 使用了 [Astro](https://astro.build) 和 [Tailwind CSS](https://tailwindcss.com) 建置
-- 使用了b站up [公公的日常](https://space.bilibili.com/3546750017080050) 提供的Q版 `流螢` 看板娘切片資料模型
-- 圖示來自 [Iconify](https://iconify.design/)
-- 流螢部分相關圖片素材版權歸遊戲 [《崩壞：星穹鐵道》](https://sr.mihoyo.com/) 開發商 [米哈遊](https://www.mihoyo.com/) 所有
+## 🙏 致謝
+
+非常感謝 [saicaca](https://github.com/saicaca) 開發的 [fuwari](https://github.com/saicaca/fuwari) 範本，Firefly 就是基於這個範本二次開發
+
+流螢部分相關圖片素材版權歸遊戲 [《崩壞：星穹鐵道》](https://sr.mihoyo.com/) 開發商 [米哈遊](https://www.mihoyo.com/) 所有
+
+### 技術棧
+
+- [Astro](https://astro.build) 
+- [Tailwind CSS](https://tailwindcss.com) 
+- [Iconify](https://iconify.design)
+
+### 靈感專案
+
+- [fuwari](https://github.com/saicaca/fuwari)
+- [hexo-theme-shoka](https://github.com/amehime/hexo-theme-shoka)
+- [astro-koharu](https://github.com/cosZone/astro-koharu)
+- [Mizuki](https://github.com/matsuzaka-yuki/Mizuki)
+
+### 其他參考
+- 部落客`霞葉`的 [Bangumi 收藏](https://kasuha.com/posts/fuwari-enhance-ep2/) 頁面元件
+- 嗶哩嗶哩up主 `公公的日常` 的Q版 [流螢看板娘Spine切片資料](https://www.bilibili.com/video/BV1fuVzzdE5y)
 
 ## 📝 許可協議
 

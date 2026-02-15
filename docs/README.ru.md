@@ -251,13 +251,26 @@ comment: true    # Включить комментарии
 
 ## 🙏 Благодарности
 
-- Особенная благодарность [saicaca](https://github.com/saicaca) за разработку шаблона [fuwari](https://github.com/saicaca/fuwari), на котором основан Firefly
-- Использованы решения [Bangumi Collection Display](https://kasuha.com/posts/fuwari-enhance-ep2/) и [Email Protection/Image Title](https://kasuha.com/posts/fuwari-enhance-ep1/), которыми поделился блогер [霞葉](https://kasuha.com)
-- За основу взяты решения [Mizuki](https://github.com/matsuzaka-yuki/Mizuki) для заголовка баннера, многоуровневой панели навигации меню, эффекта сакуры, KaTeX и Fancybox
-- Построено с использованием [Astro](https://astro.build) и [Tailwind CSS](https://tailwindcss.com)
-- Использует модель маскота в стиле Чиби `Firefly` spine, предоставленную создателем Bilibili [公公的日常](https://space.bilibili.com/3546750017080050)
-- Иконки от [Iconify](https://iconify.design/)
-- Авторские права на изображения Firefly принадлежат компании [miHoYo](https://www.mihoyo.com/), разработчику игры ["Honkai: Star Rail"](https://sr.mihoyo.com/).
+Особая благодарность [saicaca](https://github.com/saicaca) за разработку шаблона [fuwari](https://github.com/saicaca/fuwari), на котором Firefly основан для вторичной разработки.
+
+Авторские права на изображения Firefly принадлежат компании [miHoYo](https://www.mihoyo.com/), разработчику игры ["Honkai: Star Rail"](https://sr.mihoyo.com/).
+
+### Технический стек
+
+- [Astro](https://astro.build) 
+- [Tailwind CSS](https://tailwindcss.com) 
+- [Iconify](https://iconify.design)
+
+### Проекты вдохновения
+
+- [fuwari](https://github.com/saicaca/fuwari)
+- [hexo-theme-shoka](https://github.com/amehime/hexo-theme-shoka)
+- [astro-koharu](https://github.com/cosZone/astro-koharu)
+- [Mizuki](https://github.com/matsuzaka-yuki/Mizuki)
+
+### Другие ссылки
+- Компонент страницы [Bangumi Collection](https://kasuha.com/posts/fuwari-enhance-ep2/) блогера `霞葉`
+- Q-версия [Firefly Mascot Spine Model](https://www.bilibili.com/video/BV1fuVzzdE5y) от создателя Bilibili `公公的日常`
 
 ## 📝 Лицензия
 

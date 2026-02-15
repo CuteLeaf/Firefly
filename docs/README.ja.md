@@ -249,13 +249,26 @@ Astroがデフォルトで対応している[GitHub Flavored Markdown](https://g
 
 ## 🙏 謝辞
 
-- [fuwari](https://github.com/saicaca/fuwari)テンプレートを開発した[saicaca](https://github.com/saicaca)に深く感謝します。Fireflyはこのテンプレートをベースに開発されています
-- ブロガー[霞葉](https://kasuha.com)の[Bangumiコレクション表示](https://kasuha.com/posts/fuwari-enhance-ep2/)と[メール保護・画像タイトル](https://kasuha.com/posts/fuwari-enhance-ep1/)案を参考にしました
-- [Mizuki](https://github.com/matsuzaka-yuki/Mizuki)のバナータイトル/多階層メニューナビゲーションバー/桜エフェクト/KaTeX/Fancyboxソリューションを参考にしました
-- [Astro](https://astro.build)と[Tailwind CSS](https://tailwindcss.com)を使用して構築
-- Bilibili UP主[公公的日常](https://space.bilibili.com/3546750017080050)が提供するQ版`蛍`マスコットスライスデータモデルを使用
-- アイコンは[Iconify](https://iconify.design/)から
-- 蛍関連の画像素材の著作権はゲーム[「崩壊：スターレイル」](https://sr.mihoyo.com/)の開発元[miHoYo](https://www.mihoyo.com/)に帰属します。
+[fuwari](https://github.com/saicaca/fuwari)テンプレートを開発した[saicaca](https://github.com/saicaca)に深く感謝します。Fireflyはこのテンプレートをベースに二次開発されています。
+
+蛍関連の画像素材の著作権はゲーム[「崩壊：スターレイル」](https://sr.mihoyo.com/)の開発元[miHoYo](https://www.mihoyo.com/)に帰属します。
+
+### 技術スタック
+
+- [Astro](https://astro.build) 
+- [Tailwind CSS](https://tailwindcss.com) 
+- [Iconify](https://iconify.design)
+
+### インスピレーションプロジェクト
+
+- [fuwari](https://github.com/saicaca/fuwari)
+- [hexo-theme-shoka](https://github.com/amehime/hexo-theme-shoka)
+- [astro-koharu](https://github.com/cosZone/astro-koharu)
+- [Mizuki](https://github.com/matsuzaka-yuki/Mizuki)
+
+### その他の参考
+- ブロガー`霞葉`の [Bangumi コレクション](https://kasuha.com/posts/fuwari-enhance-ep2/) ページコンポーネント
+- Bilibiliクリエイター `公公的日常` のQ版 [蛍看板娘Spineモデル](https://www.bilibili.com/video/BV1fuVzzdE5y)
 
 ## 📝 ライセンス
 
