@@ -248,8 +248,6 @@ comment: true    # 是否允許留言
 
 ## 🙏 致謝
 
-## 🙏 致謝
-
 非常感謝 [saicaca](https://github.com/saicaca) 開發的 [fuwari](https://github.com/saicaca/fuwari) 範本，Firefly 就是基於這個範本二次開發
 
 流螢部分相關圖片素材版權歸遊戲 [《崩壞：星穹鐵道》](https://sr.mihoyo.com/) 開發商 [米哈遊](https://www.mihoyo.com/) 所有
