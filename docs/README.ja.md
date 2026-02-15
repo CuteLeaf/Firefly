@@ -274,7 +274,7 @@ Astroがデフォルトで対応している[GitHub Flavored Markdown](https://g
 
 本プロジェクトは [MIT license](https://mit-license.org/) の下で公開されています。詳細は [LICENSE](../LICENSE) ファイルをご覧ください。
 
-最初は [saicaca/fuwari](https://github.com/saicaca/fuwari) からフォークされました。元の作者の貢献に感謝します。元のプロジェクトは [MIT License](https://mit-license.org/) の下で公開されています。
+最初は [saicaca/fuwari](https://github.com/saicaca/fuwari) からフォークされました。元の作者の貢献に感謝します。
 
 **著作権表示：**
 - Copyright (c) 2024 [saicaca](https://github.com/saicaca) - [fuwari](https://github.com/saicaca/fuwari)
