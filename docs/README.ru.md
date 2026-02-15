@@ -276,7 +276,7 @@ comment: true    # Включить комментарии
 
 Этот проект распространяется под лицензией [MIT license](https://mit-license.org/), подробности см. в файле [LICENSE](../LICENSE).
 
-Первоначально ветвлено из [saicaca/fuwari](https://github.com/saicaca/fuwari). Благодарим автора оригинального проекта за вклад. Оригинальный проект лицензирован по [MIT License](https://mit-license.org/)
+Первоначально ветвлено из [saicaca/fuwari](https://github.com/saicaca/fuwari). Благодарим автора оригинального проекта за вклад. 
 
 **Уведомление об авторских правах:**
 - Copyright (c) 2024 [saicaca](https://github.com/saicaca) - [fuwari](https://github.com/saicaca/fuwari)
