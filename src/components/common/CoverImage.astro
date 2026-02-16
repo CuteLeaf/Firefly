@@ -74,7 +74,8 @@ if (isLocal) {
 // 加载回退图片
 let fallbackImg: ImageMetadata | null = null;
 const fallbackPath = coverImageConfig.randomCoverImage.fallback;
-if (fallbackPath && !isLocal) {
+const isFallbackPublic = fallbackPath?.startsWith("/");
+if (fallbackPath && !isLocal && !isFallbackPublic) {
 	const files = import.meta.glob<ImageMetadata>(
 		"../../**/*.{png,jpg,jpeg,webp,avif}",
 		{
@@ -139,6 +140,18 @@ const showLoading = coverImageConfig.randomCoverImage.showLoading ?? true;
 				widths={widths}
 				sizes={sizes}
 				layout={layout}
+			/>
+		</div>
+	)}
+	{!fallbackImg && isFallbackPublic && fallbackPath && (
+		<div class="fallback-image absolute inset-0 hidden">
+			<img
+				src={url(fallbackPath)}
+				alt="Fallback cover"
+				class={imageClass}
+				style={imageStyle}
+				loading="lazy"
+				decoding="async"
 			/>
 		</div>
 	)}
