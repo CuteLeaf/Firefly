@@ -52,8 +52,6 @@ export default defineConfig({
 			// the default value `transition-` cause transition delay
 			// when the Tailwind class `transition-all` is used
 			containers: [
-				"#banner-overlay-container",
-				"#banner-dim-container",
 				"#swup-container",
 				"#right-sidebar-dynamic",
 				"#floating-toc-wrapper",
