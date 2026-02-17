@@ -104,7 +104,7 @@ const postUrlPrefix = url("/posts/");
   </div>
 </WidgetLayout>
 
-<script is:inline define:vars={{ monthNames, weekDays, yearText, currentLang, calendarDataUrl, postUrlPrefix }}>
+<script is:inline data-swup-ignore-script define:vars={{ monthNames, weekDays, yearText, currentLang, calendarDataUrl, postUrlPrefix }}>
   // State variables
   let displayYear = new Date().getFullYear();
   let displayMonth = new Date().getMonth();
@@ -115,8 +115,14 @@ const postUrlPrefix = url("/posts/");
 
   async function fetchData() {
     try {
-      const response = await fetch(calendarDataUrl);
-      allPostsData = await response.json();
+      // 使用缓存避免 swup 导航时重复请求
+      if (window.__calendarCache) {
+        allPostsData = window.__calendarCache;
+      } else {
+        const response = await fetch(calendarDataUrl);
+        allPostsData = await response.json();
+        window.__calendarCache = allPostsData;
+      }
       
       // Reconstruct postDateMap and availableYears
       postDateMap = {};

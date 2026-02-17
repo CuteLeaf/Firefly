@@ -285,7 +285,7 @@ if (document.readyState === 'loading') {
 
 {
     import.meta.env.PROD && (
-        <script is:inline define:vars={{ scriptUrl: url('/pagefind/pagefind.js') }}>
+        <script is:inline data-swup-ignore-script define:vars={{ scriptUrl: url('/pagefind/pagefind.js') }}>
             {/* 你的 loadPagefind 函数的完整内容放在这里 */}
             async function loadPagefind() {
                 try {
