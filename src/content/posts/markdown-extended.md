@@ -45,7 +45,7 @@ export const siteConfig: SiteConfig = {
 
 这是 GitHub 官方支持的 5 种基本类型。
 
-![GitHub](./images/github.png)
+![GitHub](./images/github.avif)
 
 **基本语法**
 
@@ -166,7 +166,7 @@ export const siteConfig: SiteConfig = {
 ```
 </details>
 
-![Obsidian](./images/obsidian.png)
+![Obsidian](./images/obsidian.avif)
 
 ---
 
@@ -198,7 +198,7 @@ export const siteConfig: SiteConfig = {
 ```
 </details>
 
-![VitePress](./images/vitepress.png)
+![VitePress](./images/vitepress.avif)
 
 ---
 

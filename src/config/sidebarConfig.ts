@@ -7,14 +7,22 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 	// 是否启用侧边栏功能
 	enable: true,
 
-	// 侧边栏位置：left=左侧，both=双侧
-	// 开启双侧边栏后，右侧组件会在宽度低于1280px时隐藏
+	// 侧边栏位置：
+	// left: 仅显示左侧边栏
+	// right: 仅显示右侧边栏
+	// both: 双侧边栏，1280px以上同时显示左右，769-1279px根据tabletSidebar配置显示其中一侧
 	position: "both",
 
-	// 使用左侧单侧栏时，是否在文章详情页显示右侧边栏
-	// 当position为left时开启此项后，文章详情页将显示双侧边栏，主页等其他页面保持左侧单侧边栏
-	// 适用在只想用左侧单侧栏，但在文章详情页想用右侧栏的目录等组件的场景
-	showRightSidebarOnPostPage: true,
+	// 平板端(769-1279px)显示哪侧侧边栏，仅position为both时生效
+	// left: 平板端显示左侧边栏
+	// right: 平板端显示右侧边栏
+	tabletSidebar: "left",
+
+	// 使用单侧栏(position为left或right)时，是否在文章详情页显示双侧边栏
+	// 当position为left时开启此项，文章详情页将额外显示右侧边栏
+	// 当position为right时开启此项，文章详情页将额外显示左侧边栏
+	// 适用在只想用单侧栏，但在文章详情页想用对侧栏的目录等组件的场景
+	showBothSidebarsOnPostPage: true,
 
 	// 左侧边栏组件配置列表
 	// 组件的渲染顺序完全取决于它们在配置数组中出现的顺序，但top的组件会优先于sticky位置的组件渲染

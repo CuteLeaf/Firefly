@@ -55,6 +55,7 @@ export default defineConfig({
 				"#banner-overlay-container",
 				"#banner-dim-container",
 				"#swup-container",
+				"#left-sidebar-dynamic",
 				"#right-sidebar-dynamic",
 				"#floating-toc-wrapper",
 			],

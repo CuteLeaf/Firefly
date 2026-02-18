@@ -175,56 +175,71 @@ const finalMainPanelTop =
 // 获取响应式侧边栏配置
 const sidebarConfig = getResponsiveSidebarConfig();
 
-// 在文章页面且启用了showRightSidebarOnPostPage时，要确保有右侧组件并参与网格计算
-const shouldShowRightSidebarOnPostPage: boolean =
+// 在文章页面且启用了showBothSidebarsOnPostPage时，确保对侧组件参与网格计算
+const shouldShowBothSidebarsOnPostPage: boolean =
 	isPostPage &&
-	sidebarLayoutConfig.position === "left" &&
-	!!sidebarLayoutConfig.showRightSidebarOnPostPage;
+	sidebarLayoutConfig.position !== "both" &&
+	!!sidebarLayoutConfig.showBothSidebarsOnPostPage;
+
+// position为left时，对侧为右侧；position为right时，对侧为左侧
+const shouldAddRightSidebar: boolean =
+	shouldShowBothSidebarsOnPostPage && sidebarLayoutConfig.position === "left";
+const shouldAddLeftSidebar: boolean =
+	shouldShowBothSidebarsOnPostPage && sidebarLayoutConfig.position === "right";
 
 const effectiveIsBothSidebars: boolean =
-	sidebarConfig.isBothSidebars || shouldShowRightSidebarOnPostPage;
+	sidebarConfig.isBothSidebars || shouldShowBothSidebarsOnPostPage;
 const effectiveHasRightComponents: boolean =
 	sidebarConfig.hasRightComponents ||
-	(shouldShowRightSidebarOnPostPage &&
+	(shouldAddRightSidebar &&
 		sidebarLayoutConfig.rightComponents.some((comp) => comp.enable));
+const effectiveHasLeftComponents: boolean =
+	sidebarConfig.hasLeftComponents ||
+	(shouldAddLeftSidebar &&
+		sidebarLayoutConfig.leftComponents.some((comp) => comp.enable));
 
 // 使用effective值重新生成网格类
+// 当position为right且文章页临时显示左侧栏时，tabletSidebar应为right（保持显示主侧栏）
+const effectiveTabletSidebar = shouldAddLeftSidebar
+	? ("right" as const)
+	: sidebarConfig.tabletSidebar;
+
 const updatedGridConfig: ResponsiveSidebarConfig = {
 	...sidebarConfig,
 	isBothSidebars: effectiveIsBothSidebars,
+	hasLeftComponents: effectiveHasLeftComponents,
 	hasRightComponents: effectiveHasRightComponents,
+	tabletSidebar: effectiveTabletSidebar,
 };
 
 const { gridCols } = generateGridClasses(updatedGridConfig);
-const sidebarClass = generateSidebarClasses();
-const rightSidebarClass = effectiveIsBothSidebars
-	? generateRightSidebarClasses()
-	: "";
+const sidebarClass = generateSidebarClasses(updatedGridConfig);
+const rightSidebarClass =
+	effectiveIsBothSidebars || sidebarLayoutConfig.position === "right"
+		? generateRightSidebarClasses(updatedGridConfig)
+		: "";
 const mainContentClass = generateMainContentClasses(updatedGridConfig);
 
-const footerClass = [
-	"footer",
-	"col-span-1",
-	"md:col-span-2",
-	"onload-animation",
-];
+const footerClass = ["footer", "col-span-1", "onload-animation"];
 
 if (
 	updatedGridConfig.isBothSidebars &&
 	updatedGridConfig.hasLeftComponents &&
 	updatedGridConfig.hasRightComponents
 ) {
-	footerClass.push("xl:col-start-2 xl:col-span-1");
+	// 双侧栏：平板端跨2列，桌面端在中间列
+	footerClass.push("md:col-span-2 xl:col-start-2 xl:col-span-1");
 } else if (
 	updatedGridConfig.hasLeftComponents &&
 	!updatedGridConfig.hasRightComponents
 ) {
-	footerClass.push("xl:col-start-2 xl:col-span-1");
+	footerClass.push("md:col-span-2 xl:col-start-2 xl:col-span-1");
 } else if (
 	!updatedGridConfig.hasLeftComponents &&
 	updatedGridConfig.hasRightComponents
 ) {
-	footerClass.push("xl:col-start-1 xl:col-span-1");
+	// 仅右侧栏：平板端跨2列，内容在第1列
+	footerClass.push("md:col-span-2 md:col-start-1 xl:col-start-1 xl:col-span-1");
 } else {
 	footerClass.push("xl:col-start-1 xl:col-span-1");
 }
@@ -559,7 +574,8 @@ const mobileQuality = Math.round(configQuality * 0.9);
         <div id="main-grid"
           class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-[auto_1fr_auto] lg:grid-rows-[auto] mx-auto gap-4 px-2 md:px-4 ${!sidebarConfig.mobileShowSidebar ? 'mobile-no-sidebar' : ''}`}
           data-sidebar-position={sidebarLayoutConfig.position}
-          data-show-right-sidebar-on-post={sidebarLayoutConfig.showRightSidebarOnPostPage ? "true" : "false"}
+          data-tablet-sidebar={sidebarLayoutConfig.tabletSidebar ?? "left"}
+          data-show-both-sidebars-on-post={sidebarLayoutConfig.showBothSidebarsOnPostPage ? "true" : "false"}
         >
             <!-- Background image credit - Desktop -->
             {hasBannerCredit && creditEnabledOnDesktop && <a 
@@ -602,16 +618,32 @@ const mobileQuality = Math.round(configQuality * 0.9);
             </a>}
 
 
-            {/* 渲染侧边栏 - 769px及以上显示 */}
-            <div id="left-sidebar-wrapper" class="contents" style="contain: layout style paint;">
-                {sidebarConfig.hasLeftComponents && (
-                    <SideBar
-                        side={sidebarConfig.isBothSidebars ? "left" : undefined}
-                        class={`${sidebarClass} ${transparentClass}`}
-                        headings={headings}
-                    />
-                )}
-            </div>
+            {/* 渲染左侧边栏 - 根据position和tabletSidebar配置显示 */}
+            {/*
+                如果全局配置为双侧栏(position: both)或仅左侧栏(position: left)，则使用静态容器(不被swup替换)，避免闪烁。
+                如果全局配置为仅右侧栏(position: right)，则使用动态容器(被swup替换)，以便在文章页显示左侧栏。
+                注意：为了满足swup要求所有containers必须存在，我们在所有模式下都必须渲染 #left-sidebar-dynamic。
+            */}
+            {sidebarLayoutConfig.position !== "right" ? (
+                <>
+                    <div id="left-sidebar-wrapper" class="contents" style="contain: layout style paint;">
+                        {effectiveHasLeftComponents && (
+                            <SideBar
+                                side={effectiveIsBothSidebars ? "left" : undefined}
+                                class={`${sidebarClass} ${transparentClass}`}
+                                headings={headings}
+                            />
+                        )}
+                    </div>
+                    <div id="left-sidebar-dynamic" class="hidden transition-swup-fade"></div>
+                </>
+            ) : (
+                <div id="left-sidebar-dynamic" class="contents transition-swup-fade">
+                    {effectiveIsBothSidebars && effectiveHasLeftComponents && (
+                        <SideBar side="left" class={`${sidebarClass} ${transparentClass}`} headings={headings}></SideBar>
+                    )}
+                </div>
+            )}
                     
             {/* 主内容区 - 始终渲染，确保 Swup 容器存在 */}
             <main id="swup-container" class={`${mainContentClass} transition-main`}>
@@ -627,17 +659,17 @@ const mobileQuality = Math.round(configQuality * 0.9);
                 </div>
             </main>
             
-            {/* 右侧边栏 - 仅双侧边栏模式 */}
+            {/* 右侧边栏 - 双侧边栏模式或仅右侧栏模式 */}
             {/*
-                如果全局配置为双侧栏(position: both)，则使用静态容器(不被swup替换)，避免闪烁。
+                如果全局配置为双侧栏(position: both)或仅右侧栏(position: right)，则使用静态容器(不被swup替换)，避免闪烁。
                 如果全局配置为单侧栏(position: left)，则使用动态容器(被swup替换)，以便在文章页显示右侧栏。
-                注意：为了满足swup要求所有containers必须存在，我们在两种模式下都必须渲染 #right-sidebar-dynamic。
-                右侧边栏在1280px以下隐藏（CSS处理）。
+                注意：为了满足swup要求所有containers必须存在，我们在所有模式下都必须渲染 #right-sidebar-dynamic。
+                右侧边栏的显示由CSS类控制。
             */}
-            {sidebarLayoutConfig.position === "both" ? (
+            {(sidebarLayoutConfig.position === "both" || sidebarLayoutConfig.position === "right") ? (
                 <>
                     <div id="right-sidebar-static" class="contents">
-                        {effectiveIsBothSidebars && effectiveHasRightComponents && (
+                        {(effectiveIsBothSidebars || sidebarLayoutConfig.position === "right") && effectiveHasRightComponents && (
                             <SideBar side="right" class={`${rightSidebarClass} ${transparentClass}`} headings={headings}></SideBar>
                         )}
                     </div>
