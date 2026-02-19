@@ -1,7 +1,6 @@
 ---
 import type { GetStaticPaths } from "astro";
 import Pagination from "@/components/common/Pagination.astro";
-import CategoryBar from "@/components/layout/CategoryBar.astro";
 import PostPage from "@/components/layout/PostPage.astro";
 import { siteConfig } from "@/config";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
@@ -20,7 +19,6 @@ const len = page.data.length;
 ---
 
 <MainGridLayout>
-  {siteConfig.categoryBar && <CategoryBar slot="static-bar" />}
   <PostPage page={page} />
   {
     page.total > page.size && (

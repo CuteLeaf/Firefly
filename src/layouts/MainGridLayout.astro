@@ -10,6 +10,7 @@ import { Icon } from "astro-icon/components";
 import ImageWrapper from "@/components/common/ImageWrapper.astro";
 import FloatingControls from "@/components/controls/FloatingControls.astro";
 import TypewriterText from "@/components/features/TypewriterText.astro";
+import CategoryBar from "@/components/layout/CategoryBar.astro";
 import {
 	backgroundWallpaper,
 	live2dModelConfig,
@@ -648,10 +649,8 @@ const mobileQuality = Math.round(configQuality * 0.9);
                     
             {/* 主内容区包装器 - 包含静态栏位和swup容器，作为单个grid item */}
             <div class={staticBarClass}>
-                {/* 静态栏位 - 不被swup替换，用于分类导航等需要跨页面持久显示的内容 */}
-                {Astro.slots.has('static-bar') && (
-                    <slot name="static-bar" />
-                )}
+                {/* 分类导航栏 - 在所有页面渲染，由客户端JS控制显隐 */}
+                {siteConfig.categoryBar && <CategoryBar />}
 
                 {/* 主内容区 - 始终渲染，确保 Swup 容器存在 */}
                 <main id="swup-container" class="transition-main">
