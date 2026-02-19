@@ -12,10 +12,10 @@ const archiveUrl = url("/archive/");
 ---
 
 <div class="card-base category-bar p-3 onload-animation" id="category-bar" data-home-path={homeUrl} data-archive-path={archiveUrl}>
-  <div class="category-scroll flex gap-2 overflow-x-auto">
+  <div class="category-bar-inner flex gap-2">
     <a
       href={homeUrl}
-      class="category-pill btn-regular text-sm px-2 py-1 rounded-lg
+      class="category-pill btn-regular text-sm px-2 py-1 rounded-lg flex-shrink-0
              transition-colors duration-200"
       data-category-name=""
     >
@@ -23,26 +23,33 @@ const archiveUrl = url("/archive/");
     </a>
     <a
       href={archiveUrl}
-      class="category-pill btn-regular text-sm px-3 py-1 rounded-lg whitespace-nowrap
+      class="category-pill btn-regular text-sm px-3 py-1 rounded-lg whitespace-nowrap flex-shrink-0
              transition-colors duration-200"
       data-category-name="__archive__"
     >
       {i18n(I18nKey.archive)}
       <span class="text-xs opacity-60 ml-1">{totalPosts}</span>
     </a>
-    {
-      categories.map((cat) => (
-        <a
-          href={cat.url}
-          class="category-pill btn-regular text-sm px-3 py-1 rounded-lg whitespace-nowrap
-                 transition-colors duration-200"
-          data-category-name={cat.name}
-        >
-          {cat.name}
-          <span class="text-xs opacity-60 ml-1">{cat.count}</span>
-        </a>
-      ))
-    }
+    <div class="category-divider flex-shrink-0"></div>
+    <div class="scroll-area relative">
+      <div class="scroll-fade scroll-fade-left" aria-hidden="true"></div>
+      <div class="category-scroll flex gap-2 overflow-x-auto">
+        {
+          categories.map((cat) => (
+            <a
+              href={cat.url}
+              class="category-pill btn-regular text-sm px-3 py-1 rounded-lg whitespace-nowrap
+                     transition-colors duration-200"
+              data-category-name={cat.name}
+            >
+              {cat.name}
+              <span class="text-xs opacity-60 ml-1">{cat.count}</span>
+            </a>
+          ))
+        }
+      </div>
+      <div class="scroll-fade scroll-fade-right" aria-hidden="true"></div>
+    </div>
   </div>
 </div>
 
@@ -50,9 +57,41 @@ const archiveUrl = url("/archive/");
   .category-bar {
     margin-bottom: 1rem;
   }
+  .category-divider {
+    width: 1px;
+    align-self: stretch;
+    background: var(--line-divider);
+  }
+  .scroll-area {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+  }
+  .scroll-fade {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2.5rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+    z-index: 1;
+  }
+  .scroll-fade[data-visible] {
+    opacity: 1;
+  }
+  .scroll-fade-left {
+    left: 0;
+    background: linear-gradient(to left, transparent, var(--card-bg));
+  }
+  .scroll-fade-right {
+    right: 0;
+    background: linear-gradient(to right, transparent, var(--card-bg));
+  }
   .category-scroll {
     scrollbar-width: none;
     -ms-overflow-style: none;
+    scroll-behavior: smooth;
   }
   .category-scroll::-webkit-scrollbar {
     display: none;
@@ -108,6 +147,14 @@ const archiveUrl = url("/archive/");
         ?.setAttribute("data-active", "");
     }
 
+    // 自动滚动到当前高亮的分类
+    const activePill = bar.querySelector<HTMLAnchorElement>('.category-pill[data-active]');
+    const scroll = bar.querySelector<HTMLElement>(".category-scroll");
+    if (activePill && scroll) {
+      const scrollLeft = activePill.offsetLeft - scroll.offsetLeft - (scroll.clientWidth - activePill.offsetWidth) / 2;
+      scroll.scrollTo({ left: Math.max(0, scrollLeft), behavior: "smooth" });
+    }
+
     // 更新横幅标题：归档页有分类筛选时显示分类名
     if (isArchive && activeCategory) {
       const bannerTitle = document.querySelector(".banner-page-title-text");
@@ -117,7 +164,56 @@ const archiveUrl = url("/archive/");
     }
   }
 
+  function initScrollFeatures() {
+    const bar = document.getElementById("category-bar");
+    if (!bar) return;
+
+    const scroll = bar.querySelector<HTMLElement>(".category-scroll");
+    if (!scroll) return;
+
+    // 鼠标滚轮横向滚动
+    scroll.addEventListener("wheel", (e) => {
+      if (scroll.scrollWidth <= scroll.clientWidth) return;
+      e.preventDefault();
+      scroll.scrollLeft += e.deltaY;
+    }, { passive: false });
+
+    // 监听滚动更新提示图标
+    scroll.addEventListener("scroll", updateScrollHint);
+    window.addEventListener("resize", updateScrollHint);
+    updateScrollHint();
+  }
+
+  function updateScrollHint() {
+    const bar = document.getElementById("category-bar");
+    if (!bar) return;
+    const scroll = bar.querySelector<HTMLElement>(".category-scroll");
+    const fadeLeft = bar.querySelector<HTMLElement>(".scroll-fade-left");
+    const fadeRight = bar.querySelector<HTMLElement>(".scroll-fade-right");
+    if (!scroll || !fadeLeft || !fadeRight) return;
+
+    const hasOverflow = scroll.scrollWidth > scroll.clientWidth + 1;
+    const atStart = scroll.scrollLeft <= 1;
+    const atEnd = scroll.scrollLeft + scroll.clientWidth >= scroll.scrollWidth - 1;
+
+    if (hasOverflow && !atStart) {
+      fadeLeft.setAttribute("data-visible", "");
+    } else {
+      fadeLeft.removeAttribute("data-visible");
+    }
+
+    if (hasOverflow && !atEnd) {
+      fadeRight.setAttribute("data-visible", "");
+    } else {
+      fadeRight.removeAttribute("data-visible");
+    }
+  }
+
   updateCategoryBar();
-  document.addEventListener("astro:page-load", updateCategoryBar);
+  initScrollFeatures();
+  document.addEventListener("astro:page-load", () => {
+    updateCategoryBar();
+    initScrollFeatures();
+  });
   document.addEventListener("swup:contentReplaced", updateCategoryBar);
 </script>

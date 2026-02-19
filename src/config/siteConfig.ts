@@ -121,6 +121,9 @@ export const siteConfig: SiteConfig = {
 		bangumi: true,
 	},
 
+	// 分类导航栏开关，在首页和归档页顶部显示分类快捷导航
+	categoryBar: true,
+
 	// 文章列表布局配置
 	postListLayout: {
 		// 默认布局模式："list" 列表模式（单列布局），"grid" 网格模式（多列布局）

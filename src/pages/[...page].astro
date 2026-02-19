@@ -20,7 +20,7 @@ const len = page.data.length;
 ---
 
 <MainGridLayout>
-  <CategoryBar slot="static-bar" />
+  {siteConfig.categoryBar && <CategoryBar slot="static-bar" />}
   <PostPage page={page} />
   {
     page.total > page.size && (
