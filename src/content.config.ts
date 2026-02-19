@@ -6,35 +6,46 @@ const postsCollection = defineCollection({
 	loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/posts" }),
 	schema: z.object({
 		title: z.string(),
-		published: z.date(),
-		updated: z.date().optional(),
-		draft: z.boolean().optional().default(false),
+		// 使用 coerce 可以自动将 Hugo 的字符串日期转换为 JavaScript Date 对象
+		date: z.coerce.date().optional(),
+		lastmod: z.coerce.date().optional(),
+		published: z.coerce.date().optional(),
+		updated: z.coerce.date().optional(),
+
+		// 支持 Hugo 的 slug，这样迁移后文章链接不会变
+		slug: z.string().optional(),
+
 		description: z.string().optional().default(""),
-		image: z.string().optional().default(""),
-		tags: z.array(z.string()).optional().default([]),
-		category: z.string().optional().nullable().default(""),
-		lang: z.string().optional().default(""),
-		pinned: z.boolean().optional().default(false),
 		author: z.string().optional().default(""),
-		sourceLink: z.string().optional().default(""),
-		licenseName: z.string().optional().default(""),
-		licenseUrl: z.string().optional().default(""),
+		draft: z.boolean().optional().default(false),
+
+		// 分类与标签
+		categories: z.array(z.string()).optional().default([]),
+		category: z.string().optional().default(""),
+		tags: z.array(z.string()).optional().default([]),
+
+		// 主题原有字段（设为可选以防报错）
+		image: z.string().optional().default(""),
+		pinned: z.boolean().optional().default(false),
 		comment: z.boolean().optional().default(true),
+	}).transform((data) => {
+		// 映射逻辑
+		const finalDate = data.date || data.published || new Date();
+		const finalUpdated = data.lastmod || data.updated || finalDate;
 
-		/* For internal use */
-		prevTitle: z.string().default(""),
-		prevSlug: z.string().default(""),
-		nextTitle: z.string().default(""),
-		nextSlug: z.string().default(""),
+		return {
+			...data,
+			// 确保主题能读到日期
+			published: finalDate,
+			updated: finalUpdated,
+			// 确保主题能读到分类（取数组第一个）
+			category: (data.category && data.category !== "")
+				? data.category
+				: (data.categories.length > 0 ? data.categories[0] : "Uncategorized"),
+		};
 	}),
-});
-
-const specCollection = defineCollection({
-	loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/spec" }),
-	schema: z.object({}),
 });
 
 export const collections = {
 	posts: postsCollection,
-	spec: specCollection,
 };
