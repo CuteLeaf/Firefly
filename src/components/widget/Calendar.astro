@@ -328,14 +328,14 @@ const postUrlPrefix = url("/posts/");
     container.innerHTML = availableYears.map(year => {
       const isCurrent = year === displayYear;
       const classes = [
-        "p-2 text-center text-sm rounded cursor-pointer hover:bg-(--btn-plain-bg-hover) transition-colors"
+        "p-2 text-center text-sm rounded cursor-pointer hover:bg-(--btn-plain-bg-hover) transition-colors relative"
       ];
       if (isCurrent) {
         classes.push("text-(--primary) font-bold bg-(--btn-plain-bg-hover)");
       } else {
         classes.push("text-neutral-700 dark:text-neutral-300");
       }
-      return `<div class="${classes.join(' ')}" data-year="${year}">${year}</div>`;
+      return `<div class="${classes.join(' ')}" data-year="${year}">${year}<span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-(--primary)"></span></div>`;
     }).join('');
 
     container.querySelectorAll('[data-year]').forEach(el => {
@@ -491,17 +491,18 @@ const postUrlPrefix = url("/posts/");
 </script>
 
 <style>
-  .calendar-day {
+  :global(.calendar-day) {
     transition: all 0.2s ease;
     min-height: 32px;
   }
-  
-  .calendar-day[data-has-post="true"]:hover {
+
+  :global(.calendar-day[data-has-post="true"]:hover) {
     transform: translateY(-2px);
   }
 
-  /* 自定义选中日期样式，替代 bg-opacity-10 */
-  .calendar-day-selected {
-    background-color: oklch(from var(--primary) l c h / 0.1);
+  /* 自定义选中日期样式 */
+  :global(.calendar-day-selected) {
+    background-color: var(--btn-regular-bg);
+    border-radius: 0.25rem;
   }
 </style>
