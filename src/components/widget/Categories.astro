@@ -5,6 +5,7 @@ import { sidebarLayoutConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { getCategoryList } from "@/utils/content-utils";
+import { url } from "@/utils/url-utils";
 
 const categories = await getCategoryList();
 
@@ -28,11 +29,14 @@ interface Props {
 }
 const className = Astro.props.class;
 const style = Astro.props.style;
+
+const archivePath = url("/archive/");
 ---
 
 <WidgetLayout name={i18n(I18nKey.categories)} id="categories" isCollapsed={isCollapsed} collapsedHeight={COLLAPSED_HEIGHT}
                 class={className} style={style}
 >
+    <div id="categories-widget-data" class="hidden" data-archive-path={archivePath}></div>
     {categories.map((c) =>
         <ButtonLink
             url={c.url}
@@ -43,3 +47,30 @@ const style = Astro.props.style;
         </ButtonLink>
     )}
 </WidgetLayout>
+
+<script>
+  function updateBannerTitleFromCategory() {
+    const data = document.getElementById("categories-widget-data");
+    if (!data) return;
+
+    const archivePath = (data.getAttribute("data-archive-path") || "/archive").replace(/\/$/, "");
+    const pathname = window.location.pathname.replace(/\/$/, "");
+    const isArchive = pathname === archivePath;
+
+    if (!isArchive) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const activeCategory = params.get("category") || "";
+
+    if (activeCategory) {
+      const bannerTitle = document.querySelector(".banner-page-title-text");
+      if (bannerTitle) {
+        bannerTitle.textContent = decodeURIComponent(activeCategory);
+      }
+    }
+  }
+
+  updateBannerTitleFromCategory();
+  document.addEventListener("astro:page-load", updateBannerTitleFromCategory);
+  document.addEventListener("swup:contentReplaced", updateBannerTitleFromCategory);
+</script>
