@@ -219,6 +219,7 @@ const rightSidebarClass =
 		? generateRightSidebarClasses(updatedGridConfig)
 		: "";
 const mainContentClass = generateMainContentClasses(updatedGridConfig);
+const staticBarClass = mainContentClass.replace("transition-main", "").trim();
 
 const footerClass = ["footer", "col-span-1", "onload-animation"];
 
@@ -645,8 +646,15 @@ const mobileQuality = Math.round(configQuality * 0.9);
                 </div>
             )}
                     
-            {/* 主内容区 - 始终渲染，确保 Swup 容器存在 */}
-            <main id="swup-container" class={`${mainContentClass} transition-main`}>
+            {/* 主内容区包装器 - 包含静态栏位和swup容器，作为单个grid item */}
+            <div class={staticBarClass}>
+                {/* 静态栏位 - 不被swup替换，用于分类导航等需要跨页面持久显示的内容 */}
+                {Astro.slots.has('static-bar') && (
+                    <slot name="static-bar" />
+                )}
+
+                {/* 主内容区 - 始终渲染，确保 Swup 容器存在 */}
+                <main id="swup-container" class="transition-main">
                 {/* 携带网格布局类名，用于JS更新父容器 */}
                 <div id="grid-class-carrier" data-grid-class={gridCols} class="hidden"></div>
                 {/* 备用 h1 标题 - 当主页横幅文本未启用时，提供隐藏的主标题 */}
@@ -658,7 +666,8 @@ const mobileQuality = Math.round(configQuality * 0.9);
 
                 </div>
             </main>
-            
+            </div>
+
             {/* 右侧边栏 - 双侧边栏模式或仅右侧栏模式 */}
             {/*
                 如果全局配置为双侧栏(position: both)或仅右侧栏(position: right)，则使用静态容器(不被swup替换)，避免闪烁。

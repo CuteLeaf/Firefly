@@ -1,0 +1,123 @@
+---
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import { Icon } from "astro-icon/components";
+import { getCategoryList, getSortedPostsList } from "@/utils/content-utils";
+import { url } from "@/utils/url-utils";
+
+const categories = await getCategoryList();
+const totalPosts = (await getSortedPostsList()).length;
+const homeUrl = url("/");
+const archiveUrl = url("/archive/");
+---
+
+<div class="card-base category-bar p-3" id="category-bar" data-home-path={homeUrl} data-archive-path={archiveUrl}>
+  <div class="category-scroll flex gap-2 overflow-x-auto">
+    <a
+      href={homeUrl}
+      class="category-pill btn-regular text-sm px-2 py-1 rounded-lg
+             transition-colors duration-200"
+      data-category-name=""
+    >
+      <Icon name="material-symbols:home" class="text-lg" />
+    </a>
+    <a
+      href={archiveUrl}
+      class="category-pill btn-regular text-sm px-3 py-1 rounded-lg whitespace-nowrap
+             transition-colors duration-200"
+      data-category-name="__archive__"
+    >
+      {i18n(I18nKey.archive)}
+      <span class="text-xs opacity-60 ml-1">{totalPosts}</span>
+    </a>
+    {
+      categories.map((cat) => (
+        <a
+          href={cat.url}
+          class="category-pill btn-regular text-sm px-3 py-1 rounded-lg whitespace-nowrap
+                 transition-colors duration-200"
+          data-category-name={cat.name}
+        >
+          {cat.name}
+          <span class="text-xs opacity-60 ml-1">{cat.count}</span>
+        </a>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .category-bar {
+    margin-bottom: 1rem;
+  }
+  .category-scroll {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .category-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  .category-pill[data-active] {
+    background: var(--primary);
+    color: white;
+  }
+  .category-pill[data-active]:hover {
+    background: var(--primary);
+    opacity: 0.9;
+  }
+</style>
+
+<script>
+  function updateCategoryBar() {
+    const bar = document.getElementById("category-bar");
+    if (!bar) return;
+
+    const pathname = window.location.pathname.replace(/\/$/, "");
+    const homePath = (bar.getAttribute("data-home-path") || "/").replace(/\/$/, "");
+    const archivePath = (bar.getAttribute("data-archive-path") || "/archive").replace(/\/$/, "");
+    const isHome = pathname === homePath || pathname === "" || pathname === "/";
+    const isArchive = pathname === archivePath;
+
+    // 只在首页和归档页显示
+    if (!isHome && !isArchive) {
+      bar.style.display = "none";
+      return;
+    }
+    bar.style.display = "";
+
+    // 高亮当前分类
+    const pills = bar.querySelectorAll<HTMLAnchorElement>(".category-pill");
+    const params = new URLSearchParams(window.location.search);
+    const activeCategory = params.get("category") || "";
+    const hasTag = params.has("tag");
+    const hasUncategorized = params.has("uncategorized");
+
+    pills.forEach((pill) => pill.removeAttribute("data-active"));
+
+    if (isHome) {
+      bar.querySelector<HTMLAnchorElement>('.category-pill[data-category-name=""]')
+        ?.setAttribute("data-active", "");
+    } else if (activeCategory) {
+      pills.forEach((pill) => {
+        if (pill.getAttribute("data-category-name") === activeCategory) {
+          pill.setAttribute("data-active", "");
+        }
+      });
+    } else if (isArchive && !hasTag && !hasUncategorized) {
+      bar.querySelector<HTMLAnchorElement>('.category-pill[data-category-name="__archive__"]')
+        ?.setAttribute("data-active", "");
+    }
+
+    // 更新横幅标题：归档页有分类筛选时显示分类名
+    if (isArchive && activeCategory) {
+      const bannerTitle = document.querySelector(".banner-page-title-text");
+      if (bannerTitle) {
+        bannerTitle.textContent = decodeURIComponent(activeCategory);
+      }
+    }
+  }
+
+  updateCategoryBar();
+  document.addEventListener("astro:page-load", updateCategoryBar);
+  document.addEventListener("swup:contentReplaced", updateCategoryBar);
+</script>
