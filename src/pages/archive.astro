@@ -1,10 +1,10 @@
 ---
 import ArchivePanel from "@components/controls/ArchivePanel.svelte";
-import CategoryBar from "@/components/layout/CategoryBar.astro";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
-import { siteConfig } from "@/config";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
+import CategoryBar from "@/components/layout/CategoryBar.astro";
+import { siteConfig } from "@/config";
 import { getSortedPostsList } from "@/utils/content-utils";
 
 const sortedPostsList = await getSortedPostsList();
