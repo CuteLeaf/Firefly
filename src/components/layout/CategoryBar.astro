@@ -15,16 +15,17 @@ const archiveUrl = url("/archive/");
   <div class="category-bar-inner flex gap-2">
     <a
       href={homeUrl}
-      class="category-pill btn-regular text-sm px-2 py-1 rounded-lg flex-shrink-0
-             transition-colors duration-200"
+      class="category-pill text-sm px-2 py-1 rounded-lg flex-shrink-0
+             transition-colors duration-200 flex items-center justify-center"
       data-category-name=""
+      aria-label={i18n(I18nKey.home)}
     >
       <Icon name="material-symbols:home" class="text-lg" />
     </a>
     <a
       href={archiveUrl}
-      class="category-pill btn-regular text-sm px-3 py-1 rounded-lg whitespace-nowrap flex-shrink-0
-             transition-colors duration-200"
+      class="category-pill text-sm px-3 py-1 rounded-lg whitespace-nowrap flex-shrink-0
+             transition-colors duration-200 flex items-center justify-center"
       data-category-name="__archive__"
     >
       {i18n(I18nKey.archive)}
@@ -38,8 +39,8 @@ const archiveUrl = url("/archive/");
           categories.map((cat) => (
             <a
               href={cat.url}
-              class="category-pill btn-regular text-sm px-3 py-1 rounded-lg whitespace-nowrap
-                     transition-colors duration-200"
+              class="category-pill text-sm px-3 py-1 rounded-lg whitespace-nowrap
+                     transition-colors duration-200 flex items-center justify-center"
               data-category-name={cat.name}
             >
               {cat.name}
@@ -88,6 +89,9 @@ const archiveUrl = url("/archive/");
     right: 0;
     background: linear-gradient(to right, transparent, var(--card-bg));
   }
+  :global(body.wallpaper-transparent) .scroll-fade {
+    display: none;
+  }
   .category-scroll {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -96,12 +100,24 @@ const archiveUrl = url("/archive/");
   .category-scroll::-webkit-scrollbar {
     display: none;
   }
+  .category-pill {
+    border: 1.5px solid var(--line-divider);
+    color: var(--btn-content);
+    background: transparent;
+  }
+  .category-pill:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: transparent;
+  }
   .category-pill[data-active] {
     background: var(--primary);
+    border-color: var(--primary);
     color: white;
   }
   .category-pill[data-active]:hover {
     background: var(--primary);
+    border-color: var(--primary);
     opacity: 0.9;
   }
 </style>
