@@ -104,7 +104,7 @@ export async function getCategoryList(): Promise<Category[]> {
 	});
 
 	const lst = Object.keys(count).sort((a, b) => {
-		return a.toLowerCase().localeCompare(b.toLowerCase());
+		return count[b] - count[a] || a.toLowerCase().localeCompare(b.toLowerCase());
 	});
 
 	const ret: Category[] = [];
