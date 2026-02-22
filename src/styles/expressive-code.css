@@ -22,6 +22,7 @@
     color: var(--btn-content) !important;
     background-color: var(--btn-regular-bg) !important;
     border-color: var(--line-color) !important;
+    opacity: var(--opacity-80) !important;
 
     &:hover {
       background-color: var(--btn-regular-bg-hover) !important;
@@ -35,7 +36,7 @@
 
 /* 透明模式下的代码块样式 */
 body.wallpaper-transparent .expressive-code,
-body.wallpaper-transparent .expressive-code * {
+body.wallpaper-transparent .expressive-code *:not(.ec-collapse__toggle) {
   background-color: transparent !important;
   background: transparent !important;
 }
