@@ -569,6 +569,14 @@ const mobileQuality = Math.round(configQuality * 0.9);
 </div>
 )}
 
+{/* 当壁纸未渲染时，添加空的 Swup 占位容器，避免 Swup 找不到容器而回退为整页加载 */}
+{!(isWallpaperSwitchable || isBannerMode || isOverlayMode) && (
+<>
+    <div id="banner-overlay-container" class="hidden"></div>
+    <div id="banner-dim-container" class="hidden"></div>
+</>
+)}
+
 <!-- Main content -->
 <div class={`absolute w-full z-30 pointer-events-none ${mobileNonHomeBannerClass ? 'mobile-main-no-banner' : ''} ${!(isBannerMode && isBackgroundEnabled) ? 'no-banner-layout' : ''} ${transparentClass}`} style={`top: ${finalMainPanelTop}`}>
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
