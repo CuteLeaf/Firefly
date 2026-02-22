@@ -27,6 +27,9 @@ declare global {
 		// biome-ignore lint/suspicious/noExplicitAny: External library without types
 		spine: any;
 		closeAnnouncement: () => void;
+		// __fireflyMusic type is defined in global.d.ts
+		semifullScrollHandler?: (() => void) | undefined;
+		initSemifullScrollDetection?: () => void;
 	}
 }
 
