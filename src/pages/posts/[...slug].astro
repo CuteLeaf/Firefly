@@ -26,7 +26,7 @@ import { profileConfig } from "@/config/profileConfig";
 import { siteConfig } from "@/config/siteConfig";
 import { sponsorConfig } from "@/config/sponsorConfig";
 import { formatDateToYYYYMMDD } from "@/utils/date-utils";
-import { processCoverImageSync } from "@/utils/image-utils";
+import { getApiUrlList, processCoverImageSync } from "@/utils/image-utils";
 import { url } from "@/utils/url-utils";
 
 export async function getStaticPaths() {
@@ -56,6 +56,7 @@ const bannerPostMeta = {
 
 // 处理随机图：如果image为"api"，则从配置的API获取随机图
 const processedImage = processCoverImageSync(entry.data.image, entry.id);
+const apiUrls = getApiUrlList(entry.data.image, entry.id);
 
 let posterCoverUrl = processedImage;
 if (processedImage) {
@@ -234,6 +235,7 @@ const jsonLd = {
               basePath={getFileDirFromPath(entry.filePath || '')}
               class="mb-8 rounded-xl banner-container onload-animation"
               preview={false}
+              apiUrls={apiUrls}
             />
           </div>
         )

@@ -22,6 +22,7 @@ interface Props {
 	layout?: ResponsiveImageLayout;
 	formats?: ImageFormat[];
 	loading?: "lazy" | "eager";
+	apiUrls?: string[];
 }
 
 const {
@@ -34,6 +35,7 @@ const {
 	layout = "constrained",
 	formats = getImageFormats(),
 	loading = "lazy",
+	apiUrls = [],
 } = Astro.props;
 
 const configQuality = getImageQuality();
@@ -110,6 +112,7 @@ const showLoading = coverImageConfig.randomCoverImage.showLoading ?? true;
 	id={id}
 	class:list={[className, "cover-image-container overflow-hidden relative"]}
 	data-loading={showLoading ? "true" : "false"}
+	data-api-urls={apiUrls.length > 0 ? JSON.stringify(apiUrls) : undefined}
 >
 	<!-- 加载动画 -->
 	{showLoading && (
@@ -258,15 +261,21 @@ const showLoading = coverImageConfig.randomCoverImage.showLoading ?? true;
 
 <script>
 	function initCoverImages() {
-		// 处理所有封面图容器，无论是否显示加载动画
 		const containers = document.querySelectorAll('.cover-image-container');
 		containers.forEach((container) => {
-			// 跳过已处理过的容器
 			if (container.hasAttribute('data-initialized')) return;
 			container.setAttribute('data-initialized', 'true');
 
 			const img = container.querySelector('img[data-cover-img]') as HTMLImageElement | null;
 			if (!img) return;
+
+			// 解析API URL列表，用于按顺序重试
+			let apiUrls: string[] = [];
+			let currentApiIndex = 1; // 0号已由服务端设为img.src
+			const apiUrlsAttr = container.getAttribute('data-api-urls');
+			if (apiUrlsAttr) {
+				try { apiUrls = JSON.parse(apiUrlsAttr); } catch (_e) { /* ignore */ }
+			}
 
 			const hideLoading = () => {
 				container.setAttribute('data-loading', 'false');
@@ -277,26 +286,34 @@ const showLoading = coverImageConfig.randomCoverImage.showLoading ?? true;
 				container.setAttribute('data-error', 'true');
 			};
 
+			// 统一的错误处理：尝试下一个API或显示回退
+			const onError = () => {
+				if (img.dataset.remote !== 'true') return;
+
+				if (currentApiIndex < apiUrls.length) {
+					// 先绑定好事件，再更换src
+					img.addEventListener('load', hideLoading, { once: true });
+					img.addEventListener('error', onError, { once: true });
+					img.src = apiUrls[currentApiIndex];
+					currentApiIndex++;
+				} else {
+					showError();
+				}
+			};
+
 			if (img.complete) {
 				if (img.naturalWidth > 0) {
 					hideLoading();
-				} else if (img.dataset.remote === 'true') {
-					showError();
+				} else {
+					onError();
 				}
 			} else {
 				img.addEventListener('load', hideLoading, { once: true });
-				img.addEventListener('error', () => {
-					if (img.dataset.remote === 'true') {
-						showError();
-					}
-				}, { once: true });
+				img.addEventListener('error', onError, { once: true });
 			}
 		});
 	}
 
-	// 初始化
 	initCoverImages();
-
-	// 支持 Swup 等页面切换
 	document.addEventListener('astro:page-load', initCoverImages);
 </script>

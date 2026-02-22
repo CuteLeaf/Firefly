@@ -6,7 +6,7 @@ import CoverImage from "@/components/common/CoverImage.astro";
 import PostMetadata from "@/components/layout/PostMeta.astro";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
-import { processCoverImageSync } from "@/utils/image-utils";
+import { getApiUrlList, processCoverImageSync } from "@/utils/image-utils";
 import { getFileDirFromPath, getTagUrl } from "@/utils/url-utils";
 
 interface Props {
@@ -43,6 +43,7 @@ const className = Astro.props.class;
 
 // 处理随机图：如果image为"api"，则从配置的API获取随机图
 const processedImage = processCoverImageSync(image, entry.id);
+const apiUrls = getApiUrlList(image, entry.id);
 const hasCover =
 	processedImage !== undefined &&
 	processedImage !== null &&
@@ -171,6 +172,7 @@ const { remarkPluginFrontmatter } = await render(entry);
           class="w-full h-full transition-transform duration-300 group-hover:scale-110 group-active:scale-115"
           preview={true}
           loading={loading}
+          apiUrls={apiUrls}
         />
       </a>
     )
