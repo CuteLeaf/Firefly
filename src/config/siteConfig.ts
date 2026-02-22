@@ -40,6 +40,10 @@ export const siteConfig: SiteConfig = {
 		defaultMode: "system",
 	},
 
+	// 页面整体宽度（单位：rem）
+	// 数值越大可以让页面内容区域更宽
+	pageWidth: 100,
+
 	// 网站Card样式配置
 	card: {
 		// 是否开启卡片边框和阴影，开启后让网站更有立体感

@@ -22,6 +22,9 @@ export type SiteConfig = {
 		defaultMode?: LIGHT_DARK_MODE; // 默认模式：浅色、深色或跟随系统
 	};
 
+	// 页面整体宽度（单位：rem）
+	pageWidth?: number;
+
 	// 卡片样式配置
 	card: {
 		// 是否开启卡片边框和阴影立体效果
