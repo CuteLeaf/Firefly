@@ -602,7 +602,9 @@ export type FriendLink = {
 };
 
 export type FriendsPageConfig = {
-	columns: 2 | 3; // 显示列数：2列或3列
+	title?: string; // 页面标题，留空则使用 i18n 中的翻译
+	description?: string; // 页面描述，留空则使用 i18n 中的翻译
+	showCustomContent?: boolean; // 是否显示自定义内容（friends.mdx）
 };
 
 // 音乐播放器配置

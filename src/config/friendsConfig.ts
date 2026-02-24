@@ -4,8 +4,14 @@ import type { FriendLink, FriendsPageConfig } from "../types/config";
 
 // 友链页面配置
 export const friendsPageConfig: FriendsPageConfig = {
-	// 显示列数：2列或3列
-	columns: 2,
+	// 页面标题，如果留空则使用 i18n 中的翻译
+	title: "",
+
+	// 页面描述文本，如果留空则使用 i18n 中的翻译
+	description: "",
+
+	// 是否显示底部自定义内容（friends.mdx 中的内容）
+	showCustomContent: true,
 };
 
 // 友链配置

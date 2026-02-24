@@ -21,8 +21,9 @@ const items = getEnabledFriends();
 const allTags = [...new Set(items.flatMap((item) => item.tags || []))].sort();
 
 // 页面标题和描述
-const title = i18n(I18nKey.friends);
-const description = i18n(I18nKey.friendsDescription);
+const title = friendsPageConfig.title || i18n(I18nKey.friends);
+const description =
+	friendsPageConfig.description || i18n(I18nKey.friendsDescription);
 ---
 
 <MainGridLayout title={title} description={description}>
@@ -73,7 +74,7 @@ const description = i18n(I18nKey.friendsDescription);
         )
       }
 
-      <div class={`grid grid-cols-1 sm:grid-cols-2 ${friendsPageConfig.columns === 2 ? 'lg:grid-cols-2' : 'lg:grid-cols-3'} gap-3 my-4`}>
+      <div class="friends-grid my-4">
         {
           items.map((item) => (
             <a
@@ -132,11 +133,16 @@ const description = i18n(I18nKey.friendsDescription);
           ))
         }
       </div>
-      <Markdown class="mt-2">
+    </div>
+  </div>
+
+  {friendsPageConfig.showCustomContent !== false && (
+    <div class="mt-4 card-base z-10 px-9 py-6 relative w-full">
+      <Markdown class="">
         <Content />
       </Markdown>
     </div>
-  </div>
+  )}
 
   <!-- 评论区 -->
   <div class="mt-4">
@@ -209,4 +215,12 @@ const description = i18n(I18nKey.friendsDescription);
       customElements.define("friend-filter", FriendFilter);
     }
   </script>
+
+  <style is:global>
+    .friends-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 0.75rem;
+    }
+  </style>
 </MainGridLayout>
