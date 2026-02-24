@@ -2,7 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getPostUrlBySlug } from "@utils/url-utils";
 import PostCard from "@/components/layout/PostCard.astro";
-import { sidebarLayoutConfig, siteConfig } from "@/config";
+import { siteConfig } from "@/config";
 
 const { page } = Astro.props;
 
@@ -12,20 +12,14 @@ const interval = 50;
 // 类型别名避免Fragment语法问题
 type PostEntry = CollectionEntry<"posts">;
 
-// 检查是否启用双侧边栏
-const isBothSidebars = sidebarLayoutConfig.position === "both";
 const masonryEnabled = siteConfig.postListLayout.grid.masonry;
-const gridColumns = siteConfig.postListLayout.grid.columns || 2;
+const columnWidth = siteConfig.postListLayout.grid.columnWidth || 280;
 
 // 根据配置设置初始布局模式，避免闪烁
 const defaultLayout = siteConfig.postListLayout.defaultMode || "list";
-const gridCols =
-	!isBothSidebars && gridColumns === 3
-		? "md:grid-cols-2 lg:grid-cols-3"
-		: "md:grid-cols-2";
 const initialLayoutClass =
 	defaultLayout === "grid"
-		? `grid grid-cols-1 ${gridCols} gap-4 grid-mode`
+		? "post-grid-auto grid-mode"
 		: "flex flex-col gap-4 md:gap-4 list-mode";
 ---
 
@@ -33,9 +27,9 @@ const initialLayoutClass =
   id="post-list-container"
   class={`transition-all duration-500 ease-in-out mb-4 ${initialLayoutClass}`}
   data-default-layout={defaultLayout}
-  data-both-sidebars={isBothSidebars}
   data-masonry-enabled={masonryEnabled}
-  data-grid-columns={gridColumns}
+  data-column-width={columnWidth}
+  style={`--post-card-min-width: ${columnWidth}px;`}
 >
   {
     page.data.map((entry: PostEntry, index: number) => (
@@ -60,7 +54,7 @@ const initialLayoutClass =
 </div>
 
 <!-- 立即执行脚本：防止刷新时的布局闪烁 -->
-<script is:inline define:vars={{ defaultLayout, isBothSidebars, gridColumns }}>
+<script is:inline define:vars={{ defaultLayout, columnWidth }}>
   (function() {
     const savedLayout = localStorage.getItem('postListLayout');
 
@@ -73,13 +67,10 @@ const initialLayoutClass =
         container.style.transition = 'none';
 
         // 移除所有布局类
-        container.classList.remove('list-mode', 'grid-mode', 'flex', 'flex-col', 'grid', 'grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3', 'gap-4', 'md:gap-4');
+        container.classList.remove('list-mode', 'grid-mode', 'post-grid-auto', 'flex', 'flex-col', 'gap-4', 'md:gap-4');
 
         if (savedLayout === 'grid') {
-          container.classList.add('grid-mode', 'grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-4');
-          if (!isBothSidebars && gridColumns === 3) {
-            container.classList.add('lg:grid-cols-3');
-          }
+          container.classList.add('grid-mode', 'post-grid-auto');
         } else {
           container.classList.add('list-mode', 'flex', 'flex-col', 'gap-4', 'md:gap-4');
         }
@@ -127,30 +118,25 @@ const initialLayoutClass =
     const currentLayout = isCurrentGrid ? "grid" : (isCurrentList ? "list" : null);
 
     // Common logic vars
-    const isBothSidebars = postListContainer.getAttribute("data-both-sidebars") === "true";
     const masonryEnabled = postListContainer.getAttribute("data-masonry-enabled") === "true";
-    const gridColumns = parseInt(postListContainer.getAttribute("data-grid-columns") || "2");
 
     // Helper to apply layout classes (Pure logic, no animation)
     const applyClasses = () => {
-        postListContainer.classList.remove("list-mode", "grid-mode");
+        postListContainer.classList.remove("list-mode", "grid-mode", "post-grid-auto");
         if (layout === "grid") {
             postListContainer.classList.add("grid-mode");
             postListContainer.classList.remove("flex", "flex-col");
             if (masonryEnabled) {
-                postListContainer.classList.remove("grid", "grid-cols-1", "md:grid-cols-2", "lg:grid-cols-3", "gap-4");
+                postListContainer.classList.remove("post-grid-auto");
                 applyMasonryLayout();
             } else {
-                postListContainer.classList.add("grid", "grid-cols-1", "md:grid-cols-2", "gap-4");
-                if (!isBothSidebars && gridColumns === 3) {
-                    postListContainer.classList.add("lg:grid-cols-3");
-                }
+                postListContainer.classList.add("post-grid-auto");
                 resetMasonryLayout();
             }
         } else {
             postListContainer.classList.add("list-mode");
             postListContainer.classList.add("flex", "flex-col", "gap-4", "md:gap-4");
-            postListContainer.classList.remove("grid", "grid-cols-1", "md:grid-cols-2", "lg:grid-cols-3");
+            postListContainer.classList.remove("post-grid-auto");
             resetMasonryLayout();
         }
     };
@@ -172,7 +158,7 @@ const initialLayoutClass =
     // Case 3: Layout Change - Smooth Animation
     // 1. Fade OUT
     postListContainer.classList.add("layout-switching");
-    
+
     // 2. Change Layout after fade out (200ms match CSS)
     setTimeout(() => {
         applyClasses();
@@ -187,11 +173,11 @@ const initialLayoutClass =
   function resetMasonryLayout() {
     const container = document.getElementById("post-list-container");
     if (!container) return;
-    
+
     container.style.height = "";
     container.style.position = "";
     container.style.display = "";
-    
+
     const items = container.querySelectorAll(".post-card-item");
     items.forEach((item) => {
       // @ts-ignore
@@ -208,10 +194,10 @@ const initialLayoutClass =
   function applyMasonryLayout() {
     const container = document.getElementById("post-list-container");
     if (!container) return;
-    
+
     const masonryEnabled = container.getAttribute("data-masonry-enabled") === "true";
     if (!masonryEnabled) return;
-    
+
     // 仅在 grid 模式下应用
     if (!container.classList.contains("grid-mode")) return;
 
@@ -220,48 +206,46 @@ const initialLayoutClass =
 
     // 瀑布流配置
     const gap = 16; // 1rem = 16px
-    const isBothSidebars = container.getAttribute("data-both-sidebars") === "true";
-    const gridColumns = parseInt(container.getAttribute("data-grid-columns") || "2");
-    let colCount = 2;
-    if (!isBothSidebars && gridColumns === 3 && window.innerWidth >= 1024) {
-        colCount = 3;
-    }
-    
+    const columnWidth = parseInt(container.getAttribute("data-column-width") || "280");
+
     // 重置容器样式以允许绝对定位
     container.style.position = "relative";
     container.style.display = "block"; // 覆盖 grid display
 
     // 使用 offsetWidth 避免 transform: scale 的影响
     const containerWidth = container.offsetWidth;
+    // 根据容器宽度和最小列宽动态计算列数
+    const colCount = Math.max(1, Math.floor((containerWidth + gap) / (columnWidth + gap)));
     const itemWidth = (containerWidth - (colCount - 1) * gap) / colCount;
-    
+
     const colHeights = new Array(colCount).fill(0);
-    
-    items.forEach((item, index) => {
-      const colIndex = index % colCount; // Z字形分布：左右交替
-      
+
+    items.forEach((item) => {
+      // 找到最短的列放置
+      const colIndex = colHeights.indexOf(Math.min(...colHeights));
+
       // @ts-ignore
       item.style.position = "absolute";
       // @ts-ignore
       item.style.width = `${itemWidth}px`;
       // @ts-ignore
       item.style.setProperty('height', 'auto', 'important');
-      
+
       // 获取高度，优先使用 offsetHeight 避免 transform 影响
       // @ts-ignore
       const height = item.offsetHeight;
-      
+
       const top = colHeights[colIndex];
       const left = colIndex * (itemWidth + gap);
-      
+
       // @ts-ignore
       item.style.top = `${top}px`;
       // @ts-ignore
       item.style.left = `${left}px`;
-      
+
       colHeights[colIndex] += height + gap;
     });
-    
+
     container.style.height = `${Math.max(...colHeights)}px`;
   }
 
@@ -269,7 +253,7 @@ const initialLayoutClass =
   document.addEventListener("DOMContentLoaded", function () {
     // 延迟一点确保DOM完全加载
     setTimeout(initLayout, 50);
-    
+
     // 监听图片加载以重新计算布局
     const imgs = document.querySelectorAll('#post-list-container img');
     imgs.forEach(img => {
@@ -294,7 +278,7 @@ const initialLayoutClass =
     const newLayout = event.detail.layout;
     const postListContainer = document.getElementById("post-list-container");
     if (!postListContainer) return;
-    
+
     // 检查屏幕宽度，如果小于1200px则强制使用列表模式
     const screenWidth = window.innerWidth;
     const isSmallScreen = screenWidth < 1200;
@@ -318,7 +302,7 @@ const initialLayoutClass =
   // 监听页面导航事件（Astro的客户端路由）
   document.addEventListener("astro:page-load", function () {
     setTimeout(initLayout, 50);
-    
+
     // 监听图片加载
     const imgs = document.querySelectorAll('#post-list-container img');
     imgs.forEach(img => {
@@ -329,7 +313,7 @@ const initialLayoutClass =
         });
     });
   });
-  
+
   document.addEventListener("astro:after-swap", function () {
     setTimeout(initLayout, 50);
   });
@@ -338,11 +322,19 @@ const initialLayoutClass =
   setTimeout(initLayout, 0);
 </script>
 
+<style is:global>
+  .post-grid-auto {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--post-card-min-width, 320px), 1fr));
+    gap: 1rem;
+  }
+</style>
+
 <style>
   /* 布局切换动画 */
   #post-list-container {
     /* 限制过渡属性为 opacity 和 transform，避免响应父元素位置变化 */
-    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
                 transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -356,7 +348,7 @@ const initialLayoutClass =
   #post-list-container {
     transition: opacity 0.2s ease-out, transform 0.2s ease-out;
   }
-  
+
   #post-list-container.layout-switching {
     opacity: 0;
     transform: translateY(10px);
