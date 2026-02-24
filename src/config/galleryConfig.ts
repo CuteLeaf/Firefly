@@ -7,8 +7,9 @@ export const galleryConfig: GalleryConfig = {
 		// 支持jpg/png/webp/avif/gif格式
 		// id: 相册唯一标识符（用于目录命名和URL路径），比如设置：id: "firefly-2026", 对应 public/gallery/firefly-2026/目录
 		// cover: 手动指定封面图（可选，不填会把cover.*文件作为封面图，如果没有cover.*文件，则使用第一张图片作为封面图）
-		// name: 相册名称，显示在相册列表和相册页标题
-		// description: 相册描述，显示在相册列表和相册页面
+		// name: 相册名称
+		// description: 相册描述
+		// location: 相册拍摄地点
 		// date: 相册日期，格式为 YYYY-MM-DD，用于排序和显示
 		// tags: 相册标签，用于分类和过滤
 		// 每添加一个数组项就相当于添加了一个相册，记得在 public/gallery/ 目录下创建对应的子目录并放入图片
