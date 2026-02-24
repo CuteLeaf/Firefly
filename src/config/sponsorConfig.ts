@@ -61,7 +61,6 @@ export const sponsorConfig: SponsorConfig = {
 			name: "夏叶",
 			amount: "¥50",
 			date: "2025-10-01",
-			message: "感谢分享！",
 		},
 
 		// 示例：匿名赞助者

@@ -64,14 +64,14 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
                             {method.name}
                           </h3>
                         </div>
-          
+
                         <!-- 描述 -->
                         {method.description && (
                           <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-4 text-center">
                             {method.description}
                           </p>
                         )}
-          
+
                         <!-- 二维码或链接 -->
                         {method.qrCode && (
                           <div class="relative w-full max-w-[200px] aspect-square bg-white rounded-lg p-4 shadow-md mb-4">
@@ -83,7 +83,7 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
                             />
                           </div>
                         )}
-                        
+
                         {method.link && (
                           <a
                             href={method.link}
@@ -99,77 +99,66 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
                     ))}
         </div>
       </div>
+    </div>
+  </div>
 
-
-      <!-- 赞助者列表 -->
-      {showSponsorsList && (
-        <div>
-          <div class="flex items-center gap-3 mb-6">
-            <Icon name="material-symbols:emoji-people-rounded" class="text-xl text-(--primary)" />
-            <h2 class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+  <!-- 赞助者列表 -->
+  {showSponsorsList && (
+    <div class="flex w-full rounded-(--radius-large) overflow-hidden relative mt-4">
+      <div class="card-base z-10 px-9 py-6 relative w-full">
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-3">
+            <div class="h-8 w-8 rounded-lg bg-(--primary)/10 flex items-center justify-center">
+              <Icon name="material-symbols:emoji-people-rounded" class="text-[1.25rem] text-(--primary)" />
+            </div>
+            <h2 class="text-xl font-bold text-neutral-900 dark:text-neutral-100">
               {i18n(I18nKey.sponsorList)}
             </h2>
           </div>
-          {sponsors.length > 0 ? (
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {sponsors.map((sponsor) => (
-                <div class="relative p-5 rounded-lg bg-neutral-50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 hover:border-(--primary) transition-all duration-200 hover:shadow-md">
-                  <!-- 内容 -->
-                  <div class="flex flex-col h-full">
-                    <!-- 头部：姓名和金额 -->
-                    <div class="flex items-center justify-between mb-3">
-                      <span class="font-semibold text-lg text-neutral-900 dark:text-neutral-100">
-                        {sponsor.name}
-                      </span>
-                      {sponsor.amount && (
-                        <span class="inline-flex items-center px-3 py-1 text-sm font-bold text-(--primary) bg-(--primary)/10 dark:bg-(--primary)/20 rounded-full">
-                          {sponsor.amount}
-                        </span>
-                      )}
-                    </div>
-
-                    <!-- 留言 -->
-                    {sponsor.message && (
-                      <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-3 leading-relaxed flex-1">
-                        {sponsor.message}
-                      </p>
-                    )}
-
-                    <!-- 底部：日期 -->
-                    {sponsor.date && (
-                      <div class="flex items-center gap-1.5 mt-auto pt-3 border-t border-neutral-200 dark:border-neutral-800">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="w-4 h-4 text-neutral-400 dark:text-neutral-500"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
-                        <span class="text-xs text-neutral-500 dark:text-neutral-500">
-                          {new Date(sponsor.date).toLocaleDateString()}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div class="text-center py-12 text-neutral-500 dark:text-neutral-500">
-              <p>{i18n(I18nKey.sponsorEmpty)}</p>
-            </div>
+          {sponsors.length > 0 && (
+            <span class="text-xs text-neutral-400 dark:text-neutral-500">
+              {sponsors.length}
+            </span>
           )}
         </div>
-      )}
+        {sponsors.length > 0 ? (
+          <div class="sponsor-grid">
+            {sponsors.map((sponsor) => (
+              <div class="group flex items-center gap-3 p-3 rounded-xl border border-(--line-divider) hover:border-(--primary) transition-all duration-200">
+                {/* 头像占位 */}
+                <div class="w-9 h-9 rounded-full bg-(--primary)/10 flex items-center justify-center shrink-0 group-hover:bg-(--primary)/20 transition-colors">
+                  <span class="text-sm font-bold text-(--primary)">{sponsor.name.charAt(0)}</span>
+                </div>
+
+                {/* 信息 */}
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2">
+                    <span class="font-semibold text-sm text-neutral-900 dark:text-neutral-100 truncate">
+                      {sponsor.name}
+                    </span>
+                    {sponsor.amount && (
+                      <span class="shrink-0 text-xs font-bold text-(--primary)">
+                        {sponsor.amount}
+                      </span>
+                    )}
+                  </div>
+                  {sponsor.date && (
+                    <span class="text-[0.65rem] text-neutral-400 dark:text-neutral-500">
+                      {new Date(sponsor.date).toLocaleDateString()}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div class="text-center py-12 text-neutral-500 dark:text-neutral-500">
+            <p>{i18n(I18nKey.sponsorEmpty)}</p>
+          </div>
+        )}
+      </div>
     </div>
-  </div>
+  )}
 </MainGridLayout>
 
 <style>
@@ -177,9 +166,17 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
   :global(body.wallpaper-transparent .usage-info-box) {
     background-color: rgba(var(--primary-rgb, 70, 130, 180), 0.15) !important;
   }
-  
+
   :global(:root.dark body.wallpaper-transparent .usage-info-box) {
     background-color: oklch(from var(--primary) l c h / 0.15) !important;
+  }
+</style>
+
+<style is:global>
+  .sponsor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.75rem;
   }
 </style>
 
