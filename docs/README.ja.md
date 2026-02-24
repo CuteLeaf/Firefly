@@ -16,6 +16,8 @@
 [![Issues](https://img.shields.io/github/issues/CuteLeaf/Firefly)](https://github.com/CuteLeaf/Firefly/issues)
 > 
 > [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Z8Z41NQALY)
+>
+> **QQ交流群：[1087127207](https://qm.qq.com/q/ZGsFa8qX2G)**
 > 
 > ![GitHub License](https://img.shields.io/github/license/CuteLeaf/Firefly)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/CuteLeaf/Firefly)
@@ -73,37 +75,6 @@
 - [x] **壁紙モード切り替え** - バナー壁紙、フルスクリーン壁紙、単色背景
 - [x] **テーマカラーのカスタマイズ** - 360°色相調整
 
-### ページコンポーネント
-- [x] **ゲストブック** - ゲストブックページをサポート
-- [x] **お知らせバー** - サイドバーのお知らせ通知をサポート
-- [x] **マスコット** - SpineとLive2Dの2つのアニメーションエンジンをサポート
-- [x] **サイト統計** - 記事、カテゴリ、タグ数、総文字数などのデータを表示
-- [x] **サイトカレンダー** - 今月のカレンダーと今月公開された記事を表示
-- [x] **スポンサーページ** - スポンサーリンクのジャンプ、支払いQRコードの表示、スポンサーリスト、記事内スポンサーボタン
-- [x] **シェアポスター** - 美しい記事シェアポスターの生成をサポート
-- [x] **桜エフェクト** - 桜エフェクトをサポート、フルスクリーン桜アニメーション
-- [x] **友人リンク** - 美しい友人リンク展示ページ
-- [x] **広告コンポーネント** - カスタムサイドバー広告コンテンツをサポート
-- [x] **Bangumi** - Bangumi APIベースのアニメとゲーム記録表示
-- [x] **コメントシステム** - Twikoo、Waline、Giscus、Disqus、Artalkコメントシステムを統合
-- [x] **訪問者数統計** - Waline、Twikoo組み込みの訪問追跡を呼び出し可能
-- [x] **音楽プレーヤー** - Material Design 3 デザインの音楽プレーヤー
-
-### コンテンツ拡張
-- [x] **画像ライトボックス** - Fancybox画像プレビュー機能
-- [x] **フローティング目次** - 記事の目次を動的に表示、アンカージャンプをサポート、サイドバー目次非表示時に表示
-- [x] **メールアドレス保護** - 自動クローラーによるメールアドレスの収集を防ぎ、スパムメールを回避
-- [x] **サイドバー目次** - 記事の目次を動的に表示、アンカージャンプをサポート
-- [x] **強化されたコードブロック** - Expressive Codeベース、コード折りたたみ、行番号、言語識別をサポート
-- [x] **数式サポート** - KaTeXレンダリングエンジン、インラインとブロック数式をサポート
-- [x] **ランダムカバー画像** - APIを介してランダムカバー画像の取得をサポート
-- [x] **Markdown拡張** - より多くのMarkdown拡張構文サポート
-
-### SEO
-- [x] **SEO最適化** - 完全なメタタグと構造化データ
-- [x] **RSS購読** - RSSフィードを自動生成
-- [x] **サイトマップ** - XMLサイトマップを自動生成、ページフィルタリング設定をサポート
-- [x] **統計分析** - Google Analytics、Microsoft Clarityを統合
 
 便利な機能や最適化があれば、[Pull Request](https://github.com/CuteLeaf/Firefly/pulls)を提出してください
 
@@ -202,6 +173,7 @@ src/
 │   ├── pioConfig.ts          # マスコット設定
 │   ├── adConfig.ts           # 広告設定
 │   ├── friendsConfig.ts      # 友人リンク設定
+│   ├── galleryConfig.ts      # ギャラリー設定
 │   ├── sponsorConfig.ts      # スポンサー設定
 │   └── coverImageConfig.ts   # 記事カバー画像設定
 ```

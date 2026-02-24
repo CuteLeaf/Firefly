@@ -1,0 +1,26 @@
+---
+interface Props {
+	src: string;
+	albumId: string;
+	alt?: string;
+}
+
+const { src, albumId, alt = "" } = Astro.props;
+---
+
+<div class="gallery-photo-card break-inside-avoid mb-3">
+  <div
+    data-fancybox={`gallery-${albumId}`}
+    data-src={src}
+    data-type="image"
+    class="block rounded-xl overflow-hidden group cursor-pointer"
+  >
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+      class="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
+    />
+  </div>
+</div>

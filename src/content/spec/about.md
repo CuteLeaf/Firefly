@@ -30,6 +30,7 @@
 
 - 💻 **GitHub**: [CuteLeaf](https://github.com/CuteLeaf)
 - ✉️ **Email**: [xiaye@msn.com](mailto:xiaye@msn.com)
+- 🐧 **QQ交流群：[1087127207](https://qm.qq.com/q/ZGsFa8qX2G)**
 
 ---
 
