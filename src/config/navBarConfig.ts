@@ -26,7 +26,7 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		links.push(LinkPreset.Guestbook);
 	}
 
-	//
+	// 我的及其子菜单
 	links.push({
 		name: "我的",
 		url: "/my/",
