@@ -274,4 +274,12 @@ export const zh_CN: Translation = {
 	[Key.codeCollapsibleShowLess]: "显示更少",
 	[Key.codeCollapsibleExpanded]: "代码块已展开",
 	[Key.codeCollapsibleCollapsed]: "代码块已折叠",
+
+	// 相册页面
+	[Key.gallery]: "相册",
+	[Key.galleryDescription]: "记录生活中的美好瞬间",
+	[Key.galleryPhotos]: "张照片",
+	[Key.galleryAlbums]: "本相册",
+	[Key.galleryNoAlbums]: "暂无相册",
+	[Key.galleryBackToAlbums]: "返回相册列表",
 };

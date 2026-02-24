@@ -284,4 +284,12 @@ export const ru: Translation = {
 	[Key.codeCollapsibleShowLess]: "Показать меньше",
 	[Key.codeCollapsibleExpanded]: "Блок кода развернут",
 	[Key.codeCollapsibleCollapsed]: "Блок кода свернут",
+
+	// Страница галереи
+	[Key.gallery]: "Галерея",
+	[Key.galleryDescription]: "Запечатлеть прекрасные моменты жизни",
+	[Key.galleryPhotos]: "фото",
+	[Key.galleryAlbums]: "альбомов",
+	[Key.galleryNoAlbums]: "Пока нет альбомов",
+	[Key.galleryBackToAlbums]: "Вернуться к альбомам",
 };

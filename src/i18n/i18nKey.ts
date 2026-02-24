@@ -270,6 +270,14 @@ enum I18nKey {
 	codeCollapsibleShowLess = "codeCollapsibleShowLess",
 	codeCollapsibleExpanded = "codeCollapsibleExpanded",
 	codeCollapsibleCollapsed = "codeCollapsibleCollapsed",
+
+	// 相册页面
+	gallery = "gallery",
+	galleryDescription = "galleryDescription",
+	galleryPhotos = "galleryPhotos",
+	galleryAlbums = "galleryAlbums",
+	galleryNoAlbums = "galleryNoAlbums",
+	galleryBackToAlbums = "galleryBackToAlbums",
 }
 
 export default I18nKey;

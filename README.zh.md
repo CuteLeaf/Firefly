@@ -16,6 +16,8 @@
 [![Issues](https://img.shields.io/github/issues/CuteLeaf/Firefly)](https://github.com/CuteLeaf/Firefly/issues)
 > 
 > [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Z8Z41NQALY)
+>
+> **QQ交流群：[1087127207](https://qm.qq.com/q/ZGsFa8qX2G)**
 > 
 > ![GitHub License](https://img.shields.io/github/license/CuteLeaf/Firefly)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/CuteLeaf/Firefly)
@@ -73,40 +75,6 @@
 - [x] **导航栏自定义** - Logo、标题、链接全面自定义
 - [x] **壁纸模式切换** - 横幅壁纸、全屏透明壁纸、纯色背景
 - [x] **主题色自定义** - 360° 色相调节
-
-### 页面组件
-   
-- [x] **留言板** - 支持留言页面
-- [x] **公告栏** - 支持侧边栏公告提示
-- [x] **看板娘** - 支持 Spine 和 Live2D 两种动画引擎
-- [x] **站点统计** - 显示文章、分类、标签数目、文章总字数等数据
-- [x] **站点日历** - 显示当月日历，以及当月的发布文章
-- [x] **赞助页面** - 赞助链接跳转、收款码展示、赞助者列表、文章内赞助按钮
-- [x] **分享海报** - 支持生成精美的文章分享海报
-- [x] **樱花特效** - 支持樱花特效，全屏樱花效果
-- [x] **友情链接** - 精美的友情链接展示页面
-- [x] **广告组件** - 支持自定义侧边栏广告内容
-- [x] **番组计划** - 基于 Bangumi API 的追番和游戏等记录展示
-- [x] **评论系统** - 集成 Twikoo、Waline、Giscus、Disqus、Artalk 评论系统
-- [x] **访问量统计** - 支持调用 Waline、Twikoo 自带的访问量追踪
-- [x] **音乐播放器** - Material Design 3 设计风格的音乐播放器
-
-### 内容增强
-- [x] **图片灯箱** - Fancybox 图片预览功能
-- [x] **浮动目录** - 动态显示文章目录，支持锚点跳转，在侧边栏目录隐藏后显示
-- [x] **邮箱保护** - 让自动化爬虫程序无法直接爬到邮箱地址，被垃圾邮件骚扰
-- [x] **侧边栏目录** - 动态显示文章目录，支持锚点跳转
-- [x] **增强代码块** - 基于 Expressive Code，支持代码折叠、行号、语言标识
-- [x] **数学公式支持** - KaTeX 渲染引擎，支持行内和块级公式
-- [x] **文章随机封面图** - 支持通过 API 获取随机封面图
-- [x] **Markdown扩展** - 更多的 Markdown 扩展语法
-
-### SEO
-- [x] **SEO 优化** - 完整的 meta 标签和结构化数据
-- [x] **RSS 订阅** - 自动生成 RSS Feed
-- [x] **站点地图** - 自动生成 XML Sitemap，支持页面过滤配置
-- [x] **统计分析** - 集成 Google Analytics、Microsoft Clarity
-
 
 如果你有好用的功能和优化，请提交 [Pull Request](https://github.com/CuteLeaf/Firefly/pulls)
 
@@ -205,6 +173,7 @@ src/
 │   ├── pioConfig.ts          # 看板娘配置
 │   ├── adConfig.ts           # 广告配置
 │   ├── friendsConfig.ts      # 友链配置
+│   ├── galleryConfig.ts      # 相册配置
 │   ├── sponsorConfig.ts      # 赞助配置
 │   └── coverImageConfig.ts  # 文章封面图配置
 ```

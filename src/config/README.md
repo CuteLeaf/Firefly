@@ -23,6 +23,7 @@ src/config/
 ├── pioConfig.ts          # Pio 模型配置
 ├── adConfig.ts           # 广告配置
 ├── friendsConfig.ts      # 友链配置
+├── galleryConfig.ts      # 相册配置
 ├── sponsorConfig.ts      # 赞助配置
 ├── coverImageConfig.ts   # 封面图配置
 └── README.md             # 本文件

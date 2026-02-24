@@ -1,0 +1,80 @@
+---
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+
+interface Props {
+	id: string;
+	name: string;
+	cover: string;
+	description?: string;
+	date?: string;
+	location?: string;
+	tags?: string[];
+	photoCount: number;
+}
+
+const { id, name, cover, description, date, location, tags, photoCount } =
+	Astro.props;
+---
+
+<a
+  href={`/gallery/${id}/`}
+  data-tags={tags?.join(",") || ""}
+  class="album-card group relative block overflow-hidden rounded-xl transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
+>
+  <!-- Cover Image -->
+  <div class="aspect-4/3 relative overflow-hidden">
+    {cover ? (
+      <img
+        src={cover}
+        alt={name}
+        class="w-full h-full object-cover pointer-events-none transition-transform duration-500 group-hover:scale-105"
+        loading="lazy"
+        decoding="async"
+      />
+    ) : (
+      <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+        <div class="text-gray-400 text-5xl">&#x1f4f7;</div>
+      </div>
+    )}
+
+    <!-- Photo count badge -->
+    <div class="absolute top-2 right-2 px-2 py-1 rounded-full text-xs text-white font-medium bg-black/50 backdrop-blur-sm">
+      {photoCount} {i18n(I18nKey.galleryPhotos)}
+    </div>
+
+    <!-- Gradient overlay + info -->
+    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+    <div class="absolute bottom-0 left-0 right-0 p-4">
+      <h3 class="font-bold text-base text-white line-clamp-1 drop-shadow-lg">
+        {name}
+      </h3>
+
+      {description && (
+        <p class="text-xs text-white/75 line-clamp-1 mt-1 leading-relaxed" title={description}>
+          {description}
+        </p>
+      )}
+
+      <div class="flex items-center gap-3 text-xs text-white/70 mt-1.5 flex-wrap">
+        {date && <span>{date}</span>}
+        {location && (
+          <span class="inline-flex items-center gap-0.5">
+            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>
+            {location}
+          </span>
+        )}
+      </div>
+
+      {tags && tags.length > 0 && (
+        <div class="flex flex-wrap gap-1 mt-2">
+          {tags.slice(0, 4).map((tag) => (
+            <span class="text-[0.6rem] px-1.5 py-0.5 rounded bg-white/20 text-white/90 backdrop-blur-sm">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</a>
