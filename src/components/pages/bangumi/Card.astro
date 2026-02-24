@@ -68,14 +68,14 @@ const displayTags =
   href={`${subject_base_url}${item.subject.id}`}
   target="_blank"
   rel="noopener noreferrer nofollow"
-  class="group relative overflow-hidden rounded-xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-2xl transition-all duration-200 hover:scale-105 block"
+  class="group relative overflow-hidden rounded-xl transition-all duration-300 hover:shadow-lg hover:scale-[1.02] block"
 >
-  <div class="aspect-2/3 relative overflow-hidden" >
+  <div class="aspect-2/3 relative overflow-hidden">
     {item.subject?.images?.medium ? (
       <img
         src={item.subject.images.medium}
         alt={item.subject.name_cn || item.subject.name}
-        class="w-full h-full object-cover pointer-events-none"
+        class="w-full h-full object-cover pointer-events-none transition-transform duration-500 group-hover:scale-105"
         loading="lazy"
       />
     ) : (
@@ -88,48 +88,48 @@ const displayTags =
     <div class={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs text-white font-medium ${getStatusColor(item.type)}`}>
       {getStatusText(item.type)}
     </div>
-  </div>
 
-  <!-- Info overlay on hover -->
-  <div class="absolute inset-x-0 bottom-0 bg-black/80 text-white p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-200">
-    <h3 class="font-bold text-sm mb-1 line-clamp-2">
-      {item.subject.name_cn || item.subject.name}
-    </h3>
-
-    {(item.subject.score || item.comment) && (
-      <div class="flex items-center justify-between mb-2">
-        {item.subject.score && (
-          <div class="flex items-center gap-1">
-            <div class="text-yellow-400">⭐</div>
-            <span class="text-sm">{item.subject.score}</span>
-          </div>
-        )}
-
-        {item.comment && (
-          <div class="relative group/comment">
-            <div class="text-sm text-gray-300 cursor-help">💬</div>
-            <div class="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover/comment:opacity-100 transition-opacity duration-150 w-32 sm:w-44 xl:w-52 z-10 pointer-events-none">
-              {item.comment}
-            </div>
-          </div>
-        )}
+    <!-- Score badge -->
+    {item.subject.score && (
+      <div class="absolute top-2 right-2 px-2 py-1 rounded-full text-xs text-white font-medium bg-black/50 backdrop-blur-sm flex items-center gap-1">
+        <span class="text-yellow-400">⭐</span>
+        {item.subject.score}
       </div>
     )}
 
-    <!-- Tags display -->
-    {displayTags && displayTags.length > 0 && (
-      <div class="flex flex-wrap gap-1 mt-2">
-        {displayTags.slice(0, 5).map((tag: string) => (
-          <span class="text-xs px-2 py-0.5 bg-white/20 rounded-full text-white/90">
-            {tag}
-          </span>
-        ))}
-        {displayTags.length > 5 && (
-          <span class="text-xs px-2 py-0.5 bg-white/20 rounded-full text-white/60">
-            +{displayTags.length - 5}
-          </span>
-        )}
-      </div>
-    )}
+    <!-- Gradient overlay + info -->
+    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+    <div class="absolute bottom-0 left-0 right-0 p-3">
+      <h3 class="font-bold text-sm text-white line-clamp-2 drop-shadow-lg">
+        {item.subject.name_cn || item.subject.name}
+      </h3>
+
+      {item.subject.date && (
+        <p class="text-xs text-white/60 mt-1">
+          {item.subject.date.substring(0, 4)}
+        </p>
+      )}
+
+      {item.comment && (
+        <p class="text-xs text-white/75 line-clamp-1 mt-1 leading-relaxed" title={item.comment}>
+          {item.comment}
+        </p>
+      )}
+
+      {displayTags && displayTags.length > 0 && (
+        <div class="flex flex-wrap gap-1 mt-1.5">
+          {displayTags.slice(0, 5).map((tag: string) => (
+            <span class="text-[0.6rem] px-1.5 py-0.5 rounded bg-white/20 text-white/90 backdrop-blur-sm">
+              {tag}
+            </span>
+          ))}
+          {displayTags.length > 5 && (
+            <span class="text-[0.6rem] px-1.5 py-0.5 rounded bg-white/20 text-white/60 backdrop-blur-sm">
+              +{displayTags.length - 5}
+            </span>
+          )}
+        </div>
+      )}
+    </div>
   </div>
 </a>

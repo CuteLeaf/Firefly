@@ -13,7 +13,7 @@ interface Props {
 const { tabs, activeTab } = Astro.props;
 ---
 
-<div class="border-b border-gray-200 dark:border-gray-700 mb-3">
+<div class="border-b border-(--line-divider) mb-3">
   <nav class="flex space-x-8" aria-label="Tabs">
     {tabs.map((tab) => (
       <button
@@ -29,7 +29,7 @@ const { tabs, activeTab } = Astro.props;
       >
         {tab.name}
         {tab.count !== undefined && (
-          <span class="ml-2 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 py-0.5 px-2 rounded-full text-xs">
+          <span class="ml-2 bg-(--btn-regular-bg) text-(--btn-content) py-0.5 px-2 rounded-full text-xs">
             {tab.count}
           </span>
         )}

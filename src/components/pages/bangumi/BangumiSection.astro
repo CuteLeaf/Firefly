@@ -121,7 +121,7 @@ const defaultFilter = "all"; // 默认显示全部，用户可以通过筛选器
         sectionId={sectionId}
       />
 
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
+      <div class="bangumi-masonry">
         {items.map((item) => (
           <div
             class="bangumi-item"
@@ -147,3 +147,11 @@ const defaultFilter = "all"; // 默认显示全部，用户可以通过筛选器
     </div>
   )}
 </div>
+
+<style is:global>
+  .bangumi-masonry {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.75rem;
+  }
+</style>

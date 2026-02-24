@@ -21,7 +21,7 @@ const { filters, activeFilter, sectionId } = Astro.props;
         "px-3 py-1 rounded-full text-xs font-medium transition-all duration-200",
         {
           "bg-(--primary) text-white shadow-md": filter.value === activeFilter,
-          "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600": filter.value !== activeFilter
+          "bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover)": filter.value !== activeFilter
         }
       ]}
       data-filter={filter.value}
@@ -49,10 +49,10 @@ const { filters, activeFilter, sectionId } = Astro.props;
         const sectionButtons = document.querySelectorAll(`[data-section="${currentSectionId}"][data-filter]`);
         sectionButtons.forEach(btn => {
           btn.classList.remove('bg-(--primary)', 'text-white', 'shadow-md');
-          btn.classList.add('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200', 'dark:bg-gray-700', 'dark:text-gray-300', 'dark:hover:bg-gray-600');
+          btn.classList.add('bg-(--btn-regular-bg)', 'text-(--btn-content)', 'hover:bg-(--btn-regular-bg-hover)');
         });
 
-        this.classList.remove('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200', 'dark:bg-gray-700', 'dark:text-gray-300', 'dark:hover:bg-gray-600');
+        this.classList.remove('bg-(--btn-regular-bg)', 'text-(--btn-content)', 'hover:bg-(--btn-regular-bg-hover)');
         this.classList.add('bg-(--primary)', 'text-white', 'shadow-md');
 
         // Filter items
