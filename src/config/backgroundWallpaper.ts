@@ -148,5 +148,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		opacity: 0.8,
 		// 背景模糊程度
 		blur: 1,
+		// 卡片背景透明度，0-1之间，值越小越透明
+		cardOpacity: 0.6,
 	},
 };

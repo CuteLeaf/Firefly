@@ -560,6 +560,7 @@ export type BackgroundWallpaperConfig = {
 		zIndex?: number; // 层级，确保壁纸在合适的层级显示
 		opacity?: number; // 壁纸透明度，0-1之间
 		blur?: number; // 背景模糊程度，单位px
+		cardOpacity?: number; // 卡片背景透明度，0-1之间
 	};
 };
 

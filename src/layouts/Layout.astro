@@ -166,6 +166,7 @@ const siteLang = lang.replace("_", "-");
         darkTheme: expressiveCodeConfig.darkTheme,
         lightTheme: expressiveCodeConfig.lightTheme,
         baseUrl: import.meta.env.BASE_URL,
+        cardTransparentOpacity: backgroundWallpaper.overlay?.cardOpacity ?? 0.6,
       }}
     >
       // 主题初始化 - 与setting-utils.ts保持一致
@@ -210,6 +211,9 @@ const siteLang = lang.replace("_", "-");
       // Load the hue from local storage
       const hue = localStorage.getItem("hue") || configHue;
       document.documentElement.style.setProperty("--hue", hue);
+
+      // 设置卡片透明度（全屏透明模式下使用）
+      document.documentElement.style.setProperty("--card-transparent-opacity", String(cardTransparentOpacity));
 
       // calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
       // 使用更准确的窗口高度计算
