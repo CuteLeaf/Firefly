@@ -17,7 +17,7 @@ function shouldAddNoReferrer(urlStr) {
 
 		return domains.some((pattern) => {
 			const regexPattern = pattern.replace(/\./g, "\\.").replace(/\*/g, ".*");
-			const regex = new RegExp("^" + regexPattern + "$");
+			const regex = new RegExp(`^${regexPattern}$`);
 			return regex.test(hostname);
 		});
 	} catch {

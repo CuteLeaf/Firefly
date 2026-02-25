@@ -2,6 +2,7 @@
 import { Image, Picture } from "astro:assets";
 import * as path from "node:path";
 import type { ImageMetadata } from "astro";
+import { siteConfig } from "@/config";
 import type { ImageFormat, ResponsiveImageLayout } from "@/types/config";
 import {
 	getFallbackFormat,
@@ -9,7 +10,6 @@ import {
 	getImageQuality,
 } from "@/utils/image-utils";
 import { url } from "@/utils/url-utils";
-import { siteConfig } from "@/config";
 
 interface Props {
 	id?: string;
@@ -72,7 +72,7 @@ function shouldAddNoReferrer(urlStr: string): boolean {
 
 		return domains.some((pattern) => {
 			const regexPattern = pattern.replace(/\./g, "\\.").replace(/\*/g, ".*");
-			const regex = new RegExp("^" + regexPattern + "$");
+			const regex = new RegExp(`^${regexPattern}$`);
 			return regex.test(hostname);
 		});
 	} catch {
