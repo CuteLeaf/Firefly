@@ -3,6 +3,7 @@ import { render } from "astro:content";
 import * as path from "node:path";
 import Comment from "@components/comment/index.astro";
 import Markdown from "@components/common/Markdown.astro";
+import EncryptedPost from "@components/features/EncryptedPost.astro";
 import KatexManager from "@components/features/KatexManager.astro";
 import License from "@components/misc/License.astro";
 import I18nKey from "@i18n/i18nKey";
@@ -241,91 +242,183 @@ const jsonLd = {
         )
       }
 
-      <Markdown class="mb-6 markdown-content onload-animation">
-        <Content />
-      </Markdown>
+      {entry.data.password ? (
+        <EncryptedPost password={entry.data.password} slug={entry.id} hint={entry.data.passwordHint}>
+          <Markdown class="mb-6 markdown-content onload-animation">
+            <Content />
+          </Markdown>
 
-      {/* 赞助按钮 & 分享按钮 */}
-      {
-        (siteConfig.sharePoster || (sponsorConfig.showButtonInPost && siteConfig.pages.sponsor)) && (
-          <div class="mb-6 rounded-xl onload-animation">
-            <div class="p-6 bg-(--license-block-bg) rounded-xl">
-              <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div class="flex items-center gap-3 flex-1">
-                  <div class="h-12 w-12 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70 shrink-0">
-                    <Icon
-                      name={sponsorConfig.showButtonInPost &&
-                      siteConfig.pages.sponsor
-                        ? "material-symbols:favorite"
-                        : "material-symbols:share"}
-                      class="text-2xl"
-                    />
-                  </div>
-                  <div>
-                    <h3 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
+          {/* 赞助按钮 & 分享按钮 */}
+          {
+            (siteConfig.sharePoster || (sponsorConfig.showButtonInPost && siteConfig.pages.sponsor)) && (
+              <div class="mb-6 rounded-xl onload-animation">
+                <div class="p-6 bg-(--license-block-bg) rounded-xl">
+                  <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3 flex-1">
+                      <div class="h-12 w-12 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70 shrink-0">
+                        <Icon
+                          name={sponsorConfig.showButtonInPost &&
+                          siteConfig.pages.sponsor
+                            ? "material-symbols:favorite"
+                            : "material-symbols:share"}
+                          class="text-2xl"
+                        />
+                      </div>
+                      <div>
+                        <h3 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
+                          {
+                            sponsorConfig.showButtonInPost && siteConfig.pages.sponsor
+                              ? i18n(I18nKey.sponsorButton)
+                              : i18n(I18nKey.shareOnSocial)
+                          }
+                        </h3>
+                        <p class="text-sm text-neutral-600 dark:text-neutral-400">
+                          {
+                            sponsorConfig.showButtonInPost && siteConfig.pages.sponsor
+                              ? i18n(I18nKey.sponsorButtonText)
+                              : i18n(I18nKey.shareOnSocialDescription)
+                          }
+                        </p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-3">
                       {
-                        sponsorConfig.showButtonInPost && siteConfig.pages.sponsor
-                          ? i18n(I18nKey.sponsorButton)
-                          : i18n(I18nKey.shareOnSocial)
+                        siteConfig.sharePoster && (
+                          <SharePoster
+                            client:load
+                            title={entry.data.title}
+                            author={profileConfig.name}
+                            description={entry.data.description || entry.data.title}
+                            pubDate={formatDateToYYYYMMDD(entry.data.published)}
+                            coverImage={posterCoverUrl}
+                            url={Astro.url.href}
+                            siteTitle={siteConfig.title}
+                            avatar={posterAvatarUrl}
+                          />
+                        )
                       }
-                    </h3>
-                    <p class="text-sm text-neutral-600 dark:text-neutral-400">
                       {
-                        sponsorConfig.showButtonInPost && siteConfig.pages.sponsor
-                          ? i18n(I18nKey.sponsorButtonText)
-                          : i18n(I18nKey.shareOnSocialDescription)
+                        sponsorConfig.showButtonInPost && siteConfig.pages.sponsor && (
+                          <a
+                            href={url("/sponsor/")}
+                            class="inline-flex items-center gap-2 px-6 py-3 bg-(--primary) text-white dark:text-black/70 rounded-lg font-medium hover:bg-(--primary)/80 hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
+                          >
+                            <span>{i18n(I18nKey.sponsor)}</span>
+                            <Icon name="fa7-solid:arrow-right" class="text-sm" />
+                          </a>
+                        )
                       }
-                    </p>
+                    </div>
                   </div>
-                </div>
-                <div class="flex items-center gap-3">
-                  {
-                    siteConfig.sharePoster && (
-                      <SharePoster
-                        client:load
-                        title={entry.data.title}
-                        author={profileConfig.name}
-                        description={entry.data.description || entry.data.title}
-                        pubDate={formatDateToYYYYMMDD(entry.data.published)}
-                        coverImage={posterCoverUrl}
-                        url={Astro.url.href}
-                        siteTitle={siteConfig.title}
-                        avatar={posterAvatarUrl}
-                      />
-                    )
-                  }
-                  {
-                    sponsorConfig.showButtonInPost && siteConfig.pages.sponsor && (
-                      <a
-                        href={url("/sponsor/")}
-                        class="inline-flex items-center gap-2 px-6 py-3 bg-(--primary) text-white dark:text-black/70 rounded-lg font-medium hover:bg-(--primary)/80 hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
-                      >
-                        <span>{i18n(I18nKey.sponsor)}</span>
-                        <Icon name="fa7-solid:arrow-right" class="text-sm" />
-                      </a>
-                    )
-                  }
                 </div>
               </div>
-            </div>
-          </div>
-        )
-      }
+            )
+          }
 
-      {
-        licenseConfig.enable && (
-          <License
-            title={entry.data.title}
-            id={entry.id}
-            pubDate={entry.data.published}
-            author={entry.data.author}
-            sourceLink={entry.data.sourceLink}
-            licenseName={entry.data.licenseName}
-            licenseUrl={entry.data.licenseUrl}
-            class="mb-6 rounded-xl license-container onload-animation"
-          />
-        )
-      }
+          {
+            licenseConfig.enable && (
+              <License
+                title={entry.data.title}
+                id={entry.id}
+                pubDate={entry.data.published}
+                author={entry.data.author}
+                sourceLink={entry.data.sourceLink}
+                licenseName={entry.data.licenseName}
+                licenseUrl={entry.data.licenseUrl}
+                class="mb-6 rounded-xl license-container onload-animation"
+              />
+            )
+          }
+        </EncryptedPost>
+      ) : (
+        <>
+          <Markdown class="mb-6 markdown-content onload-animation">
+            <Content />
+          </Markdown>
+
+          {/* 赞助按钮 & 分享按钮 */}
+          {
+            (siteConfig.sharePoster || (sponsorConfig.showButtonInPost && siteConfig.pages.sponsor)) && (
+              <div class="mb-6 rounded-xl onload-animation">
+                <div class="p-6 bg-(--license-block-bg) rounded-xl">
+                  <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3 flex-1">
+                      <div class="h-12 w-12 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70 shrink-0">
+                        <Icon
+                          name={sponsorConfig.showButtonInPost &&
+                          siteConfig.pages.sponsor
+                            ? "material-symbols:favorite"
+                            : "material-symbols:share"}
+                          class="text-2xl"
+                        />
+                      </div>
+                      <div>
+                        <h3 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
+                          {
+                            sponsorConfig.showButtonInPost && siteConfig.pages.sponsor
+                              ? i18n(I18nKey.sponsorButton)
+                              : i18n(I18nKey.shareOnSocial)
+                          }
+                        </h3>
+                        <p class="text-sm text-neutral-600 dark:text-neutral-400">
+                          {
+                            sponsorConfig.showButtonInPost && siteConfig.pages.sponsor
+                              ? i18n(I18nKey.sponsorButtonText)
+                              : i18n(I18nKey.shareOnSocialDescription)
+                          }
+                        </p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                      {
+                        siteConfig.sharePoster && (
+                          <SharePoster
+                            client:load
+                            title={entry.data.title}
+                            author={profileConfig.name}
+                            description={entry.data.description || entry.data.title}
+                            pubDate={formatDateToYYYYMMDD(entry.data.published)}
+                            coverImage={posterCoverUrl}
+                            url={Astro.url.href}
+                            siteTitle={siteConfig.title}
+                            avatar={posterAvatarUrl}
+                          />
+                        )
+                      }
+                      {
+                        sponsorConfig.showButtonInPost && siteConfig.pages.sponsor && (
+                          <a
+                            href={url("/sponsor/")}
+                            class="inline-flex items-center gap-2 px-6 py-3 bg-(--primary) text-white dark:text-black/70 rounded-lg font-medium hover:bg-(--primary)/80 hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
+                          >
+                            <span>{i18n(I18nKey.sponsor)}</span>
+                            <Icon name="fa7-solid:arrow-right" class="text-sm" />
+                          </a>
+                        )
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )
+          }
+
+          {
+            licenseConfig.enable && (
+              <License
+                title={entry.data.title}
+                id={entry.id}
+                pubDate={entry.data.published}
+                author={entry.data.author}
+                sourceLink={entry.data.sourceLink}
+                licenseName={entry.data.licenseName}
+                licenseUrl={entry.data.licenseUrl}
+                class="mb-6 rounded-xl license-container onload-animation"
+              />
+            )
+          }
+        </>
+      )}
     </div>
   </div>
 
@@ -427,5 +520,5 @@ const jsonLd = {
   </div>
 
   <!-- 评论 -->
-  {entry.data.comment && <Comment post={entry} />}
+  {entry.data.comment && !entry.data.password && <Comment post={entry} />}
 </MainGridLayout>

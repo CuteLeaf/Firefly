@@ -101,4 +101,9 @@ const { headings: _headings = [], class: className, style } = Astro.props;
     }
     window.tocInternalNavigation = false;
   });
+
+  // 密码解密后重新初始化 TOC
+  document.addEventListener("password:decrypted", () => {
+    setTimeout(initSidebarTOC, 200);
+  });
 </script>

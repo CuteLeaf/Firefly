@@ -341,6 +341,11 @@ const sidebarPosition = sidebarLayoutConfig.position;
       updateFloatingTOCVisibility();
     });
 
+    // 密码解密后重新初始化 TOC
+    document.addEventListener("password:decrypted", () => {
+      setTimeout(initFloatingTOC, 200);
+    });
+
     // 监听窗口大小变化
     let resizeTimeout: ReturnType<typeof setTimeout>;
     window.addEventListener('resize', () => {

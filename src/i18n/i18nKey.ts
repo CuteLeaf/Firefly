@@ -278,6 +278,15 @@ enum I18nKey {
 	galleryAlbums = "galleryAlbums",
 	galleryNoAlbums = "galleryNoAlbums",
 	galleryBackToAlbums = "galleryBackToAlbums",
+
+	// 密码保护
+	passwordProtected = "passwordProtected",
+	passwordProtectedDesc = "passwordProtectedDesc",
+	passwordHint = "passwordHint",
+	passwordPlaceholder = "passwordPlaceholder",
+	passwordSubmit = "passwordSubmit",
+	passwordError = "passwordError",
+	passwordProtectedRss = "passwordProtectedRss",
 }
 
 export default I18nKey;

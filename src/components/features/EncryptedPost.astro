@@ -1,0 +1,186 @@
+---
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import { encryptContent } from "@utils/crypto-utils";
+import { Icon } from "astro-icon/components";
+
+interface Props {
+	password: string;
+	slug: string;
+	hint?: string;
+}
+
+const { password, slug, hint = "" } = Astro.props;
+
+const rawHtml = await Astro.slots.render("default");
+const encryptedData = encryptContent(rawHtml, password, slug);
+
+const labels = {
+	protected: i18n(I18nKey.passwordProtected),
+	desc: i18n(I18nKey.passwordProtectedDesc),
+	hint: i18n(I18nKey.passwordHint),
+	placeholder: i18n(I18nKey.passwordPlaceholder),
+	submit: i18n(I18nKey.passwordSubmit),
+	error: i18n(I18nKey.passwordError),
+};
+---
+
+<div
+  id="encrypted-container"
+  data-encrypted={encryptedData}
+  data-slug={slug}
+>
+  <!-- Lock UI -->
+  <div id="password-ui" class="flex justify-center py-16 px-4">
+    <div class="card-base flex flex-col items-center gap-3 max-w-100 w-full p-8">
+      <Icon name="material-symbols:shield-lock" class="text-8xl text-(--primary)" />
+
+      <h2 class="text-lg font-bold text-black/80 dark:text-white/80 m-0">{labels.protected}</h2>
+      <p class="text-sm text-black/40 dark:text-white/40 text-center m-0">{labels.desc}</p>
+
+      {hint && (
+        <p class="text-xs text-black/30 dark:text-white/30 text-center m-0">{labels.hint}: {hint}</p>
+      )}
+
+      <form id="password-form" class="w-full mt-2 space-y-2">
+        <input
+          id="password-input"
+          name="password"
+          type="password"
+          placeholder={labels.placeholder}
+          autocomplete="off"
+          class="w-full px-3 py-2 rounded-lg text-sm bg-black/5 dark:bg-white/10
+                 border border-black/8 dark:border-white/8
+                 text-black/80 dark:text-white/80 placeholder-black/25 dark:placeholder-white/25
+                 outline-none focus:border-(--primary) transition"
+        />
+        <button
+          type="submit"
+          class="w-full py-2 rounded-lg text-sm font-medium bg-(--primary) text-white dark:text-black/70
+                 hover:opacity-85 active:scale-[0.98] transition-all"
+        >
+          {labels.submit}
+        </button>
+      </form>
+
+      <p id="password-error" class="text-xs text-red-500 dark:text-red-400 m-0 hidden">{labels.error}</p>
+    </div>
+  </div>
+
+  <!-- Decrypted content injected here -->
+  <div id="decrypted-content" class="hidden"></div>
+</div>
+
+<script is:inline>
+(function() {
+  var ITERATIONS = 100000;
+  var SALT_LEN = 16;
+  var IV_LEN = 12;
+  var TAG_LEN = 16;
+
+  var container = document.getElementById('encrypted-container');
+  if (!container) return;
+
+  var encryptedData = container.getAttribute('data-encrypted');
+  var slug = container.getAttribute('data-slug');
+  var cacheKey = 'pw:' + slug;
+
+  var ui = document.getElementById('password-ui');
+  var form = document.getElementById('password-form');
+  var input = document.getElementById('password-input');
+  var errorEl = document.getElementById('password-error');
+  var contentEl = document.getElementById('decrypted-content');
+
+  function showContent(html) {
+    contentEl.innerHTML = html;
+    contentEl.classList.remove('hidden');
+    ui.classList.add('hidden');
+    // Scripts injected via innerHTML are inert — re-create them so they execute
+    // Reset mermaid singleton so its render script re-initializes after decryption
+    if (typeof window.mermaidInitialized !== 'undefined') {
+      window.mermaidInitialized = false;
+    }
+    var scripts = contentEl.querySelectorAll('script');
+    for (var i = 0; i < scripts.length; i++) {
+      var old = scripts[i];
+      var ns = document.createElement('script');
+      for (var j = 0; j < old.attributes.length; j++) {
+        ns.setAttribute(old.attributes[j].name, old.attributes[j].value);
+      }
+      ns.textContent = old.textContent;
+      old.parentNode.replaceChild(ns, old);
+    }
+    // Re-init TOC after content is in DOM
+    setTimeout(function() {
+      document.dispatchEvent(new CustomEvent('password:decrypted'));
+    }, 100);
+  }
+
+  function showError() {
+    errorEl.classList.remove('hidden');
+  }
+
+  function hideError() {
+    errorEl.classList.add('hidden');
+  }
+
+  function base64ToBytes(b64) {
+    var bin = atob(b64);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) {
+      bytes[i] = bin.charCodeAt(i);
+    }
+    return bytes;
+  }
+
+  async function decrypt(pwd) {
+    var raw = base64ToBytes(encryptedData);
+    var salt = raw.slice(0, SALT_LEN);
+    var iv = raw.slice(SALT_LEN, SALT_LEN + IV_LEN);
+    var authTag = raw.slice(SALT_LEN + IV_LEN, SALT_LEN + IV_LEN + TAG_LEN);
+    var ciphertext = raw.slice(SALT_LEN + IV_LEN + TAG_LEN);
+
+    var combined = new Uint8Array(ciphertext.length + TAG_LEN);
+    combined.set(ciphertext);
+    combined.set(authTag, ciphertext.length);
+
+    var enc = new TextEncoder();
+    var keyMaterial = await crypto.subtle.importKey(
+      'raw', enc.encode(pwd), 'PBKDF2', false, ['deriveBits', 'deriveKey']
+    );
+    var key = await crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt: salt, iterations: ITERATIONS, hash: 'SHA-256' },
+      keyMaterial,
+      { name: 'AES-GCM', length: 256 },
+      false,
+      ['decrypt']
+    );
+    var decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, combined);
+    return new TextDecoder().decode(decrypted);
+  }
+
+  // Handle form submit
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var pwd = input.value.trim();
+    if (!pwd) return;
+    hideError();
+    decrypt(pwd).then(function(html) {
+      sessionStorage.setItem(cacheKey, pwd);
+      showContent(html);
+    }).catch(function() {
+      showError();
+    });
+  });
+
+  // Try cached password
+  var cached = sessionStorage.getItem(cacheKey);
+  if (cached) {
+    decrypt(cached).then(function(html) {
+      showContent(html);
+    }).catch(function() {
+      sessionStorage.removeItem(cacheKey);
+    });
+  }
+})();
+</script>

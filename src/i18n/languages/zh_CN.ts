@@ -282,4 +282,13 @@ export const zh_CN: Translation = {
 	[Key.galleryAlbums]: "本相册",
 	[Key.galleryNoAlbums]: "暂无相册",
 	[Key.galleryBackToAlbums]: "返回相册列表",
+
+	// 密码保护
+	[Key.passwordProtected]: "密码保护",
+	[Key.passwordProtectedDesc]: "这篇文章已被密码保护，请输入密码查看内容。",
+	[Key.passwordHint]: "提示",
+	[Key.passwordPlaceholder]: "请输入密码",
+	[Key.passwordSubmit]: "解锁",
+	[Key.passwordError]: "密码错误，请重试。",
+	[Key.passwordProtectedRss]: "本文已加密保护，请访问网站查看。",
 };

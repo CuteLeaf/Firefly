@@ -284,4 +284,13 @@ export const zh_TW: Translation = {
 	[Key.galleryAlbums]: "本相簿",
 	[Key.galleryNoAlbums]: "暫無相簿",
 	[Key.galleryBackToAlbums]: "返回相簿列表",
+
+	// 密碼保護
+	[Key.passwordProtected]: "密碼保護",
+	[Key.passwordProtectedDesc]: "這篇文章已被密碼保護，請輸入密碼查看內容。",
+	[Key.passwordHint]: "提示",
+	[Key.passwordPlaceholder]: "請輸入密碼",
+	[Key.passwordSubmit]: "解鎖",
+	[Key.passwordError]: "密碼錯誤，請重試。",
+	[Key.passwordProtectedRss]: "本文已加密保護，請訪問網站查看。",
 };
