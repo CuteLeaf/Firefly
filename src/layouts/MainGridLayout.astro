@@ -409,12 +409,12 @@ const mobileQuality = Math.round(configQuality * 0.9);
             <div class="w-4/5 lg:w-3/4 text-center mb-0">
                 <div class="flex flex-col">
                     {backgroundWallpaper.banner?.homeText?.title && (
-                        <h1 class="banner-title font-bold text-white mb-2 lg:mb-4 leading-tight" style={{ fontSize: backgroundWallpaper.banner.homeText.titleSize || "3rem" }}>
+                        <div class="banner-title font-bold text-white mb-2 lg:mb-4 leading-tight" style={{ fontSize: backgroundWallpaper.banner.homeText.titleSize || "3rem" }}>
                             {backgroundWallpaper.banner.homeText.title}
-                        </h1>
+                        </div>
                     )}
                     {backgroundWallpaper.banner?.homeText?.subtitle && (
-                        <h2 id="banner-subtitle" class="banner-subtitle text-white/90 leading-snug" style={{ fontSize: backgroundWallpaper.banner.homeText.subtitleSize || "1.5rem" }} data-subtitles={JSON.stringify(backgroundWallpaper.banner.homeText.subtitle)}>
+                        <div id="banner-subtitle" class="banner-subtitle text-white/90 leading-snug" style={{ fontSize: backgroundWallpaper.banner.homeText.subtitleSize || "1.5rem" }} data-subtitles={JSON.stringify(backgroundWallpaper.banner.homeText.subtitle)}>
                             {backgroundWallpaper.banner.homeText.typewriter?.enable ? (
                                 <TypewriterText
                                     text={backgroundWallpaper.banner.homeText.subtitle}
@@ -425,7 +425,7 @@ const mobileQuality = Math.round(configQuality * 0.9);
                             ) : (
                                 randomSubtitle
                             )}
-                        </h2>
+                        </div>
                     )}
                 </div>
             </div>
@@ -465,10 +465,10 @@ const mobileQuality = Math.round(configQuality * 0.9);
     {showBannerPageTitle && (
         <div class="banner-page-title-overlay absolute inset-0 z-20 hidden lg:flex items-center justify-center pointer-events-none">
             <div class="w-4/5 lg:w-3/4 text-center mb-0">
-                <h1 class="banner-page-title font-bold text-white leading-tight inline-flex items-center justify-center gap-3">
+                <div class="banner-page-title font-bold text-white leading-tight inline-flex items-center justify-center gap-3">
                     {/* <Icon name="material-symbols:bookmark-rounded" class="banner-page-title-icon" /> */}
                     <span class="banner-page-title-text">{title}</span>
-                </h1>
+                </div>
             </div>
         </div>
     )}
@@ -478,9 +478,9 @@ const mobileQuality = Math.round(configQuality * 0.9);
         <div class="banner-post-meta-overlay absolute inset-0 z-20 hidden lg:flex items-center justify-center pointer-events-none">
             <div class="w-4/5 lg:w-3/4 text-center mb-0">
                 <div class="flex flex-col items-center gap-3">
-                    <h1 class="banner-post-title font-bold text-white leading-tight">
+                    <div class="banner-post-title font-bold text-white leading-tight">
                         {bannerPostMeta.title}
-                    </h1>
+                    </div>
                     <div class="banner-post-meta-list flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-white/90 text-sm md:text-base">
                         <span class="inline-flex items-center gap-1.5">
                             <Icon name="material-symbols:calendar-month-outline-rounded" class="text-[1.05em]" />
@@ -664,13 +664,10 @@ const mobileQuality = Math.round(configQuality * 0.9);
                 <main id="swup-container" class="transition-main">
                 {/* 携带网格布局类名，用于JS更新父容器 */}
                 <div id="grid-class-carrier" data-grid-class={gridCols} class="hidden"></div>
-                {/* 备用 h1 标题 - 当主页横幅文本未启用时，提供隐藏的主标题 */}
-                {isHomePageCheck && !showHomeText && (
-                        <h1 class="sr-only">{siteConfig.title}</h1>
-                )}
+                {/* 为每个页面提供一个隐藏的h1标题，用于SEO和可访问性 */}
+                <h1 class="sr-only">{title}</h1>
                 <div id="content-wrapper" class="onload-animation transition-leaving">
                     <slot></slot>
-
                 </div>
             </main>
             </div>
