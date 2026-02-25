@@ -141,6 +141,9 @@
 
 		isRendering = true;
 
+		// 主题切换前销毁旧的 pan-zoom 实例
+		destroyAllPanZoom();
+
 		try {
 			const mermaidElements = document.querySelectorAll(
 				".mermaid[data-mermaid-code]",
@@ -256,6 +259,9 @@
 			// 等待所有渲染完成
 			await Promise.all(renderPromises);
 			retryCount = 0; // 重置重试计数
+
+			// 渲染完成后初始化 pan-zoom
+			initPanZoom();
 		} catch (error) {
 			console.error("Error in renderMermaidDiagrams:", error);
 
@@ -284,7 +290,7 @@
 		return new Promise((resolve, reject) => {
 			const script = document.createElement("script");
 			script.src =
-				"https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js";
+				"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js";
 
 			script.onload = () => {
 				console.log("Mermaid library loaded successfully");
@@ -295,7 +301,8 @@
 				console.error("Failed to load Mermaid library:", error);
 				// 尝试备用 CDN
 				const fallbackScript = document.createElement("script");
-				fallbackScript.src = "https://unpkg.com/mermaid@11/dist/mermaid.min.js";
+				fallbackScript.src =
+					"https://unpkg.com/mermaid@11.12.0/dist/mermaid.min.js";
 
 				fallbackScript.onload = () => {
 					console.log("Mermaid library loaded from fallback CDN");
@@ -317,6 +324,279 @@
 		});
 	}
 
+	// 加载 svg-pan-zoom 库
+	async function loadSvgPanZoom() {
+		if (typeof window.svgPanZoom !== "undefined") {
+			return Promise.resolve();
+		}
+
+		return new Promise((resolve, reject) => {
+			const script = document.createElement("script");
+			script.src =
+				"https://unpkg.com/svg-pan-zoom@3.6.2/dist/svg-pan-zoom.min.js";
+			script.onload = () => {
+				resolve();
+			};
+
+			script.onerror = () => {
+				// 尝试备用 CDN
+				const fallbackScript = document.createElement("script");
+				fallbackScript.src =
+					"https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.2/dist/svg-pan-zoom.min.js";
+
+				fallbackScript.onload = () => {
+					resolve();
+				};
+
+				fallbackScript.onerror = () => {
+					console.warn(
+						"Failed to load svg-pan-zoom, pan/zoom features will be unavailable",
+					);
+					resolve(); // 不阻塞，只是功能降级
+				};
+
+				document.head.appendChild(fallbackScript);
+			};
+
+			document.head.appendChild(script);
+		});
+	}
+
+	// 销毁所有 pan-zoom 实例
+	function destroyAllPanZoom() {
+		const containers = document.querySelectorAll(
+			".mermaid-diagram-container[data-panzoom-init]",
+		);
+		containers.forEach((container) => {
+			if (container._panZoomInstance) {
+				try {
+					container._panZoomInstance.destroy();
+				} catch (e) {
+					// 忽略销毁错误
+				}
+				container._panZoomInstance = null;
+			}
+			// 移除控制栏 DOM
+			const controls = container.querySelector(".mermaid-controls");
+			if (controls) {
+				controls.remove();
+			}
+			container.removeAttribute("data-panzoom-init");
+		});
+	}
+
+	// 初始化 pan-zoom 功能
+	function initPanZoom() {
+		if (typeof window.svgPanZoom !== "function") {
+			return;
+		}
+
+		const containers = document.querySelectorAll(".mermaid-diagram-container");
+
+		containers.forEach((container) => {
+			if (container.hasAttribute("data-panzoom-init")) {
+				return;
+			}
+
+			const svgElement = container.querySelector(".mermaid svg");
+			if (!svgElement) {
+				return;
+			}
+
+			// svg-pan-zoom 需要 SVG 有固定像素尺寸
+			if (!svgElement.getAttribute("viewBox")) {
+				return;
+			}
+
+			// 读取 CSS 约束后的实际渲染尺寸
+			const rect = svgElement.getBoundingClientRect();
+			svgElement.setAttribute("width", rect.width + "px");
+			svgElement.setAttribute("height", rect.height + "px");
+			svgElement.style.maxWidth = "none";
+			svgElement.style.height = "";
+
+			try {
+				const panZoomInstance = window.svgPanZoom(svgElement, {
+					panEnabled: true,
+					zoomEnabled: true,
+					controlIconsEnabled: false,
+					mouseWheelZoomEnabled: true,
+					dblClickZoomEnabled: true,
+					minZoom: 0.5,
+					maxZoom: 5,
+					fit: true,
+					center: true,
+					zoomScaleSensitivity: 0.3,
+				});
+
+				container._panZoomInstance = panZoomInstance;
+				container.setAttribute("data-panzoom-init", "true");
+
+				// 创建控制栏
+				const controlsDiv = document.createElement("div");
+				controlsDiv.className = "mermaid-controls";
+
+				const buttons = [
+					{ label: "+", title: "放大", action: () => panZoomInstance.zoomIn() },
+					{
+						label: "\u2212",
+						title: "缩小",
+						action: () => panZoomInstance.zoomOut(),
+					},
+					{
+						label: "\u21BA",
+						title: "重置",
+						action: () => {
+							panZoomInstance.resetZoom();
+							panZoomInstance.resetPan();
+							panZoomInstance.center();
+						},
+					},
+					{
+						label: "\u26F6",
+						title: "全屏",
+						action: () => openFullscreen(container),
+					},
+				];
+
+				buttons.forEach((btn) => {
+					const button = document.createElement("button");
+					button.className = "mermaid-ctrl-btn";
+					button.textContent = btn.label;
+					button.title = btn.title;
+					button.addEventListener("click", (e) => {
+						e.preventDefault();
+						e.stopPropagation();
+						btn.action();
+					});
+					controlsDiv.appendChild(button);
+				});
+
+				container.appendChild(controlsDiv);
+			} catch (e) {
+				console.warn("Failed to initialize svg-pan-zoom for a diagram:", e);
+			}
+		});
+	}
+
+	// 全屏查看
+	function openFullscreen(container) {
+		const svgElement = container.querySelector(".mermaid svg");
+		if (!svgElement) return;
+
+		// 创建 overlay
+		const overlay = document.createElement("div");
+		overlay.className = "mermaid-fullscreen-overlay";
+
+		// 全屏内容区
+		const content = document.createElement("div");
+		content.className = "mermaid-fs-content";
+
+		// 克隆 SVG
+		const clonedSvg = svgElement.cloneNode(true);
+		clonedSvg.style.filter = "";
+		clonedSvg.setAttribute("width", "100%");
+		clonedSvg.setAttribute("height", "100%");
+		clonedSvg.style.maxWidth = "none";
+		content.appendChild(clonedSvg);
+
+		// 全屏控制栏
+		const fsControls = document.createElement("div");
+		fsControls.className = "mermaid-fs-controls";
+
+		let fsInstance = null;
+
+		const closeOverlay = () => {
+			if (fsInstance) {
+				try {
+					fsInstance.destroy();
+				} catch (e) {
+					// 忽略
+				}
+			}
+			overlay.remove();
+			document.removeEventListener("keydown", escHandler);
+		};
+
+		const escHandler = (e) => {
+			if (e.key === "Escape") {
+				closeOverlay();
+			}
+		};
+
+		const fsButtons = [
+			{
+				label: "+",
+				title: "放大",
+				action: () => fsInstance && fsInstance.zoomIn(),
+			},
+			{
+				label: "\u2212",
+				title: "缩小",
+				action: () => fsInstance && fsInstance.zoomOut(),
+			},
+			{
+				label: "\u21BA",
+				title: "重置",
+				action: () => {
+					if (fsInstance) {
+						fsInstance.resetZoom();
+						fsInstance.resetPan();
+						fsInstance.center();
+					}
+				},
+			},
+			{ label: "\u2715", title: "关闭", action: closeOverlay },
+		];
+
+		fsButtons.forEach((btn) => {
+			const button = document.createElement("button");
+			button.className = "mermaid-ctrl-btn";
+			button.textContent = btn.label;
+			button.title = btn.title;
+			button.addEventListener("click", (e) => {
+				e.preventDefault();
+				e.stopPropagation();
+				btn.action();
+			});
+			fsControls.appendChild(button);
+		});
+
+		overlay.appendChild(content);
+		overlay.appendChild(fsControls);
+		document.body.appendChild(overlay);
+
+		// 点击背景关闭
+		overlay.addEventListener("click", (e) => {
+			if (e.target === overlay) {
+				closeOverlay();
+			}
+		});
+
+		// ESC 关闭
+		document.addEventListener("keydown", escHandler);
+
+		// 在 overlay 中的 SVG 上初始化 pan-zoom
+		requestAnimationFrame(() => {
+			try {
+				fsInstance = window.svgPanZoom(clonedSvg, {
+					panEnabled: true,
+					zoomEnabled: true,
+					controlIconsEnabled: false,
+					mouseWheelZoomEnabled: true,
+					dblClickZoomEnabled: true,
+					minZoom: 0.3,
+					maxZoom: 10,
+					fit: true,
+					center: true,
+					zoomScaleSensitivity: 0.3,
+				});
+			} catch (e) {
+				console.warn("Failed to initialize fullscreen pan-zoom:", e);
+			}
+		});
+	}
+
 	// 主初始化函数
 	async function initialize() {
 		try {
@@ -327,8 +607,8 @@
 			// 初始化主题状态
 			initializeThemeState();
 
-			// 加载并初始化 Mermaid
-			await loadMermaid();
+			// 加载并初始化 Mermaid，同时加载 svg-pan-zoom
+			await Promise.all([loadMermaid(), loadSvgPanZoom()]);
 			await initializeMermaid();
 		} catch (error) {
 			console.error("Failed to initialize Mermaid system:", error);
