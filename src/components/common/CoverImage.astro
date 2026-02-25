@@ -2,12 +2,13 @@
 import { Picture } from "astro:assets";
 import * as path from "node:path";
 import type { ImageMetadata } from "astro";
-import { coverImageConfig } from "@/config/coverImageConfig";
+import { coverImageConfig } from "@/config";
 import type { ImageFormat, ResponsiveImageLayout } from "@/types/config";
 import {
 	getFallbackFormat,
 	getImageFormats,
 	getImageQuality,
+	shouldAddNoReferrer,
 } from "@/utils/image-utils";
 import { url } from "@/utils/url-utils";
 
@@ -106,6 +107,18 @@ const quality = preview ? Math.round(configQuality * 0.9) : configQuality;
 
 // 是否显示加载动画
 const showLoading = coverImageConfig.randomCoverImage.showLoading ?? true;
+
+// 检查回退图片是否需要 referrerpolicy
+const fallbackReferrerPolicy =
+	isFallbackPublic && fallbackPath && shouldAddNoReferrer(url(fallbackPath))
+		? "no-referrer"
+		: undefined;
+
+// 检查远程图片是否需要 referrerpolicy
+const remoteReferrerPolicy =
+	!isLocal && shouldAddNoReferrer(isPublic ? url(src) : src)
+		? "no-referrer"
+		: undefined;
 ---
 
 <div
@@ -155,6 +168,7 @@ const showLoading = coverImageConfig.randomCoverImage.showLoading ?? true;
 				style={imageStyle}
 				loading="lazy"
 				decoding="async"
+				referrerpolicy={fallbackReferrerPolicy}
 			/>
 		</div>
 	)}
@@ -190,6 +204,7 @@ const showLoading = coverImageConfig.randomCoverImage.showLoading ?? true;
 			decoding="async"
 			data-cover-img
 			data-remote="true"
+			referrerpolicy={remoteReferrerPolicy}
 		/>
 	)}
 </div>

@@ -7,6 +7,7 @@ import {
 	getFallbackFormat,
 	getImageFormats,
 	getImageQuality,
+	shouldAddNoReferrer,
 } from "@/utils/image-utils";
 import { url } from "@/utils/url-utils";
 
@@ -81,6 +82,11 @@ if (isLocal) {
 const imageClass = "w-full h-full object-cover";
 const imageStyle = `object-position: ${position}`;
 
+// 检查是否需要添加 referrerpolicy（仅对非本地图片）
+const fullSrc = isPublic ? url(src) : src;
+const referrerPolicy =
+	!isLocal && shouldAddNoReferrer(fullSrc) ? "no-referrer" : undefined;
+
 // 构建响应式图像属性
 const responsiveProps = {
 	...(layout && { layout }),
@@ -115,5 +121,5 @@ const responsiveProps = {
             {...responsiveProps}
         />
     )}
-    {!isLocal && <img src={isPublic ? url(src) : src} alt={alt || ""} class={imageClass} style={imageStyle} loading={loading} fetchpriority={fetchpriority} />}
+    {!isLocal && <img src={isPublic ? url(src) : src} alt={alt || ""} class={imageClass} style={imageStyle} loading={loading} fetchpriority={fetchpriority} referrerpolicy={referrerPolicy} />}
 </div>

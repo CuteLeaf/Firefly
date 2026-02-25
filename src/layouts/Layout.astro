@@ -152,6 +152,70 @@ const siteLang = lang.replace("_", "-");
       ))
     }
 
+    <!-- 为特定域名的图片添加 referrerpolicy 以解决 403 问题 -->
+    {siteConfig.imageOptimization?.noReferrerDomains &&
+     siteConfig.imageOptimization.noReferrerDomains.length > 0 && (
+      <script
+        is:inline
+        define:vars={{
+          noReferrerDomains: JSON.stringify(
+            siteConfig.imageOptimization.noReferrerDomains
+          ),
+        }}
+      >
+        (function() {
+          const domains = JSON.parse(noReferrerDomains);
+
+          // 域名匹配函数，支持通配符
+          function matchesDomain(urlStr, patterns) {
+            try {
+              const urlObj = new URL(urlStr);
+              const hostname = urlObj.hostname;
+
+              return patterns.some(function(pattern) {
+                const regexPattern = pattern.replace(/\./g, '\\.').replace(/\*/g, '.*');
+                const regex = new RegExp('^' + regexPattern + '$');
+                return regex.test(hostname);
+              });
+            } catch (e) {
+              return false;
+            }
+          }
+
+          // 处理单个图片元素
+          function processImage(img) {
+            if (!img.src || img.hasAttribute('referrerpolicy')) return;
+
+            if (matchesDomain(img.src, domains)) {
+              img.setAttribute('referrerpolicy', 'no-referrer');
+            }
+          }
+
+          // 立即处理页面上的所有图片
+          document.querySelectorAll('img').forEach(processImage);
+
+          // 使用 MutationObserver 监听动态加载的图片
+          const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+              mutation.addedNodes.forEach(function(node) {
+                if (node.nodeName === 'IMG') {
+                  processImage(node);
+                }
+                if (node.querySelectorAll) {
+                  node.querySelectorAll('img').forEach(processImage);
+                }
+              });
+            });
+          });
+
+          observer.observe(document.documentElement, {
+            childList: true,
+            subtree: true
+          });
+        })();
+      </script>
+    )}
+
     <!-- Set the theme before the page is rendered to avoid a flash -->
     <script
       is:inline

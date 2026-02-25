@@ -122,6 +122,13 @@ export type SiteConfig = {
 		 * 值越低体积越小但质量越差，推荐 70-85
 		 */
 		quality?: number;
+		/**
+		 * 为特定域名的图片添加 referrerpolicy="no-referrer" 属性
+		 * 开启后可解决指定域名图片加载时的 403 问题（如防盗链图片）
+		 * 示例：["i0.hdslb.com", "*.bilibili.com"] 支持通配符 *
+		 * 仅影响匹配域名的图片标签，不影响其他链接的 referrer 行为
+		 */
+		noReferrerDomains?: string[];
 	};
 };
 
