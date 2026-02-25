@@ -9,6 +9,7 @@ import {
 	getImageQuality,
 } from "@/utils/image-utils";
 import { url } from "@/utils/url-utils";
+import { siteConfig } from "@/config";
 
 interface Props {
 	id?: string;
@@ -55,6 +56,30 @@ const isLocal = !(
 );
 const isPublic = src.startsWith("/");
 
+// 检查是否需要为图片添加 referrerpolicy
+function shouldAddNoReferrer(urlStr: string): boolean {
+	const domains = siteConfig.imageOptimization?.noReferrerDomains || [];
+	if (domains.length === 0) return false;
+
+	try {
+		const urlObj = new URL(
+			urlStr,
+			urlStr.startsWith("http")
+				? undefined
+				: window?.location?.href || "http://localhost",
+		);
+		const hostname = urlObj.hostname;
+
+		return domains.some((pattern) => {
+			const regexPattern = pattern.replace(/\./g, "\\.").replace(/\*/g, ".*");
+			const regex = new RegExp("^" + regexPattern + "$");
+			return regex.test(hostname);
+		});
+	} catch {
+		return false;
+	}
+}
+
 // TODO temporary workaround for images dynamic import
 // https://github.com/withastro/astro/issues/3373
 let img: ImageMetadata | null = null;
@@ -80,6 +105,11 @@ if (isLocal) {
 
 const imageClass = "w-full h-full object-cover";
 const imageStyle = `object-position: ${position}`;
+
+// 检查是否需要添加 referrerpolicy（仅对非本地图片）
+const fullSrc = isPublic ? url(src) : src;
+const referrerPolicy =
+	!isLocal && shouldAddNoReferrer(fullSrc) ? "no-referrer" : undefined;
 
 // 构建响应式图像属性
 const responsiveProps = {
@@ -115,5 +145,5 @@ const responsiveProps = {
             {...responsiveProps}
         />
     )}
-    {!isLocal && <img src={isPublic ? url(src) : src} alt={alt || ""} class={imageClass} style={imageStyle} loading={loading} fetchpriority={fetchpriority} />}
+    {!isLocal && <img src={isPublic ? url(src) : src} alt={alt || ""} class={imageClass} style={imageStyle} loading={loading} fetchpriority={fetchpriority} referrerpolicy={referrerPolicy} />}
 </div>
