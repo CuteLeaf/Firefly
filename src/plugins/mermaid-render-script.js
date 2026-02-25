@@ -330,7 +330,7 @@
 			return Promise.resolve();
 		}
 
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve, _reject) => {
 			const script = document.createElement("script");
 			script.src =
 				"https://unpkg.com/svg-pan-zoom@3.6.2/dist/svg-pan-zoom.min.js";
@@ -371,7 +371,7 @@
 			if (container._panZoomInstance) {
 				try {
 					container._panZoomInstance.destroy();
-				} catch (e) {
+				} catch (_e) {
 					// 忽略销毁错误
 				}
 				container._panZoomInstance = null;
@@ -410,8 +410,8 @@
 
 			// 读取 CSS 约束后的实际渲染尺寸
 			const rect = svgElement.getBoundingClientRect();
-			svgElement.setAttribute("width", rect.width + "px");
-			svgElement.setAttribute("height", rect.height + "px");
+			svgElement.setAttribute("width", `${rect.width}px`);
+			svgElement.setAttribute("height", `${rect.height}px`);
 			svgElement.style.maxWidth = "none";
 			svgElement.style.height = "";
 
@@ -510,7 +510,7 @@
 			if (fsInstance) {
 				try {
 					fsInstance.destroy();
-				} catch (e) {
+				} catch (_e) {
 					// 忽略
 				}
 			}
@@ -528,12 +528,12 @@
 			{
 				label: "+",
 				title: "放大",
-				action: () => fsInstance && fsInstance.zoomIn(),
+				action: () => fsInstance?.zoomIn(),
 			},
 			{
 				label: "\u2212",
 				title: "缩小",
-				action: () => fsInstance && fsInstance.zoomOut(),
+				action: () => fsInstance?.zoomOut(),
 			},
 			{
 				label: "\u21BA",
