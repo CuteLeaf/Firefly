@@ -1,6 +1,5 @@
 import { h } from "hastscript";
 import { visit } from "unist-util-visit";
-import { shouldAddNoReferrer } from "../utils/image-utils.ts";
 
 // 来自霞葉： https://kasuha.com/posts/fuwari-enhance-ep1/
 
@@ -17,28 +16,19 @@ export default function rehypeFigure() {
 				return;
 			}
 
-			const imgProps = { ...node.properties };
-
-			// 添加 referrerpolicy（如果需要）解决 403 问题
-			// 无论是否有 alt，都要检查并添加 referrerpolicy
-			if (imgProps.src && shouldAddNoReferrer(imgProps.src)) {
-				imgProps.referrerpolicy = "no-referrer";
-			}
-
 			// 获取 alt 属性
-			const alt = imgProps.alt;
+			const alt = node.properties?.alt;
 
-			// 如果没有 alt 属性或 alt 为空字符串，则只更新属性并保持原样
+			// 如果没有 alt 属性或 alt 为空字符串，则保持原样
 			if (!alt || alt.trim() === "") {
-				node.properties = imgProps;
 				return;
 			}
 
-			// 创建 figure 元素，包含处理后的 img 和居中的 figcaption
+			// 创建 figure 元素，包含原始的 img 和居中的 figcaption
 			const figure = h("figure", [
-				// 使用处理后的 img 节点，但移除 alt 属性避免重复显示
+				// 复制原始的 img 节点，但移除 alt 属性避免重复显示
 				h("img", {
-					...imgProps,
+					...node.properties,
 					alt: "", // 清空 alt 属性，因为现在有 figcaption 了
 				}),
 				h("figcaption", alt),
