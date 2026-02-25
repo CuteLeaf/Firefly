@@ -1,29 +1,8 @@
 import { h } from "hastscript";
 import { visit } from "unist-util-visit";
-import { siteConfig } from "../config/index.js";
+import { shouldAddNoReferrer } from "../utils/image-utils.ts";
 
 // 来自霞葉： https://kasuha.com/posts/fuwari-enhance-ep1/
-
-/**
- * 检查是否需要为图片添加 referrerpolicy
- */
-function shouldAddNoReferrer(urlStr) {
-	const domains = siteConfig.imageOptimization?.noReferrerDomains || [];
-	if (domains.length === 0) return false;
-
-	try {
-		const urlObj = new URL(urlStr);
-		const hostname = urlObj.hostname;
-
-		return domains.some((pattern) => {
-			const regexPattern = pattern.replace(/\./g, "\\.").replace(/\*/g, ".*");
-			const regex = new RegExp(`^${regexPattern}$`);
-			return regex.test(hostname);
-		});
-	} catch {
-		return false;
-	}
-}
 
 /**
  * 将带有 alt 文本的图片转换为包含 figcaption 的 figure 元素的 rehype 插件
@@ -44,7 +23,6 @@ export default function rehypeFigure() {
 			// 无论是否有 alt，都要检查并添加 referrerpolicy
 			if (imgProps.src && shouldAddNoReferrer(imgProps.src)) {
 				imgProps.referrerpolicy = "no-referrer";
-				imgProps.alt = "";
 			}
 
 			// 获取 alt 属性

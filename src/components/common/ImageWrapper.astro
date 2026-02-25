@@ -2,12 +2,12 @@
 import { Image, Picture } from "astro:assets";
 import * as path from "node:path";
 import type { ImageMetadata } from "astro";
-import { siteConfig } from "@/config";
 import type { ImageFormat, ResponsiveImageLayout } from "@/types/config";
 import {
 	getFallbackFormat,
 	getImageFormats,
 	getImageQuality,
+	shouldAddNoReferrer,
 } from "@/utils/image-utils";
 import { url } from "@/utils/url-utils";
 
@@ -55,30 +55,6 @@ const isLocal = !(
 	src.startsWith("data:")
 );
 const isPublic = src.startsWith("/");
-
-// 检查是否需要为图片添加 referrerpolicy
-function shouldAddNoReferrer(urlStr: string): boolean {
-	const domains = siteConfig.imageOptimization?.noReferrerDomains || [];
-	if (domains.length === 0) return false;
-
-	try {
-		const urlObj = new URL(
-			urlStr,
-			urlStr.startsWith("http")
-				? undefined
-				: window?.location?.href || "http://localhost",
-		);
-		const hostname = urlObj.hostname;
-
-		return domains.some((pattern) => {
-			const regexPattern = pattern.replace(/\./g, "\\.").replace(/\*/g, ".*");
-			const regex = new RegExp(`^${regexPattern}$`);
-			return regex.test(hostname);
-		});
-	} catch {
-		return false;
-	}
-}
 
 // TODO temporary workaround for images dynamic import
 // https://github.com/withastro/astro/issues/3373

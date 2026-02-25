@@ -188,12 +188,6 @@ const siteLang = lang.replace("_", "-");
 
             if (matchesDomain(img.src, domains)) {
               img.setAttribute('referrerpolicy', 'no-referrer');
-              // 重新加载图片以应用新的 referrerpolicy
-              const originalSrc = img.src;
-              img.src = '';
-              setTimeout(function() {
-                img.src = originalSrc;
-              }, 0);
             }
           }
 
