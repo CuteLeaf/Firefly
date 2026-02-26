@@ -11,7 +11,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 	// left: 仅显示左侧边栏
 	// right: 仅显示右侧边栏
 	// both: 双侧边栏，1280px以上同时显示左右，769-1279px根据tabletSidebar配置显示其中一侧
-	position: "left",
+	position: "both",
 
 	// 平板端(769-1279px)显示哪侧侧边栏，仅position为both时生效
 	// left: 平板端显示左侧边栏
