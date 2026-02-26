@@ -118,7 +118,8 @@
    ブログは`http://localhost:4321`で利用可能になります
 
 ### プラットフォームホスティングデプロイ
-- **[公式ガイド](https://docs.astro.build/ja/guides/deploy/)を参照して、Vercel、Netlify、GitHub Pages、Cloudflare Pages、EdgeOne Pagesなどにブログをデプロイしてください。**
+- **[公式ガイド](https://docs.astro.build/ja/guides/deploy/)を参照して、Vercel、Netlify、Cloudflare Pages、EdgeOne Pagesなどにブログをデプロイしてください。**
+- **Vercel**、**Netlify** などの主要プラットフォームは自動デプロイに対応し、環境に応じて適切なアダプターが自動的に選択されます。
 
    フレームワークプリセット： `Astro`
 
@@ -129,6 +130,9 @@
    ビルドコマンド： `pnpm run build`
 
    インストールコマンド： `pnpm install`
+
+   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/CuteLeaf/Firefly&project-name=Firefly&repository-name=Firefly)
+   [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/CuteLeaf/Firefly)
 
 ## 📖 設定説明
 
