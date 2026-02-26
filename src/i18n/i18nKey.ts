@@ -190,6 +190,9 @@ enum I18nKey {
 	// 置顶
 	pinned = "pinned",
 
+	// 加密
+	postEncrypted = "postEncrypted",
+
 	// 壁纸模式
 	wallpaperMode = "wallpaperMode",
 	wallpaperBannerMode = "wallpaperBannerMode",

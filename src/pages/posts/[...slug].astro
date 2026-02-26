@@ -190,6 +190,18 @@ const jsonLd = {
             }
           </div>
         </div>
+        {entry.data.password && (
+          <div class="flex flex-row items-center">
+            <div
+              class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2"
+            >
+              <Icon name="material-symbols:lock-outline" />
+            </div>
+            <div class="text-sm">
+              {i18n(I18nKey.postEncrypted)}
+            </div>
+          </div>
+        )}
       </div>
 
       <!-- title -->

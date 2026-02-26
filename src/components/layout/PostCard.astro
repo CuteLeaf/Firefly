@@ -22,6 +22,7 @@ interface Props {
 	description: string;
 	draft: boolean;
 	pinned?: boolean;
+	password?: boolean;
 	style: string;
 	loading?: "lazy" | "eager";
 }
@@ -36,6 +37,7 @@ const {
 	image,
 	description,
 	pinned,
+	password,
 	style,
 	loading = "lazy",
 } = Astro.props;
@@ -75,8 +77,6 @@ const { remarkPluginFrontmatter } = await render(entry);
       },
     ]}
   >
-
-
     <a
       href={url}
       class="post-card-title transition group w-full block font-bold mb-3 text-3xl text-90
@@ -85,7 +85,15 @@ const { remarkPluginFrontmatter } = await render(entry);
         before:w-1 before:h-5 before:rounded-md before:bg-(--primary)
         before:absolute before:top-[35px] before:left-[18px] before:hidden md:before:block"
     >
-      {title}<Icon
+      {title}
+
+      {
+        password && (
+          <Icon name="material-symbols:lock-outline" class="inline text-2xl align-middle -translate-y-px" />
+        )
+      }
+
+      <Icon
         class="inline text-[2rem] text-(--primary) md:hidden align-middle -translate-y-[2px] -ml-1"
         name="material-symbols:chevron-right-rounded"
       />
@@ -103,6 +111,7 @@ const { remarkPluginFrontmatter } = await render(entry);
       minutes={remarkPluginFrontmatter.minutes}
       showWordCount={true}
       pinned={pinned}
+      password={password}
       className="mb-4 post-meta"
     />
 
@@ -167,7 +176,7 @@ const { remarkPluginFrontmatter } = await render(entry);
         </div>
         <CoverImage
           src={processedImage}
-          basePath={getFileDirFromPath(entry.filePath || '')}
+          basePath={getFileDirFromPath(entry.filePath || "")}
           alt="Cover Image of the Post"
           class="w-full h-full transition-transform duration-300 group-hover:scale-110 group-active:scale-115"
           preview={true}
@@ -239,5 +248,5 @@ const { remarkPluginFrontmatter } = await render(entry);
   :global(.grid-mode) .has-cover .post-card-title::before {
     top: 1.3rem !important;
   }
-
+  
 </style>
