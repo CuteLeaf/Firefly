@@ -119,3 +119,124 @@ export async function getCategoryList(): Promise<Category[]> {
 	}
 	return ret;
 }
+
+/**
+ * 对标题进行分词，支持中英文混合
+ * 使用 Intl.Segmenter 对中文分词，英文按空格分词
+ * 过滤标点和空白，英文统一小写
+ */
+function tokenizeTitle(title: string): Set<string> {
+	const tokens = new Set<string>();
+	const segmenter = new Intl.Segmenter("zh", { granularity: "word" });
+	for (const { segment, isWordLike } of segmenter.segment(title)) {
+		if (!isWordLike) continue;
+		tokens.add(segment.toLowerCase());
+	}
+	return tokens;
+}
+
+/**
+ * 计算两个集合的 Jaccard 相似度
+ */
+function jaccardSimilarity(a: Set<string>, b: Set<string>): number {
+	if (a.size === 0 && b.size === 0) return 0;
+	let intersection = 0;
+	for (const item of a) {
+		if (b.has(item)) intersection++;
+	}
+	const union = a.size + b.size - intersection;
+	return union === 0 ? 0 : intersection / union;
+}
+
+/**
+ * 获取相关文章推荐
+ * 评分公式: totalScore = tagMatchScore + titleSimilarityScore + timeFreshnessScore + categoryBonus
+ * - tagMatchScore (0-100): 标签 Jaccard 相似度 × 100
+ * - titleSimilarityScore (0-100): 标题分词 Jaccard 相似度 × 100
+ * - timeFreshnessScore (0-30): 6 个月半衰期指数衰减
+ * - categoryBonus (0 or 10): 同分类加 10 分
+ */
+export async function getRelatedPosts(
+	currentPost: CollectionEntry<"posts">,
+	maxCount = 5,
+): Promise<PostForList[]> {
+	const allPosts = await getCollection<"posts">("posts", ({ data }) => {
+		return import.meta.env.PROD ? data.draft !== true : true;
+	});
+
+	// 排除自身和加密文章
+	const candidates = allPosts.filter(
+		(p) => p.id !== currentPost.id && !p.data.password,
+	);
+
+	const currentTags = new Set(currentPost.data.tags || []);
+	const currentTokens = tokenizeTitle(currentPost.data.title);
+	const currentCategory = currentPost.data.category || "";
+	const now = Date.now();
+
+	const scored = candidates.map((post) => {
+		const postTags = new Set(post.data.tags || []);
+
+		// tagMatchScore (0-100)
+		const tagMatchScore = jaccardSimilarity(currentTags, postTags) * 100;
+
+		// titleSimilarityScore (0-100)
+		const postTokens = tokenizeTitle(post.data.title);
+		const titleSimilarityScore =
+			jaccardSimilarity(currentTokens, postTokens) * 100;
+
+		// timeFreshnessScore (0-30): 6 个月半衰期
+		const daysSincePublished =
+			(now - new Date(post.data.published).getTime()) / (1000 * 60 * 60 * 24);
+		const timeFreshnessScore =
+			30 * Math.exp((-Math.LN2 * daysSincePublished) / 180);
+
+		// categoryBonus (0 or 10)
+		const postCategory = post.data.category || "";
+		const categoryBonus =
+			currentCategory && postCategory && currentCategory === postCategory
+				? 10
+				: 0;
+
+		const totalScore =
+			tagMatchScore + titleSimilarityScore + timeFreshnessScore + categoryBonus;
+
+		return {
+			post,
+			totalScore,
+			tagMatchScore,
+			timeFreshnessScore,
+			categoryBonus,
+		};
+	});
+
+	// 按总分降序排列
+	scored.sort((a, b) => b.totalScore - a.totalScore);
+
+	// 优先取有标签匹配的
+	const withTagMatch = scored.filter((s) => s.tagMatchScore > 0);
+	const withoutTagMatch = scored.filter((s) => s.tagMatchScore === 0);
+
+	const result: PostForList[] = [];
+
+	for (const s of withTagMatch) {
+		if (result.length >= maxCount) break;
+		result.push({ id: s.post.id, data: s.post.data });
+	}
+
+	// 不足时从剩余候选中按 timeFreshnessScore + categoryBonus 降序补充
+	if (result.length < maxCount) {
+		withoutTagMatch.sort(
+			(a, b) =>
+				b.timeFreshnessScore +
+				b.categoryBonus -
+				(a.timeFreshnessScore + a.categoryBonus),
+		);
+		for (const s of withoutTagMatch) {
+			if (result.length >= maxCount) break;
+			result.push({ id: s.post.id, data: s.post.data });
+		}
+	}
+
+	return result;
+}

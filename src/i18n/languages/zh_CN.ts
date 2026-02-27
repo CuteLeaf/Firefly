@@ -192,6 +192,12 @@ export const zh_CN: Translation = {
 	// 置顶
 	[Key.pinned]: "置顶",
 
+	// 相关文章推荐
+	[Key.relatedPosts]: "相关文章",
+	[Key.randomPosts]: "随机文章",
+	[Key.smartRecommend]: "智能推荐",
+	[Key.randomRecommend]: "随机推荐",
+
 	// 加密
 	[Key.postEncrypted]: "本文已加密",
 

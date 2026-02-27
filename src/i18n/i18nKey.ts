@@ -190,6 +190,12 @@ enum I18nKey {
 	// 置顶
 	pinned = "pinned",
 
+	// 相关文章推荐
+	relatedPosts = "relatedPosts",
+	randomPosts = "randomPosts",
+	smartRecommend = "smartRecommend",
+	randomRecommend = "randomRecommend",
+
 	// 加密
 	postEncrypted = "postEncrypted",
 

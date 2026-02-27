@@ -46,7 +46,7 @@ const yearText = i18n(I18nKey.year);
 // 获取当前语言
 const currentLang = siteConfig.lang || "en";
 
-const calendarDataUrl = url("/api/calendar.json");
+const calendarDataUrl = url("/api/allPostMeta.json");
 const postUrlPrefix = url("/posts/");
 ---
 
@@ -116,12 +116,12 @@ const postUrlPrefix = url("/posts/");
   async function fetchData() {
     try {
       // 使用缓存避免 swup 导航时重复请求
-      if (window.__calendarCache) {
-        allPostsData = window.__calendarCache;
+      if (window.__allPostMetaCache) {
+        allPostsData = window.__allPostMetaCache;
       } else {
         const response = await fetch(calendarDataUrl);
         allPostsData = await response.json();
-        window.__calendarCache = allPostsData;
+        window.__allPostMetaCache = allPostsData;
       }
       
       // Reconstruct postDateMap and availableYears

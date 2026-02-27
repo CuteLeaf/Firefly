@@ -199,6 +199,12 @@ export const ja: Translation = {
 	// ピン留め
 	[Key.pinned]: "ピン留め",
 
+	// 関連記事
+	[Key.relatedPosts]: "関連記事",
+	[Key.randomPosts]: "ランダム記事",
+	[Key.smartRecommend]: "スマート",
+	[Key.randomRecommend]: "ランダム",
+
 	// 暗号化
 	[Key.postEncrypted]: "この記事は暗号化されています",
 

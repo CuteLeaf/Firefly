@@ -1,0 +1,193 @@
+---
+import { Icon } from "astro-icon/components";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { PostForList } from "@/utils/content-utils";
+import { formatDateToYYYYMMDD } from "@/utils/date-utils";
+import { getPostUrlBySlug, url } from "@/utils/url-utils";
+
+interface Props {
+	relatedPosts: PostForList[];
+	currentPostId: string;
+}
+
+const { relatedPosts, currentPostId } = Astro.props;
+const apiUrl = url("/api/allPostMeta.json");
+const relatedIds = JSON.stringify(relatedPosts.map((p) => p.id));
+---
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+  {/* 左栏：相关文章（静态） */}
+  {relatedPosts.length > 0 && (
+    <div class="card-base p-5 md:p-6 flex flex-col">
+      <div class="flex items-center gap-2 pb-3 mb-1 border-b border-dashed border-(--line-divider)">
+        <Icon
+          name="material-symbols:signpost"
+          class="text-xl text-(--primary)"
+        />
+        <span class="text-base font-bold text-black/75 dark:text-white/75 transition">
+          {i18n(I18nKey.relatedPosts)}
+        </span>
+        <span class="ml-auto text-xs px-2 py-0.5 rounded-full bg-(--btn-regular-bg) text-(--btn-content) transition">
+          {i18n(I18nKey.smartRecommend)}
+        </span>
+      </div>
+      {relatedPosts.map((post, idx) => (
+        <a
+          href={getPostUrlBySlug(post.id)}
+          class:list={[
+            "group flex items-center gap-3 px-3 py-3 -mx-1 rounded-lg",
+            "transition-all hover:bg-black/5 dark:hover:bg-white/5 active:scale-[0.98]",
+            idx < relatedPosts.length - 1 && "border-b border-dashed border-(--line-divider)",
+          ]}
+        >
+          <div class="shrink-0 w-6 h-6 rounded-md bg-(--enter-btn-bg) text-(--primary) flex items-center justify-center text-sm font-bold transition">
+            {idx + 1}
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="font-bold text-sm text-black/75 dark:text-white/75 truncate transition group-hover:text-(--primary)">
+              {post.data.title}
+            </div>
+            <div class="flex items-center gap-1.5 text-xs text-black/30 dark:text-white/30 transition mt-0.5">
+              {post.data.category && (
+                <span class="shrink-0 px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/10 text-black/40 dark:text-white/40">
+                  {post.data.category}
+                </span>
+              )}
+              <span class="truncate">{post.data.description || formatDateToYYYYMMDD(post.data.published)}</span>
+            </div>
+          </div>
+          <Icon
+            name="material-symbols:chevron-right-rounded"
+            class="shrink-0 text-xl text-black/15 dark:text-white/15 transition group-hover:text-(--primary) group-hover:translate-x-0.5"
+          />
+        </a>
+      ))}
+    </div>
+  )}
+
+  {/* 右栏：随机文章（客户端 fetch 渲染） */}
+  <div class="card-base p-5 md:p-6 flex flex-col">
+    <div class="flex items-center gap-2 pb-3 mb-1 border-b border-dashed border-(--line-divider)">
+      <Icon
+        name="material-symbols:casino-outline"
+        class="text-xl text-(--primary)"
+      />
+      <span class="text-base font-bold text-black/75 dark:text-white/75 transition">
+        {i18n(I18nKey.randomPosts)}
+      </span>
+      <span class="ml-auto text-xs px-2 py-0.5 rounded-full bg-(--btn-regular-bg) text-(--btn-content) transition">
+        {i18n(I18nKey.randomRecommend)}
+      </span>
+    </div>
+    <div
+      id="random-posts-list"
+      data-api-url={apiUrl}
+      data-current-id={currentPostId}
+      data-related-ids={relatedIds}
+    ></div>
+  </div>
+</div>
+
+<script is:inline>
+function renderRandomPosts() {
+  var container = document.getElementById('random-posts-list');
+  if (!container) return;
+
+  var apiUrl = container.dataset.apiUrl;
+  var currentId = container.dataset.currentId;
+  var relatedIds = JSON.parse(container.dataset.relatedIds || '[]');
+  var excludeSet = {};
+  excludeSet[currentId] = true;
+  for (var i = 0; i < relatedIds.length; i++) excludeSet[relatedIds[i]] = true;
+
+  function render(allPosts) {
+    container.innerHTML = '';
+    var candidates = allPosts.filter(function(p) {
+      return !excludeSet[p.id] && !p.password;
+    });
+
+    // Fisher-Yates shuffle
+    for (var i = candidates.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = candidates[i];
+      candidates[i] = candidates[j];
+      candidates[j] = tmp;
+    }
+
+    var picked = candidates.slice(0, 5);
+    var fragment = document.createDocumentFragment();
+    var base = apiUrl.replace(/\/api\/allPostMeta\.json$/, '');
+
+    picked.forEach(function(post, idx) {
+      var href = base + '/posts/' + post.id + '/';
+
+      var a = document.createElement('a');
+      a.href = href;
+      a.className = 'group flex items-center gap-3 px-3 py-3 -mx-1 rounded-lg transition-all hover:bg-black/5 dark:hover:bg-white/5 active:scale-[0.98]'
+        + (idx < picked.length - 1 ? ' border-b border-dashed border-(--line-divider)' : '');
+
+      var num = document.createElement('div');
+      num.className = 'shrink-0 w-6 h-6 rounded-md bg-(--enter-btn-bg) text-(--primary) flex items-center justify-center text-sm font-bold transition';
+      num.textContent = String(idx + 1);
+
+      var content = document.createElement('div');
+      content.className = 'flex-1 min-w-0';
+
+      var title = document.createElement('div');
+      title.className = 'font-bold text-sm text-black/75 dark:text-white/75 truncate transition group-hover:text-(--primary)';
+      title.textContent = post.title;
+
+      var meta = document.createElement('div');
+      meta.className = 'flex items-center gap-1.5 text-xs text-black/30 dark:text-white/30 transition mt-0.5';
+
+      if (post.category) {
+        var cat = document.createElement('span');
+        cat.className = 'shrink-0 px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/10 text-black/40 dark:text-white/40';
+        cat.textContent = post.category;
+        meta.appendChild(cat);
+      }
+
+      var desc = document.createElement('span');
+      desc.className = 'truncate';
+      desc.textContent = post.description || new Date(post.published).toISOString().substring(0, 10);
+      meta.appendChild(desc);
+
+      content.appendChild(title);
+      content.appendChild(meta);
+
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('width', '24');
+      svg.setAttribute('height', '24');
+      svg.setAttribute('viewBox', '0 0 24 24');
+      svg.setAttribute('class', 'shrink-0 text-xl text-black/15 dark:text-white/15 transition group-hover:text-(--primary) group-hover:translate-x-0.5');
+      var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('fill', 'currentColor');
+      path.setAttribute('d', 'M9.29 6.71a1 1 0 0 0 0 1.41L13.17 12l-3.88 3.88a1 1 0 1 0 1.41 1.41l4.59-4.59a1 1 0 0 0 0-1.41L10.7 6.7a1 1 0 0 0-1.41.01z');
+      svg.appendChild(path);
+
+      a.appendChild(num);
+      a.appendChild(content);
+      a.appendChild(svg);
+      fragment.appendChild(a);
+    });
+
+    container.appendChild(fragment);
+  }
+
+  // 使用缓存避免 swup 导航时重复请求
+  if (window.__allPostMetaCache) {
+    render(window.__allPostMetaCache);
+  } else {
+    fetch(apiUrl)
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        window.__allPostMetaCache = data;
+        render(data);
+      });
+  }
+}
+
+renderRandomPosts();
+document.addEventListener('swup:contentReplaced', renderRandomPosts);
+</script>
