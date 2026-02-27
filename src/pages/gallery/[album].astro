@@ -51,9 +51,9 @@ const columnWidth = galleryConfig.columnWidth || 240;
         </a>
         <!-- 封面上的信息 -->
         <div class="absolute bottom-0 left-0 right-0 p-6">
-          <h1 class="text-2xl sm:text-3xl font-bold text-white mb-2 drop-shadow-lg">
+          <div class="text-2xl sm:text-3xl font-bold text-white mb-2 drop-shadow-lg">
             {albumMeta.name}
-          </h1>
+          </div>
           {albumMeta.description && (
             <p class="text-sm text-white/75 leading-relaxed mb-2 max-w-2xl line-clamp-2">
               {albumMeta.description}
@@ -97,9 +97,9 @@ const columnWidth = galleryConfig.columnWidth || 240;
           <Icon name="material-symbols:arrow-back" class="text-base" />
           {i18n(I18nKey.galleryBackToAlbums)}
         </a>
-        <h1 class="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+        <div class="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-neutral-100">
           {albumMeta.name}
-        </h1>
+        </div>
         <div class="flex items-center gap-4 text-sm text-neutral-500 dark:text-neutral-400 mt-2 flex-wrap">
           {albumMeta.date && (
             <span class="inline-flex items-center gap-1">

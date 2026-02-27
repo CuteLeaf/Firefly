@@ -39,9 +39,9 @@ const allTags = [...new Set(albums.flatMap((a) => a.tags || []))].sort();
           >
             <Icon name="material-symbols:photo-library" class="text-[1.5rem]" />
           </div>
-          <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+          <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
             {title}
-          </h1>
+          </div>
         </div>
         {description && (
           <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
