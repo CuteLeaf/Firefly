@@ -1,20 +1,23 @@
 import { visit } from "unist-util-visit";
+
 /**
  * Custom Remark plugin for creating responsive image grids.
- * 
+ *
  * It parses markdown blocks surrounded by `[grid]` and `[/grid]` tags and wraps
  * the contained images in a styled `div` container with a grid layout.
  * The column count is evaluated automatically based on the number of inserted images
  * inside the grid tags (up to 4 columns).
- * 
+ *
  * Example:
  * [grid]
  * ![image1](/url1)
  * ![image2](/url2)
  * [/grid]
- * 
+ *
  * @returns {import('unified').Plugin}
- */export function remarkImageGrid() {
+ */
+
+export function remarkImageGrid() {
 	return (tree) => {
 		// 1. Process block-level [grid] and [/grid]
 		if (tree.type === "root") {
