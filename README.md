@@ -81,8 +81,8 @@ If you have useful features and optimizations, please submit a [Pull Request](ht
 
 ### Requirements
 
-- Node.js ≤ 22
-- pnpm ≤ 9
+- Node.js ≥ 22
+- pnpm ≥ 9
 
 ### Local Development
 
