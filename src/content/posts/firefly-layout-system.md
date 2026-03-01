@@ -16,6 +16,19 @@ Firefly 提供了灵活的布局系统，允许您根据内容需求和个人喜
 
 ---
 
+[grid]
+![左侧边栏+列表布局](./images/left-list.avif)
+![右侧边栏+网格布局](./images/right-grid2.avif)
+![左侧边栏+三列网格布局](./images/left-grid3.avif)
+[/grid]
+
+[grid]
+![双侧边栏+列表布局](./images/both-list.avif)
+![双侧边栏+网格布局](./images/both-grid.avif)
+![双侧边栏+网格瀑布流布局](./images/masonry.avif)
+[/grid]
+
+
 ## 一、侧边栏布局系统
 
 侧边栏是博客页面的重要组成部分，用于展示导航、分类、标签、统计信息等辅助内容。Firefly 支持两种侧边栏布局模式。

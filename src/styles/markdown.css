@@ -110,5 +110,27 @@
     overflow-x: auto;
     margin: 1em 0;
   }
+
+  .image-grid {
+    @apply items-stretch;
+    
+    center {
+      @apply h-full w-full;
+      
+      figure {
+        @apply flex flex-col h-full w-full m-0 p-0;
+        
+        img {
+          @apply object-cover w-full flex-grow rounded-xl m-0;
+          /* 使图片自动填满所在网格高度（自适应裁剪居中，不拉伸变形） */
+          height: 100%;
+        }
+        
+        figcaption {
+          @apply mt-2 mb-0;
+        }
+      }
+    }
+  }
 }
 

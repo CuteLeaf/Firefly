@@ -2,8 +2,6 @@ import { h } from "hastscript";
 import { visit } from "unist-util-visit";
 import { shouldAddNoReferrer } from "../utils/image-utils.ts";
 
-// 来自霞葉： https://kasuha.com/posts/fuwari-enhance-ep1/
-
 /**
  * 将带有 alt 文本的图片转换为包含 figcaption 的 figure 元素的 rehype 插件
  *
@@ -36,10 +34,9 @@ export default function rehypeFigure() {
 
 			// 创建 figure 元素，包含处理后的 img 和居中的 figcaption
 			const figure = h("figure", [
-				// 使用处理后的 img 节点，但移除 alt 属性避免重复显示
+				// 使用原始属性的 img 节点
 				h("img", {
 					...imgProps,
-					alt: "", // 清空 alt 属性，因为现在有 figcaption 了
 				}),
 				h("figcaption", alt),
 			]);
