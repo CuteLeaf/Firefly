@@ -183,6 +183,24 @@ for (const [categoryKey, enabled] of Object.entries(bangumiConfig.categories)) {
 	}
 }
 
+// 根据 categoryOrder 配置对 tabs 进行排序
+const categoryOrder = siteConfig.bangumi?.categoryOrder || [];
+if (categoryOrder.length > 0) {
+	tabs.sort((a, b) => {
+		const aIndex = categoryOrder.indexOf(
+			a.id as (typeof categoryOrder)[number],
+		);
+		const bIndex = categoryOrder.indexOf(
+			b.id as (typeof categoryOrder)[number],
+		);
+		// 如果类型在配置中，按配置顺序排序；否则排在后面
+		if (aIndex === -1 && bIndex === -1) return 0;
+		if (aIndex === -1) return 1;
+		if (bIndex === -1) return -1;
+		return aIndex - bIndex;
+	});
+}
+
 const activeTab = tabs[0]?.id || "anime";
 ---
 
