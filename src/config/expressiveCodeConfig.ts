@@ -23,4 +23,10 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
 		previewLines: 8, // 折叠时显示前8行
 		defaultCollapsed: true, // 默认折叠长代码块
 	},
+
+	// 语言徽章插件配置
+	pluginLanguageBadge: {
+		// 是否启用语言徽章插件
+		enable: false,
+	},
 };
