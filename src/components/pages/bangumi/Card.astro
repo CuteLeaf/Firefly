@@ -5,9 +5,10 @@ import type { UserSubjectCollection } from "@/types/bangumi";
 
 interface Props {
 	item: UserSubjectCollection;
+	loadImage?: boolean;
 }
 
-const { item } = Astro.props;
+const { item, loadImage = false } = Astro.props;
 
 const subject_base_url = "https://bgm.tv/subject/";
 
@@ -73,10 +74,12 @@ const displayTags =
   <div class="aspect-2/3 relative overflow-hidden">
     {item.subject?.images?.medium ? (
       <img
-        src={item.subject.images.medium}
+        src={loadImage ? item.subject.images.medium : undefined}
+        data-src={loadImage ? undefined : item.subject.images.medium}
         alt={item.subject.name_cn || item.subject.name}
         class="w-full h-full object-cover pointer-events-none transition-transform duration-500 group-hover:scale-105"
         loading="lazy"
+        decoding="async"
       />
     ) : (
       <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">

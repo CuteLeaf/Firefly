@@ -194,6 +194,19 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
     function updatePage() {
       const items = document.querySelectorAll(`[data-item-section="${sectionId}"]:not(.hidden)`);
       const totalPages = Math.ceil(items.length / itemsPerPage);
+      const sectionElement = document.querySelector(`[data-section="${sectionId}"]`);
+      const shouldHydrateImages = !sectionElement?.classList.contains('hidden');
+
+      function hydrateItemImage(item) {
+        const image = item.querySelector('img[data-src]');
+        if (image) {
+          const deferredSrc = image.getAttribute('data-src');
+          if (deferredSrc) {
+            image.setAttribute('src', deferredSrc);
+            image.removeAttribute('data-src');
+          }
+        }
+      }
 
       // Hide all items first
       for (const item of items) {
@@ -205,6 +218,9 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
       const endIndex = startIndex + itemsPerPage;
       for (let i = startIndex; i < endIndex && i < items.length; i++) {
         items[i].style.display = 'block';
+        if (shouldHydrateImages) {
+          hydrateItemImage(items[i]);
+        }
       }
 
       // Update pagination buttons

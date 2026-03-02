@@ -43,6 +43,28 @@ const { tabs, activeTab } = Astro.props;
     const tabButtons = document.querySelectorAll('[data-tab]');
     const sections = document.querySelectorAll('[data-section]');
 
+    function hydrateVisibleImages(targetTab: string) {
+      const visibleItems = document.querySelectorAll(
+        `[data-section="${targetTab}"] [data-item-section="${targetTab}"]:not(.hidden)`
+      );
+
+      visibleItems.forEach((item) => {
+        const htmlItem = item as HTMLElement;
+        if (htmlItem.style.display === 'none') {
+          return;
+        }
+
+        const image = htmlItem.querySelector('img[data-src]');
+        if (image) {
+          const deferredSrc = image.getAttribute('data-src');
+          if (deferredSrc) {
+            image.setAttribute('src', deferredSrc);
+            image.removeAttribute('data-src');
+          }
+        }
+      });
+    }
+
     tabButtons.forEach(button => {
       button.addEventListener('click', (event) => {
         const currentButton = event.currentTarget as HTMLButtonElement;
@@ -66,6 +88,10 @@ const { tabs, activeTab } = Astro.props;
             htmlSection.classList.add('hidden');
           }
         });
+
+        if (targetTab) {
+          hydrateVisibleImages(targetTab);
+        }
       });
     });
   }
