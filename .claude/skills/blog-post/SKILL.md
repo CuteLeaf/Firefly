@@ -1,144 +1,213 @@
 ---
 name: blog-post
-description: Use this skill when writing long-form blog posts, tutorials, or educational articles that require structure, depth, and SEO considerations
+description: "Write technical blog posts for the Firefly Astro blog. Use this skill whenever the user wants to create a new blog post, write an article, draft a tutorial, or produce any long-form content for the blog — even if they just say something like 'write about X' or 'I want to blog about Y'. Also use this when the user asks to edit, expand, or restructure an existing post."
 ---
 
-# Blog Post Writing Skill
+# Blog Post Writer for Firefly
 
-This skill provides a structured workflow for creating high-quality blog posts that educate and engage readers.
+Write professional technical blog posts that follow this project's conventions, frontmatter schema, and available markdown features.
 
-## When to Use This Skill
+## Workflow
 
-Use this skill when asked to:
-- Write a blog post or article
-- Create a tutorial or how-to guide
-- Develop educational long-form content
-- Write thought leadership pieces
+Follow this two-phase process for every new post. Do not skip the outline phase.
 
-## Research First (Required)
+### Phase 1: Outline
 
-**Before writing any blog post, you MUST delegate research:**
+1. **Clarify the topic.** If the user's request is vague, ask what specific angle or audience they have in mind. Otherwise, proceed.
+2. **Determine the language.** If the user writes in Chinese, set `lang: "zh_CN"`. If in English, set `lang: "en"`. If they specify, follow their preference.
+3. **Generate a structured outline** containing:
+   - Proposed `title` (concise, descriptive, may include a subtitle after a colon)
+   - Proposed `description` (one or two sentences summarizing the post's value)
+   - Proposed `tags` (3-7 short keywords) and `category`
+   - Section-by-section outline with H2/H3 headings and a one-line summary of each section's content
+   - Estimated word count
+4. **Present the outline to the user and wait for confirmation.** Do not proceed to writing until they approve or request changes.
 
-1. Use the `task` tool with `subagent_type: "researcher"`
-2. In the description, specify BOTH the topic AND where to save:
+### Phase 2: Writing
 
+Once the outline is approved:
+
+1. **Create the file** using `pnpm new-post -- <slug>` where `<slug>` is a URL-friendly filename in lowercase English with hyphens (e.g., `getting-started-with-astro`). Always use English for the slug regardless of the post language.
+2. **Update the frontmatter** with finalized metadata:
+   ```yaml
+   ---
+   title: "Post Title Here"
+   published: <today's date YYYY-MM-DD>
+   description: "A concise summary of the post."
+   image: ""
+   tags: ["Tag1", "Tag2", "Tag3"]
+   category: "技术教程"
+   draft: false
+   lang: "zh_CN"
+   ---
+   ```
+3. **Write the full article** following the approved outline. Apply the style and formatting rules below.
+
+## Frontmatter Reference
+
+| Field | Required | Notes |
+|-------|----------|-------|
+| `title` | Yes | Quoted string. May include subtitle after colon. |
+| `published` | Yes | `YYYY-MM-DD` format. Use today's date. |
+| `description` | No | One or two sentences. Appears in post cards and SEO. |
+| `image` | No | Cover image path. Leave empty `""` if none. |
+| `tags` | No | Array of 3-7 short keywords. |
+| `category` | No | Single string, e.g., `"技术教程"`, `"工具推荐"`, `"Tutorial"`. |
+| `draft` | No | Set to `true` to hide from listings. Default `false`. |
+| `lang` | No | `"zh_CN"` for Chinese, `"en"` for English. |
+| `pinned` | No | `true` to pin at top of post list. |
+| `author` | No | Override default author if needed. |
+| `sourceLink` | No | URL to original source if this is a translation/repost. |
+| `licenseName` / `licenseUrl` | No | Override default license. |
+| `comment` | No | Set to `false` to disable comments. Default `true`. |
+
+## Writing Style
+
+### Tone
+
+- **Professional and precise.** Avoid filler, vague claims, and hype words ("amazing", "incredible", "revolutionary").
+- **Direct.** Use second person ("you" / "你") to address the reader when giving instructions.
+- **Substantive.** Every paragraph should deliver information or insight. Cut sentences that exist only to transition.
+- **Technically accurate.** Verify technical claims. When uncertain, note the uncertainty rather than stating something as fact.
+
+### Language Conventions
+
+**Chinese posts (`lang: "zh_CN"`):**
+- Write body text in Simplified Chinese
+- Keep technical terms in English when they are commonly used that way (e.g., API, Docker, React, TypeScript, CLI, SSH)
+- Use Chinese punctuation (，。；：！？、""''（）) for Chinese text
+- Leave a space between Chinese characters and English words / numbers for readability: `使用 Docker 部署` not `使用Docker部署`
+
+**English posts (`lang: "en"`):**
+- Standard technical English, clear and direct
+- Prefer active voice over passive
+- Use American English spelling
+
+### Structure
+
+Every post should follow this general structure (adapt as needed):
+
+1. **Title** (H1, repeating the frontmatter title)
+2. **TL;DR / Lead paragraph** — A bold summary of what the reader will learn and why it matters
+3. **Prerequisites or context** (if applicable) — Use a blockquote to state reader assumptions and environment info
+4. **Table of Contents** — Manually authored using anchor links for posts with 4+ sections
+5. **Numbered sections** (H2) — Each major topic as `## N. Section Title`
+   - Subsections (H3): `### N.M Subsection Title`
+   - Sub-subsections (H4) when needed
+6. **Conclusion / Summary** — Key takeaways, next steps, or further reading
+7. Use horizontal rules (`---`) between major sections for visual separation
+
+### Paragraph and Sentence Guidelines
+
+- Keep paragraphs short: 2-4 sentences each
+- Lead each section with the key point, then expand with details
+- One idea per paragraph
+- Use lists for steps, features, or comparisons instead of long prose
+
+## Markdown Features
+
+Use the project's available markdown features appropriately. Do not overuse them — each should serve the content.
+
+### Code Blocks
+
+Fenced code blocks with language tags. Always specify the language for syntax highlighting:
+
+````markdown
+```typescript
+const greeting = "Hello, world!";
 ```
-task(
-    subagent_type="researcher",
-    description="Research [TOPIC]. Save findings to research/[slug].md"
-)
+````
+
+Use inline code (backticks) for file paths, config keys, CLI commands, variable names, and short code references.
+
+### Callouts / Admonitions
+
+Use the directive syntax for callouts. Available types include: `note`, `tip`, `important`, `warning`, `caution`, `info`, `danger`, `example`, `quote`.
+
+```markdown
+:::tip
+Helpful advice here.
+:::
+
+:::warning[Custom Title]
+Warning with a custom title.
+:::
 ```
 
-Example:
-```
-task(
-    subagent_type="researcher",
-    description="Research the current state of AI agents in 2025. Save findings to research/ai-agents-2025.md"
-)
-```
+**When to use each type:**
+- `tip` — Best practices, shortcuts, helpful advice
+- `note` / `info` — Additional context that is good to know
+- `warning` — Common pitfalls or things that could cause problems
+- `important` — Critical information the reader must not skip
+- `danger` / `caution` — Actions that could cause data loss or security issues
+- `example` — Concrete worked examples
 
-3. After research completes, read the findings file before writing
+Do not use more than 3-4 callouts per 1000 words. Too many callouts dilute their impact.
 
-## Output Structure (Required)
+### Tables
 
-**Every blog post MUST have both a post AND a cover image:**
+Standard markdown tables for comparisons, reference data, and structured information:
 
-```
-blogs/
-└── <slug>/
-    ├── post.md        # The blog post content
-    └── hero.png       # REQUIRED: Generated cover image
-```
-
-Example: A post about "AI Agents in 2025" → `blogs/ai-agents-2025/`
-
-**You MUST complete both steps:**
-1. Write the post to `blogs/<slug>/post.md`
-2. Generate a cover image using `generate_image` and save to `blogs/<slug>/hero.png`
-
-**A blog post is NOT complete without its cover image.**
-
-## Blog Post Structure
-
-Every blog post should follow this structure:
-
-### 1. Hook (Opening)
-- Start with a compelling question, statistic, or statement
-- Make the reader want to continue
-- Keep it to 2-3 sentences
-
-### 2. Context (The Problem)
-- Explain why this topic matters
-- Describe the problem or opportunity
-- Connect to the reader's experience
-
-### 3. Main Content (The Solution)
-- Break into 3-5 main sections with H2 headers
-- Each section covers one key point
-- Include code examples, diagrams, or screenshots where helpful
-- Use bullet points for lists
-
-### 4. Practical Application
-- Show how to apply the concepts
-- Include step-by-step instructions if applicable
-- Provide code snippets or templates
-
-### 5. Conclusion & CTA
-- Summarize key takeaways (3 bullets max)
-- End with a clear call-to-action
-- Link to related resources
-
-## Cover Image Generation
-
-After writing the post, generate a cover image using the `generate_cover` tool:
-
-```
-generate_cover(prompt="A detailed description of the image...", slug="your-blog-slug")
+```markdown
+| Feature | Free | Pro |
+|---------|------|-----|
+| API access | No | Yes |
 ```
 
-The tool saves the image to `blogs/<slug>/hero.png`.
+### Mermaid Diagrams
 
-### Writing Effective Image Prompts
+Use for architecture diagrams, flowcharts, and sequence diagrams when they clarify relationships that are hard to describe in text:
 
-Structure your prompt with these elements:
-
-1. **Subject**: What is the main focus? Be specific and concrete.
-2. **Style**: Art direction (minimalist, isometric, flat design, 3D render, watercolor, etc.)
-3. **Composition**: How elements are arranged (centered, rule of thirds, symmetrical)
-4. **Color palette**: Specific colors or mood (warm earth tones, cool blues and purples, high contrast)
-5. **Lighting/Atmosphere**: Soft diffused light, dramatic shadows, golden hour, neon glow
-6. **Technical details**: Aspect ratio considerations, negative space for text overlay
-
-### Example Prompts
-
-**For a technical blog post:**
+````markdown
+```mermaid
+graph LR
+    A[Client] --> B[API Gateway]
+    B --> C[Service]
 ```
-Isometric 3D illustration of interconnected glowing cubes representing AI agents, each cube has subtle circuit patterns. Cubes connected by luminous data streams. Deep navy background (#0a192f) with electric blue (#64ffda) and soft purple (#c792ea) accents. Clean minimal style, lots of negative space at top for title. Professional tech aesthetic.
-```
+````
 
-**For a tutorial/how-to:**
-```
-Clean flat illustration of hands typing on a keyboard with abstract code symbols floating upward, transforming into lightbulbs and gears. Warm gradient background from soft coral to light peach. Friendly, approachable style. Centered composition with space for text overlay.
-```
+### LaTeX Math
 
-**For thought leadership:**
-```
-Abstract visualization of a human silhouette profile merging with geometric neural network patterns. Split composition - organic watercolor texture on left transitioning to clean vector lines on right. Muted sage green and warm terracotta color scheme. Contemplative, forward-thinking mood.
+Use for mathematical formulas when writing about algorithms or data science topics:
+
+```markdown
+Inline: $O(n \log n)$
+
+Block:
+$$
+E = mc^2
+$$
 ```
 
-## SEO Considerations
+### GitHub Repository Cards
 
-- Include the main keyword in the title and first paragraph
-- Use the keyword naturally 3-5 times throughout
-- Keep the title under 60 characters
-- Write a meta description (150-160 characters)
+Embed cards for referenced open-source projects:
+
+```markdown
+::github{repo="withastro/astro"}
+```
+
+### Images
+
+Place images in `src/content/posts/images/` and reference them with relative paths. Always provide descriptive alt text (it becomes the figure caption automatically):
+
+```markdown
+![Architecture diagram showing the data flow between services](./images/architecture.webp)
+```
+
+Prefer `.webp` format for smaller file sizes. Use `.png` only when transparency or lossless quality is critical.
 
 ## Quality Checklist
 
-Before finishing:
-- [ ] Post saved to `blogs/<slug>/post.md`
-- [ ] Hero image generated at `blogs/<slug>/hero.png`
-- [ ] Hook grabs attention in first 2 sentences
-- [ ] Each section has a clear purpose
-- [ ] Conclusion summarizes key points
-- [ ] CTA tells reader what to do next
+Before finishing a post, verify:
+
+- [ ] Frontmatter is complete with title, published, description, tags, category, and lang
+- [ ] Slug (filename) is URL-friendly lowercase English with hyphens
+- [ ] TL;DR or lead paragraph summarizes the post's value
+- [ ] Sections are numbered and hierarchically organized
+- [ ] Code examples are tested or verified for correctness
+- [ ] Technical terms are accurate and used consistently
+- [ ] Callouts are used sparingly and appropriately
+- [ ] No placeholder text or TODO markers remain
+- [ ] Spacing between Chinese and English/numbers is correct (for zh_CN posts)
+- [ ] The post reads well from start to finish with logical flow between sections
