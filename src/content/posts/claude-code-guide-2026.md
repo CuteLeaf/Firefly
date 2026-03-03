@@ -1,3 +1,14 @@
+---
+title: "Claude Code 完全指南：从安装到精通（2026 年版）"
+published: 2026-03-03
+description: "Claude Code 是 Anthropic 推出的官方命令行 AI 编程工具。本文覆盖安装、认证、配置、核心功能到高级特性，特别深入解析 hasCompletedOnboarding、skipWebFetchPreflight 等关键配置项。"
+image: ""
+tags: ["Claude Code", "AI", "CLI", "Anthropic", "开发工具"]
+category: "技术教程"
+draft: false
+lang: "zh_CN"
+---
+
 # Claude Code 完全指南：从安装到精通（2026 年版）
 
 **TL;DR:** Claude Code 是 Anthropic 推出的官方命令行 AI 编程工具，能直接在终端中理解你的代码库、编写代码、执行命令。本文覆盖安装、认证、配置、核心功能到高级特性，特别深入解析 `hasCompletedOnboarding`、`skipWebFetchPreflight` 等关键配置项，帮你彻底掌握 Claude Code。
