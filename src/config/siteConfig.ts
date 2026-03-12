@@ -166,6 +166,16 @@ export const siteConfig: SiteConfig = {
 		googleAnalyticsId: "",
 		// Microsoft Clarity ID
 		microsoftClarityId: "",
+		// 51la 统计 ID
+		la51AnalyticsId: "",
+		// 51la 配置
+		la51Config: {
+			// sdkUrl: "", // 自定义 SDK JS 地址，防止 DNS 污染，留空使用默认地址
+			// ck: "", // 多个统计 ID 的数据分离标识，留空则使用 la51AnalyticsId
+			autoTrack: false, // 开启事件分析功能
+			hashMode: false, // Hash路由模式, 项目使用History API路由, 所以不必开启默认false
+			screenRecord: true, // 开启网站录屏功能
+		},
 	},
 
 	// 图像优化及响应式配置

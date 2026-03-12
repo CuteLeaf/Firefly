@@ -110,6 +110,14 @@ export type SiteConfig = {
 	analytics?: {
 		googleAnalyticsId?: string; // Google Analytics ID
 		microsoftClarityId?: string; // Microsoft Clarity ID
+		la51AnalyticsId?: string; // 51la 统计 ID
+		la51Config?: {
+			sdkUrl?: string; // 自定义 SDK 地址，防止 DNS 污染，默认为 "//sdk.51.la/js-sdk-pro.min.js"
+			ck?: string; // 多个统计 ID 的数据分离标识，默认与 id 相同
+			autoTrack?: boolean; // 开启事件分析功能，默认 true
+			hashMode?: boolean; // 单页面应用统计（Vue/React 等），默认 false
+			screenRecord?: boolean; // 开启网站录屏功能，默认 true
+		};
 	};
 
 	// 图片优化配置

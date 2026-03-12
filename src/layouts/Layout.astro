@@ -1,5 +1,6 @@
 ---
 import GoogleAnalytics from "@components/analytics/GoogleAnalytics.astro";
+import La51Analytics from "@components/analytics/La51Analytics.astro";
 import MicrosoftClarity from "@components/analytics/MicrosoftClarity.astro";
 import FancyboxManager from "@components/features/FancyboxManager.astro";
 import FontManager from "@components/features/FontManager.astro";
@@ -101,6 +102,16 @@ const siteLang = lang.replace("_", "-");
     )}
     {siteConfig.analytics?.microsoftClarityId && (
             <MicrosoftClarity clarityId={siteConfig.analytics.microsoftClarityId} />
+    )}
+    {siteConfig.analytics?.la51AnalyticsId && (
+            <La51Analytics
+                    analyticsId={siteConfig.analytics.la51AnalyticsId}
+                    sdkUrl={siteConfig.analytics.la51Config?.sdkUrl}
+                    ck={siteConfig.analytics.la51Config?.ck}
+                    autoTrack={siteConfig.analytics.la51Config?.autoTrack}
+                    hashMode={siteConfig.analytics.la51Config?.hashMode}
+                    screenRecord={siteConfig.analytics.la51Config?.screenRecord}
+            />
     )}
 
     <title>{pageTitle}</title>
