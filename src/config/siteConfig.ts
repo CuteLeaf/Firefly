@@ -7,10 +7,10 @@ const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "Firefly",
+	title: "Zane Labs",
 
 	// 站点副标题
-	subtitle: "Demo site",
+	subtitle: "",
 
 	// 站点 URL
 	site_url: "https://firefly.cuteleaf.cn",
@@ -48,7 +48,7 @@ export const siteConfig: SiteConfig = {
 	// 网站Card样式配置
 	card: {
 		// 是否开启卡片边框和阴影，开启后让网站更有立体感
-		border: false,
+		border: true,
 		// 是否让卡片风格跟随主题色相
 		followTheme: false,
 	},
@@ -79,13 +79,13 @@ export const siteConfig: SiteConfig = {
 			alt: "🍀",
 		},
 		// 导航栏标题
-		title: "Firefly",
+		title: "Zane Labs",
 		// 全宽导航栏，导航栏是否占满屏幕宽度，true：占满，false：不占满
 		widthFull: false,
 		// 导航菜单对齐方式，left：左对齐，center：居中
 		menuAlign: "center",
 		// 导航栏图标和标题是否跟随主题色
-		followTheme: false,
+		followTheme: true,
 	},
 
 	// 站点开始日期，用于统计运行天数
@@ -133,7 +133,7 @@ export const siteConfig: SiteConfig = {
 		// 番组计划页面开关，含追番、游戏、书籍和音乐，dev调试时只获取一页数据，build才会获取全部数据
 		bangumi: true,
 		// 相册页面开关
-		gallery: true,
+		gallery: false,
 	},
 
 	// 分类导航栏开关，在首页和归档页顶部显示分类快捷导航
