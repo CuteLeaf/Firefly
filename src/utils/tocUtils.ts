@@ -3,6 +3,9 @@
  * 用于 SidebarTOC 和 FloatingTOC 的共享逻辑
  */
 
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+
 export interface TOCConfig {
 	contentId: string;
 	indicatorId: string;
@@ -85,6 +88,18 @@ export class TOCManager {
 	}
 
 	/**
+	 * 转义 HTML 属性值，避免标题中的引号破坏属性
+	 */
+	private escapeHtmlAttr(value: string): string {
+		return value
+			.replace(/&/g, "&amp;")
+			.replace(/"/g, "&quot;")
+			.replace(/'/g, "&#39;")
+			.replace(/</g, "&lt;")
+			.replace(/>/g, "&gt;");
+	}
+
+	/**
 	 * 生成徽章内容
 	 */
 	private generateBadgeContent(depth: number, heading1Count: number): string {
@@ -92,9 +107,16 @@ export class TOCManager {
 			return heading1Count.toString();
 		}
 		if (depth === this.minDepth + 1) {
-			return '<div class="transition w-2 h-2 rounded-[0.1875rem] bg-(--toc-badge-bg)"></div>';
+			return '<span class="toc-badge-dot"></span>';
 		}
-		return '<div class="transition w-1.5 h-1.5 rounded-xs bg-black/5 dark:bg-white/10"></div>';
+		return '<span class="toc-badge-dot toc-badge-dot-sm"></span>';
+	}
+
+	/**
+	 * 空状态文案
+	 */
+	private getEmptyStateHTML(): string {
+		return `<div class="text-center py-8 text-gray-500 dark:text-gray-400"><p>${i18n(I18nKey.tocEmpty)}</p></div>`;
 	}
 
 	/**
@@ -104,14 +126,14 @@ export class TOCManager {
 		const headings = this.getAllHeadings();
 
 		if (headings.length === 0) {
-			return '<div class="text-center py-8 text-gray-500 dark:text-gray-400"><p>当前页面没有目录</p></div>';
+			return this.getEmptyStateHTML();
 		}
 
 		this.minDepth = this.calculateMinDepth(headings);
 		const filteredHeadings = this.filterHeadings(headings);
 
 		if (filteredHeadings.length === 0) {
-			return '<div class="text-center py-8 text-gray-500 dark:text-gray-400"><p>当前页面没有目录</p></div>';
+			return this.getEmptyStateHTML();
 		}
 
 		let tocHTML = "";
@@ -119,12 +141,8 @@ export class TOCManager {
 
 		filteredHeadings.forEach((heading) => {
 			const depth = Number.parseInt(heading.tagName.charAt(1), 10);
-			const depthClass =
-				depth === this.minDepth
-					? ""
-					: depth === this.minDepth + 1
-						? "pl-4"
-						: "pl-8";
+			const depthLevel =
+				depth === this.minDepth ? 0 : depth === this.minDepth + 1 ? 1 : 2;
 
 			if (!heading.id) {
 				return;
@@ -159,22 +177,25 @@ export class TOCManager {
 						: heading.id || "Heading";
 			}
 
+			const escapedHeadingText = this.escapeHtmlAttr(headingText);
+
 			tocHTML += `
         <a 
           href="#${heading.id}" 
-          class="px-2 flex gap-2 relative transition w-full min-h-9 rounded-xl hover:bg-(--toc-btn-hover) active:bg-(--toc-btn-active) py-2 ${depthClass}"
+			  class="toc-item toc-level-${depthLevel}"
           data-heading-id="${heading.id}"
-          aria-label="${headingText}"
+		  aria-label="${escapedHeadingText}"
+		  title="${escapedHeadingText}"
         >
-          <div class="transition w-5 h-5 shrink-0 rounded-lg text-xs flex items-center justify-center font-bold ${depth === this.minDepth ? "bg-(--toc-badge-bg) text-(--btn-content)" : ""}">
+			  <div class="toc-badge ${depth === this.minDepth ? "toc-badge-index" : ""}">
             ${badgeContent}
           </div>
-          <div class="transition text-sm ${depth <= this.minDepth + 1 ? "text-50" : "text-30"} flex-1 min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">${headingText}</div>
+			  <div class="toc-label ${depth <= this.minDepth + 1 ? "toc-label-primary" : "toc-label-secondary"}">${headingText}</div>
         </a>
       `;
 		});
 
-		tocHTML += `<div id="${this.indicatorId}" style="opacity: 0;" class="-z-10 absolute bg-(--toc-btn-hover) left-0 right-0 rounded-xl transition-all"></div>`;
+		tocHTML += `<div id="${this.indicatorId}" style="opacity: 0;" class="toc-active-indicator"></div>`;
 
 		return tocHTML;
 	}

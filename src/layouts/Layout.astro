@@ -1066,6 +1066,9 @@ function disableAnimation() {
     const scrollTop = document.documentElement.scrollTop;
     const bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100);
 
+    // 根据滚动位置动态更新侧边栏 sticky 间距
+    updateSidebarStickySpacing();
+
     // 使用批量DOM操作优化性能
     const operations: (() => void)[] = [];
 
@@ -1226,6 +1229,42 @@ function disableAnimation() {
     // 处理 showOnNonPostPage === false 的组件
     document.querySelectorAll(".widget-hide-on-non-post").forEach((widget) => {
       !isPostPage ? widget.classList.add("hidden") : widget.classList.remove("hidden");
+    });
+
+    // 组件可见性变化后，立即重算 sticky 间距，避免 swup 切页后残留旧间距
+    updateSidebarStickySpacing();
+  }
+
+  // 根据当前页面实际可见的顶部组件与滚动位置，动态更新侧边栏 sticky 间距
+  function updateSidebarStickySpacing() {
+    const scrollTop = document.documentElement.scrollTop || window.scrollY || 0;
+
+    (["left", "right"] as const).forEach((side) => {
+      const sticky = document.getElementById(`${side}-sidebar-sticky`);
+      if (!sticky) return;
+
+      // 结构为：sidebar -> top 容器（可选） + sticky 容器
+      const topContainer = sticky.previousElementSibling as HTMLElement | null;
+      const hasVisibleTop =
+        !!topContainer && topContainer.getBoundingClientRect().height > 1;
+
+      // swup 从非文章页切换到文章页时，top 容器可能残留 mb-4，需要按可见性动态修正
+      if (topContainer) {
+        if (hasVisibleTop) {
+          topContainer.classList.add("mb-4");
+        } else {
+          topContainer.classList.remove("mb-4");
+        }
+      }
+
+      sticky.classList.remove("top-0", "top-4");
+
+      // 仅切换顶部偏移；组件间距由容器常驻 gap-4 保持
+      if (hasVisibleTop || scrollTop > 0) {
+        sticky.classList.add("top-4");
+      } else {
+        sticky.classList.add("top-0");
+      }
     });
   }
 

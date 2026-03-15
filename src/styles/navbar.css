@@ -226,6 +226,18 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-enab
     backdrop-filter: none !important;
 }
 
+/* 页面切换期间强制 semifull 保持透明，避免自动回顶时出现背景闪烁 */
+.is-page-transitioning #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"]>div,
+.is-page-transitioning #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"].scrolled>div,
+.is-page-transitioning body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]>div,
+.is-page-transitioning body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"].scrolled>div {
+    backdrop-filter: none !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    box-shadow: none !important;
+    transition: none !important;
+}
+
 
 /* 调整下拉菜单和浮动面板的背景透明度 */
 /* 亮色主题 */
