@@ -13,7 +13,7 @@ export const siteConfig: SiteConfig = {
 	subtitle: "",
 
 	// 站点 URL
-	site_url: "https://firefly.cuteleaf.cn",
+	site_url: "https://blog.ezane.top/",
 
 	// 站点描述
 	description:
@@ -75,7 +75,7 @@ export const siteConfig: SiteConfig = {
 		// 4. 网络图片: { type: "url", value: "https://example.com/logo.png", alt: "Logo" }
 		logo: {
 			type: "image",
-			value: "assets/images/firefly.png",
+			value: "assets/images/square.png",
 			alt: "🍀",
 		},
 		// 导航栏标题
