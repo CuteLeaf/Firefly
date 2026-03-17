@@ -172,7 +172,7 @@ Crypto中最水也是最恶心的题目
 
 看到栏目，一眼栅栏密码，解密得到flag
 在```https://ctf.bugku.com/tool/railfence```上枚举解密
-![alt text](image-12.png)
+![](image-12.png)
 轻松得到flag：```flag{bf49f41f492b4d578ecda3a9afb0f54c}```
 
 ### Crypto-小小维纳，可笑可笑 解题步骤

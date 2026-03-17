@@ -13,12 +13,12 @@ draft: false
 ### Misc-二维码的秘密 解题步骤：
 文件啥也没有，一眼LSB隐写
 StegSolve打开，Blue plane 1通道发现二维码，扫描后得到flag
-![alt text](image.png)
+![](image.png)
 轻松拿下flag： ```flag{43ff4dfc6018149aba91dce2efffe64a}```
 
 ### Misc-欢迎来到川大 解题步骤：
 打开文件，拖入010editor，发现文件末尾有flag
-![alt text](image-1.png)
+![](image-1.png)
 轻松解出flag: ```flag{8c79c19629b139fa330d2ae47d44ce7c}```
 
 ### Misc-奇怪的字符 解题步骤：
@@ -32,7 +32,7 @@ StegSolve打开，Blue plane 1通道发现二维码，扫描后得到flag
 流量分析题，手边没有WireShark
 数据包丢进```https://apackets.com/```中
 进行分析，在HTTP请求中发现可疑的php代码
-![alt text](image-2.png)
+![](image-2.png)
 识别出这是工具 Weevely 生成的 webshell
 代码中大量使用了 hZ 作为干扰字符，编写代码进行解析
 ```
@@ -55,10 +55,10 @@ $k="9e94b15e";$kh="d312fa42232f";$kf="d87a55db0d39";$p="PY16bXfpTDNaKyiy";functi
 ```
 将k kh kf字符串拼接得到一串MD5 ```9e94b15ed312fa42232fd87a55db0d39```
 进入```https://md5.cc/```查询 得到payload 为 ```007```
-![alt text](image-3.png)
+![](image-3.png)
 
 在提取出数据包里面被加密的字符串（剩余两张图略）
-![alt text](image-4.png)
+![](image-4.png)
 
 根据字符串特征和先前代码，编写脚本解密
 ```
@@ -158,9 +158,9 @@ if __name__ == "__main__":
 ### Misc-pgp 解题步骤
 拿到gpg文件
 使用pgp5windows工具
-![alt text](image-21.png)
+![](image-21.png)
 轻松解出flag：```flag{e56d50da93bb4d7e95a73d83305dac60}```
-![alt text](image-22.png)
+![](image-22.png)
 
 
 ### Misc-Algorithm 解题步骤

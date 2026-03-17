@@ -12,15 +12,15 @@ draft: false
 
 ### Reverse-EasyCaesar 解题步骤：
 拿到题丢进IDA pro
-![alt text](image-13.png)
+![](image-13.png)
 找到字符串```xdsy{82847s57s3ts7233219s8719x554596t}```，猜测是凯撒密码
 丢入```https://tools.081192.xyz/tools/caesar-decode.html```中解密
-![alt text](image-14.png)
+![](image-14.png)
 轻松解出flag：```flag{82847a57a3ba7233219a8719f554596b}```
 
 ### Reverse-byte_by_byte 解题步骤：
 丢入IDA pro解出伪代码
-![alt text](image-16.png)
+![](image-16.png)
 使用 rol8 (循环左移) 撤销步骤4
 逆向 ROL/XOR：先异或 (11 * i) ^ 0xA5，然后使用 ror8 (循环右移) 撤销步骤3的 rol8。
 逆向 ADD：减去 7 * i + 3。
@@ -72,7 +72,7 @@ flag：```flag{f864517668e8bd4e7469c37fafa71958}```
 ### Reverse-Easy_Xor 解题步骤：
 
 丢入IDA pro解出伪代码
-![alt text](image-15.png)
+![](image-15.png)
 编写脚本
 ```
 import struct
@@ -102,17 +102,17 @@ print(f"flag{{{flag_content}}}")
 
 ### Reverse-maze 解题步骤：
 逆向，在字符串中得到地图
-![alt text](image-17.png)
+![](image-17.png)
 分析代码，接受小写wasd
-![alt text](image-18.png)
+![](image-18.png)
 按照地图反推
 flag为：```flag{ddssddwwddddssssssss}```
 
 ### Reverse-RE 解题步骤：
 逆向，得到伪代码，分析得到与```target_3810```数组有关
-![alt text](image-19.png)
+![](image-19.png)
 查看```target_3810```数组的值，得到flag
-![alt text](image-20.png)
+![](image-20.png)
 编写代码解出flag
 ```
 target_3810 = [0x6D, 0x76, 0x6E, 0x77, 0x8E, 0x8D, 0x7E, 0x88, 0x82, 0x91, 0x92, 0x8D, 0x8A, 0xA2, 0xA0, 0x93, 0xA9, 0x9F, 0x5E, 0xBD, 0x0C]

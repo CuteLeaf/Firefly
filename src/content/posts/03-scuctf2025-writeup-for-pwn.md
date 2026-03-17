@@ -12,15 +12,15 @@ draft: false
 
 ### Pwn-Test_You_NC 解题步骤：
 如题所示，nc连接
-![alt text](image-5.png)
+![](image-5.png)
 轻松解出flag：``` flag{f1715dfe4eaf4000966cba0d51c777aa}```
 
 ### Pwn-ret2function 解题步骤：
 将附件丢入IDA pro中
-![alt text](image-6.png)
+![](image-6.png)
 得到代码，发现gets(s) 函数不检查输入长度。
 标准的栈溢出，在fun函数中发现有system函数，但是system函数的参数是固定的，所以需要通过ret2libc来调用system函数，从而执行/bin/sh
-![alt text](image-7.png)
+![](image-7.png)
 编写脚本构造payload
 ```
 from pwn import *
@@ -72,7 +72,7 @@ io.interactive()
 运行然后执行命令，然后ls; cat flag;
 
 得到flag：```flag{aaa7e3dd428b4a26bae9aa8b90640b6e}```
-![alt text](image-8.png)
+![](image-8.png)
 
 
 ### Pwn-ret2function1 解题步骤：
@@ -113,5 +113,3 @@ io.sendline(payload)
 io.interactive()
 ```
 然后不轻松的解出flag
-
-### Pwn-ezpwn 解题步骤：

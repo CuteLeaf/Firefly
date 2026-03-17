@@ -12,13 +12,13 @@ draft: false
 ## 一、在Beszel中添加客户端
 Beszel Hub部署此处略过，请参照官网部署[Beszel.dev](https://beszel.dev/)
 
-![alt text](image-32.png)
+![](image-32.png)
 
-![alt text](image-33.png)
+![](image-33.png)
 
-![alt text](image-34.png)
+![](image-34.png)
 
-![alt text](image-35.png)
+![](image-35.png)
 复制通用令牌和SSH公钥，后面连接时要用到。
 
 注意一定是通用令牌并设置为永久，后续才能实现服务器监控的自动添加

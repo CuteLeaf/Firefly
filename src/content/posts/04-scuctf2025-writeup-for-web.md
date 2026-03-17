@@ -14,7 +14,7 @@ draft: false
 
 简简单单SQL注入
 然后进入后台修改成绩，获得flag
-![alt text](image-9.png)
+![](image-9.png)
 ```flag{a74f0bf731c94271b43a7c6dcd14cf95}```
 
 ### Web-Cookies 解题步骤：
@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
 ### Web-死亡PING命令 解题步骤：
 分析代码，需要进行命令注入和关键词过滤绕过
-![alt text](image-10.png)
+![](image-10.png)
 执行```http://challenge.qsnctf.com:45532/?ip=127.0.0.1;ls /```
 得到
 ```
@@ -180,6 +180,6 @@ if __name__ == "__main__":
 ```
 爆破得到密码```zhangsan19930725```
 登录进去与站长对话
-![alt text](image-23.png)
+![](image-23.png)
 获得flag：```flag{b3af41867a30475683e5b4d0fad7a69d}```
 
