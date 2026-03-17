@@ -44,7 +44,14 @@ export default defineConfig({
 	// 图像优化配置
 	image: {
 		// 全局响应式布局
-		experimentalLayout: "constrained",
+		layout: "constrained",
+	},
+
+	experimental: {
+		// Rust 编译器以提升构建性能（实验性）
+		rustCompiler: true, 
+		// 队列渲染以优化性能（实验性）
+		queuedRendering: { enabled: true }, 
 	},
 
 	integrations: [
