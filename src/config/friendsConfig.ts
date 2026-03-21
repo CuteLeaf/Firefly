@@ -22,7 +22,7 @@ export const friendsPageConfig: FriendsPageConfig = {
 
 // 友链配置
 export const friendsConfig: FriendLink[] = [
-	{
+/*	{
 		title: "夏夜流萤",
 		imgurl:
 			"https://weavatar.com/avatar/d252655d40d6874417a720bad0a6c5f77f8f6a1fd2f882f8f338402dc37e4190?s=640",
@@ -49,7 +49,7 @@ export const friendsConfig: FriendLink[] = [
 		tags: ["Framework"],
 		weight: 8,
 		enabled: true,
-	},
+	},*/
 ];
 
 // 获取启用的友链并进行排序
