@@ -1,6 +1,7 @@
 ---
+import Comment from "@components/comment/index.astro";
 import { Icon } from "astro-icon/components";
-import { siteConfig, sponsorConfig } from "@/config";
+import { commentConfig, siteConfig, sponsorConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
@@ -10,6 +11,12 @@ import { url } from "@/utils/url-utils";
 if (!siteConfig.pages.sponsor) {
 	return Astro.redirect("/404/");
 }
+
+// 检查评论系统是否启用
+const isCommentEnabled =
+	commentConfig?.type &&
+	commentConfig.type !== "none" &&
+	sponsorConfig.showComment !== false;
 
 const title = sponsorConfig.title || i18n(I18nKey.sponsorTitle);
 const description =
@@ -157,6 +164,12 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
           </div>
         )}
       </div>
+    </div>
+  )}
+  <!-- 评论区 -->
+  {isCommentEnabled && (
+    <div class="mt-4">
+      <Comment customPath="/sponsor/" title="sponsor"  />
     </div>
   )}
 </MainGridLayout>

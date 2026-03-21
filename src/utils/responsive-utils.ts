@@ -105,7 +105,7 @@ export function generateSidebarClasses(
 		"md:col-span-1",
 		"md:max-w-70",
 		"md:row-start-1",
-		"md:row-end-2",
+		"md:row-end-3",
 		"md:col-start-1",
 		"onload-animation",
 	];
@@ -134,7 +134,7 @@ export function generateRightSidebarClasses(
 		classes.push(
 			"md:block",
 			"md:row-start-1",
-			"md:row-end-2",
+			"md:row-end-3",
 			"md:col-span-1",
 			"md:max-w-70",
 			"md:col-start-2", // 平板端在第2列
@@ -145,7 +145,7 @@ export function generateRightSidebarClasses(
 		classes.push(
 			"xl:block",
 			"xl:row-start-1",
-			"xl:row-end-2",
+			"xl:row-end-3",
 			"xl:col-span-1",
 			"xl:max-w-70",
 			"xl:col-start-3",
@@ -155,7 +155,7 @@ export function generateRightSidebarClasses(
 		classes.push(
 			"md:block",
 			"md:row-start-1",
-			"md:row-end-2",
+			"md:row-end-3",
 			"md:col-span-1",
 			"md:max-w-70",
 			"md:col-start-2",
@@ -165,7 +165,7 @@ export function generateRightSidebarClasses(
 		classes.push(
 			"xl:block",
 			"xl:row-start-1",
-			"xl:row-end-2",
+			"xl:row-end-3",
 			"xl:col-span-1",
 			"xl:max-w-70",
 			"xl:col-start-3",

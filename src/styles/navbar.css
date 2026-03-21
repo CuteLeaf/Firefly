@@ -28,6 +28,15 @@
     transition: all var(--duration-medium) var(--ease-standard);
 }
 
+/* 通用滚动阴影：用于提升导航栏与页面内容的分层感 */
+#navbar.navbar-sticky-shadow>div {
+    box-shadow: var(--shadow-navbar) !important;
+}
+
+:root.dark #navbar.navbar-sticky-shadow>div {
+    box-shadow: var(--shadow-navbar-dark) !important;
+}
+
 /* ============================================
  * 桌面端 - 亮色主题 - Banner模式
  * 适用: 桌面端(≥1024px) + Banner模式 + 亮色主题
@@ -224,6 +233,18 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="full"][data-enable-b
 body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-enable-blur="false"]>div,
 body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-enable-blur="false"].scrolled>div {
     backdrop-filter: none !important;
+}
+
+/* 页面切换期间强制 semifull 保持透明，避免自动回顶时出现背景闪烁 */
+.is-page-transitioning #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"]>div,
+.is-page-transitioning #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"].scrolled>div,
+.is-page-transitioning body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]>div,
+.is-page-transitioning body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"].scrolled>div {
+    backdrop-filter: none !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    box-shadow: none !important;
+    transition: none !important;
 }
 
 

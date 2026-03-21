@@ -1,6 +1,8 @@
 ---
 import GoogleAnalytics from "@components/analytics/GoogleAnalytics.astro";
+import La51Analytics from "@components/analytics/La51Analytics.astro";
 import MicrosoftClarity from "@components/analytics/MicrosoftClarity.astro";
+import UmamiAnalytics from "@components/analytics/UmamiAnalytics.astro";
 import FancyboxManager from "@components/features/FancyboxManager.astro";
 import FontManager from "@components/features/FontManager.astro";
 import MusicManager from "@components/features/MusicManager.astro";
@@ -101,6 +103,22 @@ const siteLang = lang.replace("_", "-");
     )}
     {siteConfig.analytics?.microsoftClarityId && (
             <MicrosoftClarity clarityId={siteConfig.analytics.microsoftClarityId} />
+    )}
+        {siteConfig.analytics?.umamiAnalytics?.websiteId && (
+          <UmamiAnalytics
+          websiteId={siteConfig.analytics.umamiAnalytics.websiteId}
+          scriptUrl={siteConfig.analytics.umamiAnalytics.scriptUrl}
+          />
+        )}
+        {siteConfig.analytics?.la51Analytics?.Id && (
+            <La51Analytics
+            analyticsId={siteConfig.analytics.la51Analytics.Id}
+            sdkUrl={siteConfig.analytics.la51Analytics?.sdkUrl}
+            ck={siteConfig.analytics.la51Analytics?.ck}
+            autoTrack={siteConfig.analytics.la51Analytics?.autoTrack}
+            hashMode={siteConfig.analytics.la51Analytics?.hashMode}
+            screenRecord={siteConfig.analytics.la51Analytics?.screenRecord}
+            />
     )}
 
     <title>{pageTitle}</title>
@@ -492,6 +510,7 @@ const siteLang = lang.replace("_", "-");
       {
         "lg:is-home": isHomePageCheck,
         "enable-banner": enableBanner,
+        "sticky-navbar": siteConfig.navbar.stickyNavbar ?? false,
         "enable-card-border": siteConfig.card?.border,
         "card-follow-theme-hue": siteConfig.card?.followTheme,
       },
@@ -562,8 +581,47 @@ const siteLang = lang.replace("_", "-");
     .enable-banner #right-sidebar-sticky {
       top: calc(1rem - var(--banner-height-extend)) !important;
     }
+
+    body.enable-banner.sticky-navbar #sidebar-sticky,
+    body.enable-banner.sticky-navbar #left-sidebar-sticky,
+    body.enable-banner.sticky-navbar #right-sidebar-sticky {
+      top: calc(5.5rem - var(--banner-height-extend)) !important;
+    }
+
     .navbar-hidden {
       @apply opacity-0 -translate-y-16;
+    }
+
+    body.sticky-navbar #top-row {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      z-index: 80 !important;
+      height: 4.5rem !important;
+    }
+
+    body.sticky-navbar #navbar-wrapper {
+      position: static !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    body.sticky-navbar #navbar-wrapper.navbar-hidden {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    html[data-wallpaper-mode="none"] body.sticky-navbar #sidebar-sticky,
+    html[data-wallpaper-mode="none"] body.sticky-navbar #left-sidebar-sticky,
+    html[data-wallpaper-mode="none"] body.sticky-navbar #right-sidebar-sticky,
+    html[data-wallpaper-mode="overlay"] body.sticky-navbar #sidebar-sticky,
+    html[data-wallpaper-mode="overlay"] body.sticky-navbar #left-sidebar-sticky,
+    html[data-wallpaper-mode="overlay"] body.sticky-navbar #right-sidebar-sticky,
+    body.sticky-navbar.no-banner-layout #sidebar-sticky,
+    body.sticky-navbar.no-banner-layout #left-sidebar-sticky,
+    body.sticky-navbar.no-banner-layout #right-sidebar-sticky {
+      top: 5.5rem !important;
     }
   }
 
@@ -580,6 +638,22 @@ const siteLang = lang.replace("_", "-");
     body.enable-banner:not(.lg\:is-home) #left-sidebar-sticky,
     body.enable-banner:not(.lg\:is-home) #right-sidebar-sticky {
       top: 1rem !important;
+    }
+
+    html[data-wallpaper-mode="none"] body.sticky-navbar #sidebar-sticky,
+    html[data-wallpaper-mode="none"] body.sticky-navbar #left-sidebar-sticky,
+    html[data-wallpaper-mode="none"] body.sticky-navbar #right-sidebar-sticky,
+    html[data-wallpaper-mode="overlay"] body.sticky-navbar #sidebar-sticky,
+    html[data-wallpaper-mode="overlay"] body.sticky-navbar #left-sidebar-sticky,
+    html[data-wallpaper-mode="overlay"] body.sticky-navbar #right-sidebar-sticky,
+    body.sticky-navbar.no-banner-layout #sidebar-sticky,
+    body.sticky-navbar.no-banner-layout #left-sidebar-sticky,
+    body.sticky-navbar.no-banner-layout #right-sidebar-sticky {
+      top: 5.5rem !important;
+    }
+
+    body.sticky-navbar #top-row {
+      height: 4.5rem !important;
     }
   }
 </style>
@@ -639,6 +713,7 @@ function disableAnimation() {
 */
 
   const bannerEnabled = !!document.getElementById("wallpaper-wrapper");
+  const stickyNavbar = siteConfig.navbar.stickyNavbar ?? false;
 
   function setClickOutsideToClose(panel: string, ignores: string[]) {
       document.addEventListener("click", (event) => {
@@ -775,14 +850,13 @@ function disableAnimation() {
         document.documentElement.classList.add("is-page-transitioning");
       }
 
-      // 简化navbar处理逻辑
-      if (bannerEnabled) {
-        const navbar = document.getElementById("navbar-wrapper");
-        if (navbar) {
-          const threshold = window.innerHeight * (BANNER_HEIGHT_HOME / 100) - 88;
-          if (document.documentElement.scrollTop >= threshold) {
-            navbar.classList.add("navbar-hidden");
-          }
+      const navbar = document.getElementById("navbar-wrapper");
+      if (navbar && stickyNavbar) {
+        navbar.classList.remove("navbar-hidden");
+      } else if (bannerEnabled && navbar) {
+        const threshold = window.innerHeight * (BANNER_HEIGHT_HOME / 100) - 88;
+        if (document.documentElement.scrollTop >= threshold) {
+          navbar.classList.add("navbar-hidden");
         }
       }
     });
@@ -1049,11 +1123,22 @@ function disableAnimation() {
   let backToTopBtn = document.getElementById("back-to-top-btn");
   let toc = document.getElementById("toc-wrapper");
   let navbar = document.getElementById("navbar-wrapper");
+  const sidebarStickyState: Record<
+    "left" | "right",
+    { topClass: "top-0" | "top-4"; hasVisibleTop: boolean }
+  > = {
+    left: { topClass: "top-0", hasVisibleTop: false },
+    right: { topClass: "top-0", hasVisibleTop: false },
+  };
 
   // 优化的滚动处理函数
   function scrollFunction() {
     const scrollTop = document.documentElement.scrollTop;
     const bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100);
+    const navbarElement = document.getElementById("navbar");
+
+    // 根据滚动位置动态更新侧边栏 sticky 间距
+    updateSidebarStickySpacing();
 
     // 使用批量DOM操作优化性能
     const operations: (() => void)[] = [];
@@ -1078,7 +1163,11 @@ function disableAnimation() {
       });
     }
 
-    if (bannerEnabled && navbar) {
+    if (stickyNavbar && navbar) {
+      operations.push(() => {
+        navbar.classList.remove("navbar-hidden");
+      });
+    } else if (bannerEnabled && navbar) {
       operations.push(() => {
         const threshold = window.innerHeight * (BANNER_HEIGHT_HOME / 100) - 88;
 
@@ -1086,6 +1175,16 @@ function disableAnimation() {
           navbar.classList.add("navbar-hidden");
         } else {
           navbar.classList.remove("navbar-hidden");
+        }
+      });
+    }
+
+    if (navbarElement) {
+      operations.push(() => {
+        if (scrollTop > 8) {
+          navbarElement.classList.add("navbar-sticky-shadow");
+        } else {
+          navbarElement.classList.remove("navbar-sticky-shadow");
         }
       });
     }
@@ -1110,6 +1209,9 @@ function disableAnimation() {
     },
     { passive: true }
   );
+
+  // 初始化滚动状态（例如从历史位置恢复时）
+  scrollFunction();
 
   window.onresize = () => {
     // calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
@@ -1215,6 +1317,47 @@ function disableAnimation() {
     // 处理 showOnNonPostPage === false 的组件
     document.querySelectorAll(".widget-hide-on-non-post").forEach((widget) => {
       !isPostPage ? widget.classList.add("hidden") : widget.classList.remove("hidden");
+    });
+
+    // 组件可见性变化后，立即重算 sticky 间距，避免 swup 切页后残留旧间距
+    updateSidebarStickySpacing();
+  }
+
+  // 根据当前页面实际可见的顶部组件与滚动位置，动态更新侧边栏 sticky 间距
+  function updateSidebarStickySpacing() {
+    const scrollTop = document.documentElement.scrollTop || window.scrollY || 0;
+    const isScrolled = scrollTop > 2;
+
+    (["left", "right"] as const).forEach((side) => {
+      const sticky = document.getElementById(`${side}-sidebar-sticky`);
+      if (!sticky) return;
+
+      // 结构为：sidebar -> top 容器（可选） + sticky 容器
+      const topContainer = sticky.previousElementSibling as HTMLElement | null;
+      const hasVisibleTop = !!topContainer && topContainer.offsetHeight > 1;
+
+      // swup 从非文章页切换到文章页时，top 容器可能残留 mb-4，需要按可见性动态修正
+      if (topContainer) {
+        if (hasVisibleTop !== sidebarStickyState[side].hasVisibleTop) {
+          sidebarStickyState[side].hasVisibleTop = hasVisibleTop;
+        }
+
+        if (hasVisibleTop) {
+          topContainer.classList.add("mb-4");
+        } else {
+          topContainer.classList.remove("mb-4");
+        }
+      }
+
+      // 仅切换顶部偏移；组件间距由容器常驻 gap-4 保持
+      const nextTopClass: "top-0" | "top-4" =
+        hasVisibleTop || isScrolled ? "top-4" : "top-0";
+
+      if (sidebarStickyState[side].topClass !== nextTopClass) {
+        sticky.classList.remove(sidebarStickyState[side].topClass);
+        sticky.classList.add(nextTopClass);
+        sidebarStickyState[side].topClass = nextTopClass;
+      }
     });
   }
 

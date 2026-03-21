@@ -11,18 +11,25 @@ import Twikoo from "./Twikoo.astro";
 import Waline from "./Waline.astro";
 
 interface Props {
-	post: CollectionEntry<"posts"> | CollectionEntry<"spec">;
+	post?: CollectionEntry<"posts"> | CollectionEntry<"spec">;
 	customPath?: string;
+	title?: string;
 }
 
-const { post, customPath } = Astro.props;
-const { id } = post;
+const { post, customPath, title: customTitle } = Astro.props as Props;
 
 // 根据页面类型确定路径
-const slug = removeFileExtension(id);
-const path =
-	customPath || (post.collection === "posts" ? `/posts/${slug}` : `/${slug}`);
+const slugFromPath = (customPath || "/").replace(/^\/+|\/+$/g, "") || "index";
+const slug = post ? removeFileExtension(post.id) : slugFromPath;
+const path = customPath
+	? customPath
+	: post
+		? post.collection === "posts"
+			? `/posts/${slug}`
+			: `/${slug}`
+		: `/${slug}`;
 const url = `${Astro.site?.href}${path}`;
+const postTitle = post && "title" in post.data ? post.data.title : undefined;
 
 // 强制commentService类型为string，避免类型不兼容警告
 let commentService: string = commentConfig?.type || "none";
@@ -52,7 +59,7 @@ let commentService: string = commentConfig?.type || "none";
         {commentService === "twikoo" && <Twikoo path={path} />}
         {commentService === "waline" && <Waline path={path} />}
         {commentService === "giscus" && <Giscus />}
-        {commentService === "disqus" && <Disqus identifier={slug} url={url} title={'title' in post.data ? post.data.title : slug} />}
+        {commentService === "disqus" && <Disqus identifier={slug} url={url} title={customTitle || postTitle || slug} />}
           {commentService === "artalk" && <Artalk path={path} />}
         {commentService === "none" && (
           <div class="text-center py-8 text-(--content-meta)">

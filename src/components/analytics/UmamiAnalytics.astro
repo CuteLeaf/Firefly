@@ -1,0 +1,16 @@
+---
+interface Props {
+	websiteId: string;
+	scriptUrl?: string;
+}
+
+const { websiteId, scriptUrl } = Astro.props;
+---
+
+<script
+	is:inline
+	data-swup-ignore-script
+	defer
+	src={scriptUrl}
+	data-website-id={websiteId}
+></script>

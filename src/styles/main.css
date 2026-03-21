@@ -251,6 +251,16 @@ html {
     .wallpaper-transparent #navbar > div {
         background-color: var(--card-bg-transparent) !important;
     }
+
+    /* Overlay 模式下，滚动后提高导航栏背景模糊度，增强与正文区分 */
+    .wallpaper-transparent #navbar.navbar-sticky-shadow > div {
+        backdrop-filter: blur(20px) !important;
+     
+    }
+
+    :root.dark .wallpaper-transparent #navbar.navbar-sticky-shadow > div {
+        backdrop-filter: blur(20px) !important;
+    }
     
     .wallpaper-transparent .btn-card {
         background-color: var(--card-bg-transparent) !important;

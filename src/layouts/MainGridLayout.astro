@@ -229,21 +229,30 @@ if (
 	updatedGridConfig.hasLeftComponents &&
 	updatedGridConfig.hasRightComponents
 ) {
-	// 双侧栏：平板端跨2列，桌面端在中间列
-	footerClass.push("md:col-span-2 xl:col-start-2 xl:col-span-1");
+	// 双侧栏：Footer 在平板与桌面都跟随内容列
+	if (updatedGridConfig.tabletSidebar === "right") {
+		footerClass.push(
+			"md:col-start-1 md:col-span-1 xl:col-start-2 xl:col-span-1",
+		);
+	} else {
+		footerClass.push(
+			"md:col-start-2 md:col-span-1 xl:col-start-2 xl:col-span-1",
+		);
+	}
 } else if (
 	updatedGridConfig.hasLeftComponents &&
 	!updatedGridConfig.hasRightComponents
 ) {
-	footerClass.push("md:col-span-2 xl:col-start-2 xl:col-span-1");
+	// 仅左侧栏：内容列在第2列
+	footerClass.push("md:col-start-2 md:col-span-1 xl:col-start-2 xl:col-span-1");
 } else if (
 	!updatedGridConfig.hasLeftComponents &&
 	updatedGridConfig.hasRightComponents
 ) {
-	// 仅右侧栏：平板端跨2列，内容在第1列
-	footerClass.push("md:col-span-2 md:col-start-1 xl:col-start-1 xl:col-span-1");
+	// 仅右侧栏：内容列在第1列
+	footerClass.push("md:col-start-1 md:col-span-1 xl:col-start-1 xl:col-span-1");
 } else {
-	footerClass.push("xl:col-start-1 xl:col-span-1");
+	footerClass.push("md:col-start-1 md:col-span-1 xl:col-start-1 xl:col-span-1");
 }
 
 const footerClassName = footerClass.join(" ");
@@ -257,6 +266,7 @@ const transparentClass = shouldEnableTransparency
 	: "";
 
 const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
+const stickyNavbar = siteConfig.navbar.stickyNavbar ?? false;
 
 // 获取图片质量配置
 const configQuality = getImageQuality();
@@ -275,8 +285,21 @@ const mobileQuality = Math.round(configQuality * 0.9);
 
 <!-- Navbar -->
 <slot slot="head" name="head"></slot>
-<div id="top-row" class="z-50 pointer-events-none relative transition-all duration-700 mx-auto" class:list={[navbarWidthFull ? "" : "w-full xl:w-[92vw] max-w-(--page-width) px-0 md:px-4"]}>
-    <div id="navbar-wrapper" class="pointer-events-auto sticky top-0 transition-all">
+<div
+    id="top-row"
+    class="z-50 pointer-events-none relative transition-all duration-700 mx-auto"
+    class:list={[
+        stickyNavbar ? "h-18 fixed top-0 left-0 right-0 z-80" : "",
+        navbarWidthFull ? "" : "w-full xl:w-[92vw] max-w-(--page-width) px-0 md:px-4",
+    ]}
+>
+    <div
+        id="navbar-wrapper"
+        class:list={[
+            "pointer-events-auto transition-all",
+            stickyNavbar ? "" : "sticky top-0",
+        ]}
+    >
         <Navbar></Navbar>
     </div>
 </div>

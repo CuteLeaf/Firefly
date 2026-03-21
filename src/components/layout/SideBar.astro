@@ -101,6 +101,27 @@ const getAnimationDelay = (index: number): string => {
 // 判断当前页面是否为文章页面（服务端渲染时确定）
 const isPostPage = Astro.url.pathname.includes("/posts/");
 
+// 判断组件在当前页面首屏是否可见（用于计算布局间距，避免隐藏组件占位）
+const isComponentInitiallyVisible = (
+	config: WidgetComponentConfig | MobileBottomComponentConfig,
+): boolean => {
+	if (
+		"showOnPostPage" in config &&
+		config.showOnPostPage === false &&
+		isPostPage
+	) {
+		return false;
+	}
+	if (
+		"showOnNonPostPage" in config &&
+		config.showOnNonPostPage === false &&
+		!isPostPage
+	) {
+		return false;
+	}
+	return true;
+};
+
 // 动态构建组件 props
 const getComponentProps = (
 	config: WidgetComponentConfig | MobileBottomComponentConfig,
@@ -153,6 +174,9 @@ const { topComponents, stickyComponents } = !isMobileBottom
 	? getComponentsByPosition(filteredComponents)
 	: { topComponents: [], stickyComponents: [] };
 const bottomComponents = isMobileBottom ? filteredComponents : [];
+const hasInitiallyVisibleTopComponents = topComponents.some(
+	isComponentInitiallyVisible,
+);
 ---
 
 {
@@ -172,7 +196,12 @@ const bottomComponents = isMobileBottom ? filteredComponents : [];
 				<>
 					{/* Top components */}
 					{topComponents.length > 0 && (
-						<div class="flex flex-col w-full gap-4 mb-4">
+						<div
+							class:list={[
+								"flex flex-col w-full gap-4",
+								hasInitiallyVisibleTopComponents && "mb-4",
+							]}
+						>
 							{topComponents.map((comp, index) => {
 								const Component = componentMap[comp.type];
 								if (!Component) return null;
@@ -187,9 +216,9 @@ const bottomComponents = isMobileBottom ? filteredComponents : [];
 						<div
 							id={`${side}-sidebar-sticky`}
 							class:list={[
-								"transition-all duration-700 flex flex-col w-full mt-0",
+								"flex flex-col w-full mt-0 gap-4",
 								"sticky",
-								topComponents.length > 0 ? "top-4 gap-4" : "top-0",
+								hasInitiallyVisibleTopComponents ? "top-4" : "top-0",
 							]}
 						>
 							{stickyComponents.map((comp, index) => {

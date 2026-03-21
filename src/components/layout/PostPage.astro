@@ -17,6 +17,8 @@ const columnWidth = siteConfig.postListLayout.grid.columnWidth || 280;
 
 // 根据配置设置初始布局模式，避免闪烁
 const defaultLayout = siteConfig.postListLayout.defaultMode || "list";
+const mobileDefaultLayout =
+	siteConfig.postListLayout.mobileDefaultMode || defaultLayout;
 const initialLayoutClass =
 	defaultLayout === "grid"
 		? "post-grid-auto grid-mode"
@@ -27,6 +29,7 @@ const initialLayoutClass =
   id="post-list-container"
   class={`transition-all duration-500 ease-in-out mb-4 ${initialLayoutClass}`}
   data-default-layout={defaultLayout}
+  data-mobile-default-layout={mobileDefaultLayout}
   data-masonry-enabled={masonryEnabled}
   data-column-width={columnWidth}
   style={`--post-card-min-width: ${columnWidth}px;`}
@@ -55,12 +58,15 @@ const initialLayoutClass =
 </div>
 
 <!-- 立即执行脚本：防止刷新时的布局闪烁 -->
-<script is:inline define:vars={{ defaultLayout, columnWidth }}>
+<script is:inline define:vars={{ defaultLayout, mobileDefaultLayout, columnWidth }}>
   (function() {
     const savedLayout = localStorage.getItem('postListLayout');
+    // 根据视口宽度确定有效的默认布局
+    const effectiveDefault = window.innerWidth < 780 ? mobileDefaultLayout : defaultLayout;
+    // 低于380px强制网格模式
+    const effectiveLayout = window.innerWidth < 380 ? 'grid' : (savedLayout || effectiveDefault);
 
-    // 如果有保存的布局且与默认布局不同，更新容器布局
-    if (savedLayout && savedLayout !== defaultLayout) {
+    if (effectiveLayout !== defaultLayout) {
       const container = document.getElementById('post-list-container');
 
       if (container) {
@@ -70,7 +76,7 @@ const initialLayoutClass =
         // 移除所有布局类
         container.classList.remove('list-mode', 'grid-mode', 'post-grid-auto', 'flex', 'flex-col', 'gap-4', 'md:gap-4');
 
-        if (savedLayout === 'grid') {
+        if (effectiveLayout === 'grid') {
           container.classList.add('grid-mode', 'post-grid-auto');
         } else {
           container.classList.add('list-mode', 'flex', 'flex-col', 'gap-4', 'md:gap-4');
@@ -90,19 +96,20 @@ const initialLayoutClass =
     const postListContainer = document.getElementById("post-list-container");
     if (!postListContainer) return;
 
-    // 检查屏幕宽度
-    const screenWidth = window.innerWidth;
-    const isSmallScreen = screenWidth < 1200;
-
     // 从localStorage读取用户偏好
     const savedLayout = localStorage.getItem("postListLayout");
     const defaultLayout =
       postListContainer.getAttribute("data-default-layout") || "list";
-    let currentLayout = savedLayout || defaultLayout;
+    const mobileDefaultLayout =
+      postListContainer.getAttribute("data-mobile-default-layout") || defaultLayout;
 
-    // 如果屏幕宽度小于1200px，强制使用列表模式
-    if (isSmallScreen) {
-      currentLayout = "list";
+    // 根据视口宽度确定有效的默认布局
+    const effectiveDefault = window.innerWidth < 780 ? mobileDefaultLayout : defaultLayout;
+    let currentLayout = savedLayout || effectiveDefault;
+
+    // 低于380px强制网格模式
+    if (window.innerWidth < 380) {
+      currentLayout = "grid";
     }
 
     // 应用布局
@@ -280,15 +287,7 @@ const initialLayoutClass =
     const postListContainer = document.getElementById("post-list-container");
     if (!postListContainer) return;
 
-    // 检查屏幕宽度，如果小于1200px则强制使用列表模式
-    const screenWidth = window.innerWidth;
-    const isSmallScreen = screenWidth < 1200;
-
-    if (isSmallScreen) {
-      updatePostListLayout("list");
-    } else {
-      updatePostListLayout(newLayout);
-    }
+    updatePostListLayout(newLayout);
   });
 
   // 监听窗口大小变化
@@ -329,6 +328,20 @@ const initialLayoutClass =
     grid-template-columns: repeat(auto-fill, minmax(var(--post-card-min-width, 320px), 1fr));
     gap: 1rem;
   }
+
+  /* 移动端列表模式下缩小元数据 */
+  @media (max-width: 767px) {
+    .list-mode .post-meta-root {
+      transform: scale(0.72) !important;
+      transform-origin: top left !important;
+      margin-bottom: 0.25rem !important;
+      width: 139% !important;
+    }
+    .list-mode :global(.post-meta) {
+      margin-bottom: 0.25rem !important;
+      gap: 0.25rem !important;
+    }
+  }
 </style>
 
 <style>
@@ -366,16 +379,7 @@ const initialLayoutClass =
   }
   */
 
-  /* List Mode Customization */
-  #post-list-container.list-mode :global(.post-card-title) {
-    font-size: 1.5rem !important;
-    line-height: 2rem !important;
-  }
-
-  #post-list-container.list-mode :global(.post-card-title::before) {
-    top: 2.25rem !important;
-    height: 1rem !important;
-  }
+  /* List Mode Customization - handled in PostCard.astro */
 
   /* 列表模式下，有封面的文章，摘要最多显示两行 */
   #post-list-container.list-mode :global(.has-cover .description) {
@@ -424,14 +428,11 @@ const initialLayoutClass =
     font-size: 0.875rem !important;
     margin-bottom: 0.75rem !important;
     padding-right: 0 !important;
-  }
-  /* 网格模式下，有封面的文章，摘要最多显示两行 */
-  #post-list-container.grid-mode :global(.has-cover .description) {
     display: -webkit-box !important;
     -webkit-box-orient: vertical !important;
     overflow: hidden !important;
-    -webkit-line-clamp: 3 !important;
-    line-clamp: 3 !important;
+    -webkit-line-clamp: 2 !important;
+    line-clamp: 2 !important;
   }
 
   #post-list-container.grid-mode :global(.post-meta) {

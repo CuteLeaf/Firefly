@@ -61,7 +61,7 @@ const { remarkPluginFrontmatter } = await render(entry);
     "post-card-wrapper",
     hasCover ? "has-cover" : "no-cover",
     pinned ? "pinned" : "",
-    "card-base flex flex-col-reverse md:flex-col w-full rounded-(--radius-large) overflow-hidden relative",
+    "card-base flex flex-col-reverse w-full rounded-(--radius-large) overflow-hidden relative",
     className,
   ]}
   style={style}
@@ -70,7 +70,7 @@ const { remarkPluginFrontmatter } = await render(entry);
   <div
     class:list={[
       "post-card-content",
-      "pl-6 md:pl-9 pr-6 md:pr-2 pt-6 md:pt-7 pb-6 md:pb-7 relative flex flex-col h-full",
+      "pl-4 md:pl-9 pr-4 md:pr-2 pt-4 md:pt-7 pb-4 md:pb-7 relative flex flex-col h-full",
       {
         "w-full md:w-[calc(100%-52px-12px)]": !hasCover,
         "w-full md:w-[calc(100%-var(--coverWidth)-1.5rem)]": hasCover,
@@ -93,10 +93,6 @@ const { remarkPluginFrontmatter } = await render(entry);
         )
       }
 
-      <Icon
-        class="inline text-[2rem] text-(--primary) md:hidden align-middle -translate-y-[2px] -ml-1"
-        name="material-symbols:chevron-right-rounded"
-      />
     </a>
 
     <!-- metadata -->
@@ -119,8 +115,9 @@ const { remarkPluginFrontmatter } = await render(entry);
     <div
       class:list={[
         "transition text-75 mb-3.5 md:pr-4 description grow",
-        { "line-clamp-2 md:line-clamp-1": !description },
+        { "line-clamp-2": !description },
       ]}
+      title={description || remarkPluginFrontmatter.excerpt}
     >
       {description || remarkPluginFrontmatter.excerpt}
     </div>
@@ -136,7 +133,7 @@ const { remarkPluginFrontmatter } = await render(entry);
             <a
               href={getTagUrl(tag)}
               aria-label={`View all posts with the ${tag.trim()} tag`}
-              class="btn-regular h-6 text-xs px-2 py-1 rounded-md 
+              class="btn-regular h-6 text-xs px-2 py-1 rounded-md
                     transition-all duration-200 hover:scale-105 active:scale-95"
             >
               #{tag.trim()}
@@ -164,7 +161,7 @@ const { remarkPluginFrontmatter } = await render(entry);
           "w-full md:w-(--coverWidth)",
           "aspect-2/1 md:aspect-auto",
           "relative md:absolute md:top-4 md:bottom-4 md:right-4",
-          "rounded-t-(--radius-large) md:rounded-xl overflow-hidden",
+          "rounded-(--radius-large) md:rounded-xl overflow-hidden",
         ]}
       >
         <div class="absolute pointer-events-none z-10 w-full h-full group-hover:bg-black/30 group-active:bg-black/50 transition" />
@@ -194,7 +191,7 @@ const { remarkPluginFrontmatter } = await render(entry);
         aria-label={title}
         class:list={[
           "post-card-enter-btn",
-          "hidden md:flex btn-regular w-13",
+          "flex btn-regular w-13",
           "absolute right-3 top-3 bottom-3 rounded-xl bg-(--enter-btn-bg)",
           "hover:bg-(--enter-btn-bg-hover) active:bg-(--enter-btn-bg-active) active:scale-95",
         ]}
@@ -209,7 +206,121 @@ const { remarkPluginFrontmatter } = await render(entry);
 </div>
 
 <style define:vars={{ coverWidth }}>
-  /* Grid Mode Styles */
+  /* === List Mode Mobile Styles === */
+  /* 移动端列表模式：封面在右侧，内容缩小 */
+  :global(.list-mode) .post-card-wrapper {
+    flex-direction: row !important;
+  }
+
+  :global(.list-mode) .has-cover .post-card-content {
+    width: calc(100% - 9rem - 0.75rem) !important;
+    padding: 0.75rem 0.5rem 0.75rem 0.75rem !important;
+  }
+
+  :global(.list-mode) .has-cover .post-card-image {
+    position: absolute !important;
+    top: 0.5rem !important;
+    bottom: 0.5rem !important;
+    right: 0.5rem !important;
+    width: 9rem !important;
+    aspect-ratio: auto !important;
+    border-radius: 0.75rem !important;
+  }
+
+  :global(.list-mode) .post-card-title {
+    font-size: 1.125rem !important;
+    line-height: 1.75rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  :global(.list-mode) .post-card-title::before {
+    display: none !important;
+  }
+
+  :global(.list-mode) .description {
+    font-size: 0.8rem !important;
+    margin-bottom: 0.75rem !important;
+    -webkit-line-clamp: 2 !important;
+    line-clamp: 2 !important;
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  :global(.list-mode) .stats {
+    gap: 0.25rem !important;
+  }
+
+  :global(.list-mode) .no-cover .post-card-content {
+    width: calc(100% - 52px - 12px) !important;
+  }
+
+  :global(.list-mode) .post-card-enter-btn {
+    display: flex !important;
+  }
+
+  /* 移动端列表模式 - 隐藏tags，只在有空间时显示 */
+  :global(.list-mode) .stats a {
+    font-size: 0.65rem !important;
+    padding: 0.125rem 0.375rem !important;
+    height: 1.25rem !important;
+  }
+
+  /* === Desktop List Mode overrides === */
+  @media (min-width: 768px) {
+    :global(.list-mode) .post-card-wrapper {
+      flex-direction: row !important;
+    }
+
+    :global(.list-mode) .has-cover .post-card-content {
+      width: calc(100% - var(--coverWidth) - 1.5rem) !important;
+      padding: 1.75rem 0.5rem 1.75rem 2.25rem !important;
+    }
+
+    :global(.list-mode) .has-cover .post-card-image {
+      top: 1rem !important;
+      bottom: 1rem !important;
+      right: 1rem !important;
+      width: var(--coverWidth) !important;
+      border-radius: 0.75rem !important;
+    }
+
+    :global(.list-mode) .post-card-title {
+      font-size: 1.5rem !important;
+      line-height: 2rem !important;
+      margin-bottom: 0.75rem !important;
+    }
+
+    :global(.list-mode) .post-card-title::before {
+      display: block !important;
+      top: 2.25rem !important;
+      height: 1rem !important;
+    }
+
+    :global(.list-mode) .description {
+      font-size: inherit !important;
+      margin-bottom: 0.875rem !important;
+      -webkit-line-clamp: 2 !important;
+      line-clamp: 2 !important;
+    }
+
+    :global(.list-mode) .stats a {
+      font-size: 0.75rem !important;
+      padding: 0.25rem 0.5rem !important;
+      height: 1.5rem !important;
+    }
+
+    :global(.list-mode) .no-cover .post-card-content {
+      width: calc(100% - 52px - 12px) !important;
+    }
+
+    :global(.list-mode) .post-card-enter-btn {
+      display: flex !important;
+    }
+  }
+
+  /* === Grid Mode Styles === */
+  /* 网格模式：封面在顶部（移动端和桌面端一致） */
   :global(.grid-mode) .post-card-wrapper {
     flex-direction: column-reverse !important;
     height: 100% !important;
@@ -248,5 +359,13 @@ const { remarkPluginFrontmatter } = await render(entry);
   :global(.grid-mode) .has-cover .post-card-title::before {
     top: 1.3rem !important;
   }
-  
+
+  :global(.grid-mode) .no-cover .post-card-content {
+    width: calc(100% - 52px - 12px) !important;
+  }
+
+  :global(.grid-mode) .post-card-enter-btn {
+    display: flex !important;
+  }
+
 </style>

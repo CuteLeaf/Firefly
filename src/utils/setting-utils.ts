@@ -307,7 +307,11 @@ export function applyWallpaperModeToDocument(mode: WALLPAPER_MODE) {
 		const body = document.body;
 
 		// 移除所有壁纸相关的CSS类
-		body.classList.remove("enable-banner", "wallpaper-transparent");
+		body.classList.remove(
+			"enable-banner",
+			"wallpaper-transparent",
+			"no-banner-layout",
+		);
 
 		// 根据模式添加相应的CSS类
 		switch (mode) {
@@ -317,12 +321,15 @@ export function applyWallpaperModeToDocument(mode: WALLPAPER_MODE) {
 				break;
 			case WALLPAPER_OVERLAY:
 				body.classList.add("wallpaper-transparent");
+				body.classList.add("no-banner-layout");
 				showOverlayMode();
 				break;
 			case WALLPAPER_NONE:
+				body.classList.add("no-banner-layout");
 				hideAllWallpapers();
 				break;
 			default:
+				body.classList.add("no-banner-layout");
 				hideAllWallpapers();
 				break;
 		}
@@ -342,7 +349,11 @@ function ensureWallpaperState(mode: WALLPAPER_MODE) {
 	const body = document.body;
 
 	// 移除所有壁纸相关的CSS类
-	body.classList.remove("enable-banner", "wallpaper-transparent");
+	body.classList.remove(
+		"enable-banner",
+		"wallpaper-transparent",
+		"no-banner-layout",
+	);
 
 	// 根据模式添加相应的CSS类
 	switch (mode) {
@@ -352,9 +363,11 @@ function ensureWallpaperState(mode: WALLPAPER_MODE) {
 			break;
 		case WALLPAPER_OVERLAY:
 			body.classList.add("wallpaper-transparent");
+			body.classList.add("no-banner-layout");
 			showOverlayMode();
 			break;
 		case WALLPAPER_NONE:
+			body.classList.add("no-banner-layout");
 			hideAllWallpapers();
 			break;
 	}

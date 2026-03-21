@@ -1,0 +1,49 @@
+---
+interface Props {
+	analyticsId: string;
+	sdkUrl?: string;
+	ck?: string;
+	autoTrack?: boolean;
+	hashMode?: boolean;
+	screenRecord?: boolean;
+}
+
+const {
+	analyticsId,
+	sdkUrl,
+	ck,
+	autoTrack = true,
+	hashMode = false,
+	screenRecord = true,
+} = Astro.props;
+---
+
+<script is:inline data-swup-ignore-script define:vars={{ analyticsId, sdkUrl, ck, autoTrack, hashMode, screenRecord }}>
+	!(function (p) {
+		"use strict";
+		!(function () {
+			var s = window,
+				e = document,
+				i = p,
+				c = sdkUrl || "".concat(
+					"https:" === e.location.protocol ? "https://" : "http://",
+					"sdk.51.la/js-sdk-pro.min.js"
+				),
+				n = e.createElement("script"),
+				r = e.getElementsByTagName("script")[0];
+			(n.type = "text/javascript"),
+				n.setAttribute("charset", "UTF-8"),
+				(n.async = !0),
+				(n.src = c),
+				(n.id = "LA_COLLECT"),
+				(i.d = n);
+			var o = function () {
+				s.LA.ids.push(i);
+			};
+			s.LA
+				? s.LA.ids && o()
+				: ((s.LA = p), (s.LA.ids = []), o()),
+				r.parentNode.insertBefore(n, r);
+		})();
+	})({ id: analyticsId, ck: ck || analyticsId, autoTrack: autoTrack, hashMode: hashMode, screenRecord: screenRecord });
+</script>

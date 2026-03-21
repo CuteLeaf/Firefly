@@ -3,10 +3,20 @@ import { getEntry, render } from "astro:content";
 import Comment from "@components/comment/index.astro";
 import Markdown from "@components/common/Markdown.astro";
 import { Icon } from "astro-icon/components";
-import { friendsPageConfig, getEnabledFriends } from "@/config";
+import {
+	commentConfig,
+	friendsPageConfig,
+	getEnabledFriends,
+	siteConfig,
+} from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+// 检查页面是否启用
+if (!siteConfig.pages.friends) {
+	return Astro.redirect("/404/");
+}
 
 const friendsPost = await getEntry("spec", "friends");
 
@@ -15,6 +25,12 @@ if (!friendsPost) {
 }
 
 const { Content } = await render(friendsPost);
+
+// 检查评论系统是否启用
+const isCommentEnabled =
+	commentConfig?.type &&
+	commentConfig.type !== "none" &&
+	friendsPageConfig.showComment !== false;
 
 // 使用配置文件中的友链数据，按权重排序
 const items = getEnabledFriends();
@@ -145,9 +161,11 @@ const description =
   )}
 
   <!-- 评论区 -->
-  <div class="mt-4">
-    <Comment post={friendsPost} customPath="/friends/" />
-  </div>
+  {isCommentEnabled && (
+    <div class="mt-4">
+      <Comment post={friendsPost} customPath="/friends/" />
+    </div>
+  )}
 
   <script slot="head" is:inline>
     if (!customElements.get("friend-filter")) {
