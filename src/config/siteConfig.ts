@@ -183,7 +183,7 @@ export const siteConfig: SiteConfig = {
 		// Umami 统计配置
 		umamiAnalytics: {
 			// Umami Website ID
-			websiteId: "",
+			websiteId: "483c0341-5b7d-4fe2-9e4f-fdf98eb0b447",
 			// Umami JS地址，支持使用自建
 			scriptUrl: "https://cloud.umami.is/script.js",
 		},
@@ -196,7 +196,7 @@ export const siteConfig: SiteConfig = {
 			// 多个统计 ID 的数据分离标识，留空则使用 Id
 			ck: "",
 			// 是否开启事件分析功能
-			autoTrack: false,
+			autoTrack: true,
 			//  Hash路由模式, 项目使用History API路由, 所以不必开启默认false
 			hashMode: false,
 			// 是否开启网站录屏功能
