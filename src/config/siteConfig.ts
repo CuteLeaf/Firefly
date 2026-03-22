@@ -10,7 +10,7 @@ export const siteConfig: SiteConfig = {
 	title: "Zane Labs",
 
 	// 站点副标题
-	subtitle: "",
+	subtitle: "a blog",
 
 	// 站点 URL
 	site_url: "https://blog.ezane.top/",
