@@ -52,7 +52,7 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 			...(siteConfig.pages.sponsor ? [LinkPreset.Sponsor] : []),
 
 			// 关于页面
-			LinkPreset.About,
+			//LinkPreset.About,
 		],
 	});
 
