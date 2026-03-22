@@ -12,7 +12,7 @@ export const profileConfig: ProfileConfig = {
 	name: "Zane",
 
 	// 个人签名
-	bio: "一个热爱探索者高中生，在此分享发现与生活",
+	bio: "一个热爱探索的高中生，在此分享发现与生活",
 
 	// 链接配置
 	// 已经预装的图标集：fa7-brands，fa7-regular，fa7-solid，material-symbols，simple-icons
@@ -22,21 +22,21 @@ export const profileConfig: ProfileConfig = {
 	// showName: true 时显示图标和名称，false 时只显示图标
 	links: [
 		{
-			name: "qq",
-			icon: "fa7-brands:qq",
-			url: "https://qm.qq.com/q/ZGsFa8qX2G",
-			showName: false,
-		},
-		{
-			name: "GitHub",
-			icon: "fa7-brands:github",
-			url: "https://github.com/CuteLeaf",
+			name: "Bilibili",
+			icon: "fa7-brands:bilibili",
+			url: "https://m.bilibili.com/space/587847197",
 			showName: false,
 		},
 		{
 			name: "Email",
-			icon: "fa7-solid:envelope",
-			url: "mailto:xiaye@msn.com",
+			icon: "fa7-brands:envelope",
+			url: "mzane@foxmail.com",
+			showName: false,
+		},
+		{
+			name: "Sponsor",
+			icon: "fa7-solid:paypal",
+			url: "config/sponsorConfig.ts",
 			showName: false,
 		},
 		{
