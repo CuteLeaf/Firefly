@@ -1,38 +1,36 @@
-# 关于我 / About Me
+# 👋 关于我
 
-你好！我是 **夏叶** ，一个在数字世界中默默无闻的一片叶子。
-
-## 🛠️ 关于本站
-
-这个网站使用 **Astro** 框架构建，采用了 [Firefly](https://github.com/CuteLeaf/Firefly) 模板，Firefly 是基于 [Fuwari](https://github.com/saicaca/fuwari) 的二次开发。
-
-**Firefly** 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。
-
-
-**🖥️在线预览： [Firefly - Demo site](https://firefly.cuteleaf.cn/)**
-
-**🏠我的博客： [https://blog.cuteleaf.cn](https://blog.cuteleaf.cn/)**
-
-**📝Firefly使用文档： [https://docs-firefly.cuteleaf.cn](https://docs-firefly.cuteleaf.cn/)**
-
-**⭐Firefly开源地址：[https://github.com/CuteLeaf/Firefly](https://github.com/CuteLeaf/Firefly)** 
-
-**⭐Fuwari开源地址：[https://github.com/saicaca/fuwari](https://github.com/saicaca/fuwari)**
-
-::github{repo="CuteLeaf/Firefly"}
-
-::github{repo="saicaca/fuwari"}
-
-
-## 📫 联系方式
-
-如果你想和我交流技术问题，分享有趣的想法，或者只是想打个招呼，欢迎通过以下方式联系我：
-
-- 💻 **GitHub**: [CuteLeaf](https://github.com/CuteLeaf)
-- ✉️ **Email**: [xiaye@msn.com](mailto:xiaye@msn.com)
-- 🐧 **QQ交流群：[1087127207](https://qm.qq.com/q/ZGsFa8qX2G)**
+大家好，我是一名来自安徽歙县的 16 岁学生。
+平时喜欢安静折腾，也喜欢慢慢探索自己感兴趣的一切。
 
 ---
 
-*感谢你的来访！希望在这里能找到对你有用的内容！*
+## 📌 基本信息
+- 年龄：16 岁
+- 生日：12 月 21 日
+- 居住：安徽省黄山市歙县
+- 学校：歙县行知学校
+- 专业：会计
 
+---
+
+## 📚 学习日常
+目前主修会计专业，和数字、账目打交道。
+课堂上认真学习专业知识，课后也会给自己安排一些小目标。
+
+---
+
+## 💻 兴趣爱好
+我真正热爱的是 IT 和服务器。
+喜欢折腾：
+- 服务器搭建与运维
+- 系统配置与优化
+- 网络、内网穿透、小项目实践
+
+对技术充满好奇，享受动手解决问题的过程。
+
+---
+
+## 💡 小想法
+一边是会计，一边是技术。
+在平凡的生活里，做自己喜欢的事，慢慢成长，慢慢发光。
