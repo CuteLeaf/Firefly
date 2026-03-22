@@ -47,3 +47,13 @@
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:active {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.4) 100%);
 }
+
+/* 音乐播放器播放列表隐藏滚动条 */
+.playlist-container {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.playlist-container::-webkit-scrollbar {
+    display: none;
+}
