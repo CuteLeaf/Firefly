@@ -65,34 +65,80 @@ const { tabs, activeTab } = Astro.props;
       });
     }
 
+    function activateTab(targetTab: string, shouldSyncHash = true) {
+      if (!targetTab) {
+        return;
+      }
+
+      const targetButton = Array.from(tabButtons).find(
+        (button) => (button as HTMLButtonElement).dataset.tab === targetTab
+      ) as HTMLButtonElement | undefined;
+
+      if (!targetButton) {
+        return;
+      }
+
+      // Update active tab
+      tabButtons.forEach(btn => {
+        btn.classList.remove('border-(--primary)', 'text-(--primary)');
+        btn.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300', 'dark:text-gray-400', 'dark:hover:text-gray-300');
+      });
+
+      targetButton.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300', 'dark:text-gray-400', 'dark:hover:text-gray-300');
+      targetButton.classList.add('border-(--primary)', 'text-(--primary)');
+
+      // Show/hide sections
+      sections.forEach(section => {
+        const htmlSection = section as HTMLElement;
+        if (htmlSection.dataset.section === targetTab) {
+          htmlSection.classList.remove('hidden');
+        } else {
+          htmlSection.classList.add('hidden');
+        }
+      });
+
+      hydrateVisibleImages(targetTab);
+
+      if (shouldSyncHash) {
+        const nextHash = `#${encodeURIComponent(targetTab)}`;
+        if (window.location.hash !== nextHash) {
+          window.history.replaceState(null, '', nextHash);
+        }
+      }
+    }
+
+    function getTabFromHash() {
+      const hash = window.location.hash.replace(/^#/, '');
+      if (!hash) {
+        return '';
+      }
+      try {
+        return decodeURIComponent(hash);
+      } catch {
+        return '';
+      }
+    }
+
     tabButtons.forEach(button => {
       button.addEventListener('click', (event) => {
         const currentButton = event.currentTarget as HTMLButtonElement;
         const targetTab = currentButton.dataset.tab;
-
-        // Update active tab
-        tabButtons.forEach(btn => {
-          btn.classList.remove('border-(--primary)', 'text-(--primary)');
-          btn.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300', 'dark:text-gray-400', 'dark:hover:text-gray-300');
-        });
-
-        currentButton.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300', 'dark:text-gray-400', 'dark:hover:text-gray-300');
-        currentButton.classList.add('border-(--primary)', 'text-(--primary)');
-
-        // Show/hide sections
-        sections.forEach(section => {
-          const htmlSection = section as HTMLElement;
-          if (htmlSection.dataset.section === targetTab) {
-            htmlSection.classList.remove('hidden');
-          } else {
-            htmlSection.classList.add('hidden');
-          }
-        });
-
         if (targetTab) {
-          hydrateVisibleImages(targetTab);
+          activateTab(targetTab, true);
         }
       });
+    });
+
+    const initialTab = getTabFromHash();
+    if (initialTab) {
+      activateTab(initialTab, false);
+    }
+
+    window.addEventListener('hashchange', () => {
+      const tabFromHash = getTabFromHash();
+      if (tabFromHash) {
+        activateTab(tabFromHash, false);
+      }
     });
   }
 
