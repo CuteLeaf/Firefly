@@ -36,7 +36,7 @@ export const profileConfig: ProfileConfig = {
 		{
 			name: "Sponsor",
 			icon: "fa7-brands:paypal",
-			url: "config/sponsorConfig.ts",
+			url: "sponsor/",
 			showName: false,
 		},
 		{
