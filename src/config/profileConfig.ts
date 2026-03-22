@@ -29,13 +29,13 @@ export const profileConfig: ProfileConfig = {
 		},
 		{
 			name: "Email",
-			icon: "fa7-brands:envelope",
+			icon: "fa7-solid:envelope",
 			url: "mzane@foxmail.com",
 			showName: false,
 		},
 		{
 			name: "Sponsor",
-			icon: "fa7-solid:paypal",
+			icon: "fa7-brands:paypal",
 			url: "config/sponsorConfig.ts",
 			showName: false,
 		},
