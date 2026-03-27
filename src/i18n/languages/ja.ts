@@ -218,6 +218,7 @@ export const ja: Translation = {
 	// バナー設定
 	[Key.bannerSettings]: "バナー設定",
 	[Key.bannerTitle]: "ホームバナータイトル",
+	[Key.bannerCarousel]: "バナーカルーセル",
 	[Key.wavesAnimation]: "波アニメーション",
 	[Key.overlaySettings]: "透明設定",
 	[Key.overlayOpacity]: "壁紙の透明度",
@@ -292,8 +293,8 @@ export const ja: Translation = {
 	[Key.scanToRead]: "QRコードで読む",
 
 	// コードブロック折りたたみ設定
-	[Key.codeCollapsibleShowMore]: "もっと表示",
-	[Key.codeCollapsibleShowLess]: "少なく表示",
+	[Key.codeCollapsibleShowMore]: "展開する",
+	[Key.codeCollapsibleShowLess]: "折りたたむ",
 	[Key.codeCollapsibleExpanded]: "コードブロックが展開されました",
 	[Key.codeCollapsibleCollapsed]: "コードブロックが折りたたまれました",
 

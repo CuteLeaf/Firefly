@@ -8,7 +8,7 @@
 > 
 > ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen) 
 ![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
-![Astro](https://img.shields.io/badge/Astro-6.0.5-orange)
+![Astro](https://img.shields.io/badge/Astro-6.0.8-orange)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)
 >
 > [![Stars](https://img.shields.io/github/stars/CuteLeaf/Firefly?style=social)](https://github.com/CuteLeaf/Firefly/stargazers)
@@ -47,13 +47,22 @@
 <img alt="Lighthouse" src="./images/Lighthouse.png" />
 
 >[!TIP]
->Fireflyは、AstroフレームワークとFuwariテンプレートをベースに開発された、清新で美しい個人ブログテーマテンプレートです。技術愛好家やコンテンツクリエイター向けに設計されています。このテーマはモダンなWeb技術スタックを統合し、豊富な機能モジュールと高度にカスタマイズ可能なインターフェースを提供し、プロフェッショナルで美しい個人ブログウェブサイトを簡単に作成できます。
 >
->重要なレイアウトでは、Fireflyは革新的に左右のデュアルサイドバー、記事グリッド（多列）レイアウト、メーソンリーレイアウトを追加し、サイト統計、カレンダーコンポーネント、記事目次などの小さなウィジェットを追加してサイドバーをより豊かにし、同時にfuwariのレイアウトシステムも保持しており、設定ファイルで自由に切り替えられます。
+>Firefly は、Astro フレームワークと Fuwari テンプレートをベースに開発された、清新で美しくモダンな個人ブログテーマテンプレートです。技術愛好家やコンテンツクリエイター向けに設計されており、モダンな Web 技術スタックを統合し、豊富な機能モジュールと高いカスタマイズ性を備えたインターフェースで、プロフェッショナルで美しい個人ブログを手軽に構築できます。
 >
->**レイアウト設定とデモの詳細については、[Fireflyレイアウトシステム詳細](https://firefly.cuteleaf.cn/posts/firefly-layout-system/)をご覧ください**
+>主要なレイアウト面では、Firefly は左右のデュアルサイドバー、記事グリッド（多カラム）レイアウト、メイソンリーレイアウトを革新的に追加しています。
 >
->Fireflyはi18n多言語切り替えをサポートしていますが、簡体字中国語以外はAI翻訳です。誤りがある場合は、[Pull Request](https://github.com/CuteLeaf/Firefly/pulls)を提出して修正してください。
+>さらに、サイト統計、カレンダー、目次、音楽プレーヤー、クイックカテゴリーナビゲーションなどのウィジェットを追加し、サイドバーとページ全体のレイアウトをより豊かにしています。
+>
+>同時に、共有ポスター、関連記事のおすすめ、ランダム記事などのコンポーネントも追加し、記事ページの内容をさらに充実させています。
+>
+>**Firefly の上記コンポーネント設計や関連コードを参考または利用する場合は、出典として Firefly を明記してください。**
+>
+>Firefly はオリジナルの fuwari レイアウトも保持しており、設定ファイルで好みに応じて自由に切り替えられます。
+>
+>**レイアウト設定とデモの詳細については、[Firefly レイアウトシステム詳解](https://firefly.cuteleaf.cn/posts/firefly-layout-system/)をご覧ください**
+>
+>Firefly は i18n の多言語 UI をサポートしていますが、簡体字中国語以外の言語は AI 翻訳です。誤りがある場合は、[Pull Request](https://github.com/CuteLeaf/Firefly/pulls) の提出を歓迎します。
 
 ## ✨ 機能
 
@@ -62,7 +71,7 @@
 - [x] **Astro + Tailwind CSS** - モダンな技術スタックベースの超高速静的サイト生成
 - [x] **スムーズなアニメーション** - Swupページトランジションアニメーションで滑らかなブラウジング体験
 - [x] **レスポンシブデザイン** - デスクトップ、タブレット、モバイルデバイスに完璧に対応
-- [x] **多言語サポート** - i18n国際化、簡体字中国語、繁体字中国語、英語、日本語、ロシア語をサポート
+- [x] **多言語サポート** - i18n国際化UI、簡体字中国語、繁体字中国語、英語、日本語、ロシア語をサポート
 - [x] **全文検索** - Pagefindベースのクライアントサイド検索、記事コンテンツのインデックスをサポート
 
 ### パーソナライゼーション

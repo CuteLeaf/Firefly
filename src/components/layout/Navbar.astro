@@ -246,6 +246,12 @@ function initSemifullScrollDetection() {
     let ticking = false;
 
     function updateNavbarState() {
+        if (document.documentElement.classList.contains('is-page-transitioning')) {
+            navbar!.classList.remove('scrolled');
+            ticking = false;
+            return;
+        }
+
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const threshold = 50; // 滚动阈值，可以根据需要调整
         // 使用批量DOM操作优化性能

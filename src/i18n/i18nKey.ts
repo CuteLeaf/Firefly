@@ -209,6 +209,7 @@ enum I18nKey {
 	// 横幅设置
 	bannerSettings = "bannerSettings",
 	bannerTitle = "bannerTitle",
+	bannerCarousel = "bannerCarousel",
 	wavesAnimation = "wavesAnimation",
 	overlaySettings = "overlaySettings",
 	overlayOpacity = "overlayOpacity",

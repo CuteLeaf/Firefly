@@ -4,6 +4,7 @@ import { render } from "astro:content";
 import { Icon } from "astro-icon/components";
 import CoverImage from "@/components/common/CoverImage.astro";
 import PostMetadata from "@/components/layout/PostMeta.astro";
+import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { getApiUrlList, processCoverImageSync } from "@/utils/image-utils";
@@ -31,7 +32,6 @@ const {
 	title,
 	url,
 	published,
-	updated,
 	tags,
 	category,
 	image,
@@ -53,7 +53,16 @@ const hasCover =
 
 const coverWidth = "30%";
 
+const showTags = siteConfig.postListLayout.showTags;
+const descriptionLines = Math.max(
+	0,
+	Math.trunc(siteConfig.postListLayout.descriptionLines ?? 2),
+);
+const descriptionClampLines = String(descriptionLines);
+const shouldClampDescription = descriptionLines > 0;
+
 const { remarkPluginFrontmatter } = await render(entry);
+const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
 ---
 
 <div
@@ -89,23 +98,20 @@ const { remarkPluginFrontmatter } = await render(entry);
 
       {
         password && (
-          <Icon name="material-symbols:lock-outline" class="inline text-2xl align-middle -translate-y-px" />
+          <Icon
+            name="material-symbols:lock-outline"
+            class="inline text-2xl align-middle -translate-y-px"
+          />
         )
       }
-
     </a>
 
     <!-- metadata -->
     <PostMetadata
       published={published}
-      updated={updated}
       tags={tags}
+      showTags={false}
       category={category || undefined}
-      hideTagsForMobile={true}
-      hideUpdateDate={true}
-      words={remarkPluginFrontmatter.words}
-      minutes={remarkPluginFrontmatter.minutes}
-      showWordCount={true}
       pinned={pinned}
       password={password}
       className="mb-4 post-meta"
@@ -114,42 +120,39 @@ const { remarkPluginFrontmatter } = await render(entry);
     <!-- description -->
     <div
       class:list={[
-        "transition text-75 mb-3.5 md:pr-4 description grow",
-        { "line-clamp-2": !description },
+        "transition text-75 md:pr-4 description grow",
+        { "description-clamped": shouldClampDescription },
       ]}
-      title={description || remarkPluginFrontmatter.excerpt}
+      title={descriptionText}
     >
-      {description || remarkPluginFrontmatter.excerpt}
+      {descriptionText}
     </div>
 
     <!-- tags -->
-    <div
-      class="text-sm text-black/30 dark:text-white/30 flex flex-wrap gap-2 transition stats mt-auto"
-    >
-      {
-        tags &&
-          tags.length > 0 &&
-          tags.map((tag, _i) => (
-            <a
-              href={getTagUrl(tag)}
-              aria-label={`View all posts with the ${tag.trim()} tag`}
-              class="btn-regular h-6 text-xs px-2 py-1 rounded-md
-                    transition-all duration-200 hover:scale-105 active:scale-95"
-            >
-              #{tag.trim()}
-            </a>
-          ))
-      }
-      {
-        !(tags && tags.length > 0) && (
-          <span class="text-(--content-meta) text-xs">
-            #{i18n(I18nKey.noTags)}
-          </span>
-        )
-      }
-    </div>
+    {
+      showTags && (
+        <div class="text-sm text-black/30 dark:text-white/30 flex flex-wrap gap-2 transition stats pt-3">
+          {tags &&
+            tags.length > 0 &&
+            tags.map((tag, _i) => (
+              <a
+                href={getTagUrl(tag)}
+                aria-label={`View all posts with the ${tag.trim()} tag`}
+                class="btn-regular h-6 text-xs px-2 py-1 rounded-md
+                         transition-all duration-200 hover:scale-105 active:scale-95"
+              >
+                #{tag.trim()}
+              </a>
+            ))}
+          {!(tags && tags.length > 0) && (
+            <span class="text-(--content-meta) text-xs">
+              #{i18n(I18nKey.noTags)}
+            </span>
+          )}
+        </div>
+      )
+    }
   </div>
-
   {
     hasCover && (
       <a
@@ -205,7 +208,15 @@ const { remarkPluginFrontmatter } = await render(entry);
   }
 </div>
 
-<style define:vars={{ coverWidth }}>
+<style define:vars={{ coverWidth, descriptionClampLines }}>
+  .description-clamped {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: var(--descriptionClampLines);
+    line-clamp: var(--descriptionClampLines);
+  }
+
   /* === List Mode Mobile Styles === */
   /* 移动端列表模式：封面在右侧，内容缩小 */
   :global(.list-mode) .post-card-wrapper {
@@ -235,16 +246,6 @@ const { remarkPluginFrontmatter } = await render(entry);
 
   :global(.list-mode) .post-card-title::before {
     display: none !important;
-  }
-
-  :global(.list-mode) .description {
-    font-size: 0.8rem !important;
-    margin-bottom: 0.75rem !important;
-    -webkit-line-clamp: 2 !important;
-    line-clamp: 2 !important;
-    display: -webkit-box !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
   }
 
   :global(.list-mode) .stats {
@@ -299,9 +300,6 @@ const { remarkPluginFrontmatter } = await render(entry);
 
     :global(.list-mode) .description {
       font-size: inherit !important;
-      margin-bottom: 0.875rem !important;
-      -webkit-line-clamp: 2 !important;
-      line-clamp: 2 !important;
     }
 
     :global(.list-mode) .stats a {
@@ -367,5 +365,4 @@ const { remarkPluginFrontmatter } = await render(entry);
   :global(.grid-mode) .post-card-enter-btn {
     display: flex !important;
   }
-
 </style>

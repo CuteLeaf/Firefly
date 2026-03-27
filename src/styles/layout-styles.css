@@ -1,16 +1,5 @@
 /* Layout specific styles */
 
-/* User controlled visibility - 通过 html 属性控制，在渲染前就生效 */
-/* 用户关闭时隐藏水波纹 */
-html[data-waves-enabled="false"] #header-waves {
-    display: none !important;
-}
-
-/* 用户开启时显示水波纹（覆盖默认的 hidden 类） */
-html[data-waves-enabled="true"] #header-waves {
-    display: block !important;
-}
-
 /* 用户关闭时隐藏横幅标题 */
 html[data-banner-title-enabled="false"] .banner-home-text-overlay {
     display: none !important;
@@ -120,12 +109,6 @@ html.is-page-transitioning .banner-home-text-overlay {
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7) !important;
     }
     
-    /* 水波纹效果高度调整 - 与文章列表提升同步 */
-    .waves {
-        height: 13vh !important;
-        min-height: 100px !important;
-        max-height: 176px !important;
-    }
 }
 
 /* 移动端横幅优化 - 大屏手机 (481px - 640px) */
@@ -175,12 +158,6 @@ html.is-page-transitioning .banner-home-text-overlay {
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7) !important;
     }
     
-    /* 水波纹效果高度调整 - 与文章列表提升同步 */
-    .waves {
-        height: 15vh !important;
-        min-height: 110px !important;
-        max-height: 166px !important;
-    }
 }
 
 /* 移动端横幅优化 - 超大屏手机/小平板 (641px - 767px) */
@@ -229,13 +206,7 @@ html.is-page-transitioning .banner-home-text-overlay {
         line-height: 1.4 !important;
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7) !important;
     }
-    
-    /* 水波纹效果高度调整 - 与文章列表提升同步 */
-    .waves {
-        height: 16vh !important;
-        min-height: 115px !important;
-        max-height: 190px !important;
-    }
+
 }
 
 /* 平板设备横幅优化 (768px - 1023px) - Tailwind md 断点 */
@@ -284,12 +255,6 @@ html.is-page-transitioning .banner-home-text-overlay {
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7) !important;
     }
     
-    /* 水波纹效果高度调整 - 与文章列表提升同步 */
-    .waves {
-        height: 17vh !important;
-        min-height: 120px !important;
-        max-height: 216px !important;
-    }
 }
 
 /* 桌面端保持居中 (1024px+) - Tailwind lg 断点 */
@@ -312,12 +277,6 @@ html.is-page-transitioning .banner-home-text-overlay {
         transition: transform 1s ease-out !important;
     }
     
-    /* 水波纹效果恢复默认 */
-    .waves {
-        height: 15vh !important;
-        min-height: 80px !important;
-        max-height: 150px !important;
-    }
 }
 
 /* 移动端图片优化 */
@@ -522,93 +481,6 @@ html.is-page-transitioning .banner-home-text-overlay {
     }
 }
 
-/* 水波纹显示优化 */
-.waves {
-    /* 确保水波纹完整显示 */
-    overflow: visible;
-    z-index: 5;
-    /* 硬件加速，确保与背景同步渲染 */
-    transform: translateZ(0);
-    will-change: transform;
-    /* 移除contain属性，避免限制动画渲染范围 */
-    contain: none;
-}
-
-.waves svg {
-    /* 确保SVG完整渲染 */
-    width: 100%;
-    height: 100%;
-    display: block;
-    /* SVG硬件加速 */
-    transform: translateZ(0);
-    backface-visibility: hidden;
-}
-
-/* 水波纹填充色主题切换优化 */
-.waves use {
-    /* 确保填充色与页面背景同步更新 */
-    will-change: fill;
-}
-
-/* 水波纹与背景同步切换优化 - 解决交界线闪烁 */
-#header-waves {
-    /* 确保水波纹容器与页面背景在同一合成层 */
-    isolation: isolate;
-    /* 移除contain属性，避免限制水波纹动画 */
-    contain: none;
-    /* 精确对齐 */
-    margin-bottom: -1px;
-}
-
-/* 主题切换时的额外保护 */
-.theme-changing #header-waves,
-.theme-changing #header-waves svg,
-.theme-changing #header-waves use {
-    /* 在主题切换期间禁用所有可能的渲染延迟 */
-    will-change: auto;
-    transform: translateZ(0);
-    backface-visibility: hidden;
-}
-
-/* 移动端水波纹特殊优化 */
-@media (max-width: 1023px) {
-    #header-waves {
-        /* 确保水波纹容器不被裁剪 */
-        overflow: visible;
-        z-index: 5;
-        /* 水波纹快速消失动画 */
-        transition: transform 0.3s ease-in, opacity 0.2s ease-in;
-    }
-    
-    /* 当banner隐藏时，水波纹也隐藏 */
-    .mobile-hide-banner #header-waves {
-        display: none !important;
-        transform: translateY(-100%);
-        opacity: 0;
-        /* 水波纹比banner更快消失 */
-        transition: transform 0.25s ease-in, opacity 0.15s ease-in;
-    }
-    
-    .waves svg {
-        /* 移动端SVG优化 */
-        min-height: 60px;
-    }
-    
-    /* 确保水波纹在banner底部正确定位 */
-    .waves {
-        bottom: -1px !important;
-        position: absolute !important;
-    }
-}
-
-/* 超小屏幕水波纹优化 */
-@media (max-width: 360px) {
-    .waves {
-        height: 6vh !important;
-        min-height: 50px !important;
-        max-height: 70px !important;
-    }
-}
 
 /* 基于屏幕高度的banner优化 - 优先显示banner */
 /* 极小高度屏幕 (高度 ≤ 500px) */
@@ -636,10 +508,6 @@ html.is-page-transitioning .banner-home-text-overlay {
         line-height: 1.2 !important;
     }
     
-    .waves {
-        height: 10vh !important;
-        min-height: 60px !important;
-    }
 }
 
 /* 小高度屏幕 (高度 501px - 600px) */
@@ -667,10 +535,6 @@ html.is-page-transitioning .banner-home-text-overlay {
         line-height: 1.3 !important;
     }
     
-    .waves {
-        height: 17vh !important;
-        min-height: 250px !important;
-    }
 }
 
 /* 中等高度屏幕 (高度 601px - 700px) */
@@ -698,10 +562,6 @@ html.is-page-transitioning .banner-home-text-overlay {
         line-height: 1.4 !important;
     }
     
-    .waves {
-        height: 15vh !important;
-        min-height: 200px !important;
-    }
 }
 
 /* 横屏模式特殊处理 - 优先显示banner */
@@ -729,10 +589,6 @@ html.is-page-transitioning .banner-home-text-overlay {
         line-height: 1.2 !important;
     }
     
-    .waves {
-        height: 10vh !important;
-        min-height: 50px !important;
-    }
 }
 
 /* ============================================
@@ -767,8 +623,6 @@ html.is-page-transitioning .banner-home-text-overlay {
 /* Overlay 模式隐藏 Banner 专属元素 */
 #wallpaper-wrapper.wallpaper-overlay .banner-home-text-overlay,
 #wallpaper-wrapper.wallpaper-overlay .banner-page-title-overlay,
-#wallpaper-wrapper.wallpaper-overlay .banner-post-meta-overlay,
-#wallpaper-wrapper.wallpaper-overlay .waves,
-#wallpaper-wrapper.wallpaper-overlay #header-waves {
+#wallpaper-wrapper.wallpaper-overlay .banner-post-meta-overlay {
     display: none !important;
 }

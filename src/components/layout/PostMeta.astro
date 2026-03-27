@@ -18,7 +18,7 @@ export interface Props {
 	id?: string;
 	words?: number;
 	minutes?: number;
-	showWordCount?: boolean; // 是否显示字数统计，默认false显示标签
+	showTags?: boolean;
 	customPath?: string;
 	pinned?: boolean;
 	password?: boolean;
@@ -34,7 +34,7 @@ const {
 	isHome,
 	className = "",
 	id,
-	showWordCount = false,
+	showTags = true,
 	customPath,
 	pinned,
 } = Astro.props;
@@ -105,9 +105,9 @@ const path = customPath || (id ? `/posts/${id}` : "");
     </div>
   </div>
 
-   <!-- tags (only for post detail page) -->
+   <!-- tags -->
    {
-     !showWordCount && (
+     showTags && (
        <div class:list={["items-center", {"flex": !hideTagsForMobile, "hidden md:flex": hideTagsForMobile}]}>
          <div class="meta-icon">
            <Icon name="material-symbols:tag-rounded" class="text-xl" />

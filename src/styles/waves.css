@@ -1,40 +1,158 @@
-/* Water waves animation */
-.waves > .parallax use {
-animation: wave 25s cubic-bezier(0.5, 0.5, 0.45, 0.5) infinite;
-transform: translateZ(0);
-will-change: transform;
-backface-visibility: hidden;
+/* ==========================================================================
+   Water Waves Animation & Styles
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. 用户控制 - 通过 html 属性控制显隐
+   -------------------------------------------------------------------------- */
+html[data-waves-enabled="false"] #header-waves {
+    display: none !important;
 }
 
-.waves > .parallax use:nth-child(1) {
-animation-delay: -2s;
-animation-duration: 7s;
+html[data-waves-enabled="true"] #header-waves {
+    display: block !important;
 }
 
-.waves > .parallax use:nth-child(2) {
-animation-delay: -3s;
-animation-duration: 10s;
-}
-
-.waves > .parallax use:nth-child(3) {
-animation-delay: -4s;
-animation-duration: 13s;
-}
-
-.waves > .parallax use:nth-child(4) {
-animation-delay: -5s;
-animation-duration: 20s;
-}
-
-@keyframes wave {
-0% {
-transform: translate3d(-90px, 0, 0);
-}
-100% {
-transform: translate3d(85px, 0, 0);
-}
+/* --------------------------------------------------------------------------
+   2. 波浪容器基础样式
+   -------------------------------------------------------------------------- */
+#header-waves {
+    isolation: isolate;
+    contain: layout style;
+    margin-bottom: -1px;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
 }
 
 .waves {
-contain: none;
+    overflow: visible;
+    z-index: 5;
+    transform: translateZ(0);
+    will-change: transform;
+    contain: layout style;
+}
+
+.waves svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   3. 波浪动画
+   -------------------------------------------------------------------------- */
+.waves > .parallax {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+.waves > .parallax use {
+    animation: wave 25s cubic-bezier(0.5, 0.5, 0.45, 0.5) infinite;
+}
+
+.waves > .parallax use:nth-child(1) {
+    animation-delay: -2s;
+    animation-duration: 7s;
+}
+
+.waves > .parallax use:nth-child(2) {
+    animation-delay: -3s;
+    animation-duration: 10s;
+}
+
+.waves > .parallax use:nth-child(3) {
+    animation-delay: -4s;
+    animation-duration: 13s;
+}
+
+.waves > .parallax use:nth-child(4) {
+    animation-delay: -5s;
+    animation-duration: 20s;
+}
+
+@keyframes wave {
+    0% {
+        transform: translate3d(-90px, 0, 0);
+    }
+    100% {
+        transform: translate3d(85px, 0, 0);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   4. 页面切换期间优化
+   -------------------------------------------------------------------------- */
+html.is-page-transitioning #header-waves {
+    contain: layout style paint;
+}
+
+/* --------------------------------------------------------------------------
+   5. 主题切换优化
+   -------------------------------------------------------------------------- */
+.theme-changing #header-waves,
+.theme-changing #header-waves svg,
+.theme-changing #header-waves use {
+    will-change: auto;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+.is-theme-transitioning #header-waves {
+    color: var(--page-bg);
+    isolation: isolate;
+    contain: layout style paint;
+    transform: translateZ(0);
+    background: transparent;
+}
+
+.is-theme-transitioning #header-waves use {
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+/* --------------------------------------------------------------------------
+   6. 移动端优化
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+    #header-waves {
+        overflow: visible;
+        z-index: 5;
+        transition: transform 0.3s ease-in, opacity 0.2s ease-in;
+    }
+
+    .mobile-hide-banner #header-waves {
+        display: none !important;
+        transform: translateY(-100%);
+        opacity: 0;
+        transition: transform 0.25s ease-in, opacity 0.15s ease-in;
+    }
+
+    .waves svg {
+        min-height: 60px;
+    }
+
+    .waves {
+        bottom: -1px !important;
+        position: absolute !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   7. Overlay 模式隐藏波浪
+   -------------------------------------------------------------------------- */
+#wallpaper-wrapper.wallpaper-overlay .waves,
+#wallpaper-wrapper.wallpaper-overlay #header-waves {
+    display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   8. None 模式隐藏波浪
+   -------------------------------------------------------------------------- */
+html[data-wallpaper-mode="none"] .waves,
+html[data-wallpaper-mode="none"] #header-waves {
+    display: none !important;
 }

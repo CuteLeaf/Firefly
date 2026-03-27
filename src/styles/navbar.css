@@ -17,15 +17,26 @@
  * ============================================
  */
 
+@reference "tailwindcss";
+
+@utility navbar-surface-transition {
+  transition:
+    background-color 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+    backdrop-filter 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+    border-radius 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 /* ============================================
  * 基础导航栏样式
  * 适用: 所有模式，所有设备
  * ============================================ */
 #navbar>div {
-    background: var(--card-bg);
+    background-color: var(--card-bg);
     border: 1px solid transparent;
     border-radius: 0 0 0.75rem 0.75rem;
-    transition: all var(--duration-medium) var(--ease-standard);
+    @apply navbar-surface-transition;
 }
 
 /* 通用滚动阴影：用于提升导航栏与页面内容的分层感 */
@@ -35,6 +46,12 @@
 
 :root.dark #navbar.navbar-sticky-shadow>div {
     box-shadow: var(--shadow-navbar-dark) !important;
+}
+
+/* semifull 模式的透明阶段不单独显示 sticky shadow，避免 8px 和 50px 两段跳变 */
+#wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"]:not(.scrolled).navbar-sticky-shadow>div,
+body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scrolled).navbar-sticky-shadow>div {
+    box-shadow: none !important;
 }
 
 /* ============================================
@@ -49,10 +66,8 @@
     body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semi"]>div {
         backdrop-filter: blur(var(--navbar-glass-blur, 20px)) !important;
         background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
         border-radius: 0 0 0.75rem 0.75rem !important;
         box-shadow: var(--shadow-navbar) !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
 
     /* "full" */
@@ -60,10 +75,9 @@
     body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="full"]>div {
         backdrop-filter: none !important;
         background: transparent !important;
-        border: 1px solid transparent !important;
+        border: none !important;
         border-radius: 0 !important;
         box-shadow: none !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
 
     /* "semifull" (static) */
@@ -71,10 +85,9 @@
     body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]>div {
         backdrop-filter: none !important;
         background: transparent !important;
-        border: 1px solid transparent !important;
+        border: none !important;
         border-radius: 0 0 0.75rem 0.75rem !important;
         box-shadow: none !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
 
     /* "semifull" (scrolled) */
@@ -82,10 +95,8 @@
     body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"].scrolled>div {
         backdrop-filter: blur(var(--navbar-glass-blur, 20px)) !important;
         background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
         border-radius: 0 0 0.75rem 0.75rem !important;
         box-shadow: var(--shadow-navbar) !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
 }
 
@@ -100,10 +111,8 @@
     body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semi"][data-is-home="true"]>div {
         backdrop-filter: blur(var(--navbar-glass-blur, 20px)) !important;
         background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
         border-radius: 0 0 0.75rem 0.75rem !important;
         box-shadow: var(--shadow-navbar) !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
 
     /* "full" */
@@ -111,10 +120,9 @@
     body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="full"][data-is-home="true"]>div {
         backdrop-filter: none !important;
         background: transparent !important;
-        border: 1px solid transparent !important;
+        border: none !important;
         border-radius: 0 !important;
         box-shadow: none !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
 
     /* "semifull" (static) */
@@ -122,10 +130,9 @@
     body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"]>div {
         backdrop-filter: none !important;
         background: transparent !important;
-        border: 1px solid transparent !important;
+        border: none !important;
         border-radius: 0 0 0.75rem 0.75rem !important;
         box-shadow: none !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
 
     /* "semifull" (scrolled) */
@@ -133,10 +140,8 @@
     body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled>div {
         backdrop-filter: blur(var(--navbar-glass-blur, 20px)) !important;
         background: rgba(255, 255, 255, var(--opacity-55)) !important;
-        border: 1px solid rgba(255, 255, 255, var(--opacity-55)) !important;
         border-radius: 0 0 0.75rem 0.75rem !important;
         box-shadow: var(--shadow-navbar) !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
 }
 
@@ -149,7 +154,6 @@
     :root.dark #wallpaper-wrapper~* #navbar[data-transparent-mode="semi"]>div,
     :root.dark body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semi"]>div {
         background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
 
@@ -157,7 +161,7 @@
     :root.dark #wallpaper-wrapper~* #navbar[data-transparent-mode="full"]>div,
     :root.dark body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="full"]>div {
         background: transparent !important;
-        border: 1px solid transparent !important;
+        border: none !important;
         box-shadow: none !important;
     }
 
@@ -165,7 +169,7 @@
     :root.dark #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"]>div,
     :root.dark body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]>div {
         background: transparent !important;
-        border: 1px solid transparent !important;
+        border: none !important;
         box-shadow: none !important;
     }
 
@@ -173,7 +177,6 @@
     :root.dark #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"].scrolled>div,
     :root.dark body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"].scrolled>div {
         background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
 }
@@ -187,7 +190,6 @@
     :root.dark #wallpaper-wrapper~* #navbar[data-transparent-mode="semi"][data-is-home="true"]>div,
     :root.dark body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semi"][data-is-home="true"]>div {
         background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
 
@@ -195,7 +197,7 @@
     :root.dark #wallpaper-wrapper~* #navbar[data-transparent-mode="full"][data-is-home="true"]>div,
     :root.dark body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="full"][data-is-home="true"]>div {
         background: transparent !important;
-        border: 1px solid transparent !important;
+        border: none !important;
         box-shadow: none !important;
     }
 
@@ -203,7 +205,7 @@
     :root.dark #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"][data-is-home="true"]>div,
     :root.dark body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"]>div {
         background: transparent !important;
-        border: 1px solid transparent !important;
+        border: none !important;
         box-shadow: none !important;
     }
 
@@ -211,7 +213,6 @@
     :root.dark #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled>div,
     :root.dark body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled>div {
         background: rgba(0, 0, 0, var(--opacity-55)) !important;
-        border: 1px solid rgba(0, 0, 0, var(--opacity-55)) !important;
         box-shadow: var(--shadow-navbar-dark) !important;
     }
 }
@@ -236,16 +237,15 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-enab
 }
 
 /* 页面切换期间强制 semifull 保持透明，避免自动回顶时出现背景闪烁 */
-.is-page-transitioning #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"]>div,
-.is-page-transitioning #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"].scrolled>div,
-.is-page-transitioning body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]>div,
-.is-page-transitioning body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"].scrolled>div {
+.is-page-transitioning #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"]:not(.scrolled)>div,
+.is-page-transitioning body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scrolled)>div {
     backdrop-filter: none !important;
     background: transparent !important;
-    border: 1px solid transparent !important;
+    border: none !important;
     box-shadow: none !important;
     transition: none !important;
 }
+
 
 
 /* 调整下拉菜单和浮动面板的背景透明度 */

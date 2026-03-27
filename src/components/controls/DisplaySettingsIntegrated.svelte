@@ -7,6 +7,7 @@ import {
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import {
+	getDefaultBannerCarouselEnabled,
 	getDefaultBannerTitleEnabled,
 	getDefaultHue,
 	getDefaultOverlayBlur,
@@ -14,12 +15,14 @@ import {
 	getDefaultOverlayOpacity,
 	getDefaultWavesEnabled,
 	getHue,
+	getStoredBannerCarouselEnabled,
 	getStoredBannerTitleEnabled,
 	getStoredOverlayBlur,
 	getStoredOverlayCardOpacity,
 	getStoredOverlayOpacity,
 	getStoredWallpaperMode,
 	getStoredWavesEnabled,
+	setBannerCarouselEnabled,
 	setBannerTitleEnabled,
 	setHue,
 	setOverlayBlur,
@@ -53,6 +56,8 @@ let wavesEnabled = $state(true);
 const defaultWavesEnabled = getDefaultWavesEnabled();
 let bannerTitleEnabled = $state(true);
 const defaultBannerTitleEnabled = getDefaultBannerTitleEnabled();
+let bannerCarouselEnabled = $state(true);
+const defaultBannerCarouselEnabled = getDefaultBannerCarouselEnabled();
 let overlayOpacity = $state(getDefaultOverlayOpacity());
 const defaultOverlayOpacity = getDefaultOverlayOpacity();
 let overlayBlur = $state(getDefaultOverlayBlur());
@@ -76,8 +81,12 @@ const isBannerTitleEnabled =
 const isBannerTitleSwitchable =
 	isBannerTitleEnabled &&
 	(backgroundWallpaper.banner?.homeText?.switchable ?? false);
+// 是否允许用户切换横幅轮播
+const isBannerCarouselSwitchable =
+	backgroundWallpaper.banner?.carousel?.switchable ?? false;
 // 是否有任何横幅设置可显示（后续添加新设置时在此处添加条件）
-const hasBannerSettings = isWavesSwitchable || isBannerTitleSwitchable;
+const hasBannerSettings =
+	isWavesSwitchable || isBannerTitleSwitchable || isBannerCarouselSwitchable;
 const overlaySwitchableConfig =
 	backgroundWallpaper.overlay?.switchable ?? false;
 const isOverlaySettingsSwitchable =
@@ -109,7 +118,9 @@ let overlaySettingsIsDefault = $derived(
 let bannerSettingsIsDefault = $derived(
 	(!isBannerTitleSwitchable ||
 		bannerTitleEnabled === defaultBannerTitleEnabled) &&
-		(!isWavesSwitchable || wavesEnabled === defaultWavesEnabled),
+		(!isWavesSwitchable || wavesEnabled === defaultWavesEnabled) &&
+		(!isBannerCarouselSwitchable ||
+			bannerCarouselEnabled === defaultBannerCarouselEnabled),
 );
 const hasAnyContent =
 	showThemeColor ||
@@ -156,6 +167,13 @@ function resetBannerSettings() {
 		wavesEnabled = defaultWavesEnabled;
 		setWavesEnabled(defaultWavesEnabled);
 	}
+	if (
+		isBannerCarouselSwitchable &&
+		bannerCarouselEnabled !== defaultBannerCarouselEnabled
+	) {
+		bannerCarouselEnabled = defaultBannerCarouselEnabled;
+		setBannerCarouselEnabled(defaultBannerCarouselEnabled);
+	}
 }
 
 function resetOverlaySettings() {
@@ -186,6 +204,11 @@ function toggleWavesEnabled() {
 function toggleBannerTitleEnabled() {
 	bannerTitleEnabled = !bannerTitleEnabled;
 	setBannerTitleEnabled(bannerTitleEnabled);
+}
+
+function toggleBannerCarouselEnabled() {
+	bannerCarouselEnabled = !bannerCarouselEnabled;
+	setBannerCarouselEnabled(bannerCarouselEnabled);
 }
 
 function switchWallpaperMode(newMode: WALLPAPER_MODE) {
@@ -265,6 +288,9 @@ onMount(() => {
 
 	// 从localStorage读取横幅标题状态
 	bannerTitleEnabled = getStoredBannerTitleEnabled();
+
+	// 从localStorage读取横幅轮播状态
+	bannerCarouselEnabled = getStoredBannerCarouselEnabled();
 
 	// 从localStorage读取全屏透明设置状态
 	overlayOpacity = getStoredOverlayOpacity();
@@ -518,6 +544,24 @@ $effect(() => {
                         <div class="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all duration-200"
                              class:left-0.5={!bannerTitleEnabled}
                              class:left-5={bannerTitleEnabled}></div>
+                    </div>
+                </button>
+                {/if}
+                <!-- Banner Carousel Switch -->
+                {#if isBannerCarouselSwitchable}
+                <button
+                    class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
+                    class:bg-(--btn-regular-bg-hover)={bannerCarouselEnabled}
+                    onclick={toggleBannerCarouselEnabled}
+                >
+                    <Icon icon="material-symbols:view-carousel-outline" class="text-[1.25rem] shrink-0"></Icon>
+                    <span class="text-sm flex-1">{i18n(I18nKey.bannerCarousel)}</span>
+                    <div class="w-10 h-5 rounded-full transition-all duration-200 relative"
+                         class:bg-(--primary)={bannerCarouselEnabled}
+                         class:bg-(--btn-regular-bg-active)={!bannerCarouselEnabled}>
+                        <div class="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all duration-200"
+                             class:left-0.5={!bannerCarouselEnabled}
+                             class:left-5={bannerCarouselEnabled}></div>
                     </div>
                 </button>
                 {/if}

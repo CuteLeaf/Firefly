@@ -200,27 +200,6 @@ html {
         backdrop-filter: none !important;
     }
     
-    /* 水波纹容器的颜色传递 */
-    .is-theme-transitioning #header-waves {
-        /* 设置当前颜色为页面背景色，供SVG继承 */
-        color: var(--page-bg);
-        /* 确保与页面在同一合成层 */
-        isolation: isolate;
-        /* 优化渲染性能 */
-        contain: layout style paint;
-        /* GPU层合成 */
-        transform: translateZ(0);
-        /* 确保没有背景色 */
-        background: transparent;
-    }
-    
-    .is-theme-transitioning #header-waves use {
-        /* 保持动画连续性 */
-        will-change: transform;
-        /* GPU优化 */
-        transform: translateZ(0);
-    }
-    
     .card-base {
         @apply rounded-(--radius-large) overflow-hidden bg-(--card-bg) transition-colors duration-150;
     }
@@ -241,7 +220,14 @@ html {
         @apply transition-all duration-300 border shadow-xs;
         border-color: var(--line-divider) !important;
     }
-    
+
+    /* 壁纸模式切换期间禁止导航栏边框和阴影闪现 */
+    .is-wallpaper-transitioning #navbar > div {
+        border-color: transparent !important;
+        box-shadow: none !important;
+        transition: none !important;
+    }
+
     /* 全屏壁纸模式下的半透明效果 */
     .wallpaper-transparent .card-base {
         background-color: var(--card-bg-transparent) !important;

@@ -8,7 +8,7 @@
 > 
 > ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen) 
 ![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
-![Astro](https://img.shields.io/badge/Astro-6.0.5-orange)
+![Astro](https://img.shields.io/badge/Astro-6.0.8-orange)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)
 >
 > [![Stars](https://img.shields.io/github/stars/CuteLeaf/Firefly?style=social)](https://github.com/CuteLeaf/Firefly/stargazers)
@@ -46,13 +46,22 @@
 <img alt="Lighthouse" src="./docs/images/Lighthouse.png" />
 
 >[!TIP]
->Firefly is a fresh and beautiful personal blog theme template based on the Astro framework and the Fuwari template, designed for tech enthusiasts and content creators. This theme integrates modern web technology stacks, provides rich functional modules and highly customizable interfaces, allowing you to easily create a professional and beautiful personal blog website.
 >
->In important layouts, Firefly innovatively adds dual sidebars, article grid (multi-column) layout, masonry layout, includes site statistics, calendar component, table of contents and other widgets to enrich the sidebar, while also retaining the original fuwari layout, which can be freely switched in the configuration file according to your preferences.
+>Firefly is a fresh, beautiful, and modern personal blog theme template based on the Astro framework and the Fuwari template, designed for tech enthusiasts and content creators. It integrates a modern web tech stack, offering rich feature modules and a highly customizable interface so you can easily build a professional and visually appealing personal blog.
+>
+>In terms of key layouts, Firefly innovatively adds dual sidebars, an article grid (multi-column) layout, and a masonry layout.
+>
+>It also adds widgets such as site statistics, calendar, table of contents, music player, and quick category navigation, making both the sidebar and the overall page layout richer.
+>
+>At the same time, it also adds components such as share posters, related post recommendations, and random posts, making article pages more content-rich.
+>
+>**If you reference or use the component designs and related code above from Firefly, please credit Firefly.**
+>
+>Firefly also preserves the original fuwari layout, which can be freely switched in the configuration file according to your preferences.
 >
 >**For more layout configurations and demos, please see: [Firefly Layout System Details](https://firefly.cuteleaf.cn/posts/firefly-layout-system/)**
 >
->Firefly supports i18n multi-language switching, but except for Simplified Chinese, other languages are AI-translated. If there are any errors, welcome to submit [Pull Request](https://github.com/CuteLeaf/Firefly/pulls) for correction.
+>Firefly supports i18n multilingual UI, but except for Simplified Chinese, other languages are AI-translated. If you find any errors, feel free to submit a [Pull Request](https://github.com/CuteLeaf/Firefly/pulls) to help improve them.
 
 ## ✨ Features
 
@@ -61,7 +70,7 @@
 - [x] **Astro + Tailwind CSS** - Ultra-fast static site generation based on modern tech stack
 - [x] **Smooth Animations** - Swup page transition animations for silky smooth browsing experience
 - [x] **Responsive Design** - Perfect adaptation for desktop, tablet and mobile devices
-- [x] **Multi-language Support** - i18n internationalization, supports Simplified Chinese, Traditional Chinese, English, Japanese, Russian
+- [x] **Multi-language Support** - i18n internationalization ui, supports Simplified Chinese, Traditional Chinese, English, Japanese, Russian
 - [x] **Full-text Search** - Client-side search based on Pagefind, supports article content indexing.
 
 ### Personalization

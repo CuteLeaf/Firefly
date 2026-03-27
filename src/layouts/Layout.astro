@@ -95,7 +95,7 @@ const siteLang = lang.replace("_", "-");
 ---
 
 <!doctype html>
-<html lang={siteLang} class="bg-(--page-bg) text-[14px] md:text-[16px]">
+<html lang={siteLang} class="bg-(--page-bg) text-[14px] md:text-[16px]" data-wallpaper-mode={backgroundWallpaper.mode}>
   <head>
     <meta charset="UTF-8" />
     {siteConfig.analytics?.googleAnalyticsId && (
@@ -839,12 +839,15 @@ function disableAnimation() {
       const targetHref = el.getAttribute("href") || "";
       const targetPathname = (() => {
         try {
-          return new URL(targetHref, window.location.origin).pathname;
+          return new URL(targetHref, window.location.href).pathname;
         } catch {
           return targetHref;
         }
       })();
       const isSamePage = pathsEqual(targetPathname, window.location.pathname);
+      if (isSamePage) {
+        document.documentElement.classList.remove("is-page-transitioning");
+      }
       if (!isSamePage) {
         // 添加页面切换保护，防止导航栏闪烁
         document.documentElement.classList.add("is-page-transitioning");
@@ -1013,11 +1016,14 @@ function disableAnimation() {
         toc.classList.add("toc-not-ready");
       }
 
-      // 确保页面滚动到顶部，使用平滑滚动避免侧边栏闪烁
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
+      // 确保页面滚动到顶部，切页期间使用即时回顶，移动端不使用，避免出现闪烁
+      const shouldUseSmoothScroll = window.innerWidth >= 768;
+      if (shouldUseSmoothScroll) {
+        window.scrollTo({
+          top: 0,
+          behavior: "auto",
+        });
+      }
     });
     window.swup.hooks.on("page:view", () => {
       // 更新网格列数和侧边栏组件可见性
@@ -1109,6 +1115,7 @@ function disableAnimation() {
 
         // 移除页面切换保护，恢复过渡动画
         document.documentElement.classList.remove("is-page-transitioning");
+        scrollFunction();
       }, 200);
     });
 
@@ -1133,6 +1140,10 @@ function disableAnimation() {
 
   // 优化的滚动处理函数
   function scrollFunction() {
+    if (document.documentElement.classList.contains("is-page-transitioning")) {
+      return;
+    }
+
     const scrollTop = document.documentElement.scrollTop;
     const bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100);
     const navbarElement = document.getElementById("navbar");

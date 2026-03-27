@@ -368,28 +368,6 @@ const initialLayoutClass =
     transform: translateY(10px);
   }
 
-  /* 移除特定模式下的子元素动画，避免布局计算冲突 */
-  /*
-  #post-list-container.layout-switching > :global(*) {
-    transform: scale(0.98);
-  }
-
-  #post-list-container.list-mode > :global(*) {
-    animation: fadeInSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  }
-  */
-
-  /* List Mode Customization - handled in PostCard.astro */
-
-  /* 列表模式下，有封面的文章，摘要最多显示两行 */
-  #post-list-container.list-mode :global(.has-cover .description) {
-    display: -webkit-box !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-    -webkit-line-clamp: 2 !important;
-    line-clamp: 2 !important;
-  }
-
   /* Grid Mode Customization */
   #post-list-container.grid-mode :global(.post-card-wrapper) {
     flex-direction: column-reverse !important;
@@ -415,24 +393,13 @@ const initialLayoutClass =
   }
 
   #post-list-container.grid-mode :global(.post-card-title) {
-    font-size: 1.125rem !important;
+    font-size: 1.35rem !important;
     line-height: 1.75rem !important;
     margin-bottom: 0.5rem !important;
   }
 
   #post-list-container.grid-mode :global(.post-card-title::before) {
     display: none !important;
-  }
-
-  #post-list-container.grid-mode :global(.description) {
-    font-size: 0.875rem !important;
-    margin-bottom: 0.75rem !important;
-    padding-right: 0 !important;
-    display: -webkit-box !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-    -webkit-line-clamp: 2 !important;
-    line-clamp: 2 !important;
   }
 
   #post-list-container.grid-mode :global(.post-meta) {

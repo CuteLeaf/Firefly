@@ -8,7 +8,7 @@
 > 
 > ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen) 
 ![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
-![Astro](https://img.shields.io/badge/Astro-6.0.5-orange)
+![Astro](https://img.shields.io/badge/Astro-6.0.8-orange)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)
 >
 > [![Stars](https://img.shields.io/github/stars/CuteLeaf/Firefly?style=social)](https://github.com/CuteLeaf/Firefly/stargazers)
@@ -47,13 +47,22 @@
 <img alt="Lighthouse" src="./images/Lighthouse.png" />
 
 >[!TIP]
->Firefly 是一款基於 Astro 框架和 Fuwari 模板開發的清新美觀且現代化個人部落格主題模板，專為技術愛好者和內容創作者設計。該主題融合了現代 Web 技術棧，提供了豐富的功能模組和高度可定制的界面，讓您能夠輕鬆打造出專業且美觀的個人部落格網站。
 >
->在重要的版面配置上，Firefly 創新性地增加了左右雙側邊欄、文章網格(多列)版面配置、瀑布流配置，增加了站點統計、日曆元件、文章目錄等小元件，讓側邊欄更加豐富，同時也保留了原版 fuwari 的版面配置，可根據自己的喜好在配置檔案中自由切換。
+>Firefly 是一款基於 Astro 框架和 Fuwari 模板開發的清新美觀且現代化個人部落格主題模板，專為技術愛好者和內容創作者設計。該主題融合了現代 Web 技術棧，提供了豐富的功能模組和高度可自訂的介面，讓您能夠輕鬆打造出專業且美觀的個人部落格網站。
+>
+>在重要的版面上，Firefly 創新性地增加了左右雙側邊欄、文章網格（多列）版面、瀑布流版面。
+>
+>增加了站點統計、日曆、文章目錄、音樂播放器、快捷分類導覽等小元件，讓側邊欄和整體頁面版面更加豐富。
+>
+>同時也增加了分享海報、相關文章推薦、隨機文章等元件，讓文章頁面內容更加豐富。
+>
+>**如果你參考或使用了 Firefly 以上元件設計和相關程式碼，請註明來自 Firefly。**
+>
+>Firefly 也保留了原版 fuwari 的版面，可根據自己的喜好在配置檔案中自由切換。
 >
 >**更多版面配置及示範請查看：[Firefly 版面配置系統詳解](https://firefly.cuteleaf.cn/posts/firefly-layout-system/)**
 >
->Firefly 支援 i18n 多語言切換，但除了簡體中文，其他語言均為 AI 翻譯轉換，如有錯誤，歡迎提交 [Pull Request](https://github.com/CuteLeaf/Firefly/pulls) 修正。
+>Firefly 支援 i18n 多語言 UI，但除了簡體中文，其他語言均為 AI 翻譯轉換，如有錯誤，歡迎提交 [Pull Request](https://github.com/CuteLeaf/Firefly/pulls) 修正。
 
 ## ✨ 功能特性
 
@@ -62,7 +71,7 @@
 - [x] **Astro + Tailwind CSS** - 基於現代技術堆疊的超快靜態站點生成
 - [x] **流暢動畫** - Swup 頁面過渡動畫，提供絲滑的瀏覽體驗
 - [x] **響應式設計** - 完美適配桌面端、平板和行動裝置
-- [x] **多語言支援** - i18n 國際化，支援簡體中文、繁體中文、英文、日文、俄語
+- [x] **多語言支援** - i18n 國際化UI，支援簡體中文、繁體中文、英文、日文、俄語
 - [x] **全文搜尋** - 基於 Pagefind 的客戶端搜尋，支援文章內容索引。
 
 ### 個性化
