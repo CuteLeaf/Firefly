@@ -13,7 +13,7 @@ export const siteConfig: SiteConfig = {
 	subtitle: "江晚Blog",
 
 	// 站点 URL
-	site_url: "https://xoxor.top",
+	site_url: "https://zhouwanx.top",
 
 	// 站点描述
 	description:
@@ -56,7 +56,7 @@ export const siteConfig: SiteConfig = {
 	// 网站Card样式配置
 	card: {
 		// 是否开启卡片边框和阴影，开启后让网站更有立体感
-		border: true,
+		border: false,
 		// 是否让卡片风格跟随主题色相
 		followTheme: false,
 	},
@@ -157,10 +157,6 @@ export const siteConfig: SiteConfig = {
 		defaultMode: "list",
 		// 移动端默认布局模式，不设置则跟随 defaultMode
 		mobileDefaultMode: "list",
-		// 是否在文章列表中显示标签
-		showTags: true,
-		// 文章简介显示行数，设为 0 则不截断
-		descriptionLines: 2,
 		// 是否允许用户切换布局
 		allowSwitch: true,
 		// 网格布局配置，仅在 defaultMode 为 "grid" 或允许切换布局时生效
