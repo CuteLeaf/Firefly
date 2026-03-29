@@ -27,6 +27,7 @@ import { i18n } from "@/i18n/translation";
 import { formatDateToYYYYMMDD } from "@/utils/date-utils";
 import { getImageQuality } from "@/utils/image-utils";
 import { getBackgroundImages, isHomePage } from "@/utils/layout-utils";
+import { url } from "@/utils/url-utils";
 import {
 	generateGridClasses,
 	generateMainContentClasses,
@@ -125,6 +126,24 @@ const creditUrlMobile =
 
 // 检查是否为首页
 const isHomePageCheck = isHomePage(Astro.url.pathname);
+
+// 分类导航仅在首页、首页分页和归档页进行服务端渲染，避免非列表页首屏闪烁
+const currentPathname = Astro.url.pathname.replace(/\/$/, "");
+const homePath = url("/").replace(/\/$/, "");
+const archivePath = url("/archive/").replace(/\/$/, "");
+const escapedHomePath = homePath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const isHomeRoute =
+	currentPathname === homePath ||
+	currentPathname === "" ||
+	currentPathname === "/";
+const isArchiveRoute = currentPathname === archivePath;
+const isHomePaginationRoute =
+	/^\/\d+$/.test(currentPathname) ||
+	(homePath !== "" &&
+		new RegExp(`^${escapedHomePath}\\/\\d+$`).test(currentPathname));
+const shouldRenderCategoryBar =
+	!!siteConfig.categoryBar &&
+	(isHomeRoute || isHomePaginationRoute || isArchiveRoute);
 
 // 检查是否在文章详情页
 const isPostPage = !!postSlug;
@@ -872,8 +891,8 @@ const bannerCarouselInterval = Math.max(
                     
             {/* 主内容区包装器 - 包含静态栏位和swup容器，作为单个grid item */}
             <div class={staticBarClass}>
-                {/* 分类导航栏 - 在所有页面渲染，由客户端JS控制显隐 */}
-                {siteConfig.categoryBar && <CategoryBar />}
+                {/* 分类导航栏 - 仅在首页、首页分页和归档页渲染 */}
+                {shouldRenderCategoryBar && <CategoryBar />}
 
                 {/* 主内容区 - 始终渲染，确保 Swup 容器存在 */}
                 <main id="swup-container" class="transition-main">
