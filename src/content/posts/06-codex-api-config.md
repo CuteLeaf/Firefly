@@ -33,18 +33,21 @@ npm -v
 将下列代码粘贴进入config.toml中，填入自己的base_url
 ```
 model_provider = "sub2api"              #模型提供商，需要与下面的名字一致
-model = "gpt-5.3-codex"                 #你要使用的模型名称
-model_reasoning_effort = "high"         #模型推理等级(建议保持)
+model = "gpt-5.4"                       #你要使用的模型名称
+review_model = "gpt-5.4"                #你要使用的模型名称
+model_reasoning_effort = "xhigh"        #模型推理等级(请按需调整)
 network_access = "enabled"              #是否允许网络访问(建议保持开启)
 disable_response_storage = true         #是否禁止响应存储(建议保持开启)
 windows_wsl_setup_acknowledged = true   #是否确认windows wsl设置(建议保持开启)
 model_verbosity = "high"                #模型输出等级(建议保持)
+model_context_window = 1000000          #最大上下文(请按需调整，会增加token消耗)
+model_auto_compact_token_limit = 900000 #上下文自动压缩阈值(请按需调整)
 
 [model_providers.sub2api]
 name = "sub2api"                        #模型提供商名称，需要与上面的名字一致
 base_url = "https://**********"         #你的base_url
 wire_api = "responses"                  #保持不变
-requires_openai_auth = true             #是否需要openai认证(建议保持开启)
+requires_openai_auth = true             #是否需要openai认证(保持开启)
 ```
 
 打开```%userprofile%\.codex```文件夹，编辑```auth.json```文件，填入自己的OPENAI_API_KEY
