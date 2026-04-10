@@ -186,6 +186,19 @@ export const siteConfig: SiteConfig = {
 			trackOutboundLinks: true,
 			// 是否收集浏览器性能指标
 			collectWebVitals: false,
+			// 会话回放配置
+			relpays: {
+				// 是否启用会话回放
+				enabled: false,
+				// 录制会话采样率，范围 0-1，例如 0.15 表示记录 15% 的会话
+				sampleRate: 0.15,
+				// 隐私遮罩级别："moderate" 会遮罩所有输入框；"strict" 额外遮罩页面全部文本
+				maskLevel: "moderate",
+				// 单次录制最大时长（毫秒）
+				maxDuration: 300000,
+				// 需要排除录制的元素 CSS 选择器，例如 ".sensitive-widget"
+				blockSelector: "",
+			},
 		},
 		// 51la 统计配置
 		la51Analytics: {
