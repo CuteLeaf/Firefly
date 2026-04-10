@@ -118,6 +118,7 @@ export type SiteConfig = {
 		umamiAnalytics?: {
 			websiteId?: string; // Umami Website ID
 			scriptUrl?: string; // Umami JS地址，支持使用自建
+			trackOutboundLinks?: boolean; // 是否追踪出站链接点击事件，默认 true
 		};
 		la51Analytics?: {
 			Id?: string; // 51la 统计 ID
