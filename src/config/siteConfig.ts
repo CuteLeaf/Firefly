@@ -184,6 +184,8 @@ export const siteConfig: SiteConfig = {
 			scriptUrl: "https://cloud.umami.is/script.js",
 			// 是否追踪出站链接
 			trackOutboundLinks: true,
+			// 是否收集浏览器性能指标
+			collectWebVitals: false,
 		},
 		// 51la 统计配置
 		la51Analytics: {

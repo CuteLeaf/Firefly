@@ -3,9 +3,15 @@ interface Props {
 	websiteId: string;
 	scriptUrl?: string;
 	trackOutboundLinks?: boolean;
+	collectWebVitals?: boolean;
 }
 
-const { websiteId, scriptUrl, trackOutboundLinks = true } = Astro.props;
+const {
+	websiteId,
+	scriptUrl,
+	trackOutboundLinks = true,
+	collectWebVitals = false,
+} = Astro.props;
 ---
 
 <script
@@ -14,6 +20,7 @@ const { websiteId, scriptUrl, trackOutboundLinks = true } = Astro.props;
 	defer
 	src={scriptUrl}
 	data-website-id={websiteId}
+	data-performance={collectWebVitals ? "true" : undefined}
 ></script>
 
 {
