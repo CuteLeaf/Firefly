@@ -14,7 +14,8 @@ const { tabs, activeTab } = Astro.props;
 ---
 
 <div class="border-b border-(--line-divider) mb-3">
-  <nav class="flex space-x-8" aria-label="Tabs">
+  <div class="overflow-x-auto" data-tab-scroll-container>
+    <nav class="flex min-w-max space-x-8" aria-label="Tabs">
     {tabs.map((tab) => (
       <button
         class:list={[
@@ -35,7 +36,8 @@ const { tabs, activeTab } = Astro.props;
         )}
       </button>
     ))}
-  </nav>
+    </nav>
+  </div>
 </div>
 
 <script>
