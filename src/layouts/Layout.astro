@@ -794,6 +794,21 @@ function disableAnimation() {
 
   }
 
+  function initContentOverflowEnhancements() {
+    initCustomScrollbar();
+    initHorizontalOverflowContainers();
+  }
+
+  function scheduleContentOverflowEnhancements() {
+    initContentOverflowEnhancements();
+    requestAnimationFrame(() => {
+      initContentOverflowEnhancements();
+    });
+    setTimeout(() => {
+      initContentOverflowEnhancements();
+    }, 100);
+  }
+
   function showBanner() {
     const isBannerMode = backgroundWallpaper.mode === "banner";
     if (!isBannerMode) return;
@@ -868,8 +883,7 @@ function disableAnimation() {
       updateSidebarComponentsVisibility();
 
       // 只处理katex元素的容器，使用浏览器原生滚动条
-      initCustomScrollbar();
-      initHorizontalOverflowContainers();
+      scheduleContentOverflowEnhancements();
 
       // 重新初始化图标加载器
       import("@/utils/icon-loader").then(({ initIconLoader }) => {
@@ -1127,6 +1141,10 @@ function disableAnimation() {
     document.addEventListener("swup:enable", setup);
   }
 
+  document.addEventListener("astro:page-load", scheduleContentOverflowEnhancements);
+  document.addEventListener("password:decrypted", () => {
+    setTimeout(scheduleContentOverflowEnhancements, 200);
+  });
   let backToTopBtn = document.getElementById("back-to-top-btn");
   let toc = document.getElementById("toc-wrapper");
   let navbar = document.getElementById("navbar-wrapper");
@@ -1234,17 +1252,15 @@ function disableAnimation() {
     );
   };
 
-  // 页面加载完成后初始化banner和katex容器
+  // 页面加载完成后初始化banner和内容溢出容器
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
       showBanner();
-      initCustomScrollbar();
-      initHorizontalOverflowContainers();
+      scheduleContentOverflowEnhancements();
     });
   } else {
     showBanner();
-    initCustomScrollbar();
-    initHorizontalOverflowContainers();
+    scheduleContentOverflowEnhancements();
   }
 
   // 检查当前页面是否为文章详情页
