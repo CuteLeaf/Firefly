@@ -3,7 +3,7 @@ import type { Live2DModelConfig, SpineModelConfig } from "../types/config";
 // Spine 看板娘配置
 export const spineModelConfig: SpineModelConfig = {
 	// Spine 看板娘开关
-	enable: false,
+	enable: true,
 
 	// Spine模型配置
 	model: {
@@ -47,7 +47,6 @@ export const spineModelConfig: SpineModelConfig = {
 			"emoji_3",
 			"emoji_4",
 			"emoji_5",
-			"emoji_6",
 		],
 		// 点击时随机显示的文字消息
 		clickMessages: [
