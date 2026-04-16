@@ -1,6 +1,8 @@
 @reference "tailwindcss";
 
 .custom-md {
+  overflow-wrap: break-word;
+
   h1 {
     @apply text-3xl;
   }
@@ -30,6 +32,7 @@
     @apply relative bg-none font-medium text-(--primary) underline decoration-(--link-underline) decoration-1 decoration-dashed underline-offset-4;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
+    word-break: break-word;
 
     &:hover,
     &:active {
