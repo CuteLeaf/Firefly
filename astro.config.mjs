@@ -24,15 +24,18 @@ import { pluginLanguageBadge } from "expressive-code-language-badge"; /* Languag
 import { pluginCollapsible } from "expressive-code-collapsible"; /* Collapsible */
 import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.mjs";
 import { rehypeMermaid } from "./src/plugins/rehype-mermaid.mjs";
+import { rehypePlantuml } from "./src/plugins/rehype-plantuml.mjs";
 import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
 import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
 import { remarkMermaid } from "./src/plugins/remark-mermaid.js";
+import { remarkPlantuml } from "./src/plugins/remark-plantuml.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
 import mdx from "@astrojs/mdx";
 import rehypeEmailProtection from "./src/plugins/rehype-email-protection.mjs";
 import rehypeExternalLinks from "./src/plugins/rehype-external-links.mjs";
 import rehypeFigure from "./src/plugins/rehype-figure.mjs";
 import { remarkImageGrid } from "./src/plugins/remark-image-grid.js";
+import { plantumlConfig } from "./src/config";
 
 // https://astro.build/config
 export default defineConfig({
@@ -194,12 +197,14 @@ export default defineConfig({
 			remarkSectionize,
 			parseDirectiveNode,
 			remarkMermaid,
+			[remarkPlantuml, plantumlConfig],
 		],
 		rehypePlugins: [
 			[rehypeKatex, { katex }],
 			[rehypeCallouts, { theme: siteConfig.rehypeCallouts.theme }],
 			rehypeSlug,
 			rehypeMermaid,
+			rehypePlantuml,
 			rehypeFigure,
 			[rehypeExternalLinks, { siteUrl: siteConfig.site_url }],
 			[rehypeEmailProtection, { method: "base64" }], // 邮箱保护插件，支持 'base64' 或 'rot13'

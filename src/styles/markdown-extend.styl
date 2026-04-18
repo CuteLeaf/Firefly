@@ -440,3 +440,204 @@ a.card-github.fetch-error
     width: 32px
     height: 32px
     font-size: 16px
+
+// PlantUML 图表样式（与 mermaid 视觉对齐，使用 CSS transform 实现 pan-zoom）
+.plantuml-diagram-container
+  position: relative
+  margin: 1rem 0
+  border-radius: 0.75rem
+  overflow: hidden
+  background: var(--card-bg)
+  transition: all 0.3s ease
+  touch-action: none
+
+  &:hover
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)
+
+    .plantuml-controls
+      opacity: 1
+
+.plantuml-wrapper
+  padding: 1.5rem
+  display: flex
+  justify-content: center
+  align-items: center
+  min-height: 100px
+  max-height: 420px
+  overflow: hidden
+
+.plantuml-image
+  max-width: 100%
+  max-height: 420px
+  height: auto
+  display: block
+  user-select: none
+  -webkit-user-drag: none
+  transition: transform 0.12s ease-out
+  will-change: transform
+
+.plantuml-loading
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 2rem
+  color: var(--text-color-secondary)
+  font-style: italic
+
+  &::before
+    content: ""
+    width: 20px
+    height: 20px
+    border: 2px solid var(--primary)
+    border-top: 2px solid transparent
+    border-radius: 50%
+    animation: spin 1s linear infinite
+    margin-right: 0.5rem
+
+.plantuml-error
+  color: var(--admonitions-color-warning)
+  background: rgba(239, 68, 68, 0.1)
+  border: 1px solid var(--admonitions-color-warning)
+  border-radius: 0.5rem
+  padding: 1rem
+  margin: 1rem
+  text-align: center
+  font-weight: 500
+
+  p
+    margin: 0 0 0.5rem 0
+
+  button
+    padding: 4px 12px
+    background: var(--primary)
+    color: white
+    border: none
+    border-radius: 4px
+    cursor: pointer
+    transition: all 0.2s ease
+
+    &:hover
+      background: var(--primary-hover)
+      transform: translateY(-1px)
+
+// 深色模式下的 PlantUML 容器背景
+.dark .plantuml-diagram-container
+  background: var(--card-bg)
+
+  .plantuml-image
+    filter: brightness(0.95)
+
+// PlantUML pan-zoom 控制栏
+.plantuml-controls
+  position: absolute
+  top: 8px
+  right: 8px
+  display: flex
+  gap: 4px
+  opacity: 0.5
+  transition: opacity 0.2s ease
+  z-index: 10
+
+  &:hover
+    opacity: 1
+
+.plantuml-ctrl-btn
+  width: 28px
+  height: 28px
+  border: none
+  border-radius: 6px
+  background: var(--btn-regular-bg)
+  color: var(--btn-content)
+  font-size: 14px
+  line-height: 28px
+  text-align: center
+  cursor: pointer
+  padding: 0
+  display: flex
+  align-items: center
+  justify-content: center
+  transition: all 0.15s ease
+  backdrop-filter: blur(8px)
+
+  &:hover
+    background: var(--btn-regular-bg-hover)
+    transform: translateY(-1px)
+
+  &:active
+    background: var(--btn-regular-bg-active)
+    transform: translateY(0)
+
+// PlantUML 全屏遮罩
+.plantuml-fullscreen-overlay
+  position: fixed
+  top: 0
+  left: 0
+  width: 100vw
+  height: 100vh
+  background: rgba(0, 0, 0, 0.85)
+  z-index: 9999
+  display: flex
+  align-items: center
+  justify-content: center
+
+.plantuml-fs-content
+  width: 90vw
+  height: 85vh
+  cursor: grab
+  display: flex
+  align-items: center
+  justify-content: center
+  background: rgba(255, 255, 255, 0.95)
+  overflow: hidden
+
+  &:active
+    cursor: grabbing
+
+  img
+    max-width: 100%
+    max-height: 100%
+    user-select: none
+    -webkit-user-drag: none
+    will-change: transform
+
+.plantuml-fs-controls
+  position: fixed
+  top: 16px
+  right: 16px
+  display: flex
+  gap: 6px
+  z-index: 10000
+  background: rgba(255, 255, 255, 0.1)
+  backdrop-filter: blur(12px)
+  padding: 6px
+  border-radius: 10px
+
+  .plantuml-ctrl-btn
+    width: 36px
+    height: 36px
+    font-size: 18px
+    border-radius: 8px
+    background: rgba(255, 255, 255, 0.15)
+    color: #fff
+
+    &:hover
+      background: rgba(255, 255, 255, 0.3)
+
+    &:active
+      background: rgba(255, 255, 255, 0.2)
+
+// 移动端 plantuml 控制栏与容器优化
+@media (max-width: 768px)
+  .plantuml-wrapper
+    padding: 1rem
+
+  .plantuml-image
+    max-height: 400px
+
+  .plantuml-controls
+    opacity: 0.8
+
+  .plantuml-ctrl-btn
+    width: 32px
+    height: 32px
+    font-size: 16px

@@ -15,6 +15,17 @@ export default function rehypeFigure() {
 				return;
 			}
 
+			// 跳过已由其它插件接管渲染的图片（例如 plantuml）
+			const classRaw = node.properties?.className;
+			const classNames = Array.isArray(classRaw)
+				? classRaw
+				: typeof classRaw === "string"
+					? classRaw.split(/\s+/)
+					: [];
+			if (classNames.includes("plantuml-image")) {
+				return;
+			}
+
 			const imgProps = { ...node.properties };
 
 			// 添加 referrerpolicy（如果需要）解决 403 问题
