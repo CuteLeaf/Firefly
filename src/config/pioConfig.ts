@@ -47,7 +47,6 @@ export const spineModelConfig: SpineModelConfig = {
 			"emoji_3",
 			"emoji_4",
 			"emoji_5",
-			"emoji_6",
 		],
 		// 点击时随机显示的文字消息
 		clickMessages: [

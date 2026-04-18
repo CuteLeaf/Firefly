@@ -6,6 +6,7 @@ import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
 import { getAlbumCover, scanAlbumPhotos } from "@/utils/gallery-utils";
+import { url } from "@/utils/url-utils";
 
 // 检查页面是否启用
 if (!siteConfig.pages.gallery) {
@@ -43,7 +44,7 @@ const columnWidth = galleryConfig.columnWidth || 240;
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         <!-- 返回按钮 -->
         <a
-          href="/gallery/"
+          href={url("/gallery/")}
           class="absolute top-4 left-4 inline-flex items-center gap-1.5 text-sm text-white/90 hover:text-white bg-black/30 hover:bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-lg transition-colors"
         >
           <Icon name="material-symbols:arrow-back" class="text-base" />
@@ -91,7 +92,7 @@ const columnWidth = galleryConfig.columnWidth || 240;
     ) : (
       <div class="card-base px-6 py-4">
         <a
-          href="/gallery/"
+          href={url("/gallery/")}
           class="inline-flex items-center gap-1 text-sm text-(--primary) hover:underline mb-3"
         >
           <Icon name="material-symbols:arrow-back" class="text-base" />
@@ -125,7 +126,7 @@ const columnWidth = galleryConfig.columnWidth || 240;
       {photos.length > 0 ? (
         <div
           class="gallery-masonry"
-          style={`--col-width: ${columnWidth}px;`}
+          style={`column-count: 2; column-gap: 0.75rem; --col-width: ${columnWidth}px;`}
         >
           {photos.map((photo) => (
             <PhotoCard src={photo} albumId={albumMeta.id} />
@@ -141,13 +142,11 @@ const columnWidth = galleryConfig.columnWidth || 240;
   </div>
 
   <style is:global>
-    .gallery-masonry {
-      column-width: var(--col-width, 240px);
-      column-gap: 0.75rem;
-    }
-
-    .gallery-masonry .gallery-photo-card {
-      break-inside: avoid;
+    @media (min-width: 640px) {
+      .gallery-masonry {
+        column-width: var(--col-width, 240px) !important;
+        column-count: auto !important;
+      }
     }
   </style>
 </MainGridLayout>

@@ -1,7 +1,7 @@
 ---
 import { commentConfig } from "@/config";
 
-if (!commentConfig || !commentConfig.giscus) {
+if (!commentConfig?.giscus) {
 	throw new Error("Giscus comments are not configured");
 }
 

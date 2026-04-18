@@ -9,7 +9,7 @@ interface Props {
 
 const { identifier, url, title } = Astro.props;
 
-if (!commentConfig || !commentConfig.disqus) {
+if (!commentConfig?.disqus) {
 	throw new Error("Disqus comments are not configured");
 }
 const shortname = commentConfig.disqus.shortname;

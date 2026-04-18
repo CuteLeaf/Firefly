@@ -36,6 +36,19 @@ import Icon from "@/components/common/Icon.svelte";
 import { backgroundWallpaper, siteConfig } from "@/config";
 import type { WALLPAPER_MODE } from "@/types/config";
 
+type OverlaySliderItem = {
+	key: "opacity" | "blur" | "cardOpacity";
+	enabled: boolean;
+	label: string;
+	displayValue: string;
+	ariaLabel: string;
+	min: number;
+	max: number;
+	step: number;
+	value: number;
+	onValueChange: (value: number) => void;
+};
+
 let hue = $state(getHue());
 const defaultHue = getDefaultHue();
 let wallpaperMode: WALLPAPER_MODE = $state(backgroundWallpaper.mode);
@@ -128,6 +141,51 @@ const hasAnyContent =
 	allowLayoutSwitch ||
 	hasBannerSettings ||
 	hasOverlaySettings;
+
+let overlaySliderItems = $derived<OverlaySliderItem[]>([
+	{
+		key: "opacity",
+		enabled: isOverlayOpacitySwitchable,
+		label: i18n(I18nKey.overlayOpacity),
+		displayValue: `${Math.round(overlayOpacity * 100)}%`,
+		ariaLabel: i18n(I18nKey.overlayOpacity),
+		min: 20,
+		max: 100,
+		step: 1,
+		value: Math.round(overlayOpacity * 100),
+		onValueChange: (value) => {
+			overlayOpacity = value / 100;
+		},
+	},
+	{
+		key: "blur",
+		enabled: isOverlayBlurSwitchable,
+		label: i18n(I18nKey.overlayBlur),
+		displayValue: `${overlayBlur.toFixed(1)}px`,
+		ariaLabel: i18n(I18nKey.overlayBlur),
+		min: 0,
+		max: 20,
+		step: 0.5,
+		value: overlayBlur,
+		onValueChange: (value) => {
+			overlayBlur = value;
+		},
+	},
+	{
+		key: "cardOpacity",
+		enabled: isOverlayCardOpacitySwitchable,
+		label: i18n(I18nKey.overlayCardOpacity),
+		displayValue: `${Math.round(overlayCardOpacity * 100)}%`,
+		ariaLabel: i18n(I18nKey.overlayCardOpacity),
+		min: 20,
+		max: 100,
+		step: 1,
+		value: Math.round(overlayCardOpacity * 100),
+		onValueChange: (value) => {
+			overlayCardOpacity = value / 100;
+		},
+	},
+]);
 
 function resetHue() {
 	hue = getDefaultHue();
@@ -347,6 +405,22 @@ onMount(() => {
 	};
 });
 
+onMount(() => {
+	const handleWallpaperModeChange = (event: Event) => {
+		const customEvent = event as CustomEvent<{ mode: WALLPAPER_MODE }>;
+		wallpaperMode = customEvent.detail.mode;
+	};
+
+	window.addEventListener("wallpaperModeChange", handleWallpaperModeChange);
+
+	return () => {
+		window.removeEventListener(
+			"wallpaperModeChange",
+			handleWallpaperModeChange,
+		);
+	};
+});
+
 $effect(() => {
 	if (hue || hue === 0) {
 		setHue(hue);
@@ -472,43 +546,26 @@ $effect(() => {
                 </button>
             </div>
             <div class="space-y-2">
-                {#if isOverlayOpacitySwitchable}
-                    <div class="rounded-md bg-(--btn-regular-bg) p-2">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="text-sm font-medium text-(--btn-content) opacity-80">{i18n(I18nKey.overlayOpacity)}</span>
-                            <span class="text-xs text-(--btn-content)">{Math.round(overlayOpacity * 100)}%</span>
+                {#each overlaySliderItems as item (item.key)}
+                    {#if item.enabled}
+                        <div class="rounded-md bg-(--btn-regular-bg) p-2">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-sm font-medium text-(--btn-content) opacity-80">{item.label}</span>
+                                <span class="text-xs text-(--btn-content)">{item.displayValue}</span>
+                            </div>
+                            <input
+                                aria-label={item.ariaLabel}
+                                type="range"
+                                min={item.min}
+                                max={item.max}
+                                step={item.step}
+                                value={item.value}
+                                oninput={(e) => item.onValueChange(Number((e.currentTarget as HTMLInputElement).value))}
+                                class="slider w-full overlay-slider"
+                            />
                         </div>
-                        <input aria-label={i18n(I18nKey.overlayOpacity)} type="range" min="20" max="100" step="1"
-                               value={Math.round(overlayOpacity * 100)}
-                               oninput={(e) => (overlayOpacity = Number((e.currentTarget as HTMLInputElement).value) / 100)}
-                               class="slider w-full" />
-                    </div>
-                {/if}
-
-                {#if isOverlayBlurSwitchable}
-                    <div class="rounded-md bg-(--btn-regular-bg) p-2">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="text-sm font-medium text-(--btn-content) opacity-80">{i18n(I18nKey.overlayBlur)}</span>
-                            <span class="text-xs text-(--btn-content)">{overlayBlur.toFixed(1)}px</span>
-                        </div>
-                        <input aria-label={i18n(I18nKey.overlayBlur)} type="range" min="0" max="20" step="0.5"
-                               bind:value={overlayBlur}
-                               class="slider w-full" />
-                    </div>
-                {/if}
-
-                {#if isOverlayCardOpacitySwitchable}
-                    <div class="rounded-md bg-(--btn-regular-bg) p-2">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="text-sm font-medium text-(--btn-content) opacity-80">{i18n(I18nKey.overlayCardOpacity)}</span>
-                            <span class="text-xs text-(--btn-content)">{Math.round(overlayCardOpacity * 100)}%</span>
-                        </div>
-                        <input aria-label={i18n(I18nKey.overlayCardOpacity)} type="range" min="20" max="100" step="1"
-                               value={Math.round(overlayCardOpacity * 100)}
-                               oninput={(e) => (overlayCardOpacity = Number((e.currentTarget as HTMLInputElement).value) / 100)}
-                               class="slider w-full" />
-                    </div>
-                {/if}
+                    {/if}
+                {/each}
             </div>
         </div>
     {/if}
@@ -652,6 +709,9 @@ $effect(() => {
             border-radius 999px
             background-image unquote("linear-gradient(90deg, var(--primary) 0 var(--range-progress, 50%), hsla(var(--hue), 22%, 28%, 0.18) var(--range-progress, 50%) 100%)")
             transition background-image 0.15s ease-in-out
+
+        input[type="range"].overlay-slider
+            height 0.85rem
 
             /* Input Thumb */
             &::-webkit-slider-thumb

@@ -35,8 +35,20 @@
 }
 
 /* 透明模式下的代码块样式 */
-body.wallpaper-transparent .expressive-code,
-body.wallpaper-transparent .expressive-code *:not(.ec-collapse__toggle) {
+/*
+ * 仅处理外层容器背景，避免清空 ANSI token 的背景色。
+ * 之前的通配符规则会把行内背景也强制透明，导致 ANSI 背景色失效。
+ */
+body.wallpaper-transparent .expressive-code {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+body.wallpaper-transparent .expressive-code .frame pre,
+body.wallpaper-transparent .expressive-code .frame code,
+body.wallpaper-transparent .expressive-code .frame .code,
+body.wallpaper-transparent .expressive-code .frame .ec-code,
+body.wallpaper-transparent .expressive-code .frame .ec-code__inner {
   background-color: transparent !important;
   background: transparent !important;
 }

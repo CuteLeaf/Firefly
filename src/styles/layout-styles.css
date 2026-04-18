@@ -22,6 +22,9 @@ html.is-page-transitioning .banner-home-text-overlay {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
     animation: banner-fadeInUp 0.3s ease-out;
     font-weight: bold;
+    /* 防止大字体标题溢出容器 */
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .banner-subtitle {
@@ -96,7 +99,7 @@ html.is-page-transitioning .banner-home-text-overlay {
     
     /* 标题字体优化 */
     .banner-title {
-        font-size: 3.2rem !important; /* 增大字体大小 */
+        font-size: min(var(--banner-title-size, 3rem), 10vw) !important;
         line-height: 1.1 !important;
         margin-bottom: 0.5rem !important;
         text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8) !important; /* 增强阴影 */
@@ -145,19 +148,19 @@ html.is-page-transitioning .banner-home-text-overlay {
     
     /* 标题字体优化 */
     .banner-title {
-        font-size: 3.8rem !important; /* 增大字体大小 */
+        font-size: min(var(--banner-title-size, 3rem), 10vw) !important;
         line-height: 1.1 !important;
         margin-bottom: 0.75rem !important;
         text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8) !important;
     }
-    
+
     /* 副标题字体优化 */
     .banner-subtitle {
         font-size: 1.125rem !important;
         line-height: 1.4 !important;
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7) !important;
     }
-    
+
 }
 
 /* 移动端横幅优化 - 超大屏手机/小平板 (641px - 767px) */
@@ -194,7 +197,7 @@ html.is-page-transitioning .banner-home-text-overlay {
     
     /* 标题字体优化 */
     .banner-title {
-        font-size: 3.9rem !important;
+        font-size: min(var(--banner-title-size, 3rem), 8vw) !important;
         line-height: 1.1 !important;
         margin-bottom: 0.85rem !important;
         text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8) !important;
@@ -242,7 +245,7 @@ html.is-page-transitioning .banner-home-text-overlay {
     
     /* 标题字体优化 */
     .banner-title {
-        font-size: 4rem !important;
+        font-size: min(var(--banner-title-size, 3rem), 7vw) !important;
         line-height: 1.1 !important;
         margin-bottom: 1rem !important;
         text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8) !important;
@@ -451,7 +454,7 @@ html.is-page-transitioning .banner-home-text-overlay {
     }
 
     .banner-title {
-        font-size: 2.2rem !important; /* 增大字体大小 */
+        font-size: min(var(--banner-title-size, 3rem), 6vw) !important;
         line-height: 1.3;
     }
 
@@ -498,16 +501,16 @@ html.is-page-transitioning .banner-home-text-overlay {
     }
     
     .banner-title {
-        font-size: 2.8rem !important; /* 增大字体大小 */
+        font-size: min(var(--banner-title-size, 3rem), 10vw) !important;
         line-height: 1.1 !important;
         margin-bottom: 0.5rem !important;
     }
-    
+
     .banner-subtitle {
         font-size: 0.9rem !important;
         line-height: 1.2 !important;
     }
-    
+
 }
 
 /* 小高度屏幕 (高度 501px - 600px) */
@@ -525,7 +528,7 @@ html.is-page-transitioning .banner-home-text-overlay {
     }
     
     .banner-title {
-        font-size: 3.2rem !important; /* 增大字体大小 */
+        font-size: min(var(--banner-title-size, 3rem), 10vw) !important;
         line-height: 1.1 !important;
         margin-bottom: 0.75rem !important;
     }
@@ -552,7 +555,7 @@ html.is-page-transitioning .banner-home-text-overlay {
     }
     
     .banner-title {
-        font-size: 3.8rem !important; /* 增大字体大小 */
+        font-size: min(var(--banner-title-size, 3rem), 10vw) !important;
         line-height: 1.1 !important;
         margin-bottom: 1rem !important;
     }
@@ -579,7 +582,7 @@ html.is-page-transitioning .banner-home-text-overlay {
     }
     
     .banner-title {
-        font-size: 2.8rem !important; /* 增大字体大小 */
+        font-size: min(var(--banner-title-size, 3rem), 6vw) !important;
         line-height: 1.1 !important;
         margin-bottom: 0.5rem !important;
     }

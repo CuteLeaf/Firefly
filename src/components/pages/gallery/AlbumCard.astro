@@ -1,6 +1,7 @@
 ---
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
+import { url } from "@/utils/url-utils";
 
 interface Props {
 	id: string;
@@ -18,7 +19,7 @@ const { id, name, cover, description, date, location, tags, photoCount } =
 ---
 
 <a
-  href={`/gallery/${id}/`}
+  href={url(`/gallery/${id}/`)}
   data-tags={tags?.join(",") || ""}
   class="album-card group relative block overflow-hidden rounded-xl transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
 >

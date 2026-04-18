@@ -538,26 +538,31 @@ function updateNavbarTransparency(mode: WALLPAPER_MODE) {
 
 	let transparentMode: string;
 	let enableBlur: boolean;
+	let blurAmount: number;
 
 	// 根据当前壁纸模式设置导航栏透明模式和模糊效果
 	if (mode === WALLPAPER_OVERLAY) {
 		// 全屏壁纸模式
 		transparentMode = "none";
 		enableBlur = false;
+		blurAmount = 0;
 	} else if (mode === WALLPAPER_NONE) {
 		// 纯色背景模式
 		transparentMode = "none";
 		enableBlur = false;
+		blurAmount = 0;
 	} else {
 		// Banner模式：使用配置的透明模式和模糊效果
 		transparentMode =
 			backgroundWallpaper.banner?.navbar?.transparentMode || "semi";
 		enableBlur = backgroundWallpaper.banner?.navbar?.enableBlur ?? true;
+		blurAmount = backgroundWallpaper.banner?.navbar?.blur ?? 20;
 	}
 
 	// 更新导航栏的透明模式属性
 	navbar.setAttribute("data-transparent-mode", transparentMode);
 	navbar.setAttribute("data-enable-blur", String(enableBlur));
+	navbar.style.setProperty("--navbar-glass-blur", `${blurAmount}px`);
 
 	// 移除现有的透明模式类
 	navbar.classList.remove(
@@ -620,14 +625,20 @@ function adjustMainContentTransparency(enable: boolean) {
 	const mainContent = document.querySelector(".absolute.w-full.z-30");
 	const body = document.body;
 
-	if (!mainContent || !body) return;
-
 	if (enable) {
-		mainContent.classList.add("wallpaper-transparent");
-		body.classList.add("wallpaper-transparent");
+		if (mainContent) {
+			mainContent.classList.add("wallpaper-transparent");
+		}
+		if (body) {
+			body.classList.add("wallpaper-transparent");
+		}
 	} else {
-		mainContent.classList.remove("wallpaper-transparent");
-		body.classList.remove("wallpaper-transparent");
+		if (mainContent) {
+			mainContent.classList.remove("wallpaper-transparent");
+		}
+		if (body) {
+			body.classList.remove("wallpaper-transparent");
+		}
 	}
 }
 
@@ -665,6 +676,13 @@ export function getStoredWallpaperMode(): WALLPAPER_MODE {
 	) {
 		return backgroundWallpaper.mode;
 	}
+
+	const isSwitchable = backgroundWallpaper.switchable ?? true;
+	if (!isSwitchable) {
+		localStorage.removeItem("wallpaperMode");
+		return backgroundWallpaper.mode;
+	}
+
 	return (
 		(localStorage.getItem("wallpaperMode") as WALLPAPER_MODE) ||
 		backgroundWallpaper.mode

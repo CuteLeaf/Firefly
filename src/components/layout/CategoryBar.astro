@@ -5,13 +5,25 @@ import { Icon } from "astro-icon/components";
 import { getCategoryList, getSortedPostsList } from "@/utils/content-utils";
 import { url } from "@/utils/url-utils";
 
+interface Props {
+	currentPostCategory?: string;
+}
+
+const { currentPostCategory } = Astro.props as Props;
+
 const categories = await getCategoryList();
 const totalPosts = (await getSortedPostsList()).length;
 const homeUrl = url("/");
 const archiveUrl = url("/archive/");
 ---
 
-<div class="card-base category-bar p-3 onload-animation" id="category-bar" data-home-path={homeUrl} data-archive-path={archiveUrl}>
+<div
+  class="card-base category-bar p-3 onload-animation"
+  id="category-bar"
+  data-home-path={homeUrl}
+  data-archive-path={archiveUrl}
+  data-current-post-category={currentPostCategory || ""}
+>
   <div class="category-bar-inner flex gap-2">
     <a
       href={homeUrl}
@@ -115,6 +127,22 @@ const archiveUrl = url("/archive/");
     border-color: var(--primary);
     color: white;
   }
+  .category-pill[data-soft-active] {
+    border-color: var(--line-divider);
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: color-mix(in srgb, var(--primary) 72%, var(--btn-content));
+  }
+  .category-pill[data-soft-active]:hover {
+    border-color: var(--line-divider);
+    background: color-mix(in srgb, var(--primary) 15%, transparent);
+    color: color-mix(in srgb, var(--primary) 82%, var(--btn-content));
+  }
+  .category-pill[data-soft-active][data-active],
+  .category-pill[data-soft-active][data-active]:hover {
+    border-color: var(--line-divider);
+    background: color-mix(in srgb, var(--primary) 15%, transparent);
+    color: color-mix(in srgb, var(--primary) 82%, var(--btn-content));
+  }
   .category-pill[data-active]:hover {
     background: var(--primary);
     border-color: var(--primary);
@@ -123,22 +151,18 @@ const archiveUrl = url("/archive/");
 </style>
 
 <script>
+  let delayedCategoryBarScrollTimer: number | undefined;
+
   function getCategoryBarState(bar: HTMLElement, currentUrl: URL) {
     const pathname = currentUrl.pathname.replace(/\/$/, "");
     const homePath = (bar.getAttribute("data-home-path") || "/").replace(/\/$/, "");
     const archivePath = (bar.getAttribute("data-archive-path") || "/archive").replace(/\/$/, "");
     const isHome = pathname === homePath || pathname === "" || pathname === "/";
     const isArchive = pathname === archivePath;
-    const escapedHomePath = homePath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    // 分页页面（如 /2/, /3/）也属于首页的延续
-    const isHomePagination =
-      /^\/\d+$/.test(pathname) ||
-      (homePath !== "" && new RegExp(`^${escapedHomePath}\\/\\d+$`).test(pathname));
 
     return {
       isHome,
       isArchive,
-      isHomePagination,
       activeCategory: currentUrl.searchParams.get("category") || "",
       hasTag: currentUrl.searchParams.has("tag"),
       hasUncategorized: currentUrl.searchParams.has("uncategorized"),
@@ -146,20 +170,17 @@ const archiveUrl = url("/archive/");
   }
 
   function setActiveCategory(bar: HTMLElement, currentUrl: URL) {
-    const { isHome, isArchive, isHomePagination, activeCategory, hasTag, hasUncategorized } =
+    const { isHome, isArchive, activeCategory, hasTag, hasUncategorized } =
       getCategoryBarState(bar, currentUrl);
-
-    // 在首页、首页分页和归档页显示
-    if (!isHome && !isHomePagination && !isArchive) {
-      bar.style.display = "none";
-      return;
-    }
-    bar.style.display = "";
+    const postCategory = (bar.getAttribute("data-current-post-category") || "").trim();
 
     const pills = bar.querySelectorAll<HTMLAnchorElement>(".category-pill");
-    pills.forEach((pill) => pill.removeAttribute("data-active"));
+    pills.forEach((pill) => {
+      pill.removeAttribute("data-active");
+      pill.removeAttribute("data-soft-active");
+    });
 
-    if (isHome || isHomePagination) {
+    if (isHome) {
       bar.querySelector<HTMLAnchorElement>('.category-pill[data-category-name=""]')
         ?.setAttribute("data-active", "");
       return;
@@ -177,11 +198,22 @@ const archiveUrl = url("/archive/");
     if (isArchive && !hasTag && !hasUncategorized) {
       bar.querySelector<HTMLAnchorElement>('.category-pill[data-category-name="__archive__"]')
         ?.setAttribute("data-active", "");
+      return;
+    }
+
+    if (postCategory) {
+      pills.forEach((pill) => {
+        if (pill.getAttribute("data-category-name") === postCategory) {
+          pill.setAttribute("data-soft-active", "");
+        }
+      });
     }
   }
 
   function scrollActiveCategoryIntoView(bar: HTMLElement, behavior: ScrollBehavior = "smooth") {
-    const activePill = bar.querySelector<HTMLAnchorElement>('.category-pill[data-active]');
+    const activePill =
+      bar.querySelector<HTMLAnchorElement>('.category-pill[data-active]') ||
+      bar.querySelector<HTMLAnchorElement>('.category-pill[data-soft-active]');
     const scroll = bar.querySelector<HTMLElement>(".category-scroll");
     if (!activePill || !scroll) return;
 
@@ -189,12 +221,51 @@ const archiveUrl = url("/archive/");
     scroll.scrollTo({ left: Math.max(0, scrollLeft), behavior });
   }
 
-  function updateCategoryBar(currentUrl = new URL(window.location.href)) {
+  function shouldDeferCategoryScroll(bar: HTMLElement, currentUrl: URL) {
+    const { isHome } = getCategoryBarState(bar, currentUrl);
+    const isMobile = window.innerWidth < 1024;
+    const isBannerMode = document.body.classList.contains("enable-banner");
+    return isMobile && isBannerMode && !isHome;
+  }
+
+  function updateCategoryBar(
+    currentUrl = new URL(window.location.href),
+    options: { scrollBehavior?: ScrollBehavior; deferScroll?: boolean } = {},
+  ) {
     const bar = document.getElementById("category-bar");
     if (!bar) return;
 
+    const swupContainer = document.getElementById("swup-container");
+    if (swupContainer) {
+      const currentPostCategory = swupContainer.getAttribute("data-current-post-category") || "";
+      bar.setAttribute("data-current-post-category", currentPostCategory);
+    }
+
     setActiveCategory(bar, currentUrl);
-    scrollActiveCategoryIntoView(bar);
+
+    const deferScroll = options.deferScroll ?? shouldDeferCategoryScroll(bar, currentUrl);
+    const scrollBehavior = options.scrollBehavior ?? (deferScroll ? "auto" : "smooth");
+
+    if (delayedCategoryBarScrollTimer) {
+      window.clearTimeout(delayedCategoryBarScrollTimer);
+      delayedCategoryBarScrollTimer = undefined;
+    }
+
+    if (deferScroll) {
+      // 等主内容上移完成后再定位分类，避免出现“先横向滚动后上移”的卡顿观感。
+      delayedCategoryBarScrollTimer = window.setTimeout(() => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            scrollActiveCategoryIntoView(bar, scrollBehavior);
+            updateScrollHint();
+          });
+        });
+      }, 220);
+      return;
+    }
+
+    scrollActiveCategoryIntoView(bar, scrollBehavior);
+    updateScrollHint();
   }
 
   function initCategoryBarInteractions() {
@@ -235,6 +306,12 @@ const archiveUrl = url("/archive/");
 
     const scroll = bar.querySelector<HTMLElement>(".category-scroll");
     if (!scroll) return;
+
+    if (scroll.dataset.featuresBound === "true") {
+      updateScrollHint();
+      return;
+    }
+    scroll.dataset.featuresBound = "true";
 
     // 鼠标滚轮横向滚动
     scroll.addEventListener("wheel", (e) => {
@@ -283,5 +360,25 @@ const archiveUrl = url("/archive/");
   });
   document.addEventListener("swup:contentReplaced", () => {
     updateCategoryBar();
+    // 某些 swup 生命周期下 URL/DOM 状态同步稍晚，下一帧再校正一次避免状态残留
+    requestAnimationFrame(() => {
+      updateCategoryBar();
+    });
   });
+
+  // 在 Swup 导航时提前更新状态，避免切换期间激活态闪烁
+  function setupSwupEarlyUpdate() {
+    if (!window.swup?.hooks) return;
+    window.swup.hooks.on("visit:start", (visit: any) => {
+      const bar = document.getElementById("category-bar");
+      if (!bar) return;
+      const targetUrl = new URL(visit.to.url, window.location.href);
+      setActiveCategory(bar, targetUrl);
+    });
+  }
+  if (window.swup?.hooks) {
+    setupSwupEarlyUpdate();
+  } else {
+    document.addEventListener("swup:enable", setupSwupEarlyUpdate);
+  }
 </script>

@@ -108,6 +108,9 @@ const siteLang = lang.replace("_", "-");
           <UmamiAnalytics
           websiteId={siteConfig.analytics.umamiAnalytics.websiteId}
           scriptUrl={siteConfig.analytics.umamiAnalytics.scriptUrl}
+          trackOutboundLinks={siteConfig.analytics.umamiAnalytics.trackOutboundLinks}
+          collectWebVitals={siteConfig.analytics.umamiAnalytics.collectWebVitals}
+          relpays={siteConfig.analytics.umamiAnalytics.relpays}
           />
         )}
         {siteConfig.analytics?.la51Analytics?.Id && (
@@ -294,8 +297,13 @@ const siteLang = lang.replace("_", "-");
       const hue = localStorage.getItem("hue") || configHue;
       document.documentElement.style.setProperty("--hue", hue);
 
-      // 设置卡片透明度（全屏透明模式下使用）
-      document.documentElement.style.setProperty("--card-transparent-opacity", String(cardTransparentOpacity));
+      // 设置卡片透明度（全屏透明模式下使用），优先使用用户自定义值
+      const storedCardOpacity = localStorage.getItem("overlayCardOpacity");
+      const parsedCardOpacity = storedCardOpacity === null ? NaN : Number.parseFloat(storedCardOpacity);
+      const resolvedCardOpacity = Number.isFinite(parsedCardOpacity)
+        ? Math.min(1, Math.max(0, parsedCardOpacity))
+        : cardTransparentOpacity;
+      document.documentElement.style.setProperty("--card-transparent-opacity", String(resolvedCardOpacity));
 
       // calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
       // 使用更准确的窗口高度计算
@@ -794,6 +802,21 @@ function disableAnimation() {
 
   }
 
+  function initContentOverflowEnhancements() {
+    initCustomScrollbar();
+    initHorizontalOverflowContainers();
+  }
+
+  function scheduleContentOverflowEnhancements() {
+    initContentOverflowEnhancements();
+    requestAnimationFrame(() => {
+      initContentOverflowEnhancements();
+    });
+    setTimeout(() => {
+      initContentOverflowEnhancements();
+    }, 100);
+  }
+
   function showBanner() {
     const isBannerMode = backgroundWallpaper.mode === "banner";
     if (!isBannerMode) return;
@@ -868,8 +891,7 @@ function disableAnimation() {
       updateSidebarComponentsVisibility();
 
       // 只处理katex元素的容器，使用浏览器原生滚动条
-      initCustomScrollbar();
-      initHorizontalOverflowContainers();
+      scheduleContentOverflowEnhancements();
 
       // 重新初始化图标加载器
       import("@/utils/icon-loader").then(({ initIconLoader }) => {
@@ -1127,6 +1149,10 @@ function disableAnimation() {
     document.addEventListener("swup:enable", setup);
   }
 
+  document.addEventListener("astro:page-load", scheduleContentOverflowEnhancements);
+  document.addEventListener("password:decrypted", () => {
+    setTimeout(scheduleContentOverflowEnhancements, 200);
+  });
   let backToTopBtn = document.getElementById("back-to-top-btn");
   let toc = document.getElementById("toc-wrapper");
   let navbar = document.getElementById("navbar-wrapper");
@@ -1234,17 +1260,15 @@ function disableAnimation() {
     );
   };
 
-  // 页面加载完成后初始化banner和katex容器
+  // 页面加载完成后初始化banner和内容溢出容器
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
       showBanner();
-      initCustomScrollbar();
-      initHorizontalOverflowContainers();
+      scheduleContentOverflowEnhancements();
     });
   } else {
     showBanner();
-    initCustomScrollbar();
-    initHorizontalOverflowContainers();
+    scheduleContentOverflowEnhancements();
   }
 
   // 检查当前页面是否为文章详情页

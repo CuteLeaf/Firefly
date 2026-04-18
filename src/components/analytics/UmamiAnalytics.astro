@@ -2,9 +2,30 @@
 interface Props {
 	websiteId: string;
 	scriptUrl?: string;
+	trackOutboundLinks?: boolean;
+	collectWebVitals?: boolean;
+	relpays?: {
+		enabled?: boolean;
+		sampleRate?: number;
+		maskLevel?: "moderate" | "strict";
+		maxDuration?: number;
+		blockSelector?: string;
+	};
 }
 
-const { websiteId, scriptUrl } = Astro.props;
+const {
+	websiteId,
+	scriptUrl,
+	trackOutboundLinks = true,
+	collectWebVitals = false,
+	relpays,
+} = Astro.props;
+
+const relpaysEnabled = relpays?.enabled ?? false;
+const relpaysSampleRate = relpays?.sampleRate ?? 0.15;
+const relpaysMaskLevel = relpays?.maskLevel ?? "moderate";
+const relpaysMaxDuration = relpays?.maxDuration ?? 300000;
+const relpaysBlockSelector = relpays?.blockSelector?.trim();
 ---
 
 <script
@@ -13,4 +34,43 @@ const { websiteId, scriptUrl } = Astro.props;
 	defer
 	src={scriptUrl}
 	data-website-id={websiteId}
+	data-performance={collectWebVitals ? "true" : undefined}
+	data-sample-rate={relpaysEnabled ? String(relpaysSampleRate) : undefined}
+	data-mask-level={relpaysEnabled ? relpaysMaskLevel : undefined}
+	data-max-duration={relpaysEnabled ? String(relpaysMaxDuration) : undefined}
+	data-block-selector={
+		relpaysEnabled && relpaysBlockSelector ? relpaysBlockSelector : undefined
+	}
 ></script>
+
+{
+	trackOutboundLinks && (
+		<script is:inline data-swup-ignore-script>
+			;(() => {
+				const name = 'outbound-link-click'
+
+				const applyOutboundTracking = () => {
+					document.querySelectorAll('a').forEach((a) => {
+						if (
+							a.host !== window.location.host &&
+							!a.getAttribute('data-umami-event')
+						) {
+							a.setAttribute('data-umami-event', name)
+							a.setAttribute('data-umami-event-url', a.href)
+						}
+					})
+				}
+
+				if (document.readyState === 'loading') {
+					document.addEventListener('DOMContentLoaded', applyOutboundTracking, {
+						once: true,
+					})
+				} else {
+					applyOutboundTracking()
+				}
+
+				document.addEventListener('astro:page-load', applyOutboundTracking)
+			})()
+		</script>
+	)
+}

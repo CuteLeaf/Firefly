@@ -112,11 +112,11 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		// 横幅导航栏配置
 		navbar: {
 			// 横幅导航栏透明模式："semi" 半透明，"full" 完全透明，"semifull" 动态透明
-			transparentMode: "semifull",
+			transparentMode: "semi",
 			// 是否开启毛玻璃模糊效果，开启可能会影响页面性能，如果不开启则是半透明，请根据自己的喜好开启
 			enableBlur: true,
 			// 毛玻璃模糊度
-			blur: 10,
+			blur: 5,
 		},
 		// 横幅图片轮播配置，仅在当配置多张图片时生效
 		carousel: {

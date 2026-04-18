@@ -15,7 +15,7 @@ export function GithubCardComponent(properties, children) {
 			'Invalid directive. ("github" directive must be leaf type "::github{repo="owner/repo"}")',
 		]);
 
-	if (!properties.repo || !properties.repo.includes("/"))
+	if (!properties.repo?.includes("/"))
 		return h(
 			"div",
 			{ class: "hidden" },

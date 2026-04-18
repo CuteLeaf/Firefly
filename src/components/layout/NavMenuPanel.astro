@@ -19,7 +19,7 @@ const processedLinks = Astro.props.links.map((link: NavBarLink) => ({
 	}),
 }));
 ---
-<div id="nav-menu-panel" class:list={["float-panel float-panel-closed absolute transition-all fixed right-4 px-2 py-2 max-h-[80vh] overflow-y-auto"]}>
+<div id="nav-menu-panel" class:list={["float-panel float-panel-closed transition-all fixed right-4 px-2 py-2 max-h-[80vh] overflow-y-auto"]}>
     {processedLinks.map((link) => (
         <div class="mobile-menu-item">
             {link.children && link.children.length > 0 ? (
@@ -32,10 +32,10 @@ const processedLinks = Astro.props.links.map((link: NavBarLink) => ({
                         aria-expanded="false"
                     >
                         <div class="flex items-center transition text-black/75 dark:text-white/75 font-bold group-hover:text-(--primary) group-active:text-(--primary)">
-                            {link.icon && <Icon name={link.icon} class="text-[1.1rem] mr-2" />}
+							{link.icon && <Icon name={link.icon} is:inline class="text-[1.1rem] mr-2" />}
                             {link.name}
                         </div>
-                        <Icon name="material-symbols:keyboard-arrow-down-rounded"
+                        <Icon name="material-symbols:keyboard-arrow-down-rounded" is:inline
                               class="transition text-[1.25rem] text-(--primary) mobile-dropdown-arrow duration-200"
                         />
                     </button>
@@ -47,10 +47,10 @@ const processedLinks = Astro.props.links.map((link: NavBarLink) => ({
                                target={child.external ? "_blank" : null}
                             >
                                 <div class="flex items-center transition text-black/60 dark:text-white/60 font-medium group-hover:text-(--primary) group-active:text-(--primary)">
-                                    {child.icon && <Icon name={child.icon} class="text-[1.1rem] mr-2" />}
+									{child.icon && <Icon name={child.icon} is:inline class="text-[1.1rem] mr-2" />}
                                     {child.name}
                                 </div>
-                                {child.external && <Icon name="fa7-solid:arrow-up-right-from-square"
+                                {child.external && <Icon name="fa7-solid:arrow-up-right-from-square" is:inline
                                       class="transition text-[0.75rem] text-black/25 dark:text-white/25 -translate-x-1"
                                 />}
                             </a>
@@ -65,13 +65,13 @@ const processedLinks = Astro.props.links.map((link: NavBarLink) => ({
                    target={link.external ? "_blank" : null}
                 >
                     <div class="flex items-center transition text-black/75 dark:text-white/75 font-bold group-hover:text-(--primary) group-active:text-(--primary)">
-                        {link.icon && <Icon name={link.icon} class="text-[1.1rem] mr-2" />}
+						{link.icon && <Icon name={link.icon} is:inline class="text-[1.1rem] mr-2" />}
                         {link.name}
                     </div>
-                    {!link.external && <Icon name="material-symbols:chevron-right-rounded"
+					{!link.external && <Icon name="material-symbols:chevron-right-rounded" is:inline
                           class="transition text-[1.25rem] text-(--primary)"
                     />}
-                    {link.external && <Icon name="fa7-solid:arrow-up-right-from-square"
+					{link.external && <Icon name="fa7-solid:arrow-up-right-from-square" is:inline
                           class="transition text-[0.75rem] text-black/25 dark:text-white/25 -translate-x-1"
                     />}
                 </a>

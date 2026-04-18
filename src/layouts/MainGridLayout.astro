@@ -47,6 +47,7 @@ interface Props {
 	lang?: string;
 	setOGTypeArticle?: boolean;
 	postSlug?: string;
+	postCategory?: string;
 	headings?: MarkdownHeading[];
 	bannerPostMeta?: {
 		title: string;
@@ -66,6 +67,7 @@ const {
 	lang,
 	setOGTypeArticle,
 	postSlug,
+	postCategory,
 	headings = [],
 	bannerPostMeta,
 } = Astro.props;
@@ -125,6 +127,8 @@ const creditUrlMobile =
 
 // 检查是否为首页
 const isHomePageCheck = isHomePage(Astro.url.pathname);
+
+const shouldRenderCategoryBar = !!siteConfig.categoryBar;
 
 // 检查是否在文章详情页
 const isPostPage = !!postSlug;
@@ -259,11 +263,6 @@ const footerClassName = footerClass.join(" ");
 
 // 检查是否应该启用半透明效果
 const shouldEnableTransparency = isOverlayMode && isBackgroundEnabled;
-
-// 为组件添加半透明效果的CSS类
-const transparentClass = shouldEnableTransparency
-	? "wallpaper-transparent"
-	: "";
 
 const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
 const stickyNavbar = siteConfig.navbar.stickyNavbar ?? false;
@@ -465,6 +464,8 @@ const bannerCarouselInterval = Math.max(
             var container = document.getElementById('banner-images-container');
             if (!container) return;
 
+            var WALLPAPER_BANNER = 'banner';
+
             var mobileCount = parseInt(container.dataset.mobileCount || '0', 10);
             var desktopCount = parseInt(container.dataset.desktopCount || '0', 10);
             if (mobileCount <= 1 && desktopCount <= 1) return;
@@ -479,6 +480,10 @@ const bannerCarouselInterval = Math.max(
                 var stored = localStorage.getItem('bannerCarouselEnabled');
                 if (stored === null) return defaultEnabled;
                 return stored === 'true';
+            }
+
+            function isBannerWallpaperMode() {
+                return document.documentElement.getAttribute('data-wallpaper-mode') === WALLPAPER_BANNER;
             }
 
             // 收集所有帧内容
@@ -581,6 +586,7 @@ const bannerCarouselInterval = Math.max(
 
             function startCarousel() {
                 stopCarousel();
+                if (!isBannerWallpaperMode()) return;
                 if (!isCarouselEnabled()) return;
 
                 // 首张图立即启动 Ken Burns 缩放
@@ -588,6 +594,7 @@ const bannerCarouselInterval = Math.max(
                 applyInitialKB('banner-image-slot-desktop');
 
                 timerId = setInterval(function() {
+                    if (!isBannerWallpaperMode()) { stopCarousel(); return; }
                     if (!isCarouselEnabled()) { stopCarousel(); return; }
                     crossfade('banner-image-slot-mobile', mobileCount, 'mobile');
                     crossfade('banner-image-slot-desktop', desktopCount, 'desktop');
@@ -624,7 +631,7 @@ const bannerCarouselInterval = Math.max(
             <div class="w-4/5 lg:w-3/4 text-center mb-0">
                 <div class="flex flex-col">
                     {backgroundWallpaper.banner?.homeText?.title && (
-                        <div class="banner-title font-bold text-white mb-2 lg:mb-4 leading-tight" style={{ fontSize: backgroundWallpaper.banner.homeText.titleSize || "3rem" }}>
+                        <div class="banner-title font-bold text-white mb-2 lg:mb-4 leading-tight" style={{ '--banner-title-size': backgroundWallpaper.banner.homeText.titleSize || "3rem" }}>
                             {backgroundWallpaper.banner.homeText.title}
                         </div>
                     )}
@@ -793,7 +800,7 @@ const bannerCarouselInterval = Math.max(
 )}
 
 <!-- Main content -->
-<div class={`absolute w-full z-30 pointer-events-none ${mobileNonHomeBannerClass ? 'mobile-main-no-banner' : ''} ${!(isBannerMode && isBackgroundEnabled) ? 'no-banner-layout' : ''} ${transparentClass}`} style={`top: ${finalMainPanelTop}`}>
+<div class={`absolute w-full z-30 pointer-events-none ${mobileNonHomeBannerClass ? 'mobile-main-no-banner' : ''} ${!(isBannerMode && isBackgroundEnabled) ? 'no-banner-layout' : ''}`} style={`top: ${finalMainPanelTop}`}>
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
     <div class="relative w-full xl:w-[92vw] max-w-(--page-width) mx-auto pointer-events-auto">
         <div id="main-grid"
@@ -855,7 +862,7 @@ const bannerCarouselInterval = Math.max(
                         {effectiveHasLeftComponents && (
                             <SideBar
                                 side={effectiveIsBothSidebars ? "left" : undefined}
-                                class={`${sidebarClass} ${transparentClass}`}
+                                class={sidebarClass}
                                 headings={headings}
                             />
                         )}
@@ -865,18 +872,21 @@ const bannerCarouselInterval = Math.max(
             ) : (
                 <div id="left-sidebar-dynamic" class="contents transition-swup-fade">
                     {effectiveIsBothSidebars && effectiveHasLeftComponents && (
-                        <SideBar side="left" class={`${sidebarClass} ${transparentClass}`} headings={headings}></SideBar>
+						<SideBar side="left" class={sidebarClass} headings={headings}></SideBar>
                     )}
                 </div>
             )}
                     
             {/* 主内容区包装器 - 包含静态栏位和swup容器，作为单个grid item */}
             <div class={staticBarClass}>
-                {/* 分类导航栏 - 在所有页面渲染，由客户端JS控制显隐 */}
-                {siteConfig.categoryBar && <CategoryBar />}
-
+                {/* 分类导航栏 - 全站渲染并显示 */}
+                {shouldRenderCategoryBar && <div id="category-bar-wrapper"><CategoryBar currentPostCategory={postCategory} /></div>}
                 {/* 主内容区 - 始终渲染，确保 Swup 容器存在 */}
-                <main id="swup-container" class="transition-main">
+                <main
+                    id="swup-container"
+                    class="transition-main"
+                    data-current-post-category={postCategory || ""}
+                >
                 {/* 携带网格布局类名，用于JS更新父容器 */}
                 <div id="grid-class-carrier" data-grid-class={gridCols} class="hidden"></div>
                 {/* 为每个页面提供一个隐藏的h1标题，用于SEO和可访问性 */}
@@ -898,7 +908,7 @@ const bannerCarouselInterval = Math.max(
                 <>
                     <div id="right-sidebar-static" class="contents">
                         {(effectiveIsBothSidebars || sidebarLayoutConfig.position === "right") && effectiveHasRightComponents && (
-                            <SideBar side="right" class={`${rightSidebarClass} ${transparentClass}`} headings={headings}></SideBar>
+							<SideBar side="right" class={rightSidebarClass} headings={headings}></SideBar>
                         )}
                     </div>
                     <div id="right-sidebar-dynamic" class="hidden transition-swup-fade"></div>
@@ -906,7 +916,7 @@ const bannerCarouselInterval = Math.max(
             ) : (
                 <div id="right-sidebar-dynamic" class="contents transition-swup-fade">
                     {effectiveIsBothSidebars && effectiveHasRightComponents && (
-                        <SideBar side="right" class={`${rightSidebarClass} ${transparentClass}`} headings={headings}></SideBar>
+						<SideBar side="right" class={rightSidebarClass} headings={headings}></SideBar>
                     )}
                 </div>
             )}
@@ -914,7 +924,7 @@ const bannerCarouselInterval = Math.max(
             {/* 移动端底部组件 - 768px及以下显示 */}
             {sidebarLayoutConfig.mobileBottomComponents && sidebarLayoutConfig.mobileBottomComponents.length > 0 && (
                 <div id="mobile-bottom-sidebar" class="col-span-1 block md:hidden mt-4">
-                    <SideBar side="bottom" class={`${transparentClass}`} headings={headings}></SideBar>
+					<SideBar side="bottom" headings={headings}></SideBar>
                 </div>
             )}
 

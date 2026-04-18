@@ -138,6 +138,7 @@ const relatedPosts = await getRelatedPosts(entry, 5);
   lang={entry.data.lang}
   setOGTypeArticle={true}
   postSlug={entry.id}
+  postCategory={entry.data.category || undefined}
   headings={headings}
   bannerPostMeta={bannerPostMeta}
 >

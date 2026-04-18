@@ -101,7 +101,7 @@ if (isLocalSrcLogo) {
                     siteConfig.navbar.followTheme ? "text-(--primary)" : "dark:text-white text-black"
                 ]}>
                                     {siteConfig.navbar.logo?.type === "icon" ? (
-                                        <Icon name={siteConfig.navbar.logo.value || "material-symbols:home-pin-outline"} class="text-[1.75rem] mb-1 mr-2" />
+                                        <Icon name={siteConfig.navbar.logo.value || "material-symbols:home-pin-outline"} is:inline class="text-[1.75rem] mb-1 mr-2" />
                                     ) : siteConfig.navbar.logo?.type === "image" && logoImg ? (
                                         <Picture
                                             src={logoImg}
@@ -118,7 +118,7 @@ if (isLocalSrcLogo) {
                                     ) : siteConfig.navbar.logo?.type === "url" ? (
                                         <img src={siteConfig.navbar.logo.value} alt={siteConfig.navbar.logo.alt || siteConfig.title} class="h-7 w-7 mb-1 mr-2 object-contain" fetchpriority="high" />
                                     ) : (
-                                        <Icon name="material-symbols:home-pin-outline" class="text-[1.75rem] mb-1 mr-2" />
+                                        <Icon name="material-symbols:home-pin-outline" is:inline class="text-[1.75rem] mb-1 mr-2" />
                                     )}
                     {navbarTitle}
                 </div>
@@ -140,18 +140,18 @@ if (isLocalSrcLogo) {
                 />
                 {musicPlayerConfig.showInNavbar && (
                     <button aria-label={i18n(I18nKey.music)} class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="music-player-switch">
-                        <Icon name="material-symbols:music-note-rounded" class="text-[1.25rem]"></Icon>
+                        <Icon name="material-symbols:music-note-rounded" is:inline class="text-[1.25rem]"></Icon>
                     </button>
                 )}
                 {hasDisplaySettings && (
                         <button aria-label="Display Settings" class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="display-settings-switch">
-                            <Icon name="material-symbols:palette-outline" class="text-[1.25rem]"></Icon>
+                            <Icon name="material-symbols:palette-outline" is:inline class="text-[1.25rem]"></Icon>
                         </button>
                 )}
                 {/* @ts-ignore */}
                 <LightDarkSwitch client:load></LightDarkSwitch>
                 <button aria-label="Menu" name="Nav Menu" class="btn-plain scale-animation rounded-lg w-11 h-11 active:scale-90 lg:hidden!" id="nav-menu-switch">
-                    <Icon name="material-symbols:menu-rounded" class="text-[1.25rem]"></Icon>
+                    <Icon name="material-symbols:menu-rounded" is:inline class="text-[1.25rem]"></Icon>
                 </button>
             </div>
         </div>

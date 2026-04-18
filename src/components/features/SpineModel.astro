@@ -243,12 +243,79 @@ import { url } from "@/utils/url-utils";
           // 保存播放器实例引用
           window.spinePlayerInstance = player;
 
+          // 构建可用动画索引，避免播放不存在的动画导致报错
+          const availableAnimations = new Set(
+            (player.skeleton?.data?.animations || [])
+              .map((anim) => anim?.name)
+              .filter(Boolean)
+          );
+
+          const pickRandom = (list) =>
+            list[Math.floor(Math.random() * list.length)];
+
+          const configuredClickAnims =
+            spineModelConfig.interactive.clickAnimations ||
+            (spineModelConfig.interactive.clickAnimation
+              ? [spineModelConfig.interactive.clickAnimation]
+              : []);
+
+          const configuredIdleAnims =
+            spineModelConfig.interactive.idleAnimations || ["idle"];
+
+          const validClickAnims = configuredClickAnims.filter((name) =>
+            availableAnimations.has(name)
+          );
+          const validIdleAnims = configuredIdleAnims.filter((name) =>
+            availableAnimations.has(name)
+          );
+
+          const fallbackIdleAnim =
+            (availableAnimations.has("idle") && "idle") ||
+            validIdleAnims[0] ||
+            configuredIdleAnims[0] ||
+            configuredClickAnims[0] ||
+            Array.from(availableAnimations)[0];
+
+          const safeSetAnimation = (name, loop) => {
+            if (!name || !availableAnimations.has(name)) {
+              return false;
+            }
+            try {
+              player.setAnimation(name, loop);
+              return true;
+            } catch (e) {
+              console.warn(`Failed to play animation: ${name}`, e);
+              return false;
+            }
+          };
+
+          // 初始动画兜底，防止默认 idle 不存在
+          if (!safeSetAnimation("idle", true) && fallbackIdleAnim) {
+            safeSetAnimation(fallbackIdleAnim, true);
+          }
+
+          // 输出一次配置校验信息，便于排查模型与配置不一致
+          const missingClickAnims = configuredClickAnims.filter(
+            (name) => !availableAnimations.has(name)
+          );
+          if (missingClickAnims.length > 0) {
+            console.warn(
+              "Spine click animations not found in model:",
+              missingClickAnims
+            );
+          }
+
           // 初始化完成后设置默认姿态
           setTimeout(() => {
             if (player.skeleton) {
               try {
-                player.skeleton.updateWorldTransform();
                 player.skeleton.setToSetupPose();
+                const physicsMode =
+                  window.spine?.Physics?.update ??
+                  window.spine?.Physics?.pose ??
+                  window.spine?.Physics?.none ??
+                  0;
+                player.skeleton.updateWorldTransform(physicsMode);
               } catch (e) {
                 console.warn("Error positioning skeleton:", e);
               }
@@ -271,30 +338,21 @@ import { url } from "@/utils/url-utils";
                 isClickProcessing = true;
                 lastClickTime = currentTime;
 
-                // 随机播放点击动画
-                const clickAnims =
-                  spineModelConfig.interactive.clickAnimations ||
-                  (spineModelConfig.interactive.clickAnimation
-                    ? [spineModelConfig.interactive.clickAnimation]
-                    : []);
+                // 随机播放点击动画（仅在动画存在时）
+                if (validClickAnims.length > 0) {
+                  const randomClickAnim = pickRandom(validClickAnims);
+                  safeSetAnimation(randomClickAnim, false);
 
-                if (clickAnims.length > 0) {
-                  try {
-                    const randomClickAnim =
-                      clickAnims[Math.floor(Math.random() * clickAnims.length)];
-                    player.setAnimation(randomClickAnim, false);
-
-                    // 动画播放完成后回到待机状态
-                    setTimeout(() => {
-                      const idleAnims =
-                        spineModelConfig.interactive.idleAnimations;
-                      const randomIdle =
-                        idleAnims[Math.floor(Math.random() * idleAnims.length)];
-                      player.setAnimation(randomIdle, true);
-                    }, 2000);
-                  } catch (e) {
-                    console.warn("Failed to play click animation:", e);
-                  }
+                  // 动画播放完成后回到待机状态
+                  setTimeout(() => {
+                    const randomIdle =
+                      validIdleAnims.length > 0
+                        ? pickRandom(validIdleAnims)
+                        : fallbackIdleAnim;
+                    safeSetAnimation(randomIdle, true);
+                  }, 2000);
+                } else if (fallbackIdleAnim) {
+                  safeSetAnimation(fallbackIdleAnim, true);
                 }
 
                 // 显示随机消息
@@ -311,18 +369,11 @@ import { url } from "@/utils/url-utils";
                 }, 500);
               });
 
-              // 设置待机动画循环
-              if (spineModelConfig.interactive.idleAnimations.length > 1) {
+              // 设置待机动画循环（仅在至少两个有效待机动画时启用）
+              if (validIdleAnims.length > 1) {
                 setInterval(() => {
-                  try {
-                    const idleAnims =
-                      spineModelConfig.interactive.idleAnimations;
-                    const randomIdle =
-                      idleAnims[Math.floor(Math.random() * idleAnims.length)];
-                    player.setAnimation(randomIdle, true);
-                  } catch (e) {
-                    console.warn("Failed to play idle animation:", e);
-                  }
+                  const randomIdle = pickRandom(validIdleAnims);
+                  safeSetAnimation(randomIdle, true);
                 }, spineModelConfig.interactive.idleInterval);
               }
             }
