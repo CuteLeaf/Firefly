@@ -1,6 +1,12 @@
 /* 横幅文字阴影 - 更柔和的扩散效果 */
 .banner-title {
     text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+    /* 防止大字体标题溢出容器 */
+    overflow-wrap: break-word;
+    word-break: break-word;
+    /* 响应式字体大小：取用户配置值与视口宽度10%中的较小值，防止小屏幕溢出 */
+    font-size: var(--banner-title-size, 3rem);
+    font-size: min(var(--banner-title-size, 3rem), 10vw);
 }
 
 .banner-subtitle {
