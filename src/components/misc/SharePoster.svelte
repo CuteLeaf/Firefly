@@ -14,8 +14,13 @@ export let url: string;
 export let siteTitle: string;
 export let avatar: string | null = null;
 
-/** 画布用中文字体栈（避免仅用 Roboto 导致标题发虚、缺字） */
-const FONT_CN = '"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif';
+/** 画布字体：使用系统栈 + 单次引号族名，避免 ctx.font 解析失败 */
+function fontBold(px: number, scale: number) {
+	return `bold ${px * scale}px system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif`;
+}
+function fontNormal(px: number, scale: number) {
+	return `${px * scale}px system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif`;
+}
 
 /**
  * 解析海报日期：YYYY-MM-DD 按「日历日」解析，避免 `new Date('2026-05-03')` 在部分时区变成前一天/错月。
@@ -46,11 +51,14 @@ function truncateTextToWidth(
 	text: string,
 	maxWidth: number,
 ): string {
-	if (!text || ctx.measureText(text).width <= maxWidth) return text;
+	if (!text || !Number.isFinite(maxWidth) || maxWidth <= 4) return text;
+	if (ctx.measureText(text).width <= maxWidth) return text;
 	let t = text;
 	const ell = "…";
-	while (t.length > 1 && ctx.measureText(t.slice(0, -1) + ell).width > maxWidth) {
+	let guard = 0;
+	while (t.length > 1 && ctx.measureText(t.slice(0, -1) + ell).width > maxWidth && guard < 4096) {
 		t = t.slice(0, -1);
+		guard++;
 	}
 	return t.length <= 1 ? text.slice(0, 1) + ell : t.slice(0, -1) + ell;
 }
@@ -58,6 +66,7 @@ function truncateTextToWidth(
 let showModal = false;
 let posterImage: string | null = null;
 let generating = false;
+let posterError: string | null = null;
 let themeColor = "#558e88"; // Default blue
 
 onMount(() => {
@@ -102,18 +111,30 @@ function getLines(
 	text: string,
 	maxWidth: number,
 ): string[] {
+	if (!text || !Number.isFinite(maxWidth) || maxWidth <= 8) {
+		return text ? [text] : [];
+	}
 	const chars = text.split("");
 	const lines: string[] = [];
 	let currentLine = "";
 
 	for (let i = 0; i < chars.length; i++) {
 		const char = chars[i];
-		const width = ctx.measureText(currentLine + char).width;
+		const test = currentLine + char;
+		const width = ctx.measureText(test).width;
 		if (width < maxWidth) {
-			currentLine += char;
+			currentLine = test;
 		} else {
-			lines.push(currentLine);
-			currentLine = char;
+			if (currentLine) {
+				lines.push(currentLine);
+				currentLine = char;
+				if (ctx.measureText(currentLine).width >= maxWidth) {
+					lines.push(currentLine);
+					currentLine = "";
+				}
+			} else {
+				lines.push(char);
+			}
 		}
 	}
 	if (currentLine) {
@@ -145,6 +166,7 @@ function drawRoundedRect(
 
 async function generatePoster() {
 	showModal = true;
+	posterError = null;
 	if (posterImage) return;
 
 	generating = true;
@@ -186,7 +208,7 @@ async function generatePoster() {
 		// Meta (Date on Cover) - No extra height needed
 
 		// Title
-		ctx.font = `700 ${24 * scale}px ${FONT_CN}`;
+		ctx.font = fontBold(24, scale);
 		const titleLines = getLines(ctx, title, contentWidth);
 		const titleLineHeight = 30 * scale;
 		const titleHeight = titleLines.length * titleLineHeight;
@@ -196,7 +218,7 @@ async function generatePoster() {
 		// Description
 		let descHeight = 0;
 		if (description) {
-			ctx.font = `${14 * scale}px ${FONT_CN}`;
+			ctx.font = fontNormal(14, scale);
 			const descLines = getLines(ctx, description, contentWidth - 16 * scale); // minus border width and gap
 			// Limit to 6 lines
 			const maxDescLines = 6;
@@ -303,7 +325,7 @@ async function generatePoster() {
 			ctx.fillStyle = "#ffffff";
 			ctx.textAlign = "center";
 			ctx.textBaseline = "middle";
-			ctx.font = `700 ${30 * scale}px ${FONT_CN}`;
+			ctx.font = fontBold(30, scale);
 			ctx.fillText(dateObj.day, dateBoxX + dateBoxW / 2, dateBoxY + 24 * scale);
 
 			// Line
@@ -315,7 +337,7 @@ async function generatePoster() {
 			ctx.stroke();
 
 			// 年.月（与日历日一致）
-			ctx.font = `${10 * scale}px ${FONT_CN}`;
+			ctx.font = fontNormal(10, scale);
 			ctx.fillText(
 				`${dateObj.year}.${dateObj.month}`,
 				dateBoxX + dateBoxW / 2,
@@ -329,7 +351,7 @@ async function generatePoster() {
 		// Draw Title
 		ctx.textBaseline = "top";
 		ctx.textAlign = "left";
-		ctx.font = `700 ${24 * scale}px ${FONT_CN}`;
+		ctx.font = fontBold(24, scale);
 		ctx.fillStyle = "#111827";
 		titleLines.forEach((line) => {
 			ctx.fillText(line, padding, drawY);
@@ -353,7 +375,7 @@ async function generatePoster() {
 			);
 			ctx.fill();
 
-			ctx.font = `${14 * scale}px ${FONT_CN}`;
+			ctx.font = fontNormal(14, scale);
 			ctx.fillStyle = "#4b5563";
 			const descLines = getLines(ctx, description, contentWidth - 16 * scale);
 			const maxDescLines = 6;
@@ -419,11 +441,11 @@ async function generatePoster() {
 		const textCenterY = footerY + 32 * scale;
 
 		ctx.fillStyle = "#9ca3af";
-		ctx.font = `${12 * scale}px ${FONT_CN}`;
+		ctx.font = fontNormal(12, scale);
 		ctx.fillText(i18n(I18nKey.author), authorTextX, textCenterY - 20 * scale);
 
 		ctx.fillStyle = "#1f2937";
-		ctx.font = `700 ${20 * scale}px ${FONT_CN}`;
+		ctx.font = fontBold(20, scale);
 		const authorMaxW = Math.max(80 * scale, qrX - authorTextX - 16 * scale);
 		const authorDraw = truncateTextToWidth(ctx, author, authorMaxW);
 		ctx.fillText(authorDraw, authorTextX, textCenterY + 4 * scale);
@@ -460,18 +482,27 @@ async function generatePoster() {
 		ctx.textAlign = "right";
 
 		ctx.fillStyle = "#9ca3af";
-		ctx.font = `${12 * scale}px ${FONT_CN}`;
+		ctx.font = fontNormal(12, scale);
 		ctx.fillText(i18n(I18nKey.scanToRead), siteInfoX, textCenterY - 20 * scale);
 
 		ctx.fillStyle = "#1f2937";
-		ctx.font = `700 ${20 * scale}px ${FONT_CN}`;
+		ctx.font = fontBold(20, scale);
 		ctx.fillText(siteTitle, siteInfoX, textCenterY + 4 * scale);
 
-		// Finalize
-		posterImage = canvas.toDataURL("image/png");
+		// Finalize（跨域未 CORS 的图片会污染画布导致 toDataURL 抛错）
+		try {
+			posterImage = canvas.toDataURL("image/png");
+		} catch (e) {
+			console.error("Poster toDataURL failed:", e);
+			posterError =
+				"导出图片失败（多为封面/头像跨域）。请关闭海报后重试，或暂时换用同域名图片。";
+			posterImage = null;
+		}
 		generating = false;
 	} catch (error) {
 		console.error("Failed to generate poster:", error);
+		posterError = "海报生成失败，请关闭后重试。";
+		posterImage = null;
 		generating = false;
 	}
 }
@@ -487,6 +518,7 @@ function downloadPoster() {
 
 function closeModal() {
 	showModal = false;
+	posterError = null;
 }
 
 let copied = false;
@@ -532,6 +564,8 @@ function portal(node: HTMLElement) {
       <div class="p-6 flex justify-center bg-gray-50 dark:bg-gray-900 min-h-[200px] items-center">
         {#if posterImage}
           <img src={posterImage} alt="Poster" class="max-w-full h-auto shadow-lg rounded-lg" />
+        {:else if posterError}
+          <p class="text-sm text-red-600 dark:text-red-400 text-center px-2">{posterError}</p>
         {:else}
            <div class="flex flex-col items-center gap-3">
              <div class="w-8 h-8 border-2 border-gray-200 rounded-full animate-spin" style="border-top-color: {themeColor}"></div>
