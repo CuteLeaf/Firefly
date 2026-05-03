@@ -7,13 +7,13 @@ const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "刘姥姥智取生辰纲",
+	title: "Drose",
 
 	// 站点副标题
 	subtitle: "晴的个人博客",
 
 	// 站点 URL
-	site_url: "https://qinrui.top",
+	site_url: "https://blog.qinrui.top",
 
 	// 站点描述
 	description:

@@ -110,6 +110,12 @@ if (posterAvatarUrl) {
 
 dayjs.extend(utc);
 
+/** 海报二维码与「复制链接」：必须用站点配置的绝对 URL；`Astro.url.href` 在本地开发时为 localhost，复制后他人无法打开。 */
+const posterPageAbsoluteUrl = new URL(
+	getPostUrlBySlug(entry.id),
+	siteConfig.site_url,
+).href;
+
 const jsonLd = {
 	"@context": "https://schema.org",
 	"@type": "BlogPosting",
@@ -307,7 +313,7 @@ const relatedPosts = await getRelatedPosts(entry, 5);
                             description={entry.data.description || entry.data.title}
                             pubDate={formatDateToYYYYMMDD(entry.data.published)}
                             coverImage={posterCoverUrl}
-                            url={Astro.url.href}
+                            url={posterPageAbsoluteUrl}
                             siteTitle={siteConfig.title}
                             avatar={posterAvatarUrl}
                           />
@@ -395,7 +401,7 @@ const relatedPosts = await getRelatedPosts(entry, 5);
                             description={entry.data.description || entry.data.title}
                             pubDate={formatDateToYYYYMMDD(entry.data.published)}
                             coverImage={posterCoverUrl}
-                            url={Astro.url.href}
+                            url={posterPageAbsoluteUrl}
                             siteTitle={siteConfig.title}
                             avatar={posterAvatarUrl}
                           />
