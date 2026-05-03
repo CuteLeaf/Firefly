@@ -123,6 +123,38 @@ const managerConfigStr = JSON.stringify({
     else if (config.playMode === 'one') state.playMode = 1;
     else state.playMode = 0;
 
+    // 浏览器会拦截无用户手势的有声自动播放：首次点击/按键后再尝试 play（仅 config.autoplay 时）
+    var gestureResumeHandler = null;
+    function removeAutoplayGestureResume() {
+        if (!gestureResumeHandler) return;
+        document.removeEventListener('pointerdown', gestureResumeHandler, true);
+        document.removeEventListener('keydown', gestureResumeHandler, true);
+        gestureResumeHandler = null;
+    }
+    function tryResumeAutoplayFromGesture() {
+        if (!config.autoplay) {
+            removeAutoplayGestureResume();
+            return;
+        }
+        if (!audio.paused) {
+            removeAutoplayGestureResume();
+            return;
+        }
+        audio.play().then(function () {
+            state.isPlaying = true;
+            emit('fm:play-state', { isPlaying: true });
+            removeAutoplayGestureResume();
+        }).catch(function () {});
+    }
+    function installAutoplayGestureResume() {
+        if (!config.autoplay || gestureResumeHandler) return;
+        gestureResumeHandler = function () {
+            tryResumeAutoplayFromGesture();
+        };
+        document.addEventListener('pointerdown', gestureResumeHandler, true);
+        document.addEventListener('keydown', gestureResumeHandler, true);
+    }
+
     // ── Event helpers ────────────────────────────────────────
     function emit(name, detail) {
         window.dispatchEvent(new CustomEvent(name, { detail: detail || {} }));
@@ -213,13 +245,33 @@ const managerConfigStr = JSON.stringify({
         emit('fm:track', { index: index, track: track, autoPlay: !!autoPlay });
 
         if (autoPlay) {
-            audio.play().then(function () {
-                state.isPlaying = true;
-                emit('fm:play-state', { isPlaying: true });
-            }).catch(function (e) {
-                console.warn('Autoplay blocked:', e);
-            });
+            removeAutoplayGestureResume();
+            var tryPlay = function () {
+                var p = audio.play();
+                if (p === undefined) return;
+                p.then(function () {
+                    state.isPlaying = true;
+                    emit('fm:play-state', { isPlaying: true });
+                    removeAutoplayGestureResume();
+                }).catch(function (e) {
+                    console.warn('Autoplay blocked:', e);
+                    installAutoplayGestureResume();
+                });
+            };
+            if (audio.readyState >= 2) {
+                tryPlay();
+            } else {
+                audio.addEventListener(
+                    'canplay',
+                    function onCanPlay() {
+                        audio.removeEventListener('canplay', onCanPlay);
+                        tryPlay();
+                    },
+                    { once: true },
+                );
+            }
         } else {
+            removeAutoplayGestureResume();
             state.isPlaying = false;
             emit('fm:play-state', { isPlaying: false });
         }
@@ -231,6 +283,7 @@ const managerConfigStr = JSON.stringify({
             audio.play().then(function () {
                 state.isPlaying = true;
                 emit('fm:play-state', { isPlaying: true });
+                removeAutoplayGestureResume();
             });
         } else {
             audio.pause();

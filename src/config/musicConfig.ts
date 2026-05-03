@@ -16,7 +16,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	// 默认音量 (0-1)
 	volume: 0.7,
 
-    // 歌单加载完成后是否自动开始播放。多数浏览器会拦截「未经过用户手势」的带声自动播放，失败时控制台会出现 Autoplay blocked，需用户点击播放一次
+	// 歌单加载完成后尝试自动播放；若被浏览器拦截，会在用户首次点击/按键页面任意处后自动续播（无需再点播放器）
 	autoplay: true,
 
 
@@ -72,7 +72,6 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 			{
 				name: "老男孩",
 				artist: "筷子兄弟",
-				// 文件名含 #，在 URL 中必须编码为 %23
 				url: "/assets/music/312.mp3",
 				cover: "/assets/music/cover/23.jpg",
 				lrc: "/assets/music/lrc/song.lrc",
