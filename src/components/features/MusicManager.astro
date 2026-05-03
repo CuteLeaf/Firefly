@@ -97,7 +97,7 @@ const managerConfigStr = JSON.stringify({
 
     // ── Audio element (persistent, attached to body) ────────
     var audio = document.createElement('audio');
-    audio.crossOrigin = 'anonymous';
+    // 仅外链音频设 crossOrigin；同源 /assets 不设，避免部分 CDN 未返回 CORS 时整段无法解码播放
     audio.style.display = 'none';
     document.body.appendChild(audio);
 
@@ -125,10 +125,15 @@ const managerConfigStr = JSON.stringify({
 
     // 浏览器会拦截无用户手势的有声自动播放：首次点击/按键后再尝试 play（仅 config.autoplay 时）
     var gestureResumeHandler = null;
+    var touchStartOpts = { capture: true, passive: true };
     function removeAutoplayGestureResume() {
         if (!gestureResumeHandler) return;
-        document.removeEventListener('pointerdown', gestureResumeHandler, true);
-        document.removeEventListener('keydown', gestureResumeHandler, true);
+        var h = gestureResumeHandler;
+        window.removeEventListener('pointerdown', h, true);
+        window.removeEventListener('touchstart', h, touchStartOpts);
+        window.removeEventListener('click', h, true);
+        document.removeEventListener('pointerdown', h, true);
+        document.removeEventListener('keydown', h, true);
         gestureResumeHandler = null;
     }
     function tryResumeAutoplayFromGesture() {
@@ -151,8 +156,12 @@ const managerConfigStr = JSON.stringify({
         gestureResumeHandler = function () {
             tryResumeAutoplayFromGesture();
         };
-        document.addEventListener('pointerdown', gestureResumeHandler, true);
-        document.addEventListener('keydown', gestureResumeHandler, true);
+        var h = gestureResumeHandler;
+        window.addEventListener('pointerdown', h, true);
+        window.addEventListener('touchstart', h, touchStartOpts);
+        window.addEventListener('click', h, true);
+        document.addEventListener('pointerdown', h, true);
+        document.addEventListener('keydown', h, true);
     }
 
     // ── Event helpers ────────────────────────────────────────
@@ -238,6 +247,11 @@ const managerConfigStr = JSON.stringify({
         state.currentIndex = index;
         var track = state.playlist[index];
 
+        if (/^https?:\/\//i.test(track.url)) {
+            audio.crossOrigin = 'anonymous';
+        } else {
+            audio.removeAttribute('crossorigin');
+        }
         audio.src = track.url;
 
         loadLyrics(track);

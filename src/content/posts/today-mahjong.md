@@ -1,6 +1,6 @@
 ---
 title: AAA今天去打麻将吗
-published: 2026-05-03
+published: 2026-05-03T23:59:00
 pinned: true
 description: 约牌小记——想一起打麻将的话，欢迎点进来联系我。
 tags: [生活, 随笔]
