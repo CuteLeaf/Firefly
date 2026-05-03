@@ -11,6 +11,7 @@ import ConfigCarrier from "@components/layout/ConfigCarrier.astro";
 
 import {
 	backgroundWallpaper,
+	commentConfig,
 	expressiveCodeConfig,
 	profileConfig,
 	siteConfig,
@@ -546,6 +547,17 @@ const siteLang = lang.replace("_", "-");
 
     <!-- Fancybox Manager -->
     <FancyboxManager />
+
+    <!-- giscus.mjs：全站加载一次，避免 Swup 从首页切入文章时评论区脚本不执行 -->
+    {
+      commentConfig.type === "giscus" && (
+        <script
+          is:inline
+          type="module"
+          src="https://cdn.jsdelivr.net/npm/giscus@1.6.0/dist/giscus.mjs"
+        />
+      )
+    }
   </body>
 </html>
 
