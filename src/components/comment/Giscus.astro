@@ -4,51 +4,7 @@ import { commentConfig } from "@/config";
 if (!commentConfig?.giscus) {
 	throw new Error("Giscus comments are not configured");
 }
-
-const giscus = commentConfig.giscus;
-const lightTheme = "light";
-const darkTheme = "dark";
 ---
 
-<giscus-widget
-  id="comments"
-  repo={giscus.repo}
-  repoId={giscus.repoId}
-  category={giscus.category}
-  categoryId={giscus.categoryId}
-  mapping={giscus.mapping}
-  strict={giscus.strict}
-  reactionsEnabled={giscus.reactionsEnabled}
-  emitMetadata={giscus.emitMetadata}
-  inputPosition={giscus.inputPosition}
-  theme={lightTheme}
-  lang={giscus.lang}
-  loading={giscus.loading}
-/>
-
-<script is:inline define:vars={{ lightTheme, darkTheme }}>
-  function giscusResolvedTheme() {
-    return document.documentElement.classList.contains('dark') ? darkTheme : lightTheme;
-  }
-
-  /** 仅在明暗实际变化时更新，避免 html 上其它 class（如 Swup is-page-transitioning）触发重复 setAttribute 导致 iframe 重载、评论发不出去 */
-  function updateGiscusTheme() {
-    const theme = giscusResolvedTheme();
-    const widget = document.querySelector('giscus-widget');
-    if (widget && widget.getAttribute('theme') !== theme) {
-      widget.setAttribute('theme', theme);
-    }
-  }
-
-  updateGiscusTheme();
-
-  if (window.giscusThemeObserver) {
-    window.giscusThemeObserver.disconnect();
-  }
-
-  window.giscusThemeObserver = new MutationObserver(() => {
-    updateGiscusTheme();
-  });
-
-  window.giscusThemeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-</script>
+<!-- 实际挂载与 client.js 在 Layout 中统一处理（Swup 换页后需重新注入脚本）；此处仅提供 giscus 官方要求的挂载点 -->
+<div id="comments" class="giscus"></div>

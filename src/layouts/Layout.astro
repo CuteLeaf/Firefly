@@ -548,14 +548,99 @@ const siteLang = lang.replace("_", "-");
     <!-- Fancybox Manager -->
     <FancyboxManager />
 
-    <!-- giscus.mjs：全站加载一次，避免 Swup 从首页切入文章时评论区脚本不执行 -->
     {
-      commentConfig.type === "giscus" && (
+      commentConfig.type === "giscus" && commentConfig.giscus && (
         <script
           is:inline
-          type="module"
-          src="https://cdn.jsdelivr.net/npm/giscus@1.6.0/dist/giscus.mjs"
-        />
+          define:vars={{ giscusCfg: commentConfig.giscus }}
+        >
+          {`(function () {
+  const cfg = giscusCfg;
+  const GISCUS_ORIGIN = "https://giscus.app";
+
+  function giscusTheme() {
+    return document.documentElement.classList.contains("dark") ? "dark" : "light";
+  }
+
+  function sendGiscusTheme() {
+    const iframe = document.querySelector("iframe.giscus-frame");
+    if (!iframe || !iframe.contentWindow) return;
+    iframe.contentWindow.postMessage(
+      { giscus: { setConfig: { theme: giscusTheme() } } },
+      GISCUS_ORIGIN
+    );
+  }
+
+  let lastGiscusTheme = "";
+  function onHtmlClassChange() {
+    const t = giscusTheme();
+    if (t === lastGiscusTheme) return;
+    lastGiscusTheme = t;
+    sendGiscusTheme();
+  }
+
+  function mountGiscus() {
+    const el = document.querySelector("#comments.giscus") || document.querySelector(".giscus");
+    if (!el) return;
+
+    el.innerHTML = "";
+    const prev = el.nextElementSibling;
+    if (prev && prev.tagName === "SCRIPT" && prev.getAttribute("data-firefly-giscus") === "1") {
+      prev.remove();
+    }
+
+    const s = document.createElement("script");
+    s.id = "firefly-giscus-client";
+    s.setAttribute("data-firefly-giscus", "1");
+    s.src = GISCUS_ORIGIN + "/client.js";
+    s.async = true;
+    s.crossOrigin = "anonymous";
+    s.setAttribute("data-repo", cfg.repo);
+    s.setAttribute("data-repo-id", cfg.repoId);
+    s.setAttribute("data-category", cfg.category);
+    s.setAttribute("data-category-id", cfg.categoryId);
+    s.setAttribute("data-mapping", cfg.mapping);
+    s.setAttribute("data-strict", cfg.strict);
+    s.setAttribute("data-reactions-enabled", cfg.reactionsEnabled);
+    s.setAttribute("data-emit-metadata", cfg.emitMetadata);
+    s.setAttribute("data-input-position", cfg.inputPosition);
+    s.setAttribute("data-theme", giscusTheme());
+    s.setAttribute("data-lang", cfg.lang);
+    if (cfg.loading === "lazy") s.setAttribute("data-loading", "lazy");
+    el.after(s);
+    lastGiscusTheme = giscusTheme();
+  }
+
+  function scheduleMount() {
+    setTimeout(mountGiscus, 50);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", scheduleMount);
+  } else {
+    scheduleMount();
+  }
+
+  document.addEventListener("swup:contentReplaced", scheduleMount);
+  if (window.swup && window.swup.hooks) {
+    window.swup.hooks.on("content:replace", scheduleMount);
+  } else {
+    document.addEventListener("swup:enable", function () {
+      if (window.swup && window.swup.hooks) {
+        window.swup.hooks.on("content:replace", scheduleMount);
+      }
+    });
+  }
+
+  if (!window.__fireflyGiscusThemeObserver) {
+    window.__fireflyGiscusThemeObserver = new MutationObserver(onHtmlClassChange);
+    window.__fireflyGiscusThemeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+  }
+})();`}
+        </script>
       )
     }
   </body>
