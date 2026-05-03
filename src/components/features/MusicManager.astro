@@ -123,9 +123,12 @@ const managerConfigStr = JSON.stringify({
     else if (config.playMode === 'one') state.playMode = 1;
     else state.playMode = 0;
 
-    // 浏览器会拦截无用户手势的有声自动播放：首次点击/按键后再尝试 play（仅 config.autoplay 时）
+    // 有声自动播常被拦截 → 先静音自动播（多数浏览器允许），首次点击页面再取消静音
     var gestureResumeHandler = null;
     var touchStartOpts = { capture: true, passive: true };
+    /** 当前是否处于「已在播但等用户点一下开声」 */
+    var autoplayAwaitingUnmute = false;
+
     function removeAutoplayGestureResume() {
         if (!gestureResumeHandler) return;
         var h = gestureResumeHandler;
@@ -141,11 +144,22 @@ const managerConfigStr = JSON.stringify({
             removeAutoplayGestureResume();
             return;
         }
+        if (autoplayAwaitingUnmute && !audio.paused) {
+            audio.muted = false;
+            state.isMuted = false;
+            autoplayAwaitingUnmute = false;
+            emit('fm:volume', { volume: state.volume, isMuted: false });
+            removeAutoplayGestureResume();
+            return;
+        }
         if (!audio.paused) {
             removeAutoplayGestureResume();
             return;
         }
-        audio.play().then(function () {
+        audio.muted = false;
+        var p = audio.play();
+        if (p === undefined) return;
+        p.then(function () {
             state.isPlaying = true;
             emit('fm:play-state', { isPlaying: true });
             removeAutoplayGestureResume();
@@ -245,6 +259,7 @@ const managerConfigStr = JSON.stringify({
     function loadTrack(index, autoPlay) {
         if (index < 0 || index >= state.playlist.length) return;
         state.currentIndex = index;
+        autoplayAwaitingUnmute = false;
         var track = state.playlist[index];
 
         if (/^https?:\/\//i.test(track.url)) {
@@ -261,15 +276,38 @@ const managerConfigStr = JSON.stringify({
         if (autoPlay) {
             removeAutoplayGestureResume();
             var tryPlay = function () {
+                audio.muted = state.isMuted;
+                audio.volume = state.volume;
                 var p = audio.play();
                 if (p === undefined) return;
                 p.then(function () {
+                    autoplayAwaitingUnmute = false;
                     state.isPlaying = true;
                     emit('fm:play-state', { isPlaying: true });
                     removeAutoplayGestureResume();
                 }).catch(function (e) {
-                    console.warn('Autoplay blocked:', e);
-                    installAutoplayGestureResume();
+                    console.warn('Autoplay blocked, try muted:', e);
+                    audio.muted = true;
+                    audio.volume = state.volume;
+                    var p2 = audio.play();
+                    if (p2 === undefined) {
+                        audio.muted = state.isMuted;
+                        installAutoplayGestureResume();
+                        return;
+                    }
+                    p2.then(function () {
+                        autoplayAwaitingUnmute = true;
+                        state.isPlaying = true;
+                        state.isMuted = true;
+                        emit('fm:play-state', { isPlaying: true });
+                        emit('fm:volume', { volume: state.volume, isMuted: true });
+                        installAutoplayGestureResume();
+                    }).catch(function (e2) {
+                        console.warn('Muted autoplay failed:', e2);
+                        autoplayAwaitingUnmute = false;
+                        audio.muted = state.isMuted;
+                        installAutoplayGestureResume();
+                    });
                 });
             };
             if (audio.readyState >= 2) {
@@ -300,6 +338,7 @@ const managerConfigStr = JSON.stringify({
                 removeAutoplayGestureResume();
             });
         } else {
+            autoplayAwaitingUnmute = false;
             audio.pause();
             state.isPlaying = false;
             emit('fm:play-state', { isPlaying: false });
@@ -341,6 +380,7 @@ const managerConfigStr = JSON.stringify({
     }
 
     function setVolume(val) {
+        autoplayAwaitingUnmute = false;
         val = Math.max(0, Math.min(1, val));
         state.volume = val;
         state.isMuted = false;
@@ -351,6 +391,7 @@ const managerConfigStr = JSON.stringify({
     }
 
     function toggleMute() {
+        autoplayAwaitingUnmute = false;
         state.isMuted = !state.isMuted;
         audio.muted = state.isMuted;
         emit('fm:volume', { volume: state.volume, isMuted: state.isMuted });

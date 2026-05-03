@@ -16,7 +16,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	// 默认音量 (0-1)
 	volume: 0.7,
 
-	// 歌单加载完成后尝试自动播放。若仍无声：① 任意点一下页面或按键盘（已监听 window 点击/触摸）；② 同源 MP3 勿强制 crossOrigin（已在 MusicManager 中按 URL 处理）
+	// 自动播放：先尝试有声；被拦截则静音播放，用户任意点击页面一次后自动开声（浏览器策略下最接近「进站即播」）
 	autoplay: true,
 
 
