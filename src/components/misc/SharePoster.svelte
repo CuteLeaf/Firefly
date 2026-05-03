@@ -529,12 +529,37 @@ function closeModal() {
 }
 
 let copied = false;
-function copyLink() {
-	navigator.clipboard.writeText(url);
+async function copyLink() {
+	try {
+		if (navigator.clipboard && navigator.clipboard.writeText) {
+			await navigator.clipboard.writeText(url);
+		} else {
+			throw new Error("no clipboard API");
+		}
+	} catch {
+		const ta = document.createElement("textarea");
+		ta.value = url;
+		ta.setAttribute("readonly", "");
+		ta.style.position = "fixed";
+		ta.style.left = "-9999px";
+		document.body.appendChild(ta);
+		ta.select();
+		try {
+			document.execCommand("copy");
+		} finally {
+			document.body.removeChild(ta);
+		}
+	}
 	copied = true;
 	setTimeout(() => {
 		copied = false;
 	}, 2000);
+}
+
+function onBackdropPointerDown(e: PointerEvent) {
+	if (e.target === e.currentTarget) {
+		closeModal();
+	}
 }
 
 function portal(node: HTMLElement) {
@@ -561,30 +586,46 @@ function portal(node: HTMLElement) {
 
 
 
-<!-- Modal -->
+<!-- Modal：仅遮罩层响应关闭；海报区单独滚动，按钮区 flex-shrink-0 避免手机端触摸被滚动层抢走 -->
 {#if showModal}
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <div use:portal class="fixed inset-0 z-9999 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 transition-opacity" on:click={closeModal}>
-    <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-[440px] w-full max-h-[90vh] overflow-y-auto flex flex-col shadow-2xl transform transition-all" on:click={(e) => e.stopPropagation()}>
-      
-      <div class="p-6 flex justify-center bg-gray-50 dark:bg-gray-900 min-h-[200px] items-center">
+  <div
+    use:portal
+    class="fixed inset-0 z-9999 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 transition-opacity touch-manipulation"
+    on:pointerdown={onBackdropPointerDown}
+  >
+    <div
+      class="bg-white dark:bg-gray-800 rounded-2xl max-w-[440px] w-full max-h-[90vh] flex flex-col shadow-2xl transform transition-all overflow-hidden"
+    >
+      <div
+        class="min-h-0 flex-1 overflow-y-auto overscroll-contain p-6 flex justify-center bg-gray-50 dark:bg-gray-900 min-h-[120px] items-center"
+      >
         {#if posterImage}
           <img src={posterImage} alt="Poster" class="max-w-full h-auto shadow-lg rounded-lg" />
         {:else if posterError}
           <p class="text-sm text-red-600 dark:text-red-400 text-center px-2">{posterError}</p>
         {:else}
-           <div class="flex flex-col items-center gap-3">
-             <div class="w-8 h-8 border-2 border-gray-200 rounded-full animate-spin" style="border-top-color: {themeColor}"></div>
-             <span class="text-sm text-gray-500">{i18n(I18nKey.generatingPoster)}</span>
-           </div>
+          <div class="flex flex-col items-center gap-3 py-4">
+            <div
+              class="w-8 h-8 border-2 border-gray-200 rounded-full animate-spin"
+              style="border-top-color: {themeColor}"
+            ></div>
+            <span class="text-sm text-gray-500">{i18n(I18nKey.generatingPoster)}</span>
+          </div>
         {/if}
       </div>
-      
-      <div class="p-4 border-t border-gray-100 dark:border-gray-700 grid grid-cols-2 gap-3">
-        <button 
-          class="py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl font-medium hover:bg-gray-200 dark:hover:bg-gray-600 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
-          on:click={copyLink}
+
+      <div
+        class="flex-shrink-0 p-4 border-t border-gray-100 dark:border-gray-700 grid grid-cols-2 gap-3 touch-manipulation"
+      >
+        <button
+          type="button"
+          class="py-3 min-h-[48px] bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl font-medium hover:bg-gray-200 dark:hover:bg-gray-600 active:scale-[0.98] transition-all flex items-center justify-center gap-2 select-none"
+          on:click|stopPropagation={(e) => {
+            e.preventDefault();
+            copyLink();
+          }}
         >
           {#if copied}
             <Icon icon="material-symbols:check" size="md" />
@@ -594,10 +635,14 @@ function portal(node: HTMLElement) {
             <span>{i18n(I18nKey.copyLink)}</span>
           {/if}
         </button>
-        <button 
-          class="py-3 text-white rounded-xl font-medium active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-90"
+        <button
+          type="button"
+          class="py-3 min-h-[48px] text-white rounded-xl font-medium active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-90 select-none"
           style="background-color: {themeColor};"
-          on:click={downloadPoster}
+          on:click|stopPropagation={(e) => {
+            e.preventDefault();
+            downloadPoster();
+          }}
           disabled={!posterImage}
         >
           <Icon icon="material-symbols:download" size="md" />
