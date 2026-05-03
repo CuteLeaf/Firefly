@@ -63,12 +63,34 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 			},
 			
 			{
-                name: "春娇与志明",
-                artist: "me",
-                url: "/assets/music/春娇与志明 - 街道办GDC.mp3",
-                cover: "/assets/music/cover/cover.webp",
-                lrc: "/assets/music/lrc/song.lrc",
-            },
+				name: "春娇与志明",
+				artist: "me",
+				url: "/assets/music/春娇与志明 - 街道办GDC.mp3",
+				cover: "/assets/music/cover/23.jpg",
+				lrc: "/assets/music/lrc/song.lrc",
+			},
+			{
+				name: "老男孩",
+				artist: "筷子兄弟",
+				// 文件名含 #，在 URL 中必须编码为 %23
+				url: "/assets/music/312.mp3",
+				cover: "/assets/music/cover/23.jpg",
+				lrc: "/assets/music/lrc/song.lrc",
+			},
+			{
+				name: "晴天",
+				artist: "梅菜扣肉肉（女声独唱版）",
+				url: "/assets/music/晴天 (女声独唱版) - 梅菜扣肉肉.mp3",
+				cover: "/assets/music/cover/23.jpg",
+				lrc: "/assets/music/lrc/song.lrc",
+			},
+			{
+				name: "说好的幸福呢",
+				artist: "周杰伦",
+				url: "/assets/music/说好的幸福呢 - 周杰伦.mp3",
+				cover: "/assets/music/cover/23.jpg",
+				lrc: "/assets/music/lrc/song.lrc",
+			},
 		],
 	},
 };
