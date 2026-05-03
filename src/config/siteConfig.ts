@@ -16,8 +16,7 @@ export const siteConfig: SiteConfig = {
 	site_url: "https://blog.qinrui.top",
 
 	// 站点描述
-	description:
-		"哪里跑！明天打不打麻将？",
+	description: "自知者不怨人，知命者不怨天。",
 
 	// 站点关键词
 	keywords: [
@@ -79,7 +78,7 @@ export const siteConfig: SiteConfig = {
 			alt: "🍀",
 		},
 		// 导航栏标题
-		title: "晴的每一天",
+		title: "Drose",
 		// 全宽导航栏，导航栏是否占满屏幕宽度
 		widthFull: false,
 		// 导航菜单对齐方式，left：左对齐，center：居中

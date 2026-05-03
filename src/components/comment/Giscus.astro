@@ -10,7 +10,7 @@ const lightTheme = "light";
 const darkTheme = "dark";
 ---
 
-<script is:inline type="module" src="https://esm.sh/giscus"></script>
+<script is:inline type="module" src="https://cdn.jsdelivr.net/npm/giscus@1.6.0/dist/giscus.mjs"></script>
 
 <!-- 
   Giscus 官方Web Component用法，兼容Astro静态输出，无需import包，无需NPM依赖！
@@ -33,31 +33,28 @@ const darkTheme = "dark";
 />
 
 <script is:inline define:vars={{ lightTheme, darkTheme }}>
+  function giscusResolvedTheme() {
+    return document.documentElement.classList.contains('dark') ? darkTheme : lightTheme;
+  }
+
+  /** 仅在明暗实际变化时更新，避免 html 上其它 class（如 Swup is-page-transitioning）触发重复 setAttribute 导致 iframe 重载、评论发不出去 */
   function updateGiscusTheme() {
-    const isDark = document.documentElement.classList.contains('dark');
-    const theme = isDark ? darkTheme : lightTheme;
+    const theme = giscusResolvedTheme();
     const widget = document.querySelector('giscus-widget');
-    if (widget) {
+    if (widget && widget.getAttribute('theme') !== theme) {
       widget.setAttribute('theme', theme);
     }
   }
 
-  // Initial update
   updateGiscusTheme();
 
-  // Clean up previous observer if exists
   if (window.giscusThemeObserver) {
     window.giscusThemeObserver.disconnect();
   }
 
-  // Create new observer
-  window.giscusThemeObserver = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-        updateGiscusTheme();
-      }
-    });
+  window.giscusThemeObserver = new MutationObserver(() => {
+    updateGiscusTheme();
   });
 
-  window.giscusThemeObserver.observe(document.documentElement, { attributes: true });
+  window.giscusThemeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 </script>
