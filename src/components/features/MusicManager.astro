@@ -33,6 +33,7 @@ const managerConfigStr = JSON.stringify({
 	meting: config.meting,
 	localPlaylist: localPlaylist,
 	volume: config.volume ?? 0.7,
+	autoplay: config.autoplay ?? false,
 	playMode: config.playMode ?? "list",
 	showLyrics: config.showLyrics ?? true,
 	i18n: {
@@ -374,7 +375,7 @@ const managerConfigStr = JSON.stringify({
                     isMuted: state.isMuted
                 });
 
-                loadTrack(startIndex, false);
+                loadTrack(startIndex, !!config.autoplay);
             } else {
                 state.initialized = true;
                 emit('fm:init', {

@@ -11,10 +11,15 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	showInNavbar: true,
 
 	// 使用方式："meting" 使用 Meting API，"local" 使用本地音乐列表
-	mode: "meting",
+	mode: "local",
 
 	// 默认音量 (0-1)
 	volume: 0.7,
+
+    // 歌单加载完成后是否自动开始播放。多数浏览器会拦截「未经过用户手势」的带声自动播放，失败时控制台会出现 Autoplay blocked，需用户点击播放一次
+	autoplay: true,
+
+
 
 	// 播放模式：'list'=列表循环, 'one'=单曲循环, 'random'=随机播放
 	playMode: "list",
@@ -50,12 +55,20 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	local: {
 		playlist: [
 			{
-				name: "使一颗心免于哀伤",
-				artist: "知更鸟 / HOYO-MiX / Chevy",
-				url: "/assets/music/使一颗心免于哀伤-哼唱.mp3",
-				cover: "/assets/music/cover/109951169585655912.webp",
-				lrc: "",
+				name: "雨爱",
+				artist: "雨爱 / 杨丞琳 ",
+				url: "/assets/music/雨爱 - 杨丞琳.mp3",
+				cover: "/assets/music/cover/32131.jpg",
+				lrc: "/assets/music/lrc/song.lrc",
 			},
+			
+			{
+                name: "春娇与志明",
+                artist: "me",
+                url: "/assets/music/春娇与志明 - 街道办GDC.mp3",
+                cover: "/assets/music/cover/cover.webp",
+                lrc: "/assets/music/lrc/song.lrc",
+            },
 		],
 	},
 };

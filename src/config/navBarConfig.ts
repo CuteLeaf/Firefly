@@ -58,8 +58,8 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 
 	// 自定义导航栏链接,并且支持多级菜单
 	links.push({
-		name: "链接",
-		url: "/links/",
+		name: "晴的私人微信",
+		url: "/https://work.weixin.qq.com/kfid/kfcb2eb5c0c4c99817c/",
 		icon: "material-symbols:link",
 
 		// 子菜单
@@ -78,10 +78,18 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 			},
 			{
 				name: "QQ交流群",
-				url: "https://qm.qq.com/q/ZGsFa8qX2G",
+				url: "https://qm.qq.com/q/1HcZo7koEg",
 				external: true,
 				icon: "fa7-brands:qq",
 			},
+
+            {
+				name: "晴的专属秘书",
+				url: "https://work.weixin.qq.com/kfid/kfcb2eb5c0c4c99817c",
+				external: true,
+				icon: "fa7-brands:weixin",
+			},
+			
 		],
 	});
 

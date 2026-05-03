@@ -2,7 +2,7 @@ import type { SponsorConfig } from "../types/config";
 
 export const sponsorConfig: SponsorConfig = {
 	// 页面标题，如果留空则使用 i18n 中的翻译
-	title: "",
+	title: "投资给我点钱我不会让你失望",
 
 	// 页面描述文本，如果留空则使用 i18n 中的翻译
 	description: "",
@@ -26,7 +26,7 @@ export const sponsorConfig: SponsorConfig = {
 			name: "支付宝",
 			icon: "fa7-brands:alipay",
 			// 收款码图片路径（需要放在 public 目录下）
-			qrCode: "/assets/images/sponsor/alipay.png",
+			qrCode: "/assets/images/sponsor/222222.jpg",
 			link: "",
 			description: "使用 支付宝 扫码赞助",
 			enabled: true,
@@ -34,7 +34,7 @@ export const sponsorConfig: SponsorConfig = {
 		{
 			name: "微信",
 			icon: "fa7-brands:weixin",
-			qrCode: "/assets/images/sponsor/wechat.png",
+			qrCode: "/assets/images/sponsor/22222222.jpg",
 			link: "",
 			description: "使用 微信 扫码赞助",
 			enabled: true,
@@ -61,16 +61,16 @@ export const sponsorConfig: SponsorConfig = {
 	sponsors: [
 		// 示例：已实名赞助者
 		{
-			name: "夏叶",
+			name: "嘎子卖可乐",
 			amount: "¥50",
-			date: "2025-10-01",
+			date: "2026-05-01",
 		},
 
 		// 示例：匿名赞助者
 		{
-			name: "匿名用户",
+			name: "熊二玩编程",
 			amount: "¥20",
-			date: "2025-10-01",
+			date: "2026-05-01",
 		},
 	],
 };
