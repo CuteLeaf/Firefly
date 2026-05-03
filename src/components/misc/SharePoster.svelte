@@ -270,7 +270,7 @@ async function generatePoster() {
 		const dateObj = parsePosterDate(pubDate);
 
 		// Draw Cover
-		if (coverImg) {
+		if (coverImg && coverImg.width > 0 && coverImg.height > 0) {
 			// Object-fit: cover implementation
 			const imgRatio = coverImg.width / coverImg.height;
 			const targetRatio = width / coverHeight;
@@ -402,8 +402,12 @@ async function generatePoster() {
 		// Draw Footer Content
 		const footerY = drawY;
 
+		// QR 水平位置（需在计算作者名宽度前定义，否则会 ReferenceError）
+		const qrSize = 64 * scale;
+		const qrX = width - padding - qrSize;
+
 		// Left: Author
-		if (avatarImg) {
+		if (avatarImg && avatarImg.width > 0 && avatarImg.height > 0) {
 			ctx.save();
 			const avatarSize = 64 * scale;
 			const avatarX = padding;
@@ -437,7 +441,9 @@ async function generatePoster() {
 			ctx.stroke();
 		}
 
-		const authorTextX = padding + (avatar ? 64 * scale + 16 * scale : 0);
+		const authorTextX =
+			padding +
+			(avatarImg && avatarImg.width > 0 ? 64 * scale + 16 * scale : 0);
 		const textCenterY = footerY + 32 * scale;
 
 		ctx.fillStyle = "#9ca3af";
@@ -451,9 +457,6 @@ async function generatePoster() {
 		ctx.fillText(authorDraw, authorTextX, textCenterY + 4 * scale);
 
 		// Right: QR Code
-		const qrSize = 64 * scale;
-		const qrX = width - padding - qrSize;
-
 		// QR Background/Shadow effect (simplified as border)
 		ctx.fillStyle = "#ffffff";
 		// Shadow simulation
@@ -501,7 +504,11 @@ async function generatePoster() {
 		generating = false;
 	} catch (error) {
 		console.error("Failed to generate poster:", error);
-		posterError = "海报生成失败，请关闭后重试。";
+		const hint =
+			error instanceof Error ? error.message : String(error);
+		posterError = hint
+			? `海报生成失败：${hint}`
+			: "海报生成失败，请关闭后重试。";
 		posterImage = null;
 		generating = false;
 	}
