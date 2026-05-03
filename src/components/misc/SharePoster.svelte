@@ -14,6 +14,47 @@ export let url: string;
 export let siteTitle: string;
 export let avatar: string | null = null;
 
+/** 画布用中文字体栈（避免仅用 Roboto 导致标题发虚、缺字） */
+const FONT_CN = '"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif';
+
+/**
+ * 解析海报日期：YYYY-MM-DD 按「日历日」解析，避免 `new Date('2026-05-03')` 在部分时区变成前一天/错月。
+ */
+function parsePosterDate(pubDate: string): {
+	day: string;
+	month: string;
+	year: string;
+} | null {
+	const trimmed = pubDate.trim();
+	const m = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})/);
+	if (m) {
+		return { year: m[1], month: m[2], day: m[3] };
+	}
+	const d = new Date(trimmed);
+	if (!Number.isNaN(d.getTime())) {
+		return {
+			day: d.getDate().toString().padStart(2, "0"),
+			month: (d.getMonth() + 1).toString().padStart(2, "0"),
+			year: d.getFullYear().toString(),
+		};
+	}
+	return null;
+}
+
+function truncateTextToWidth(
+	ctx: CanvasRenderingContext2D,
+	text: string,
+	maxWidth: number,
+): string {
+	if (!text || ctx.measureText(text).width <= maxWidth) return text;
+	let t = text;
+	const ell = "…";
+	while (t.length > 1 && ctx.measureText(t.slice(0, -1) + ell).width > maxWidth) {
+		t = t.slice(0, -1);
+	}
+	return t.length <= 1 ? text.slice(0, 1) + ell : t.slice(0, -1) + ell;
+}
+
 let showModal = false;
 let posterImage: string | null = null;
 let generating = false;
@@ -145,7 +186,7 @@ async function generatePoster() {
 		// Meta (Date on Cover) - No extra height needed
 
 		// Title
-		ctx.font = `700 ${24 * scale}px 'Roboto', sans-serif`;
+		ctx.font = `700 ${24 * scale}px ${FONT_CN}`;
 		const titleLines = getLines(ctx, title, contentWidth);
 		const titleLineHeight = 30 * scale;
 		const titleHeight = titleLines.length * titleLineHeight;
@@ -155,7 +196,7 @@ async function generatePoster() {
 		// Description
 		let descHeight = 0;
 		if (description) {
-			ctx.font = `${14 * scale}px 'Roboto', sans-serif`;
+			ctx.font = `${14 * scale}px ${FONT_CN}`;
 			const descLines = getLines(ctx, description, contentWidth - 16 * scale); // minus border width and gap
 			// Limit to 6 lines
 			const maxDescLines = 6;
@@ -204,18 +245,7 @@ async function generatePoster() {
 		ctx.fill();
 		ctx.restore();
 
-		// Parse Date
-		let dateObj: { day: string; month: string; year: string } | null = null;
-		try {
-			const d = new Date(pubDate);
-			if (!Number.isNaN(d.getTime())) {
-				dateObj = {
-					day: d.getDate().toString().padStart(2, "0"),
-					month: (d.getMonth() + 1).toString().padStart(2, "0"),
-					year: d.getFullYear().toString(),
-				};
-			}
-		} catch (e) {}
+		const dateObj = parsePosterDate(pubDate);
 
 		// Draw Cover
 		if (coverImg) {
@@ -273,7 +303,7 @@ async function generatePoster() {
 			ctx.fillStyle = "#ffffff";
 			ctx.textAlign = "center";
 			ctx.textBaseline = "middle";
-			ctx.font = `700 ${30 * scale}px 'Roboto', sans-serif`;
+			ctx.font = `700 ${30 * scale}px ${FONT_CN}`;
 			ctx.fillText(dateObj.day, dateBoxX + dateBoxW / 2, dateBoxY + 24 * scale);
 
 			// Line
@@ -284,10 +314,10 @@ async function generatePoster() {
 			ctx.lineTo(dateBoxX + dateBoxW - 10 * scale, dateBoxY + 42 * scale);
 			ctx.stroke();
 
-			// Year Month
-			ctx.font = `${10 * scale}px 'Roboto', sans-serif`;
+			// 年.月（与日历日一致）
+			ctx.font = `${10 * scale}px ${FONT_CN}`;
 			ctx.fillText(
-				`${dateObj.year} ${dateObj.month}`,
+				`${dateObj.year}.${dateObj.month}`,
 				dateBoxX + dateBoxW / 2,
 				dateBoxY + 51 * scale,
 			);
@@ -299,7 +329,7 @@ async function generatePoster() {
 		// Draw Title
 		ctx.textBaseline = "top";
 		ctx.textAlign = "left";
-		ctx.font = `700 ${24 * scale}px 'Roboto', sans-serif`;
+		ctx.font = `700 ${24 * scale}px ${FONT_CN}`;
 		ctx.fillStyle = "#111827";
 		titleLines.forEach((line) => {
 			ctx.fillText(line, padding, drawY);
@@ -323,7 +353,7 @@ async function generatePoster() {
 			);
 			ctx.fill();
 
-			ctx.font = `${14 * scale}px 'Roboto', sans-serif`;
+			ctx.font = `${14 * scale}px ${FONT_CN}`;
 			ctx.fillStyle = "#4b5563";
 			const descLines = getLines(ctx, description, contentWidth - 16 * scale);
 			const maxDescLines = 6;
@@ -389,12 +419,14 @@ async function generatePoster() {
 		const textCenterY = footerY + 32 * scale;
 
 		ctx.fillStyle = "#9ca3af";
-		ctx.font = `${12 * scale}px 'Roboto', sans-serif`;
+		ctx.font = `${12 * scale}px ${FONT_CN}`;
 		ctx.fillText(i18n(I18nKey.author), authorTextX, textCenterY - 20 * scale);
 
 		ctx.fillStyle = "#1f2937";
-		ctx.font = `700 ${20 * scale}px 'Roboto', sans-serif`;
-		ctx.fillText(author, authorTextX, textCenterY + 4 * scale);
+		ctx.font = `700 ${20 * scale}px ${FONT_CN}`;
+		const authorMaxW = Math.max(80 * scale, qrX - authorTextX - 16 * scale);
+		const authorDraw = truncateTextToWidth(ctx, author, authorMaxW);
+		ctx.fillText(authorDraw, authorTextX, textCenterY + 4 * scale);
 
 		// Right: QR Code
 		const qrSize = 64 * scale;
@@ -428,11 +460,11 @@ async function generatePoster() {
 		ctx.textAlign = "right";
 
 		ctx.fillStyle = "#9ca3af";
-		ctx.font = `${12 * scale}px 'Roboto', sans-serif`;
+		ctx.font = `${12 * scale}px ${FONT_CN}`;
 		ctx.fillText(i18n(I18nKey.scanToRead), siteInfoX, textCenterY - 20 * scale);
 
 		ctx.fillStyle = "#1f2937";
-		ctx.font = `700 ${20 * scale}px 'Roboto', sans-serif`;
+		ctx.font = `700 ${20 * scale}px ${FONT_CN}`;
 		ctx.fillText(siteTitle, siteInfoX, textCenterY + 4 * scale);
 
 		// Finalize
