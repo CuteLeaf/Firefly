@@ -45,22 +45,28 @@ html.is-page-transitioning .banner-home-text-overlay {
 
 /* 移动端无侧边栏布局优化 */
 @media (max-width: 767px) {
-    .mobile-no-sidebar {
-        display: block !important;
+    /* 勿用 display:block 覆盖 grid：会破坏列语义与 min-width，导致侧栏与主栏溢出裁切 */
+    #main-grid.mobile-no-sidebar {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
         width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
     }
-    
+
     .mobile-no-sidebar main {
         width: 100% !important;
         max-width: 100% !important;
+        min-width: 0 !important;
         margin: 0 !important;
         padding-left: 0 !important;
         padding-right: 0 !important;
     }
-    
+
     .mobile-no-sidebar #content-wrapper {
         width: 100% !important;
         max-width: 100% !important;
+        min-width: 0 !important;
         margin: 0 !important;
     }
 }

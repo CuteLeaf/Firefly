@@ -77,19 +77,20 @@ export function generateGridClasses(config: ResponsiveSidebarConfig): {
 		config.hasRightComponents
 	) {
 		// 双侧边栏
+		const fr = "minmax(0,1fr)";
 		if (config.tabletSidebar === "right") {
 			// 平板端显示右侧栏: 769-1279px [内容+右侧栏], 1280px+ [左+中+右]
-			gridCols = `grid-cols-1 md:grid-cols-[1fr_${t}] xl:grid-cols-[${t}_1fr_${t}]`;
+			gridCols = `grid-cols-1 md:grid-cols-[${fr}_${t}] xl:grid-cols-[${t}_${fr}_${t}]`;
 		} else {
 			// 平板端显示左侧栏（默认）: 769-1279px [左侧栏+内容], 1280px+ [左+中+右]
-			gridCols = `grid-cols-1 md:grid-cols-[${t}_1fr] xl:grid-cols-[${t}_1fr_${t}]`;
+			gridCols = `grid-cols-1 md:grid-cols-[${t}_${fr}] xl:grid-cols-[${t}_${fr}_${t}]`;
 		}
 	} else if (config.hasLeftComponents && !config.hasRightComponents) {
 		// 仅左侧边栏: 769px+显示左+中，768-以下单列
-		gridCols = `grid-cols-1 md:grid-cols-[${t}_1fr]`;
+		gridCols = `grid-cols-1 md:grid-cols-[${t}_minmax(0,1fr)]`;
 	} else if (!config.hasLeftComponents && config.hasRightComponents) {
 		// 仅右侧边栏: 769px+显示中+右，768-以下单列
-		gridCols = `grid-cols-1 md:grid-cols-[1fr_${t}]`;
+		gridCols = `grid-cols-1 md:grid-cols-[minmax(0,1fr)_${t}]`;
 	}
 
 	return { gridCols };

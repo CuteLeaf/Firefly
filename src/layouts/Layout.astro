@@ -1388,24 +1388,25 @@ function disableAnimation() {
     let newGridClasses: string;
 
     const t = sidebarTrack;
+    const fr = "minmax(0,1fr)";
     if (sidebarPosition === "both" || shouldBothSidebars) {
       // 双侧栏（含文章页临时双侧栏）
       // 从right临时扩展为both时，平板端保持显示右侧栏
       const effectiveTabletSidebar = (shouldBothSidebars && sidebarPosition === "right") ? "right" : tabletSidebar;
       if (effectiveTabletSidebar === "right") {
-        newGridClasses = `grid-cols-1 md:grid-cols-[1fr_${t}] xl:grid-cols-[${t}_1fr_${t}]`;
+        newGridClasses = `grid-cols-1 md:grid-cols-[${fr}_${t}] xl:grid-cols-[${t}_${fr}_${t}]`;
       } else {
-        newGridClasses = `grid-cols-1 md:grid-cols-[${t}_1fr] xl:grid-cols-[${t}_1fr_${t}]`;
+        newGridClasses = `grid-cols-1 md:grid-cols-[${t}_${fr}] xl:grid-cols-[${t}_${fr}_${t}]`;
       }
     } else if (sidebarPosition === "right") {
       // 仅右侧栏
-      newGridClasses = `grid-cols-1 md:grid-cols-[1fr_${t}]`;
+      newGridClasses = `grid-cols-1 md:grid-cols-[${fr}_${t}]`;
     } else {
       // 仅左侧栏
-      newGridClasses = `grid-cols-1 md:grid-cols-[${t}_1fr]`;
+      newGridClasses = `grid-cols-1 md:grid-cols-[${t}_${fr}]`;
     }
 
-    // 移除旧类并添加新类（含历史 17.5rem 与当前侧栏宽）
+    // 移除旧类并添加新类（含历史 17.5rem、裸 1fr 与 minmax 列）
     const gridColClasses = [
       "grid-cols-1",
       "md:grid-cols-[17.5rem_1fr]",
@@ -1414,6 +1415,9 @@ function disableAnimation() {
       `md:grid-cols-[${t}_1fr]`,
       `md:grid-cols-[1fr_${t}]`,
       `xl:grid-cols-[${t}_1fr_${t}]`,
+      `md:grid-cols-[${t}_${fr}]`,
+      `md:grid-cols-[${fr}_${t}]`,
+      `xl:grid-cols-[${t}_${fr}_${t}]`,
     ];
     gridColClasses.forEach((cls) => mainGrid.classList.remove(cls));
 
