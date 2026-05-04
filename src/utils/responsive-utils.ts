@@ -227,7 +227,6 @@ export function generateMainContentClasses(
 	}
 
 	classes.push("min-w-0");
-	classes.push("overflow-hidden");
 
 	return classes.join(" ");
 }

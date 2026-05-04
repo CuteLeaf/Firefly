@@ -800,8 +800,8 @@ const bannerCarouselInterval = Math.max(
 </>
 )}
 
-<!-- Main content -->
-<div class={`absolute w-full z-30 pointer-events-none ${mobileNonHomeBannerClass ? 'mobile-main-no-banner' : ''} ${!(isBannerMode && isBackgroundEnabled) ? 'no-banner-layout' : ''}`} style={`top: ${finalMainPanelTop}`}>
+<!-- Main content：必须限定水平 inset，否则仅 top + absolute 时 left 依赖静态位置，易出现整块贴左被裁切 -->
+<div class={`absolute inset-x-0 w-full z-30 pointer-events-none ${mobileNonHomeBannerClass ? 'mobile-main-no-banner' : ''} ${!(isBannerMode && isBackgroundEnabled) ? 'no-banner-layout' : ''}`} style={`top: ${finalMainPanelTop}`}>
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
     <div class="relative w-full max-w-(--page-width) mx-auto pointer-events-auto">
         <div id="main-grid"
