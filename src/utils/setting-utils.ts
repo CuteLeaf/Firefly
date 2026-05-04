@@ -25,13 +25,12 @@ declare global {
 }
 
 export function getDefaultHue(): number {
-	const fallback = "250";
-	// 检查是否在浏览器环境中
+	const fromConfig = String(siteConfig.themeColor.hue);
 	if (typeof document === "undefined") {
-		return Number.parseInt(fallback, 10);
+		return siteConfig.themeColor.hue;
 	}
 	const configCarrier = document.getElementById("config-carrier");
-	return Number.parseInt(configCarrier?.dataset.hue || fallback, 10);
+	return Number.parseInt(configCarrier?.dataset.hue ?? fromConfig, 10);
 }
 
 export function getDefaultTheme(): LIGHT_DARK_MODE {

@@ -303,10 +303,7 @@ if (document.readyState === 'loading') {
             {/* 你的 loadPagefind 函数的完整内容放在这里 */}
             async function loadPagefind() {
                 try {
-                    const response = await fetch(scriptUrl, { method: 'HEAD' });
-                    if (!response.ok) {
-                        throw new Error(`Pagefind script not found: ${response.status}`);
-                    }
+                    // 不要用 HEAD 探测：部分 CDN/反代对静态 JS 的 HEAD 非 200，会导致 Pagefind 永远不加载、搜索恒为空
                     const pagefind = await import(scriptUrl);
                     await pagefind.options({
                         excerptLength: 20

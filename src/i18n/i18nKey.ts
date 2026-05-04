@@ -9,6 +9,11 @@ enum I18nKey {
 	searchSummary = "searchSummary",
 	searchContent = "searchContent",
 	searchViewMore = "searchViewMore",
+	/** 开发模式：导航栏搜索占位说明 */
+	searchDevHintTitle1 = "searchDevHintTitle1",
+	searchDevHintExcerpt1 = "searchDevHintExcerpt1",
+	searchDevHintTitle2 = "searchDevHintTitle2",
+	searchDevHintExcerpt2 = "searchDevHintExcerpt2",
 	other = "other",
 
 	tags = "tags",

@@ -12,6 +12,12 @@ export const en: Translation = {
 	[Key.searchSummary]: "Summary",
 	[Key.searchContent]: "Content",
 	[Key.searchViewMore]: "View more results ({count} more)",
+	[Key.searchDevHintTitle1]: "Placeholder (development mode)",
+	[Key.searchDevHintExcerpt1]:
+		"Pagefind runs on the built static site only. You are in <mark>development mode</mark>, so posts are not indexed.",
+	[Key.searchDevHintTitle2]: "How to test real search",
+	[Key.searchDevHintExcerpt2]:
+		"From the project root run <mark>pnpm build && pnpm preview</mark>, then search on the preview URL.",
 	[Key.other]: "Other",
 	[Key.all]: "All",
 

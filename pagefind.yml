@@ -1,3 +1,6 @@
+# 全站以中文为主时，强制走中文分词管线，避免多语言检测与索引分裂导致搜不到
+force_language: zh
+
 exclude_selectors:
   - "span.katex"
   - "span.katex-display"

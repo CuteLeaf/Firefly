@@ -33,6 +33,7 @@ import {
 	generateRightSidebarClasses,
 	generateSidebarClasses,
 	getResponsiveSidebarConfig,
+	MAIN_GRID_SIDEBAR_TRACK,
 	type ResponsiveSidebarConfig,
 } from "@/utils/responsive-utils";
 import Layout from "./Layout.astro";
@@ -297,7 +298,7 @@ const bannerCarouselInterval = Math.max(
     class="z-50 pointer-events-none relative transition-all duration-700 mx-auto"
     class:list={[
         stickyNavbar ? "h-18 fixed top-0 left-0 right-0 z-80" : "",
-        navbarWidthFull ? "" : "w-full xl:w-[92vw] max-w-(--page-width) px-0 md:px-4",
+        navbarWidthFull ? "" : "w-full max-w-(--page-width) px-0 md:px-4",
     ]}
 >
     <div
@@ -802,9 +803,10 @@ const bannerCarouselInterval = Math.max(
 <!-- Main content -->
 <div class={`absolute w-full z-30 pointer-events-none ${mobileNonHomeBannerClass ? 'mobile-main-no-banner' : ''} ${!(isBannerMode && isBackgroundEnabled) ? 'no-banner-layout' : ''}`} style={`top: ${finalMainPanelTop}`}>
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
-    <div class="relative w-full xl:w-[92vw] max-w-(--page-width) mx-auto pointer-events-auto">
+    <div class="relative w-full max-w-(--page-width) mx-auto pointer-events-auto">
         <div id="main-grid"
-          class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-[auto_1fr_auto] lg:grid-rows-[auto] mx-auto gap-4 px-2 md:px-4 ${!sidebarConfig.mobileShowSidebar ? 'mobile-no-sidebar' : ''}`}
+          style={`--sidebar-track: ${MAIN_GRID_SIDEBAR_TRACK}`}
+          class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-[auto_1fr_auto] lg:grid-rows-[auto] mx-auto gap-4 md:gap-5 px-2 md:px-4 ${!sidebarConfig.mobileShowSidebar ? 'mobile-no-sidebar' : ''}`}
           data-sidebar-position={sidebarLayoutConfig.position}
           data-tablet-sidebar={sidebarLayoutConfig.tabletSidebar ?? "left"}
           data-show-both-sidebars-on-post={sidebarLayoutConfig.showBothSidebarsOnPostPage ? "true" : "false"}

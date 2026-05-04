@@ -19,20 +19,19 @@ const description = "";
 <script is:inline define:vars={{ scriptUrl: url('/pagefind/pagefind.js') }}>
     if (!window.pagefind) {
         async function loadPagefind() {
-            const url = scriptUrl.replace(/\/$/, "")
             try {
-                const response = await fetch(url, { method: 'HEAD' });
-                if (response.status !== 200) {
-                    return;
-                }
                 const pagefind = await import(scriptUrl);
                 await pagefind.options({
-                    "excerptLength": 20
+                    excerptLength: 20
                 });
                 window.pagefind = pagefind;
                 window.dispatchEvent(new Event('pagefindready'));
             } catch (error) {
-                console.warn("Pagefind script not found or failed to load.");
+                console.warn("Pagefind script not found or failed to load.", error);
+                window.pagefind = {
+                    search: () => Promise.resolve({ results: [] }),
+                    options: () => Promise.resolve(),
+                };
                 window.dispatchEvent(new Event('pagefindloaderror'));
             }
         }

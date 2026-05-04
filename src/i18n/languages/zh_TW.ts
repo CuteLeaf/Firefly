@@ -12,6 +12,12 @@ export const zh_TW: Translation = {
 	[Key.searchSummary]: "摘要",
 	[Key.searchContent]: "內容",
 	[Key.searchViewMore]: "查看更多結果 ({count} 個更多)",
+	[Key.searchDevHintTitle1]: "開發模式佔位結果",
+	[Key.searchDevHintExcerpt1]:
+		"Pagefind 僅在建置後的靜態網站上可用，目前為 <mark>開發模式</mark>，無法索引文章全文。",
+	[Key.searchDevHintTitle2]: "如何測試真實搜尋",
+	[Key.searchDevHintExcerpt2]:
+		"請在專案根目錄執行 <mark>pnpm build && pnpm preview</mark>，再以預覽網址搜尋。",
 	[Key.other]: "其他",
 	[Key.all]: "全部",
 

@@ -4,7 +4,10 @@ import { i18n } from "@i18n/translation";
 import { onMount } from "svelte";
 import Icon from "@/components/common/Icon.svelte";
 import type { SearchResult } from "@/global";
-import { url as formatUrl } from "@/utils/url-utils";
+import {
+	loadPostMetaForDevSearch,
+	searchPostsInDev,
+} from "@/utils/dev-post-search";
 
 // --- Props ---
 export let title = i18n(I18nKey.search);
@@ -25,20 +28,6 @@ const getInitialKeyword = (): string => {
 	return "";
 };
 
-// --- Mocks for Dev Mode ---
-const fakeResult: SearchResult[] = [
-	{
-		url: formatUrl("/"),
-		meta: { title: "Dev Mode Search Result 1" },
-		excerpt: "This is a <mark>mock</mark> result for development.",
-	},
-	{
-		url: formatUrl("/"),
-		meta: { title: "Dev Mode Search Result 2" },
-		excerpt: "Pagefind only works in <mark>production</mark> build.",
-	},
-];
-
 // --- Core Search Logic ---
 const search = async () => {
 	if (!initialized || !keyword.trim()) {
@@ -55,12 +44,8 @@ const search = async () => {
 			);
 			results = rawResults;
 		} else if (import.meta.env.DEV) {
-			// 开发模式下的模拟结果
-			results = fakeResult.filter(
-				(item) =>
-					item.excerpt.toLowerCase().includes(keyword.toLowerCase()) ||
-					item.meta.title.toLowerCase().includes(keyword.toLowerCase()),
-			);
+			const posts = await loadPostMetaForDevSearch();
+			results = searchPostsInDev(posts, keyword);
 		}
 	} catch (error) {
 		console.error("Search error:", error);
@@ -91,11 +76,14 @@ onMount(() => {
 	if (import.meta.env.DEV) {
 		initialize();
 	} else {
-		// 生产环境等待 Pagefind 加载
+		// 生产环境等待 Pagefind 加载（含加载失败时的 pagefindloaderror，与 Navbar 行为一致）
 		if (window.pagefind) {
 			initialize();
 		} else {
 			document.addEventListener("pagefindready", initialize, {
+				once: true,
+			});
+			document.addEventListener("pagefindloaderror", initialize, {
 				once: true,
 			});
 		}

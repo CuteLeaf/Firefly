@@ -12,6 +12,12 @@ export const ru: Translation = {
 	[Key.searchSummary]: "Резюме",
 	[Key.searchContent]: "Содержание",
 	[Key.searchViewMore]: "Показать еще ({count} шт)",
+	[Key.searchDevHintTitle1]: "Заглушка (режим разработки)",
+	[Key.searchDevHintExcerpt1]:
+		"Pagefind работает только на собранном статическом сайте. Сейчас <mark>режим разработки</mark> — полнотекстовый индекс недоступен.",
+	[Key.searchDevHintTitle2]: "Как проверить настоящий поиск",
+	[Key.searchDevHintExcerpt2]:
+		"В корне проекта выполните <mark>pnpm build && pnpm preview</mark> и ищите на URL предпросмотра.",
 	[Key.other]: "Прочее",
 	[Key.all]: "Все",
 

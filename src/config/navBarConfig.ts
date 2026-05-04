@@ -16,17 +16,40 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 
 		// 归档
 		LinkPreset.Archive,
+
+		// 外链下拉（友链/留言页已关，统一放此处）
+		{
+			name: "链接",
+			url: "/",
+			icon: "material-symbols:link",
+			children: [
+				{
+					name: "GitHub",
+					url: "https://github.com/CokeloveMiyo",
+					external: true,
+					icon: "fa7-brands:github",
+				},
+				{
+					name: "Bilibili",
+					url: "https://space.bilibili.com/379217893?spm_id_from=333.1007.0.0",
+					external: true,
+					icon: "simple-icons:bilibili",
+				},
+				{
+					name: "QQ交流群",
+					url: "https://qm.qq.com/q/1HcZo7koEg",
+					external: true,
+					icon: "fa7-brands:qq",
+				},
+				{
+					name: "晴的专属秘书",
+					url: "https://work.weixin.qq.com/kfid/kfcb2eb5c0c4c99817c",
+					external: true,
+					icon: "fa7-brands:weixin",
+				},
+			],
+		},
 	];
-
-	// 根据配置决定是否添加友链，在siteConfig关闭pages.friends时导航栏不显示友链
-	if (siteConfig.pages.friends) {
-		links.push(LinkPreset.Friends);
-	}
-
-	// 根据配置决定是否添加留言板，在siteConfig关闭pages.guestbook时导航栏不显示留言板
-	if (siteConfig.pages.guestbook) {
-		links.push(LinkPreset.Guestbook);
-	}
 
 	// 我的及其子菜单
 	links.push({
@@ -53,43 +76,6 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 
 			// 关于页面
 			LinkPreset.About,
-		],
-	});
-
-	// 自定义导航栏链接,并且支持多级菜单
-	links.push({
-		name: "晴的私人微信",
-		url: "/https://work.weixin.qq.com/kfid/kfcb2eb5c0c4c99817c/",
-		icon: "material-symbols:link",
-
-		// 子菜单
-		children: [
-			{
-				name: "GitHub",
-				url: "https://github.com/CuteLeaf/Firefly",
-				external: true,
-				icon: "fa7-brands:github",
-			},
-			{
-				name: "Gitee",
-				url: "https://gitee.com/CuteLeaf/Firefly",
-				external: true,
-				icon: "fa7-brands:gitee",
-			},
-			{
-				name: "QQ交流群",
-				url: "https://qm.qq.com/q/1HcZo7koEg",
-				external: true,
-				icon: "fa7-brands:qq",
-			},
-
-            {
-				name: "晴的专属秘书",
-				url: "https://work.weixin.qq.com/kfid/kfcb2eb5c0c4c99817c",
-				external: true,
-				icon: "fa7-brands:weixin",
-			},
-			
 		],
 	});
 

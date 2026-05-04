@@ -12,6 +12,12 @@ export const ja: Translation = {
 	[Key.searchSummary]: "摘要",
 	[Key.searchContent]: "内容",
 	[Key.searchViewMore]: "さらに結果を表示 ({count} 件)",
+	[Key.searchDevHintTitle1]: "開発モードのプレースホルダー",
+	[Key.searchDevHintExcerpt1]:
+		"Pagefind はビルド後の静的サイトでのみ動作します。現在は <mark>開発モード</mark> のため全文索引がありません。",
+	[Key.searchDevHintTitle2]: "本番に近い検索の試し方",
+	[Key.searchDevHintExcerpt2]:
+		"プロジェクト直下で <mark>pnpm build && pnpm preview</mark> を実行し、プレビュー URL で検索してください。",
 	[Key.other]: "その他",
 	[Key.all]: "すべて",
 

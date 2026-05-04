@@ -5,6 +5,10 @@ import { navigateToPage } from "@utils/navigation-utils";
 import { onMount } from "svelte";
 import Icon from "@/components/common/Icon.svelte";
 import type { SearchResult } from "@/global";
+import {
+	loadPostMetaForDevSearch,
+	searchPostsInDev,
+} from "@/utils/dev-post-search";
 import { url as formatUrl, getSearchUrl } from "@/utils/url-utils";
 
 // --- State ---
@@ -14,21 +18,6 @@ let result: SearchResult[] = [];
 let isSearching = false;
 let initialized = false;
 let debounceTimer: NodeJS.Timeout;
-
-// --- Mocks for Dev Mode ---
-const fakeResult: SearchResult[] = [
-	{
-		url: formatUrl("/"),
-		meta: { title: "This Is a Fake Search Result" },
-		excerpt:
-			"Because Pagefind cannot work in the <mark>dev</mark> environment.",
-	},
-	{
-		url: formatUrl("/"),
-		meta: { title: "If You Want to Test the Search" },
-		excerpt: "Try running <mark>npm build && npm preview</mark> instead.",
-	},
-];
 
 // --- UI Logic ---
 const togglePanel = () => {
@@ -85,7 +74,8 @@ const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
 					response.results.map((item) => item.data()),
 				);
 			} else if (import.meta.env.DEV) {
-				searchResults = fakeResult;
+				const posts = await loadPostMetaForDevSearch();
+				searchResults = searchPostsInDev(posts, keyword);
 			}
 
 			result = searchResults;
@@ -109,7 +99,9 @@ onMount(() => {
 	};
 
 	if (import.meta.env.DEV) {
-		console.log("Pagefind mock enabled in development mode.");
+		console.log(
+			"[Firefly] 开发模式：按标题/摘要/分类搜索；正文全文请用 pnpm build && pnpm preview",
+		);
 		initializePagefind();
 	} else {
 		if (window.pagefind) {
