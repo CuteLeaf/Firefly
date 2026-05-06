@@ -7,8 +7,9 @@
  * 重组件（Music / Calendar / Live2D / Spine）由右下浮动坞触达，不在此处。
  */
 import { Icon } from "astro-icon/components";
+import ImageWrapper from "@/components/common/ImageWrapper.astro";
 import TypewriterText from "@/components/features/TypewriterText.astro";
-import { announcementConfig, profileConfig, siteConfig } from "@/config";
+import { profileConfig, siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import {
@@ -60,8 +61,16 @@ const stats = [
 <div class="home-portal">
 	{/* PROFILE */}
 	<section class="section onload-animation flex flex-col items-center gap-4">
-		<a href={url("/about/")} class="block w-60 h-60 overflow-hidden rounded-full border border-(--line-divider) shrink-0">
-			<img src={profileConfig.avatar} alt={profileConfig.name} class="w-full h-full object-cover" loading="eager" />
+		<a href={url("/about/")} class="group block relative w-60 h-60 overflow-hidden rounded-full border border-(--line-divider) shrink-0">
+			<ImageWrapper
+				src={profileConfig.avatar || ""}
+				alt="Profile Image of the Author"
+				class="w-full h-full"
+				loading="eager"
+				fetchpriority="high"
+				widths={[400]}
+				sizes="400px"
+			/>
 		</a>
 		<div class="text-center w-full">
 			<TypewriterText text={profileConfig.bio || ""} speed={80} pauseTime={3000} class="text-xl text-(--content-meta)" />
@@ -81,35 +90,6 @@ const stats = [
 		</div>
 	</section>
 
-	{/* ANNOUNCEMENT */}
-	{announcementConfig.content && (
-		<section class="section onload-animation" id="home-announcement">
-			<div class="flex items-center justify-between mb-2">
-				<div class="section-label !mb-0">{announcementConfig.title || i18n(I18nKey.announcement)}</div>
-				{announcementConfig.closable && (
-					<button
-						class="text-(--content-meta) hover:text-(--deep-text) transition-colors"
-						onclick="document.getElementById('home-announcement')?.remove()"
-						aria-label="Close"
-					>
-						<Icon name="fa7-solid:xmark" class="text-sm" />
-					</button>
-				)}
-			</div>
-			<p class="text-(--deep-text) leading-relaxed mb-4">{announcementConfig.content}</p>
-			{announcementConfig.link?.enable !== false && announcementConfig.link?.url && (
-				<a
-					href={announcementConfig.link.url}
-					target={announcementConfig.link.external ? "_blank" : "_self"}
-					rel={announcementConfig.link.external ? "noopener noreferrer" : undefined}
-					class="btn-line text-sm"
-				>
-					{announcementConfig.link.text}
-					<Icon name="fa7-solid:arrow-right" class="ml-2 text-xs" />
-				</a>
-			)}
-		</section>
-	)}
 
 	{/* STATS */}
 	<section class="section onload-animation">

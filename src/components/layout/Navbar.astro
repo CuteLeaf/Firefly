@@ -137,6 +137,13 @@ if (isLocalSrcLogo) {
         text-decoration: none;
         color: var(--deep-text);
     }
+    .navbar-logo::before {
+        background-color: transparent !important;
+        scale: 0.85;
+    }
+    .navbar-logo:hover::before {
+        background-color: transparent !important;
+    }
 
     /* logo 文字：滚动后淡出收缩 */
     .navbar-logo-text {
@@ -193,6 +200,16 @@ if (isLocalSrcLogo) {
         gap: 0.25rem;
         transition: gap 0.55s cubic-bezier(0.22, 1, 0.36, 1);
     }
+    .navbar-right :global(.btn-plain) {
+        background-color: transparent !important;
+    }
+    .navbar-right :global(.btn-plain::before) {
+        background-color: transparent !important;
+        scale: 0.85;
+    }
+    .navbar-right :global(.btn-plain:hover::before) {
+        background-color: transparent !important;
+    }
 
     :global(#navbar.scrolled) .navbar-right {
         gap: 0.1rem;
@@ -241,26 +258,14 @@ function loadButtonScript() {
         };
     }
 
-    const themeSwitchBtn = document.getElementById("scheme-switch");
-    if (themeSwitchBtn) {
-        themeSwitchBtn.onclick = () => {
-            const themePanel = document.getElementById("theme-mode-panel");
-            themePanel?.classList.toggle("float-panel-closed");
-        };
-    }
-
     document.addEventListener("click", (event) => {
-        const panels = ["nav-menu-panel", "theme-mode-panel"];
-        const buttons = ["nav-menu-switch", "scheme-switch"];
-        panels.forEach((id, i) => {
-            const panel = document.getElementById(id);
-            const button = document.getElementById(buttons[i]);
-            if (panel && button && !panel.classList.contains("float-panel-closed")) {
-                if (event.target instanceof Node && !panel.contains(event.target) && !button.contains(event.target)) {
-                    panel.classList.add("float-panel-closed");
-                }
+        const panel = document.getElementById("nav-menu-panel");
+        const button = document.getElementById("nav-menu-switch");
+        if (panel && button && !panel.classList.contains("float-panel-closed")) {
+            if (event.target instanceof Node && !panel.contains(event.target) && !button.contains(event.target)) {
+                panel.classList.add("float-panel-closed");
             }
-        });
+        }
     });
 }
 

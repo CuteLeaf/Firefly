@@ -1,9 +1,5 @@
 <script lang="ts">
-import I18nKey from "@i18n/i18nKey";
-import { i18n } from "@i18n/translation";
 import { onMount } from "svelte";
-import DropdownItem from "@/components/common/DropdownItem.svelte";
-import DropdownPanel from "@/components/common/DropdownPanel.svelte";
 import Icon from "@/components/common/Icon.svelte";
 import { DARK_MODE, LIGHT_MODE, SYSTEM_MODE } from "@/constants/constants";
 import type { LIGHT_DARK_MODE } from "@/types/config.ts";
@@ -30,6 +26,16 @@ let displayedMode: LIGHT_DARK_MODE = $state(LIGHT_MODE); // 显示的实际主�
 function switchScheme(newMode: LIGHT_DARK_MODE) {
 	mode = newMode;
 	setTheme(newMode);
+}
+
+function cycleTheme() {
+	if (mode === LIGHT_MODE) {
+		switchScheme(DARK_MODE);
+	} else if (mode === DARK_MODE) {
+		switchScheme(SYSTEM_MODE);
+	} else {
+		switchScheme(LIGHT_MODE);
+	}
 }
 
 // 更新显示的主题（用于显示当前实际主题）
@@ -115,43 +121,15 @@ onMount(() => {
 </script>
 
 <div class="relative z-50">
-    <button aria-label="Light/Dark Mode" aria-haspopup="menu" class="relative btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="scheme-switch">
+    <button aria-label="Light/Dark Mode" class="relative btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="scheme-switch" onclick={cycleTheme}>
         <div class="absolute inset-0 flex items-center justify-center" class:opacity-0={displayedMode !== LIGHT_MODE}>
             <Icon icon="material-symbols:wb-sunny-outline-rounded" class="text-[1.25rem]"></Icon>
         </div>
         <div class="absolute inset-0 flex items-center justify-center" class:opacity-0={displayedMode !== DARK_MODE}>
             <Icon icon="material-symbols:dark-mode-outline-rounded" class="text-[1.25rem]"></Icon>
         </div>
+        <div class="absolute inset-0 flex items-center justify-center" class:opacity-0={mode !== SYSTEM_MODE}>
+            <Icon icon="material-symbols:brightness-auto-outline-rounded" class="text-[1.25rem]"></Icon>
+        </div>
     </button>
-    <div id="theme-mode-panel" class="absolute transition float-panel-closed top-11 -right-2 pt-5 z-50" role="menu" aria-labelledby="scheme-switch">
-        <DropdownPanel>
-            <DropdownItem
-                role="menuitem"
-                isActive={mode === LIGHT_MODE}
-                isLast={false}
-                onclick={() => switchScheme(LIGHT_MODE)}
-            >
-                <Icon icon="material-symbols:wb-sunny-outline-rounded" class="text-[1.25rem] mr-3"></Icon>
-                {i18n(I18nKey.lightMode)}
-            </DropdownItem>
-            <DropdownItem
-                role="menuitem"
-                isActive={mode === DARK_MODE}
-                isLast={false}
-                onclick={() => switchScheme(DARK_MODE)}
-            >
-                <Icon icon="material-symbols:dark-mode-outline-rounded" class="text-[1.25rem] mr-3"></Icon>
-                {i18n(I18nKey.darkMode)}
-            </DropdownItem>
-            <DropdownItem
-                role="menuitem"
-                isActive={mode === SYSTEM_MODE}
-                isLast={true}
-                onclick={() => switchScheme(SYSTEM_MODE)}
-            >
-                <Icon icon="material-symbols:brightness-auto-outline-rounded" class="text-[1.25rem] mr-3"></Icon>
-                {i18n(I18nKey.systemMode)}
-            </DropdownItem>
-        </DropdownPanel>
-    </div>
 </div>

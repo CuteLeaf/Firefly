@@ -39,9 +39,20 @@ const togglePanel = () => {
 const setPanelVisibility = (show: boolean): void => {
 	const panel = document.getElementById("search-panel");
 	if (!panel || !keyword) return;
-	show
-		? panel.classList.remove("float-panel-closed")
-		: panel.classList.add("float-panel-closed");
+	if (show) {
+		positionSearchPanel();
+		panel.classList.remove("float-panel-closed");
+	} else {
+		panel.classList.add("float-panel-closed");
+	}
+};
+
+const positionSearchPanel = (): void => {
+	const panel = document.getElementById("search-panel");
+	const drawer = document.getElementById("dock-drawer-search");
+	if (!panel || !drawer) return;
+	const rect = drawer.getBoundingClientRect();
+	panel.style.bottom = `${window.innerHeight - rect.top + 8}px`;
 };
 
 const closeSearchPanel = (): void => {
@@ -138,9 +149,8 @@ $: if (initialized && (keyword || keyword === "")) {
     >
 </div>
 
-<!-- search panel -->
-<div id="search-panel" class="float-panel float-panel-closed search-panel absolute md:w-120
-     top-20 left-4 md:left-[unset] right-4 shadow-2xl rounded-2xl p-2">
+<!-- search panel (positioned above the drawer via JS) -->
+<div id="search-panel" class="float-panel float-panel-closed search-panel">
 
     <!-- search results -->
     {#if isSearching}
@@ -205,7 +215,27 @@ $: if (initialized && (keyword || keyword === "")) {
     }
 
     .search-panel {
-        max-height: calc(100vh - 100px);
+        position: fixed;
+        width: 22rem;
+        max-height: 50vh;
         overflow-y: auto;
+        right: 5rem;
+        z-index: 61;
+        background: color-mix(in oklch, var(--float-panel-bg) 85%, transparent);
+        backdrop-filter: blur(16px) saturate(180%);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+        border-radius: 1rem;
+        padding: 0.5rem;
+    }
+    :root.dark .search-panel {
+        box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    @media (max-width: 768px) {
+        .search-panel {
+            right: 1rem;
+            left: 1rem;
+            width: auto;
+        }
     }
 </style>

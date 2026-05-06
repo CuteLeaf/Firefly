@@ -267,6 +267,10 @@ html {
         z-index: 60;
         transition: opacity 0.15s ease, transform 0.15s ease;
     }
+    #dock-drawer-search {
+        overflow: visible;
+        max-height: none;
+    }
     .dock-drawer.dock-drawer-closed {
         opacity: 0;
         transform: translateX(0.5rem);
@@ -393,7 +397,10 @@ html {
     }
 
     .dropdown-content {
-        @apply bg-transparent border border-(--line-divider) py-2 min-w-48;
+        @apply border border-(--line-divider) py-2 min-w-48;
+        background: color-mix(in oklch, var(--float-panel-bg) 85%, transparent);
+        backdrop-filter: blur(16px) saturate(180%);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
         border-style: solid;
         transition: border-style 0.15s ease;
     }

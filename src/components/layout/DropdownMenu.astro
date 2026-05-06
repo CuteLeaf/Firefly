@@ -101,6 +101,16 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 		background-color: transparent !important;
 	}
 
+	.dropdown-container > a::before,
+	.dropdown-container > button::before,
+	.dropdown-container:hover > a::before,
+	.dropdown-container:hover > button::before,
+	.dropdown-container:focus-within > a::before,
+	.dropdown-container:focus-within > button::before {
+		background-color: transparent !important;
+		scale: 0.85;
+	}
+
 	.dropdown-container:hover > a,
 	.dropdown-container:hover > button,
 	.dropdown-container:focus-within > a,
@@ -142,9 +152,6 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 
 	.dropdown-content {
 		@apply min-w-[12rem];
-		background-color: transparent !important;
-		backdrop-filter: none !important;
-		-webkit-backdrop-filter: none !important;
 	}
 
 	/* 禁用 dropdown item 的 expand-animation 背景，只保留边框效果 */
