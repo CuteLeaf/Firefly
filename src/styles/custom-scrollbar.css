@@ -1,22 +1,31 @@
 /* 通用自定义滚动条样式 */
+html,
+body,
 .custom-scrollbar {
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }
 
-.dark .custom-scrollbar {
+:root.dark,
+:root.dark .custom-scrollbar {
     scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
 .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
 }
 
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
 .custom-scrollbar::-webkit-scrollbar-track {
     background: transparent;
     border-radius: 3px;
 }
 
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
 .custom-scrollbar::-webkit-scrollbar-thumb {
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.2) 100%);
     border-radius: 3px;
@@ -24,26 +33,36 @@
     transition: all 0.2s ease;
 }
 
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.3) 100%);
     border-color: rgba(255, 255, 255, 0.2);
 }
 
+html::-webkit-scrollbar-thumb:active,
+body::-webkit-scrollbar-thumb:active,
 .custom-scrollbar::-webkit-scrollbar-thumb:active {
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.4) 100%);
 }
 
 /* 暗色模式滚动条 - Webkit */
-.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+:root.dark html::-webkit-scrollbar-thumb,
+:root.dark body::-webkit-scrollbar-thumb,
+:root.dark .custom-scrollbar::-webkit-scrollbar-thumb {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.2) 100%);
     border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+:root.dark html::-webkit-scrollbar-thumb:hover,
+:root.dark body::-webkit-scrollbar-thumb:hover,
+:root.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.3) 100%);
     border-color: rgba(0, 0, 0, 0.2);
 }
 
-.dark .custom-scrollbar::-webkit-scrollbar-thumb:active {
+:root.dark html::-webkit-scrollbar-thumb:active,
+:root.dark body::-webkit-scrollbar-thumb:active,
+:root.dark .custom-scrollbar::-webkit-scrollbar-thumb:active {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.4) 100%);
 }

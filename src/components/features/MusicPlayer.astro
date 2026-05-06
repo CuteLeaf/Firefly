@@ -186,6 +186,13 @@ const widgetId =
     var mgr = window.__fireflyMusic;
     if (!mgr) return;
 
+    // Guard: skip if already initialized (SwupScriptsPlugin may re-execute)
+    if (widget.__musicInitialized) {
+        if (typeof widget.__musicSync === 'function') widget.__musicSync();
+        return;
+    }
+    widget.__musicInitialized = true;
+
     // ── UI element refs ──────────────────────────────────────
     var ui = {
         widget: widget,
