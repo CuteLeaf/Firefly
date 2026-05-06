@@ -350,10 +350,10 @@ initHoverSlider();
         const y = window.scrollY;
 
         if (y > SCROLL_IN) {
-            navbar.classList.add('scrolled');
+            navbar?.classList.add('scrolled');
             navbarWrapper?.classList.add('navbar-scrolled');
         } else if (y < SCROLL_OUT) {
-            navbar.classList.remove('scrolled');
+            navbar?.classList.remove('scrolled');
             navbarWrapper?.classList.remove('navbar-scrolled');
         }
 

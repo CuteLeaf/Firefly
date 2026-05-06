@@ -6,14 +6,12 @@ import HomeHero from "@components/layout/HomeHero.astro";
 import HomePortal from "@components/layout/HomePortal.astro";
 import Navbar from "@components/layout/Navbar.astro";
 import type { MarkdownHeading } from "astro";
-import { Icon } from "astro-icon/components";
 import FloatingDock from "@/components/controls/FloatingDock.astro";
 import CategoryBar from "@/components/layout/CategoryBar.astro";
 import CategoryFollowBar from "@/components/layout/CategoryFollowBar.astro";
 import { live2dModelConfig, siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
-import { formatDateToYYYYMMDD } from "@/utils/date-utils";
 import { isHomePage } from "@/utils/layout-utils";
 import Layout from "./Layout.astro";
 
@@ -48,7 +46,7 @@ const {
 	postSlug,
 	postCategory,
 	headings = [],
-	bannerPostMeta,
+	bannerPostMeta: _bannerPostMeta,
 } = Astro.props;
 
 const isHomePageCheck = isHomePage(Astro.url.pathname);
@@ -238,6 +236,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
 	}
 
 	function initArticleTOC() {
+		cleanupArticleTOC();
 		if (!isPostPage()) return;
 
 		const tocContent = document.getElementById("article-toc-content");

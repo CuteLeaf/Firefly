@@ -254,7 +254,7 @@ const { headings: _headings = [] } = Astro.props;
 		});
 
 		function collapseDock() {
-			stack.setAttribute("data-expanded", "false");
+			stack?.setAttribute("data-expanded", "false");
 			collapsedIcon?.classList.remove("hidden");
 			expandedIcon?.classList.add("hidden");
 		}

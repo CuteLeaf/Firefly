@@ -40,11 +40,6 @@ for (const post of posts) {
 
 const siteStartDate = siteConfig.siteStartDate || "2025-01-01";
 const latestPost = posts[0];
-const lastPostDate = latestPost
-	? latestPost.data.published.toISOString()
-	: null;
-const todayText = i18n(I18nKey.today);
-const formatNum = (n: number) => n.toLocaleString();
 
 // 计算运行天数（服务端计算）
 const startDate = new Date(siteStartDate);

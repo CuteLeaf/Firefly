@@ -95,10 +95,11 @@ const managerConfigStr = JSON.stringify({
     }
 
     // ── Audio element (persistent, attached to body) ────────
-    var audio = document.createElement('audio');
+    var audio = document.getElementById('firefly-music-audio') || document.createElement('audio');
+    audio.id = 'firefly-music-audio';
     audio.crossOrigin = 'anonymous';
     audio.style.display = 'none';
-    document.body.appendChild(audio);
+    if (!audio.parentNode) document.body.appendChild(audio);
 
     // ── State ────────────────────────────────────────────────
     var state = {
@@ -448,17 +449,23 @@ const managerConfigStr = JSON.stringify({
     };
 
     // ── Swup page transition hook: re-sync widgets after navigation ──
+    function scheduleResync() {
+        setTimeout(function () {
+            if (window.__fireflyMusic) window.__fireflyMusic.resync();
+        }, 100);
+    }
+
     function onSwupReady() {
         if (window.swup && window.swup.hooks) {
-            window.swup.hooks.on('page:view', function () {
-                // Delay slightly so new MusicPlayer inline scripts have time to run
-                setTimeout(function () {
-                    if (window.__fireflyMusic) window.__fireflyMusic.resync();
-                }, 50);
-            });
+            window.swup.hooks.on('page:view', scheduleResync);
+            window.swup.hooks.on('content:replace', scheduleResync);
         }
     }
+
     if (window.swup && window.swup.hooks) onSwupReady();
     else document.addEventListener('swup:enable', onSwupReady);
+
+    document.addEventListener('astro:page-load', scheduleResync);
+    document.addEventListener('swup:contentReplaced', scheduleResync);
 })();
 </script>
