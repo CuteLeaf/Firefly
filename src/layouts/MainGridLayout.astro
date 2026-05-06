@@ -75,36 +75,36 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
 
 {/* 主内容容器 — 单列居中，无壁纸/三栏 */}
 <div class="relative w-full" id="main-grid-wrapper">
-	{isPostPage && (
-		<div id="article-toc-wrapper" class="article-toc-wrapper hidden xl:block">
-			<div id="article-toc-container" class="article-toc-container">
-				<div class="article-toc-header">
-					<span class="article-toc-title">{i18n(I18nKey.tableOfContents)}</span>
-				</div>
-				<div class="toc-scroll-container custom-scrollbar article-toc-body">
-					<div class="toc-content" id="article-toc-content"></div>
-				</div>
-			</div>
-		</div>
-	)}
 	<div class="mx-auto max-w-4xl px-4 md:px-6" data-sidebar-position="none" id="main-grid">
-		{shouldRenderCategoryBar && <div id="category-bar-wrapper"><CategoryBar title={title} postSlug={postSlug} postCategory={postCategory} /></div>}
-		{!isHomePageCheck && <CategoryFollowBar />}
-
 		{/* Swup 占位：保留 left/right sidebar 容器以满足 swup containers 协议 */}
 		<div id="left-sidebar-dynamic" class="hidden"></div>
 		<div id="right-sidebar-dynamic" class="hidden"></div>
 
-		{/* 首页：顶部 Hero + 门户信息层（profile / 公告 / 站点统计 / 分类 / 标签） */}
-		{isHomePageCheck && (
-			<>
-				<HomeHero />
-				<HomePortal />
-				<div class="border-t border-(--line-divider) my-8"></div>
-			</>
-		)}
-
 		<main id="swup-container" class="transition-main" data-current-post-category={postCategory || ""}>
+			{isPostPage && (
+				<div id="article-toc-wrapper" class="article-toc-wrapper hidden xl:block">
+					<div id="article-toc-container" class="article-toc-container">
+						<div class="article-toc-header">
+							<span class="article-toc-title">{i18n(I18nKey.tableOfContents)}</span>
+						</div>
+						<div class="toc-scroll-container custom-scrollbar article-toc-body">
+							<div class="toc-content" id="article-toc-content"></div>
+						</div>
+					</div>
+				</div>
+			)}
+			{shouldRenderCategoryBar && <div id="category-bar-wrapper"><CategoryBar title={title} postSlug={postSlug} postCategory={postCategory} /></div>}
+			{!isHomePageCheck && <CategoryFollowBar />}
+
+			{/* 首页：顶部 Hero + 门户信息层（profile / 公告 / 站点统计 / 分类 / 标签） */}
+			{isHomePageCheck && (
+				<>
+					<HomeHero />
+					<HomePortal />
+					<div class="border-t border-(--line-divider) my-8"></div>
+				</>
+			)}
+
 			<h1 class="sr-only">{title}</h1>
 
 
@@ -114,11 +114,10 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
 			<div id="content-wrapper" class="onload-animation transition-leaving">
 				<slot></slot>
 			</div>
+			<div class="footer onload-animation mt-16 pt-8 border-t border-(--line-divider)">
+				<Footer></Footer>
+			</div>
 		</main>
-
-		<div class="footer onload-animation mt-16 pt-8 border-t border-(--line-divider)">
-			<Footer></Footer>
-		</div>
 
 		{/* Live2D / Spine — 由悬浮坞控制显隐 */}
 		<SpineModel></SpineModel>
@@ -215,19 +214,14 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
 		if (!contentWrapper) return;
 
 		let offsetTop = 0;
+		const mainGridRect = mainGrid.getBoundingClientRect();
 
-		const coverImage = contentWrapper.querySelector("img");
-		if (coverImage) {
-			const coverRect = coverImage.getBoundingClientRect();
-			const mainGridRect = mainGrid.getBoundingClientRect();
-			offsetTop = coverRect.top - mainGridRect.top;
+		// 对齐到文章卡片顶部
+		const postCard = document.getElementById("post-container");
+		if (postCard) {
+			offsetTop = postCard.getBoundingClientRect().top - mainGridRect.top;
 		} else {
-			const header = document.querySelector(".post-header");
-			if (header) {
-				const headerRect = header.getBoundingClientRect();
-				const mainGridRect = mainGrid.getBoundingClientRect();
-				offsetTop = headerRect.bottom - mainGridRect.top + 16;
-			}
+			offsetTop = contentWrapper.getBoundingClientRect().top - mainGridRect.top;
 		}
 
 		wrapper.style.top = `${offsetTop}px`;

@@ -91,9 +91,10 @@ const textData = Array.isArray(text) ? JSON.stringify(text) : text;
         // 删除字符
         if (this.currentIndex > 0) {
           this.currentIndex--;
-          this.element.textContent = segments
+          this.element.innerHTML = segments
             .slice(0, this.currentIndex)
-            .join("");
+            .join("")
+            .replace(/\n/g, "<br>");
 
           this.timeoutId = window.setTimeout(
             () => this.type(),
@@ -109,9 +110,10 @@ const textData = Array.isArray(text) ? JSON.stringify(text) : text;
       } else {
         if (this.currentIndex < segments.length) {
           this.currentIndex++;
-          this.element.textContent = segments
+          this.element.innerHTML = segments
             .slice(0, this.currentIndex)
-            .join("");
+            .join("")
+            .replace(/\n/g, "<br>");
 
           this.timeoutId = window.setTimeout(() => this.type(), this.speed);
         } else {

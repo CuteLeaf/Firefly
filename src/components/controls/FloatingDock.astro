@@ -338,7 +338,11 @@ const { headings: _headings = [] } = Astro.props;
 		updateScrollDependent();
 		updatePathDependent();
 		window.addEventListener("scroll", updateScrollDependent, { passive: true });
-		document.addEventListener("swup:contentReplaced", () => setTimeout(updatePathDependent, 100));
+		document.addEventListener("swup:contentReplaced", () => {
+			closeAllDrawers();
+			collapseDock();
+			setTimeout(updatePathDependent, 100);
+		});
 		document.addEventListener("astro:page-load", updatePathDependent);
 
 		// TOC

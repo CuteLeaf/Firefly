@@ -12,7 +12,7 @@ export const profileConfig: ProfileConfig = {
 	name: "MmMing",
 
 	// 个人签名
-	bio: "Hello, I'm MmMing.A back-end development project, mainly developed with JAVA and react",
+	bio: "Hello, I'm MmMing.\nA back-end development project,\nmainly developed with JAVA and react.",
 
 	// 链接配置
 	// 已经预装的图标集：fa7-brands，fa7-regular，fa7-solid，material-symbols，simple-icons
