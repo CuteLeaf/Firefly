@@ -434,7 +434,31 @@ const managerConfigStr = JSON.stringify({
         seek: seek,
         seekToTime: seekToTime,
         playTrackByIndex: playTrackByIndex,
-        loadTrack: loadTrack
+        loadTrack: loadTrack,
+        // Re-sync all MusicPlayer widgets (called after Swup page transitions)
+        resync: function () {
+            if (!state.initialized) return;
+            var widgets = document.querySelectorAll('.music-player-widget');
+            widgets.forEach(function (w) {
+                if (typeof w.__musicSync === 'function') {
+                    try { w.__musicSync(); } catch (e) { /* noop */ }
+                }
+            });
+        }
     };
+
+    // ── Swup page transition hook: re-sync widgets after navigation ──
+    function onSwupReady() {
+        if (window.swup && window.swup.hooks) {
+            window.swup.hooks.on('page:view', function () {
+                // Delay slightly so new MusicPlayer inline scripts have time to run
+                setTimeout(function () {
+                    if (window.__fireflyMusic) window.__fireflyMusic.resync();
+                }, 50);
+            });
+        }
+    }
+    if (window.swup && window.swup.hooks) onSwupReady();
+    else document.addEventListener('swup:enable', onSwupReady);
 })();
 </script>

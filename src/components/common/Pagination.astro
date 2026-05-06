@@ -53,7 +53,7 @@ const getPageUrl = (p: number) => {
 };
 ---
 
-<div class:list={[className, "flex flex-col gap-4 items-center"]} style={style}>
+<div class:list={[className, "flex flex-col gap-4 items-center mt-8"]} style={style}>
   <!-- 分页信息 - 已禁用 -->
   <!--
   {
@@ -73,7 +73,7 @@ const getPageUrl = (p: number) => {
       aria-disabled={page.url.prev === undefined ? "true" : "false"}
       tabindex={page.url.prev === undefined ? "-1" : "0"}
       class:list={[
-        "btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11",
+        "border border-(--line-divider) rounded-none text-(--primary) w-11 h-11 flex items-center justify-center transition-colors duration-150 hover:bg-(--btn-card-bg-hover)",
         { disabled: page.url.prev == undefined },
       ]}
     >
@@ -84,7 +84,7 @@ const getPageUrl = (p: number) => {
       />
     </a>
     <div
-      class="bg-(--card-bg) flex flex-row rounded-lg items-center text-neutral-700 dark:text-neutral-300 font-bold"
+      class="flex flex-row rounded-lg items-center text-(--text-secondary) font-bold"
     >
       {
         pages.map((p) => {
@@ -104,7 +104,7 @@ const getPageUrl = (p: number) => {
             <a
               href={url(getPageUrl(p))}
               aria-label={`${i18n(I18nKey.paginationPage)} ${p}`}
-              class="btn-card w-11 h-11 rounded-lg overflow-hidden active:scale-[0.85]"
+              class="border border-(--line-divider) w-11 h-11 rounded-lg flex items-center justify-center transition-colors duration-150 hover:bg-(--btn-card-bg-hover) active:scale-[0.85]"
             >
               {p}
             </a>
@@ -118,7 +118,7 @@ const getPageUrl = (p: number) => {
       aria-disabled={page.url.next === undefined ? "true" : "false"}
       tabindex={page.url.next === undefined ? "-1" : "0"}
       class:list={[
-        "btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11",
+        "border border-(--line-divider) rounded-lg text-(--primary) w-11 h-11 flex items-center justify-center transition-colors duration-150 hover:bg-(--btn-card-bg-hover)",
         { disabled: page.url.next == undefined },
       ]}
     >
@@ -130,3 +130,13 @@ const getPageUrl = (p: number) => {
     </a>
   </div>
 </div>
+
+<style>
+  .disabled {
+    pointer-events: none;
+    color: oklch(0 0 0 / 0.1);
+  }
+  :root.dark .disabled {
+    color: oklch(1 0 0 / 0.1);
+  }
+</style>

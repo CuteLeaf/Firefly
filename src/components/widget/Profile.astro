@@ -1,9 +1,98 @@
 ---
 import { Icon } from "astro-icon/components";
 import ImageWrapper from "@/components/common/ImageWrapper.astro";
+import NumberTicker from "@/components/common/NumberTicker.svelte";
 import TypewriterText from "@/components/features/TypewriterText.astro";
+import { siteConfig } from "@/config";
 import { profileConfig } from "@/config/profileConfig";
+import {
+	getCategoryList,
+	getSortedPosts,
+	getTagList,
+} from "@/utils/content-utils";
 import { url } from "@/utils/url-utils";
+
+// 获取统计数据
+const posts = await getSortedPosts();
+const categories = await getCategoryList();
+const tags = await getTagList();
+
+// 计算总字数
+let totalWords = 0;
+for (const post of posts) {
+	if (post.body) {
+		let text = post.body
+			.replace(/```[\s\S]*?```/g, "")
+			.replace(/`[^`]*`/g, "")
+			.replace(/\s+/g, " ")
+			.trim();
+
+		const chineseChars = text.match(/[一-龥]/g) || [];
+		const englishChars = text.match(/[a-zA-Z]/g) || [];
+
+		totalWords += chineseChars.length + englishChars.length;
+	}
+}
+
+// 从配置中获取站点开始日期
+const siteStartDate = siteConfig.siteStartDate || "2025-01-01";
+
+// 计算运行天数（服务端计算）
+const startDate = new Date(siteStartDate);
+const today = new Date();
+const diffTime = Math.abs(today.getTime() - startDate.getTime());
+const runningDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+// 获取最新文章日期并计算活跃天数
+const latestPost = posts.reduce((latest, post) => {
+	if (!latest) return post;
+	return post.data.published > latest.data.published ? post : latest;
+}, posts[0]);
+
+let lastUpdateDays = 0;
+let isToday = false;
+if (latestPost) {
+	const lastPost = latestPost.data.published;
+	const timeSinceLastPost = Math.abs(today.getTime() - lastPost.getTime());
+	lastUpdateDays = Math.floor(timeSinceLastPost / (1000 * 60 * 60 * 24));
+	isToday = lastUpdateDays === 0;
+}
+
+const stats = [
+	{
+		icon: "material-symbols:article-outline",
+		label: "文章",
+		value: posts.length,
+	},
+	{
+		icon: "material-symbols:folder-outline",
+		label: "分类",
+		value: categories.length,
+	},
+	{
+		icon: "material-symbols:label-outline",
+		label: "标签",
+		value: tags.length,
+	},
+	{
+		icon: "material-symbols:text-ad-outline-rounded",
+		label: "字数",
+		value: totalWords,
+		formatted: true,
+	},
+	{
+		icon: "material-symbols:calendar-clock-outline",
+		label: "运行",
+		value: runningDays,
+		suffix: "天",
+	},
+	{
+		icon: "mingcute:heartbeat-line",
+		label: "活跃",
+		value: isToday ? 0 : lastUpdateDays,
+		suffix: isToday ? "今天" : "天前",
+	},
+];
 ---
 
 <div class="section p-3 flex flex-col items-center gap-4">
@@ -37,5 +126,26 @@ import { url } from "@/utils/url-utils";
         <Icon name={item.icon} class="text-xl" is:inline />
       </a>;
     })}
+  </div>
+
+  <!-- 站点统计 -->
+  <div class="flex flex-row flex-wrap justify-center gap-4 w-full mt-4 pt-4">
+    {stats.map((stat) => (
+      <div class="flex flex-col items-center gap-1">
+        <div class="flex items-center gap-1.5">
+          <Icon name={stat.icon} class="text-base text-neutral-600 dark:text-neutral-300" />
+          <span class="text-xs text-neutral-600 dark:text-neutral-300 font-medium">
+            {stat.label}
+          </span>
+        </div>
+        <NumberTicker
+          value={stat.value}
+          formatted={stat.formatted || false}
+          suffix={stat.suffix || ''}
+          class="text-sm font-bold text-neutral-900 dark:text-neutral-100"
+          client:visible
+        />
+      </div>
+    ))}
   </div>
 </div>

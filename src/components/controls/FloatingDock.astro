@@ -6,10 +6,13 @@
  */
 import type { MarkdownHeading } from "astro";
 import { Icon } from "astro-icon/components";
-import DisplaySettings from "@/components/controls/DisplaySettingsIntegrated.svelte";
 import Search from "@/components/controls/Search.svelte";
 import MusicPlayer from "@/components/features/MusicPlayer.astro";
-import { announcementConfig, live2dModelConfig, spineModelConfig } from "@/config";
+import {
+	announcementConfig,
+	live2dModelConfig,
+	spineModelConfig,
+} from "@/config";
 import { musicPlayerConfig } from "@/config/musicConfig";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
@@ -24,29 +27,25 @@ const { headings: _headings = [] } = Astro.props;
 <div class="floating-dock" id="floating-dock">
 	<div class="dock-stack" id="dock-stack" data-expanded="false">
 		<div class="dock-buttons">
-			<button class="dock-btn" id="dock-search-btn" aria-label={i18n(I18nKey.search)} type="button" data-tooltip={i18n(I18nKey.search)}>
-				<Icon name="material-symbols:search" class="text-xl" />
-			</button>
-
-			<button class="dock-btn" id="dock-theme-btn" aria-label="Theme" type="button" data-tooltip="主题切换">
-				<Icon name="material-symbols:dark-mode-outline-rounded" class="text-xl" />
-			</button>
-
-			<button class="dock-btn" id="dock-settings-btn" aria-label="Display Settings" type="button" data-tooltip="显示设置">
-				<Icon name="material-symbols:visibility-outline-rounded" class="text-xl" />
-			</button>
-
 			{announcementConfig.content && (
 				<button class="dock-btn" id="dock-announcement-btn" aria-label="Announcement" type="button" data-tooltip="公告">
 					<Icon name="material-symbols:notifications-outline-rounded" class="text-xl" />
 				</button>
 			)}
 
+			<button class="dock-btn" id="dock-theme-btn" aria-label="Theme" type="button" data-tooltip="主题切换">
+				<Icon name="material-symbols:dark-mode-outline-rounded" class="text-xl" />
+			</button>
+
 			{musicPlayerConfig.showInNavbar !== false && (
 				<button class="dock-btn" id="dock-music-btn" aria-label={i18n(I18nKey.music)} type="button" data-tooltip={i18n(I18nKey.music)}>
 					<Icon name="material-symbols:music-note-rounded" class="text-xl" />
 				</button>
 			)}
+
+			<button class="dock-btn" id="dock-search-btn" aria-label={i18n(I18nKey.search)} type="button" data-tooltip={i18n(I18nKey.search)}>
+				<Icon name="material-symbols:search" class="text-xl" />
+			</button>
 
 			{live2dModelConfig.enable && (
 				<button class="dock-btn" id="dock-live2d-btn" aria-label="Live2D" type="button" data-active="true" data-tooltip="Live2D 看板娘">
@@ -111,11 +110,6 @@ const { headings: _headings = [] } = Astro.props;
 			<span class="ml-auto text-(--content-meta) text-xs theme-active-mark hidden">●</span>
 		</button>
 	</div>
-</div>
-
-<div class="dock-drawer dock-drawer-closed" id="dock-drawer-settings">
-	<div class="dock-drawer-title">[ settings ]</div>
-	<DisplaySettings client:load />
 </div>
 
 {announcementConfig.content && (
@@ -238,7 +232,6 @@ const { headings: _headings = [] } = Astro.props;
 		const drawers: Record<string, string> = {
 			"dock-search-btn": "dock-drawer-search",
 			"dock-theme-btn": "dock-drawer-theme",
-			"dock-settings-btn": "dock-drawer-settings",
 			"dock-music-btn": "dock-drawer-music",
 			"dock-toc-btn": "dock-drawer-toc",
 			"dock-announcement-btn": "dock-drawer-announcement",

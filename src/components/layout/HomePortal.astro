@@ -8,6 +8,7 @@
  */
 import { Icon } from "astro-icon/components";
 import ImageWrapper from "@/components/common/ImageWrapper.astro";
+import NumberTicker from "@/components/common/NumberTicker.svelte";
 import TypewriterText from "@/components/features/TypewriterText.astro";
 import { profileConfig, siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
@@ -45,16 +46,58 @@ const lastPostDate = latestPost
 const todayText = i18n(I18nKey.today);
 const formatNum = (n: number) => n.toLocaleString();
 
+// 计算运行天数（服务端计算）
+const startDate = new Date(siteStartDate);
+const today = new Date();
+const diffTime = Math.abs(today.getTime() - startDate.getTime());
+const runningDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+// 计算活跃天数
+let lastUpdateDays = 0;
+let isToday = false;
+if (latestPost) {
+	const lastPost = latestPost.data.published;
+	const timeSinceLastPost = Math.abs(today.getTime() - lastPost.getTime());
+	lastUpdateDays = Math.floor(timeSinceLastPost / (1000 * 60 * 60 * 24));
+	isToday = lastUpdateDays === 0;
+}
+
 const stats = [
-	{ label: i18n(I18nKey.siteStatsPostCount), value: String(posts.length) },
 	{
-		label: i18n(I18nKey.siteStatsCategoryCount),
-		value: String(categories.length),
+		icon: "material-symbols:article-outline",
+		label: i18n(I18nKey.siteStatsPostCount),
+		value: posts.length,
 	},
-	{ label: i18n(I18nKey.siteStatsTagCount), value: String(tags.length) },
-	{ label: i18n(I18nKey.siteStatsTotalWords), value: formatNum(totalWords) },
-	{ label: i18n(I18nKey.siteStatsRunningDays), value: "—", id: "running-days" },
-	{ label: i18n(I18nKey.siteStatsLastUpdate), value: "—", id: "last-update" },
+	{
+		icon: "material-symbols:folder-outline",
+		label: i18n(I18nKey.siteStatsCategoryCount),
+		value: categories.length,
+	},
+	{
+		icon: "material-symbols:label-outline",
+		label: i18n(I18nKey.siteStatsTagCount),
+		value: tags.length,
+	},
+	{
+		icon: "material-symbols:text-ad-outline-rounded",
+		label: i18n(I18nKey.siteStatsTotalWords),
+		value: totalWords,
+		formatted: true,
+	},
+	{
+		icon: "material-symbols:calendar-clock-outline",
+		label: i18n(I18nKey.siteStatsRunningDays),
+		value: runningDays,
+		suffix: i18n(I18nKey.siteStatsDays).replace("{days}", ""),
+	},
+	{
+		icon: "mingcute:heartbeat-line",
+		label: i18n(I18nKey.siteStatsLastUpdate),
+		value: isToday ? 0 : lastUpdateDays,
+		suffix: isToday
+			? i18n(I18nKey.today)
+			: i18n(I18nKey.siteStatsDaysAgo).replace("{days}", ""),
+	},
 ];
 ---
 
@@ -92,38 +135,56 @@ const stats = [
 
 
 	{/* STATS */}
-	<section class="section onload-animation">
-		<div class="section-label">{i18n(I18nKey.siteStats)}</div>
-		<dl class="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-6">
-			{stats.map((s) => (
-				<div>
-					<dt class="text-xs uppercase tracking-wider text-(--content-meta) mb-1">{s.label}</dt>
-					<dd class="text-2xl font-semibold text-(--deep-text)" data-stat-id={s.id}>{s.value}</dd>
+	<div class="onload-animation mt-4">
+		<div class="flex flex-row flex-wrap justify-center gap-x-8 gap-y-4">
+			{stats.map((stat) => (
+				<div class="flex flex-col items-center gap-2">
+					<div class="flex items-center gap-1.5">
+						<Icon name={stat.icon} class="text-base text-neutral-600 dark:text-neutral-300" />
+						<span class="text-xs text-neutral-600 dark:text-neutral-300 font-medium">
+							{stat.label}
+						</span>
+					</div>
+					<NumberTicker
+						value={stat.value}
+						formatted={stat.formatted || false}
+						suffix={stat.suffix || ''}
+						class="text-sm font-bold text-neutral-900 dark:text-neutral-100"
+						client:visible
+					/>
 				</div>
 			))}
-		</dl>
-	</section>
-
-	{/* CATEGORIES */}
-	<section class="section onload-animation">
-		<div class="section-label">{i18n(I18nKey.categories)}</div>
-		<div class="flex flex-wrap gap-2">
-			{categories.map((c) => (
-				<a href={c.url} aria-label={`View all posts in ${c.name.trim()}`} class="btn-line text-sm gap-2">
-					<span>{c.name.trim()}</span>
-					<span class="text-(--content-meta) text-xs">{c.count}</span>
-				</a>
-			))}
 		</div>
-	</section>
+	</div>
+
+	{/* CATEGORIES TITLE */}
+	<div class="section-label text-center">{i18n(I18nKey.categories)}</div>
+
+	{/* CATEGORIES — follows scroll */}
+	<div id="category-sticky-placeholder">
+		<div id="category-sticky-wrapper">
+			<section class="section onload-animation">
+				<div class="flex flex-wrap justify-center gap-2 px-2 max-w-full overflow-x-auto">
+					{categories.map((c) => (
+						<a href={c.url} aria-label={`View all posts in ${c.name.trim()}`} class="cat-square-btn text-sm gap-2 shrink-0">
+							<span>{c.name.trim()}</span>
+							<span class="text-(--content-meta) text-xs">{c.count}</span>
+						</a>
+					))}
+				</div>
+			</section>
+		</div>
+	</div>
+
+	{/* TAGS TITLE */}
+	<div class="section-label text-center">{i18n(I18nKey.tags)}</div>
 
 	{/* TAGS */}
 	<section class="section onload-animation">
-		<div class="section-label">{i18n(I18nKey.tags)}</div>
-		<div class="flex flex-wrap gap-2">
+		<div class="flex flex-wrap justify-center gap-2">
 			{tags.map((t) => (
-				<a href={getTagUrl(t.name)} aria-label={`View all posts tagged ${t.name.trim()}`} class="btn-line text-sm">
-					{t.name.trim()}
+				<a href={getTagUrl(t.name)} aria-label={`View all posts tagged ${t.name.trim()}`} class="cat-square-btn text-sm">
+					# {t.name.trim()}
 				</a>
 			))}
 		</div>
@@ -136,6 +197,19 @@ const stats = [
 		padding-bottom: 4rem;
 	}
 
+	/* 统一标题边距：分类/标签标题在 section 外，需要与 section 间距一致 */
+	.home-portal > .section-label {
+		margin-top: 3rem;
+		padding-top: 3rem;
+		border-top: 1px solid var(--line-divider);
+	}
+	/* 第一个标题不需要上边框 */
+	.home-portal > .section-label:first-of-type {
+		margin-top: 0;
+		padding-top: 0;
+		border-top: none;
+	}
+
 	:root.dark .social-link {
 		color: oklch(1 0 0) !important;
 		border-color: oklch(0.3 0 0) !important;
@@ -145,24 +219,114 @@ const stats = [
 		color: oklch(0.85 0 0) !important;
 		border-color: oklch(0.5 0 0) !important;
 	}
+
+	/* Category bar — follows header */
+	#category-sticky-placeholder {
+		position: relative;
+	}
+	#category-sticky-wrapper {
+		position: relative;
+		z-index: 40;
+		background: transparent;
+		padding: 0.5rem 0;
+		margin: 0 -1rem;
+	}
+	#category-sticky-wrapper.is-pinned {
+		position: fixed;
+		top: 68px;
+		left: 50%;
+		transform: translateX(-50%);
+		width: min(100%, 56rem);
+		max-width: 56rem;
+		padding-left: max(0.5rem, calc((100vw - 56rem) / 2));
+		padding-right: max(0.5rem, calc((100vw - 56rem) / 2));
+	}
+
+	.cat-square-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.375rem 1rem;
+		border: 1px solid black;
+		color: black;
+		background: #fff;
+		border-radius: 0;
+		transition: color 150ms, background-color 150ms;
+	}
+	.cat-square-btn:hover {
+		background-color: black;
+		color: white;
+	}
+	:root.dark .cat-square-btn {
+		border-color: white;
+		color: white;
+		background: #1a1a1a;
+	}
+	:root.dark .cat-square-btn:hover {
+		background-color: white;
+		color: black;
+	}
 </style>
 
-<script is:inline define:vars={{ siteStartDate, lastPostDate, todayText }}>
-	function updateHomePortalStats() {
-		const today = new Date();
-		const start = new Date(siteStartDate);
-		const days = Math.ceil(Math.abs(today.getTime() - start.getTime()) / 86400000);
-		document.querySelectorAll('[data-stat-id="running-days"]').forEach((el) => {
-			el.textContent = String(days);
-		});
-		if (lastPostDate) {
-			const last = new Date(lastPostDate);
-			const since = Math.floor(Math.abs(today.getTime() - last.getTime()) / 86400000);
-			document.querySelectorAll('[data-stat-id="last-update"]').forEach((el) => {
-				el.textContent = since === 0 ? todayText : String(since);
-			});
-		}
+<script>
+(function() {
+	const FIXED_TOP = 68;
+	let originalTop = 0;
+	let ticking = false;
+
+	function measure() {
+		const placeholder = document.getElementById('category-sticky-placeholder');
+		if (!placeholder) return;
+		const rect = placeholder.getBoundingClientRect();
+		originalTop = rect.top + window.scrollY;
 	}
-	updateHomePortalStats();
-	document.addEventListener("swup:contentReplaced", () => setTimeout(updateHomePortalStats, 100));
+
+	function onScroll() {
+		if (ticking) return;
+		ticking = true;
+		requestAnimationFrame(() => {
+			const wrapper = document.getElementById('category-sticky-wrapper');
+			const placeholder = document.getElementById('category-sticky-placeholder');
+			const mainGrid = document.getElementById('main-grid');
+			if (!wrapper || !placeholder || !mainGrid) { ticking = false; return; }
+
+			const gridRect = mainGrid.getBoundingClientRect();
+			const gridBottom = gridRect.bottom;
+			const shouldPin = window.scrollY >= originalTop - FIXED_TOP && gridBottom > FIXED_TOP + wrapper.offsetHeight;
+
+			if (shouldPin && !wrapper.classList.contains('is-pinned')) {
+				placeholder.style.height = wrapper.offsetHeight + 'px';
+			} else if (!shouldPin && wrapper.classList.contains('is-pinned')) {
+				placeholder.style.height = '';
+			}
+			wrapper.classList.toggle('is-pinned', shouldPin);
+			ticking = false;
+		});
+	}
+
+	function init() {
+		const wrapper = document.getElementById('category-sticky-wrapper');
+		if (!wrapper) return;
+		wrapper.classList.remove('is-pinned');
+		requestAnimationFrame(() => {
+			measure();
+			window.addEventListener('scroll', onScroll, { passive: true });
+			onScroll();
+		});
+	}
+
+	function cleanup() {
+		window.removeEventListener('scroll', onScroll);
+		const wrapper = document.getElementById('category-sticky-wrapper');
+		const placeholder = document.getElementById('category-sticky-placeholder');
+		if (wrapper) wrapper.classList.remove('is-pinned');
+		if (placeholder) placeholder.style.height = '';
+	}
+
+	init();
+	window.addEventListener('resize', () => { measure(); onScroll(); });
+
+	document.addEventListener('swup:page:view', () => { cleanup(); setTimeout(init, 100); });
+	document.addEventListener('astro:page-load', () => { cleanup(); setTimeout(init, 100); });
+})();
 </script>

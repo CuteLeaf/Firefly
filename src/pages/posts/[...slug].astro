@@ -230,8 +230,8 @@ const relatedPosts = await getRelatedPosts(entry, 5);
           className="mb-5"
           published={entry.data.published}
           updated={entry.data.updated}
-          tags={entry.data.tags}
           category={entry.data.category || undefined}
+          tags={entry.data.tags}
           id={entry.id}
         />
         {

@@ -98,7 +98,7 @@ const path = customPath || (id ? `/posts/${id}` : "");
         href={getCategoryUrl(category || "")}
         aria-label={`View all posts in the ${category} category`}
         class="link-lg transition text-50 text-sm font-medium
-                            hover:text-(--primary) dark:hover:text-(--primary) whitespace-nowrap"
+                            hover:text-(--primary) dark:hover:text(--primary) whitespace-nowrap"
       >
         {category || i18n(I18nKey.uncategorized)}
       </a>

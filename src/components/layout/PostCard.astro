@@ -138,8 +138,7 @@ const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
               <a
                 href={getTagUrl(tag)}
                 aria-label={`View all posts with the ${tag.trim()} tag`}
-                class="btn-regular h-6 text-xs px-2 py-1 rounded-md
-                         transition-all duration-200 hover:scale-105 active:scale-95"
+                class="post-tag-square text-xs px-2 py-1"
               >
                 #{tag.trim()}
               </a>
@@ -374,5 +373,30 @@ const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
 
   :global(.grid-mode) .post-card-enter-btn {
     display: flex !important;
+  }
+
+  .post-tag-square {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #000;
+    color: #000;
+    background: #fff;
+    border-radius: 0;
+    transition: color 150ms, background-color 150ms;
+  }
+  .post-tag-square:hover {
+    background-color: #000;
+    color: #fff;
+  }
+  :root.dark .post-tag-square {
+    border-color: #fff;
+    color: #fff;
+    background: #1a1a1a;
+  }
+  :root.dark .post-tag-square:hover {
+    background-color: #fff;
+    color: #000;
   }
 </style>

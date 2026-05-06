@@ -665,6 +665,9 @@ const widgetId =
         observer.observe(widget.parentNode, { childList: true });
     }
 
+    // ── Expose syncAll for manager to call after Swup transitions ──
+    widget.__musicSync = syncAll;
+
     // ── Init: either sync existing state or trigger init ─────
     var currentState = mgr.getState();
     if (currentState.initialized) {

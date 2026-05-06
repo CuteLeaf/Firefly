@@ -9,6 +9,7 @@ import type { MarkdownHeading } from "astro";
 import { Icon } from "astro-icon/components";
 import FloatingDock from "@/components/controls/FloatingDock.astro";
 import CategoryBar from "@/components/layout/CategoryBar.astro";
+import CategoryFollowBar from "@/components/layout/CategoryFollowBar.astro";
 import { live2dModelConfig, siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
@@ -90,6 +91,7 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
 	)}
 	<div class="mx-auto max-w-4xl px-4 md:px-6" data-sidebar-position="none" id="main-grid">
 		{shouldRenderCategoryBar && <div id="category-bar-wrapper"><CategoryBar title={title} postSlug={postSlug} postCategory={postCategory} /></div>}
+		{!isHomePageCheck && <CategoryFollowBar />}
 
 		{/* Swup 占位：保留 left/right sidebar 容器以满足 swup containers 协议 */}
 		<div id="left-sidebar-dynamic" class="hidden"></div>
@@ -107,43 +109,9 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
 		<main id="swup-container" class="transition-main" data-current-post-category={postCategory || ""}>
 			<h1 class="sr-only">{title}</h1>
 
-			{/* 非首页非文章页：[ TITLE ] 风格页眉 */}
-			{!isHomePageCheck && !isPostPage && title && (
-				<header class="page-header py-12">
-					<div class="font-mono text-xs uppercase tracking-[0.25em] text-(--content-meta) mb-4">[ {title} ]</div>
-					<div class="border-b border-(--line-divider)"></div>
-				</header>
-			)}
 
-			{/* 文章页：极简文章头 */}
-			{isPostPage && bannerPostMeta && (
-				<header class="post-header py-10 border-b border-(--line-divider) mb-8">
-					<div class="font-mono text-xs uppercase tracking-[0.25em] text-(--content-meta) mb-4">
-						[ {postCategory || "post"} ]
-					</div>
-					<h2 class="text-3xl md:text-4xl font-semibold text-(--deep-text) leading-tight mb-4">
-						{bannerPostMeta.title}
-					</h2>
-					<div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-(--content-meta)">
-						<span class="inline-flex items-center gap-1.5">
-							<Icon name="material-symbols:calendar-month-outline-rounded" />
-							{formatDateToYYYYMMDD(bannerPostMeta.published)}
-						</span>
-						{bannerPostMeta.updated && bannerPostMeta.updated.getTime() !== bannerPostMeta.published.getTime() && (
-							<span class="inline-flex items-center gap-1.5">
-								<Icon name="material-symbols:update-rounded" />
-								{formatDateToYYYYMMDD(bannerPostMeta.updated)}
-							</span>
-						)}
-						{typeof bannerPostMeta.words === "number" && (
-							<span>{bannerPostMeta.words} {i18n(I18nKey.wordsCount)}</span>
-						)}
-						{typeof bannerPostMeta.minutes === "number" && (
-							<span>{bannerPostMeta.minutes} {i18n(I18nKey.minutesCount)}</span>
-						)}
-					</div>
-				</header>
-			)}
+
+
 
 			<div id="content-wrapper" class="onload-animation transition-leaving">
 				<slot></slot>

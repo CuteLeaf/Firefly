@@ -2,7 +2,7 @@
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import { navigateToPage } from "@utils/navigation-utils";
-import { onMount } from "svelte";
+import { onMount, tick } from "svelte";
 import Icon from "@/components/common/Icon.svelte";
 import type { SearchResult } from "@/global";
 import { url as formatUrl, getSearchUrl } from "@/utils/url-utils";
@@ -36,10 +36,11 @@ const togglePanel = () => {
 		?.classList.toggle("float-panel-closed");
 };
 
-const setPanelVisibility = (show: boolean): void => {
+const setPanelVisibility = async (show: boolean): Promise<void> => {
 	const panel = document.getElementById("search-panel");
 	if (!panel || !keyword) return;
 	if (show) {
+		await tick();
 		positionSearchPanel();
 		panel.classList.remove("float-panel-closed");
 	} else {
@@ -52,7 +53,10 @@ const positionSearchPanel = (): void => {
 	const drawer = document.getElementById("dock-drawer-search");
 	if (!panel || !drawer) return;
 	const rect = drawer.getBoundingClientRect();
-	panel.style.bottom = `${window.innerHeight - rect.top + 8}px`;
+	const panelHeight = panel.offsetHeight || 0;
+	const top = Math.max(8, rect.top - panelHeight - 4);
+	panel.style.top = `${top}px`;
+	panel.style.bottom = "auto";
 };
 
 const closeSearchPanel = (): void => {
