@@ -313,6 +313,57 @@ export class TOCManager {
 		indicator.style.height = `${height}px`;
 		indicator.style.opacity = "1";
 
+		// 绑定鼠标边缘检测（只绑定一次，监听父容器 toc-content）
+		if (!indicator.dataset.edgeBound) {
+			indicator.dataset.edgeBound = "1";
+			const EDGE_THRESHOLD = 0.28;
+
+			if (tocContent) {
+				tocContent.addEventListener("mousemove", (e: MouseEvent) => {
+					// indicator 不可见时不处理
+					if (indicator.style.opacity === "0") return;
+
+					const rect = indicator.getBoundingClientRect();
+					// 鼠标不在 indicator 范围内时清除
+					if (
+						e.clientX < rect.left ||
+						e.clientX > rect.right ||
+						e.clientY < rect.top ||
+						e.clientY > rect.bottom
+					) {
+						delete indicator.dataset.hoverEdge;
+						return;
+					}
+
+					const x = e.clientX - rect.left;
+					const y = e.clientY - rect.top;
+					const w = rect.width;
+					const h = rect.height;
+					const distTop = y / h;
+					const distBottom = (h - y) / h;
+					const distLeft = x / w;
+					const distRight = (w - x) / w;
+					const minDist = Math.min(distTop, distBottom, distLeft, distRight);
+
+					if (minDist > EDGE_THRESHOLD) {
+						delete indicator.dataset.hoverEdge;
+					} else if (minDist === distTop) {
+						indicator.dataset.hoverEdge = "top";
+					} else if (minDist === distBottom) {
+						indicator.dataset.hoverEdge = "bottom";
+					} else if (minDist === distLeft) {
+						indicator.dataset.hoverEdge = "left";
+					} else {
+						indicator.dataset.hoverEdge = "right";
+					}
+				});
+
+				tocContent.addEventListener("mouseleave", () => {
+					delete indicator.dataset.hoverEdge;
+				});
+			}
+		}
+
 		// 自动滚动到活动项
 		if (firstActive) {
 			this.scrollToActiveItem(firstActive);

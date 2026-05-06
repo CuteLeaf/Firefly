@@ -1,384 +1,289 @@
 ---
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
-import { Icon } from "astro-icon/components";
-import { getCategoryList, getSortedPostsList } from "@/utils/content-utils";
+import { isHomePage } from "@/utils/layout-utils";
 import { url } from "@/utils/url-utils";
 
 interface Props {
-	currentPostCategory?: string;
+	title?: string;
+	postSlug?: string;
+	postCategory?: string;
 }
 
-const { currentPostCategory } = Astro.props as Props;
+const { title, postSlug, postCategory } = Astro.props as Props;
 
-const categories = await getCategoryList();
-const totalPosts = (await getSortedPostsList()).length;
+const pathname = Astro.url.pathname.replace(/\/$/, "");
+const searchParams = Astro.url.searchParams;
+
 const homeUrl = url("/");
 const archiveUrl = url("/archive/");
+const isHome = isHomePage(pathname);
+
+interface BreadcrumbItem {
+	label: string;
+	href: string;
+	icon: string;
+	isCurrent: boolean;
+}
+
+let items: BreadcrumbItem[] = [];
+
+if (isHome) {
+	items = [];
+} else if (postSlug) {
+	const category = postCategory || "";
+	const categoryHref = category
+		? `${archiveUrl}?category=${encodeURIComponent(category)}`
+		: archiveUrl;
+	items = [
+		{
+			label: i18n(I18nKey.home),
+			href: homeUrl,
+			icon: "material-symbols:home-rounded",
+			isCurrent: false,
+		},
+		...(category
+			? [
+					{
+						label: category,
+						href: categoryHref,
+						icon: "material-symbols:folder-open-rounded",
+						isCurrent: false,
+					},
+				]
+			: []),
+		{
+			label: title || "",
+			href: "",
+			icon: "material-symbols:article-rounded",
+			isCurrent: true,
+		},
+	];
+} else if (pathname === archiveUrl.replace(/\/$/, "")) {
+	const categoryParam = searchParams.get("category") || "";
+	if (categoryParam) {
+		items = [
+			{
+				label: i18n(I18nKey.home),
+				href: homeUrl,
+				icon: "material-symbols:home-rounded",
+				isCurrent: false,
+			},
+			{
+				label: categoryParam,
+				href: `${archiveUrl}?category=${encodeURIComponent(categoryParam)}`,
+				icon: "material-symbols:folder-open-rounded",
+				isCurrent: true,
+			},
+		];
+	} else {
+		items = [
+			{
+				label: i18n(I18nKey.home),
+				href: homeUrl,
+				icon: "material-symbols:home-rounded",
+				isCurrent: false,
+			},
+			{
+				label: i18n(I18nKey.archive),
+				href: archiveUrl,
+				icon: "material-symbols:folder-rounded",
+				isCurrent: true,
+			},
+		];
+	}
+} else if (pathname === "/about") {
+	items = [
+		{
+			label: i18n(I18nKey.home),
+			href: homeUrl,
+			icon: "material-symbols:home-rounded",
+			isCurrent: false,
+		},
+		{
+			label: i18n(I18nKey.about),
+			href: "/about/",
+			icon: "material-symbols:info-outline-rounded",
+			isCurrent: true,
+		},
+	];
+} else if (pathname === "/friends") {
+	items = [
+		{
+			label: i18n(I18nKey.home),
+			href: homeUrl,
+			icon: "material-symbols:home-rounded",
+			isCurrent: false,
+		},
+		{
+			label: i18n(I18nKey.friends),
+			href: "/friends/",
+			icon: "material-symbols:group-rounded",
+			isCurrent: true,
+		},
+	];
+} else if (pathname === "/guestbook") {
+	items = [
+		{
+			label: i18n(I18nKey.home),
+			href: homeUrl,
+			icon: "material-symbols:home-rounded",
+			isCurrent: false,
+		},
+		{
+			label: i18n(I18nKey.guestbook),
+			href: "/guestbook/",
+			icon: "material-symbols:mode-comment-rounded",
+			isCurrent: true,
+		},
+	];
+} else if (pathname === "/gallery" || pathname.startsWith("/gallery/")) {
+	const albumMatch = pathname.match(/^\/gallery\/(.+)$/);
+	if (albumMatch) {
+		items = [
+			{
+				label: i18n(I18nKey.home),
+				href: homeUrl,
+				icon: "material-symbols:home-rounded",
+				isCurrent: false,
+			},
+			{
+				label: i18n(I18nKey.gallery),
+				href: "/gallery/",
+				icon: "material-symbols:photo-library-outline-rounded",
+				isCurrent: false,
+			},
+			{
+				label: title || decodeURIComponent(albumMatch[1]),
+				href: "",
+				icon: "material-symbols:photo-frame-rounded",
+				isCurrent: true,
+			},
+		];
+	} else {
+		items = [
+			{
+				label: i18n(I18nKey.home),
+				href: homeUrl,
+				icon: "material-symbols:home-rounded",
+				isCurrent: false,
+			},
+			{
+				label: i18n(I18nKey.gallery),
+				href: "/gallery/",
+				icon: "material-symbols:photo-library-outline-rounded",
+				isCurrent: true,
+			},
+		];
+	}
+} else if (pathname === "/sponsor") {
+	items = [
+		{
+			label: i18n(I18nKey.home),
+			href: homeUrl,
+			icon: "material-symbols:home-rounded",
+			isCurrent: false,
+		},
+		{
+			label: title || i18n(I18nKey.sponsor),
+			href: "/sponsor/",
+			icon: "material-symbols:volunteer-activism-rounded",
+			isCurrent: true,
+		},
+	];
+} else if (pathname === "/search") {
+	items = [
+		{
+			label: i18n(I18nKey.home),
+			href: homeUrl,
+			icon: "material-symbols:home-rounded",
+			isCurrent: false,
+		},
+		{
+			label: title || i18n(I18nKey.search),
+			href: "/search/",
+			icon: "material-symbols:search-rounded",
+			isCurrent: true,
+		},
+	];
+} else if (pathname === "/bangumi") {
+	items = [
+		{
+			label: i18n(I18nKey.home),
+			href: homeUrl,
+			icon: "material-symbols:home-rounded",
+			isCurrent: false,
+		},
+		{
+			label: title || i18n(I18nKey.bangumi),
+			href: "/bangumi/",
+			icon: "material-symbols:tv-outline-rounded",
+			isCurrent: true,
+		},
+	];
+} else if (items.length === 0 && !isHome) {
+	items = [
+		{
+			label: i18n(I18nKey.home),
+			href: homeUrl,
+			icon: "material-symbols:home-rounded",
+			isCurrent: false,
+		},
+		{
+			label: title || "",
+			href: "",
+			icon: "material-symbols:description-rounded",
+			isCurrent: true,
+		},
+	];
+}
+
+function escapeHtml(str: string): string {
+	return str
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;");
+}
+
+let breadcrumbHtml = "";
+if (items.length > 0) {
+	const liHtml = items
+		.map((item, idx) => {
+			const separator =
+				idx > 0
+					? `<span class="breadcrumb-separator text-(--content-meta) mx-1 select-none" aria-hidden="true">›</span>`
+					: "";
+			const iconSvg = `<svg class="text-[1rem] shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><use href="/icons/${item.icon}.svg#icon"></use></svg>`;
+			if (item.isCurrent) {
+				return `${separator}<span class="breadcrumb-current flex items-center gap-1 text-(--deep-text) font-medium">${iconSvg}<span>${escapeHtml(item.label)}</span></span>`;
+			}
+			return `${separator}<a href="${escapeHtml(item.href)}" class="breadcrumb-link flex items-center gap-1 text-(--content-meta) hover:text-(--primary) transition-colors duration-150 rounded px-1 -mx-1">${iconSvg}<span>${escapeHtml(item.label)}</span></a>`;
+		})
+		.join("");
+	breadcrumbHtml = `<ol class="breadcrumb-list flex items-center flex-wrap gap-1 text-sm"><li class="breadcrumb-item flex items-center gap-1">${liHtml}</li></ol>`;
+}
 ---
 
-<div
-  class="card-base category-bar p-3 onload-animation"
-  id="category-bar"
-  data-home-path={homeUrl}
-  data-archive-path={archiveUrl}
-  data-current-post-category={currentPostCategory || ""}
->
-  <div class="category-bar-inner flex gap-2">
-    <a
-      href={homeUrl}
-      class="category-pill text-sm px-2 py-1 rounded-lg shrink-0
-             transition-colors duration-150 ease-out flex items-center justify-center"
-      data-category-name=""
-      aria-label={i18n(I18nKey.home)}
-    >
-      <Icon name="material-symbols:home" class="text-lg" />
-    </a>
-    <a
-      href={archiveUrl}
-      class="category-pill text-sm px-3 py-1 rounded-lg whitespace-nowrap shrink-0
-             transition-colors duration-150 ease-out flex items-center justify-center"
-      data-category-name="__archive__"
-    >
-      {i18n(I18nKey.archive)}
-      <span class="text-xs opacity-60 ml-1">{totalPosts}</span>
-    </a>
-    <div class="category-divider shrink-0"></div>
-    <div class="scroll-area relative">
-      <div class="scroll-fade scroll-fade-left" aria-hidden="true"></div>
-      <div class="category-scroll flex gap-2 overflow-x-auto">
-        {
-          categories.map((cat) => (
-            <a
-              href={cat.url}
-              class="category-pill text-sm px-3 py-1 rounded-lg whitespace-nowrap
-                     transition-colors duration-150 ease-out flex items-center justify-center"
-              data-category-name={cat.name}
-            >
-              {cat.name}
-              <span class="text-xs opacity-60 ml-1">{cat.count}</span>
-            </a>
-          ))
-        }
-      </div>
-      <div class="scroll-fade scroll-fade-right" aria-hidden="true"></div>
-    </div>
-  </div>
-</div>
+{items.length > 0 && (
+<nav class="card-base breadcrumb-nav p-3 onload-animation" id="breadcrumb-nav" aria-label="Breadcrumb" set:html={breadcrumbHtml}>
+</nav>
+)}
 
 <style>
-  .category-bar {
-    margin-bottom: 1rem;
-  }
-  .category-divider {
-    width: 1px;
-    align-self: stretch;
-    background: var(--line-divider);
-  }
-  .scroll-area {
-    flex: 1;
-    min-width: 0;
-    position: relative;
-  }
-  .scroll-fade {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 2.5rem;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 300ms ease-in-out;
-    z-index: 1;
-  }
-  .scroll-fade[data-visible] {
-    opacity: 1;
-  }
-  .scroll-fade-left {
-    left: 0;
-    background: linear-gradient(to left, transparent, var(--card-bg));
-  }
-  .scroll-fade-right {
-    right: 0;
-    background: linear-gradient(to right, transparent, var(--card-bg));
-  }
-  :global(body.wallpaper-transparent) .scroll-fade {
-    display: none;
-  }
-  .category-scroll {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    scroll-behavior: smooth;
-  }
-  .category-scroll::-webkit-scrollbar {
-    display: none;
-  }
-  .category-pill {
-    border: 1.5px solid var(--line-divider);
-    color: var(--btn-content);
-    background: transparent;
-  }
-  .category-pill:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-    background: transparent;
-  }
-  .category-pill[data-active] {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: white;
-  }
-  .category-pill[data-soft-active] {
-    border-color: var(--line-divider);
-    background: color-mix(in srgb, var(--primary) 10%, transparent);
-    color: color-mix(in srgb, var(--primary) 72%, var(--btn-content));
-  }
-  .category-pill[data-soft-active]:hover {
-    border-color: var(--line-divider);
-    background: color-mix(in srgb, var(--primary) 15%, transparent);
-    color: color-mix(in srgb, var(--primary) 82%, var(--btn-content));
-  }
-  .category-pill[data-soft-active][data-active],
-  .category-pill[data-soft-active][data-active]:hover {
-    border-color: var(--line-divider);
-    background: color-mix(in srgb, var(--primary) 15%, transparent);
-    color: color-mix(in srgb, var(--primary) 82%, var(--btn-content));
-  }
-  .category-pill[data-active]:hover {
-    background: var(--primary);
-    border-color: var(--primary);
-    opacity: 0.9;
-  }
+	.breadcrumb-nav {
+		margin-bottom: 1rem;
+	}
+	.breadcrumb-link:hover :global(svg) {
+		color: var(--primary);
+	}
+	.breadcrumb-current :global(svg) {
+		color: var(--primary);
+		opacity: 0.8;
+	}
+	.breadcrumb-separator {
+		font-size: 0.875rem;
+		line-height: 1;
+		font-weight: 500;
+	}
 </style>
-
-<script>
-  let delayedCategoryBarScrollTimer: number | undefined;
-
-  function getCategoryBarState(bar: HTMLElement, currentUrl: URL) {
-    const pathname = currentUrl.pathname.replace(/\/$/, "");
-    const homePath = (bar.getAttribute("data-home-path") || "/").replace(/\/$/, "");
-    const archivePath = (bar.getAttribute("data-archive-path") || "/archive").replace(/\/$/, "");
-    const isHome = pathname === homePath || pathname === "" || pathname === "/";
-    const isArchive = pathname === archivePath;
-
-    return {
-      isHome,
-      isArchive,
-      activeCategory: currentUrl.searchParams.get("category") || "",
-      hasTag: currentUrl.searchParams.has("tag"),
-      hasUncategorized: currentUrl.searchParams.has("uncategorized"),
-    };
-  }
-
-  function setActiveCategory(bar: HTMLElement, currentUrl: URL) {
-    const { isHome, isArchive, activeCategory, hasTag, hasUncategorized } =
-      getCategoryBarState(bar, currentUrl);
-    const postCategory = (bar.getAttribute("data-current-post-category") || "").trim();
-
-    const pills = bar.querySelectorAll<HTMLAnchorElement>(".category-pill");
-    pills.forEach((pill) => {
-      pill.removeAttribute("data-active");
-      pill.removeAttribute("data-soft-active");
-    });
-
-    if (isHome) {
-      bar.querySelector<HTMLAnchorElement>('.category-pill[data-category-name=""]')
-        ?.setAttribute("data-active", "");
-      return;
-    }
-
-    if (activeCategory) {
-      pills.forEach((pill) => {
-        if (pill.getAttribute("data-category-name") === activeCategory) {
-          pill.setAttribute("data-active", "");
-        }
-      });
-      return;
-    }
-
-    if (isArchive && !hasTag && !hasUncategorized) {
-      bar.querySelector<HTMLAnchorElement>('.category-pill[data-category-name="__archive__"]')
-        ?.setAttribute("data-active", "");
-      return;
-    }
-
-    if (postCategory) {
-      pills.forEach((pill) => {
-        if (pill.getAttribute("data-category-name") === postCategory) {
-          pill.setAttribute("data-soft-active", "");
-        }
-      });
-    }
-  }
-
-  function scrollActiveCategoryIntoView(bar: HTMLElement, behavior: ScrollBehavior = "smooth") {
-    const activePill =
-      bar.querySelector<HTMLAnchorElement>('.category-pill[data-active]') ||
-      bar.querySelector<HTMLAnchorElement>('.category-pill[data-soft-active]');
-    const scroll = bar.querySelector<HTMLElement>(".category-scroll");
-    if (!activePill || !scroll) return;
-
-    const scrollLeft = activePill.offsetLeft - scroll.offsetLeft - (scroll.clientWidth - activePill.offsetWidth) / 2;
-    scroll.scrollTo({ left: Math.max(0, scrollLeft), behavior });
-  }
-
-  function shouldDeferCategoryScroll(bar: HTMLElement, currentUrl: URL) {
-    const { isHome } = getCategoryBarState(bar, currentUrl);
-    const isMobile = window.innerWidth < 1024;
-    const isBannerMode = document.body.classList.contains("enable-banner");
-    return isMobile && isBannerMode && !isHome;
-  }
-
-  function updateCategoryBar(
-    currentUrl = new URL(window.location.href),
-    options: { scrollBehavior?: ScrollBehavior; deferScroll?: boolean } = {},
-  ) {
-    const bar = document.getElementById("category-bar");
-    if (!bar) return;
-
-    const swupContainer = document.getElementById("swup-container");
-    if (swupContainer) {
-      const currentPostCategory = swupContainer.getAttribute("data-current-post-category") || "";
-      bar.setAttribute("data-current-post-category", currentPostCategory);
-    }
-
-    setActiveCategory(bar, currentUrl);
-
-    const deferScroll = options.deferScroll ?? shouldDeferCategoryScroll(bar, currentUrl);
-    const scrollBehavior = options.scrollBehavior ?? (deferScroll ? "auto" : "smooth");
-
-    if (delayedCategoryBarScrollTimer) {
-      window.clearTimeout(delayedCategoryBarScrollTimer);
-      delayedCategoryBarScrollTimer = undefined;
-    }
-
-    if (deferScroll) {
-      // 等主内容上移完成后再定位分类，避免出现“先横向滚动后上移”的卡顿观感。
-      delayedCategoryBarScrollTimer = window.setTimeout(() => {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            scrollActiveCategoryIntoView(bar, scrollBehavior);
-            updateScrollHint();
-          });
-        });
-      }, 220);
-      return;
-    }
-
-    scrollActiveCategoryIntoView(bar, scrollBehavior);
-    updateScrollHint();
-  }
-
-  function initCategoryBarInteractions() {
-    const bar = document.getElementById("category-bar");
-    if (!bar || bar.dataset.clickBound === "true") return;
-
-    bar.dataset.clickBound = "true";
-    bar.addEventListener("click", (event) => {
-      if (!(event.target instanceof Element)) return;
-
-      const pill = event.target.closest<HTMLAnchorElement>(".category-pill");
-      if (!pill) return;
-
-      if (
-        event.defaultPrevented ||
-        event.button !== 0 ||
-        event.metaKey ||
-        event.ctrlKey ||
-        event.shiftKey ||
-        event.altKey
-      ) {
-        return;
-      }
-
-      if (pill.target && pill.target !== "_self") return;
-
-      const targetUrl = new URL(pill.href, window.location.href);
-      if (targetUrl.origin !== window.location.origin) return;
-
-      setActiveCategory(bar, targetUrl);
-      scrollActiveCategoryIntoView(bar, "auto");
-    });
-  }
-
-  function initScrollFeatures() {
-    const bar = document.getElementById("category-bar");
-    if (!bar) return;
-
-    const scroll = bar.querySelector<HTMLElement>(".category-scroll");
-    if (!scroll) return;
-
-    if (scroll.dataset.featuresBound === "true") {
-      updateScrollHint();
-      return;
-    }
-    scroll.dataset.featuresBound = "true";
-
-    // 鼠标滚轮横向滚动
-    scroll.addEventListener("wheel", (e) => {
-      if (scroll.scrollWidth <= scroll.clientWidth) return;
-      e.preventDefault();
-      scroll.scrollLeft += e.deltaY;
-    }, { passive: false });
-
-    // 监听滚动更新提示图标
-    scroll.addEventListener("scroll", updateScrollHint);
-    window.addEventListener("resize", updateScrollHint);
-    updateScrollHint();
-  }
-
-  function updateScrollHint() {
-    const bar = document.getElementById("category-bar");
-    if (!bar) return;
-    const scroll = bar.querySelector<HTMLElement>(".category-scroll");
-    const fadeLeft = bar.querySelector<HTMLElement>(".scroll-fade-left");
-    const fadeRight = bar.querySelector<HTMLElement>(".scroll-fade-right");
-    if (!scroll || !fadeLeft || !fadeRight) return;
-
-    const hasOverflow = scroll.scrollWidth > scroll.clientWidth + 1;
-    const atStart = scroll.scrollLeft <= 1;
-    const atEnd = scroll.scrollLeft + scroll.clientWidth >= scroll.scrollWidth - 1;
-
-    if (hasOverflow && !atStart) {
-      fadeLeft.setAttribute("data-visible", "");
-    } else {
-      fadeLeft.removeAttribute("data-visible");
-    }
-
-    if (hasOverflow && !atEnd) {
-      fadeRight.setAttribute("data-visible", "");
-    } else {
-      fadeRight.removeAttribute("data-visible");
-    }
-  }
-
-  updateCategoryBar();
-  initCategoryBarInteractions();
-  initScrollFeatures();
-  document.addEventListener("astro:page-load", () => {
-    updateCategoryBar();
-    initScrollFeatures();
-  });
-  document.addEventListener("swup:contentReplaced", () => {
-    updateCategoryBar();
-    // 某些 swup 生命周期下 URL/DOM 状态同步稍晚，下一帧再校正一次避免状态残留
-    requestAnimationFrame(() => {
-      updateCategoryBar();
-    });
-  });
-
-  // 在 Swup 导航时提前更新状态，避免切换期间激活态闪烁
-  function setupSwupEarlyUpdate() {
-    if (!window.swup?.hooks) return;
-    window.swup.hooks.on("visit:start", (visit: any) => {
-      const bar = document.getElementById("category-bar");
-      if (!bar) return;
-      const targetUrl = new URL(visit.to.url, window.location.href);
-      setActiveCategory(bar, targetUrl);
-    });
-  }
-  if (window.swup?.hooks) {
-    setupSwupEarlyUpdate();
-  } else {
-    document.addEventListener("swup:enable", setupSwupEarlyUpdate);
-  }
-</script>

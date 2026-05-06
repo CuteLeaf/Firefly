@@ -49,23 +49,8 @@ html {
     scroll-behavior: smooth;
 }
 
-/* 页面顶部渐变高光效果 */
-.top-gradient-highlight {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 180px;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.3) 30%, rgba(255, 255, 255, 0.15) 60%, rgba(255, 255, 255, 0.05) 80%, transparent 100%);
-    pointer-events: none;
-    z-index: 20;
-    transition: all var(--duration-medium) var(--ease-standard);
-}
-
-/* 暗色主题下的渐变高光效果 */
-:root.dark .top-gradient-highlight {
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.3) 30%, rgba(0, 0, 0, 0.15) 60%, rgba(0, 0, 0, 0.05) 80%, transparent 100%);
-}
+/* 极简模式：顶部高光禁用 */
+.top-gradient-highlight { display: none; }
 
 @layer components {
     /* View Transitions API 主题切换动画 */
@@ -200,56 +185,104 @@ html {
         backdrop-filter: none !important;
     }
     
-    .card-base {
-        @apply rounded-(--radius-large) overflow-hidden bg-(--card-bg) transition-colors duration-150;
-    }
+    /* 极简风格：card-base 退化为透明无边框无阴影，保留类名兼容旧组件 */
+    .card-base,
     .card-base-transparent {
-        @apply rounded-(--radius-large) overflow-hidden bg-(--card-bg-transparent) transition-colors duration-150;
-    }
-
-    /* 开启边框和阴影效果时的样式 */
-    .enable-card-border .card-base {
-        @apply transition-all duration-300 border border-(--line-divider) shadow-xs;
-    }
-    .enable-card-border .card-base-transparent {
-        @apply transition-all duration-300 border border-(--line-divider) shadow-xs;
-    }
-
-    /* 导航栏样式适配 */
-    .enable-card-border #navbar > div:not(.absolute) {
-        @apply transition-all duration-300 border shadow-xs;
-        border-color: var(--line-divider) !important;
-    }
-
-    /* 壁纸模式切换期间禁止导航栏边框和阴影闪现 */
-    .is-wallpaper-transitioning #navbar > div {
-        border-color: transparent !important;
+        background-color: transparent !important;
+        border: 0 !important;
         box-shadow: none !important;
-        transition: none !important;
+        backdrop-filter: none !important;
+        border-radius: 0 !important;
+        overflow: visible;
     }
 
-    /* 全屏壁纸模式下的半透明效果 */
-    .wallpaper-transparent .card-base {
-        background-color: var(--card-bg-transparent) !important;
-    }
- 
-    
-    .wallpaper-transparent #navbar > div {
-        background-color: var(--card-bg-transparent) !important;
+    .enable-card-border .card-base,
+    .enable-card-border .card-base-transparent {
+        background-color: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
     }
 
-    /* Overlay 模式下，滚动后提高导航栏背景模糊度，增强与正文区分 */
-    .wallpaper-transparent #navbar.navbar-sticky-shadow > div {
-        backdrop-filter: blur(20px) !important;
-     
+    .enable-card-border #navbar > div:not(.absolute) {
+        border: 0 !important;
+        box-shadow: none !important;
     }
 
-    :root.dark .wallpaper-transparent #navbar.navbar-sticky-shadow > div {
-        backdrop-filter: blur(20px) !important;
+    /* 极简区块容器：仅细线分隔，无填充色 */
+    .section {
+        @apply w-full;
     }
-    
-    .wallpaper-transparent .btn-card {
-        background-color: var(--card-bg-transparent) !important;
+    .section + .section {
+        @apply mt-12 pt-12 border-t border-(--line-divider);
+    }
+    .section-label {
+        @apply text-xs uppercase tracking-[0.2em] text-(--content-meta) mb-6 font-mono;
+    }
+    .section-label::before { content: "[ "; }
+    .section-label::after  { content: " ]"; }
+
+    /* 描边按钮：仅细线，hover 反相填充 */
+    .btn-line {
+        @apply inline-flex items-center justify-center px-4 py-1.5 rounded-full
+               border border-(--line-divider) text-(--deep-text)
+               transition-colors duration-150
+               hover:border-(--deep-text) hover:bg-(--deep-text) hover:text-(--page-bg);
+    }
+    :root.dark .btn-line {
+        @apply text-white/85 hover:bg-white hover:text-black hover:border-white;
+    }
+
+    /* 右下浮动坞 */
+    .floating-dock {
+        position: fixed;
+        right: 1.25rem;
+        bottom: 1.25rem;
+        z-index: 60;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.5rem;
+        pointer-events: none;
+    }
+    .floating-dock > * { pointer-events: auto; }
+    .dock-btn {
+        @apply w-11 h-11 inline-flex items-center justify-center
+               rounded-full border border-(--line-divider) bg-(--page-bg)
+               text-(--deep-text) transition-colors duration-150
+               hover:border-(--deep-text);
+    }
+    :root.dark .dock-btn {
+        @apply text-white/85 hover:border-white;
+    }
+    .dock-drawer {
+        position: fixed;
+        right: 5rem;
+        bottom: 1.25rem;
+        width: 22rem;
+        max-height: 70vh;
+        overflow: auto;
+        background: var(--page-bg);
+        border: 1px solid var(--line-divider);
+        padding: 1.25rem;
+        z-index: 60;
+        transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+    .dock-drawer.dock-drawer-closed {
+        opacity: 0;
+        transform: translateX(0.5rem);
+        pointer-events: none;
+    }
+    @media (max-width: 768px) {
+        .dock-drawer {
+            right: 0;
+            left: 0;
+            bottom: 0;
+            width: auto;
+            max-height: 80vh;
+            border-left: 0;
+            border-right: 0;
+            border-bottom: 0;
+        }
     }
     
     h1, h2, h3, h4, h5, h6, p, a, span, li, ul, ol, blockquote, code, pre, table, th, td, strong {
@@ -265,7 +298,7 @@ html {
         @apply transition-colors duration-150 rounded-md p-1.5 -m-1.5 expand-animation;
     }
     .float-panel {
-        @apply top-21 rounded-(--radius-large) overflow-hidden bg-(--card-bg) transition-colors duration-150 shadow-xl border border-black/5 dark:border-white/10
+        @apply top-21 overflow-hidden bg-(--float-panel-bg) transition-colors duration-150 border border-(--line-divider)
     }
     .float-panel-closed {
         @apply -translate-y-1 opacity-0 pointer-events-none
@@ -360,11 +393,29 @@ html {
     }
 
     .dropdown-content {
-        @apply bg-(--card-bg) rounded-(--radius-large) shadow-xl border border-black/5 dark:border-white/10 py-2 min-w-48;
+        @apply bg-transparent border border-(--line-divider) py-2 min-w-48;
+        border-style: solid;
+        transition: border-style 0.15s ease;
+    }
+
+    .dropdown-content:hover {
+        border-style: dashed;
     }
 
     .dropdown-item {
-        @apply flex items-center justify-between px-4 py-2.5 text-black/75 dark:text-white/75 hover:text-(--primary) hover:bg-(--btn-plain-bg-hover) transition-colors duration-150 font-medium;
+        @apply flex items-center justify-between px-4 py-2.5 text-black/75 dark:text-white/75 hover:text-(--primary) transition-colors duration-150 font-medium;
+        border: 1.5px solid transparent;
+        border-radius: 0.5rem;
+        background-color: transparent !important;
+    }
+
+    .dropdown-item:hover {
+        border-color: oklch(0.2 0 0);
+        background-color: transparent !important;
+    }
+
+    :root.dark .dropdown-item:hover {
+        border-color: oklch(0.75 0 0);
     }
 
     .dropdown-item:first-child {

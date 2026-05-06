@@ -32,7 +32,7 @@ const iconSetCache = new Map();
 /**
  * 递归获取目录下所有文件
  */
-function getAllFiles(dir, extensions = [".svelte"]) {
+function getAllFiles(dir, extensions = [".svelte", ".astro", ".ts"]) {
 	const files = [];
 
 	function walk(currentDir) {
@@ -64,8 +64,10 @@ function extractIconNames(content) {
 
 	// 匹配各种图标使用模式
 	const patterns = [
-		// icon="xxx:yyy" 或 icon='xxx:yyy'
+		// icon="xxx:yyy" 或 icon='xxx:yyy' (HTML 属性)
 		/icon=["']([a-z0-9-]+:[a-z0-9-]+)["']/gi,
+		// icon: "xxx:yyy" 或 icon: 'xxx:yyy' (JS/TS 对象属性)
+		/icon:\s*["']([a-z0-9-]+:[a-z0-9-]+)["']/gi,
 		// icon={`xxx:yyy`}
 		/icon=\{[`"']([a-z0-9-]+:[a-z0-9-]+)[`"']\}/gi,
 		// getIconSvg("xxx:yyy") 或 getIconSvg('xxx:yyy')

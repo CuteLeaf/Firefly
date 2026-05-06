@@ -1,0 +1,331 @@
+---
+/**
+ * 极简悬浮坞 — 替代原 FloatingControls。
+ * 所有重组件（Search / Theme / DisplaySettings / Music / Live2D / Spine / Calendar / TOC / BackToTop / BackToHome / BackToComment）
+ * 全部以图标按钮 + 抽屉/浮层形式集中在右下角。
+ */
+import type { MarkdownHeading } from "astro";
+import { Icon } from "astro-icon/components";
+import DisplaySettings from "@/components/controls/DisplaySettingsIntegrated.svelte";
+import Search from "@/components/controls/Search.svelte";
+import MusicPlayer from "@/components/features/MusicPlayer.astro";
+import { live2dModelConfig, spineModelConfig } from "@/config";
+import { musicPlayerConfig } from "@/config/musicConfig";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+
+interface Props {
+	headings?: MarkdownHeading[];
+}
+
+const { headings: _headings = [] } = Astro.props;
+---
+
+<div class="floating-dock" id="floating-dock">
+	<div class="dock-stack" id="dock-stack" data-expanded="false">
+		<div class="dock-buttons">
+			<button class="dock-btn" id="dock-search-btn" aria-label={i18n(I18nKey.search)} type="button" data-tooltip={i18n(I18nKey.search)}>
+				<Icon name="material-symbols:search" class="text-xl" />
+			</button>
+
+			<button class="dock-btn" id="dock-theme-btn" aria-label="Theme" type="button" data-tooltip="主题切换">
+				<Icon name="material-symbols:dark-mode-outline-rounded" class="text-xl" />
+			</button>
+
+			<button class="dock-btn" id="dock-settings-btn" aria-label="Display Settings" type="button" data-tooltip="显示设置">
+				<Icon name="material-symbols:visibility-outline-rounded" class="text-xl" />
+			</button>
+
+			{musicPlayerConfig.showInNavbar !== false && (
+				<button class="dock-btn" id="dock-music-btn" aria-label={i18n(I18nKey.music)} type="button" data-tooltip={i18n(I18nKey.music)}>
+					<Icon name="material-symbols:music-note-rounded" class="text-xl" />
+				</button>
+			)}
+
+			{live2dModelConfig.enable && (
+				<button class="dock-btn" id="dock-live2d-btn" aria-label="Live2D" type="button" data-active="true" data-tooltip="Live2D 看板娘">
+					<Icon name="fa7-regular:address-card" class="text-xl" />
+				</button>
+			)}
+
+			{spineModelConfig?.enable && (
+				<button class="dock-btn" id="dock-spine-btn" aria-label="Spine" type="button" data-active="true" data-tooltip="Spine 模型">
+					<Icon name="material-symbols:image-outline" class="text-xl" />
+				</button>
+			)}
+
+			<button class="dock-btn dock-btn-toc hide" id="dock-toc-btn" aria-label="Table of Contents" type="button" data-tooltip="目录">
+				<Icon name="material-symbols:format-list-bulleted" class="text-xl" />
+			</button>
+
+			<button class="dock-btn dock-btn-comment hide" id="dock-comment-btn" aria-label="Comments" type="button" data-tooltip="跳到评论">
+				<Icon name="mingcute:comment-line" class="text-xl" />
+			</button>
+
+			<button class="dock-btn dock-btn-home hide" id="dock-home-btn" aria-label={i18n(I18nKey.home)} type="button" data-tooltip={i18n(I18nKey.home)}>
+				<Icon name="material-symbols:home-outline-rounded" class="text-xl" />
+			</button>
+
+			<button class="dock-btn dock-btn-top hide" id="dock-top-btn" aria-label="Back to Top" type="button" data-tooltip="回到顶部">
+				<Icon name="material-symbols:keyboard-arrow-up-rounded" class="text-xl" />
+			</button>
+		</div>
+
+		<button class="dock-btn dock-toggle" id="dock-toggle-btn" aria-label="Toggle dock" type="button" data-tooltip="工具坞">
+			<Icon name="material-symbols:more-horiz" class="text-xl dock-icon-collapsed" />
+			<Icon name="material-symbols:close" class="text-xl dock-icon-expanded hidden" />
+		</button>
+	</div>
+</div>
+
+{/* 抽屉容器（独立于 dock-stack） */}
+<div class="dock-drawer dock-drawer-closed" id="dock-drawer-search">
+	<div class="dock-drawer-title">[ {i18n(I18nKey.search)} ]</div>
+	<Search client:load />
+</div>
+
+{/* Theme drawer：内联三选一；不复用 LightDarkSwitch 的弹层（弹层依赖按钮锚点，放进抽屉会偏移） */}
+<div class="dock-drawer dock-drawer-closed" id="dock-drawer-theme">
+	<div class="dock-drawer-title">[ theme ]</div>
+	<div class="flex flex-col gap-2" id="dock-theme-options">
+		<button class="theme-option btn-line w-full justify-start gap-3 text-sm" data-theme-mode="light" type="button">
+			<Icon name="material-symbols:wb-sunny-outline-rounded" class="text-base" />
+			<span>{i18n(I18nKey.lightMode)}</span>
+			<span class="ml-auto text-(--content-meta) text-xs theme-active-mark hidden">●</span>
+		</button>
+		<button class="theme-option btn-line w-full justify-start gap-3 text-sm" data-theme-mode="dark" type="button">
+			<Icon name="material-symbols:dark-mode-outline-rounded" class="text-base" />
+			<span>{i18n(I18nKey.darkMode)}</span>
+			<span class="ml-auto text-(--content-meta) text-xs theme-active-mark hidden">●</span>
+		</button>
+		<button class="theme-option btn-line w-full justify-start gap-3 text-sm" data-theme-mode="system" type="button">
+			<Icon name="material-symbols:brightness-auto-outline-rounded" class="text-base" />
+			<span>{i18n(I18nKey.systemMode)}</span>
+			<span class="ml-auto text-(--content-meta) text-xs theme-active-mark hidden">●</span>
+		</button>
+	</div>
+</div>
+
+<div class="dock-drawer dock-drawer-closed" id="dock-drawer-settings">
+	<div class="dock-drawer-title">[ settings ]</div>
+	<DisplaySettings client:load />
+</div>
+
+{musicPlayerConfig.showInNavbar !== false && (
+	<div class="dock-drawer dock-drawer-closed" id="dock-drawer-music">
+		<div class="dock-drawer-title">[ {i18n(I18nKey.music)} ]</div>
+		<MusicPlayer />
+	</div>
+)}
+
+<div class="dock-drawer dock-drawer-closed" id="dock-drawer-toc">
+	<div class="dock-drawer-title">[ contents ]</div>
+	<div id="dock-toc-content" class="text-sm leading-relaxed"></div>
+</div>
+
+<style>
+	.dock-stack {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 0.5rem;
+	}
+	.dock-buttons {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		max-height: 0;
+		overflow: hidden;
+		opacity: 0;
+		transform: translateY(0.5rem);
+		transition: max-height 0.25s ease, opacity 0.2s ease, transform 0.25s ease;
+	}
+	.dock-stack[data-expanded="true"] .dock-buttons {
+		max-height: 40rem;
+		opacity: 1;
+		transform: translateY(0);
+	}
+	.dock-btn.hide { display: none; }
+
+	/* tooltip：hover 时在按钮左侧弹出文字 */
+	.dock-btn { position: relative; }
+	.dock-btn[data-tooltip]::after {
+		content: attr(data-tooltip);
+		position: absolute;
+		right: calc(100% + 0.625rem);
+		top: 50%;
+		transform: translateY(-50%) translateX(0.25rem);
+		white-space: nowrap;
+		padding: 0.3rem 0.625rem;
+		font-size: 0.75rem;
+		line-height: 1;
+		background: var(--page-bg);
+		color: var(--deep-text);
+		border: 1px solid var(--line-divider);
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.15s ease, transform 0.15s ease;
+		font-family: ui-monospace, SFMono-Regular, monospace;
+		letter-spacing: 0.02em;
+		z-index: 80;
+	}
+	.dock-btn[data-tooltip]:hover::after,
+	.dock-btn[data-tooltip]:focus-visible::after {
+		opacity: 1;
+		transform: translateY(-50%) translateX(0);
+	}
+	@media (max-width: 768px) {
+		.dock-btn[data-tooltip]::after { display: none; }
+	}
+
+	.dock-drawer { z-index: 70; }
+	.dock-drawer-title {
+		font-family: ui-monospace, SFMono-Regular, monospace;
+		font-size: 0.7rem;
+		text-transform: uppercase;
+		letter-spacing: 0.2em;
+		color: var(--content-meta);
+		margin-bottom: 1rem;
+	}
+	.theme-option[data-active="true"] .theme-active-mark { display: inline; }
+	.theme-option[data-active="true"] {
+		border-color: var(--deep-text);
+	}
+</style>
+
+<script>
+	(function initFloatingDock() {
+		const stack = document.getElementById("dock-stack");
+		const toggleBtn = document.getElementById("dock-toggle-btn");
+		const collapsedIcon = toggleBtn?.querySelector(".dock-icon-collapsed");
+		const expandedIcon = toggleBtn?.querySelector(".dock-icon-expanded");
+
+		if (!stack || !toggleBtn) return;
+
+		toggleBtn.addEventListener("click", (e) => {
+			e.stopPropagation();
+			const expanded = stack.getAttribute("data-expanded") === "true";
+			stack.setAttribute("data-expanded", expanded ? "false" : "true");
+			collapsedIcon?.classList.toggle("hidden", !expanded);
+			expandedIcon?.classList.toggle("hidden", expanded);
+		});
+
+		const drawers: Record<string, string> = {
+			"dock-search-btn": "dock-drawer-search",
+			"dock-theme-btn": "dock-drawer-theme",
+			"dock-settings-btn": "dock-drawer-settings",
+			"dock-music-btn": "dock-drawer-music",
+			"dock-toc-btn": "dock-drawer-toc",
+		};
+
+		function closeAllDrawers() {
+			document.querySelectorAll(".dock-drawer").forEach((d) => d.classList.add("dock-drawer-closed"));
+		}
+
+		Object.entries(drawers).forEach(([btnId, drawerId]) => {
+			const btn = document.getElementById(btnId);
+			const drawer = document.getElementById(drawerId);
+			if (!btn || !drawer) return;
+			btn.addEventListener("click", (e) => {
+				e.stopPropagation();
+				const isOpen = !drawer.classList.contains("dock-drawer-closed");
+				closeAllDrawers();
+				if (!isOpen) drawer.classList.remove("dock-drawer-closed");
+			});
+		});
+
+		document.addEventListener("click", (e) => {
+			const target = e.target as Node;
+			if (!target) return;
+			const isInDrawer = document.querySelector(".dock-drawer:not(.dock-drawer-closed)")?.contains(target);
+			const isInDock = document.getElementById("floating-dock")?.contains(target);
+			if (!isInDrawer && !isInDock) closeAllDrawers();
+		});
+
+		// Live2D / Spine 显隐切换
+		function bindToggleVisibility(btnId: string, targetId: string) {
+			const btn = document.getElementById(btnId);
+			const target = document.getElementById(targetId);
+			if (!btn || !target) return;
+			btn.addEventListener("click", (e) => {
+				e.stopPropagation();
+				const isHidden = (target as HTMLElement).style.display === "none";
+				(target as HTMLElement).style.display = isHidden ? "" : "none";
+				btn.setAttribute("data-active", String(isHidden));
+			});
+		}
+		bindToggleVisibility("dock-live2d-btn", "live2d-widget");
+		bindToggleVisibility("dock-spine-btn", "spine-model-container");
+
+		// 主题切换：直接调用 setting-utils
+		function syncThemeOptionsActive() {
+			const stored = localStorage.getItem("theme") || "light";
+			document.querySelectorAll<HTMLButtonElement>(".theme-option").forEach((btn) => {
+				btn.setAttribute("data-active", String(btn.dataset.themeMode === stored));
+			});
+		}
+		document.querySelectorAll<HTMLButtonElement>(".theme-option").forEach((btn) => {
+			btn.addEventListener("click", (e) => {
+				e.stopPropagation();
+				const mode = btn.dataset.themeMode;
+				if (!mode) return;
+				import("@/utils/setting-utils").then(({ setTheme }) => {
+					setTheme(mode as any);
+					syncThemeOptionsActive();
+				});
+			});
+		});
+		syncThemeOptionsActive();
+		window.addEventListener("theme-change", syncThemeOptionsActive);
+
+		// Back to Top / Home / Comment
+		document.getElementById("dock-top-btn")?.addEventListener("click", (e) => {
+			e.stopPropagation();
+			window.scroll({ top: 0, behavior: "smooth" });
+		});
+		document.getElementById("dock-home-btn")?.addEventListener("click", (e) => {
+			e.stopPropagation();
+			if ((window as any).swup) (window as any).swup.navigate("/");
+			else window.location.href = "/";
+		});
+		document.getElementById("dock-comment-btn")?.addEventListener("click", (e) => {
+			e.stopPropagation();
+			document.getElementById("post-comments")?.scrollIntoView({ behavior: "smooth", block: "start" });
+		});
+
+		function updateScrollDependent() {
+			const scrolled = window.scrollY > 200;
+			document.getElementById("dock-top-btn")?.classList.toggle("hide", !scrolled);
+		}
+		function updatePathDependent() {
+			const isHome = window.location.pathname === "/" || window.location.pathname === "";
+			document.getElementById("dock-home-btn")?.classList.toggle("hide", isHome);
+			const isPost = /\/posts?\//.test(window.location.pathname);
+			document.getElementById("dock-toc-btn")?.classList.toggle("hide", !isPost);
+			const hasComment = !!document.getElementById("post-comments");
+			document.getElementById("dock-comment-btn")?.classList.toggle("hide", !isPost || !hasComment);
+		}
+		updateScrollDependent();
+		updatePathDependent();
+		window.addEventListener("scroll", updateScrollDependent, { passive: true });
+		document.addEventListener("swup:contentReplaced", () => setTimeout(updatePathDependent, 100));
+		document.addEventListener("astro:page-load", updatePathDependent);
+
+		// TOC
+		const tocBtn = document.getElementById("dock-toc-btn");
+		tocBtn?.addEventListener("click", () => {
+			import("@/utils/toc-utils").then(({ TOCManager }) => {
+				try {
+					const mgr = new (TOCManager as any)({
+						contentId: "dock-toc-content",
+						maxLevel: 3,
+						scrollOffset: 80,
+					});
+					mgr.init();
+				} catch (err) {
+					console.error("TOC init failed:", err);
+				}
+			});
+		});
+	})();
+</script>

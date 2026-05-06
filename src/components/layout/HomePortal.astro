@@ -1,0 +1,188 @@
+---
+/**
+ * 极简门户区：将原侧边栏中的"门户级信息"以纯文本垂直堆叠展示。
+ * 每块仅用 [ LABEL ] 小标签 + 细线分隔，无卡片填充。
+ *
+ * 包含：Profile / Announcement / Stats / Categories / Tags
+ * 重组件（Music / Calendar / Live2D / Spine）由右下浮动坞触达，不在此处。
+ */
+import { Icon } from "astro-icon/components";
+import TypewriterText from "@/components/features/TypewriterText.astro";
+import { announcementConfig, profileConfig, siteConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import {
+	getCategoryList,
+	getSortedPosts,
+	getTagList,
+} from "@/utils/content-utils";
+import { getTagUrl, url } from "@/utils/url-utils";
+
+const posts = await getSortedPosts();
+const categories = await getCategoryList();
+const tags = await getTagList();
+
+let totalWords = 0;
+for (const post of posts) {
+	if (post.body) {
+		const text = post.body
+			.replace(/```[\s\S]*?```/g, "")
+			.replace(/`[^`]*`/g, "")
+			.replace(/\s+/g, " ")
+			.trim();
+		const cn = text.match(/[一-龥]/g) || [];
+		const en = text.match(/[a-zA-Z]/g) || [];
+		totalWords += cn.length + en.length;
+	}
+}
+
+const siteStartDate = siteConfig.siteStartDate || "2025-01-01";
+const latestPost = posts[0];
+const lastPostDate = latestPost
+	? latestPost.data.published.toISOString()
+	: null;
+const todayText = i18n(I18nKey.today);
+const formatNum = (n: number) => n.toLocaleString();
+
+const stats = [
+	{ label: i18n(I18nKey.siteStatsPostCount), value: String(posts.length) },
+	{
+		label: i18n(I18nKey.siteStatsCategoryCount),
+		value: String(categories.length),
+	},
+	{ label: i18n(I18nKey.siteStatsTagCount), value: String(tags.length) },
+	{ label: i18n(I18nKey.siteStatsTotalWords), value: formatNum(totalWords) },
+	{ label: i18n(I18nKey.siteStatsRunningDays), value: "—", id: "running-days" },
+	{ label: i18n(I18nKey.siteStatsLastUpdate), value: "—", id: "last-update" },
+];
+---
+
+<div class="home-portal">
+	{/* PROFILE */}
+	<section class="section onload-animation flex flex-col items-center gap-4">
+		<a href={url("/about/")} class="block w-60 h-60 overflow-hidden rounded-full border border-(--line-divider) shrink-0">
+			<img src={profileConfig.avatar} alt={profileConfig.name} class="w-full h-full object-cover" loading="eager" />
+		</a>
+		<div class="text-center w-full">
+			<TypewriterText text={profileConfig.bio || ""} speed={80} pauseTime={3000} class="text-xl text-(--content-meta)" />
+		</div>
+		<div class="flex items-center justify-center gap-3">
+			{profileConfig.links.map((item) => (
+				<a
+					rel="me"
+					aria-label={item.name}
+					href={item.url}
+					target={item.url.startsWith("http") ? "_blank" : "_self"}
+					class="social-link w-10 h-10 flex items-center justify-center rounded-full border border-(--line-divider) text-(--deep-text) hover:text-(--primary) hover:border-(--primary) transition-colors"
+				>
+				<Icon name={item.icon} class="text-xl" is:inline />
+				</a>
+			))}
+		</div>
+	</section>
+
+	{/* ANNOUNCEMENT */}
+	{announcementConfig.content && (
+		<section class="section onload-animation" id="home-announcement">
+			<div class="flex items-center justify-between mb-2">
+				<div class="section-label !mb-0">{announcementConfig.title || i18n(I18nKey.announcement)}</div>
+				{announcementConfig.closable && (
+					<button
+						class="text-(--content-meta) hover:text-(--deep-text) transition-colors"
+						onclick="document.getElementById('home-announcement')?.remove()"
+						aria-label="Close"
+					>
+						<Icon name="fa7-solid:xmark" class="text-sm" />
+					</button>
+				)}
+			</div>
+			<p class="text-(--deep-text) leading-relaxed mb-4">{announcementConfig.content}</p>
+			{announcementConfig.link?.enable !== false && announcementConfig.link?.url && (
+				<a
+					href={announcementConfig.link.url}
+					target={announcementConfig.link.external ? "_blank" : "_self"}
+					rel={announcementConfig.link.external ? "noopener noreferrer" : undefined}
+					class="btn-line text-sm"
+				>
+					{announcementConfig.link.text}
+					<Icon name="fa7-solid:arrow-right" class="ml-2 text-xs" />
+				</a>
+			)}
+		</section>
+	)}
+
+	{/* STATS */}
+	<section class="section onload-animation">
+		<div class="section-label">{i18n(I18nKey.siteStats)}</div>
+		<dl class="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-6">
+			{stats.map((s) => (
+				<div>
+					<dt class="text-xs uppercase tracking-wider text-(--content-meta) mb-1">{s.label}</dt>
+					<dd class="text-2xl font-semibold text-(--deep-text)" data-stat-id={s.id}>{s.value}</dd>
+				</div>
+			))}
+		</dl>
+	</section>
+
+	{/* CATEGORIES */}
+	<section class="section onload-animation">
+		<div class="section-label">{i18n(I18nKey.categories)}</div>
+		<div class="flex flex-wrap gap-2">
+			{categories.map((c) => (
+				<a href={c.url} aria-label={`View all posts in ${c.name.trim()}`} class="btn-line text-sm gap-2">
+					<span>{c.name.trim()}</span>
+					<span class="text-(--content-meta) text-xs">{c.count}</span>
+				</a>
+			))}
+		</div>
+	</section>
+
+	{/* TAGS */}
+	<section class="section onload-animation">
+		<div class="section-label">{i18n(I18nKey.tags)}</div>
+		<div class="flex flex-wrap gap-2">
+			{tags.map((t) => (
+				<a href={getTagUrl(t.name)} aria-label={`View all posts tagged ${t.name.trim()}`} class="btn-line text-sm">
+					{t.name.trim()}
+				</a>
+			))}
+		</div>
+	</section>
+</div>
+
+<style>
+	.home-portal {
+		padding-top: 1rem;
+		padding-bottom: 4rem;
+	}
+
+	:root.dark .social-link {
+		color: oklch(1 0 0) !important;
+		border-color: oklch(0.3 0 0) !important;
+	}
+
+	:root.dark .social-link:hover {
+		color: oklch(0.85 0 0) !important;
+		border-color: oklch(0.5 0 0) !important;
+	}
+</style>
+
+<script is:inline define:vars={{ siteStartDate, lastPostDate, todayText }}>
+	function updateHomePortalStats() {
+		const today = new Date();
+		const start = new Date(siteStartDate);
+		const days = Math.ceil(Math.abs(today.getTime() - start.getTime()) / 86400000);
+		document.querySelectorAll('[data-stat-id="running-days"]').forEach((el) => {
+			el.textContent = String(days);
+		});
+		if (lastPostDate) {
+			const last = new Date(lastPostDate);
+			const since = Math.floor(Math.abs(today.getTime() - last.getTime()) / 86400000);
+			document.querySelectorAll('[data-stat-id="last-update"]').forEach((el) => {
+				el.textContent = since === 0 ? todayText : String(since);
+			});
+		}
+	}
+	updateHomePortalStats();
+	document.addEventListener("swup:contentReplaced", () => setTimeout(updateHomePortalStats, 100));
+</script>

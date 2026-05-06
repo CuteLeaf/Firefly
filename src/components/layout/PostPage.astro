@@ -23,7 +23,38 @@ const initialLayoutClass =
 	defaultLayout === "grid"
 		? "post-grid-auto grid-mode"
 		: "flex flex-col gap-4 md:gap-4 list-mode";
+
+const allowLayoutSwitch = siteConfig.postListLayout.allowSwitch;
+const isListDefault = initialLayoutClass.includes("list-mode");
+const listBtnClass = `layout-toggle-btn flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 hover:bg-(--btn-regular-bg-hover) active:scale-95 ${isListDefault ? "bg-(--primary) text-white shadow-sm" : "text-(--btn-content)"}`;
+const gridBtnClass = `layout-toggle-btn flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 hover:bg-(--btn-regular-bg-hover) active:scale-95 ${!isListDefault ? "bg-(--primary) text-white shadow-sm" : "text-(--btn-content)"}`;
 ---
+
+<div id="post-list-toolbar" class="flex items-center justify-between mb-3 px-1">
+  <div class="text-xs text-(--content-meta) font-medium">
+    {page.data.length} {page.data.length > 1 ? 'articles' : 'article'}
+  </div>
+  <div class:list={["layout-toggle-group flex items-center bg-(--card-bg) rounded-lg p-0.5 border border-(--line-divider)", { "hidden": !allowLayoutSwitch }]}>
+    <button
+      id="btn-layout-list"
+      aria-label="List View"
+      class={listBtnClass}
+      onclick="window.switchPostLayout('list')"
+    >
+      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+      <span class="hidden sm:inline">List</span>
+    </button>
+    <button
+      id="btn-layout-grid"
+      aria-label="Grid View"
+      class={gridBtnClass}
+      onclick="window.switchPostLayout('grid')"
+    >
+      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h7v7H3V3zm0 11h7v7H3v-7zm11-11h7v7h-7V3zm0 11h7v7h-7v-7z"/></svg>
+      <span class="hidden sm:inline">Grid</span>
+    </button>
+  </div>
+</div>
 
 <div
   id="post-list-container"
@@ -70,10 +101,7 @@ const initialLayoutClass =
       const container = document.getElementById('post-list-container');
 
       if (container) {
-        // 禁用过渡动画
         container.style.transition = 'none';
-
-        // 移除所有布局类
         container.classList.remove('list-mode', 'grid-mode', 'post-grid-auto', 'flex', 'flex-col', 'gap-4', 'md:gap-4');
 
         if (effectiveLayout === 'grid') {
@@ -82,15 +110,53 @@ const initialLayoutClass =
           container.classList.add('list-mode', 'flex', 'flex-col', 'gap-4', 'md:gap-4');
         }
 
-        // 强制重排后恢复过渡动画
         container.offsetHeight;
         container.style.transition = '';
+      }
+    }
+
+    const btnList = document.getElementById('btn-layout-list');
+    const btnGrid = document.getElementById('btn-layout-grid');
+    if (btnList && btnGrid) {
+      const activeCls = 'bg-(--primary) text-white shadow-sm';
+      const inactiveCls = 'text-(--btn-content)';
+      if (effectiveLayout === 'list') {
+        btnList.className = btnList.className.replace(inactiveCls, '').trim() + ' ' + activeCls;
+        btnGrid.className = btnGrid.className.replace(activeCls, '').trim() + ' ' + inactiveCls;
+      } else {
+        btnGrid.className = btnGrid.className.replace(inactiveCls, '').trim() + ' ' + activeCls;
+        btnList.className = btnList.className.replace(activeCls, '').trim() + ' ' + inactiveCls;
       }
     }
   })();
 </script>
 
 <script>
+  (window as any).switchPostLayout = function(layout: "list" | "grid") {
+    localStorage.setItem("postListLayout", layout);
+    const event = new CustomEvent("layoutChange", { detail: { layout } });
+    window.dispatchEvent(event);
+  };
+
+  function updateToggleButtons(layout: string) {
+    const btnList = document.getElementById("btn-layout-list");
+    const btnGrid = document.getElementById("btn-layout-grid");
+    if (!btnList || !btnGrid) return;
+    const activeClass = "bg-(--primary) text-white shadow-sm";
+    const inactiveClass = "text-(--btn-content)";
+    if (layout === "list") {
+      btnList.classList.add(...activeClass.split(" "));
+      btnList.classList.remove(...inactiveClass.split(" "));
+      btnGrid.classList.remove(...activeClass.split(" "));
+      btnGrid.classList.add(...inactiveClass.split(" "));
+    } else {
+      btnGrid.classList.add(...activeClass.split(" "));
+      btnGrid.classList.remove(...inactiveClass.split(" "));
+      btnList.classList.remove(...activeClass.split(" "));
+      btnList.classList.add(...inactiveClass.split(" "));
+    }
+  }
+
   // 动态布局切换脚本
   function initLayout() {
     const postListContainer = document.getElementById("post-list-container");
@@ -114,6 +180,7 @@ const initialLayoutClass =
 
     // 应用布局
     updatePostListLayout(currentLayout);
+    updateToggleButtons(currentLayout);
   }
 
   function updatePostListLayout(layout: string) {
@@ -288,6 +355,7 @@ const initialLayoutClass =
     if (!postListContainer) return;
 
     updatePostListLayout(newLayout);
+    updateToggleButtons(newLayout);
   });
 
   // 监听窗口大小变化
@@ -329,6 +397,20 @@ const initialLayoutClass =
     gap: 1rem;
   }
 
+  /* 列表模式 - 卡片间分隔线 */
+  .list-mode .post-card-item {
+    border-bottom: 1px solid #000 !important;
+    padding-bottom: 1.5rem !important;
+    margin-bottom: 0 !important;
+  }
+  :root.dark .list-mode .post-card-item {
+    border-bottom-color: #fff !important;
+  }
+  .list-mode .post-card-item:last-child {
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+  }
+
   /* 移动端列表模式下缩小元数据 */
   @media (max-width: 767px) {
     .list-mode .post-meta-root {
@@ -345,6 +427,30 @@ const initialLayoutClass =
 </style>
 
 <style>
+  /* 布局切换工具栏 */
+  #post-list-toolbar {
+    opacity: 0;
+    animation: fadeInDown 0.4s ease-out forwards;
+    animation-delay: calc(var(--content-delay) + 0ms);
+  }
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .layout-toggle-group {
+    box-shadow: 0 1px 3px oklch(0.5 0 0 / 0.08);
+    transition: box-shadow 0.2s ease;
+  }
+  :root.dark .layout-toggle-group {
+    box-shadow: 0 1px 3px oklch(0 0 0 / 0.2);
+  }
+
+  .layout-toggle-btn {
+    position: relative;
+    white-space: nowrap;
+  }
+
   /* 布局切换动画 */
   #post-list-container {
     /* 限制过渡属性为 opacity 和 transform，避免响应父元素位置变化 */

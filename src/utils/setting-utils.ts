@@ -276,7 +276,11 @@ export function initThemeListener() {
 
 // Wallpaper mode functions
 export function applyWallpaperModeToDocument(mode: WALLPAPER_MODE) {
-	// 检查是否允许切换壁纸模式
+	// 极简风格重构后：壁纸系统已废弃，函数保留为 no-op 以兼容现有调用方
+	void mode;
+	return;
+	// 以下为旧实现，已不再生效
+	// eslint-disable-next-line no-unreachable
 	const isSwitchable = backgroundWallpaper.switchable ?? true;
 	if (!isSwitchable) {
 		// 如果不允许切换，直接返回，不执行任何操作
@@ -662,10 +666,8 @@ export function setWallpaperMode(mode: WALLPAPER_MODE): void {
 }
 
 export function initWallpaperMode(): void {
-	// 初始化透明模式参数（透明度/模糊度/卡片透明度）
-	applyStoredOverlaySettingsToDocument();
-	const storedMode = getStoredWallpaperMode();
-	applyWallpaperModeToDocument(storedMode);
+	// 极简风格重构后：壁纸系统已废弃，函数保留为 no-op
+	return;
 }
 
 export function getStoredWallpaperMode(): WALLPAPER_MODE {

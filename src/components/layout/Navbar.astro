@@ -3,70 +3,24 @@ import { Picture } from "astro:assets";
 import * as path from "node:path";
 import type { ImageMetadata } from "astro";
 import { Icon } from "astro-icon/components";
-import DisplaySettings from "@/components/controls/DisplaySettingsIntegrated.svelte";
 import LightDarkSwitch from "@/components/controls/LightDarkSwitch.svelte";
-import Search from "@/components/controls/Search.svelte";
-import MusicPlayer from "@/components/features/MusicPlayer.astro";
-import { backgroundWallpaper, navBarConfig, siteConfig } from "@/config";
-import { musicPlayerConfig } from "@/config/musicConfig";
+import { navBarConfig, siteConfig } from "@/config";
 import { LinkPresets } from "@/constants/link-presets";
-import I18nKey from "@/i18n/i18nKey";
-import { i18n } from "@/i18n/translation";
-import { LinkPreset, type NavBarLink } from "@/types/config";
 import { getFallbackFormat, getImageFormats } from "@/utils/image-utils";
-import { isHomePage } from "@/utils/layout-utils";
 import { url } from "@/utils/url-utils";
 import DropdownMenu from "./DropdownMenu.astro";
 import NavMenuPanel from "./NavMenuPanel.astro";
 
 const className = Astro.props.class;
 
-// 获取导航栏透明模式配置
-const navbarTransparentMode =
-	backgroundWallpaper.mode === "banner"
-		? backgroundWallpaper.banner?.navbar?.transparentMode || "semi"
-		: "semi";
-
-// 获取导航栏毛玻璃效果配置
-const navbarEnableBlur =
-	backgroundWallpaper.mode === "banner"
-		? (backgroundWallpaper.banner?.navbar?.enableBlur ?? true)
-		: false;
-
-// 获取导航栏模糊度
-const navbarBlur =
-	backgroundWallpaper.mode === "banner"
-		? (backgroundWallpaper.banner?.navbar?.blur ?? 20)
-		: 0;
-
-// 获取导航栏标题，如果没有设置则使用 siteConfig.title
 const navbarTitle = siteConfig.navbar.title || siteConfig.title;
+void siteConfig.navbar.widthFull;
 
-// 获取导航栏宽度配置
-const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
-const navbarMenuAlign = siteConfig.navbar.menuAlign ?? "center";
-const isNavbarMenuCentered = navbarMenuAlign === "center";
+let links = navBarConfig.links.map((item) => {
+	if (typeof item === "number") return LinkPresets[item];
+	return item;
+});
 
-// 检查是否为首页
-const isHomePageCheck = isHomePage(Astro.url.pathname);
-
-// 检查是否有任何显示设置可用
-const showThemeColor = !siteConfig.themeColor.fixed;
-const isWallpaperSwitchable = backgroundWallpaper.switchable ?? true;
-const allowLayoutSwitch = siteConfig.postListLayout.allowSwitch;
-const hasDisplaySettings =
-	showThemeColor || isWallpaperSwitchable || allowLayoutSwitch;
-
-let links: NavBarLink[] = navBarConfig.links.map(
-	(item: NavBarLink | LinkPreset): NavBarLink => {
-		if (typeof item === "number") {
-			return LinkPresets[item];
-		}
-		return item;
-	},
-);
-
-// 处理导航栏 Logo 图片
 const logoValue = siteConfig.navbar.logo?.value || "";
 const isLocalSrcLogo =
 	siteConfig.navbar.logo?.type === "image" &&
@@ -84,136 +38,223 @@ if (isLocalSrcLogo) {
 		.normalize(path.join("../../", logoValue))
 		.replace(/\\/g, "/");
 	const file = files[normalizedPath];
-	if (file) {
-		logoImg = await file();
-	}
+	if (file) logoImg = await file();
 }
 ---
-<div id="navbar" class="z-50" style={`--navbar-glass-blur: ${navbarBlur}px;`} data-transparent-mode={navbarTransparentMode} data-enable-blur={String(navbarEnableBlur)} data-is-home={isHomePageCheck} data-full-width={navbarWidthFull}>
-    <div class:list={[
-        className,
-        "overflow-visible! h-18 px-4"
-    ]}>
-        <div class="mx-auto h-full w-full max-w-(--page-width) grid grid-cols-[auto_minmax(0,1fr)_auto] items-center">
-            <a href={url('/')} class="btn-plain scale-animation rounded-lg h-13 px-5 font-bold active:scale-95">
-                <div class:list={[
-                    "flex flex-row items-center text-md",
-                    siteConfig.navbar.followTheme ? "text-(--primary)" : "dark:text-white text-black"
-                ]}>
-                                    {siteConfig.navbar.logo?.type === "icon" ? (
-                                        <Icon name={siteConfig.navbar.logo.value || "material-symbols:home-pin-outline"} is:inline class="text-[1.75rem] mb-1 mr-2" />
-                                    ) : siteConfig.navbar.logo?.type === "image" && logoImg ? (
-                                        <Picture
-                                            src={logoImg}
-                                            alt={siteConfig.navbar.logo.alt || siteConfig.title}
-                                            class="h-7 w-7 mb-1 mr-2 object-contain"
-                                            formats={getImageFormats()}
-                                            fallbackFormat={getFallbackFormat()}
-                                            widths={[28, 56]}
-                                            loading="eager"
-                                            fetchpriority="high"
-                                        />
-                                    ) : siteConfig.navbar.logo?.type === "image" ? (
-                                        <img src={url(siteConfig.navbar.logo.value)} alt={siteConfig.navbar.logo.alt || siteConfig.title} class="h-7 w-7 mb-1 mr-2 object-contain" fetchpriority="high" />
-                                    ) : siteConfig.navbar.logo?.type === "url" ? (
-                                        <img src={siteConfig.navbar.logo.value} alt={siteConfig.navbar.logo.alt || siteConfig.title} class="h-7 w-7 mb-1 mr-2 object-contain" fetchpriority="high" />
-                                    ) : (
-                                        <Icon name="material-symbols:home-pin-outline" is:inline class="text-[1.75rem] mb-1 mr-2" />
-                                    )}
-                    {navbarTitle}
-                </div>
+
+<div id="navbar" class="z-50">
+    <div class:list={[className, "navbar-pill"]}>
+        <div class="navbar-inner" data-nav-body>
+            <a href={url('/')} class="navbar-logo scale-animation flex items-center text-(--deep-text)">
+                {siteConfig.navbar.logo?.type === "icon" ? (
+                    <Icon name={siteConfig.navbar.logo.value || "material-symbols:home-pin-outline"} is:inline class="text-[1.5rem] mr-2 flex-shrink-0" />
+                ) : siteConfig.navbar.logo?.type === "image" && logoImg ? (
+                    <Picture
+                        src={logoImg}
+                        alt={siteConfig.navbar.logo.alt || siteConfig.title}
+                        class="h-7 w-7 mr-2 object-contain flex-shrink-0"
+                        formats={getImageFormats()}
+                        fallbackFormat={getFallbackFormat()}
+                        widths={[28, 56]}
+                        loading="eager"
+                        fetchpriority="high"
+                    />
+                ) : siteConfig.navbar.logo?.type === "image" ? (
+                    <img src={url(siteConfig.navbar.logo.value)} alt={siteConfig.navbar.logo.alt || siteConfig.title} class="h-7 w-7 mr-2 object-contain flex-shrink-0" fetchpriority="high" />
+                ) : siteConfig.navbar.logo?.type === "url" ? (
+                    <img src={siteConfig.navbar.logo.value} alt={siteConfig.navbar.logo.alt || siteConfig.title} class="h-7 w-7 mr-2 object-contain flex-shrink-0" fetchpriority="high" />
+                ) : (
+                    <Icon name="material-symbols:home-pin-outline" is:inline class="text-[1.5rem] mr-2 flex-shrink-0" />
+                )}
+                <span class="navbar-logo-text font-mono uppercase tracking-[0.15em] text-sm font-semibold ml-1">{navbarTitle}</span>
             </a>
-            <div class:list={[
-                "hidden lg:flex items-center space-x-1 col-start-2",
-                isNavbarMenuCentered
-                    ? "justify-center"
-                    : "justify-start pl-2"
-            ]}>
-                {links.map((l) => {
-                    return <DropdownMenu link={l} />;
-                })}
+
+            <div class="navbar-nav hidden lg:flex items-center gap-1 relative" data-navbar-nav>
+                <div class="navbar-hover-border" data-hover-border></div>
+                {links.map((l) => <DropdownMenu link={l} />)}
             </div>
-            <div class="flex col-start-3 justify-self-end">
-                <!--<SearchPanel client:load>-->
-                <Search
-                    client:load
-                />
-                {musicPlayerConfig.showInNavbar && (
-                    <button aria-label={i18n(I18nKey.music)} class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="music-player-switch">
-                        <Icon name="material-symbols:music-note-rounded" is:inline class="text-[1.25rem]"></Icon>
-                    </button>
-                )}
-                {hasDisplaySettings && (
-                        <button aria-label="Display Settings" class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="display-settings-switch">
-                            <Icon name="material-symbols:palette-outline" is:inline class="text-[1.25rem]"></Icon>
-                        </button>
-                )}
-                {/* @ts-ignore */}
-                <LightDarkSwitch client:load></LightDarkSwitch>
-                <button aria-label="Menu" name="Nav Menu" class="btn-plain scale-animation rounded-lg w-11 h-11 active:scale-90 lg:hidden!" id="nav-menu-switch">
+
+            <div class="navbar-right flex items-center gap-1">
+                <LightDarkSwitch client:load />
+                <button aria-label="Menu" name="Nav Menu" class="btn-plain h-11 w-11 lg:hidden!" id="nav-menu-switch">
                     <Icon name="material-symbols:menu-rounded" is:inline class="text-[1.25rem]"></Icon>
                 </button>
             </div>
         </div>
-        {musicPlayerConfig.showInNavbar && (
-            <div id="music-nav-panel" class="float-panel float-panel-closed absolute transition-all right-16 p-2 pt-4.5 w-80 z-50">
-                <MusicPlayer />
-            </div>
-        )}
         <NavMenuPanel links={links}></NavMenuPanel>
-        <DisplaySettings client:load></DisplaySettings>
     </div>
 </div>
 
+<style>
+    @reference "../../styles/main.css";
+
+    /* ── pill 容器内边距 ── */
+    .navbar-pill {
+        padding: 0.5rem 0.75rem;
+        /* 统一管理所有过渡，scoped style 优先级高于外部 CSS，确保不被覆盖 */
+        transition:
+            width 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+            max-width 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+            border-radius 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+            padding 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+            background-color 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+            border-color 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+            backdrop-filter 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* 滚动后内边距收紧 */
+    :global(#navbar.scrolled) .navbar-pill {
+        padding: 0.35rem 0.5rem;
+    }
+
+    /* ── 内层 flex 行 ── */
+    .navbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        max-width: var(--page-width, 1200px);
+        margin-inline: auto;
+        padding: 0.25rem 0.75rem;
+        position: relative;
+    }
+
+    :global(#navbar.scrolled) .navbar-inner {
+        padding: 0.2rem 0.5rem;
+    }
+
+    /* ── Logo ── */
+    .navbar-logo {
+        display: flex;
+        align-items: center;
+        height: 2.75rem;
+        padding: 0 0.5rem;
+        font-weight: 600;
+        position: relative;
+        z-index: 10;
+        flex-shrink: 0;
+        text-decoration: none;
+        color: var(--deep-text);
+    }
+
+    /* logo 文字：滚动后淡出收缩 */
+    .navbar-logo-text {
+        display: inline-block;
+        max-width: 12rem;
+        overflow: hidden;
+        white-space: nowrap;
+        opacity: 1;
+        transform: translateX(0);
+        transition:
+            max-width 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+            opacity 0.3s ease,
+            transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+            margin 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    :global(#navbar.scrolled) .navbar-logo-text {
+        max-width: 0;
+        opacity: 0;
+        transform: translateX(-6px);
+        margin-left: 0 !important;
+    }
+
+    /* ── 中间导航菜单 ── */
+    .navbar-nav {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        display: none;
+        align-items: center;
+        gap: 0.25rem;
+        white-space: nowrap;
+        transition: gap 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @media (min-width: 1024px) {
+        .navbar-nav {
+            display: flex;
+        }
+    }
+
+    :global(#navbar.scrolled) .navbar-nav {
+        gap: 0.1rem;
+    }
+
+    /* ── 右侧工具栏 ── */
+    .navbar-right {
+        position: relative;
+        z-index: 10;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        transition: gap 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    :global(#navbar.scrolled) .navbar-right {
+        gap: 0.1rem;
+    }
+
+    /* ── hover 滑动边框指示器 ── */
+    .navbar-hover-border {
+        position: absolute;
+        height: 2.5rem;
+        border-radius: 9999px;
+        border: 1.5px solid oklch(0.35 0 0);
+        background-color: transparent;
+        opacity: 0;
+        transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    :root.dark .navbar-hover-border {
+        border-color: oklch(0.6 0 0);
+    }
+
+    .navbar-nav:hover .navbar-hover-border,
+    .navbar-nav.nav-has-active .navbar-hover-border {
+        opacity: 1;
+    }
+
+    /* 禁用各 item 自身的 expand-animation 背景 */
+    .navbar-nav .dropdown-container > a::before,
+    .navbar-nav .dropdown-container > button::before,
+    .navbar-nav .dropdown-container > a:hover::before,
+    .navbar-nav .dropdown-container > button:hover::before,
+    .navbar-nav .dropdown-container > a:active::before,
+    .navbar-nav .dropdown-container > button:active::before {
+        background-color: transparent !important;
+    }
+</style>
+
 <script>
 function loadButtonScript() {
-    let settingBtn = document.getElementById("display-settings-switch");
-    if (settingBtn) {
-        settingBtn.onclick = function () {
-            let settingPanel = document.getElementById("display-setting");
-            if (settingPanel) {
-                settingPanel.classList.toggle("float-panel-closed");
-            }
-        };
-    }
-
-    let menuBtn = document.getElementById("nav-menu-switch");
+    const menuBtn = document.getElementById("nav-menu-switch");
     if (menuBtn) {
-        menuBtn.onclick = function () {
-            let menuPanel = document.getElementById("nav-menu-panel");
-            if (menuPanel) {
-                menuPanel.classList.toggle("float-panel-closed");
-            }
+        menuBtn.onclick = () => {
+            const menuPanel = document.getElementById("nav-menu-panel");
+            menuPanel?.classList.toggle("float-panel-closed");
         };
     }
 
-    let musicBtn = document.getElementById("music-player-switch");
-    if (musicBtn) {
-        musicBtn.onclick = function () {
-            let musicPanel = document.getElementById("music-nav-panel");
-            if (musicPanel) {
-                musicPanel.classList.toggle("float-panel-closed");
-            }
-        };
-    }
-
-    let themeSwitchBtn = document.getElementById("scheme-switch");
+    const themeSwitchBtn = document.getElementById("scheme-switch");
     if (themeSwitchBtn) {
-        themeSwitchBtn.onclick = function () {
-            let themePanel = document.getElementById("theme-mode-panel");
-            if (themePanel) {
-                themePanel.classList.toggle("float-panel-closed");
-            }
+        themeSwitchBtn.onclick = () => {
+            const themePanel = document.getElementById("theme-mode-panel");
+            themePanel?.classList.toggle("float-panel-closed");
         };
     }
 
-    document.addEventListener("click", function(event) {
-        const panels = ["display-setting", "nav-menu-panel", "music-nav-panel", "theme-mode-panel"];
-        const buttons = ["display-settings-switch", "nav-menu-switch", "music-player-switch", "scheme-switch"];
-
-        panels.forEach((id, index) => {
+    document.addEventListener("click", (event) => {
+        const panels = ["nav-menu-panel", "theme-mode-panel"];
+        const buttons = ["nav-menu-switch", "scheme-switch"];
+        panels.forEach((id, i) => {
             const panel = document.getElementById(id);
-            const button = document.getElementById(buttons[index]);
+            const button = document.getElementById(buttons[i]);
             if (panel && button && !panel.classList.contains("float-panel-closed")) {
                 if (event.target instanceof Node && !panel.contains(event.target) && !button.contains(event.target)) {
                     panel.classList.add("float-panel-closed");
@@ -223,97 +264,123 @@ function loadButtonScript() {
     });
 }
 
-loadButtonScript();
+function initHoverSlider() {
+    const navContainer = document.querySelector('[data-navbar-nav]') as HTMLElement | null;
+    const hoverBorder = document.querySelector('[data-hover-border]') as HTMLElement | null;
 
-// 为semifull模式添加滚动检测逻辑
-function initSemifullScrollDetection() {
-    const navbar = document.getElementById('navbar');
-    if (!navbar) return;
+    if (!navContainer || !hoverBorder) return;
 
-    const transparentMode = navbar.getAttribute('data-transparent-mode');
-    if (transparentMode !== 'semifull') return;
+    const _navContainer = navContainer;
+    const _hoverBorder = hoverBorder;
+    const navItems = _navContainer.querySelectorAll(':scope > .dropdown-container');
 
-    // 无论首页/非首页，semifull 都由滚动位置决定是否进入 scrolled 状态
-    // 先移除之前的滚动监听器，避免重复绑定
-    if (window.semifullScrollHandler) {
-        window.removeEventListener('scroll', window.semifullScrollHandler as () => void);
-        window.semifullScrollHandler = undefined;
+    function detectActiveItem() {
+        const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+        let hasActive = false;
+        navItems.forEach((item) => {
+            const link = item.querySelector('a') as HTMLAnchorElement | null;
+            if (!link) return;
+            const href = link.getAttribute('href')?.replace(/\/$/, '') || '/';
+            if (href === currentPath || (currentPath !== '/' && currentPath.startsWith(href + '/')) || (href !== '/' && currentPath.startsWith(href))) {
+                item.classList.add('nav-item-active');
+                hasActive = true;
+                const rect = item.getBoundingClientRect();
+                const containerRect = _navContainer.getBoundingClientRect();
+                _hoverBorder.style.width = `${rect.width}px`;
+                _hoverBorder.style.height = `${rect.height}px`;
+                _hoverBorder.style.left = `${rect.left - containerRect.left}px`;
+                _hoverBorder.style.top = `${(containerRect.height - rect.height) / 2}px`;
+            } else {
+                item.classList.remove('nav-item-active');
+            }
+        });
+        if (hasActive) {
+            _navContainer.classList.add('nav-has-active');
+        } else {
+            _navContainer.classList.remove('nav-has-active');
+        }
     }
 
-    // 初始状态不强制加 scrolled，保持透明；滚动后再切换
-    navbar.classList.remove('scrolled');
+    navItems.forEach((item) => {
+        item.addEventListener('mouseenter', () => {
+            const rect = item.getBoundingClientRect();
+            const containerRect = _navContainer.getBoundingClientRect();
+
+            _hoverBorder.style.width = `${rect.width}px`;
+            _hoverBorder.style.height = `${rect.height}px`;
+            _hoverBorder.style.left = `${rect.left - containerRect.left}px`;
+            _hoverBorder.style.top = `${(containerRect.height - rect.height) / 2}px`;
+        });
+    });
+
+    _navContainer.addEventListener('mouseleave', () => {
+        const hasActive = _navContainer.querySelector('.nav-item-active');
+        if (!hasActive) {
+            _hoverBorder.style.opacity = '0';
+        }
+    });
+
+    _navContainer.addEventListener('mouseenter', () => {
+        _hoverBorder.style.opacity = '1';
+    });
+
+    detectActiveItem();
+    document.addEventListener('swup:page:view', detectActiveItem);
+}
+
+loadButtonScript();
+initHoverSlider();
+
+(function() {
+    const navbar = document.getElementById('navbar');
+    const navbarWrapper = document.getElementById('navbar-wrapper');
+    if (!navbar) return;
+
+    const SCROLL_IN  = 80;   // 超过此值收缩
+    const SCROLL_OUT = 40;   // 低于此值展开
 
     let ticking = false;
 
-    function updateNavbarState() {
-        if (document.documentElement.classList.contains('is-page-transitioning')) {
-            navbar!.classList.remove('scrolled');
-            ticking = false;
-            return;
-        }
+    function handleScroll() {
+        const y = window.scrollY;
 
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const threshold = 50; // 滚动阈值，可以根据需要调整
-        // 使用批量DOM操作优化性能
-        if (scrollTop > threshold) {
-            navbar!.classList.add('scrolled');
-        } else {
-            navbar!.classList.remove('scrolled');
+        if (y > SCROLL_IN) {
+            navbar.classList.add('scrolled');
+            navbarWrapper?.classList.add('navbar-scrolled');
+        } else if (y < SCROLL_OUT) {
+            navbar.classList.remove('scrolled');
+            navbarWrapper?.classList.remove('navbar-scrolled');
         }
 
         ticking = false;
     }
 
-    function requestTick() {
+    window.addEventListener('scroll', () => {
         if (!ticking) {
-            requestAnimationFrame(updateNavbarState);
+            requestAnimationFrame(handleScroll);
             ticking = true;
         }
-    }
+    }, { passive: true });
 
-    // 移除之前的滚动事件监听器（如果存在）
-    if (window.semifullScrollHandler) {
-        window.removeEventListener('scroll', window.semifullScrollHandler as () => void);
-    }
+    handleScroll();
+})();
 
-    // 保存新的事件处理器引用
-    window.semifullScrollHandler = requestTick as unknown as (() => void);
-
-    // 监听滚动事件
-    window.addEventListener('scroll', requestTick, { passive: true });
-
-    // 初始化状态
-    updateNavbarState();
-}
-
-// 将函数暴露到全局对象，供页面切换时调用
-window.initSemifullScrollDetection = initSemifullScrollDetection;
-
-// 页面加载完成后初始化滚动检测
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initSemifullScrollDetection);
-} else {
-    initSemifullScrollDetection();
-}
+document.addEventListener("swup:page:view", () => {
+    initHoverSlider();
+});
 </script>
 
 {
     import.meta.env.PROD && (
         <script is:inline data-swup-ignore-script define:vars={{ scriptUrl: url('/pagefind/pagefind.js') }}>
-            {/* 你的 loadPagefind 函数的完整内容放在这里 */}
             async function loadPagefind() {
                 try {
                     const response = await fetch(scriptUrl, { method: 'HEAD' });
-                    if (!response.ok) {
-                        throw new Error(`Pagefind script not found: ${response.status}`);
-                    }
+                    if (!response.ok) throw new Error(`Pagefind script not found: ${response.status}`);
                     const pagefind = await import(scriptUrl);
-                    await pagefind.options({
-                        excerptLength: 20
-                    });
+                    await pagefind.options({ excerptLength: 20 });
                     window.pagefind = pagefind;
                     document.dispatchEvent(new CustomEvent('pagefindready'));
-                    console.log('Pagefind loaded and initialized successfully, event dispatched.');
                 } catch (error) {
                     console.error('Failed to load Pagefind:', error);
                     window.pagefind = {
@@ -321,10 +388,8 @@ if (document.readyState === 'loading') {
                         options: () => Promise.resolve(),
                     };
                     document.dispatchEvent(new CustomEvent('pagefindloaderror'));
-                    console.log('Pagefind load error, event dispatched.');
                 }
             }
-
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', loadPagefind);
             } else {

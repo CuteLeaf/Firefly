@@ -6,24 +6,12 @@ import UmamiAnalytics from "@components/analytics/UmamiAnalytics.astro";
 import FancyboxManager from "@components/features/FancyboxManager.astro";
 import FontManager from "@components/features/FontManager.astro";
 import MusicManager from "@components/features/MusicManager.astro";
-import SakuraEffect from "@components/features/SakuraEffect.astro";
 import ConfigCarrier from "@components/layout/ConfigCarrier.astro";
 
-import {
-	backgroundWallpaper,
-	expressiveCodeConfig,
-	profileConfig,
-	siteConfig,
-} from "@/config";
-import {
-	BANNER_HEIGHT,
-	BANNER_HEIGHT_EXTEND,
-	BANNER_HEIGHT_HOME,
-	PAGE_WIDTH,
-} from "@/constants/constants";
+import { expressiveCodeConfig, profileConfig, siteConfig } from "@/config";
+import { PAGE_WIDTH } from "@/constants/constants";
 import { defaultFavicons } from "@/constants/icon";
 import type { Favicon } from "@/types/config";
-import { getDefaultBackground, isHomePage } from "@/utils/layout-utils";
 import { url } from "@/utils/url-utils";
 
 import "@/styles/main.css";
@@ -40,33 +28,10 @@ interface Props {
 	postSlug?: string;
 }
 
-let { title, banner, description, lang, setOGTypeArticle, postSlug } =
-	Astro.props;
+const { title, description, setOGTypeArticle, postSlug } = Astro.props;
+let { lang } = Astro.props;
 
-// apply a class to the body element to decide the height of the banner, only used for initial page load
-// Swup can update the body for each page visit, but it's after the page transition, causing a delay for banner height change
-// so use Swup hooks instead to change the height immediately when a link is clicked
-const isHomePageCheck = isHomePage(Astro.url.pathname);
-
-// defines global css variables
-// why doing this in Layout instead of GlobalStyles: https://github.com/withastro/astro/issues/6728#issuecomment-1502203757
 const configHue = siteConfig.themeColor.hue;
-
-// 获取导航栏透明模式配置
-const navbarTransparentMode =
-	backgroundWallpaper.banner?.navbar?.transparentMode || "semi";
-// 判断是否应该显示顶部高光效果（只在full和semifull模式下显示）
-const shouldShowTopHighlight =
-	navbarTransparentMode === "full" || navbarTransparentMode === "semifull";
-
-if (!banner || typeof banner !== "string" || banner.trim() === "") {
-	banner = getDefaultBackground();
-}
-
-// TODO don't use post cover as banner for now
-banner = getDefaultBackground();
-
-const enableBanner = backgroundWallpaper.mode === "banner";
 
 let pageTitle: string;
 if (title) {
@@ -85,412 +50,102 @@ if (siteConfig.generateOgImages && postSlug) {
 const favicons: Favicon[] =
 	siteConfig.favicon.length > 0 ? siteConfig.favicon : defaultFavicons;
 
-// const siteLang = siteConfig.lang.replace('_', '-')
 if (!lang) {
 	lang = `${siteConfig.lang}`;
 }
 const siteLang = lang.replace("_", "-");
-
-// 使用固定的banner偏移量，position配置用于图片定位
 ---
 
 <!doctype html>
-<html lang={siteLang} class="bg-(--page-bg) text-[14px] md:text-[16px]" data-wallpaper-mode={backgroundWallpaper.mode}>
+<html lang={siteLang} class="bg-(--page-bg) text-[14px] md:text-[16px]" data-wallpaper-mode="none">
   <head>
     <meta charset="UTF-8" />
     {siteConfig.analytics?.googleAnalyticsId && (
-            <GoogleAnalytics analyticsId={siteConfig.analytics.googleAnalyticsId} />
+      <GoogleAnalytics analyticsId={siteConfig.analytics.googleAnalyticsId} />
     )}
     {siteConfig.analytics?.microsoftClarityId && (
-            <MicrosoftClarity clarityId={siteConfig.analytics.microsoftClarityId} />
+      <MicrosoftClarity clarityId={siteConfig.analytics.microsoftClarityId} />
     )}
-        {siteConfig.analytics?.umamiAnalytics?.websiteId && (
-          <UmamiAnalytics
-          websiteId={siteConfig.analytics.umamiAnalytics.websiteId}
-          scriptUrl={siteConfig.analytics.umamiAnalytics.scriptUrl}
-          trackOutboundLinks={siteConfig.analytics.umamiAnalytics.trackOutboundLinks}
-          collectWebVitals={siteConfig.analytics.umamiAnalytics.collectWebVitals}
-          relpays={siteConfig.analytics.umamiAnalytics.relpays}
-          />
-        )}
-        {siteConfig.analytics?.la51Analytics?.Id && (
-            <La51Analytics
-            analyticsId={siteConfig.analytics.la51Analytics.Id}
-            sdkUrl={siteConfig.analytics.la51Analytics?.sdkUrl}
-            ck={siteConfig.analytics.la51Analytics?.ck}
-            autoTrack={siteConfig.analytics.la51Analytics?.autoTrack}
-            hashMode={siteConfig.analytics.la51Analytics?.hashMode}
-            screenRecord={siteConfig.analytics.la51Analytics?.screenRecord}
-            />
+    {siteConfig.analytics?.umamiAnalytics?.websiteId && (
+      <UmamiAnalytics
+        websiteId={siteConfig.analytics.umamiAnalytics.websiteId}
+        scriptUrl={siteConfig.analytics.umamiAnalytics.scriptUrl}
+        trackOutboundLinks={siteConfig.analytics.umamiAnalytics.trackOutboundLinks}
+        collectWebVitals={siteConfig.analytics.umamiAnalytics.collectWebVitals}
+        relpays={siteConfig.analytics.umamiAnalytics.relpays}
+      />
+    )}
+    {siteConfig.analytics?.la51Analytics?.Id && (
+      <La51Analytics
+        analyticsId={siteConfig.analytics.la51Analytics.Id}
+        sdkUrl={siteConfig.analytics.la51Analytics?.sdkUrl}
+        ck={siteConfig.analytics.la51Analytics?.ck}
+        autoTrack={siteConfig.analytics.la51Analytics?.autoTrack}
+        hashMode={siteConfig.analytics.la51Analytics?.hashMode}
+        screenRecord={siteConfig.analytics.la51Analytics?.screenRecord}
+      />
     )}
 
     <title>{pageTitle}</title>
-    <meta
-      name="description"
-      content={description || siteConfig.description || pageTitle}
-    />
-    {
-      siteConfig.keywords && siteConfig.keywords.length > 0 && (
-        <meta name="keywords" content={siteConfig.keywords.join(", ")} />
-      )
-    }
+    <meta name="description" content={description || siteConfig.description || pageTitle} />
+    {siteConfig.keywords && siteConfig.keywords.length > 0 && (
+      <meta name="keywords" content={siteConfig.keywords.join(", ")} />
+    )}
     <meta name="author" content={profileConfig.name} />
 
     <meta property="og:site_name" content={siteConfig.title} />
     <meta property="og:url" content={Astro.url} />
     <meta property="og:title" content={pageTitle} />
-    <meta
-      property="og:description"
-      content={description || siteConfig.description || pageTitle}
-    />
+    <meta property="og:description" content={description || siteConfig.description || pageTitle} />
     {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
-    {
-      setOGTypeArticle ? (
-        <meta property="og:type" content="article" />
-      ) : (
-        <meta property="og:type" content="website" />
-      )
-    }
+    {setOGTypeArticle ? (
+      <meta property="og:type" content="article" />
+    ) : (
+      <meta property="og:type" content="website" />
+    )}
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={Astro.url} />
     <meta name="twitter:title" content={pageTitle} />
-    <meta
-      name="twitter:description"
-      content={description || siteConfig.description || pageTitle}
-    />
+    <meta name="twitter:description" content={description || siteConfig.description || pageTitle} />
 
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    {
-      favicons.map((favicon) => (
-        <link
-          rel="icon"
-          href={favicon.src.startsWith("/") ? url(favicon.src) : favicon.src}
-          sizes={favicon.sizes}
-          media={favicon.theme && `(prefers-color-scheme: ${favicon.theme})`}
-        />
-      ))
-    }
+    {favicons.map((favicon) => (
+      <link
+        rel="icon"
+        href={favicon.src.startsWith("/") ? url(favicon.src) : favicon.src}
+        sizes={favicon.sizes}
+        media={favicon.theme && `(prefers-color-scheme: ${favicon.theme})`}
+      />
+    ))}
 
-    <!-- 为特定域名的图片添加 referrerpolicy 以解决 403 问题 -->
-    {siteConfig.imageOptimization?.noReferrerDomains &&
-     siteConfig.imageOptimization.noReferrerDomains.length > 0 && (
-      <script
-        is:inline
-        define:vars={{
-          noReferrerDomains: JSON.stringify(
-            siteConfig.imageOptimization.noReferrerDomains
-          ),
-        }}
-      >
-        (function() {
-          const domains = JSON.parse(noReferrerDomains);
-
-          // 域名匹配函数，支持通配符
-          function matchesDomain(urlStr, patterns) {
-            try {
-              const urlObj = new URL(urlStr);
-              const hostname = urlObj.hostname;
-
-              return patterns.some(function(pattern) {
-                const regexPattern = pattern.replace(/\./g, '\\.').replace(/\*/g, '.*');
-                const regex = new RegExp('^' + regexPattern + '$');
-                return regex.test(hostname);
-              });
-            } catch (e) {
-              return false;
-            }
-          }
-
-          // 处理单个图片元素
-          function processImage(img) {
-            if (!img.src || img.hasAttribute('referrerpolicy')) return;
-
-            if (matchesDomain(img.src, domains)) {
-              img.setAttribute('referrerpolicy', 'no-referrer');
-            }
-          }
-
-          // 立即处理页面上的所有图片
-          document.querySelectorAll('img').forEach(processImage);
-
-          // 使用 MutationObserver 监听动态加载的图片
-          const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-              mutation.addedNodes.forEach(function(node) {
-                if (node.nodeName === 'IMG') {
-                  processImage(node);
-                }
-                if (node.querySelectorAll) {
-                  node.querySelectorAll('img').forEach(processImage);
-                }
-              });
-            });
-          });
-
-          observer.observe(document.documentElement, {
-            childList: true,
-            subtree: true
-          });
-        })();
-      </script>
-    )}
-
-    <!-- Set the theme before the page is rendered to avoid a flash -->
+    {/* 主题初始化（极简：仅 light/dark；无壁纸模式） */}
     <script
       is:inline
       define:vars={{
-        BANNER_HEIGHT_EXTEND,
-        PAGE_WIDTH,
         configHue,
         defaultMode: siteConfig.themeColor.defaultMode ?? "light",
-        defaultWallpaperMode: backgroundWallpaper.mode,
-        isWallpaperSwitchable:
-          backgroundWallpaper.switchable ?? true,
         darkTheme: expressiveCodeConfig.darkTheme,
         lightTheme: expressiveCodeConfig.lightTheme,
-        baseUrl: import.meta.env.BASE_URL,
-        cardTransparentOpacity: backgroundWallpaper.overlay?.cardOpacity ?? 0.6,
       }}
     >
-      // 主题初始化 - 与setting-utils.ts保持一致
       const LIGHT_MODE = "light";
       const DARK_MODE = "dark";
       const SYSTEM_MODE = "system";
 
-      // 获取存储的主题，如果没有则使用默认值
       const theme = localStorage.getItem("theme") || defaultMode;
-
-      // 获取系统主题
       function getSystemTheme() {
-        return window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? DARK_MODE
-          : LIGHT_MODE;
+        return window.matchMedia("(prefers-color-scheme: dark)").matches ? DARK_MODE : LIGHT_MODE;
       }
-
-      // 解析主题（如果是system模式，则获取系统主题）
-      function resolveTheme(themeValue) {
-        if (themeValue === SYSTEM_MODE) {
-          return getSystemTheme();
-        }
-        return themeValue;
-      }
-
-      const resolvedTheme = resolveTheme(theme);
+      const resolvedTheme = theme === SYSTEM_MODE ? getSystemTheme() : theme;
       const isDark = resolvedTheme === DARK_MODE;
+      if (isDark) document.documentElement.classList.add("dark");
+      else document.documentElement.classList.remove("dark");
+      document.documentElement.setAttribute("data-theme", isDark ? darkTheme : lightTheme);
 
-      // 应用主题
-      if (isDark) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-
-      // Set the theme for Expressive Code
-      document.documentElement.setAttribute(
-        "data-theme",
-        isDark ? darkTheme : lightTheme
-      );
-
-      // Load the hue from local storage
       const hue = localStorage.getItem("hue") || configHue;
       document.documentElement.style.setProperty("--hue", hue);
-
-      // 设置卡片透明度（全屏透明模式下使用），优先使用用户自定义值
-      const storedCardOpacity = localStorage.getItem("overlayCardOpacity");
-      const parsedCardOpacity = storedCardOpacity === null ? NaN : Number.parseFloat(storedCardOpacity);
-      const resolvedCardOpacity = Number.isFinite(parsedCardOpacity)
-        ? Math.min(1, Math.max(0, parsedCardOpacity))
-        : cardTransparentOpacity;
-      document.documentElement.style.setProperty("--card-transparent-opacity", String(resolvedCardOpacity));
-
-      // calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
-      // 使用更准确的窗口高度计算
-      function calculateBannerHeightExtend() {
-        let offset = Math.floor(
-          window.innerHeight * (BANNER_HEIGHT_EXTEND / 100)
-        );
-        offset = offset - (offset % 4);
-        document.documentElement.style.setProperty(
-          "--banner-height-extend",
-          `${offset}px`
-        );
-      }
-
-      // 立即设置初始值
-      calculateBannerHeightExtend();
-
-      // 在下一帧重新计算精确值（仅在值变化时更新，避免闪烁）
-      requestAnimationFrame(() => {
-        const oldValue = parseInt(
-          document.documentElement.style.getPropertyValue(
-            "--banner-height-extend"
-          )
-        );
-        calculateBannerHeightExtend();
-        const newValue = parseInt(
-          document.documentElement.style.getPropertyValue(
-            "--banner-height-extend"
-          )
-        );
-        // 如果值变化了，再更新一次确保准确
-        if (Math.abs(oldValue - newValue) > 4) {
-          // 如果有明显变化，延迟一帧再更新，避免闪烁
-          requestAnimationFrame(calculateBannerHeightExtend);
-        }
-      });
-
-      // 初始化壁纸模式 - 在页面渲染前应用
-      const WALLPAPER_BANNER = "banner";
-      const WALLPAPER_OVERLAY = "overlay";
-      const WALLPAPER_NONE = "none";
-      const wallpaperMode = isWallpaperSwitchable
-        ? localStorage.getItem("wallpaperMode") || defaultWallpaperMode
-        : defaultWallpaperMode;
-
-      // 设置data-wallpaper-mode属性
-      document.documentElement.setAttribute(
-        "data-wallpaper-mode",
-        wallpaperMode
-      );
-
-      // 立即执行函数来处理DOM
-      (function applyWallpaperMode() {
-        // 使用 requestAnimationFrame 确保在下一帧之前执行
-        requestAnimationFrame(function () {
-          // 根据模式隐藏显示对应元素
-          if (
-            wallpaperMode === WALLPAPER_NONE ||
-            wallpaperMode === WALLPAPER_OVERLAY
-          ) {
-            // 隐藏横幅
-            if (document.body) {
-              document.body.classList.remove("enable-banner");
-              document.body.classList.add("no-banner-layout");
-            }
-          } else {
-            if (document.body) {
-              document.body.classList.add("enable-banner");
-              document.body.classList.remove("no-banner-layout");
-            }
-          }
-
-          // 全屏壁纸模式
-          if (wallpaperMode === WALLPAPER_OVERLAY) {
-            if (document.body) {
-              document.body.classList.add("wallpaper-transparent");
-            }
-          } else {
-            if (document.body) {
-              document.body.classList.remove("wallpaper-transparent");
-            }
-          }
-
-          // 处理wallpaper-wrapper的显示
-          const wallpaperWrapper = document.getElementById("wallpaper-wrapper");
-
-          // 检查当前是否为首页
-          const isHomePage =
-            window.location.pathname === baseUrl ||
-            (baseUrl !== '/' && window.location.pathname === baseUrl.replace(/\/$/, '')) ||
-            window.location.pathname === "/";
-
-          if (wallpaperMode === WALLPAPER_OVERLAY) {
-            // 全屏壁纸透明模式：切换为 overlay 显示
-            if (wallpaperWrapper) {
-              wallpaperWrapper.classList.add("wallpaper-overlay");
-              wallpaperWrapper.style.display = "block";
-              wallpaperWrapper.classList.remove("hidden", "opacity-0", "mobile-hide-banner");
-              wallpaperWrapper.classList.add("opacity-100");
-              wallpaperWrapper.style.top = "";
-            }
-          } else if (wallpaperMode === WALLPAPER_NONE) {
-            // 纯色背景：隐藏壁纸
-            if (wallpaperWrapper) {
-              wallpaperWrapper.style.display = "none";
-              wallpaperWrapper.classList.add("hidden", "opacity-0");
-            }
-          } else {
-            // banner模式：以 banner 方式显示
-            if (wallpaperWrapper) {
-              wallpaperWrapper.classList.remove("wallpaper-overlay");
-              const isMobile = window.innerWidth < 1024;
-              // 移动端非首页时隐藏banner（初始状态直接隐藏，不需要动画）
-              // 桌面端始终显示banner
-              if (isMobile && !isHomePage) {
-                wallpaperWrapper.style.display = "none";
-                wallpaperWrapper.classList.add("mobile-hide-banner");
-              } else {
-                wallpaperWrapper.style.display = "block";
-                wallpaperWrapper.classList.remove("mobile-hide-banner");
-              }
-            }
-          }
-
-          // 处理主内容区域位置
-          const mainContentWrapper = document.querySelector(
-            ".absolute.w-full.z-30"
-          );
-          if (mainContentWrapper) {
-            const isMobile = window.innerWidth < 1024;
-            // 只在移动端非首页时调整主内容位置
-            if (isMobile && !isHomePage) {
-              mainContentWrapper.classList.add("mobile-main-no-banner");
-            } else {
-              mainContentWrapper.classList.remove("mobile-main-no-banner");
-            }
-          }
-
-          // 处理credit元素
-          const creditDesktop = document.getElementById(
-            "banner-credit-desktop"
-          );
-          const creditMobile = document.getElementById("banner-credit-mobile");
-          if (
-            wallpaperMode === WALLPAPER_OVERLAY ||
-            wallpaperMode === WALLPAPER_NONE
-          ) {
-            if (creditDesktop) creditDesktop.style.display = "none";
-            if (creditMobile) creditMobile.style.display = "none";
-          } else {
-            if (creditDesktop) creditDesktop.style.display = "";
-            if (creditMobile) creditMobile.style.display = "";
-          }
-
-          // 处理banner homeText元素
-          const bannerTextOverlay = document.querySelector(
-            ".banner-home-text-overlay"
-          );
-          if (bannerTextOverlay) {
-            const isHomePage =
-              window.location.pathname === baseUrl || 
-              (baseUrl !== '/' && window.location.pathname === baseUrl.replace(/\/$/, '')) ||
-              window.location.pathname === "/";
-            if (wallpaperMode === WALLPAPER_BANNER && isHomePage) {
-              bannerTextOverlay.classList.remove("hidden");
-            } else {
-              bannerTextOverlay.classList.add("hidden");
-            }
-          }
-        });
-      })();
-
-      // 初始化水波纹动画状态 - 在 html 元素上设置属性，CSS 会立即生效
-      (function applyWavesEnabled() {
-        const wavesEnabled = localStorage.getItem("wavesEnabled");
-        if (wavesEnabled !== null) {
-          document.documentElement.setAttribute("data-waves-enabled", wavesEnabled);
-        }
-      })();
-
-      // 初始化横幅标题显示状态 - 在 html 元素上设置属性，CSS 会立即生效
-      (function applyBannerTitleEnabled() {
-        const bannerTitleEnabled = localStorage.getItem("bannerTitleEnabled");
-        if (bannerTitleEnabled !== null) {
-          document.documentElement.setAttribute("data-banner-title-enabled", bannerTitleEnabled);
-        }
-      })();
     </script>
     <style
       define:vars={{
@@ -498,7 +153,6 @@ const siteLang = lang.replace("_", "-");
         "page-width": `${siteConfig.pageWidth ?? PAGE_WIDTH}rem`,
       }}
     ></style>
-    <!-- defines global css variables. This will be applied to <html> <body> and some other elements idk why -->
 
     <slot name="head" />
 
@@ -509,19 +163,11 @@ const siteLang = lang.replace("_", "-");
       href={`${Astro.site}rss.xml`}
     />
 
-    <!-- Font Manager -->
     <FontManager />
   </head>
   <body
-    class="min-h-screen"
+    class="min-h-screen bg-(--page-bg) text-(--deep-text)"
     class:list={[
-      {
-        "lg:is-home": isHomePageCheck,
-        "enable-banner": enableBanner,
-        "sticky-navbar": siteConfig.navbar.stickyNavbar ?? false,
-        "enable-card-border": siteConfig.card?.border,
-        "card-follow-theme-hue": siteConfig.card?.followTheme,
-      },
       ...(siteConfig.font.enable && siteConfig.font.selected
         ? (Array.isArray(siteConfig.font.selected)
             ? siteConfig.font.selected
@@ -530,335 +176,78 @@ const siteLang = lang.replace("_", "-");
         : []),
     ]}
   >
-
     <div id="progress-bar"></div>
-
-    <!-- 页面顶部渐变高光效果 - 只在full和semifull模式下显示 -->
-    {shouldShowTopHighlight && <div class="top-gradient-highlight" />}
     <ConfigCarrier />
     <MusicManager />
     <slot />
-
-
-
-    <!-- Sakura Effect -->
-    <SakuraEffect />
-
-    <!-- Fancybox Manager -->
     <FancyboxManager />
   </body>
 </html>
 
-<style
-  is:global
-  define:vars={{
-    "banner-height-home": `${BANNER_HEIGHT_HOME}vh`,
-    "banner-height": `${BANNER_HEIGHT}vh`,
-  }}
->
-  @reference "../styles/main.css";
-
-  @layer components {
-    .enable-banner #wallpaper-wrapper {
-      height: var(--banner-height-home);
-      transform: translateY(var(--banner-height-extend));
-    }
-
-    .enable-banner #banner {
-      height: var(--banner-height-home);
-      transform: translateY(0);
-    }
-
-    .enable-banner #main-grid {
-      transform: translateY(var(--banner-height-extend));
-    }
-
-    .enable-banner #top-row {
-      height: calc(var(--banner-height-home) - 4.5rem);
-      @apply transition-all duration-300;
-    }
-  }
-
-  @layer utilities {
-    .enable-banner #sidebar-sticky {
-      top: calc(1rem - var(--banner-height-extend)) !important;
-    }
-    .enable-banner #left-sidebar-sticky {
-      top: calc(1rem - var(--banner-height-extend)) !important;
-    }
-    .enable-banner #right-sidebar-sticky {
-      top: calc(1rem - var(--banner-height-extend)) !important;
-    }
-
-    body.enable-banner.sticky-navbar #sidebar-sticky,
-    body.enable-banner.sticky-navbar #left-sidebar-sticky,
-    body.enable-banner.sticky-navbar #right-sidebar-sticky {
-      top: calc(5.5rem - var(--banner-height-extend)) !important;
-    }
-
-    .navbar-hidden {
-      @apply opacity-0 -translate-y-16;
-    }
-
-    body.sticky-navbar #top-row {
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      z-index: 80 !important;
-      height: 4.5rem !important;
-    }
-
-    body.sticky-navbar #navbar-wrapper {
-      position: static !important;
-      opacity: 1 !important;
-      transform: none !important;
-    }
-
-    body.sticky-navbar #navbar-wrapper.navbar-hidden {
-      opacity: 1 !important;
-      transform: none !important;
-    }
-
-    html[data-wallpaper-mode="none"] body.sticky-navbar #sidebar-sticky,
-    html[data-wallpaper-mode="none"] body.sticky-navbar #left-sidebar-sticky,
-    html[data-wallpaper-mode="none"] body.sticky-navbar #right-sidebar-sticky,
-    html[data-wallpaper-mode="overlay"] body.sticky-navbar #sidebar-sticky,
-    html[data-wallpaper-mode="overlay"] body.sticky-navbar #left-sidebar-sticky,
-    html[data-wallpaper-mode="overlay"] body.sticky-navbar #right-sidebar-sticky,
-    body.sticky-navbar.no-banner-layout #sidebar-sticky,
-    body.sticky-navbar.no-banner-layout #left-sidebar-sticky,
-    body.sticky-navbar.no-banner-layout #right-sidebar-sticky {
-      top: 5.5rem !important;
-    }
-  }
-
-  @media (max-width: 1023px) {
-    body.enable-banner:not(.lg\:is-home) #main-grid {
-      transform: none !important;
-    }
-
-    body.enable-banner:not(.lg\:is-home) #top-row {
-      height: auto !important;
-    }
-
-    body.enable-banner:not(.lg\:is-home) #sidebar-sticky,
-    body.enable-banner:not(.lg\:is-home) #left-sidebar-sticky,
-    body.enable-banner:not(.lg\:is-home) #right-sidebar-sticky {
-      top: 1rem !important;
-    }
-
-    html[data-wallpaper-mode="none"] body.sticky-navbar #sidebar-sticky,
-    html[data-wallpaper-mode="none"] body.sticky-navbar #left-sidebar-sticky,
-    html[data-wallpaper-mode="none"] body.sticky-navbar #right-sidebar-sticky,
-    html[data-wallpaper-mode="overlay"] body.sticky-navbar #sidebar-sticky,
-    html[data-wallpaper-mode="overlay"] body.sticky-navbar #left-sidebar-sticky,
-    html[data-wallpaper-mode="overlay"] body.sticky-navbar #right-sidebar-sticky,
-    body.sticky-navbar.no-banner-layout #sidebar-sticky,
-    body.sticky-navbar.no-banner-layout #left-sidebar-sticky,
-    body.sticky-navbar.no-banner-layout #right-sidebar-sticky {
-      top: 5.5rem !important;
-    }
-
-    body.sticky-navbar #top-row {
-      height: 4.5rem !important;
-    }
-  }
-</style>
-
 <script>
-  import { pathsEqual, url } from "@/utils/url-utils";
-  import {
-    BANNER_HEIGHT,
-    BANNER_HEIGHT_HOME,
-    BANNER_HEIGHT_EXTEND,
-    // MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
-  } from "@/constants/constants";
-  import { backgroundWallpaper, expressiveCodeConfig, siteConfig } from "@/config";
-
-  /* Preload fonts */
-  // (async function() {
-  // 	try {
-  // 		await Promise.all([
-  // 			document.fonts.load("400 1em Roboto"),
-  // 			document.fonts.load("700 1em Roboto"),
-  // 		]);
-  // 		document.body.classList.remove("hidden");
-  // 	} catch (error) {
-  // 		console.log("Failed to load fonts:", error);
-  // 	}
-  // })();
-
-  /* TODO This is a temporary solution for style flicker issue when the transition is activated */
-  /* issue link: https://github.com/withastro/astro/issues/8711, the solution get from here too */
-  /* update: fixed in Astro 3.2.4 */
-  /*
-function disableAnimation() {
-	const css = document.createElement('style')
-	css.appendChild(
-		document.createTextNode(
-			`*{
-              -webkit-transition:none!important;
-              -moz-transition:none!important;
-              -o-transition:none!important;
-              -ms-transition:none!important;
-              transition:none!important
-              }`
-		)
-	)
-	document.head.appendChild(css)
-
-	return () => {
-		// Force restyle
-		;(() => window.getComputedStyle(document.body))()
-
-		// Wait for next tick before removing
-		setTimeout(() => {
-			document.head.removeChild(css)
-		}, 1)
-	}
-}
-*/
-
-  const bannerEnabled = !!document.getElementById("wallpaper-wrapper");
-  const stickyNavbar = siteConfig.navbar.stickyNavbar ?? false;
+  import { pathsEqual } from "@/utils/url-utils";
+  import { expressiveCodeConfig, siteConfig } from "@/config";
 
   function setClickOutsideToClose(panel: string, ignores: string[]) {
-      document.addEventListener("click", (event) => {
-          let panelDom = document.getElementById(panel);
-          if (!panelDom) return;
-          let tDom = event.target;
-          if (!(tDom instanceof Node)) return; // Ensure the event target is an HTML Node
-          for (let ig of ignores) {
-              let ie = document.getElementById(ig);
-              if (ie == tDom || ie?.contains(tDom)) {
-                  return;
-              }
-          }
-          panelDom.classList.add("float-panel-closed");
-      });
+    document.addEventListener("click", (event) => {
+      const panelDom = document.getElementById(panel);
+      if (!panelDom) return;
+      const tDom = event.target;
+      if (!(tDom instanceof Node)) return;
+      for (const ig of ignores) {
+        const ie = document.getElementById(ig);
+        if (ie === tDom || ie?.contains(tDom)) return;
+      }
+      panelDom.classList.add("float-panel-closed");
+    });
   }
-  setClickOutsideToClose("display-setting", [
-    "display-setting",
-    "display-settings-switch",
-  ]);
-  setClickOutsideToClose("nav-menu-panel", [
-    "nav-menu-panel",
-    "nav-menu-switch",
-  ]);
-  setClickOutsideToClose("search-panel", [
-    "search-panel",
-    "search-bar",
-    "search-switch",
-  ]);
-  setClickOutsideToClose("wallpaper-mode-panel", [
-    "wallpaper-mode-panel",
-    "wallpaper-mode-switch",
-  ]);
-  setClickOutsideToClose("theme-mode-panel", [
-    "theme-mode-panel",
-    "scheme-switch",
-  ]);
+  setClickOutsideToClose("nav-menu-panel", ["nav-menu-panel", "nav-menu-switch"]);
+  setClickOutsideToClose("search-panel", ["search-panel", "search-bar", "search-switch"]);
 
   function initCustomScrollbar() {
-    // 只处理katex元素的滚动条，使用浏览器原生滚动条
     const katexElements = document.querySelectorAll(
       ".katex-display:not([data-scrollbar-initialized])"
     ) as NodeListOf<HTMLElement>;
     katexElements.forEach((element) => {
       if (!element.parentNode) return;
-
       const container = document.createElement("div");
       container.className = "katex-display-container";
       element.parentNode.insertBefore(container, element);
       container.appendChild(element);
-
-      // 使用浏览器原生滚动条，无自定义样式
-      container.style.cssText = `
-			overflow-x: auto;
-		`;
-
+      container.style.cssText = "overflow-x: auto;";
       element.setAttribute("data-scrollbar-initialized", "true");
     });
   }
 
   function initHorizontalOverflowContainers() {
-    const markdownTables = document.querySelectorAll(
+    const tables = document.querySelectorAll(
       ".custom-md table:not([data-horizontal-scroll-ready])"
     ) as NodeListOf<HTMLElement>;
-
-    markdownTables.forEach((table) => {
+    tables.forEach((table) => {
       if (table.parentElement?.classList.contains("horizontal-scroll-container")) {
         table.dataset.horizontalScrollReady = "true";
         return;
       }
-
       const container = document.createElement("div");
       container.className = "horizontal-scroll-container";
       table.parentNode?.insertBefore(container, table);
       container.appendChild(table);
       table.dataset.horizontalScrollReady = "true";
     });
-
-  }
-
-  function initContentOverflowEnhancements() {
-    initCustomScrollbar();
-    initHorizontalOverflowContainers();
   }
 
   function scheduleContentOverflowEnhancements() {
-    initContentOverflowEnhancements();
+    initCustomScrollbar();
+    initHorizontalOverflowContainers();
     requestAnimationFrame(() => {
-      initContentOverflowEnhancements();
-    });
-    setTimeout(() => {
-      initContentOverflowEnhancements();
-    }, 100);
-  }
-
-  function showBanner() {
-    const isBannerMode = backgroundWallpaper.mode === "banner";
-    if (!isBannerMode) return;
-
-    // 使用requestAnimationFrame优化DOM操作
-    requestAnimationFrame(() => {
-      // Handle single image banner (desktop)
-      const banner = document.getElementById("banner");
-      if (banner) {
-        banner.classList.remove("opacity-0", "scale-105");
-      }
-
-      // Handle mobile single image banner - 使用与电脑端相同的逻辑
-      const mobileBanner = document.querySelector(
-        '.block.lg\\:hidden[alt="Mobile banner image of the blog"]'
-      );
-      if (mobileBanner) {
-        // 移动端使用与电脑端相同的初始化逻辑
-        mobileBanner.classList.remove("opacity-0", "scale-105");
-        mobileBanner.classList.add("opacity-100");
-      }
+      initCustomScrollbar();
+      initHorizontalOverflowContainers();
     });
   }
 
   const setup = () => {
-    // TODO: temp solution to change the height of the banner
-    /*
-	window.swup.hooks.on('animation:out:start', () => {
-		const path = window.location.pathname
-		const body = document.querySelector('body')
-		if (path[path.length - 1] === '/' && !body.classList.contains('is-home')) {
-			body.classList.add('is-home')
-		} else if (path[path.length - 1] !== '/' && body.classList.contains('is-home')) {
-			body.classList.remove('is-home')
-		}
-	})
-*/
     window.swup.hooks.on("link:click", (_visit: any, { el }: { el: HTMLAnchorElement }) => {
-      // Remove the delay for the first time page load
       document.documentElement.style.setProperty("--content-delay", "0ms");
-
-      // 同页链接点击不需要过渡保护
       const targetHref = el.getAttribute("href") || "";
       const targetPathname = (() => {
         try {
@@ -870,246 +259,50 @@ function disableAnimation() {
       const isSamePage = pathsEqual(targetPathname, window.location.pathname);
       if (isSamePage) {
         document.documentElement.classList.remove("is-page-transitioning");
-      }
-      if (!isSamePage) {
-        // 添加页面切换保护，防止导航栏闪烁
+      } else {
         document.documentElement.classList.add("is-page-transitioning");
       }
-
-      const navbar = document.getElementById("navbar-wrapper");
-      if (navbar && stickyNavbar) {
-        navbar.classList.remove("navbar-hidden");
-      } else if (bannerEnabled && navbar) {
-        const threshold = window.innerHeight * (BANNER_HEIGHT_HOME / 100) - 88;
-        if (document.documentElement.scrollTop >= threshold) {
-          navbar.classList.add("navbar-hidden");
-        }
-      }
     });
+
     window.swup.hooks.on("content:replace", () => {
-      // 更新侧边栏组件的可见性（根据新页面的 URL）
-      updateSidebarComponentsVisibility();
-
-      // 只处理katex元素的容器，使用浏览器原生滚动条
       scheduleContentOverflowEnhancements();
-
-      // 重新初始化图标加载器
-      import("@/utils/icon-loader").then(({ initIconLoader }) => {
-        initIconLoader();
-      });
-
-      // 检查当前页面是否为文章页面（有TOC元素）
-      const tocWrapper = document.getElementById("toc-wrapper");
-      const isArticlePage = tocWrapper !== null;
-
-      // 只在文章页面重新初始化桌面端 TOC 组件
-      if (isArticlePage) {
-        const tocElement = document.querySelector("table-of-contents");
-        if (tocElement && typeof (tocElement as any).init === "function") {
-          setTimeout(() => {
-            (tocElement as any).init();
-          }, 100);
-        }
-      }
-
-      // 重新初始化semifull模式的滚动检测
-      const navbar = document.getElementById("navbar");
-      if (navbar) {
-        const transparentMode = navbar.getAttribute("data-transparent-mode");
-
-        if (transparentMode === "semifull") {
-          // 重新调用初始化函数来重新绑定滚动事件
-          if (
-            typeof (window as any).initSemifullScrollDetection === "function"
-          ) {
-            (window as any).initSemifullScrollDetection();
-          }
-        }
-      }
-
+      import("@/utils/icon-loader").then(({ initIconLoader }) => initIconLoader());
     });
-    window.swup.hooks.on("visit:start", (visit: { to: { url: string } }) => {
-      // Start progress bar
+
+    window.swup.hooks.on("visit:start", () => {
       const progressBar = document.getElementById("progress-bar");
       if (progressBar) {
         progressBar.classList.remove("finishing", "done");
-        // Force reflow so the animation restarts cleanly
         void progressBar.offsetWidth;
         progressBar.classList.add("loading");
       }
-
-      // change banner height immediately when a link is clicked
-      const bodyElement = document.querySelector("body");
-      const isHomePage = pathsEqual(visit.to.url, url("/"));
-
-      if (isHomePage) {
-        bodyElement!.classList.add("lg:is-home");
-      } else {
-        bodyElement!.classList.remove("lg:is-home");
-      }
-
-      // Control banner text visibility based on page
-      const bannerTextOverlay = document.querySelector(".banner-home-text-overlay");
-      if (bannerTextOverlay) {
-        if (isHomePage) {
-          bannerTextOverlay.classList.remove("hidden");
-        } else {
-          bannerTextOverlay.classList.add("hidden");
-        }
-      }
-
-      // Control navbar transparency based on page
-      const navbar = document.getElementById("navbar");
-      if (navbar) {
-        navbar.setAttribute("data-is-home", isHomePage.toString());
-
-        // 重新初始化semifull模式的滚动检测
-        const transparentMode = navbar.getAttribute("data-transparent-mode");
-        if (transparentMode === "semifull") {
-          // 重新调用初始化函数来重新绑定滚动事件
-          if (
-            typeof (window as any).initSemifullScrollDetection === "function"
-          ) {
-            (window as any).initSemifullScrollDetection();
-          }
-        }
-      }
-
-      // Control mobile banner visibility based on page with improved staging animation
-      // 只在移动端（1024px以下）处理banner隐藏
-      const isMobile = window.innerWidth < 1024;
-
-      // 在移动端禁用文章列表容器的过渡动画，防止与主内容区位置变化冲突
-      if (isMobile) {
-        const postListContainer = document.getElementById("post-list-container");
-        if (postListContainer) {
-          postListContainer.style.transition = "none";
-        }
-      }
-
-      const wallpaperWrapper = document.getElementById("wallpaper-wrapper");
-      const mainContentWrapper = document.querySelector(
-        ".absolute.w-full.z-30"
-      ) as HTMLElement | null;
-
-      if (isMobile && wallpaperWrapper && mainContentWrapper) {
-        if (isHomePage) {
-          // 首页：禁用主内容区域的过渡动画，防止文章列表下移
-          mainContentWrapper.style.transition = "none";
-
-          // 先显示banner，然后移除隐藏类让其优雅出现
-          wallpaperWrapper.style.display = "";
-          setTimeout(() => {
-            wallpaperWrapper.classList.remove("mobile-hide-banner");
-          }, 100);
-          setTimeout(() => {
-            mainContentWrapper.classList.remove("mobile-main-no-banner");
-            // 在移除类之后立即恢复过渡动画（下次导航时使用）
-            setTimeout(() => {
-              mainContentWrapper.style.transition = "";
-            }, 50);
-          }, 150);
-        } else {
-          // 非首页：分阶段隐藏，先隐藏banner，再移动内容
-          wallpaperWrapper.classList.add("mobile-hide-banner");
-          // 延迟移动内容，让banner先完全消失
-          setTimeout(() => {
-            mainContentWrapper.classList.add("mobile-main-no-banner");
-          }, 100);
-        }
-      } else if (!isMobile && wallpaperWrapper) {
-        // 桌面端：确保banner正常显示
-        wallpaperWrapper.style.display = "";
-        wallpaperWrapper.classList.remove("mobile-hide-banner");
-        if (mainContentWrapper) {
-          mainContentWrapper.classList.remove("mobile-main-no-banner");
-        }
-      }
-
-      // increase the page height during page transition to prevent the scrolling animation from jumping
-      const heightExtend = document.getElementById("page-height-extend");
-      if (heightExtend) {
-        heightExtend.classList.remove("hidden");
-      }
-
-      // Hide the TOC while scrolling back to top
-      let toc = document.getElementById("toc-wrapper");
-      if (toc) {
-        toc.classList.add("toc-not-ready");
-      }
-
-      // 确保页面滚动到顶部，切页期间使用即时回顶，移动端不使用，避免出现闪烁
       const shouldUseSmoothScroll = window.innerWidth >= 768;
-      if (shouldUseSmoothScroll) {
-        window.scrollTo({
-          top: 0,
-          behavior: "auto",
-        });
-      }
+      if (shouldUseSmoothScroll) window.scrollTo({ top: 0, behavior: "auto" });
     });
+
     window.swup.hooks.on("page:view", () => {
-      // 更新网格列数和侧边栏组件可见性
-      updateMainGridCols();
-      updateSidebarComponentsVisibility();
-
-      // hide the temp high element when the transition is done
-      const heightExtend = document.getElementById("page-height-extend");
-      if (heightExtend) {
-        heightExtend.classList.remove("hidden");
-      }
-
-      // 在移动端恢复文章列表容器的过渡动画（在主内容区位置动画完成后）
-      const isMobile = window.innerWidth < 1024;
-      if (isMobile) {
-        setTimeout(() => {
-          const postListContainer = document.getElementById("post-list-container");
-          if (postListContainer) {
-            postListContainer.style.transition = "";
-          }
-        }, 600); // 等待主内容区动画完成（0.4s + 0.1s delay + 100ms buffer）
-      }
-
-      // 同步主题状态 - 解决从首页进入文章页面时代码块渲染问题
       const storedTheme = localStorage.getItem("theme") || siteConfig.themeColor.defaultMode || "light";
       let isDark = false;
-      
-      // 处理 system 模式
       if (storedTheme === "system") {
-        isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
       } else {
         isDark = storedTheme === "dark";
       }
-      
-      const expectedTheme = isDark
-        ? expressiveCodeConfig.darkTheme
-        : expressiveCodeConfig.lightTheme;
+      const expectedTheme = isDark ? expressiveCodeConfig.darkTheme : expressiveCodeConfig.lightTheme;
       const currentTheme = document.documentElement.getAttribute("data-theme");
-
-      // 如果主题不匹配，静默更新（不触发事件，避免重新加载效果）
       if (currentTheme !== expectedTheme) {
         document.documentElement.setAttribute("data-theme", expectedTheme);
       }
-
-      // 检查当前页面是否为文章页面，如果是则触发自定义事件用于初始化评论系统
       setTimeout(() => {
         if (document.getElementById("tcomment")) {
-          // 触发自定义事件，通知评论系统页面已完全加载
-          const pageLoadedEvent = new CustomEvent("firefly:page:loaded", {
-            detail: {
-              path: window.location.pathname,
-              timestamp: Date.now(),
-            },
-          });
-          document.dispatchEvent(pageLoadedEvent);
-          console.log(
-            "Layout: 触发 firefly:page:loaded 事件，路径:",
-            window.location.pathname
-          );
+          document.dispatchEvent(new CustomEvent("firefly:page:loaded", {
+            detail: { path: window.location.pathname, timestamp: Date.now() },
+          }));
         }
       }, 300);
     });
-    window.swup.hooks.on("visit:end", (_visit: { to: { url: string } }) => {
-      // Finish progress bar
+
+    window.swup.hooks.on("visit:end", () => {
       const progressBar = document.getElementById("progress-bar");
       if (progressBar) {
         progressBar.classList.remove("loading");
@@ -1117,301 +310,30 @@ function disableAnimation() {
         setTimeout(() => {
           progressBar.classList.remove("finishing");
           progressBar.classList.add("done");
-          setTimeout(() => {
-            progressBar.classList.remove("done");
-          }, 300);
+          setTimeout(() => progressBar.classList.remove("done"), 300);
         }, 200);
       }
-
       setTimeout(() => {
-        const heightExtend = document.getElementById("page-height-extend");
-        if (heightExtend) {
-          heightExtend.classList.add("hidden");
-        }
-
-        // Just make the transition looks better
-        const toc = document.getElementById("toc-wrapper");
-        if (toc) {
-          toc.classList.remove("toc-not-ready");
-        }
-
-        // 移除页面切换保护，恢复过渡动画
         document.documentElement.classList.remove("is-page-transitioning");
-        scrollFunction();
       }, 200);
     });
-
-
   };
-  if (window?.swup?.hooks) {
-    setup();
-  } else {
-    document.addEventListener("swup:enable", setup);
-  }
+
+  if (window?.swup?.hooks) setup();
+  else document.addEventListener("swup:enable", setup);
 
   document.addEventListener("astro:page-load", scheduleContentOverflowEnhancements);
   document.addEventListener("password:decrypted", () => {
     setTimeout(scheduleContentOverflowEnhancements, 200);
   });
-  let backToTopBtn = document.getElementById("back-to-top-btn");
-  let toc = document.getElementById("toc-wrapper");
-  let navbar = document.getElementById("navbar-wrapper");
-  const sidebarStickyState: Record<
-    "left" | "right",
-    { topClass: "top-0" | "top-4"; hasVisibleTop: boolean }
-  > = {
-    left: { topClass: "top-0", hasVisibleTop: false },
-    right: { topClass: "top-0", hasVisibleTop: false },
-  };
 
-  // 优化的滚动处理函数
-  function scrollFunction() {
-    if (document.documentElement.classList.contains("is-page-transitioning")) {
-      return;
-    }
-
-    const scrollTop = document.documentElement.scrollTop;
-    const bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100);
-    const navbarElement = document.getElementById("navbar");
-
-    // 根据滚动位置动态更新侧边栏 sticky 间距
-    updateSidebarStickySpacing();
-
-    // 使用批量DOM操作优化性能
-    const operations: (() => void)[] = [];
-
-    if (backToTopBtn) {
-      operations.push(() => {
-        if (scrollTop > bannerHeight) {
-          backToTopBtn.classList.remove("hide");
-        } else {
-          backToTopBtn.classList.add("hide");
-        }
-      });
-    }
-
-    if (bannerEnabled && toc) {
-      operations.push(() => {
-        if (scrollTop > bannerHeight) {
-          toc.classList.remove("toc-hide");
-        } else {
-          toc.classList.add("toc-hide");
-        }
-      });
-    }
-
-    if (stickyNavbar && navbar) {
-      operations.push(() => {
-        navbar.classList.remove("navbar-hidden");
-      });
-    } else if (bannerEnabled && navbar) {
-      operations.push(() => {
-        const threshold = window.innerHeight * (BANNER_HEIGHT_HOME / 100) - 88;
-
-        if (scrollTop >= threshold) {
-          navbar.classList.add("navbar-hidden");
-        } else {
-          navbar.classList.remove("navbar-hidden");
-        }
-      });
-    }
-
-    if (navbarElement) {
-      operations.push(() => {
-        if (scrollTop > 8) {
-          navbarElement.classList.add("navbar-sticky-shadow");
-        } else {
-          navbarElement.classList.remove("navbar-sticky-shadow");
-        }
-      });
-    }
-
-    // 批量执行DOM操作
-    if (operations.length > 0) {
-      requestAnimationFrame(() => {
-        operations.forEach((op) => op());
-      });
-    }
-  }
-
-  // 使用优化的滚动性能处理
-  let scrollTimeout: number;
-  window.addEventListener(
-    "scroll",
-    () => {
-      if (scrollTimeout) {
-        cancelAnimationFrame(scrollTimeout);
-      }
-      scrollTimeout = requestAnimationFrame(scrollFunction);
-    },
-    { passive: true }
-  );
-
-  // 初始化滚动状态（例如从历史位置恢复时）
-  scrollFunction();
-
-  window.onresize = () => {
-    // calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
-    let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
-    offset = offset - (offset % 4);
-    document.documentElement.style.setProperty(
-      "--banner-height-extend",
-      `${offset}px`
-    );
-  };
-
-  // 页面加载完成后初始化banner和内容溢出容器
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
-      showBanner();
       scheduleContentOverflowEnhancements();
+      import("@/utils/icon-loader").then(({ initIconLoader }) => initIconLoader());
     });
   } else {
-    showBanner();
     scheduleContentOverflowEnhancements();
-  }
-
-  // 检查当前页面是否为文章详情页
-  const isCurrentPagePost = () =>
-    window.location.pathname.includes("/posts/") || window.location.pathname.includes("/post/");
-
-  // 更新主网格的网格列数
-  function updateMainGridCols() {
-    const mainGrid = document.getElementById("main-grid");
-    if (!mainGrid) return;
-
-    const isPostPage = isCurrentPagePost();
-    const sidebarPosition = mainGrid.getAttribute("data-sidebar-position") || "left";
-    const tabletSidebar = mainGrid.getAttribute("data-tablet-sidebar") || "left";
-    const showBothSidebarsOnPostPage = mainGrid.getAttribute("data-show-both-sidebars-on-post") === "true";
-
-    const shouldBothSidebars = isPostPage && sidebarPosition !== "both" && showBothSidebarsOnPostPage;
-
-    let newGridClasses: string;
-
-    if (sidebarPosition === "both" || shouldBothSidebars) {
-      // 双侧栏（含文章页临时双侧栏）
-      // 从right临时扩展为both时，平板端保持显示右侧栏
-      const effectiveTabletSidebar = (shouldBothSidebars && sidebarPosition === "right") ? "right" : tabletSidebar;
-      if (effectiveTabletSidebar === "right") {
-        newGridClasses = "grid-cols-1 md:grid-cols-[1fr_17.5rem] xl:grid-cols-[17.5rem_1fr_17.5rem]";
-      } else {
-        newGridClasses = "grid-cols-1 md:grid-cols-[17.5rem_1fr] xl:grid-cols-[17.5rem_1fr_17.5rem]";
-      }
-    } else if (sidebarPosition === "right") {
-      // 仅右侧栏
-      newGridClasses = "grid-cols-1 md:grid-cols-[1fr_17.5rem]";
-    } else {
-      // 仅左侧栏
-      newGridClasses = "grid-cols-1 md:grid-cols-[17.5rem_1fr]";
-    }
-
-    // 移除旧类并添加新类
-    ["grid-cols-1", "md:grid-cols-[17.5rem_1fr]", "md:grid-cols-[1fr_17.5rem]", "xl:grid-cols-[17.5rem_1fr_17.5rem]"].forEach(
-      cls => mainGrid.classList.remove(cls)
-    );
-
-    newGridClasses.split(" ").forEach(cls => cls && mainGrid.classList.add(cls));
-
-    // position为right时，swup导航不会替换静态元素(右侧栏、主内容容器、页脚)的class
-    // 需要在JS中手动更新这些元素的网格定位类，以匹配2列/3列布局的切换
-    if (sidebarPosition === "right") {
-      const rightSidebar = document.getElementById("right-sidebar");
-      const swupContainer = document.getElementById("swup-container");
-      const footer = mainGrid.querySelector('.footer');
-
-      if (shouldBothSidebars) {
-        // 文章页临时双侧栏：右侧栏移到第3列，主内容移到第2列，页脚居中
-        rightSidebar?.classList.add("xl:col-start-3");
-        swupContainer?.classList.add("xl:col-start-2", "xl:col-end-3");
-        if (footer) {
-          footer.classList.remove("md:col-start-1", "xl:col-start-1");
-          footer.classList.add("xl:col-start-2");
-        }
-      } else {
-        // 非文章页：恢复2列布局定位
-        rightSidebar?.classList.remove("xl:col-start-3");
-        swupContainer?.classList.remove("xl:col-start-2", "xl:col-end-3");
-        if (footer) {
-          footer.classList.add("md:col-start-1", "xl:col-start-1");
-          footer.classList.remove("xl:col-start-2");
-        }
-      }
-    }
-  }
-
-  // 更新侧边栏组件的可见性
-  function updateSidebarComponentsVisibility() {
-    const isPostPage = isCurrentPagePost();
-
-    // 处理 showOnPostPage === false 的组件
-    document.querySelectorAll(".widget-hide-on-post").forEach((widget) => {
-      isPostPage ? widget.classList.add("hidden") : widget.classList.remove("hidden");
-    });
-
-    // 处理 showOnNonPostPage === false 的组件
-    document.querySelectorAll(".widget-hide-on-non-post").forEach((widget) => {
-      !isPostPage ? widget.classList.add("hidden") : widget.classList.remove("hidden");
-    });
-
-    // 组件可见性变化后，立即重算 sticky 间距，避免 swup 切页后残留旧间距
-    updateSidebarStickySpacing();
-  }
-
-  // 根据当前页面实际可见的顶部组件与滚动位置，动态更新侧边栏 sticky 间距
-  function updateSidebarStickySpacing() {
-    const scrollTop = document.documentElement.scrollTop || window.scrollY || 0;
-    const isScrolled = scrollTop > 2;
-
-    (["left", "right"] as const).forEach((side) => {
-      const sticky = document.getElementById(`${side}-sidebar-sticky`);
-      if (!sticky) return;
-
-      // 结构为：sidebar -> top 容器（可选） + sticky 容器
-      const topContainer = sticky.previousElementSibling as HTMLElement | null;
-      const hasVisibleTop = !!topContainer && topContainer.offsetHeight > 1;
-
-      // swup 从非文章页切换到文章页时，top 容器可能残留 mb-4，需要按可见性动态修正
-      if (topContainer) {
-        if (hasVisibleTop !== sidebarStickyState[side].hasVisibleTop) {
-          sidebarStickyState[side].hasVisibleTop = hasVisibleTop;
-        }
-
-        if (hasVisibleTop) {
-          topContainer.classList.add("mb-4");
-        } else {
-          topContainer.classList.remove("mb-4");
-        }
-      }
-
-      // 仅切换顶部偏移；组件间距由容器常驻 gap-4 保持
-      const nextTopClass: "top-0" | "top-4" =
-        hasVisibleTop || isScrolled ? "top-4" : "top-0";
-
-      if (sidebarStickyState[side].topClass !== nextTopClass) {
-        sticky.classList.remove(sidebarStickyState[side].topClass);
-        sticky.classList.add(nextTopClass);
-        sidebarStickyState[side].topClass = nextTopClass;
-      }
-    });
-  }
-
-  // Initialize wallpaper mode
-  import { initWallpaperMode, initThemeListener } from "@/utils/setting-utils";
-  import { initIconLoader } from "@/utils/icon-loader";
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-      updateMainGridCols();
-      updateSidebarComponentsVisibility();
-      initWallpaperMode();
-      initThemeListener();
-      initIconLoader();
-    });
-  } else {
-    updateMainGridCols();
-    updateSidebarComponentsVisibility();
-    initWallpaperMode();
-    initThemeListener();
-    initIconLoader();
+    import("@/utils/icon-loader").then(({ initIconLoader }) => initIconLoader());
   }
 </script>

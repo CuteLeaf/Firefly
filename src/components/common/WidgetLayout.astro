@@ -26,14 +26,12 @@ const className = Astro.props.class;
     data-id={id}
     data-is-collapsed={String(isCollapsed)}
     data-use-expanded-button-spacing={String(useExpandedButtonSpacing)}
-    class={"pb-4 card-base " + className}
+    class={"pb-4 section " + (className ?? "")}
     style={style}
 >
     {name && (
-        <div class="widget-title font-bold transition text-lg text-neutral-900 dark:text-neutral-100 relative ml-8 mt-4 mb-2
-            before:w-1 before:h-4 before:rounded-md before:bg-(--primary)
-            before:absolute before:left-[-16px] before:top-[5.5px] flex items-center justify-between">
-            <span class="widget-name">{name}</span>
+        <div class="widget-title font-mono text-xs uppercase tracking-[0.2em] text-(--content-meta) mb-3 mt-4 px-4 flex items-center justify-between">
+            <span class="widget-name">[ {name} ]</span>
             <slot name="title-icon" />
         </div>
     )}
@@ -42,16 +40,16 @@ const className = Astro.props.class;
     </div>
     {isCollapsed && <div class="expand-btn px-4 -mb-2">
         <button
-            class="btn-plain rounded-lg w-full h-9"
+            class="btn-line w-full h-9 text-sm"
             title={i18n(I18nKey.more)}
             aria-label={i18n(I18nKey.more)}
             data-show-more={i18n(I18nKey.more)}
             data-show-less={i18n(I18nKey.collapse)}
             data-expanded="false"
         >
-            <div class="text-(--primary) flex items-center justify-center gap-2 -translate-x-2">
-                <Icon name="material-symbols:more-horiz" class="toggle-icon-more text-[1.75rem]" aria-hidden="true"></Icon>
-                <Icon name="material-symbols:keyboard-arrow-up-rounded" class="toggle-icon-less hidden text-[1.75rem]" aria-hidden="true"></Icon>
+            <div class="flex items-center justify-center gap-2">
+                <Icon name="material-symbols:more-horiz" class="toggle-icon-more text-base" aria-hidden="true"></Icon>
+                <Icon name="material-symbols:keyboard-arrow-up-rounded" class="toggle-icon-less hidden text-base" aria-hidden="true"></Icon>
                 <span class="toggle-text">{i18n(I18nKey.more)}</span>
             </div>
         </button>
@@ -66,12 +64,92 @@ const className = Astro.props.class;
     widget-layout[data-is-collapsed="true"][data-expanded="true"][data-use-expanded-button-spacing="true"] .expand-btn {
         padding-top: 0.5rem;
     }
+
+    /* 卡片边框：黑白实线，无背景 */
+    widget-layout {
+        position: relative;
+        border-top: 1px solid oklch(0.15 0 0);
+        border-right: 1px solid oklch(0.15 0 0);
+        border-bottom: 1px solid oklch(0.15 0 0);
+        border-left: 1px solid oklch(0.15 0 0);
+        background: transparent;
+        transition:
+            border-top-style 0.15s ease,
+            border-right-style 0.15s ease,
+            border-bottom-style 0.15s ease,
+            border-left-style 0.15s ease;
+    }
+
+    :global(.dark) widget-layout {
+        border-top-color: oklch(0.85 0 0);
+        border-right-color: oklch(0.85 0 0);
+        border-bottom-color: oklch(0.85 0 0);
+        border-left-color: oklch(0.85 0 0);
+    }
+
+    /* hover 时四条边全部变虚线 */
+    widget-layout:hover {
+        border-top-style: dashed;
+        border-right-style: dashed;
+        border-bottom-style: dashed;
+        border-left-style: dashed;
+    }
+
+    /* 鼠标靠近哪条边，那条边恢复实线 */
+    widget-layout[data-hover-edge="top"]:hover {
+        border-top-style: solid;
+    }
+    widget-layout[data-hover-edge="right"]:hover {
+        border-right-style: solid;
+    }
+    widget-layout[data-hover-edge="bottom"]:hover {
+        border-bottom-style: solid;
+    }
+    widget-layout[data-hover-edge="left"]:hover {
+        border-left-style: solid;
+    }
 </style>
 
 <script>
     class WidgetLayout extends HTMLElement {
         constructor() {
             super();
+
+            // 鼠标边缘检测：判断鼠标最靠近哪条边，设置 data-hover-edge
+            const EDGE_THRESHOLD = 0.28; // 边缘区域占比（0~0.5）
+            const onMouseMove = (e: MouseEvent) => {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const w = rect.width;
+                const h = rect.height;
+
+                // 计算到四条边的距离（归一化）
+                const distTop    = y / h;
+                const distBottom = (h - y) / h;
+                const distLeft   = x / w;
+                const distRight  = (w - x) / w;
+
+                const minDist = Math.min(distTop, distBottom, distLeft, distRight);
+
+                if (minDist > EDGE_THRESHOLD) {
+                    // 鼠标在中间区域，不突出任何边
+                    delete this.dataset.hoverEdge;
+                } else if (minDist === distTop) {
+                    this.dataset.hoverEdge = 'top';
+                } else if (minDist === distBottom) {
+                    this.dataset.hoverEdge = 'bottom';
+                } else if (minDist === distLeft) {
+                    this.dataset.hoverEdge = 'left';
+                } else {
+                    this.dataset.hoverEdge = 'right';
+                }
+            };
+            const onMouseLeave = () => {
+                delete this.dataset.hoverEdge;
+            };
+            this.addEventListener('mousemove', onMouseMove);
+            this.addEventListener('mouseleave', onMouseLeave);
 
             if (this.dataset.isCollapsed !== "true")
                 return;

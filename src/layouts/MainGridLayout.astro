@@ -1,44 +1,24 @@
 ---
 import Live2DWidget from "@components/features/Live2DWidget.astro";
-
 import SpineModel from "@components/features/SpineModel.astro";
 import Footer from "@components/layout/Footer.astro";
+import HomeHero from "@components/layout/HomeHero.astro";
+import HomePortal from "@components/layout/HomePortal.astro";
 import Navbar from "@components/layout/Navbar.astro";
-import SideBar from "@components/layout/SideBar.astro";
 import type { MarkdownHeading } from "astro";
 import { Icon } from "astro-icon/components";
-import ImageWrapper from "@/components/common/ImageWrapper.astro";
-import FloatingControls from "@/components/controls/FloatingControls.astro";
-import TypewriterText from "@/components/features/TypewriterText.astro";
+import FloatingDock from "@/components/controls/FloatingDock.astro";
 import CategoryBar from "@/components/layout/CategoryBar.astro";
-import {
-	backgroundWallpaper,
-	live2dModelConfig,
-	sidebarLayoutConfig,
-	siteConfig,
-} from "@/config";
-import {
-	BANNER_HEIGHT,
-	BANNER_HEIGHT_EXTEND,
-	MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
-} from "@/constants/constants";
+import { live2dModelConfig, siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { formatDateToYYYYMMDD } from "@/utils/date-utils";
-import { getImageQuality } from "@/utils/image-utils";
-import { getBackgroundImages, isHomePage } from "@/utils/layout-utils";
-import {
-	generateGridClasses,
-	generateMainContentClasses,
-	generateRightSidebarClasses,
-	generateSidebarClasses,
-	getResponsiveSidebarConfig,
-	type ResponsiveSidebarConfig,
-} from "@/utils/responsive-utils";
+import { isHomePage } from "@/utils/layout-utils";
 import Layout from "./Layout.astro";
 
 import "@/styles/markdown.css";
 import "@/styles/expressive-code.css";
+import "@/styles/toc.css";
 
 interface Props {
 	title?: string;
@@ -58,8 +38,6 @@ interface Props {
 	};
 }
 
-const backgroundImages = getBackgroundImages();
-
 const {
 	title,
 	banner,
@@ -72,892 +50,296 @@ const {
 	bannerPostMeta,
 } = Astro.props;
 
-// 检查背景壁纸模式和是否允许切换
-const isBannerMode = backgroundWallpaper.mode === "banner";
-const isOverlayMode = backgroundWallpaper.mode === "overlay";
-const isBackgroundEnabled = backgroundWallpaper.mode !== "none";
-const isWallpaperSwitchable = backgroundWallpaper.switchable ?? true;
-
-// 检查是否启用水波纹动画效果
-const wavesConfig = backgroundWallpaper.banner?.waves?.enable;
-const wavesSwitchable = backgroundWallpaper.banner?.waves?.switchable ?? false;
-// 处理分设备控制的水波纹动画
-const wavesEnabledOnDesktop =
-	typeof wavesConfig === "object" ? wavesConfig.desktop : wavesConfig;
-const wavesEnabledOnMobile =
-	typeof wavesConfig === "object" ? wavesConfig.mobile : wavesConfig;
-// 是否需要渲染水波纹元素（任一设备启用 或 允许用户切换）
-const shouldRenderWaves =
-	wavesEnabledOnDesktop || wavesEnabledOnMobile || wavesSwitchable;
-
-// 处理分设备控制的横幅信贷显示
-const creditEnableConfig = backgroundWallpaper.banner?.credit?.enable;
-const creditEnabledOnDesktop =
-	typeof creditEnableConfig === "object"
-		? creditEnableConfig.desktop
-		: creditEnableConfig;
-const creditEnabledOnMobile =
-	typeof creditEnableConfig === "object"
-		? creditEnableConfig.mobile
-		: creditEnableConfig;
-
-const hasBannerCredit =
-	isBannerMode && isBackgroundEnabled && creditEnableConfig;
-
-// 处理分设备控制的横幅信贷文本和链接
-const creditTextConfig = backgroundWallpaper.banner?.credit?.text;
-const creditTextDesktop =
-	typeof creditTextConfig === "object"
-		? creditTextConfig.desktop
-		: creditTextConfig;
-const creditTextMobile =
-	typeof creditTextConfig === "object"
-		? creditTextConfig.mobile
-		: creditTextConfig;
-
-const creditUrlConfig = backgroundWallpaper.banner?.credit?.url;
-const creditUrlDesktop =
-	typeof creditUrlConfig === "object"
-		? creditUrlConfig.desktop
-		: creditUrlConfig;
-const creditUrlMobile =
-	typeof creditUrlConfig === "object"
-		? creditUrlConfig.mobile
-		: creditUrlConfig;
-
-// 检查是否为首页
 const isHomePageCheck = isHomePage(Astro.url.pathname);
-
-const shouldRenderCategoryBar = !!siteConfig.categoryBar;
-
-// 检查是否在文章详情页
 const isPostPage = !!postSlug;
-
-// 随机选择副标题（当打字机关闭且为数组时）
-const getRandomSubtitle = () => {
-	const subtitle = backgroundWallpaper.banner?.homeText?.subtitle;
-	if (Array.isArray(subtitle)) {
-		const randomIndex = Math.floor(Math.random() * subtitle.length);
-		return subtitle[randomIndex];
-	}
-	return subtitle;
-};
-const randomSubtitle = getRandomSubtitle();
-
-// 主页横幅文本只在首页且全局开关为 true 时显示，不区分设备
-const homeTextEnable = backgroundWallpaper.banner?.homeText?.enable;
-const showHomeText = isBannerMode && !!homeTextEnable && isHomePageCheck;
-
-const showBannerPostMeta =
-	isBannerMode &&
-	isBackgroundEnabled &&
-	!isHomePageCheck &&
-	isPostPage &&
-	!!bannerPostMeta;
-
-const showBannerDim = isBannerMode && isBackgroundEnabled;
-
-const showBannerPageTitle =
-	isBannerMode &&
-	isBackgroundEnabled &&
-	!isHomePageCheck &&
-	!isPostPage &&
-	!!title;
-// 手机端非首页不显示banner的CSS类
-const mobileNonHomeBannerClass = !isHomePageCheck ? "mobile-hide-banner" : "";
-
-// 计算主内容区域位置，考虑手机端非首页时banner被隐藏
-const mainPanelTop =
-	isBannerMode && isBackgroundEnabled
-		? `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`
-		: "5.5rem";
-
-// 当banner模式被禁用时，主内容区域应该始终从顶栏下面开始
-// 非首页在小于1024px时会通过 mobile-main-no-banner CSS类覆盖top值为5.5rem
-const finalMainPanelTop =
-	isBannerMode && isBackgroundEnabled ? mainPanelTop : "5.5rem";
-
-// 获取响应式侧边栏配置
-const sidebarConfig = getResponsiveSidebarConfig();
-
-// 在文章页面且启用了showBothSidebarsOnPostPage时，确保对侧组件参与网格计算
-const shouldShowBothSidebarsOnPostPage: boolean =
-	isPostPage &&
-	sidebarLayoutConfig.position !== "both" &&
-	!!sidebarLayoutConfig.showBothSidebarsOnPostPage;
-
-// position为left时，对侧为右侧；position为right时，对侧为左侧
-const shouldAddRightSidebar: boolean =
-	shouldShowBothSidebarsOnPostPage && sidebarLayoutConfig.position === "left";
-const shouldAddLeftSidebar: boolean =
-	shouldShowBothSidebarsOnPostPage && sidebarLayoutConfig.position === "right";
-
-const effectiveIsBothSidebars: boolean =
-	sidebarConfig.isBothSidebars || shouldShowBothSidebarsOnPostPage;
-const effectiveHasRightComponents: boolean =
-	sidebarConfig.hasRightComponents ||
-	(shouldAddRightSidebar &&
-		sidebarLayoutConfig.rightComponents.some((comp) => comp.enable));
-const effectiveHasLeftComponents: boolean =
-	sidebarConfig.hasLeftComponents ||
-	(shouldAddLeftSidebar &&
-		sidebarLayoutConfig.leftComponents.some((comp) => comp.enable));
-
-// 使用effective值重新生成网格类
-// 当position为right且文章页临时显示左侧栏时，tabletSidebar应为right（保持显示主侧栏）
-const effectiveTabletSidebar = shouldAddLeftSidebar
-	? ("right" as const)
-	: sidebarConfig.tabletSidebar;
-
-const updatedGridConfig: ResponsiveSidebarConfig = {
-	...sidebarConfig,
-	isBothSidebars: effectiveIsBothSidebars,
-	hasLeftComponents: effectiveHasLeftComponents,
-	hasRightComponents: effectiveHasRightComponents,
-	tabletSidebar: effectiveTabletSidebar,
-};
-
-const { gridCols } = generateGridClasses(updatedGridConfig);
-const sidebarClass = generateSidebarClasses(updatedGridConfig);
-const rightSidebarClass =
-	effectiveIsBothSidebars || sidebarLayoutConfig.position === "right"
-		? generateRightSidebarClasses(updatedGridConfig)
-		: "";
-const mainContentClass = generateMainContentClasses(updatedGridConfig);
-const staticBarClass = mainContentClass.replace("transition-main", "").trim();
-
-const footerClass = ["footer", "col-span-1", "onload-animation"];
-
-if (
-	updatedGridConfig.isBothSidebars &&
-	updatedGridConfig.hasLeftComponents &&
-	updatedGridConfig.hasRightComponents
-) {
-	// 双侧栏：Footer 在平板与桌面都跟随内容列
-	if (updatedGridConfig.tabletSidebar === "right") {
-		footerClass.push(
-			"md:col-start-1 md:col-span-1 xl:col-start-2 xl:col-span-1",
-		);
-	} else {
-		footerClass.push(
-			"md:col-start-2 md:col-span-1 xl:col-start-2 xl:col-span-1",
-		);
-	}
-} else if (
-	updatedGridConfig.hasLeftComponents &&
-	!updatedGridConfig.hasRightComponents
-) {
-	// 仅左侧栏：内容列在第2列
-	footerClass.push("md:col-start-2 md:col-span-1 xl:col-start-2 xl:col-span-1");
-} else if (
-	!updatedGridConfig.hasLeftComponents &&
-	updatedGridConfig.hasRightComponents
-) {
-	// 仅右侧栏：内容列在第1列
-	footerClass.push("md:col-start-1 md:col-span-1 xl:col-start-1 xl:col-span-1");
-} else {
-	footerClass.push("md:col-start-1 md:col-span-1 xl:col-start-1 xl:col-span-1");
-}
-
-const footerClassName = footerClass.join(" ");
-
-// 检查是否应该启用半透明效果
-const shouldEnableTransparency = isOverlayMode && isBackgroundEnabled;
-
+const shouldRenderCategoryBar = !!siteConfig.categoryBar;
 const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
-const stickyNavbar = siteConfig.navbar.stickyNavbar ?? false;
-
-// 获取图片质量配置
-const configQuality = getImageQuality();
-const mobileQuality = Math.round(configQuality * 0.9);
-const bannerCarouselEnabledDefault =
-	backgroundWallpaper.banner?.carousel?.enable ?? false;
-const bannerCarouselSwitchable =
-	backgroundWallpaper.banner?.carousel?.switchable ?? false;
-const bannerCarouselInterval = Math.max(
-	backgroundWallpaper.banner?.carousel?.interval ?? 5000,
-	3000,
-);
 ---
 
 <Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} postSlug={postSlug}>
 
-
-<!-- 为全屏壁纸模式添加body类 -->
-{shouldEnableTransparency && (
-	<script>
-		document.body.classList.add('wallpaper-transparent');
-	</script>
-)}
-
-<!-- Navbar -->
 <slot slot="head" name="head"></slot>
+
+{/* Navbar — 极简 sticky 顶栏 */}
 <div
-    id="top-row"
-    class="z-50 pointer-events-none relative transition-all duration-700 mx-auto"
-    class:list={[
-        stickyNavbar ? "h-18 fixed top-0 left-0 right-0 z-80" : "",
-        navbarWidthFull ? "" : "w-full xl:w-[92vw] max-w-(--page-width) px-0 md:px-4",
-    ]}
+	id="top-row"
+	class="z-50 pointer-events-none relative mx-auto"
+	class:list={[
+		"sticky top-0 left-0 right-0 z-80",
+		navbarWidthFull ? "w-full" : "w-full max-w-(--page-width) px-0 md:px-4",
+	]}
 >
-    <div
-        id="navbar-wrapper"
-        class:list={[
-            "pointer-events-auto transition-all",
-            stickyNavbar ? "" : "sticky top-0",
-        ]}
-    >
-        <Navbar></Navbar>
-    </div>
+	<div id="navbar-wrapper" class="pointer-events-auto bg-(--page-bg)">
+		<Navbar></Navbar>
+	</div>
 </div>
 
-<!-- Wallpaper - 如果允许切换则始终渲染，否则只渲染当前模式 -->
-{(isWallpaperSwitchable || isBannerMode || isOverlayMode) && (
-<div id="wallpaper-wrapper" class:list={[
-	`absolute z-10 w-full transition duration-700 overflow-hidden ${mobileNonHomeBannerClass}`,
-	(isOverlayMode && !isWallpaperSwitchable) || (isWallpaperSwitchable && !isBannerMode) ? 'wallpaper-overlay' : ''
-]} style={
-	isWallpaperSwitchable
-		? `top: -${BANNER_HEIGHT_EXTEND}vh; display: none; --overlay-opacity: ${backgroundWallpaper.overlay?.opacity ?? 0.8}; --overlay-z-index: ${backgroundWallpaper.overlay?.zIndex ?? -1}; --overlay-blur: ${backgroundWallpaper.overlay?.blur ?? 0}px;`
-		: isOverlayMode
-			? `--overlay-opacity: ${backgroundWallpaper.overlay?.opacity ?? 0.8}; --overlay-z-index: ${backgroundWallpaper.overlay?.zIndex ?? -1}; --overlay-blur: ${backgroundWallpaper.overlay?.blur ?? 0}px;`
-			: `top: -${BANNER_HEIGHT_EXTEND}vh`
-}>
-    <!-- 背景图片显示 -->
-    <div class="relative h-full w-full" id="banner-images-container"
-         data-mobile-count={backgroundImages.mobile.length}
-         data-desktop-count={backgroundImages.desktop.length}
-         data-carousel-enabled={bannerCarouselEnabledDefault}
-         data-carousel-switchable={bannerCarouselSwitchable}
-         data-carousel-interval={bannerCarouselInterval}>
-        <!-- Mobile: 默认渲染第一张，其余放入 template 避免浏览器预加载 -->
-        {backgroundImages.mobile.length > 0 && (
-            <div class="banner-image-slot-mobile absolute inset-0 block lg:hidden">
-                <ImageWrapper
-                    alt="Mobile background image of the blog"
-                    class="object-cover h-full w-full"
-                    src={backgroundImages.mobile[0]}
-                    position={backgroundWallpaper.banner?.position}
-                    widths={[640, 750, 1080]}
-                    sizes="100vw"
-                    loading="eager"
-                    fetchpriority="high"
-                    quality={mobileQuality}
-                />
-            </div>
-        )}
-        {backgroundImages.mobile.slice(1).map((src) => (
-            <template class="banner-tpl-mobile">
-                <ImageWrapper
-                    alt="Mobile background image of the blog"
-                    class="object-cover h-full w-full"
-                    src={src}
-                    position={backgroundWallpaper.banner?.position}
-                    widths={[640, 750, 1080]}
-                    sizes="100vw"
-                    loading="eager"
-                    fetchpriority="high"
-                    quality={mobileQuality}
-                />
-            </template>
-        ))}
-        <!-- Desktop: 默认渲染第一张，其余放入 template -->
-        {backgroundImages.desktop.length > 0 && (
-            <div class="banner-image-slot-desktop absolute inset-0 hidden lg:block">
-                <ImageWrapper
-                    id="banner"
-                    alt="Desktop background image of the blog"
-                    class="object-cover h-full"
-                    src={backgroundImages.desktop[0]}
-                    position={backgroundWallpaper.banner?.position}
-                    widths={[1280, 1920, 2560]}
-                    sizes="100vw"
-                    loading="eager"
-                    fetchpriority="high"
-                    quality={configQuality}
-                />
-            </div>
-        )}
-        {backgroundImages.desktop.slice(1).map((src) => (
-            <template class="banner-tpl-desktop">
-                <ImageWrapper
-                    id="banner"
-                    alt="Desktop background image of the blog"
-                    class="object-cover h-full"
-                    src={src}
-                    position={backgroundWallpaper.banner?.position}
-                    widths={[1280, 1920, 2560]}
-                    sizes="100vw"
-                    loading="eager"
-                    fetchpriority="high"
-                    quality={configQuality}
-                />
-            </template>
-        ))}
-    </div>
+{/* 主内容容器 — 单列居中，无壁纸/三栏 */}
+<div class="relative w-full" id="main-grid-wrapper">
+	{isPostPage && (
+		<div id="article-toc-wrapper" class="article-toc-wrapper hidden xl:block">
+			<div id="article-toc-container" class="article-toc-container">
+				<div class="article-toc-header">
+					<span class="article-toc-title">{i18n(I18nKey.tableOfContents)}</span>
+				</div>
+				<div class="toc-scroll-container custom-scrollbar article-toc-body">
+					<div class="toc-content" id="article-toc-content"></div>
+				</div>
+			</div>
+		</div>
+	)}
+	<div class="mx-auto max-w-4xl px-4 md:px-6" data-sidebar-position="none" id="main-grid">
+		{shouldRenderCategoryBar && <div id="category-bar-wrapper"><CategoryBar title={title} postSlug={postSlug} postCategory={postCategory} /></div>}
 
-    <!-- 客户端随机选择图片脚本 -->
-    <script is:inline data-swup-ignore-script>
-        (function randomizeBannerImage() {
-            var container = document.getElementById('banner-images-container');
-            if (!container) return;
+		{/* Swup 占位：保留 left/right sidebar 容器以满足 swup containers 协议 */}
+		<div id="left-sidebar-dynamic" class="hidden"></div>
+		<div id="right-sidebar-dynamic" class="hidden"></div>
 
-            var mobileCount = parseInt(container.dataset.mobileCount || '0', 10);
-            var desktopCount = parseInt(container.dataset.desktopCount || '0', 10);
+		{/* 首页：顶部 Hero + 门户信息层（profile / 公告 / 站点统计 / 分类 / 标签） */}
+		{isHomePageCheck && (
+			<>
+				<HomeHero />
+				<HomePortal />
+				<div class="border-t border-(--line-divider) my-8"></div>
+			</>
+		)}
 
-            if (mobileCount <= 1 && desktopCount <= 1) return;
+		<main id="swup-container" class="transition-main" data-current-post-category={postCategory || ""}>
+			<h1 class="sr-only">{title}</h1>
 
-            // 保存 SSR 初始第一张图的 HTML，供后续轮播收集完整帧序列使用
-            if (typeof window.__bannerInitialFrameHtml === 'undefined') {
-                window.__bannerInitialFrameHtml = {};
-            }
+			{/* 非首页非文章页：[ TITLE ] 风格页眉 */}
+			{!isHomePageCheck && !isPostPage && title && (
+				<header class="page-header py-12">
+					<div class="font-mono text-xs uppercase tracking-[0.25em] text-(--content-meta) mb-4">[ {title} ]</div>
+					<div class="border-b border-(--line-divider)"></div>
+				</header>
+			)}
 
-            function rememberInitialFrame(slotClass) {
-                var slot = container.querySelector('.' + slotClass);
-                if (!slot) return;
-                if (!window.__bannerInitialFrameHtml[slotClass]) {
-                    window.__bannerInitialFrameHtml[slotClass] = slot.innerHTML;
-                }
-            }
+			{/* 文章页：极简文章头 */}
+			{isPostPage && bannerPostMeta && (
+				<header class="post-header py-10 border-b border-(--line-divider) mb-8">
+					<div class="font-mono text-xs uppercase tracking-[0.25em] text-(--content-meta) mb-4">
+						[ {postCategory || "post"} ]
+					</div>
+					<h2 class="text-3xl md:text-4xl font-semibold text-(--deep-text) leading-tight mb-4">
+						{bannerPostMeta.title}
+					</h2>
+					<div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-(--content-meta)">
+						<span class="inline-flex items-center gap-1.5">
+							<Icon name="material-symbols:calendar-month-outline-rounded" />
+							{formatDateToYYYYMMDD(bannerPostMeta.published)}
+						</span>
+						{bannerPostMeta.updated && bannerPostMeta.updated.getTime() !== bannerPostMeta.published.getTime() && (
+							<span class="inline-flex items-center gap-1.5">
+								<Icon name="material-symbols:update-rounded" />
+								{formatDateToYYYYMMDD(bannerPostMeta.updated)}
+							</span>
+						)}
+						{typeof bannerPostMeta.words === "number" && (
+							<span>{bannerPostMeta.words} {i18n(I18nKey.wordsCount)}</span>
+						)}
+						{typeof bannerPostMeta.minutes === "number" && (
+							<span>{bannerPostMeta.minutes} {i18n(I18nKey.minutesCount)}</span>
+						)}
+					</div>
+				</header>
+			)}
 
-            rememberInitialFrame('banner-image-slot-mobile');
-            rememberInitialFrame('banner-image-slot-desktop');
+			<div id="content-wrapper" class="onload-animation transition-leaving">
+				<slot></slot>
+			</div>
+		</main>
 
-            // F5 刷新重置，Swup 切换保留
-            if (typeof window.__bannerRandomIndex === 'undefined') {
-                window.__bannerRandomIndex = {
-                    mobile: mobileCount > 1 ? Math.floor(Math.random() * mobileCount) : 0,
-                    desktop: desktopCount > 1 ? Math.floor(Math.random() * desktopCount) : 0
-                };
-            }
+		<div class="footer onload-animation mt-16 pt-8 border-t border-(--line-divider)">
+			<Footer></Footer>
+		</div>
 
-            // 从 template 替换默认图片（index 0 = 已渲染的默认图，>0 = template）
-            function applyRandom(slotClass, tplClass, randomIndex) {
-                if (randomIndex === 0) return;
-                var slot = container.querySelector('.' + slotClass);
-                var templates = container.querySelectorAll('.' + tplClass);
-                if (!slot || !templates.length) return;
-                var tpl = templates[randomIndex - 1];
-                if (!tpl) return;
-                slot.innerHTML = '';
-                slot.appendChild(tpl.content.cloneNode(true));
-            }
-
-            applyRandom('banner-image-slot-mobile', 'banner-tpl-mobile', window.__bannerRandomIndex.mobile);
-            applyRandom('banner-image-slot-desktop', 'banner-tpl-desktop', window.__bannerRandomIndex.desktop);
-        })();
-    </script>
-
-    <!-- 横幅轮播 Ken Burns 样式（放在 body 中，不受 Swup head 替换影响） -->
-    <Fragment set:html={`<style>
-        @keyframes bannerKenBurns {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.1); }
-        }
-        .banner-kb {
-            animation: bannerKenBurns ${bannerCarouselInterval + 1500}ms ease-out forwards;
-        }
-    </style>`} />
-    <!-- 横幅图片轮播脚本 -->
-    <script is:inline data-swup-ignore-script>
-        (function initBannerCarousel() {
-            var container = document.getElementById('banner-images-container');
-            if (!container) return;
-
-            var WALLPAPER_BANNER = 'banner';
-
-            var mobileCount = parseInt(container.dataset.mobileCount || '0', 10);
-            var desktopCount = parseInt(container.dataset.desktopCount || '0', 10);
-            if (mobileCount <= 1 && desktopCount <= 1) return;
-
-            var interval = parseInt(container.dataset.carouselInterval || '8000', 10);
-            var switchable = container.dataset.carouselSwitchable === 'true';
-            var defaultEnabled = container.dataset.carouselEnabled === 'true';
-            var FADE_MS = 1500;
-
-            function isCarouselEnabled() {
-                if (!switchable) return defaultEnabled;
-                var stored = localStorage.getItem('bannerCarouselEnabled');
-                if (stored === null) return defaultEnabled;
-                return stored === 'true';
-            }
-
-            function isBannerWallpaperMode() {
-                return document.documentElement.getAttribute('data-wallpaper-mode') === WALLPAPER_BANNER;
-            }
-
-            // 收集所有帧内容
-            if (!window.__bannerCarouselFrames) window.__bannerCarouselFrames = {};
-
-            function collectFrames(slotClass, tplClass) {
-                if (window.__bannerCarouselFrames[slotClass]) return;
-                var frames = [];
-                var initialFrame =
-                    window.__bannerInitialFrameHtml &&
-                    window.__bannerInitialFrameHtml[slotClass];
-                var slot = container.querySelector('.' + slotClass);
-                if (initialFrame) {
-                    frames.push(initialFrame);
-                } else if (slot) {
-                    frames.push(slot.innerHTML);
-                }
-                var tpls = container.querySelectorAll('.' + tplClass);
-                for (var i = 0; i < tpls.length; i++) {
-                    // 直接读取 template 的 innerHTML，不创建真实 DOM 节点，避免触发图片加载
-                    frames.push(tpls[i].innerHTML);
-                }
-                window.__bannerCarouselFrames[slotClass] = frames;
-            }
-
-            collectFrames('banner-image-slot-mobile', 'banner-tpl-mobile');
-            collectFrames('banner-image-slot-desktop', 'banner-tpl-desktop');
-
-            if (typeof window.__bannerCarouselIndex === 'undefined') {
-                window.__bannerCarouselIndex = {
-                    mobile: window.__bannerRandomIndex ? window.__bannerRandomIndex.mobile : 0,
-                    desktop: window.__bannerRandomIndex ? window.__bannerRandomIndex.desktop : 0
-                };
-            }
-
-            // 检查 slot 是否被响应式类隐藏（lg:hidden / hidden lg:block）
-            // 不使用 offsetParent，因为 wallpaper-wrapper 初始可能 display:none
-            function isSlotHiddenByBreakpoint(slot) {
-                var cl = slot.classList;
-                var w = window.innerWidth;
-                var isLg = w >= 1024;
-                // mobile slot: "block lg:hidden" → lg 以上隐藏
-                if (cl.contains('lg:hidden') && isLg) return true;
-                // desktop slot: "hidden lg:block" → lg 以下隐藏
-                if (cl.contains('hidden') && !cl.contains('lg:hidden') && !isLg) return true;
-                return false;
-            }
-
-            // 给首张图启动 Ken Burns
-            function applyInitialKB(slotClass) {
-                var slot = container.querySelector('.' + slotClass);
-                if (!slot || isSlotHiddenByBreakpoint(slot)) return;
-                // 移除可能残留的旧 class，重新触发动画
-                slot.classList.remove('banner-kb');
-                void slot.offsetWidth; // 强制回流
-                slot.classList.add('banner-kb');
-            }
-
-            function crossfade(slotClass, totalCount, type) {
-                if (totalCount <= 1) return;
-                var frames = window.__bannerCarouselFrames[slotClass];
-                if (!frames || frames.length === 0) return;
-
-                var oldSlot = container.querySelector('.' + slotClass);
-                if (!oldSlot) return;
-
-                // 跳过当前不可见的 slot（桌面端不加载移动端图片，反之亦然）
-                if (isSlotHiddenByBreakpoint(oldSlot)) return;
-
-                var currentIndex = window.__bannerCarouselIndex[type];
-                var nextIndex = (currentIndex + 1) % frames.length;
-                window.__bannerCarouselIndex[type] = nextIndex;
-
-                // 新层：叠在旧层上方
-                var newSlot = document.createElement('div');
-                // 复制基础 class，去掉 banner-kb 避免继承旧动画状态
-                var baseClass = oldSlot.className.replace(/\bbanner-kb\b/g, '').trim();
-                newSlot.className = baseClass;
-                newSlot.style.opacity = '0';
-                newSlot.style.transition = 'opacity ' + FADE_MS + 'ms ease-in-out';
-                newSlot.innerHTML = frames[nextIndex];
-                oldSlot.parentNode.insertBefore(newSlot, oldSlot.nextSibling);
-
-                // 双 rAF：确保 opacity:0 已绘制，然后同时触发淡入 + Ken Burns
-                requestAnimationFrame(function() {
-                    requestAnimationFrame(function() {
-                        newSlot.style.opacity = '1';
-                        newSlot.classList.add('banner-kb');
-                    });
-                });
-
-                // 淡入完成后：移除旧层，清理 transition（避免影响后续动画）
-                setTimeout(function() {
-                    if (oldSlot.parentNode) oldSlot.parentNode.removeChild(oldSlot);
-                    newSlot.style.transition = '';
-                }, FADE_MS + 50);
-            }
-
-            var timerId = null;
-
-            function startCarousel() {
-                stopCarousel();
-                if (!isBannerWallpaperMode()) return;
-                if (!isCarouselEnabled()) return;
-
-                // 首张图立即启动 Ken Burns 缩放
-                applyInitialKB('banner-image-slot-mobile');
-                applyInitialKB('banner-image-slot-desktop');
-
-                timerId = setInterval(function() {
-                    if (!isBannerWallpaperMode()) { stopCarousel(); return; }
-                    if (!isCarouselEnabled()) { stopCarousel(); return; }
-                    crossfade('banner-image-slot-mobile', mobileCount, 'mobile');
-                    crossfade('banner-image-slot-desktop', desktopCount, 'desktop');
-                }, interval);
-            }
-
-            function stopCarousel() {
-                if (timerId !== null) { clearInterval(timerId); timerId = null; }
-            }
-
-            window.addEventListener('bannerCarouselChange', function(e) {
-                e.detail && e.detail.enabled ? startCarousel() : stopCarousel();
-            });
-
-            window.addEventListener('wallpaperModeChange', function(e) {
-                if (e.detail && e.detail.mode === 'banner') {
-                    if (isCarouselEnabled()) startCarousel();
-                } else {
-                    stopCarousel();
-                }
-            });
-
-            startCarousel();
-        })();
-    </script>
-    
-    <div id="banner-dim-container" class="absolute inset-0 z-0 pointer-events-none">
-        {showBannerDim && <div class="banner-dim-overlay absolute inset-0"></div>}
-    </div>
-
-    <div id="banner-overlay-container" class="absolute inset-0 z-20 pointer-events-none transition-swup-fade">    <!-- Home page text overlay - 始终渲染以便切换模式时控制显示 -->
-    {homeTextEnable && (
-        <div class={`banner-home-text-overlay absolute inset-0 z-20 flex items-center justify-center ${!showHomeText ? 'hidden' : ''}`}>
-            <div class="w-4/5 lg:w-3/4 text-center mb-0">
-                <div class="flex flex-col">
-                    {backgroundWallpaper.banner?.homeText?.title && (
-                        <div class="banner-title font-bold text-white mb-2 lg:mb-4 leading-tight" style={{ '--banner-title-size': backgroundWallpaper.banner.homeText.titleSize || "3rem" }}>
-                            {backgroundWallpaper.banner.homeText.title}
-                        </div>
-                    )}
-                    {backgroundWallpaper.banner?.homeText?.subtitle && (
-                        <div id="banner-subtitle" class="banner-subtitle text-white/90 leading-snug" style={{ fontSize: backgroundWallpaper.banner.homeText.subtitleSize || "1.5rem" }} data-subtitles={JSON.stringify(backgroundWallpaper.banner.homeText.subtitle)}>
-                            {backgroundWallpaper.banner.homeText.typewriter?.enable ? (
-                                <TypewriterText
-                                    text={backgroundWallpaper.banner.homeText.subtitle}
-                                    speed={backgroundWallpaper.banner.homeText.typewriter.speed}
-                                    deleteSpeed={backgroundWallpaper.banner.homeText.typewriter.deleteSpeed}
-                                    pauseTime={backgroundWallpaper.banner.homeText.typewriter.pauseTime}
-                                />
-                            ) : (
-                                randomSubtitle
-                            )}
-                        </div>
-                    )}
-                </div>
-            </div>
-        </div>
-    )}
-
-    <script is:inline>
-        function setRandomSubtitle() {
-            const subtitleElement = document.getElementById('banner-subtitle');
-            if (!subtitleElement) return;
-
-            const subtitlesData = subtitleElement.dataset.subtitles;
-            if (!subtitlesData) return;
-
-            try {
-                const subtitles = JSON.parse(subtitlesData);
-                // Only randomize if it's an array and typewriter is NOT enabled (check for typewriter class)
-                if (Array.isArray(subtitles) && subtitles.length > 0 && !subtitleElement.querySelector('.typewriter')) {
-                    // Use a global variable to persist the subtitle across Swup navigations
-                    // This variable will be reset on full page reload (F5), meeting the requirement
-                    if (!window.fireflyCachedSubtitle) {
-                        const randomIndex = Math.floor(Math.random() * subtitles.length);
-                        window.fireflyCachedSubtitle = subtitles[randomIndex];
-                    }
-                    subtitleElement.textContent = window.fireflyCachedSubtitle;
-                }
-            } catch (e) {
-                console.error("Failed to parse subtitles", e);
-            }
-        }
-
-        // Run on initial load
-        setRandomSubtitle();
-    </script>
-
-    <!-- Non-home non-post page title overlay (desktop only) -->
-    {showBannerPageTitle && (
-        <div class="banner-page-title-overlay absolute inset-0 z-20 hidden lg:flex items-center justify-center pointer-events-none">
-            <div class="w-4/5 lg:w-3/4 text-center mb-0">
-                <div class="banner-page-title font-bold text-white leading-tight inline-flex items-center justify-center gap-3">
-                    {/* <Icon name="material-symbols:bookmark-rounded" class="banner-page-title-icon" /> */}
-                    <span class="banner-page-title-text">{title}</span>
-                </div>
-            </div>
-        </div>
-    )}
-
-    <!-- Non-home post banner meta overlay (desktop only) -->
-    {showBannerPostMeta && bannerPostMeta && (
-        <div class="banner-post-meta-overlay absolute inset-0 z-20 hidden lg:flex items-center justify-center pointer-events-none">
-            <div class="w-4/5 lg:w-3/4 text-center mb-0">
-                <div class="flex flex-col items-center gap-3">
-                    <div class="banner-post-title font-bold text-white leading-tight">
-                        {bannerPostMeta.title}
-                    </div>
-                    <div class="banner-post-meta-list flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-white/90 text-sm md:text-base">
-                        <span class="inline-flex items-center gap-1.5">
-                            <Icon name="material-symbols:calendar-month-outline-rounded" class="text-[1.05em]" />
-                            <span>{i18n(I18nKey.publishedAt)} {formatDateToYYYYMMDD(bannerPostMeta.published)}</span>
-                        </span>
-                        {bannerPostMeta.updated &&
-                            bannerPostMeta.updated.getTime() !== bannerPostMeta.published.getTime() && (
-                                <span class="inline-flex items-center gap-1.5">
-                                    <Icon name="material-symbols:update-rounded" class="text-[1.05em]" />
-                                    <span>{i18n(I18nKey.updatedAt)} {formatDateToYYYYMMDD(bannerPostMeta.updated)}</span>
-                                </span>
-                            )}
-                        {typeof bannerPostMeta.words === "number" && (
-                            <span class="inline-flex items-center gap-1.5">
-                                <Icon name="material-symbols:ink-pen-outline-rounded" class="text-[1.05em]" />
-                                <span>
-                                    {bannerPostMeta.words} {i18n(bannerPostMeta.words === 1 ? I18nKey.wordCount : I18nKey.wordsCount)}
-                                </span>
-                            </span>
-                        )}
-                        {typeof bannerPostMeta.minutes === "number" && (
-                            <span class="inline-flex items-center gap-1.5">
-                                <Icon name="material-symbols:schedule-outline-rounded" class="text-[1.05em]" />
-                                <span>
-                                    {bannerPostMeta.minutes} {i18n(bannerPostMeta.minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount)} · {i18n(I18nKey.readTime)}
-                                </span>
-                            </span>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </div>
-    )}
-    </div>
-
-    <!-- Water waves effect - 如果允许切换或任一设备启用则渲染 -->
-    {shouldRenderWaves ? (
-    <div class={`waves absolute -bottom-px h-[10vh] max-h-37.5 min-h-12.5 w-full md:h-[15vh]
-        ${!wavesEnabledOnMobile ? 'hidden' : ''} ${!wavesEnabledOnDesktop ? 'md:hidden' : ''} ${wavesEnabledOnDesktop ? 'md:block' : ''}`}
-        id="header-waves"
-        style="transform: translateZ(0);">
-        <svg
-            class="waves"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            viewBox="0 24 150 28"
-            preserveAspectRatio="none"
-            shape-rendering="geometricPrecision"
-        >
-            <defs>
-                <path
-                    id="gentle-wave"
-                    d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v48h-352z"
-                >
-                </path>
-            </defs>
-            <g class="parallax">
-                <use
-                    xlink:href="#gentle-wave"
-                    x="48"
-                    y="0"
-                    class="opacity-25 fill-(--page-bg)"
-                ></use>
-                <use
-                    xlink:href="#gentle-wave"
-                    x="48"
-                    y="3"
-                    class="opacity-50 fill-(--page-bg)"
-                ></use>
-                <use
-                    xlink:href="#gentle-wave"
-                    x="48"
-                    y="5"
-                    class="opacity-65 fill-(--page-bg)"
-                ></use>
-                <use
-                    xlink:href="#gentle-wave"
-                    x="48"
-                    y="7"
-                    class=" opacity-75 fill-(--page-bg)"
-                ></use>
-            </g>
-        </svg>
-    </div>
-    ) : null}
-</div>
-)}
-
-{/* 当壁纸未渲染时，添加空的 Swup 占位容器，避免 Swup 找不到容器而回退为整页加载 */}
-{!(isWallpaperSwitchable || isBannerMode || isOverlayMode) && (
-<>
-    <div id="banner-overlay-container" class="hidden"></div>
-    <div id="banner-dim-container" class="hidden"></div>
-</>
-)}
-
-<!-- Main content -->
-<div class={`absolute w-full z-30 pointer-events-none ${mobileNonHomeBannerClass ? 'mobile-main-no-banner' : ''} ${!(isBannerMode && isBackgroundEnabled) ? 'no-banner-layout' : ''}`} style={`top: ${finalMainPanelTop}`}>
-    <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
-    <div class="relative w-full xl:w-[92vw] max-w-(--page-width) mx-auto pointer-events-auto">
-        <div id="main-grid"
-          class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-[auto_1fr_auto] lg:grid-rows-[auto] mx-auto gap-4 px-2 md:px-4 ${!sidebarConfig.mobileShowSidebar ? 'mobile-no-sidebar' : ''}`}
-          data-sidebar-position={sidebarLayoutConfig.position}
-          data-tablet-sidebar={sidebarLayoutConfig.tabletSidebar ?? "left"}
-          data-show-both-sidebars-on-post={sidebarLayoutConfig.showBothSidebarsOnPostPage ? "true" : "false"}
-        >
-            <!-- Background image credit - Desktop -->
-            {hasBannerCredit && creditEnabledOnDesktop && <a 
-                href={creditUrlDesktop || "#"} 
-                id="banner-credit-desktop" 
-                target={creditUrlDesktop ? "_blank" : "_self"}
-                rel={creditUrlDesktop ? "noopener" : ""}
-                aria-label="Visit image source"
-                class:list={[
-                    "group onload-animation transition-all absolute justify-center items-center rounded-full " +
-                    "px-3 right-4 -top-13 bg-black/60 hover:bg-black/70 h-9 hidden md:flex", 
-                    {"hover:pr-9 active:bg-black/80": creditUrlDesktop}
-                ]}
-            >
-                <Icon class="text-white/75 text-[1.25rem] mr-1" name="material-symbols:copyright-outline-rounded" ></Icon>
-                <div class="text-white/75 text-xs">{creditTextDesktop}</div>
-                {creditUrlDesktop && <Icon class:list={["transition absolute text-[oklch(0.75_0.14_var(--hue))] right-4 text-[0.75rem] opacity-0 group-hover:opacity-100"]}
-                      name="fa7-solid:arrow-up-right-from-square">
-                </Icon>}
-            </a>}
-
-            <!-- Background image credit - Mobile -->
-            {hasBannerCredit && creditEnabledOnMobile && <a 
-                href={creditUrlMobile || "#"} 
-                id="banner-credit-mobile" 
-                target={creditUrlMobile ? "_blank" : "_self"}
-                rel={creditUrlMobile ? "noopener" : ""}
-                aria-label="Visit image source"
-                class:list={[
-                    "group onload-animation transition-all absolute justify-center items-center rounded-full " +
-                    "px-3 right-4 -top-13 bg-black/60 hover:bg-black/70 h-9 flex md:hidden", 
-                    {"hover:pr-9 active:bg-black/80": creditUrlMobile}
-                ]}
-            >
-                <Icon class="text-white/75 text-[1.25rem] mr-1" name="material-symbols:copyright-outline-rounded" ></Icon>
-                <div class="text-white/75 text-xs">{creditTextMobile}</div>
-                {creditUrlMobile && <Icon class:list={["transition absolute text-[oklch(0.75_0.14_var(--hue))] right-4 text-[0.75rem] opacity-0 group-hover:opacity-100"]}
-                      name="fa7-solid:arrow-up-right-from-square">
-                </Icon>}
-            </a>}
-
-
-            {/* 渲染左侧边栏 - 根据position和tabletSidebar配置显示 */}
-            {/*
-                如果全局配置为双侧栏(position: both)或仅左侧栏(position: left)，则使用静态容器(不被swup替换)，避免闪烁。
-                如果全局配置为仅右侧栏(position: right)，则使用动态容器(被swup替换)，以便在文章页显示左侧栏。
-                注意：为了满足swup要求所有containers必须存在，我们在所有模式下都必须渲染 #left-sidebar-dynamic。
-            */}
-            {sidebarLayoutConfig.position !== "right" ? (
-                <>
-                    <div id="left-sidebar-wrapper" class="contents" style="contain: layout style paint;">
-                        {effectiveHasLeftComponents && (
-                            <SideBar
-                                side={effectiveIsBothSidebars ? "left" : undefined}
-                                class={sidebarClass}
-                                headings={headings}
-                            />
-                        )}
-                    </div>
-                    <div id="left-sidebar-dynamic" class="hidden transition-swup-fade"></div>
-                </>
-            ) : (
-                <div id="left-sidebar-dynamic" class="contents transition-swup-fade">
-                    {effectiveIsBothSidebars && effectiveHasLeftComponents && (
-						<SideBar side="left" class={sidebarClass} headings={headings}></SideBar>
-                    )}
-                </div>
-            )}
-                    
-            {/* 主内容区包装器 - 包含静态栏位和swup容器，作为单个grid item */}
-            <div class={staticBarClass}>
-                {/* 分类导航栏 - 全站渲染并显示 */}
-                {shouldRenderCategoryBar && <div id="category-bar-wrapper"><CategoryBar currentPostCategory={postCategory} /></div>}
-                {/* 主内容区 - 始终渲染，确保 Swup 容器存在 */}
-                <main
-                    id="swup-container"
-                    class="transition-main"
-                    data-current-post-category={postCategory || ""}
-                >
-                {/* 携带网格布局类名，用于JS更新父容器 */}
-                <div id="grid-class-carrier" data-grid-class={gridCols} class="hidden"></div>
-                {/* 为每个页面提供一个隐藏的h1标题，用于SEO和可访问性 */}
-                <h1 class="sr-only">{title}</h1>
-                <div id="content-wrapper" class="onload-animation transition-leaving">
-                    <slot></slot>
-                </div>
-            </main>
-            </div>
-
-            {/* 右侧边栏 - 双侧边栏模式或仅右侧栏模式 */}
-            {/*
-                如果全局配置为双侧栏(position: both)或仅右侧栏(position: right)，则使用静态容器(不被swup替换)，避免闪烁。
-                如果全局配置为单侧栏(position: left)，则使用动态容器(被swup替换)，以便在文章页显示右侧栏。
-                注意：为了满足swup要求所有containers必须存在，我们在所有模式下都必须渲染 #right-sidebar-dynamic。
-                右侧边栏的显示由CSS类控制。
-            */}
-            {(sidebarLayoutConfig.position === "both" || sidebarLayoutConfig.position === "right") ? (
-                <>
-                    <div id="right-sidebar-static" class="contents">
-                        {(effectiveIsBothSidebars || sidebarLayoutConfig.position === "right") && effectiveHasRightComponents && (
-							<SideBar side="right" class={rightSidebarClass} headings={headings}></SideBar>
-                        )}
-                    </div>
-                    <div id="right-sidebar-dynamic" class="hidden transition-swup-fade"></div>
-                </>
-            ) : (
-                <div id="right-sidebar-dynamic" class="contents transition-swup-fade">
-                    {effectiveIsBothSidebars && effectiveHasRightComponents && (
-						<SideBar side="right" class={rightSidebarClass} headings={headings}></SideBar>
-                    )}
-                </div>
-            )}
-
-            {/* 移动端底部组件 - 768px及以下显示 */}
-            {sidebarLayoutConfig.mobileBottomComponents && sidebarLayoutConfig.mobileBottomComponents.length > 0 && (
-                <div id="mobile-bottom-sidebar" class="col-span-1 block md:hidden mt-4">
-					<SideBar side="bottom" headings={headings}></SideBar>
-                </div>
-            )}
-
-            <div class={footerClassName}>
-                <Footer></Footer>
-            </div>
-        </div>
-
-        <SpineModel></SpineModel>
-        {live2dModelConfig.enable && <Live2DWidget config={live2dModelConfig} />}
-    </div>
+		{/* Live2D / Spine — 由悬浮坞控制显隐 */}
+		<SpineModel></SpineModel>
+		{live2dModelConfig.enable && <Live2DWidget config={live2dModelConfig} />}
+	</div>
 </div>
 
-<FloatingControls headings={headings} />
-
+<FloatingDock headings={headings} />
 
 </Layout>
 
 <style is:global>
-  /* 右侧栏平滑过渡 */
-  #right-sidebar {
-    transition: opacity 0.35s ease-in-out,
-                transform 0.35s ease-in-out;
-  }
+	#main-grid {
+		--page-width: 56rem;
+	}
+	/* 极简 onload 淡入 */
+	.onload-animation {
+		animation: fadeUp 0.5s ease both;
+	}
+	@keyframes fadeUp {
+		from { opacity: 0; transform: translateY(0.5rem); }
+		to { opacity: 1; transform: translateY(0); }
+	}
 
-  @keyframes swupFadeOut {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0.95;
-    }
-  }
+	/* 文章页外部浮动目录 - 独立于主内容区域 */
+	.article-toc-wrapper {
+		position: absolute;
+		left: calc(50% + 25rem);
+		top: 0;
+		width: 17.5rem;
+		max-width: 17.5rem;
+		pointer-events: none;
+		z-index: 10;
+	}
 
+	.article-toc-container {
+		position: sticky;
+		top: 6rem;
+		pointer-events: auto;
+		max-height: calc(100vh - 7rem);
+		display: flex;
+		flex-direction: column;
+		border-radius: 1rem;
+		overflow: hidden;
+	}
+
+	.article-toc-header {
+		padding: 0.75rem 1rem;
+		border-bottom: 1px solid color-mix(in oklab, var(--line-divider) 50%, transparent);
+		flex-shrink: 0;
+	}
+
+	.article-toc-title {
+		font-size: 0.85rem;
+		font-weight: 700;
+		color: var(--primary);
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+	}
+
+	.article-toc-body {
+		flex: 1;
+		overflow-y: auto;
+		max-height: calc(100vh - 11rem);
+		padding: 0.5rem;
+	}
+
+	@media (max-width: 1280px) {
+		.article-toc-wrapper {
+			display: none !important;
+		}
+	}
+
+	/* 文章页显示外部浮动目录时，隐藏侧边栏中的目录组件避免重复 */
+	:global(#sidebar-toc:has(~ #main-grid-wrapper #article-toc-wrapper)),
+	:global(#article-toc-wrapper ~ * #sidebar-toc) {
+		display: none !important;
+	}
 </style>
 
+<script>
+	import { TOCManager, isPostPage } from "@/utils/toc-utils";
+
+	let articleTocManager: TOCManager | null = null;
+
+	function alignTOCCoverImage() {
+		const wrapper = document.getElementById("article-toc-wrapper");
+		if (!wrapper) return;
+
+		const mainGrid = document.getElementById("main-grid");
+		if (!mainGrid) return;
+
+		const contentWrapper = document.getElementById("content-wrapper");
+		if (!contentWrapper) return;
+
+		let offsetTop = 0;
+
+		const coverImage = contentWrapper.querySelector("img");
+		if (coverImage) {
+			const coverRect = coverImage.getBoundingClientRect();
+			const mainGridRect = mainGrid.getBoundingClientRect();
+			offsetTop = coverRect.top - mainGridRect.top;
+		} else {
+			const header = document.querySelector(".post-header");
+			if (header) {
+				const headerRect = header.getBoundingClientRect();
+				const mainGridRect = mainGrid.getBoundingClientRect();
+				offsetTop = headerRect.bottom - mainGridRect.top + 16;
+			}
+		}
+
+		wrapper.style.top = `${offsetTop}px`;
+		// 让 wrapper 高度撑满剩余内容区域，sticky 才能全程跟随
+		wrapper.style.height = `${mainGrid.offsetHeight - offsetTop}px`;
+	}
+
+	function initArticleTOC() {
+		if (!isPostPage()) return;
+
+		const tocContent = document.getElementById("article-toc-content");
+		const wrapper = document.getElementById("article-toc-wrapper");
+		if (!tocContent || !wrapper) return;
+
+		try {
+			if (articleTocManager) {
+				articleTocManager.cleanup();
+			}
+
+			articleTocManager = new TOCManager({
+				contentId: "article-toc-content",
+				indicatorId: "article-active-indicator",
+				maxLevel: 3,
+				scrollOffset: 80,
+			});
+
+			articleTocManager.init();
+
+			tocContent.addEventListener("click", (e) => {
+				const target = e.target as Element | null;
+				const anchor = target?.closest('a[href^="#"]');
+				if (anchor) {
+					window.tocInternalNavigation = true;
+				}
+			}, { capture: true });
+
+			alignTOCCoverImage();
+		} catch (error) {
+			console.error("Failed to init ArticleTOC:", error);
+		}
+	}
+
+	function cleanupArticleTOC() {
+		if (articleTocManager) {
+			articleTocManager.cleanup();
+			articleTocManager = null;
+		}
+	}
+
+	initArticleTOC();
+
+	document.addEventListener("swup:contentReplaced", () => setTimeout(initArticleTOC, 100));
+	document.addEventListener("astro:page-load", () => setTimeout(initArticleTOC, 100));
+	window.addEventListener("popstate", () => setTimeout(initArticleTOC, 200));
+	document.addEventListener("password:decrypted", () => setTimeout(initArticleTOC, 200));
+
+	let resizeTimer: ReturnType<typeof setTimeout>;
+	window.addEventListener("resize", () => {
+		clearTimeout(resizeTimer);
+		resizeTimer = setTimeout(alignTOCCoverImage, 150);
+	});
+
+	// 监听 main-grid 高度变化（图片加载、内容展开等），实时更新 wrapper 高度
+	const mainGridEl = document.getElementById("main-grid");
+	if (mainGridEl) {
+		const ro = new ResizeObserver(() => alignTOCCoverImage());
+		ro.observe(mainGridEl);
+	}
+
+	// TOC 边框样式：亮色纯黑边框，暗色纯白边框，无背景
+	function updateTOCBorder() {
+		const el = document.getElementById("article-toc-container");
+		if (!el) return;
+		el.style.setProperty("background-color", "transparent");
+		el.style.setProperty("box-shadow", "none");
+		const isDark = document.documentElement.classList.contains("dark");
+		el.style.setProperty("border", `1px solid ${isDark ? "#fff" : "#000"}`);
+	}
+	updateTOCBorder();
+	new MutationObserver(updateTOCBorder).observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+</script>

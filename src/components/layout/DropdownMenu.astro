@@ -90,7 +90,40 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 	@reference "../../styles/main.css";
 
 	.dropdown-container {
-		@apply relative;
+		@apply relative z-10;
+	}
+
+	.dropdown-container > a,
+	.dropdown-container > button {
+		border: 1.5px solid transparent;
+		border-radius: 9999px;
+		transition: border-color 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+		background-color: transparent !important;
+	}
+
+	.dropdown-container:hover > a,
+	.dropdown-container:hover > button,
+	.dropdown-container:focus-within > a,
+	.dropdown-container:focus-within > button {
+		border-color: transparent;
+		background-color: transparent !important;
+	}
+
+	:root.dark .dropdown-container:hover > a,
+	:root.dark .dropdown-container:hover > button,
+	:root.dark .dropdown-container:focus-within > a,
+	:root.dark .dropdown-container:focus-within > button {
+		border-color: transparent;
+	}
+
+	.dropdown-container.nav-item-active > a,
+	.dropdown-container.nav-item-active > button {
+		border-color: transparent;
+	}
+
+	:root.dark .dropdown-container.nav-item-active > a,
+	:root.dark .dropdown-container.nav-item-active > button {
+		border-color: transparent;
 	}
 
 	.dropdown-menu {
@@ -109,9 +142,22 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 
 	.dropdown-content {
 		@apply min-w-[12rem];
+		background-color: transparent !important;
+		backdrop-filter: none !important;
+		-webkit-backdrop-filter: none !important;
 	}
 
-	/* 移动端隐藏下拉菜单 */
+	/* 禁用 dropdown item 的 expand-animation 背景，只保留边框效果 */
+	.dropdown-content .dropdown-item::before,
+	.dropdown-content .dropdown-item:hover::before,
+	.dropdown-content .dropdown-item:active::before {
+		background-color: transparent !important;
+	}
+
+	.dropdown-content .dropdown-item:active {
+		background-color: transparent !important;
+	}
+
 	@media (max-width: 768px) {
 		.dropdown-container {
 			@apply hidden;

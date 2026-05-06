@@ -214,3 +214,15 @@ body.wallpaper-transparent .custom-md {
   }
 }
 
+/* Markdown 内容黑白边框样式 */
+.markdown-bordered {
+  border: 2px solid #000;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  margin: 1rem 0;
+}
+
+:root.dark .markdown-bordered {
+  border-color: #fff;
+}
+
