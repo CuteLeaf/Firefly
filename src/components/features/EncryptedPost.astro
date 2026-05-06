@@ -13,7 +13,7 @@ interface Props {
 const { password, slug, hint = "" } = Astro.props;
 
 const rawHtml = await Astro.slots.render("default");
-const encryptedData = encryptContent(rawHtml, password, slug);
+const encryptedData = await encryptContent(rawHtml, password, slug);
 
 const labels = {
 	protected: i18n(I18nKey.passwordProtected),

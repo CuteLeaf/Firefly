@@ -1,5 +1,3 @@
-import { createCipheriv, createHmac, pbkdf2Sync } from "node:crypto";
-
 const PBKDF2_ITERATIONS = 100000;
 const SALT_LENGTH = 16;
 const IV_LENGTH = 12;
@@ -8,8 +6,21 @@ const KEY_LENGTH = 32;
 /**
  * Derive deterministic bytes from a key and context string using HMAC-SHA256.
  */
-function deriveBytes(key: string, context: string, length: number): Buffer {
-	return createHmac("sha256", key).update(context).digest().subarray(0, length);
+async function deriveBytes(
+	key: string,
+	context: string,
+	length: number,
+): Promise<Uint8Array> {
+	const enc = new TextEncoder();
+	const cryptoKey = await crypto.subtle.importKey(
+		"raw",
+		enc.encode(key),
+		{ name: "HMAC", hash: "SHA-256" },
+		false,
+		["sign"],
+	);
+	const sig = await crypto.subtle.sign("HMAC", cryptoKey, enc.encode(context));
+	return new Uint8Array(sig).slice(0, length);
 }
 
 /**
@@ -20,28 +31,58 @@ function deriveBytes(key: string, context: string, length: number): Buffer {
  *
  * Output format: base64(salt[16] + iv[12] + authTag[16] + ciphertext)
  */
-export function encryptContent(
+export async function encryptContent(
 	html: string,
 	password: string,
 	slug: string,
-): string {
-	const salt = deriveBytes(password, `salt:${slug}`, SALT_LENGTH);
-	const iv = deriveBytes(password, `iv:${slug}`, IV_LENGTH);
-	const key = pbkdf2Sync(
-		password,
-		salt,
-		PBKDF2_ITERATIONS,
-		KEY_LENGTH,
-		"sha256",
+): Promise<string> {
+	const salt = await deriveBytes(password, `salt:${slug}`, SALT_LENGTH);
+	const iv = await deriveBytes(password, `iv:${slug}`, IV_LENGTH);
+
+	const enc = new TextEncoder();
+	const keyMaterial = await crypto.subtle.importKey(
+		"raw",
+		enc.encode(password),
+		"PBKDF2",
+		false,
+		["deriveBits"],
+	);
+	const keyBits = await crypto.subtle.deriveBits(
+		{
+			name: "PBKDF2",
+			salt: salt as unknown as BufferSource,
+			iterations: PBKDF2_ITERATIONS,
+			hash: "SHA-256",
+		},
+		keyMaterial,
+		KEY_LENGTH * 8,
+	);
+	const key = await crypto.subtle.importKey(
+		"raw",
+		keyBits,
+		{ name: "AES-GCM", length: 256 },
+		false,
+		["encrypt"],
 	);
 
-	const cipher = createCipheriv("aes-256-gcm", key, iv);
-	const encrypted = Buffer.concat([
-		cipher.update(html, "utf8"),
-		cipher.final(),
-	]);
-	const authTag = cipher.getAuthTag();
+	const encrypted = await crypto.subtle.encrypt(
+		{ name: "AES-GCM", iv: iv as unknown as BufferSource, tagLength: 128 },
+		key,
+		enc.encode(html),
+	);
 
-	const result = Buffer.concat([salt, iv, authTag, encrypted]);
-	return result.toString("base64");
+	// encrypted contains ciphertext + authTag (16 bytes)
+	const encArr = new Uint8Array(encrypted);
+	const authTag = encArr.slice(encArr.length - 16);
+	const ciphertext = encArr.slice(0, encArr.length - 16);
+
+	const result = new Uint8Array(
+		SALT_LENGTH + IV_LENGTH + 16 + ciphertext.length,
+	);
+	result.set(salt, 0);
+	result.set(iv, SALT_LENGTH);
+	result.set(authTag, SALT_LENGTH + IV_LENGTH);
+	result.set(ciphertext, SALT_LENGTH + IV_LENGTH + 16);
+
+	return btoa(String.fromCharCode(...result));
 }

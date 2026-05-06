@@ -1,9 +1,6 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
-import * as fs from "node:fs";
 import type { APIContext, GetStaticPaths } from "astro";
-import satori from "satori";
-import sharp from "sharp";
 import { removeFileExtension } from "@/utils/url-utils";
 
 import { profileConfig } from "../../config/profileConfig";
@@ -39,7 +36,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 	});
 };
 
-let fontCache: { regular: Buffer | null; bold: Buffer | null } | null = null;
+let fontCache: { regular: ArrayBuffer | null; bold: ArrayBuffer | null } | null = null;
 
 async function fetchNotoSansSCFonts() {
 	if (fontCache) return fontCache;
@@ -84,8 +81,8 @@ async function fetchNotoSansSCFonts() {
 			return { regular: null, bold: null };
 		}
 
-		const rBuf = Buffer.from(await rResp.arrayBuffer());
-		const bBuf = Buffer.from(await bResp.arrayBuffer());
+		const rBuf: ArrayBuffer = await rResp.arrayBuffer();
+		const bBuf: ArrayBuffer = await bResp.arrayBuffer();
 		fontCache = { regular: rBuf, bold: bBuf };
 		return fontCache;
 	} catch (err) {
@@ -99,9 +96,14 @@ export async function GET({
 	props,
 }: APIContext<{ post: CollectionEntry<"posts"> }>) {
 	const { post } = props;
+	const fs = await import("node:fs");
+	const { default: satori } = await import("satori");
+	const { default: sharp } = await import("sharp");
 
 	// Try to fetch fonts from Google Fonts (woff2) at runtime.
-	const { regular: fontRegular, bold: fontBold } = await fetchNotoSansSCFonts();
+	const fontsResult = await fetchNotoSansSCFonts();
+	const fontRegular = fontsResult?.regular ?? null;
+	const fontBold = fontsResult?.bold ?? null;
 
 	// Avatar + icon: still read from disk (small assets)
 	let avatarBase64: string;
@@ -343,7 +345,7 @@ export async function GET({
 		fonts,
 	});
 
-	const png = await sharp(Buffer.from(svg)).png().toBuffer();
+	const png = await sharp(new TextEncoder().encode(svg)).png().toBuffer();
 
 	return new Response(new Uint8Array(png), {
 		headers: {
