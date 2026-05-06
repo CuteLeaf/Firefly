@@ -224,17 +224,13 @@ const stats = [
 		z-index: 40;
 		background: transparent;
 		padding: 0.5rem 0;
-		margin: 0 -1rem;
 	}
 	#category-sticky-wrapper.is-pinned {
 		position: fixed;
 		top: 68px;
-		left: 50%;
-		transform: translateX(-50%);
-		width: min(100%, 56rem);
+		left: max(1rem, calc((100vw - 56rem) / 2));
+		right: max(1rem, calc((100vw - 56rem) / 2));
 		max-width: 56rem;
-		padding-left: max(0.5rem, calc((100vw - 56rem) / 2));
-		padding-right: max(0.5rem, calc((100vw - 56rem) / 2));
 	}
 
 	.cat-square-btn {
@@ -255,7 +251,7 @@ const stats = [
 	:root.dark .cat-square-btn {
 		border-color: white;
 		color: white;
-		background: #1a1a1a;
+		background: black;
 	}
 	:root.dark .cat-square-btn:hover {
 		background-color: white;

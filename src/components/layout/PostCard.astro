@@ -380,23 +380,24 @@ const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
     align-items: center;
     justify-content: center;
     padding: 0.25rem 0.5rem;
-    border: 1px solid #000;
-    color: #000;
-    background: #fff;
-    border-radius: 0;
+    border: 1px solid #000 !important;
+    color: #000 !important;
+    background-color: #fff !important;
+    border-radius: 0 !important;
     transition: color 150ms, background-color 150ms;
+    opacity: 1 !important;
   }
   .post-tag-square:hover {
-    background-color: #000;
-    color: #fff;
+    background-color: #000 !important;
+    color: #fff !important;
   }
   :root.dark .post-tag-square {
-    border-color: #fff;
-    color: #fff;
-    background: #1a1a1a;
+    border-color: #fff !important;
+    color: #fff !important;
+    background-color: #000 !important;
   }
   :root.dark .post-tag-square:hover {
-    background-color: #fff;
-    color: #000;
+    background-color: #fff !important;
+    color: #000 !important;
   }
 </style>
