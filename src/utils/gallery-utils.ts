@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import type { GalleryAlbum } from "@/types/config";
 import { url } from "@/utils/url-utils";
 
@@ -16,32 +18,22 @@ function withBase(assetPath: string): string {
 	return url(normalizedPath);
 }
 
-// Eagerly import all gallery images at build time
-const galleryModules = import.meta.glob<{ default: string }>(
-	"../../public/gallery/**/*.{jpg,jpeg,png,webp,avif,gif}",
-	{ eager: true, query: "?url", import: "default" },
-);
-
 /**
- * Get all photo paths for an album from the pre-built glob map.
+ * 扫描相册目录中的所有图片文件
  */
 export function scanAlbumPhotos(albumId: string): string[] {
-	const files = Object.keys(galleryModules)
-		.filter((p) => p.includes(`/${albumId}/`))
-		.map((p) => {
-			// Extract just the filename from the full path
-			const parts = p.split("/");
-			return parts[parts.length - 1];
-		})
+	const dir = path.join(process.cwd(), "public", "gallery", albumId);
+	if (!fs.existsSync(dir)) return [];
+	const files = fs
+		.readdirSync(dir)
+		.filter((f) => /\.(jpe?g|png|webp|avif|gif)$/i.test(f))
 		.sort();
-
-	// Move cover.* to the front
+	// 将 cover.* 排到第一位
 	const coverIdx = files.findIndex((f) => /^cover\./i.test(f));
 	if (coverIdx > 0) {
 		const [coverFile] = files.splice(coverIdx, 1);
 		files.unshift(coverFile);
 	}
-
 	return files.map((f) => withBase(`/gallery/${albumId}/${f}`));
 }
 

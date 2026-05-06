@@ -1,5 +1,6 @@
 ---
 import { render } from "astro:content";
+import * as path from "node:path";
 import Comment from "@components/comment/index.astro";
 import Markdown from "@components/common/Markdown.astro";
 import EncryptedPost from "@components/features/EncryptedPost.astro";
@@ -14,7 +15,6 @@ import {
 	getPostUrlBySlug,
 	removeFileExtension,
 } from "@utils/url-utils";
-import { normalizeGlobPath } from "@/utils/path-utils";
 import { Icon } from "astro-icon/components";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -73,7 +73,9 @@ if (processedImage) {
 		const files = import.meta.glob<ImageMetadata>("../../**", {
 			import: "default",
 		});
-		let normalizedPath = normalizeGlobPath("../../", basePath, processedImage);
+		let normalizedPath = path
+			.normalize(path.join("../../", basePath, processedImage))
+			.replace(/\\/g, "/");
 		const file = files[normalizedPath];
 		if (file) {
 			const img = await file();
@@ -95,7 +97,9 @@ if (posterAvatarUrl) {
 		const files = import.meta.glob<ImageMetadata>("../../**", {
 			import: "default",
 		});
-		const normalizedPath = normalizeGlobPath("../../", posterAvatarUrl);
+		const normalizedPath = path
+			.normalize(path.join("../../", posterAvatarUrl))
+			.replace(/\\/g, "/");
 		const file = files[normalizedPath];
 		if (file) {
 			const img = await file();

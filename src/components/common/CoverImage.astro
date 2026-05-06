@@ -1,8 +1,8 @@
 ---
 import { Picture } from "astro:assets";
+import * as path from "node:path";
 import type { ImageMetadata } from "astro";
 import { coverImageConfig } from "@/config";
-import { normalizeGlobPath } from "@/utils/path-utils";
 import type { ImageFormat, ResponsiveImageLayout } from "@/types/config";
 import {
 	getFallbackFormat,
@@ -61,7 +61,9 @@ if (isLocal) {
 			import: "default",
 		},
 	);
-	const normalizedPath = normalizeGlobPath("../../", basePath, src);
+	const normalizedPath = path
+		.normalize(path.join("../../", basePath, src))
+		.replace(/\\/g, "/");
 	const file = files[normalizedPath];
 	if (file) {
 		img = await file();
@@ -83,7 +85,9 @@ if (fallbackPath && !isLocal && !isFallbackPublic) {
 			import: "default",
 		},
 	);
-	const normalizedFallbackPath = normalizeGlobPath("../../", fallbackPath);
+	const normalizedFallbackPath = path
+		.normalize(path.join("../../", fallbackPath))
+		.replace(/\\/g, "/");
 	const file = files[normalizedFallbackPath];
 	if (file) {
 		fallbackImg = await file();

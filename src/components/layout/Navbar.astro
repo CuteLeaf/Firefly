@@ -1,11 +1,11 @@
 ---
 import { Picture } from "astro:assets";
+import * as path from "node:path";
 import type { ImageMetadata } from "astro";
 import { Icon } from "astro-icon/components";
 import LightDarkSwitch from "@/components/controls/LightDarkSwitch.svelte";
 import { navBarConfig, siteConfig } from "@/config";
 import { LinkPresets } from "@/constants/link-presets";
-import { normalizeGlobPath } from "@/utils/path-utils";
 import { getFallbackFormat, getImageFormats } from "@/utils/image-utils";
 import { url } from "@/utils/url-utils";
 import DropdownMenu from "./DropdownMenu.astro";
@@ -34,7 +34,9 @@ if (isLocalSrcLogo) {
 		"../../**/*.{png,jpg,jpeg,webp,avif,gif,svg}",
 		{ import: "default" },
 	);
-	const normalizedPath = normalizeGlobPath("../../", logoValue);
+	const normalizedPath = path
+		.normalize(path.join("../../", logoValue))
+		.replace(/\\/g, "/");
 	const file = files[normalizedPath];
 	if (file) logoImg = await file();
 }
