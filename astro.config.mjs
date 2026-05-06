@@ -58,10 +58,11 @@ export default defineConfig({
 	experimental: {
 		// Rust 编译器以提升构建性能（实验性），部分平台可能会导致构建失败，可以根据需要启用或禁用
 		rustCompiler: false,
+		environments: false,
 		// 队列渲染以优化性能（实验性）
 		queuedRendering: { enabled: true },
 	},
-
+	output: "static",
 	integrations: [
 		swup({
 			theme: false,
