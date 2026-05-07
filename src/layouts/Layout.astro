@@ -20,7 +20,6 @@ import {
 	BANNER_HEIGHT_EXTEND,
 	BANNER_HEIGHT_HOME,
 	PAGE_WIDTH,
-	WALLPAPER_FULLSCREEN,
 } from "@/constants/constants";
 import { defaultFavicons } from "@/constants/icon";
 import type { Favicon } from "@/types/config";
@@ -68,7 +67,6 @@ if (!banner || typeof banner !== "string" || banner.trim() === "") {
 banner = getDefaultBackground();
 
 const enableBanner = backgroundWallpaper.mode === "banner";
-const enableFullscreen = backgroundWallpaper.mode === "fullscreen";
 
 let pageTitle: string;
 if (title) {

@@ -432,7 +432,9 @@ function showBannerMode() {
 	if (creditMobile) creditMobile.style.display = "";
 
 	// 显示横幅首页文本（如果启用且是首页）
-	const bannerTextOverlay = document.querySelector(".banner-home-text-overlay") as HTMLElement | null;
+	const bannerTextOverlay = document.querySelector(
+		".banner-home-text-overlay",
+	) as HTMLElement | null;
 	if (bannerTextOverlay) {
 		// 检查是否启用 homeText
 		const homeTextEnabled = backgroundWallpaper.common?.homeText?.enable;
@@ -455,7 +457,9 @@ function showBannerMode() {
 	adjustMainContentPosition("banner");
 
 	// 处理移动端非首页主内容区域位置
-	const mainContentWrapper = document.querySelector(".w-full.z-30.pointer-events-none");
+	const mainContentWrapper = document.querySelector(
+		".w-full.z-30.pointer-events-none",
+	);
 	if (mainContentWrapper) {
 		const isHomePage = checkIsHomePage(window.location.pathname);
 		const isMobile = window.innerWidth < 1024;
@@ -515,16 +519,24 @@ function showFullscreenMode(prevMainContentTop?: string, animate = false) {
 	const creditDesktop = document.getElementById("banner-credit-desktop");
 	const creditMobile = document.getElementById("banner-credit-mobile");
 	if (creditDesktop) {
-		const showDesktop = typeof fullscreenCredit === "object" ? fullscreenCredit.desktop : fullscreenCredit;
+		const showDesktop =
+			typeof fullscreenCredit === "object"
+				? fullscreenCredit.desktop
+				: fullscreenCredit;
 		creditDesktop.style.display = showDesktop && !isMobile ? "" : "none";
 	}
 	if (creditMobile) {
-		const showMobile = typeof fullscreenCredit === "object" ? fullscreenCredit.mobile : fullscreenCredit;
+		const showMobile =
+			typeof fullscreenCredit === "object"
+				? fullscreenCredit.mobile
+				: fullscreenCredit;
 		creditMobile.style.display = showMobile && isMobile ? "" : "none";
 	}
 
 	// 显示横幅首页文本（如果启用且是首页）
-	const bannerTextOverlay = document.querySelector(".banner-home-text-overlay") as HTMLElement | null;
+	const bannerTextOverlay = document.querySelector(
+		".banner-home-text-overlay",
+	) as HTMLElement | null;
 	if (bannerTextOverlay) {
 		const homeTextEnabled = backgroundWallpaper.common?.homeText?.enable;
 		const isHomePage = checkIsHomePage(window.location.pathname);
@@ -536,7 +548,8 @@ function showFullscreenMode(prevMainContentTop?: string, animate = false) {
 				bannerTextOverlay.style.transition = "none";
 				bannerTextOverlay.style.transform = "translateY(-17.5vh)";
 				requestAnimationFrame(() => {
-					bannerTextOverlay.style.transition = "transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+					bannerTextOverlay.style.transition =
+						"transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
 					bannerTextOverlay.style.transform = "translateY(0)";
 				});
 			}
@@ -716,7 +729,11 @@ function adjustMainContentPosition(
 	switch (mode) {
 		case "banner":
 			// Banner模式：主内容在banner下方
-			mainContent.style.setProperty("top", "calc(var(--banner-height) - 3rem)", "important");
+			mainContent.style.setProperty(
+				"top",
+				"calc(var(--banner-height) - 3rem)",
+				"important",
+			);
 			mainContent.style.position = "";
 			break;
 		case "fullscreen": {
@@ -727,7 +744,8 @@ function adjustMainContentPosition(
 			// 用切换前保存的旧top值作为起点，设置transition后下一帧设为目标值
 			if (prevTop) {
 				mainContent.style.setProperty("top", prevTop, "important");
-				mainContent.style.transition = "top 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+				mainContent.style.transition =
+					"top 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
 				requestAnimationFrame(() => {
 					mainContent.style.setProperty("top", "100vh", "important");
 				});
@@ -756,7 +774,9 @@ function adjustMainContentPosition(
 }
 
 function adjustMainContentTransparency(enable: boolean) {
-	const mainContent = document.querySelector(".w-full.z-30.pointer-events-none");
+	const mainContent = document.querySelector(
+		".w-full.z-30.pointer-events-none",
+	);
 	const body = document.body;
 
 	if (enable) {

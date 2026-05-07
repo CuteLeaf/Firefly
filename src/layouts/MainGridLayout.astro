@@ -21,7 +21,6 @@ import {
 	BANNER_HEIGHT,
 	BANNER_HEIGHT_EXTEND,
 	MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
-	WALLPAPER_FULLSCREEN,
 } from "@/constants/constants";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
@@ -148,7 +147,8 @@ const randomSubtitle = getRandomSubtitle();
 
 // 主页横幅文本只在首页且全局开关为 true 时显示，不区分设备
 const homeTextEnable = backgroundWallpaper.common?.homeText?.enable;
-const showHomeText = (isBannerMode || isFullscreenMode) && !!homeTextEnable && isHomePageCheck;
+const showHomeText =
+	(isBannerMode || isFullscreenMode) && !!homeTextEnable && isHomePageCheck;
 
 const showBannerPostMeta =
 	(isBannerMode || isFullscreenMode) &&
