@@ -59,6 +59,8 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	},
 	// 横幅壁纸和全屏壁纸共享配置
 	common: {
+		// 横幅文字遮罩暗度，0-1之间，值越大越暗
+		dimOpacity: 0.2,
 		// 主页横幅文字
 		homeText: {
 			// 是否启用主页横幅文字

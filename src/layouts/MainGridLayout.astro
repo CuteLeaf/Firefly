@@ -157,7 +157,8 @@ const showBannerPostMeta =
 	isPostPage &&
 	!!bannerPostMeta;
 
-const showBannerDim = isBannerMode && isBackgroundEnabled;
+const showBannerDim = (isBannerMode || isFullscreenMode) && isBackgroundEnabled;
+const dimOpacity = backgroundWallpaper.common?.dimOpacity ?? 0.15;
 
 const showBannerPageTitle =
 	isBannerMode &&
@@ -627,7 +628,7 @@ const bannerCarouselInterval = Math.max(
     </script>
     
     <div id="banner-dim-container" class="absolute inset-0 z-0 pointer-events-none">
-        {showBannerDim && <div class="banner-dim-overlay absolute inset-0"></div>}
+        {showBannerDim && <div class="banner-dim-overlay absolute inset-0" style={`background: rgba(0, 0, 0, ${dimOpacity})`}></div>}
     </div>
 
     <div id="banner-overlay-container" class="absolute inset-0 z-20 pointer-events-none transition-swup-fade">    <!-- Home page text overlay - 始终渲染以便切换模式时控制显示 -->
