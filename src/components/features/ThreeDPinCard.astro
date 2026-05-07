@@ -118,6 +118,12 @@ const { title, href, imgurl, desc, tags = [] } = Astro.props;
     width: 100%;
   }
 
+  @media (min-width: 640px) {
+    .pin-wrapper {
+      height: 19rem;
+    }
+  }
+
   .pin-wrapper:hover {
     z-index: 50;
   }
