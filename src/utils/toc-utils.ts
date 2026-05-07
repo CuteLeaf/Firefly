@@ -1,6 +1,6 @@
 /**
  * TOC (Table of Contents) 工具类
- * 用于 SidebarTOC 和 FloatingTOC 的共享逻辑
+ * 用于 SidebarTOC 和 FloatingDock 的共享逻辑
  */
 
 import I18nKey from "@/i18n/i18nKey";

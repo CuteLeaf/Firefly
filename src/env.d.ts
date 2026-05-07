@@ -15,13 +15,6 @@ declare global {
 		SidebarTOC: {
 			manager: ITOCManager | null;
 		};
-		FloatingTOC: {
-			btn: HTMLElement | null;
-			panel: HTMLElement | null;
-			manager: ITOCManager | null;
-			isPostPage: () => boolean;
-		};
-		toggleFloatingTOC: () => void;
 		tocInternalNavigation: boolean;
 		// swup is defined in global.d.ts
 		// biome-ignore lint/suspicious/noExplicitAny: External library without types
