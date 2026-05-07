@@ -3,6 +3,7 @@ import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import { isHomePage } from "@/utils/layout-utils";
 import { url } from "@/utils/url-utils";
+import { getIconSvg } from "@/constants/icons";
 
 interface Props {
 	title?: string;
@@ -254,7 +255,7 @@ if (items.length > 0) {
 				idx > 0
 					? `<span class="breadcrumb-separator text-(--content-meta) mx-1 select-none" aria-hidden="true">›</span>`
 					: "";
-			const iconSvg = `<svg class="text-[1rem] shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><use href="/icons/${item.icon}.svg#icon"></use></svg>`;
+			const iconSvg = `<span class="inline-flex shrink-0">${getIconSvg(item.icon)}</span>`;
 			if (item.isCurrent) {
 				return `${separator}<span class="breadcrumb-current flex items-center gap-1 text-(--deep-text) font-medium">${iconSvg}<span>${escapeHtml(item.label)}</span></span>`;
 			}
