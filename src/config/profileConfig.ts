@@ -14,7 +14,6 @@ export const profileConfig: ProfileConfig = {
 	// 个人签名
 	bio: "你好，我是 MmzMing。\n深耕 Java 后端开发，兼顾 React 前端技术与 AI 智能体探索。\n热爱技术、持续学习，欢迎同好交流探讨，也欢迎大佬互换友链。",
 
-
 	// 链接配置
 	// 已经预装的图标集：fa7-brands，fa7-regular，fa7-solid，material-symbols，simple-icons
 	// 访问https://icones.js.org/ 获取图标代码，

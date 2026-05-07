@@ -145,6 +145,16 @@ if (isLocalSrcLogo) {
         background-color: transparent !important;
     }
 
+    /* logo 图片：暗黑主题下反转为白色 */
+    .navbar-logo img,
+    .navbar-logo picture img {
+        transition: filter 0.3s ease;
+    }
+    :root.dark .navbar-logo img,
+    :root.dark .navbar-logo picture img {
+        filter: invert(1);
+    }
+
     /* logo 文字：滚动后淡出收缩 */
     .navbar-logo-text {
         display: inline-block;

@@ -1,62 +1,61 @@
 <script lang="ts">
-  /**
-   * Aceternity UI 风格的 Animated Tabs 组件
-   * 用于切换列表/网格布局，只显示图标，带滑动动画效果
-   */
-  import { onMount } from "svelte";
+/**
+ * Aceternity UI 风格的 Animated Tabs 组件
+ * 用于切换列表/网格布局，只显示图标，带滑动动画效果
+ */
+import { onMount } from "svelte";
 
-  interface Props {
-    activeTab: "list" | "grid";
-    class?: string;
-  }
+interface Props {
+	activeTab: "list" | "grid";
+	class?: string;
+}
 
-  let {
-    activeTab = $bindable("list"),
-    class: className = "",
-  }: Props = $props();
+let { activeTab = $bindable("list"), class: className = "" }: Props = $props();
 
-  let tabRef = $state<HTMLDivElement | null>(null);
-  let listBtnRef = $state<HTMLButtonElement | null>(null);
-  let gridBtnRef = $state<HTMLButtonElement | null>(null);
-  let hoverStyle = $state({ left: 0, width: 0, opacity: 0 });
+let tabRef = $state<HTMLDivElement | null>(null);
+let listBtnRef = $state<HTMLButtonElement | null>(null);
+let gridBtnRef = $state<HTMLButtonElement | null>(null);
+let hoverStyle = $state({ left: 0, width: 0, opacity: 0 });
 
-  function updateHoverPosition(tab: "list" | "grid") {
-    const btnRef = tab === "list" ? listBtnRef : gridBtnRef;
-    if (!btnRef || !tabRef) return;
+function updateHoverPosition(tab: "list" | "grid") {
+	const btnRef = tab === "list" ? listBtnRef : gridBtnRef;
+	if (!btnRef || !tabRef) return;
 
-    const parentRect = tabRef.getBoundingClientRect();
-    const btnRect = btnRef.getBoundingClientRect();
+	const parentRect = tabRef.getBoundingClientRect();
+	const btnRect = btnRef.getBoundingClientRect();
 
-    hoverStyle = {
-      left: btnRect.left - parentRect.left,
-      width: btnRect.width,
-      opacity: 1,
-    };
-  }
+	hoverStyle = {
+		left: btnRect.left - parentRect.left,
+		width: btnRect.width,
+		opacity: 1,
+	};
+}
 
-  function handleTabChange(tab: "list" | "grid") {
-    activeTab = tab;
-    localStorage.setItem("postListLayout", tab);
-    window.dispatchEvent(new CustomEvent("layoutChange", { detail: { layout: tab } }));
-    updateHoverPosition(tab);
-  }
+function handleTabChange(tab: "list" | "grid") {
+	activeTab = tab;
+	localStorage.setItem("postListLayout", tab);
+	window.dispatchEvent(
+		new CustomEvent("layoutChange", { detail: { layout: tab } }),
+	);
+	updateHoverPosition(tab);
+}
 
-  function handleMouseEnter(tab: "list" | "grid") {
-    updateHoverPosition(tab);
-  }
+function handleMouseEnter(tab: "list" | "grid") {
+	updateHoverPosition(tab);
+}
 
-  function handleMouseLeave() {
-    updateHoverPosition(activeTab);
-  }
+function handleMouseLeave() {
+	updateHoverPosition(activeTab);
+}
 
-  onMount(() => {
-    // 同步localStorage中的实际布局（anti-flash脚本可能已更改）
-    const saved = localStorage.getItem("postListLayout");
-    if (saved === "list" || saved === "grid") {
-      activeTab = saved;
-    }
-    updateHoverPosition(activeTab);
-  });
+onMount(() => {
+	// 同步localStorage中的实际布局（anti-flash脚本可能已更改）
+	const saved = localStorage.getItem("postListLayout");
+	if (saved === "list" || saved === "grid") {
+		activeTab = saved;
+	}
+	updateHoverPosition(activeTab);
+});
 </script>
 
 <div

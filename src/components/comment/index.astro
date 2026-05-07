@@ -38,14 +38,6 @@ let commentService: string = commentConfig?.type || "none";
 {
   commentService !== "none" && (
     <div id="post-comments" class="card-base p-8 mb-6 relative overflow-hidden">
-      <!-- 评论区装饰性背景 -->
-      <div class="absolute top-0 right-0 w-32 h-32 opacity-5 pointer-events-none">
-        <svg viewBox="0 0 100 100" class="w-full h-full">
-          <circle cx="50" cy="50" r="40" fill="currentColor" class="text-(--primary)" />
-          <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="2" class="text-(--primary)" />
-          <circle cx="50" cy="50" r="10" fill="currentColor" class="text-(--primary)" />
-        </svg>
-      </div>
       <!-- 评论区标题 -->
       <div class="relative z-10 mb-6">
         <div class="flex items-center gap-3 mb-2">

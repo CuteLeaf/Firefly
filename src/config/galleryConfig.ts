@@ -20,7 +20,8 @@ export const galleryConfig: GalleryConfig = {
 			location: "崩坏：星穹铁道",
 			date: "2026-01-01",
 			tags: ["崩坏星穹铁道", "流萤"],
-		},{
+		},
+		{
 			id: "ai-2026",
 			name: "生图AI",
 			description: "神人生图，收录各种逆天的AI生图，欢迎投稿！",

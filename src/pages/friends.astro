@@ -1,7 +1,8 @@
 ---
-import { getEntry, render } from "astro:content";
+import { getEntry } from "astro:content";
 import Comment from "@components/comment/index.astro";
-import Markdown from "@components/common/Markdown.astro";
+import FriendRulesModal from "@components/features/FriendRulesModal.astro";
+import ThreeDPinCard from "@components/features/ThreeDPinCard.astro";
 import { Icon } from "astro-icon/components";
 import {
 	commentConfig,
@@ -23,8 +24,6 @@ const friendsPost = await getEntry("spec", "friends");
 if (!friendsPost) {
 	throw new Error("friends page content not found");
 }
-
-const { Content } = await render(friendsPost);
 
 // 检查评论系统是否启用
 const isCommentEnabled =
@@ -62,15 +61,13 @@ const description =
           </div>
           {
             friendsPageConfig.applyLink && (
-              <a
-                href={friendsPageConfig.applyLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="px-4 py-2 rounded-lg border border-neutral-900 dark:border-neutral-100 text-neutral-900 dark:text-neutral-100 hover:bg-neutral-900 hover:text-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-900 transition-colors duration-200 text-sm font-medium flex items-center gap-2"
+              <button
+                data-open-friend-rules
+                class="px-4 py-2 rounded-lg border border-neutral-900 dark:border-neutral-100 text-neutral-900 dark:text-neutral-100 hover:bg-neutral-900 hover:text-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-900 transition-colors duration-200 text-sm font-medium flex items-center gap-2 cursor-pointer"
               >
-                <Icon name="material-symbols:edit-square-outline" class="text-base" />
-                {i18n(I18nKey.friendsApply)}
-              </a>
+                <Icon name="material-symbols:help-outline-rounded" class="text-base" />
+                如何申请友链
+              </button>
             )
           }
         </div>
@@ -107,61 +104,49 @@ const description =
         )
       }
 
-      <div class="friends-grid my-4">
+      <div class="friends-pin-grid">
+        {
+          items.map((item) => (
+            <div class="friend-card" data-tags={item.tags?.join(",")}>
+              <ThreeDPinCard
+                title={item.title}
+                href={item.siteurl}
+                imgurl={item.imgurl}
+                desc={item.desc}
+                tags={item.tags}
+              />
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="friends-list-mobile">
         {
           items.map((item) => (
             <a
+              class="friend-list-item"
+              data-tags={item.tags?.join(",")}
               href={item.siteurl}
               target="_blank"
               rel="noopener noreferrer"
-              data-tags={item.tags?.join(",")}
-              class="friend-card group flex items-center gap-3 p-2.5 rounded-xl border border-(--line-divider) hover:border-(--primary) hover:bg-(--card-bg) transition-all duration-300 hover:shadow-lg relative overflow-hidden"
             >
-              {/* 背景装饰 - 仅悬停显示 */}
-              <div class="absolute inset-0 bg-(--primary) opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none" />
-
-              {/* 头像 */}
-              <div class="relative w-16 h-16 shrink-0 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-black/5 dark:border-white/5 group-hover:scale-105 transition-transform duration-300">
-                <img
-                  src={item.imgurl}
-                  alt={item.title}
-                  class="w-full h-full object-cover"
-                />
+              <img
+                class="friend-list-avatar"
+                src={item.imgurl}
+                alt={item.title}
+                loading="lazy"
+              />
+              <div class="friend-list-info">
+                <h3 class="friend-list-title">{item.title}</h3>
+                <p class="friend-list-desc">{item.desc}</p>
               </div>
-
-              {/* 内容 */}
-              <div class="grow min-w-0 flex flex-col justify-center gap-0.5">
-                <div class="flex items-center justify-between">
-                  <div class="font-bold text-base text-neutral-900 dark:text-neutral-100 group-hover:text-(--primary) transition-colors truncate pr-4">
-                    {item.title}
-                  </div>
-                  {/* 外部链接图标 */}
-                  <Icon
-                    name="material-symbols:arrow-outward-rounded"
-                    class="text-(--primary) text-lg opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
-                  />
+              {item.tags && item.tags.length > 0 && (
+                <div class="friend-list-tags">
+                  {item.tags.slice(0, 2).map((tag) => (
+                    <span class="friend-list-tag">{tag}</span>
+                  ))}
                 </div>
-
-                <div
-                  class="text-sm text-neutral-500 dark:text-neutral-400 line-clamp-1"
-                  title={item.desc}
-                >
-                  {item.desc}
-                </div>
-
-                {/* 标签 */}
-                <div class="flex flex-wrap gap-1 mt-1">
-                  {item.tags && item.tags.length > 0
-                    ? item.tags
-                        .slice(0, 3)
-                        .map((tag) => (
-                          <span class="text-[0.65rem] px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 transition-colors duration-300">
-                            {tag}
-                          </span>
-                        ))
-                    : null}
-                </div>
-              </div>
+              )}
             </a>
           ))
         }
@@ -169,20 +154,15 @@ const description =
     </div>
   </div>
 
-  {friendsPageConfig.showCustomContent !== false && (
-    <div class="mt-4 card-base z-10 px-9 py-6 relative w-full">
-      <Markdown class="">
-        <Content />
-      </Markdown>
-    </div>
-  )}
-
   <!-- 评论区 -->
   {isCommentEnabled && (
     <div class="mt-4">
       <Comment post={friendsPost} customPath="/friends/" />
     </div>
   )}
+
+  <!-- 友链申请指南弹窗 -->
+  <FriendRulesModal applyLink={friendsPageConfig.applyLink} />
 
   <script slot="head" is:inline>
     (function() {
@@ -285,6 +265,20 @@ const description =
               cardEl.classList.remove("animate-fade-in-up");
             }
           });
+
+          const listItems = container.querySelectorAll(".friends-list-mobile .friend-list-item");
+          listItems.forEach((item) => {
+            const itemEl = item;
+            const tags = (itemEl.dataset.tags || "").split(",");
+            if (
+              selectedTag === "all" ||
+              (selectedTag && tags.includes(selectedTag))
+            ) {
+              itemEl.style.display = "";
+            } else {
+              itemEl.style.display = "none";
+            }
+          });
         }
       }
       customElements.define("friend-filter", FriendFilter);
@@ -292,10 +286,156 @@ const description =
   </script>
 
   <style is:global>
-    .friends-grid {
+    .friends-pin-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.75rem 1.5rem;
+      padding-top: 0.75rem;
+      padding-bottom: 1rem;
+    }
+
+    @media (min-width: 640px) {
+      .friends-pin-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .friends-pin-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .friends-pin-grid .friend-card {
+      min-height: 18rem;
+    }
+
+    .friends-list-mobile {
+      display: none;
+      flex-direction: column;
       gap: 0.75rem;
+      padding-top: 0.75rem;
+      padding-bottom: 1rem;
+    }
+
+    @media (max-width: 767px) {
+      .friends-pin-grid {
+        display: none !important;
+      }
+      .friends-list-mobile {
+        display: flex !important;
+      }
+    }
+
+    .friend-list-item {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+      padding: 0.875rem 1rem;
+      border-radius: var(--radius-large);
+      background: oklch(0.15 0 0);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      text-decoration: none;
+      transition: background-color 200ms, border-color 200ms;
+    }
+
+    :root:not(.dark) .friend-list-item {
+      background: oklch(0.98 0 0);
+      border-color: oklch(0.88 0 0);
+    }
+
+    .friend-list-item:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    :root:not(.dark) .friend-list-item:hover {
+      border-color: oklch(0.75 0 0);
+    }
+
+    .friend-list-avatar {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 0.75rem;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: oklch(0.2 0 0);
+    }
+
+    :root:not(.dark) .friend-list-avatar {
+      background: oklch(0.93 0 0);
+    }
+
+    .friend-list-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .friend-list-title {
+      margin: 0;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: oklch(0.95 0 0);
+      line-height: 1.3;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    :root:not(.dark) .friend-list-title {
+      color: oklch(0.15 0 0);
+    }
+
+    .friend-list-desc {
+      margin: 0.25rem 0 0;
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: oklch(0.55 0 0);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    :root:not(.dark) .friend-list-desc {
+      color: oklch(0.45 0 0);
+    }
+
+    .friend-list-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      flex-shrink: 0;
+    }
+
+    .friend-list-tag {
+      font-size: 0.6875rem;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.06);
+      color: oklch(0.6 0 0);
+      line-height: 1.5;
+      white-space: nowrap;
+    }
+
+    :root:not(.dark) .friend-list-tag {
+      background: oklch(0.92 0 0);
+      color: oklch(0.45 0 0);
+    }
+
+    .animate-fade-in-up {
+      animation: fadeInUp 0.4s ease-out both;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .friend-filter-tabs {

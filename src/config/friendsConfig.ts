@@ -20,7 +20,9 @@ export const friendsPageConfig: FriendsPageConfig = {
 	randomizeSort: false,
 
 	// 友链申请链接，填写后会在友链页面显示申请按钮
-	applyLink: "https://github.com/MmzMing/my-blog/issues/new?template=friend-link.yml",
+	// 使用 /new/choose 让用户选择模板，避免模板参数导致的404问题
+	applyLink:
+		"https://github.com/MmzMing/my-blog/issues/new/choose",
 };
 
 // 友链配置
@@ -52,7 +54,8 @@ export const friendsConfig: FriendLink[] = [
 		tags: ["Tools"],
 		weight: 8,
 		enabled: true,
-	},{
+	},
+	{
 		title: "Fqzlr",
 		imgurl: "https://q1.qlogo.cn/g?b=qq&nk=379446167&s=640",
 		desc: "番茄煮理人大佬的博客，一位主打「人间凑数」「快乐摸鱼」的生活体验家，解锁了各种有趣的「非专业」技能，热衷于在生活里挖掘快乐，在摆烂中寻找平衡。",
