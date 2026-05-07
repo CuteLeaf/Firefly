@@ -9,7 +9,6 @@ import { LinkPresets } from "@/constants/link-presets";
 import { getFallbackFormat, getImageFormats } from "@/utils/image-utils";
 import { url } from "@/utils/url-utils";
 import DropdownMenu from "./DropdownMenu.astro";
-import NavMenuPanel from "./NavMenuPanel.astro";
 
 const className = Astro.props.class;
 
@@ -81,7 +80,6 @@ if (isLocalSrcLogo) {
                 </button>
             </div>
         </div>
-        <NavMenuPanel links={links}></NavMenuPanel>
     </div>
 </div>
 
@@ -259,26 +257,6 @@ if (isLocalSrcLogo) {
 </style>
 
 <script>
-function loadButtonScript() {
-    const menuBtn = document.getElementById("nav-menu-switch");
-    if (menuBtn) {
-        menuBtn.onclick = () => {
-            const menuPanel = document.getElementById("nav-menu-panel");
-            menuPanel?.classList.toggle("float-panel-closed");
-        };
-    }
-
-    document.addEventListener("click", (event) => {
-        const panel = document.getElementById("nav-menu-panel");
-        const button = document.getElementById("nav-menu-switch");
-        if (panel && button && !panel.classList.contains("float-panel-closed")) {
-            if (event.target instanceof Node && !panel.contains(event.target) && !button.contains(event.target)) {
-                panel.classList.add("float-panel-closed");
-            }
-        }
-    });
-}
-
 function initHoverSlider() {
     const navContainer = document.querySelector('[data-navbar-nav]') as HTMLElement | null;
     const hoverBorder = document.querySelector('[data-hover-border]') as HTMLElement | null;
@@ -343,7 +321,6 @@ function initHoverSlider() {
     document.addEventListener('swup:page:view', detectActiveItem);
 }
 
-loadButtonScript();
 initHoverSlider();
 
 (function() {

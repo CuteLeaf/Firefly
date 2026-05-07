@@ -5,11 +5,13 @@ import Footer from "@components/layout/Footer.astro";
 import HomeHero from "@components/layout/HomeHero.astro";
 import HomePortal from "@components/layout/HomePortal.astro";
 import Navbar from "@components/layout/Navbar.astro";
+import NavMenuPanel from "@components/layout/NavMenuPanel.astro";
 import type { MarkdownHeading } from "astro";
 import FloatingDock from "@/components/controls/FloatingDock.astro";
 import CategoryBar from "@/components/layout/CategoryBar.astro";
 import CategoryFollowBar from "@/components/layout/CategoryFollowBar.astro";
-import { live2dModelConfig, siteConfig } from "@/config";
+import { live2dModelConfig, navBarConfig, siteConfig } from "@/config";
+import { LinkPresets } from "@/constants/link-presets";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { isHomePage } from "@/utils/layout-utils";
@@ -53,6 +55,11 @@ const isHomePageCheck = isHomePage(Astro.url.pathname);
 const isPostPage = !!postSlug;
 const shouldRenderCategoryBar = !!siteConfig.categoryBar;
 const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
+
+const navLinks = navBarConfig.links.map((item) => {
+	if (typeof item === "number") return LinkPresets[item];
+	return item;
+});
 ---
 
 <Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} postSlug={postSlug}>
@@ -72,6 +79,8 @@ const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
 		<Navbar></Navbar>
 	</div>
 </div>
+
+<NavMenuPanel links={navLinks} />
 
 {/* 主内容容器 — 单列居中，无壁纸/三栏 */}
 <div class="relative w-full" id="main-grid-wrapper">

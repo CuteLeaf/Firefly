@@ -8,7 +8,6 @@ interface Props {
 	links: NavBarLink[];
 }
 
-// 处理links中的LinkPreset转换
 const processedLinks = Astro.props.links.map((link: NavBarLink) => ({
 	...link,
 	children: link.children?.map((child: NavBarLink | LinkPreset): NavBarLink => {
@@ -19,113 +18,345 @@ const processedLinks = Astro.props.links.map((link: NavBarLink) => ({
 	}),
 }));
 ---
-<div id="nav-menu-panel" class:list={["float-panel float-panel-closed transition-all fixed right-4 px-2 py-2 max-h-[80vh] overflow-y-auto"]}>
-    {processedLinks.map((link) => (
-        <div class="mobile-menu-item">
-            {link.children && link.children.length > 0 ? (
-                <!-- 有子菜单的项目 -->
-                <div class="mobile-dropdown" data-mobile-dropdown>
-                    <button 
-                        class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-8 w-full text-left
-                            hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
-                        data-mobile-dropdown-trigger
-                        aria-expanded="false"
-                    >
-                        <div class="flex items-center transition text-black/75 dark:text-white/75 font-bold group-hover:text-(--primary) group-active:text-(--primary)">
-							{link.icon && <Icon name={link.icon} is:inline class="text-[1.1rem] mr-2" />}
-                            {link.name}
-                        </div>
-                        <Icon name="material-symbols:keyboard-arrow-down-rounded" is:inline
-                              class="transition text-[1.25rem] text-(--primary) mobile-dropdown-arrow duration-200"
-                        />
-                    </button>
-                    <div class="mobile-submenu" data-mobile-submenu>
-                        {link.children.map((child) => (
-                            <a href={child.external ? child.url : url(child.url)} 
-                               class="group flex justify-between items-center py-2 pl-6 pr-1 rounded-lg gap-8
-                                   hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
-                               target={child.external ? "_blank" : null}
-                            >
-                                <div class="flex items-center transition text-black/60 dark:text-white/60 font-medium group-hover:text-(--primary) group-active:text-(--primary)">
-									{child.icon && <Icon name={child.icon} is:inline class="text-[1.1rem] mr-2" />}
-                                    {child.name}
-                                </div>
-                                {child.external && <Icon name="fa7-solid:arrow-up-right-from-square" is:inline
-                                      class="transition text-[0.75rem] text-black/25 dark:text-white/25 -translate-x-1"
-                                />}
-                            </a>
-                        ))}
-                    </div>
-                </div>
-            ) : (
-                <!-- 普通链接项目 -->
-                <a href={link.external ? link.url : url(link.url)} class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-8
-                    hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition
-                "
-                   target={link.external ? "_blank" : null}
-                >
-                    <div class="flex items-center transition text-black/75 dark:text-white/75 font-bold group-hover:text-(--primary) group-active:text-(--primary)">
-						{link.icon && <Icon name={link.icon} is:inline class="text-[1.1rem] mr-2" />}
-                        {link.name}
-                    </div>
-					{!link.external && <Icon name="material-symbols:chevron-right-rounded" is:inline
-                          class="transition text-[1.25rem] text-(--primary)"
-                    />}
-					{link.external && <Icon name="fa7-solid:arrow-up-right-from-square" is:inline
-                          class="transition text-[0.75rem] text-black/25 dark:text-white/25 -translate-x-1"
-                    />}
-                </a>
-            )}
-        </div>
-    ))}
+
+<div id="nav-drawer-overlay" class="nav-drawer-overlay" aria-hidden="true"></div>
+
+<div id="nav-menu-panel" class="nav-drawer">
+	<div class="nav-drawer-header">
+		<span class="nav-drawer-title font-mono uppercase tracking-[0.15em] text-sm font-semibold">Menu</span>
+		<button aria-label="Close menu" id="nav-drawer-close" class="nav-drawer-close-btn">
+			<Icon name="material-symbols:close-rounded" is:inline class="text-[1.5rem]" />
+		</button>
+	</div>
+
+	<nav class="nav-drawer-body">
+		{processedLinks.map((link, index) => (
+			<div
+				class="nav-drawer-item"
+				style={`--item-index: ${index}`}
+			>
+				{link.children && link.children.length > 0 ? (
+					<div class="mobile-dropdown" data-mobile-dropdown>
+						<button
+							class="nav-drawer-link group"
+							data-mobile-dropdown-trigger
+							aria-expanded="false"
+						>
+							<div class="flex items-center gap-3">
+								{link.icon && <Icon name={link.icon} is:inline class="text-[1.25rem] nav-drawer-icon" />}
+								<span class="nav-drawer-link-text">{link.name}</span>
+							</div>
+							<Icon name="material-symbols:keyboard-arrow-down-rounded" is:inline
+								class="transition text-[1.35rem] text-(--primary) mobile-dropdown-arrow duration-300"
+							/>
+						</button>
+						<div class="mobile-submenu" data-mobile-submenu>
+							{link.children.map((child) => (
+								<a href={child.external ? child.url : url(child.url)}
+									class="nav-drawer-sublink group"
+									target={child.external ? "_blank" : null}
+								>
+									<div class="flex items-center gap-3">
+										{child.icon && <Icon name={child.icon} is:inline class="text-[1.1rem]" />}
+										<span>{child.name}</span>
+									</div>
+									{child.external && <Icon name="fa7-solid:arrow-up-right-from-square" is:inline
+										class="text-[0.7rem] text-black/25 dark:text-white/25"
+									/>}
+								</a>
+							))}
+						</div>
+					</div>
+				) : (
+					<a href={link.external ? link.url : url(link.url)}
+						class="nav-drawer-link group"
+						target={link.external ? "_blank" : null}
+					>
+						<div class="flex items-center gap-3">
+							{link.icon && <Icon name={link.icon} is:inline class="text-[1.25rem] nav-drawer-icon" />}
+							<span class="nav-drawer-link-text">{link.name}</span>
+						</div>
+						{!link.external && <Icon name="material-symbols:chevron-right-rounded" is:inline
+							class="text-[1.35rem] text-(--primary) opacity-50 group-hover:opacity-100 transition-opacity"
+						/>}
+						{link.external && <Icon name="fa7-solid:arrow-up-right-from-square" is:inline
+							class="text-[0.7rem] text-black/25 dark:text-white/25"
+						/>}
+					</a>
+				)}
+			</div>
+		))}
+	</nav>
 </div>
 
 <style>
-    @reference "../../styles/main.css";
+	@reference "../../styles/main.css";
 
-    .mobile-submenu {
-        @apply max-h-0 overflow-hidden transition-all duration-300 ease-in-out;
-    }
-    
-    .mobile-dropdown[data-expanded="true"] .mobile-submenu {
-        @apply max-h-96;
-    }
-    
-    .mobile-dropdown[data-expanded="true"] .mobile-dropdown-arrow {
-        @apply rotate-180;
-    }
+	.nav-drawer-overlay {
+		position: fixed;
+		inset: 0;
+		z-index: 9998;
+		background-color: rgba(0, 0, 0, 0.5);
+		backdrop-filter: blur(2px);
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.nav-drawer-overlay.is-open {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	.nav-drawer {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 9999;
+		width: min(80vw, 360px);
+		background: var(--float-panel-bg);
+		border-left: 1px solid var(--line-divider);
+		box-shadow: -8px 0 32px rgba(0, 0, 0, 0.15);
+		transform: translateX(100%);
+		transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	:root.dark .nav-drawer {
+		box-shadow: -8px 0 32px rgba(0, 0, 0, 0.5);
+	}
+
+	.nav-drawer.is-open {
+		transform: translateX(0);
+	}
+
+	.nav-drawer-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 1rem 1.25rem;
+		border-bottom: 1px solid var(--line-divider);
+		flex-shrink: 0;
+	}
+
+	.nav-drawer-title {
+		color: var(--deep-text);
+		opacity: 0.6;
+	}
+
+	.nav-drawer-close-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		border-radius: 50%;
+		color: var(--deep-text);
+		transition: background-color 0.2s ease;
+	}
+
+	.nav-drawer-close-btn:hover {
+		background-color: var(--btn-plain-bg-hover);
+	}
+
+	.nav-drawer-close-btn:active {
+		background-color: var(--btn-plain-bg-active);
+	}
+
+	.nav-drawer-body {
+		flex: 1;
+		overflow-y: auto;
+		overflow-x: hidden;
+		padding: 0.75rem 0.75rem 2rem;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.nav-drawer-item {
+		opacity: 0;
+		transform: translateX(24px);
+		transition: opacity 0.35s ease, transform 0.35s ease;
+		transition-delay: calc(var(--item-index) * 50ms);
+	}
+
+	.nav-drawer.is-open .nav-drawer-item {
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	.nav-drawer-link {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		padding: 0.875rem 1rem;
+		border-radius: 0.75rem;
+		font-weight: 600;
+		color: var(--deep-text);
+		transition: background-color 0.2s ease, color 0.2s ease;
+		text-decoration: none;
+		min-height: 3.25rem;
+	}
+
+	.nav-drawer-link:hover {
+		background-color: var(--btn-plain-bg-hover);
+		color: var(--primary);
+	}
+
+	.nav-drawer-link:active {
+		background-color: var(--btn-plain-bg-active);
+		color: var(--primary);
+	}
+
+	.nav-drawer-link-text {
+		font-size: 1rem;
+	}
+
+	.nav-drawer-icon {
+		opacity: 0.7;
+	}
+
+	.nav-drawer-sublink {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0.75rem 1rem 0.75rem 2.5rem;
+		border-radius: 0.75rem;
+		font-weight: 500;
+		font-size: 0.9375rem;
+		color: var(--deep-text);
+		opacity: 0.7;
+		transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+		text-decoration: none;
+		min-height: 2.75rem;
+	}
+
+	.nav-drawer-sublink:hover {
+		background-color: var(--btn-plain-bg-hover);
+		color: var(--primary);
+		opacity: 1;
+	}
+
+	.nav-drawer-sublink:active {
+		background-color: var(--btn-plain-bg-active);
+		color: var(--primary);
+		opacity: 1;
+	}
+
+	.mobile-submenu {
+		max-height: 0;
+		overflow: hidden;
+		transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.mobile-dropdown[data-expanded="true"] .mobile-submenu {
+		max-height: 500px;
+	}
+
+	.mobile-dropdown[data-expanded="true"] .mobile-dropdown-arrow {
+		transform: rotate(180deg);
+	}
+
+	@media (min-width: 1024px) {
+		.nav-drawer-overlay,
+		.nav-drawer {
+			display: none !important;
+		}
+	}
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const mobileDropdowns = document.querySelectorAll('[data-mobile-dropdown]');
-        
-        mobileDropdowns.forEach(dropdown => {
-            const trigger = dropdown.querySelector('[data-mobile-dropdown-trigger]');
-            const submenu = dropdown.querySelector('[data-mobile-submenu]');
-            
-            if (!trigger || !submenu) return;
-            
-            trigger.addEventListener('click', function(e) {
-                e.preventDefault();
-                const isExpanded = dropdown.getAttribute('data-expanded') === 'true';
-                
-                // 关闭其他打开的下拉菜单
-                mobileDropdowns.forEach(otherDropdown => {
-                    if (otherDropdown !== dropdown) {
-                        otherDropdown.setAttribute('data-expanded', 'false');
-                        const otherTrigger = otherDropdown.querySelector('[data-mobile-dropdown-trigger]');
-                        if (otherTrigger) {
-                            otherTrigger.setAttribute('aria-expanded', 'false');
-                        }
-                    }
-                });
-                
-                // 切换当前下拉菜单
-                const newState = !isExpanded;
-                dropdown.setAttribute('data-expanded', newState.toString());
-                trigger.setAttribute('aria-expanded', newState.toString());
-            });
-        });
-    });
+function initNavDrawer() {
+	const panelEl = document.getElementById('nav-menu-panel');
+	const overlayEl = document.getElementById('nav-drawer-overlay');
+	const menuBtn = document.getElementById('nav-menu-switch');
+	const closeBtn = document.getElementById('nav-drawer-close');
+
+	if (!panelEl || !overlayEl) return;
+
+	const panel = panelEl;
+	const overlay = overlayEl;
+
+	function openDrawer() {
+		panel.classList.add('is-open');
+		overlay.classList.add('is-open');
+		overlay.setAttribute('aria-hidden', 'false');
+		document.body.style.overflow = 'hidden';
+	}
+
+	function closeDrawer() {
+		panel.classList.remove('is-open');
+		overlay.classList.remove('is-open');
+		overlay.setAttribute('aria-hidden', 'true');
+		document.body.style.overflow = '';
+	}
+
+	if (menuBtn) {
+		menuBtn.onclick = (e) => {
+			e.stopPropagation();
+			const isOpen = panel.classList.contains('is-open');
+			if (isOpen) {
+				closeDrawer();
+			} else {
+				openDrawer();
+			}
+		};
+	}
+
+	if (closeBtn) {
+		closeBtn.onclick = () => closeDrawer();
+	}
+
+	overlay.addEventListener('click', () => closeDrawer());
+
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape' && panel.classList.contains('is-open')) {
+			closeDrawer();
+		}
+	});
+
+	document.addEventListener('swup:page:view', () => {
+		closeDrawer();
+	});
+}
+
+function initMobileDropdowns() {
+	const mobileDropdowns = document.querySelectorAll('[data-mobile-dropdown]');
+
+	mobileDropdowns.forEach(dropdown => {
+		const trigger = dropdown.querySelector('[data-mobile-dropdown-trigger]');
+		const submenu = dropdown.querySelector('[data-mobile-submenu]');
+
+		if (!trigger || !submenu) return;
+
+		trigger.addEventListener('click', function(e) {
+			e.preventDefault();
+			const isExpanded = dropdown.getAttribute('data-expanded') === 'true';
+
+			mobileDropdowns.forEach(otherDropdown => {
+				if (otherDropdown !== dropdown) {
+					otherDropdown.setAttribute('data-expanded', 'false');
+					const otherTrigger = otherDropdown.querySelector('[data-mobile-dropdown-trigger]');
+					if (otherTrigger) {
+						otherTrigger.setAttribute('aria-expanded', 'false');
+					}
+				}
+			});
+
+			const newState = !isExpanded;
+			dropdown.setAttribute('data-expanded', newState.toString());
+			trigger.setAttribute('aria-expanded', newState.toString());
+		});
+	});
+}
+
+initNavDrawer();
+initMobileDropdowns();
+
+document.addEventListener('astro:page-load', () => {
+	initNavDrawer();
+	initMobileDropdowns();
+});
 </script>
