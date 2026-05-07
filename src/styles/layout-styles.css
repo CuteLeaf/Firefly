@@ -682,6 +682,50 @@ html[data-wallpaper-mode="fullscreen"] .absolute.w-full.z-30.no-banner-layout {
     z-index: 5 !important;
 }
 
+/* Fullscreen 模式下滚动向下指示器 */
+#wallpaper-wrapper .scroll-down-indicator {
+    display: none;
+}
+
+#wallpaper-wrapper.wallpaper-fullscreen .scroll-down-indicator {
+    display: flex;
+    position: absolute;
+    bottom: 5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    cursor: pointer;
+    pointer-events: auto;
+    color: rgba(255, 255, 255, 0.8);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#wallpaper-wrapper.wallpaper-fullscreen .scroll-down-indicator .scroll-down-icon {
+    font-size: 5rem;
+    animation: scroll-down-bounce 2s ease-in-out infinite;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+}
+
+#wallpaper-wrapper.wallpaper-fullscreen .scroll-down-indicator:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
+#wallpaper-wrapper.wallpaper-fullscreen .scroll-down-indicator.hide {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+    pointer-events: none;
+}
+
+@keyframes scroll-down-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+}
+
+/* 点击滚动指示器跳转到文章列表时，避免被固定导航栏遮挡 */
+body.sticky-navbar #main-grid {
+    scroll-margin-top: 5.5rem;
+}
+
 /* Fullscreen 模式下主内容上移，credit 自然显示在壁纸上（与横幅模式一致） */
 html[data-wallpaper-mode="fullscreen"] .w-full.z-30.pointer-events-none {
     top: auto !important;

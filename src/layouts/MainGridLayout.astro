@@ -9,6 +9,7 @@ import type { MarkdownHeading } from "astro";
 import { Icon } from "astro-icon/components";
 import ImageWrapper from "@/components/common/ImageWrapper.astro";
 import FloatingControls from "@/components/controls/FloatingControls.astro";
+import ScrollDownIndicator from "@/components/controls/ScrollDownIndicator.astro";
 import TypewriterText from "@/components/features/TypewriterText.astro";
 import CategoryBar from "@/components/layout/CategoryBar.astro";
 import {
@@ -742,6 +743,9 @@ const bannerCarouselInterval = Math.max(
             </div>
         </div>
     )}
+
+    <!-- Fullscreen 模式下首页显示向下滚动指示器 -->
+    {(isFullscreenMode || isWallpaperSwitchable) && isHomePageCheck && <ScrollDownIndicator />}
     </div>
 
     <!-- Water waves effect - 如果允许切换或任一设备启用则渲染 -->
