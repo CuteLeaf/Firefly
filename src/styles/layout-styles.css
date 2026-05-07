@@ -402,9 +402,7 @@ html.is-page-transitioning .banner-home-text-overlay {
 
 /* 全屏壁纸模式：主内容在壁纸下方 */
 html[data-wallpaper-mode="fullscreen"] .absolute.w-full.z-30.no-banner-layout {
-    top: 100vh !important;
     min-height: calc(100vh - 0.5rem) !important;
-    transition: top 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
 }
 
 /* 移动端当banner被禁用时的布局样式 */
