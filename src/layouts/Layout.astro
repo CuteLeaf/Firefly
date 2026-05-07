@@ -996,16 +996,6 @@ function disableAnimation() {
         bodyElement!.classList.remove("lg:is-home");
       }
 
-      // Control banner text visibility based on page
-      const bannerTextOverlay = document.querySelector(".banner-home-text-overlay");
-      if (bannerTextOverlay) {
-        if (isHomePage) {
-          bannerTextOverlay.classList.remove("hidden");
-        } else {
-          bannerTextOverlay.classList.add("hidden");
-        }
-      }
-
       // Control navbar transparency based on page
       const navbar = document.getElementById("navbar");
       if (navbar) {
