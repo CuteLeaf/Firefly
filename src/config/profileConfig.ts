@@ -9,10 +9,10 @@ export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/avatar.gif",
 
 	// 名字
-	name: "MmMing",
+	name: "MmzMing",
 
 	// 个人签名
-	bio: "你好，我是 MmMing。\n深耕 Java 后端开发，兼顾 React 前端技术与 AI 智能体探索。\n热爱技术、持续学习，欢迎同好交流探讨，也欢迎大佬互换友链。",
+	bio: "你好，我是 MmzMing。\n深耕 Java 后端开发，兼顾 React 前端技术与 AI 智能体探索。\n热爱技术、持续学习，欢迎同好交流探讨，也欢迎大佬互换友链。",
 
 
 	// 链接配置

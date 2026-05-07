@@ -34,6 +34,27 @@
   }
 }
 
+/* 修复亮色主题下代码块展开遮罩渐变颜色错误的问题 */
+/* 插件默认只支持 html.dark / data-theme="light" 等检测，本项目使用 :root.dark */
+/* 必须放在 .expressive-code 外部，否则嵌套在 .expressive-code 内时，生成的选择器会变成
+   .expressive-code :root:not(.dark) .ec-collapse__gradient，这是无效的（:root 不能是后代） */
+:root:not(.dark) .ec-collapse__gradient {
+  background: linear-gradient(
+    to bottom,
+    transparent 5%,
+    var(--ec-collapse-bg-color, var(--code-background, #ffffffd3)) 100%
+  ) !important;
+}
+
+/* 暗色主题下代码块展开遮罩渐变颜色 */
+:root.dark .ec-collapse__gradient {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--ec-collapse-bg-color, var(--code-background, #000000da)) 100%
+  ) !important;
+}
+
 /* 透明模式下的代码块样式 */
 /*
  * 仅处理外层容器背景，避免清空 ANSI token 的背景色。

@@ -18,6 +18,9 @@ export const friendsPageConfig: FriendsPageConfig = {
 
 	// 是否开启随机排序配置，如果开启，就会忽略权重，构建时进行一次随机排序
 	randomizeSort: false,
+
+	// 友链申请链接，填写后会在友链页面显示申请按钮
+	applyLink: "https://github.com/MmzMing/my-blog/issues/new?template=friend-link.yml",
 };
 
 // 友链配置

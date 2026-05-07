@@ -8,8 +8,7 @@ export const sponsorConfig: SponsorConfig = {
 	description: "",
 
 	// 赞助用途说明
-	usage:
-		"您的赞助将用于服务器维护、内容创作和功能开发，帮助我持续提供优质内容。",
+	usage: "您的赞助将用于服务器维护、内容创作和功能开发，帮助我持续提供优质内容。",
 
 	// 是否显示赞助者列表
 	showSponsorsList: true,
@@ -28,7 +27,7 @@ export const sponsorConfig: SponsorConfig = {
 			// 收款码图片路径（需要放在 public 目录下）
 			qrCode: "/assets/images/jszz.gif",
 			link: "",
-			description: "使用 精神资助 赞助",
+			description: "在 精神层面 赞助",
 			enabled: true,
 		}
 		// {

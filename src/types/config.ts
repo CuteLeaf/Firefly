@@ -681,6 +681,7 @@ export type FriendsPageConfig = {
 	showCustomContent?: boolean; // 是否显示自定义内容（friends.mdx）
 	showComment?: boolean; // 是否显示评论区，默认 true
 	randomizeSort?: boolean; // 是否打乱排序，如果为 true，将忽略 weight，随机排序
+	applyLink?: string; // 友链申请链接，跳转到 GitHub Issue 等
 };
 
 // 音乐播放器配置

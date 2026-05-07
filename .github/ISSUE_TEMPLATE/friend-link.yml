@@ -1,0 +1,46 @@
+name: 申请友链
+description: 申请添加友链
+title: "[友链申请] "
+labels: ["friend-link"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 友链申请
+        请填写以下信息，我们将在收到申请后尽快审核。
+  - type: input
+    id: name
+    attributes:
+      label: 网站名称
+      placeholder: 例如：My Blog
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: 网站链接
+      placeholder: https://example.com
+    validations:
+      required: true
+  - type: input
+    id: avatar
+    attributes:
+      label: 头像链接
+      placeholder: https://example.com/avatar.jpg
+    validations:
+      required: true
+  - type: input
+    id: description
+    attributes:
+      label: 网站描述
+      placeholder: 一句话描述
+    validations:
+      required: true
+  - type: input
+    id: friend_page
+    attributes:
+      label: 友链页面 URL
+      description: 你网站上添加本站友链的页面链接
+      placeholder: https://example.com/friends
+    validations:
+      required: true
