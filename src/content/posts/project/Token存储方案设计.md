@@ -1,6 +1,6 @@
 ---
 title: Token 存储方案设计
-published: 2025-05-04
+published: 2026-05-04
 description: 记录Token存储方案的设计文档，包括需求分析、功能需求、存储流程等，主要以安全性角度出发，关注用户账号的安全性。
 tags: [token, 存储,前端, 技术]
 category: 项目
