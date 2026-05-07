@@ -208,6 +208,7 @@ export const zh_TW: Translation = {
 	// 壁紙模式
 	[Key.wallpaperMode]: "壁紙模式",
 	[Key.wallpaperBannerMode]: "橫幅壁紙",
+	[Key.wallpaperFullscreenMode]: "全屏壁紙",
 	[Key.wallpaperOverlayMode]: "全屏透明",
 	[Key.wallpaperNoneMode]: "純色背景",
 
