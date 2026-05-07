@@ -2,6 +2,7 @@
 title: redis bitmap与雪花ID
 published: 2026-05-04
 description: 面试题一堆抢着说点赞功能要用redis bitmap，但是实现起来却失败了，为什么？
+image: ./cover/cover1.png
 tags: [redis, bitmap, 雪花ID, 分布式, 技术]
 category: 项目
 draft: false
