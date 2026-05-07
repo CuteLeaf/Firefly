@@ -806,7 +806,7 @@ const bannerCarouselInterval = Math.max(
 )}
 
 <!-- Main content -->
-<div class={`${isFullscreenMode ? 'relative' : 'absolute'} w-full z-30 pointer-events-none ${mobileNonHomeBannerClass ? 'mobile-main-no-banner' : ''} ${!(isBannerMode && isBackgroundEnabled) ? 'no-banner-layout' : ''}`} style={isFullscreenMode ? '' : `top: ${finalMainPanelTop}`}>
+<div class={`${isFullscreenMode ? 'relative' : 'absolute'} w-full z-30 pointer-events-none ${mobileNonHomeBannerClass ? 'mobile-main-no-banner' : ''} ${!(isBannerMode && isBackgroundEnabled) ? 'no-banner-layout' : ''}`} style={isFullscreenMode ? 'top: auto; margin-top: 0.5rem;' : `top: ${finalMainPanelTop}`}>
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
     <div class="relative w-full xl:w-[92vw] max-w-(--page-width) mx-auto pointer-events-auto">
         <div id="main-grid"
