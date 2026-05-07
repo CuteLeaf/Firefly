@@ -35,7 +35,7 @@ jobs:
         uses: anthropics/claude-code-action@v1
         env:
           # ANTHROPIC_BASE_URL: https://api.moonshot.cn/anthropic
-          ANTHROPIC_BASE_URL: https://api.deepseek.com/anthropic
+          ANTHROPIC_BASE_URL: https://token-plan-cn.xiaomimimo.com/anthropic
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           claude_args: |
