@@ -414,9 +414,16 @@ const siteLang = lang.replace("_", "-");
             if (wallpaperWrapper) {
               wallpaperWrapper.classList.remove("wallpaper-overlay");
               wallpaperWrapper.classList.add("wallpaper-fullscreen");
-              wallpaperWrapper.style.display = "block";
-              wallpaperWrapper.classList.remove("hidden", "opacity-0", "mobile-hide-banner");
-              wallpaperWrapper.classList.add("opacity-100");
+              const isMobile = window.innerWidth < 1024;
+              // 移动端非首页时隐藏壁纸（与横幅模式一致）
+              if (isMobile && !isHomePage) {
+                wallpaperWrapper.style.display = "none";
+                wallpaperWrapper.classList.add("mobile-hide-banner");
+              } else {
+                wallpaperWrapper.style.display = "block";
+                wallpaperWrapper.classList.remove("hidden", "opacity-0", "mobile-hide-banner");
+                wallpaperWrapper.classList.add("opacity-100");
+              }
               wallpaperWrapper.style.top = "";
             }
           } else if (wallpaperMode === WALLPAPER_NONE) {
@@ -445,7 +452,7 @@ const siteLang = lang.replace("_", "-");
 
           // 处理主内容区域位置
           const mainContentWrapper = document.querySelector(
-            ".absolute.w-full.z-30"
+            ".w-full.z-30.pointer-events-none"
           );
           if (mainContentWrapper) {
             const isMobile = window.innerWidth < 1024;
@@ -1030,7 +1037,7 @@ function disableAnimation() {
 
       const wallpaperWrapper = document.getElementById("wallpaper-wrapper");
       const mainContentWrapper = document.querySelector(
-        ".absolute.w-full.z-30"
+        ".w-full.z-30.pointer-events-none"
       ) as HTMLElement | null;
 
       if (isMobile && wallpaperWrapper && mainContentWrapper) {

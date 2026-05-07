@@ -444,7 +444,7 @@ function showBannerMode() {
 	adjustMainContentPosition("banner");
 
 	// 处理移动端非首页主内容区域位置
-	const mainContentWrapper = document.querySelector(".absolute.w-full.z-30");
+	const mainContentWrapper = document.querySelector(".w-full.z-30.pointer-events-none");
 	if (mainContentWrapper) {
 		const isHomePage = checkIsHomePage(window.location.pathname);
 		const isMobile = window.innerWidth < 1024;
@@ -680,7 +680,7 @@ function adjustMainContentPosition(
 	mode: WALLPAPER_MODE | "banner" | "none" | "overlay" | "fullscreen",
 ) {
 	const mainContent = document.querySelector(
-		".absolute.w-full.z-30",
+		".w-full.z-30.pointer-events-none",
 	) as HTMLElement;
 	if (!mainContent) return;
 
@@ -720,7 +720,7 @@ function adjustMainContentPosition(
 }
 
 function adjustMainContentTransparency(enable: boolean) {
-	const mainContent = document.querySelector(".absolute.w-full.z-30");
+	const mainContent = document.querySelector(".w-full.z-30.pointer-events-none");
 	const body = document.body;
 
 	if (enable) {

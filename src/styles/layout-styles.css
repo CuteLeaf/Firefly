@@ -677,6 +677,23 @@ html.is-page-transitioning .banner-home-text-overlay {
 }
 
 /* Fullscreen 模式下主内容上移，credit 自然显示在壁纸上（与横幅模式一致） */
-html[data-wallpaper-mode="fullscreen"] .absolute.w-full.z-30 {
+html[data-wallpaper-mode="fullscreen"] .w-full.z-30.pointer-events-none {
     margin-top: -4.8rem !important;
+}
+
+/* Fullscreen 模式下移动端非首页隐藏壁纸（与横幅模式一致） */
+@media (max-width: 1023px) {
+    #wallpaper-wrapper.wallpaper-fullscreen.mobile-hide-banner {
+        transform: translateY(-100%) translateZ(0) !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+
+    /* Fullscreen 模式下主内容使用 relative 定位，需要匹配 pointer-events-none 类 */
+    .w-full.z-30.pointer-events-none.mobile-main-no-banner {
+        top: 5.5rem !important;
+        min-height: calc(100vh - 5.5rem) !important;
+        margin-top: 0 !important;
+        transition: top 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s !important;
+    }
 }
