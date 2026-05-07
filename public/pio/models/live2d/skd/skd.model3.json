@@ -1,0 +1,46 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "skd.moc3",
+		"Textures": [
+			"skd.4096/texture_00.png"
+		],
+		"Physics": "skd.physics3.json",
+		"DisplayInfo": "skd.cdi3.json",
+		"Expressions": [
+			{
+				"Name": "arm",
+				"File": "arm.exp3.json"
+			},
+			{
+				"Name": "fish",
+				"File": "fish.exp3.json"
+			},
+			{
+				"Name": "glass",
+				"File": "glass.exp3.json"
+			},
+			{
+				"Name": "mark1",
+				"File": "mark1.exp3.json"
+			},
+			{
+				"Name": "mark2",
+				"File": "mark2.exp3.json"
+			}
+		]
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": []
+		},
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		}
+	],
+	"HitAreas": []
+}

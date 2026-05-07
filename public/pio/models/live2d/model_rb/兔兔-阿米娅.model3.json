@@ -1,0 +1,120 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "兔兔-阿米娅.moc3",
+		"Textures": [
+			"兔兔-阿米娅.8192/texture_00.png"
+		],
+		"Physics": "兔兔-阿米娅.physics3.json",
+		"DisplayInfo": "兔兔-阿米娅.cdi3.json",
+		"Expressions": [
+			{
+				"Name": "cloth off",
+				"File": "cloth off.exp3.json"
+			},
+			{
+				"Name": "emote-angry",
+				"File": "emote-angry.exp3.json"
+			},
+			{
+				"Name": "emote-sad",
+				"File": "emote-sad.exp3.json"
+			},
+			{
+				"Name": "emote-shy",
+				"File": "emote-shy.exp3.json"
+			},
+			{
+				"Name": "emote-shy2",
+				"File": "emote-shy2.exp3.json"
+			},
+			{
+				"Name": "emote-shy3",
+				"File": "emote-shy3.exp3.json"
+			},
+			{
+				"Name": "face-sad",
+				"File": "face-sad.exp3.json"
+			},
+			{
+				"Name": "face-shock",
+				"File": "face-shock.exp3.json"
+			},
+			{
+				"Name": "hand-rice",
+				"File": "hand-rice.exp3.json"
+			},
+			{
+				"Name": "hand-trumpt",
+				"File": "hand-trumpt.exp3.json"
+			},
+			{
+				"Name": "mark-bang",
+				"File": "mark-bang.exp3.json"
+			},
+			{
+				"Name": "mark-exceting",
+				"File": "mark-exceting.exp3.json"
+			},
+			{
+				"Name": "mark-flower",
+				"File": "mark-flower.exp3.json"
+			},
+			{
+				"Name": "mark-music",
+				"File": "mark-music.exp3.json"
+			},
+			{
+				"Name": "mark-sweat",
+				"File": "mark-sweat.exp3.json"
+			},
+			{
+				"Name": "mouth-hungry",
+				"File": "mouth-hungry.exp3.json"
+			},
+			{
+				"Name": "hand-pot",
+				"File": "hand-pot.exp3.json"
+			},
+			{
+				"Name": "mark-shock",
+				"File": "mark-shock.exp3.json"
+			}
+		],
+		"Motions": {
+			"": [
+				{
+					"File": "motion-celebrate.motion3.json"
+				},
+				{
+					"File": "motion-cloth off.motion3.json"
+				},
+				{
+					"File": "motion-keyboard.motion3.json"
+				},
+				{
+					"File": "motion-music.motion3.json"
+				},
+				{
+					"File": "motion-weapon.motion3.json"
+				}
+			]
+		}
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": [
+				"ParamEyeLOpen",
+				"ParamEyeROpen"
+			]
+		},
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		}
+	],
+	"HitAreas": []
+}

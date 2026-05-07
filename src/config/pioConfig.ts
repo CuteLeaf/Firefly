@@ -50,11 +50,11 @@ export const spineModelConfig: SpineModelConfig = {
 		],
 		// 点击时随机显示的文字消息
 		clickMessages: [
-			"你好呀！我是流萤~",
+			"你好呀！我是哈基墩~",
 			"今天也要加油哦！✨",
 			"想要一起去看星空吗？🌟",
 			"记得要好好休息呢~",
-			"有什么想对我说的吗？💫",
+			"站长爸爸不再哦，有什么想对我说的吗？💫",
 			"让我们一起探索未知的世界吧！🚀",
 			"每一颗星星都有自己的故事~⭐",
 			"希望能带给你温暖和快乐！💖",
@@ -85,11 +85,14 @@ export const spineModelConfig: SpineModelConfig = {
 // Live2D 看板娘配置
 export const live2dModelConfig: Live2DModelConfig = {
 	// Live2D 看板娘开关
-	enable: false,
+	enable: true,
 	// Live2D模型配置
 	model: {
-		// Live2D模型文件路径
-		path: "/pio/models/live2d/snow_miku/model.json",
+		// Live2D模型文件路径（支持 Cubism 2 .model.json 和 Cubism 3+ .model3.json）
+		//path: "/pio/models/live2d/skd/skd.model3.json",
+		path: "/pio/models/live2d/model_rb/兔兔-阿米娅.model3.json",
+		//path: "/pio/models/live2d/LSS/LSS.model3.json",
+		// path: "/pio/models/live2d/snow_miku/model.json",
 		// path: "/pio/models/live2d/illyasviel/illyasviel.model.json",
 	},
 
@@ -117,8 +120,8 @@ export const live2dModelConfig: Live2DModelConfig = {
 		enabled: true,
 		// 点击时随机显示的文字消息，motions 和 expressions 将从模型 JSON 文件中自动读取
 		clickMessages: [
-			"你好！我是Miku~",
-			"有什么需要帮助的吗？",
+			"你好呀！我是哈基墩~",
+			"笨蛋站长爸爸不在哦，有什么想对我说的吗？",
 			"今天天气真不错呢！",
 			"要不要一起玩游戏？",
 			"记得按时休息哦！",
