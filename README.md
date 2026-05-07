@@ -44,7 +44,12 @@
 🔧 高度可配置: 大部分功能模块均可通过配置文件自定义
 
 <img alt="firefly" src="./docs/images/1.webp" />
-<img alt="Lighthouse" src="./docs/images/Lighthouse.png" />
+
+上方是原作者，下方是我爆改后的个性化，一样的部署流程
+
+<img alt="Simple-firefly-2" src="./docs/images/2.webp" />
+
+<img alt="Simple-firefly-3" src="./docs/images/3.webp" />
 
 >[!TIP]
 >
