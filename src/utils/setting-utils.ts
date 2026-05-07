@@ -706,13 +706,17 @@ function adjustMainContentPosition(
 	) as HTMLElement;
 	if (!mainContent) return;
 
+	// 先用内联样式锁住当前top，防止移除类时跳到默认值
+	const currentTop = getComputedStyle(mainContent).top;
+	mainContent.style.setProperty("top", currentTop, "important");
+
 	// 移除现有的位置类
 	mainContent.classList.remove("mobile-main-no-banner", "no-banner-layout");
 
 	switch (mode) {
 		case "banner":
 			// Banner模式：主内容在banner下方
-			mainContent.style.top = "calc(var(--banner-height) - 3rem)";
+			mainContent.style.setProperty("top", "calc(var(--banner-height) - 3rem)", "important");
 			mainContent.style.position = "";
 			break;
 		case "fullscreen": {
@@ -735,17 +739,17 @@ function adjustMainContentPosition(
 		case "overlay":
 			// Overlay模式：使用紧凑布局，主内容从导航栏下方开始
 			mainContent.classList.add("no-banner-layout");
-			mainContent.style.top = "5.5rem";
+			mainContent.style.setProperty("top", "5.5rem", "important");
 			mainContent.style.position = "";
 			break;
 		case "none":
 			// 无壁纸模式：主内容从导航栏下方开始
 			mainContent.classList.add("no-banner-layout");
-			mainContent.style.top = "5.5rem";
+			mainContent.style.setProperty("top", "5.5rem", "important");
 			mainContent.style.position = "";
 			break;
 		default:
-			mainContent.style.top = "5.5rem";
+			mainContent.style.setProperty("top", "5.5rem", "important");
 			mainContent.style.position = "";
 			break;
 	}
