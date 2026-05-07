@@ -7,6 +7,7 @@ export const DEFAULT_THEME = LIGHT_MODE; // 仅作为向后兼容的默认值，
 
 // Wallpaper modes
 export const WALLPAPER_BANNER = "banner",
+	WALLPAPER_FULLSCREEN = "fullscreen",
 	WALLPAPER_OVERLAY = "overlay",
 	WALLPAPER_NONE = "none";
 

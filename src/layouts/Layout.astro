@@ -54,7 +54,7 @@ const configHue = siteConfig.themeColor.hue;
 
 // 获取导航栏透明模式配置
 const navbarTransparentMode =
-	backgroundWallpaper.banner?.navbar?.transparentMode || "semi";
+	backgroundWallpaper.common?.navbar?.transparentMode || "semi";
 // 判断是否应该显示顶部高光效果（只在full和semifull模式下显示）
 const shouldShowTopHighlight =
 	navbarTransparentMode === "full" || navbarTransparentMode === "semifull";
@@ -343,6 +343,7 @@ const siteLang = lang.replace("_", "-");
 
       // 初始化壁纸模式 - 在页面渲染前应用
       const WALLPAPER_BANNER = "banner";
+      const WALLPAPER_FULLSCREEN = "fullscreen";
       const WALLPAPER_OVERLAY = "overlay";
       const WALLPAPER_NONE = "none";
       const wallpaperMode = isWallpaperSwitchable
@@ -362,7 +363,8 @@ const siteLang = lang.replace("_", "-");
           // 根据模式隐藏显示对应元素
           if (
             wallpaperMode === WALLPAPER_NONE ||
-            wallpaperMode === WALLPAPER_OVERLAY
+            wallpaperMode === WALLPAPER_OVERLAY ||
+            wallpaperMode === WALLPAPER_FULLSCREEN
           ) {
             // 隐藏横幅
             if (document.body) {
@@ -376,7 +378,7 @@ const siteLang = lang.replace("_", "-");
             }
           }
 
-          // 全屏壁纸模式
+          // 全屏透明模式
           if (wallpaperMode === WALLPAPER_OVERLAY) {
             if (document.body) {
               document.body.classList.add("wallpaper-transparent");
@@ -405,6 +407,23 @@ const siteLang = lang.replace("_", "-");
               wallpaperWrapper.classList.add("opacity-100");
               wallpaperWrapper.style.top = "";
             }
+          } else if (wallpaperMode === WALLPAPER_FULLSCREEN) {
+            // 全屏壁纸模式：切换为全屏壁纸显示
+            if (wallpaperWrapper) {
+              wallpaperWrapper.classList.remove("wallpaper-overlay");
+              wallpaperWrapper.classList.add("wallpaper-fullscreen");
+              const isMobile = window.innerWidth < 1024;
+              // 移动端非首页时隐藏壁纸（与横幅模式一致）
+              if (isMobile && !isHomePage) {
+                wallpaperWrapper.style.display = "none";
+                wallpaperWrapper.classList.add("mobile-hide-banner");
+              } else {
+                wallpaperWrapper.style.display = "block";
+                wallpaperWrapper.classList.remove("hidden", "opacity-0", "mobile-hide-banner");
+                wallpaperWrapper.classList.add("opacity-100");
+              }
+              wallpaperWrapper.style.top = "";
+            }
           } else if (wallpaperMode === WALLPAPER_NONE) {
             // 纯色背景：隐藏壁纸
             if (wallpaperWrapper) {
@@ -415,6 +434,7 @@ const siteLang = lang.replace("_", "-");
             // banner模式：以 banner 方式显示
             if (wallpaperWrapper) {
               wallpaperWrapper.classList.remove("wallpaper-overlay");
+              wallpaperWrapper.classList.remove("wallpaper-fullscreen");
               const isMobile = window.innerWidth < 1024;
               // 移动端非首页时隐藏banner（初始状态直接隐藏，不需要动画）
               // 桌面端始终显示banner
@@ -430,7 +450,7 @@ const siteLang = lang.replace("_", "-");
 
           // 处理主内容区域位置
           const mainContentWrapper = document.querySelector(
-            ".absolute.w-full.z-30"
+            ".w-full.z-30.pointer-events-none"
           );
           if (mainContentWrapper) {
             const isMobile = window.innerWidth < 1024;
@@ -439,6 +459,13 @@ const siteLang = lang.replace("_", "-");
               mainContentWrapper.classList.add("mobile-main-no-banner");
             } else {
               mainContentWrapper.classList.remove("mobile-main-no-banner");
+            }
+            // 全屏壁纸模式：主内容使用相对定位
+            if (wallpaperMode === WALLPAPER_FULLSCREEN) {
+              mainContentWrapper.style.position = "relative";
+              mainContentWrapper.style.top = "auto";
+              mainContentWrapper.style.marginTop = "0.5rem";
+              mainContentWrapper.style.zIndex = "30";
             }
           }
 
@@ -467,7 +494,7 @@ const siteLang = lang.replace("_", "-");
               window.location.pathname === baseUrl || 
               (baseUrl !== '/' && window.location.pathname === baseUrl.replace(/\/$/, '')) ||
               window.location.pathname === "/";
-            if (wallpaperMode === WALLPAPER_BANNER && isHomePage) {
+            if ((wallpaperMode === WALLPAPER_BANNER || wallpaperMode === WALLPAPER_FULLSCREEN) && isHomePage) {
               bannerTextOverlay.classList.remove("hidden");
             } else {
               bannerTextOverlay.classList.add("hidden");
@@ -576,6 +603,26 @@ const siteLang = lang.replace("_", "-");
     .enable-banner #top-row {
       height: calc(var(--banner-height-home) - 4.5rem);
       @apply transition-all duration-300;
+    }
+
+    /* 全屏壁纸模式 */
+    .no-banner-layout #wallpaper-wrapper.wallpaper-fullscreen {
+      height: 100vh;
+      min-height: 100vh;
+      max-height: 100vh;
+      position: relative;
+      top: 0;
+      transform: none;
+      overflow: hidden;
+    }
+
+    .no-banner-layout #wallpaper-wrapper.wallpaper-fullscreen img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      object-position: center !important;
+      filter: none !important;
+      opacity: 1 !important;
     }
   }
 
@@ -948,16 +995,6 @@ function disableAnimation() {
         bodyElement!.classList.remove("lg:is-home");
       }
 
-      // Control banner text visibility based on page
-      const bannerTextOverlay = document.querySelector(".banner-home-text-overlay");
-      if (bannerTextOverlay) {
-        if (isHomePage) {
-          bannerTextOverlay.classList.remove("hidden");
-        } else {
-          bannerTextOverlay.classList.add("hidden");
-        }
-      }
-
       // Control navbar transparency based on page
       const navbar = document.getElementById("navbar");
       if (navbar) {
@@ -989,7 +1026,7 @@ function disableAnimation() {
 
       const wallpaperWrapper = document.getElementById("wallpaper-wrapper");
       const mainContentWrapper = document.querySelector(
-        ".absolute.w-full.z-30"
+        ".w-full.z-30.pointer-events-none"
       ) as HTMLElement | null;
 
       if (isMobile && wallpaperWrapper && mainContentWrapper) {

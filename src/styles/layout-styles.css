@@ -400,6 +400,11 @@ html.is-page-transitioning .banner-home-text-overlay {
     min-height: calc(100vh - 5.5rem) !important;
 }
 
+/* 全屏壁纸模式：主内容在壁纸下方 */
+html[data-wallpaper-mode="fullscreen"] .absolute.w-full.z-30.no-banner-layout {
+    min-height: calc(100vh - 0.5rem) !important;
+}
+
 /* 移动端当banner被禁用时的布局样式 */
 @media (max-width: 1023px) {
     .absolute.w-full.z-30.no-banner-layout {
@@ -628,4 +633,118 @@ html.is-page-transitioning .banner-home-text-overlay {
 #wallpaper-wrapper.wallpaper-overlay .banner-page-title-overlay,
 #wallpaper-wrapper.wallpaper-overlay .banner-post-meta-overlay {
     display: none !important;
+}
+
+/* ============================================
+ * Fullscreen 模式 - 全屏壁纸
+ * 壁纸全屏显示，水波纹在底部，内容在壁纸下方
+ * ============================================ */
+#wallpaper-wrapper.wallpaper-fullscreen {
+    position: relative !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+    top: 0 !important;
+    transform: none !important;
+    overflow: hidden !important;
+    opacity: 1 !important;
+    pointer-events: none !important;
+    transition: none !important;
+}
+
+/* Fullscreen 模式下图片全屏覆盖，无模糊 */
+#wallpaper-wrapper.wallpaper-fullscreen img,
+#wallpaper-wrapper.wallpaper-fullscreen img[class*="object-cover"] {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+/* Fullscreen 模式隐藏 overlay 专属的半透明效果 */
+#wallpaper-wrapper.wallpaper-fullscreen .banner-home-text-overlay,
+#wallpaper-wrapper.wallpaper-fullscreen .banner-page-title-overlay,
+#wallpaper-wrapper.wallpaper-fullscreen .banner-post-meta-overlay {
+    display: flex !important;
+}
+
+/* Fullscreen 模式下非首页隐藏主页标题文字（Swup 页面切换时通过 hidden 类控制） */
+#wallpaper-wrapper.wallpaper-fullscreen .banner-home-text-overlay.hidden {
+    display: none !important;
+}
+
+/* Fullscreen 模式下 waves 显示在底部 */
+#wallpaper-wrapper.wallpaper-fullscreen .waves {
+    position: absolute !important;
+    bottom: -1px !important;
+    z-index: 5 !important;
+}
+
+/* Fullscreen 模式下滚动向下指示器 */
+#wallpaper-wrapper .scroll-down-indicator {
+    display: none;
+}
+
+#wallpaper-wrapper.wallpaper-fullscreen .scroll-down-indicator {
+    display: flex;
+    position: absolute;
+    bottom: 5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    cursor: pointer;
+    pointer-events: auto;
+    color: rgba(255, 255, 255, 0.8);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#wallpaper-wrapper.wallpaper-fullscreen .scroll-down-indicator .scroll-down-icon {
+    font-size: 5rem;
+    animation: scroll-down-bounce 2s ease-in-out infinite;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+}
+
+#wallpaper-wrapper.wallpaper-fullscreen .scroll-down-indicator:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
+#wallpaper-wrapper.wallpaper-fullscreen .scroll-down-indicator.hide {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+    pointer-events: none;
+}
+
+@keyframes scroll-down-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+}
+
+/* 点击滚动指示器跳转到文章列表时，避免被固定导航栏遮挡 */
+body.sticky-navbar #main-grid {
+    scroll-margin-top: 5.5rem;
+}
+
+/* Fullscreen 模式下主内容上移，credit 自然显示在壁纸上（与横幅模式一致） */
+html[data-wallpaper-mode="fullscreen"] .w-full.z-30.pointer-events-none {
+    top: auto !important;
+    margin-top: 0.5rem !important;
+}
+
+/* Fullscreen 模式下移动端非首页隐藏壁纸（与横幅模式一致） */
+@media (max-width: 1023px) {
+    #wallpaper-wrapper.wallpaper-fullscreen.mobile-hide-banner {
+        transform: translateY(-100%) translateZ(0) !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+
+    /* Fullscreen 模式下主内容使用 relative 定位，需要匹配 pointer-events-none 类 */
+    .w-full.z-30.pointer-events-none.mobile-main-no-banner {
+        top: 5.5rem !important;
+        min-height: calc(100vh - 5.5rem) !important;
+        margin-top: 0 !important;
+        transition: top 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s !important;
+    }
 }

@@ -1,0 +1,33 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<div
+  id="scroll-down-indicator"
+  class="scroll-down-indicator"
+  onclick="document.getElementById('main-grid')?.scrollIntoView({ behavior: 'smooth' })"
+>
+  <Icon name="material-symbols:keyboard-arrow-down-rounded" class="scroll-down-icon" />
+</div>
+
+<script is:inline>
+  (function () {
+    // 防止重复初始化（Swup 页面切换时可能重复执行）
+    if (window.__scrollDownIndicatorInit) return;
+    window.__scrollDownIndicatorInit = true;
+
+    function updateVisibility() {
+      var indicator = document.getElementById("scroll-down-indicator");
+      if (!indicator) return;
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      if (scrollTop > 100) {
+        indicator.classList.add("hide");
+      } else {
+        indicator.classList.remove("hide");
+      }
+    }
+
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+    updateVisibility();
+  })();
+</script>

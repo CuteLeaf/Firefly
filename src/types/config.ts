@@ -3,6 +3,7 @@ import type {
 	LIGHT_MODE,
 	SYSTEM_MODE,
 	WALLPAPER_BANNER,
+	WALLPAPER_FULLSCREEN,
 	WALLPAPER_NONE,
 	WALLPAPER_OVERLAY,
 } from "../constants/constants";
@@ -279,6 +280,7 @@ export type LIGHT_DARK_MODE =
 
 export type WALLPAPER_MODE =
 	| typeof WALLPAPER_BANNER
+	| typeof WALLPAPER_FULLSCREEN
 	| typeof WALLPAPER_OVERLAY
 	| typeof WALLPAPER_NONE;
 
@@ -535,7 +537,7 @@ export type Live2DModelConfig = {
 };
 
 export type BackgroundWallpaperConfig = {
-	mode: "banner" | "overlay" | "none"; // 壁纸模式：banner横幅模式、overlay全屏透明覆盖模式或none纯色背景
+	mode: "banner" | "fullscreen" | "overlay" | "none"; // 壁纸模式：banner横幅模式、fullscreen全屏壁纸、overlay全屏透明覆盖模式或none纯色背景
 	switchable?: boolean; // 是否允许用户通过导航栏切换壁纸模式，默认true
 	src:
 		| string
@@ -545,28 +547,9 @@ export type BackgroundWallpaperConfig = {
 				mobile?: string | string[];
 		  }; // 支持单个图片、图片数组或分别设置桌面端和移动端图片
 
-	// Banner模式特有配置
-	banner?: {
-		position?:
-			| "top"
-			| "center"
-			| "bottom"
-			| "top left"
-			| "top center"
-			| "top right"
-			| "center left"
-			| "center center"
-			| "center right"
-			| "bottom left"
-			| "bottom center"
-			| "bottom right"
-			| "left top"
-			| "left center"
-			| "left bottom"
-			| "right top"
-			| "right center"
-			| "right bottom"
-			| string; // 壁纸位置，支持CSS object-position的所有值，包括百分比和像素值
+	// 横幅壁纸和全屏壁纸共享配置
+	common?: {
+		dimOpacity?: number; // 横幅文字遮罩暗度，0-1之间，值越大越暗，默认0.15
 		homeText?: {
 			enable: boolean; // 是否在首页显示自定义文字（全局开关）
 			switchable?: boolean; // 是否允许用户通过控制面板切换横幅标题显示
@@ -606,11 +589,6 @@ export type BackgroundWallpaperConfig = {
 			enableBlur?: boolean; // 是否开启毛玻璃模糊效果
 			blur?: number; // 毛玻璃模糊度
 		};
-		carousel?: {
-			enable: boolean; // 是否启用横幅图片轮播
-			interval?: number; // 轮播间隔时间，单位毫秒
-			switchable?: boolean; // 是否允许用户通过控制面板切换横幅轮播
-		};
 		waves?: {
 			enable:
 				| boolean
@@ -619,6 +597,35 @@ export type BackgroundWallpaperConfig = {
 						mobile: boolean; // 移动端是否启用水波纹动画效果
 				  }; // 是否启用水波纹动画效果，支持布尔值或分别设置桌面端和移动端
 			switchable?: boolean; // 是否允许用户通过控制面板切换水波纹动画
+		};
+	};
+
+	// Banner模式特有配置
+	banner?: {
+		position?:
+			| "top"
+			| "center"
+			| "bottom"
+			| "top left"
+			| "top center"
+			| "top right"
+			| "center left"
+			| "center center"
+			| "center right"
+			| "bottom left"
+			| "bottom center"
+			| "bottom right"
+			| "left top"
+			| "left center"
+			| "left bottom"
+			| "right top"
+			| "right center"
+			| "right bottom"
+			| string; // 壁纸位置，支持CSS object-position的所有值，包括百分比和像素值
+		carousel?: {
+			enable: boolean; // 是否启用横幅图片轮播
+			interval?: number; // 轮播间隔时间，单位毫秒
+			switchable?: boolean; // 是否允许用户通过控制面板切换横幅轮播
 		};
 	};
 	// 全屏透明覆盖模式特有配置
@@ -634,6 +641,10 @@ export type BackgroundWallpaperConfig = {
 		opacity?: number; // 壁纸透明度，0-1之间
 		blur?: number; // 背景模糊程度，单位px
 		cardOpacity?: number; // 卡片背景透明度，0-1之间
+	};
+	// 全屏壁纸模式特有配置
+	fullscreen?: {
+		position?: string; // 壁纸位置，支持CSS object-position的所有值
 	};
 };
 

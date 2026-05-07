@@ -24,19 +24,19 @@ const className = Astro.props.class;
 // 获取导航栏透明模式配置
 const navbarTransparentMode =
 	backgroundWallpaper.mode === "banner"
-		? backgroundWallpaper.banner?.navbar?.transparentMode || "semi"
+		? backgroundWallpaper.common?.navbar?.transparentMode || "semi"
 		: "semi";
 
 // 获取导航栏毛玻璃效果配置
 const navbarEnableBlur =
 	backgroundWallpaper.mode === "banner"
-		? (backgroundWallpaper.banner?.navbar?.enableBlur ?? true)
+		? (backgroundWallpaper.common?.navbar?.enableBlur ?? true)
 		: false;
 
 // 获取导航栏模糊度
 const navbarBlur =
 	backgroundWallpaper.mode === "banner"
-		? (backgroundWallpaper.banner?.navbar?.blur ?? 20)
+		? (backgroundWallpaper.common?.navbar?.blur ?? 20)
 		: 0;
 
 // 获取导航栏标题，如果没有设置则使用 siteConfig.title

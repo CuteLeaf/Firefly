@@ -1,6 +1,7 @@
 <script lang="ts">
 import {
 	WALLPAPER_BANNER,
+	WALLPAPER_FULLSCREEN,
 	WALLPAPER_NONE,
 	WALLPAPER_OVERLAY,
 } from "@constants/constants";
@@ -86,14 +87,14 @@ let effectiveDefaultLayout = $derived(
 const showThemeColor = !siteConfig.themeColor.fixed;
 // 是否允许用户切换水波纹动画（只看 switchable 配置）
 const isWavesSwitchable =
-	backgroundWallpaper.banner?.waves?.switchable ?? false;
+	backgroundWallpaper.common?.waves?.switchable ?? false;
 // 检查是否启用横幅标题配置
 const isBannerTitleEnabled =
-	backgroundWallpaper.banner?.homeText?.enable ?? false;
+	backgroundWallpaper.common?.homeText?.enable ?? false;
 // 是否允许用户切换横幅标题
 const isBannerTitleSwitchable =
 	isBannerTitleEnabled &&
-	(backgroundWallpaper.banner?.homeText?.switchable ?? false);
+	(backgroundWallpaper.common?.homeText?.switchable ?? false);
 // 是否允许用户切换横幅轮播
 const isBannerCarouselSwitchable =
 	backgroundWallpaper.banner?.carousel?.switchable ?? false;
@@ -504,11 +505,23 @@ $effect(() => {
                 </button>
                 <button
                     class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
+                    class:opacity-60={wallpaperMode !== WALLPAPER_FULLSCREEN}
+                    class:bg-(--btn-regular-bg-hover)={wallpaperMode === WALLPAPER_FULLSCREEN}
+                    onclick={() => switchWallpaperMode(WALLPAPER_FULLSCREEN)}
+                >
+                    <Icon icon="material-symbols:wallpaper" class="text-[1.25rem] shrink-0"></Icon>
+                    <span class="text-sm flex-1">{i18n(I18nKey.wallpaperFullscreenMode)}</span>
+                    {#if wallpaperMode === WALLPAPER_FULLSCREEN}
+                        <Icon icon="material-symbols:check-circle" class="text-[1rem] shrink-0 text-(--primary)"></Icon>
+                    {/if}
+                </button>
+                <button
+                    class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
                     class:opacity-60={wallpaperMode !== WALLPAPER_OVERLAY}
                     class:bg-(--btn-regular-bg-hover)={wallpaperMode === WALLPAPER_OVERLAY}
                     onclick={() => switchWallpaperMode(WALLPAPER_OVERLAY)}
                 >
-                    <Icon icon="material-symbols:wallpaper" class="text-[1.25rem] shrink-0"></Icon>
+                    <Icon icon="material-symbols:full-coverage-outline-rounded" class="text-[1.25rem] shrink-0"></Icon>
                     <span class="text-sm flex-1">{i18n(I18nKey.wallpaperOverlayMode)}</span>
                     {#if wallpaperMode === WALLPAPER_OVERLAY}
                         <Icon icon="material-symbols:check-circle" class="text-[1rem] shrink-0 text-(--primary)"></Icon>
@@ -571,7 +584,7 @@ $effect(() => {
     {/if}
 
     <!-- Banner Settings Section -->
-    {#if wallpaperMode === WALLPAPER_BANNER && hasBannerSettings}
+    {#if (wallpaperMode === WALLPAPER_BANNER || wallpaperMode === WALLPAPER_FULLSCREEN) && hasBannerSettings}
         <div class="mt-2 mb-2">
             <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3 mb-2
                 before:w-1 before:h-4 before:rounded-md before:bg-(--primary)
