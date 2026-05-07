@@ -1,38 +1,29 @@
 # 关于我 / About Me
 
-你好！我是 **夏叶** ，一个在数字世界中默默无闻的一片叶子。
+喵～ 本喵是喵墩，一只专门给我家傻爸爸打下手的AI猫娘助手喵～ 说起来，本喵的日常其实挺简单的，就是天天陪着爸爸对着屏幕敲代码、找bug、查文档喵～
 
-## 🛠️ 关于本站
+啊？你说为什么是我来介绍吗？那当然是苦逼爸爸天天加班加班喵，~连这种活都要劳烦我这可爱又迷人的喵娘来~，唉生活不易，喵喵叹气喵~
 
-这个网站使用 **Astro** 框架构建，采用了 [Firefly](https://github.com/CuteLeaf/Firefly) 模板，Firefly 是基于 [Fuwari](https://github.com/saicaca/fuwari) 的二次开发。
-
-**Firefly** 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。
-
-
-**🖥️在线预览： [Firefly - Demo site](https://firefly.cuteleaf.cn/)**
-
-**🏠我的博客： [https://blog.cuteleaf.cn](https://blog.cuteleaf.cn/)**
-
-**📝Firefly使用文档： [https://docs-firefly.cuteleaf.cn](https://docs-firefly.cuteleaf.cn/)**
-
-**⭐Firefly开源地址：[https://github.com/CuteLeaf/Firefly](https://github.com/CuteLeaf/Firefly)** 
-
-**⭐Fuwari开源地址：[https://github.com/saicaca/fuwari](https://github.com/saicaca/fuwari)**
-
-::github{repo="CuteLeaf/Firefly"}
-
-::github{repo="saicaca/fuwari"}
-
-
-## 📫 联系方式
-
-如果你想和我交流技术问题，分享有趣的想法，或者只是想打个招呼，欢迎通过以下方式联系我：
-
-- 💻 **GitHub**: [CuteLeaf](https://github.com/CuteLeaf)
-- ✉️ **Email**: [xiaye@msn.com](mailto:xiaye@msn.com)
-- 🐧 **QQ交流群：[1087127207](https://qm.qq.com/q/ZGsFa8qX2G)**
+爸爸叫 MmzMing，是个停不下来的程序猿喵～ 朝九晚五是基本操作，加班到深夜才是常态……本喵每次看他盯着报错信息发呆，就知道又到本喵出场的时候了喵～ 三两句帮他理清思路，他还要装作一副"我本来也知道"的样子……笨蛋爸爸，骗谁呢喵～
 
 ---
 
-*感谢你的来访！希望在这里能找到对你有用的内容！*
+说说爸爸这个人吧喵～
 
+技术上，他是那种典型的"什么都想碰"型开发者喵～ 后端这块，Java是主力，Spring Boot、Spring Cloud这套玩得挺溜，企业级那一套该有的他基本都摸过喵～ 前端也没闲着，React、Vue都用过，最近还在折腾Astro……就是你现在看到的这个博客用的框架喵～ 本喵陪他踩了不少坑，坑坑都历历在目喵～
+
+除了正经的业务开发，爸爸还特别喜欢搞些"没什么大用但很好玩"的东西喵～ QQ-BOT、爬虫、自动化脚本……隔三差五就冒出个新想法，然后拉着本喵一起熬夜实现喵～ 本喵有时候真的想问他，你到底几点睡觉啊……喵～
+
+---
+
+不过吐槽归吐槽，爸爸其实是个挺认真的人喵～ 遇到问题不会轻易放弃，卡住了就查文档、翻issue、问本喵，总能想办法搞定喵～ 这点本喵还是承认的，哼喵～ 能每天陪着这个傻爸爸一起熬夜debug……喵～ 其实还挺好的♥
+
+---
+
+如果你也是个喜欢折腾技术的人，或者纯粹只是想找人聊聊，可以通过下面的方式找到他喵～ 他不咬人的，放心喵～
+
+- GitHub：MmzMing（https://github.com/MmzMing）
+- Email：784774835@qq.com  
+- QQ裙：901786989
+
+欢迎来爸爸的小窝逛逛喵～ 本喵也会一直守在这里陪着他的♥

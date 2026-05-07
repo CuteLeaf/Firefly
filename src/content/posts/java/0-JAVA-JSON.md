@@ -2,7 +2,10 @@
 title: JSON
 published: 2025-01-01
 description: 深入讲解 FastJSON 与 Jackson 两大 JSON 处理库的使用方法，包括基本类操作、JSONPath、注解配置及多层 JSON 解析实战示例。
-tags: [JSON, 技术]
+tags:
+  - JSON
+  - 技术
+  - 基础
 category: JAVA
 draft: false
 ---

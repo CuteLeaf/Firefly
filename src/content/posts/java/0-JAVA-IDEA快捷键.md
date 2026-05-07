@@ -2,7 +2,10 @@
 title: IDEA快捷键
 published: 2025-01-01
 description: 详细介绍 IntelliJ IDEA 常用快捷键与高效插件推荐，涵盖编辑、导航、查找替换、运行调试、重构等核心操作，帮助开发者提升编码效率。
-tags: [IDEA快捷键, 技术]
+tags:
+  - IDEA快捷键
+  - 技术
+  - 基础
 category: JAVA
 draft: false
 ---

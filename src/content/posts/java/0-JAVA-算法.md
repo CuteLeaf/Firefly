@@ -2,7 +2,10 @@
 title: 算法
 published: 2025-01-01
 description: 介绍递归的基本概念与重要规则，包含冒泡排序的 Java 实现及版本号判断等算法示例，帮助理解基础算法思想。
-tags: [算法, 技术]
+tags:
+  - 算法
+  - 技术
+  - 基础
 category: JAVA
 draft: false
 ---

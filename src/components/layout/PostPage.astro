@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getPostUrlBySlug } from "@utils/url-utils";
 import PostCard from "@/components/layout/PostCard.astro";
+import AnimatedTabs from "@/components/controls/AnimatedTabs.svelte";
 import { siteConfig } from "@/config";
 
 const { page } = Astro.props;
@@ -26,33 +27,17 @@ const initialLayoutClass =
 
 const allowLayoutSwitch = siteConfig.postListLayout.allowSwitch;
 const isListDefault = initialLayoutClass.includes("list-mode");
-const listBtnClass = `layout-toggle-btn flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 hover:bg-(--btn-regular-bg-hover) active:scale-95 ${isListDefault ? "bg-(--primary) text-white shadow-sm" : "text-(--btn-content)"}`;
-const gridBtnClass = `layout-toggle-btn flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 hover:bg-(--btn-regular-bg-hover) active:scale-95 ${!isListDefault ? "bg-(--primary) text-white shadow-sm" : "text-(--btn-content)"}`;
 ---
 
 <div id="post-list-toolbar" class="flex items-center justify-between mb-3 px-1">
   <div class="text-xs text-(--content-meta) font-medium">
     {page.data.length} {page.data.length > 1 ? 'articles' : 'article'}
   </div>
-  <div class:list={["layout-toggle-group flex items-center bg-(--card-bg) rounded-lg p-0.5 border border-(--line-divider)", { "hidden": !allowLayoutSwitch }]}>
-    <button
-      id="btn-layout-list"
-      aria-label="List View"
-      class={listBtnClass}
-      onclick="window.switchPostLayout('list')"
-    >
-      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
-      <span class="hidden sm:inline">List</span>
-    </button>
-    <button
-      id="btn-layout-grid"
-      aria-label="Grid View"
-      class={gridBtnClass}
-      onclick="window.switchPostLayout('grid')"
-    >
-      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h7v7H3V3zm0 11h7v7H3v-7zm11-11h7v7h-7V3zm0 11h7v7h-7v-7z"/></svg>
-      <span class="hidden sm:inline">Grid</span>
-    </button>
+  <div class:list={["layout-toggle-group", { "hidden": !allowLayoutSwitch }]}>
+    <AnimatedTabs
+      client:load
+      activeTab={isListDefault ? "list" : "grid"}
+    />
   </div>
 </div>
 
@@ -114,20 +99,6 @@ const gridBtnClass = `layout-toggle-btn flex items-center gap-1.5 px-2.5 py-1 ro
         container.style.transition = '';
       }
     }
-
-    const btnList = document.getElementById('btn-layout-list');
-    const btnGrid = document.getElementById('btn-layout-grid');
-    if (btnList && btnGrid) {
-      const activeCls = 'bg-(--primary) text-white shadow-sm';
-      const inactiveCls = 'text-(--btn-content)';
-      if (effectiveLayout === 'list') {
-        btnList.className = btnList.className.replace(inactiveCls, '').trim() + ' ' + activeCls;
-        btnGrid.className = btnGrid.className.replace(activeCls, '').trim() + ' ' + inactiveCls;
-      } else {
-        btnGrid.className = btnGrid.className.replace(inactiveCls, '').trim() + ' ' + activeCls;
-        btnList.className = btnList.className.replace(activeCls, '').trim() + ' ' + inactiveCls;
-      }
-    }
   })();
 </script>
 
@@ -137,25 +108,6 @@ const gridBtnClass = `layout-toggle-btn flex items-center gap-1.5 px-2.5 py-1 ro
     const event = new CustomEvent("layoutChange", { detail: { layout } });
     window.dispatchEvent(event);
   };
-
-  function updateToggleButtons(layout: string) {
-    const btnList = document.getElementById("btn-layout-list");
-    const btnGrid = document.getElementById("btn-layout-grid");
-    if (!btnList || !btnGrid) return;
-    const activeClass = "bg-(--primary) text-white shadow-sm";
-    const inactiveClass = "text-(--btn-content)";
-    if (layout === "list") {
-      btnList.classList.add(...activeClass.split(" "));
-      btnList.classList.remove(...inactiveClass.split(" "));
-      btnGrid.classList.remove(...activeClass.split(" "));
-      btnGrid.classList.add(...inactiveClass.split(" "));
-    } else {
-      btnGrid.classList.add(...activeClass.split(" "));
-      btnGrid.classList.remove(...inactiveClass.split(" "));
-      btnList.classList.remove(...activeClass.split(" "));
-      btnList.classList.add(...inactiveClass.split(" "));
-    }
-  }
 
   // 动态布局切换脚本
   function initLayout() {
@@ -180,7 +132,6 @@ const gridBtnClass = `layout-toggle-btn flex items-center gap-1.5 px-2.5 py-1 ro
 
     // 应用布局
     updatePostListLayout(currentLayout);
-    updateToggleButtons(currentLayout);
   }
 
   function updatePostListLayout(layout: string) {
@@ -355,7 +306,6 @@ const gridBtnClass = `layout-toggle-btn flex items-center gap-1.5 px-2.5 py-1 ro
     if (!postListContainer) return;
 
     updatePostListLayout(newLayout);
-    updateToggleButtons(newLayout);
   });
 
   // 监听窗口大小变化
@@ -442,11 +392,6 @@ const gridBtnClass = `layout-toggle-btn flex items-center gap-1.5 px-2.5 py-1 ro
     box-shadow: 0 1px 3px oklch(0 0 0 / 0.2);
   }
 
-  .layout-toggle-btn {
-    position: relative;
-    white-space: nowrap;
-  }
-
   /* 布局切换动画 */
   #post-list-container {
     /* 限制过渡属性为 opacity 和 transform，避免响应父元素位置变化 */
@@ -468,6 +413,50 @@ const gridBtnClass = `layout-toggle-btn flex items-center gap-1.5 px-2.5 py-1 ro
   #post-list-container.layout-switching {
     opacity: 0;
     transform: translateY(10px);
+  }
+
+  /* 卡片悬停切换动效 */
+  #post-list-container > :global(.post-card-item) {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  #post-list-container > :global(.post-card-item):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+                0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  }
+
+  :root.dark #post-list-container > :global(.post-card-item):hover {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3),
+                0 8px 10px -6px rgba(0, 0, 0, 0.2);
+  }
+
+  /* 布局切换时卡片的交错动画 */
+  #post-list-container > :global(.post-card-item) {
+    opacity: 0;
+    animation: cardFadeIn 0.5s ease-out forwards;
+  }
+
+  #post-list-container > :global(.post-card-item):nth-child(1) { animation-delay: 0.05s; }
+  #post-list-container > :global(.post-card-item):nth-child(2) { animation-delay: 0.1s; }
+  #post-list-container > :global(.post-card-item):nth-child(3) { animation-delay: 0.15s; }
+  #post-list-container > :global(.post-card-item):nth-child(4) { animation-delay: 0.2s; }
+  #post-list-container > :global(.post-card-item):nth-child(5) { animation-delay: 0.25s; }
+  #post-list-container > :global(.post-card-item):nth-child(6) { animation-delay: 0.3s; }
+  #post-list-container > :global(.post-card-item):nth-child(7) { animation-delay: 0.35s; }
+  #post-list-container > :global(.post-card-item):nth-child(8) { animation-delay: 0.4s; }
+  #post-list-container > :global(.post-card-item):nth-child(9) { animation-delay: 0.45s; }
+  #post-list-container > :global(.post-card-item):nth-child(10) { animation-delay: 0.5s; }
+
+  @keyframes cardFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   /* Grid Mode Customization */
