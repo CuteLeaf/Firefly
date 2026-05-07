@@ -670,3 +670,8 @@ html.is-page-transitioning .banner-home-text-overlay {
     bottom: -1px !important;
     z-index: 5 !important;
 }
+
+/* Fullscreen 模式下主内容上移，credit 自然显示在壁纸上（与横幅模式一致） */
+html[data-wallpaper-mode="fullscreen"] .absolute.w-full.z-30 {
+    margin-top: -4.8rem !important;
+}
