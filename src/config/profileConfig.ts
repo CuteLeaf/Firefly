@@ -12,7 +12,8 @@ export const profileConfig: ProfileConfig = {
 	name: "MmMing",
 
 	// 个人签名
-	bio: "Hello, I'm MmMing.\nA back-end development project,\nmainly developed with JAVA and react.",
+	bio: "你好，我是 MmMing。\n深耕 Java 后端开发，兼顾 React 前端技术与 AI 智能体探索。\n热爱技术、持续学习，欢迎同好交流探讨，也欢迎大佬互换友链。",
+
 
 	// 链接配置
 	// 已经预装的图标集：fa7-brands，fa7-regular，fa7-solid，material-symbols，simple-icons
@@ -24,19 +25,19 @@ export const profileConfig: ProfileConfig = {
 		{
 			name: "qq",
 			icon: "fa7-brands:qq",
-			url: "https://qm.qq.com/q/ZGsFa8qX2G",
+			url: "https://qm.qq.com/q/2rnmQ1SoB2",
 			showName: false,
 		},
 		{
 			name: "GitHub",
 			icon: "fa7-brands:github",
-			url: "https://github.com/CuteLeaf",
+			url: "https://github.com/MmzMing",
 			showName: false,
 		},
 		{
 			name: "Email",
 			icon: "fa7-solid:envelope",
-			url: "mailto:xiaye@msn.com",
+			url: "mailto:784774835@qq.com",
 			showName: false,
 		},
 		{

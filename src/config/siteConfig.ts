@@ -75,8 +75,8 @@ export const siteConfig: SiteConfig = {
 		// 4. 网络图片: { type: "url", value: "https://example.com/logo.png", alt: "Logo" }
 		logo: {
 			type: "image",
-			value: "assets/images/firefly.png",
-			alt: "🍀",
+			value: "assets/images/MyLogoSvg.svg",
+			alt: "logo",
 		},
 		// 导航栏标题
 		title: "MmMing",
@@ -118,7 +118,7 @@ export const siteConfig: SiteConfig = {
 	// bangumi配置
 	bangumi: {
 		// Bangumi用户ID
-		userId: "1143164",
+		userId: "379678",
 		// 条目类型排序，数组中的类型将按顺序优先展示
 		// 可选值: "anime" | "book" | "music" | "game" | "real" (暂不支持"real"类型)
 		// 未列出的类型将按默认顺序排在后面
