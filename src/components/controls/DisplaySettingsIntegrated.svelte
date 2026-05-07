@@ -505,25 +505,25 @@ $effect(() => {
                 </button>
                 <button
                     class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
-                    class:opacity-60={wallpaperMode !== WALLPAPER_OVERLAY}
-                    class:bg-(--btn-regular-bg-hover)={wallpaperMode === WALLPAPER_OVERLAY}
-                    onclick={() => switchWallpaperMode(WALLPAPER_OVERLAY)}
+                    class:opacity-60={wallpaperMode !== WALLPAPER_FULLSCREEN}
+                    class:bg-(--btn-regular-bg-hover)={wallpaperMode === WALLPAPER_FULLSCREEN}
+                    onclick={() => switchWallpaperMode(WALLPAPER_FULLSCREEN)}
                 >
                     <Icon icon="material-symbols:wallpaper" class="text-[1.25rem] shrink-0"></Icon>
-                    <span class="text-sm flex-1">{i18n(I18nKey.wallpaperOverlayMode)}</span>
-                    {#if wallpaperMode === WALLPAPER_OVERLAY}
+                    <span class="text-sm flex-1">{i18n(I18nKey.wallpaperFullscreenMode)}</span>
+                    {#if wallpaperMode === WALLPAPER_FULLSCREEN}
                         <Icon icon="material-symbols:check-circle" class="text-[1rem] shrink-0 text-(--primary)"></Icon>
                     {/if}
                 </button>
                 <button
                     class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
-                    class:opacity-60={wallpaperMode !== WALLPAPER_FULLSCREEN}
-                    class:bg-(--btn-regular-bg-hover)={wallpaperMode === WALLPAPER_FULLSCREEN}
-                    onclick={() => switchWallpaperMode(WALLPAPER_FULLSCREEN)}
+                    class:opacity-60={wallpaperMode !== WALLPAPER_OVERLAY}
+                    class:bg-(--btn-regular-bg-hover)={wallpaperMode === WALLPAPER_OVERLAY}
+                    onclick={() => switchWallpaperMode(WALLPAPER_OVERLAY)}
                 >
-                    <Icon icon="material-symbols:fullscreen" class="text-[1.25rem] shrink-0"></Icon>
-                    <span class="text-sm flex-1">{i18n(I18nKey.wallpaperFullscreenMode)}</span>
-                    {#if wallpaperMode === WALLPAPER_FULLSCREEN}
+                    <Icon icon="material-symbols:full-coverage-outline-rounded" class="text-[1.25rem] shrink-0"></Icon>
+                    <span class="text-sm flex-1">{i18n(I18nKey.wallpaperOverlayMode)}</span>
+                    {#if wallpaperMode === WALLPAPER_OVERLAY}
                         <Icon icon="material-symbols:check-circle" class="text-[1rem] shrink-0 text-(--primary)"></Icon>
                     {/if}
                 </button>
