@@ -2,7 +2,7 @@
 import { getEntry } from "astro:content";
 import Comment from "@components/comment/index.astro";
 import FriendRulesModal from "@components/features/FriendRulesModal.astro";
-import ThreeDPinCard from "@components/features/ThreeDPinCard.astro";
+import FriendCard from "@components/features/FriendCard.astro";
 import { Icon } from "astro-icon/components";
 import {
 	commentConfig,
@@ -104,11 +104,11 @@ const description =
         )
       }
 
-      <div class="friends-pin-grid">
+      <div class="friends-grid">
         {
           items.map((item) => (
             <div class="friend-card" data-tags={item.tags?.join(",")}>
-              <ThreeDPinCard
+              <FriendCard
                 title={item.title}
                 href={item.siteurl}
                 imgurl={item.imgurl}
@@ -116,38 +116,6 @@ const description =
                 tags={item.tags}
               />
             </div>
-          ))
-        }
-      </div>
-
-      <div class="friends-list-mobile">
-        {
-          items.map((item) => (
-            <a
-              class="friend-list-item"
-              data-tags={item.tags?.join(",")}
-              href={item.siteurl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                class="friend-list-avatar"
-                src={item.imgurl}
-                alt={item.title}
-                loading="lazy"
-              />
-              <div class="friend-list-info">
-                <h3 class="friend-list-title">{item.title}</h3>
-                <p class="friend-list-desc">{item.desc}</p>
-              </div>
-              {item.tags && item.tags.length > 0 && (
-                <div class="friend-list-tags">
-                  {item.tags.slice(0, 2).map((tag) => (
-                    <span class="friend-list-tag">{tag}</span>
-                  ))}
-                </div>
-              )}
-            </a>
           ))
         }
       </div>
@@ -265,20 +233,6 @@ const description =
               cardEl.classList.remove("animate-fade-in-up");
             }
           });
-
-          const listItems = container.querySelectorAll(".friends-list-mobile .friend-list-item");
-          listItems.forEach((item) => {
-            const itemEl = item;
-            const tags = (itemEl.dataset.tags || "").split(",");
-            if (
-              selectedTag === "all" ||
-              (selectedTag && tags.includes(selectedTag))
-            ) {
-              itemEl.style.display = "";
-            } else {
-              itemEl.style.display = "none";
-            }
-          });
         }
       }
       customElements.define("friend-filter", FriendFilter);
@@ -286,147 +240,24 @@ const description =
   </script>
 
   <style is:global>
-    .friends-pin-grid {
+    .friends-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.75rem 1.5rem;
-      padding-top: 0.75rem;
-      padding-bottom: 1rem;
-    }
-
-    @media (min-width: 640px) {
-      .friends-pin-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .friends-pin-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    .friends-pin-grid .friend-card {
-      min-height: 18rem;
-    }
-
-    @media (min-width: 640px) {
-      .friends-pin-grid .friend-card {
-        min-height: 19rem;
-      }
-    }
-
-    .friends-list-mobile {
-      display: none;
-      flex-direction: column;
+      grid-template-columns: repeat(3, 1fr);
       gap: 0.75rem;
       padding-top: 0.75rem;
       padding-bottom: 1rem;
     }
 
-    @media (max-width: 767px) {
-      .friends-pin-grid {
-        display: none !important;
-      }
-      .friends-list-mobile {
-        display: flex !important;
+    @media (max-width: 1024px) {
+      .friends-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    .friend-list-item {
-      display: flex;
-      align-items: center;
-      gap: 0.875rem;
-      padding: 0.875rem 1rem;
-      border-radius: var(--radius-large);
-      background: oklch(0.15 0 0);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      text-decoration: none;
-      transition: background-color 200ms, border-color 200ms;
-    }
-
-    :root:not(.dark) .friend-list-item {
-      background: oklch(0.98 0 0);
-      border-color: oklch(0.88 0 0);
-    }
-
-    .friend-list-item:hover {
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    :root:not(.dark) .friend-list-item:hover {
-      border-color: oklch(0.75 0 0);
-    }
-
-    .friend-list-avatar {
-      width: 3rem;
-      height: 3rem;
-      border-radius: 0.75rem;
-      object-fit: cover;
-      flex-shrink: 0;
-      background: oklch(0.2 0 0);
-    }
-
-    :root:not(.dark) .friend-list-avatar {
-      background: oklch(0.93 0 0);
-    }
-
-    .friend-list-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .friend-list-title {
-      margin: 0;
-      font-size: 0.9375rem;
-      font-weight: 600;
-      color: oklch(0.95 0 0);
-      line-height: 1.3;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    :root:not(.dark) .friend-list-title {
-      color: oklch(0.15 0 0);
-    }
-
-    .friend-list-desc {
-      margin: 0.25rem 0 0;
-      font-size: 0.75rem;
-      font-weight: 400;
-      color: oklch(0.55 0 0);
-      line-height: 1.4;
-      display: -webkit-box;
-      -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    :root:not(.dark) .friend-list-desc {
-      color: oklch(0.45 0 0);
-    }
-
-    .friend-list-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.25rem;
-      flex-shrink: 0;
-    }
-
-    .friend-list-tag {
-      font-size: 0.6875rem;
-      padding: 0.125rem 0.5rem;
-      border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.06);
-      color: oklch(0.6 0 0);
-      line-height: 1.5;
-      white-space: nowrap;
-    }
-
-    :root:not(.dark) .friend-list-tag {
-      background: oklch(0.92 0 0);
-      color: oklch(0.45 0 0);
+    @media (max-width: 640px) {
+      .friends-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .animate-fade-in-up {
