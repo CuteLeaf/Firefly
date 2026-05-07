@@ -148,10 +148,10 @@ const randomSubtitle = getRandomSubtitle();
 
 // 主页横幅文本只在首页且全局开关为 true 时显示，不区分设备
 const homeTextEnable = backgroundWallpaper.common?.homeText?.enable;
-const showHomeText = isBannerMode && !!homeTextEnable && isHomePageCheck;
+const showHomeText = (isBannerMode || isFullscreenMode) && !!homeTextEnable && isHomePageCheck;
 
 const showBannerPostMeta =
-	isBannerMode &&
+	(isBannerMode || isFullscreenMode) &&
 	isBackgroundEnabled &&
 	!isHomePageCheck &&
 	isPostPage &&
@@ -161,7 +161,7 @@ const showBannerDim = (isBannerMode || isFullscreenMode) && isBackgroundEnabled;
 const dimOpacity = backgroundWallpaper.common?.dimOpacity ?? 0.15;
 
 const showBannerPageTitle =
-	isBannerMode &&
+	(isBannerMode || isFullscreenMode) &&
 	isBackgroundEnabled &&
 	!isHomePageCheck &&
 	!isPostPage &&

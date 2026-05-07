@@ -664,6 +664,11 @@ html.is-page-transitioning .banner-home-text-overlay {
     display: flex !important;
 }
 
+/* Fullscreen 模式下非首页隐藏主页标题文字（Swup 页面切换时通过 hidden 类控制） */
+#wallpaper-wrapper.wallpaper-fullscreen .banner-home-text-overlay.hidden {
+    display: none !important;
+}
+
 /* Fullscreen 模式下 waves 显示在底部 */
 #wallpaper-wrapper.wallpaper-fullscreen .waves {
     position: absolute !important;
