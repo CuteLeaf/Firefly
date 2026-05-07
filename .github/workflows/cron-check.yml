@@ -1,0 +1,158 @@
+name: 🔍 友链每日巡检
+
+on:
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+jobs:
+  check-friends:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 安装 Playwright
+        run: |
+          npm init -y
+          npm install playwright
+          npx playwright install --with-deps chromium
+
+      - name: 创建巡检脚本
+        run: |
+          cat > cron-check.cjs << 'EOF'
+          const { chromium } = require('playwright');
+          const fs = require('fs');
+
+          async function checkFriend(url, retries = 3) {
+            const browser = await chromium.launch({ headless: true });
+            const context = await browser.newContext({
+              userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            });
+            const page = await context.newPage();
+            let lastError = null;
+
+            for (let i = 0; i < retries; i++) {
+              try {
+                const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 12000 });
+                const statusCode = response ? response.status() : null;
+                if (response && response.ok()) {
+                  await browser.close();
+                  return { ok: true, status: statusCode, url: page.url() };
+                }
+                lastError = `HTTP ${statusCode}`;
+              } catch (e) {
+                lastError = e.message;
+                if (i < retries - 1) {
+                  await new Promise(r => setTimeout(r, 2000));
+                }
+              }
+            }
+            await browser.close();
+            return { ok: false, error: lastError, url: url };
+          }
+
+          async function main() {
+            const friendsConfigPath = 'src/config/friendsConfig.ts';
+            const friendsConfigContent = fs.readFileSync(friendsConfigPath, 'utf-8');
+
+            // 正则匹配 friendsConfig 数组内容
+            const friendsConfigRegex = /export const friendsConfig: FriendLink\[\] = (\[(\s|\S)*?\]);/;
+            const match = friendsConfigContent.match(friendsConfigRegex);
+            if (!match) {
+              console.error('❌ 读取友链配置失败：未找到 friendsConfig 数组');
+              process.exit(1);
+            }
+
+            // 解析为JSON数组（TS对象 → JSON）
+            const raw = match[1]
+              .replace(/\btitle\s*:/g, '"title":')
+              .replace(/\bimgurl\s*:/g, '"imgurl":')
+              .replace(/\bdesc\s*:/g, '"desc":')
+              .replace(/\bsiteurl\s*:/g, '"siteurl":')
+              .replace(/\btags\s*:/g, '"tags":')
+              .replace(/\bweight\s*:/g, '"weight":')
+              .replace(/\benabled\s*:/g, '"enabled":')
+              // 删除对象 / 数组尾部可能存在的 trailing commas
+              .replace(/,\s*(?=[\]}])/g, '');
+
+            const friends = JSON.parse(raw);
+            const results = [];
+
+            for (const f of friends) {
+              // 仅检查启用的友链
+              if (!f.enabled) continue;
+
+              const url = f.siteurl.replace(/\/$/, '');
+              console.log(`检查: ${f.title} - ${url}`);
+              const result = await checkFriend(url);
+              const status = result.ok ? '✅' : '❌';
+              console.log(` 结果: ${status} ${result.ok ? '' : result.error}`);
+              results.push({
+                name: f.title,
+                url: url,
+                ok: result.ok,
+                error: result.error || null
+              });
+              await new Promise(r => setTimeout(r, 2000));
+            }
+
+            fs.writeFileSync('/tmp/cron_results.json', JSON.stringify(results, null, 2));
+            const total = results.length;
+            const ok = results.filter(r => r.ok).length;
+            const fail = results.filter(r => !r.ok).length;
+            console.log(`总计: ${total} | 正常: ${ok} | 不可达: ${fail}`);
+          }
+
+          main();
+          EOF
+
+      - name: 执行巡检
+        id: check
+        run: node cron-check.cjs
+
+      - name: 处理异常并通知
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const results = JSON.parse(fs.readFileSync('/tmp/cron_results.json', 'utf-8'));
+            const total = results.length;
+            const ok = results.filter(r => r.ok).length;
+            const fail = results.filter(r => !r.ok).length;
+            const failed = results.filter(r => !r.ok);
+
+            let body = `## 🔍 友链每日巡检报告
+
+            📊 **总览**
+            - 检测总数：${total}
+            - ✅ 正常：${ok}
+            - ❌ 不可达：${fail}
+
+            `;
+            if (fail > 0) {
+              body += `### ❌ 不可达的友链\n\n`;
+              failed.forEach(r => {
+                body += `- **${r.name}** - ${r.url}\n  - 原因: ${r.error}\n`;
+              });
+            } else {
+              body += `🎉 所有友链状态正常！\n`;
+            }
+            body += `\n_检测时间: ${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}_`;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🔍 友链巡检报告 ${new Date().toLocaleDateString('zh-CN')}`,
+              body: body,
+              labels: ['自动巡检']
+            });
+            console.log('巡检报告已发布');

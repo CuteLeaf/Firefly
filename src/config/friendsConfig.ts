@@ -48,7 +48,7 @@ export const friendsConfig: FriendLink[] = [
 	},
 	{
 		title: "简历生成器",
-		imgurl: "https://avatars.githubusercontent.com/u/88274799?v=4",
+		imgurl: "https://i.stardots.io/784774835/StarDots-2026042803043780900.png",
 		desc: "一个轻量，网页端，本地缓存的简历生成器，支持多套模板，欢迎试用和反馈！",
 		siteurl: "https://resume.mmzmingzsk.dpdns.org",
 		tags: ["Tools"],

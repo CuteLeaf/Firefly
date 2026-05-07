@@ -24,6 +24,7 @@ const { title, href, imgurl, desc, tags = [] } = Astro.props;
               alt={title}
               class="pin-image"
               loading="lazy"
+              onerror="this.style.display='none'"
             />
           </div>
           {tags.length > 0 && (
@@ -193,6 +194,7 @@ const { title, href, imgurl, desc, tags = [] } = Astro.props;
     width: 100%;
     height: 100%;
     padding: 0.25rem;
+    justify-content: flex-start;
   }
 
   .pin-title {
@@ -229,18 +231,35 @@ const { title, href, imgurl, desc, tags = [] } = Astro.props;
 
   .pin-image-wrap {
     margin-top: 0.75rem;
-    flex: 1;
     width: 100%;
+    height: 8rem;
     min-height: 8rem;
     border-radius: 0.75rem;
     overflow: hidden;
     background: oklch(0.2 0 0);
     border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   :root:not(.dark) .pin-image-wrap {
     background: oklch(0.93 0 0);
     border-color: oklch(0.88 0 0);
+  }
+
+  .pin-image-wrap::before {
+    content: attr(data-title);
+    font-size: 0.75rem;
+    color: oklch(0.5 0 0);
+    text-align: center;
+    padding: 0 1rem;
+    display: none;
+  }
+
+  .pin-image-wrap:empty::before,
+  .pin-image-wrap img[style*="display: none"] + ::before {
+    display: block;
   }
 
   .pin-image {
