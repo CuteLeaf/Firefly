@@ -694,11 +694,15 @@ function adjustMainContentPosition(
 			mainContent.style.position = "";
 			break;
 		case "fullscreen":
-			// 全屏壁纸模式：主内容在壁纸下方，使用相对定位自然流式布局
+			// 全屏壁纸模式：主内容在壁纸下方，保持absolute定位以支持top过渡动画
 			mainContent.classList.add("no-banner-layout");
-			mainContent.style.position = "relative";
-			mainContent.style.top = "auto";
+			mainContent.style.position = "absolute";
 			mainContent.style.zIndex = "30";
+			// 先设置transition，下一帧再改变top值以触发动画
+			mainContent.style.transition = "top 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+			requestAnimationFrame(() => {
+				mainContent.style.top = "100vh";
+			});
 			break;
 		case "overlay":
 			// Overlay模式：使用紧凑布局，主内容从导航栏下方开始
