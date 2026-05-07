@@ -20,9 +20,9 @@ export const friendsPageConfig: FriendsPageConfig = {
 	randomizeSort: false,
 
 	// 友链申请链接，填写后会在友链页面显示申请按钮
-	// 使用 /new/choose 让用户选择模板，避免模板参数导致的404问题
+	// 使用模板参数直接跳转到友链申请模板
 	applyLink:
-		"https://github.com/MmzMing/my-blog/issues/new/choose",
+		"https://github.com/MmzMing/my-blog/issues/new?template=friend-link.yml",
 };
 
 // 友链配置
