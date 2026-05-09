@@ -4,17 +4,17 @@
 
 # 我正在用（用过）的电子设备 / Devices
 
-ASUS TUF Gaming F16 FX607JV
-HUAWEI MateBook D15 2020
-HONOR Magic6Pro
-OnePlus 6 
-Phicomm N1
-Xiaomi Router 3G v1
-COROS Pace4
-HUAWEI GT Runner 
-HUAWEI nova7 
-Moondrop Space Travel 2 (Ultra)
-Moondrop Quark2
+- ASUS TUF Gaming F16 FX607JV
+- HUAWEI MateBook D15 2020
+- HONOR Magic6Pro
+- OnePlus 6 
+- Phicomm N1
+- Xiaomi Router 3G v1
+- COROS Pace4
+- HUAWEI GT Runner 
+- HUAWEI nova7 
+- Moondrop Space Travel 2 (Ultra)
+- Moondrop Quark2
 
 ## 🛠️ 关于本站
 
