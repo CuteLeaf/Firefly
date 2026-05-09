@@ -2,6 +2,20 @@
 
 你好！我是 **huizzz10** ，一个未来的科学教师，喜欢计算机，跑步，游戏和番剧。
 
+# 我正在用（用过）的电子设备 / Devices
+
+ASUS TUF Gaming F16 FX607JV
+HUAWEI MateBook D15 2020
+HONOR Magic6Pro
+OnePlus 6 
+Phicomm N1
+Xiaomi Router 3G v1
+COROS Pace4
+HUAWEI GT Runner 
+HUAWEI nova7 
+Moondrop Space Travel 2 (Ultra)
+Moondrop Quark2
+
 ## 🛠️ 关于本站
 
 这个网站使用 **Astro** 框架构建，采用了 [Firefly](https://github.com/CuteLeaf/Firefly) 模板，Firefly 是基于 [Fuwari](https://github.com/saicaca/fuwari) 的二次开发。

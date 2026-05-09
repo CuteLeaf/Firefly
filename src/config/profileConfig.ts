@@ -28,9 +28,9 @@ export const profileConfig: ProfileConfig = {
 			showName: false,
 		},
 		{
-			name: "qq",
-			icon: "fa7-brands:qq",
-			url: "https://qm.qq.com/q/f7Ir5x96Ks",
+			name: "steam",
+			icon: "fa7-brands:steam",
+			url: "https://steamcommunity.com/id/huizzz10",
 			showName: false,
 		},
 		{
