@@ -7,26 +7,28 @@ const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "Firefly",
+	title: "落梦落梦落",
 
 	// 站点副标题
-	subtitle: "Demo site",
+	subtitle: "Faldream",
 
 	// 站点 URL
-	site_url: "https://firefly.cuteleaf.cn",
+	site_url: "https://faldream.top",
 
 	// 站点描述
 	description:
-		"Firefly 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。",
+		"Faldream的博客",
 
 	// 站点关键词
 	keywords: [
-		"Firefly",
-		"Fuwari",
-		"Astro",
-		"ACGN",
+		"Faldream",
+		"React",
+		"Java",
+		"C",
+		"Cpp",
+		"C#",
+		"Python",
 		"博客",
-		"技术博客",
 		"静态博客",
 	],
 
@@ -75,11 +77,11 @@ export const siteConfig: SiteConfig = {
 		// 4. 网络图片: { type: "url", value: "https://example.com/logo.png", alt: "Logo" }
 		logo: {
 			type: "image",
-			value: "assets/images/firefly.png",
+			value: "assets/images/star.png",
 			alt: "🍀",
 		},
 		// 导航栏标题
-		title: "Firefly",
+		title: "落梦落梦落",
 		// 全宽导航栏，导航栏是否占满屏幕宽度
 		widthFull: false,
 		// 导航菜单对齐方式，left：左对齐，center：居中
@@ -129,15 +131,16 @@ export const siteConfig: SiteConfig = {
 	// bangumi的数据为编译时获取的，所以不是实时数据，请配置bangumi.userId
 	pages: {
 		// 友链页面开关
-		friends: true,
+		friends: false,
 		// 赞助页面开关
-		sponsor: true,
+		sponsor: false,
 		// 留言板页面开关，需要配置评论系统
 		guestbook: true,
 		// 番组计划页面开关，含追番、游戏、书籍和音乐，dev调试时只获取一页数据，build才会获取全部数据
-		bangumi: true,
+		bangumi: false,
 		// 相册页面开关
 		gallery: true,
+		
 	},
 
 	// 分类导航栏开关，在首页和归档页顶部显示分类快捷导航
