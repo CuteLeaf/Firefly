@@ -48,7 +48,7 @@ export const profileConfig: ProfileConfig = {
 		{
 			name: "Telegram",
 			icon: "fa7-brands:telegram",
-			url: "t.me/huizzz01",
+			url: "https://t.me/huizzz01",
 			showName: false,
 		},
 	],
