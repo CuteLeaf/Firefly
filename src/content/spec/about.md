@@ -1,6 +1,6 @@
 # 关于我 / About Me
 
-你好！我是 **huizzz10** ，。
+你好！我是 **huizzz10** ，一个未来的科学教师，喜欢计算机，跑步，游戏和番剧。
 
 ## 🛠️ 关于本站
 
@@ -11,7 +11,7 @@
 
 **🖥️在线预览： [Firefly - Demo site](https://firefly.cuteleaf.cn/)**
 
-**🏠我的博客： [https://blog.cuteleaf.cn](https://blog.cuteleaf.cn/)**
+**🏠作者夏叶的博客： [https://blog.cuteleaf.cn](https://blog.cuteleaf.cn/)**
 
 **📝Firefly使用文档： [https://docs-firefly.cuteleaf.cn](https://docs-firefly.cuteleaf.cn/)**
 
@@ -26,11 +26,11 @@
 
 ## 📫 联系方式
 
-如果你想和我交流技术问题，分享有趣的想法，或者只是想打个招呼，欢迎通过以下方式联系我：
+如果你想和我交流能力范围内的技术问题，分享有趣的想法，或者只是想打个招呼，欢迎通过以下方式联系我：
 
-- 💻 **GitHub**: [CuteLeaf](https://github.com/huizzz10)
-- ✉️ **Email**: [dinghuiliao4@gmail.com](mailto:dinghuiliao4@gmail.com)
-- 🐧 **QQ：[3089736016](https://qm.qq.com/q/f7Ir5x96Ks)**
-
+- **GitHub**: [CuteLeaf](https://github.com/huizzz10)
+- **Email**: [dinghuiliao4@gmail.com](mailto:dinghuiliao4@gmail.com)
+- **QQ：[3089736016](https://qm.qq.com/q/f7Ir5x96Ks)**
+- **TG:[@huizzz01](t.me/huizzz01)
 *感谢你的来访！希望在这里能找到对你有用的内容！*
 
