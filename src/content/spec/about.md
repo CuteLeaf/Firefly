@@ -14,7 +14,6 @@
 - Xiaomi Router 3G v1
 - COROS Pace4
 - HUAWEI GT Runner 
-
 - Moondrop Space Travel 2 (Ultra)
 - Moondrop Quark2
 
@@ -44,10 +43,10 @@
 
 如果你想和我交流能力范围内的技术问题，分享有趣的想法，或者只是想打个招呼，欢迎通过以下方式联系我：
 
-- **GitHub**: [huizzz10](https://github.com/huizzz10)
-- **Email**: [dinghuiliao4@gmail.com](mailto:dinghuiliao4@gmail.com)
+- **GitHub**:[huizzz10](https://github.com/huizzz10)
+- **Email**:[dinghuiliao4@gmail.com](mailto:dinghuiliao4@gmail.com)
 - **QQ：[3089736016](https://qm.qq.com/q/f7Ir5x96Ks)**
-- **TG:[@huizzz01](t.me/huizzz01)**
+- **TG：[@huizzz01](t.me/huizzz01)**
 
 *感谢你的来访！希望在这里能找到对你有用的内容！*
 
