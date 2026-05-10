@@ -1,0 +1,173 @@
+---
+title: 博客搭建完成和搭建分享
+published: 2026-05-10
+description: 想了很久，终于实现
+image: api
+tags: [博客, 教程]
+category: 博客技术
+draft: true
+---
+# 为什么会想搭建
+
+初中接触电脑以后就想搭建一个自己的网站，搭建博客跟着教程做还挺简单的，感谢Firefly的作者夏夜和教程作者Fqzlr，同时希望我能够把博客一直写下去。
+
+# 搭建教程
+
+**原教程指路：**  
+视频教程：
+<iframe width="100%" height="468"
+  src="//player.bilibili.com/player.html?bvid=BV1hX9XBKEhm&p=1&autoplay=0"
+  scrolling="no" border="0" frameborder="no"
+  framespacing="0" allowfullscreen="true">
+</iframe>
+文字教程：https://fqzlr.com/posts/firefly-set/windows-firefly/
+
+# 本人搭建过程
+
+本教程使用**Archlinux**平台
+## 第一篇：搭建依赖准备
+
+### 一、搭建依赖
+
+- Node.js:核心依赖，版本>=22
+- pnpm
+- Git：Linux一般自带
+- VS Code（可选）：进行博客编辑，文章撰写
+
+### 二、安装过程
+
+- Node.js安装  
+Node.js下载地址：https://nodejs.org ，选择LTS版本,根据提示进入终端进行安装并检测版本
+![Node.js安装](/assets/images/blogbuild/Node.js.png "Node.js安装")
+进行Node.js、npm版本检测，输出版本号安装成功
+
+- pnpm安装  
+终端执行：npm install -g pnpm    
+执行 pnpm -v 输出版本号即成功   
+
+- Git：Linux一般自带
+
+- VS Code安装（可选）  
+VS Code为AUR包，请在Archlinux中安装好AUR安装助手，我选择yay  
+VS Code安装在终端执行：
+
+```
+yay -S  visual-studio-code-bin  
+```
+
+记得安装中文插件，不会请自行Google   
+
+## 第二篇：源码托管
+
+### 一、Fork Firefly仓库
+1.需要注册[GitHub](https://github.com/)  
+2.Fork Firefly仓库:https://github.com/CuteLeaf/Firefly，Fork按钮在右上方  
+3.进入「自己的Firefly仓库」，示例：https://github.com/你的用户名/Firefly 
+> [!NOTE] 提示
+> Fork后的仓库归你所有，修改内容不会影响官方仓库，后续可一键同步官方更新，适合长期维护 
+
+## 第三篇：本地搭建
+
+### 一、克隆源码
+
+1.使用git clone将你Fork的仓库克隆到本地  
+```
+git clone https://github.com/你的用户名/Firefly.git
+```
+2.进入「自己的Firefly仓库」文件夹
+```
+cd Firefly
+```
+
+### 二、本地预览
+
+1.安装pnpm依赖  
+```
+pnpm install
+```
+2.启动本地预览  
+```
+pnpm dev
+```
+- 构建完成后，终端显示本地地址：http://localhost:4321，显示网页即搭建成功    
+- 可以参考指南文档进行网站编辑：https://docs-firefly.cuteleaf.cn  
+- 停止服务：Ctrl+C
+- 再次运行：pnpm dev
+
+### 三、开发配置
+
+1.配置Git身份  
+- 打开终端，输入
+```
+1. 设置你的GitHub用户名
+git config --global user.name "你的GitHub用户名"
+
+2. 设置你的GitHub绑定邮箱
+git config --global user.email "你的GitHub邮箱"
+```
+- 检测配置是否成功
+```
+1. 检测你的GitHub用户名
+git config --global user.name
+
+2. 检测你的GitHub绑定邮箱
+git config --global user.email
+```
+显示你的用户名与邮箱即为成功
+
+2.推送更新
+```
+git add .
+git commit -m "更新"
+git push
+```
+> [!NOTE] 提示
+> GitHub推送更新需要令牌（token），自行Google配置
+
+## 第四篇：部署到云端
+
+- 使用Cloudflare关联GitHub自动构建，将更新推送到GitHub，网页能够自动更新
+
+### 一、前置条件
+- Cloudflare账号：https://dash.cloudflare.com
+- 你的仓库Firefly源码完整
+- 完成前面几步
+
+### 二、添加Cloudflare Workers部署需要文件
+
+在项目根目录创建wrangler.toml： Cloudflare Workers部署需要
+```
+name = "firefly"
+compatibility_date = "YYYY-MM-DD" # 更为今日
+
+[assets]
+directory = "./dist"
+
+[vars]
+NODE_VERSION = "22"
+```
+
+### 三、进行部署
+1.进入[Cloudflare控制台](https://dash.cloudflare.com)    
+2.进入**Workers & Pages**页面,在侧边栏的**构建**-->**计算**中  
+3.在右上角选择**创建应用程序**  
+4.关联GitHub账号，选择**Continue With GitHub**，跟随引导完成授权  
+5.选择部署「你自己的Firefly」仓库  
+6.构建设置：
+- **Build command**: pnpm build  
+- **Deploy command**: npx wrangler deploy  
+
+> [!NOTE] 提示
+> 部署名称要与wrangler.toml文件中的name项相同，否则Cloudflare会创建新的分支
+
+7.进行部署，点击下方**部署**，Cloudflare会进行自动构建，现在去休息一下吧  
+8.构建成功后访问**临时域名**，格式为**xxx.workers.dev**，自己找一下，如果与本地构建完全一致，即为部署成功
+
+> [!NOTE] 提示
+> 可能会出现不同设备，有的能进入，有的不行，尝试绑定**其他的域名**，本人怀疑原因是DNS污染
+
+- 如果不需要绑定其他域名的话。哦没得多，你也有了自己的博客网站！！！
+
+## 五、域名绑定
+
+- 由于采用不同的域名服务商，建议参考[原教程](https://fqzlr.com/posts/firefly-set/windows-firefly/)进行绑定
