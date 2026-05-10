@@ -30,7 +30,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 		// 音乐平台：netease=网易云音乐, tencent=QQ音乐, kugou=酷狗音乐, xiami=虾米音乐, baidu=百度音乐
 		server: "netease",
 		// 类型：song=单曲, playlist=歌单, album=专辑, search=搜索, artist=艺术家
-		type: "playlist",
+		type: "song",
 		// 歌单/专辑/单曲 ID 或搜索关键词
 		id: "2727809377",
 		// 认证 token（可选）
