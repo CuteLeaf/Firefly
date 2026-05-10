@@ -13,7 +13,7 @@ export const siteConfig: SiteConfig = {
 	subtitle: "huizzz10‘s blog",
 
 	// 站点 URL
-	site_url: "https://blog.huizzz10.ccwu.cc",
+	site_url: "http://blog.huizzz10.ccwu.cc",
 
 	// 站点描述
 	description:
@@ -23,7 +23,7 @@ export const siteConfig: SiteConfig = {
 	keywords: [
 		"关于我",
 		"设备",
-		"去哪玩",
+		"相册",
 		"ACGN",
 		"工具书",
 	],
