@@ -208,12 +208,14 @@ enum I18nKey {
 	wallpaperOverlayMode = "wallpaperOverlayMode",
 	wallpaperNoneMode = "wallpaperNoneMode",
 
-	// 横幅设置
-	bannerSettings = "bannerSettings",
-	bannerTitle = "bannerTitle",
-	bannerCarousel = "bannerCarousel",
+	// 壁纸设置
+	wallpaperSettings = "wallpaperSettings",
+	wallpaperTitle = "wallpaperTitle",
+	wallpaperCarousel = "wallpaperCarousel",
 	wavesAnimation = "wavesAnimation",
 	gradientTransition = "gradientTransition",
+	sakuraEffect = "sakuraEffect",
+	effectsSettings = "effectsSettings",
 	overlaySettings = "overlaySettings",
 	overlayOpacity = "overlayOpacity",
 	overlayBlur = "overlayBlur",

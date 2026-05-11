@@ -1,8 +1,13 @@
 import type { SakuraConfig } from "../types/config";
 
+// 特效配置 - 集中管理所有动画特效
+
 export const sakuraConfig: SakuraConfig = {
 	// 是否启用樱花特效
 	enable: false,
+
+	// 是否允许用户在设置中切换
+	switchable: true,
 
 	// 樱花数量
 	sakuraNum: 21,

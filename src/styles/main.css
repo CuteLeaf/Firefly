@@ -228,6 +228,11 @@ html {
         transition: none !important;
     }
 
+    /* 壁纸模式切换期间禁止 #main-grid 的 transform 过渡动画，防止抖动 */
+    /* .is-wallpaper-transitioning #main-grid {
+        transition: none !important;
+    } */
+
     /* 全屏壁纸模式下的半透明效果 */
     .wallpaper-transparent .card-base {
         background-color: var(--card-bg-transparent) !important;

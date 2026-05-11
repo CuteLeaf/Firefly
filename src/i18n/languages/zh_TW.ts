@@ -212,12 +212,14 @@ export const zh_TW: Translation = {
 	[Key.wallpaperOverlayMode]: "全屏透明",
 	[Key.wallpaperNoneMode]: "純色背景",
 
-	// 橫幅設置
-	[Key.bannerSettings]: "橫幅設置",
-	[Key.bannerTitle]: "首頁橫幅標題",
-	[Key.bannerCarousel]: "橫幅輪播",
+	// 壁紙設置
+	[Key.wallpaperSettings]: "壁紙設置",
+	[Key.wallpaperTitle]: "首頁壁紙標題",
+	[Key.wallpaperCarousel]: "壁紙輪播",
 	[Key.wavesAnimation]: "水波紋動畫",
 	[Key.gradientTransition]: "漸變過渡",
+	[Key.sakuraEffect]: "櫻花特效",
+	[Key.effectsSettings]: "特效設定",
 	[Key.overlaySettings]: "透明設定",
 	[Key.overlayOpacity]: "桌布透明度",
 	[Key.overlayBlur]: "背景模糊度",

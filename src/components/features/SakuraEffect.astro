@@ -4,8 +4,7 @@ import { sakuraConfig } from "@/config";
 const config = sakuraConfig;
 ---
 
-{sakuraConfig?.enable && (
-	<script is:inline define:vars={{ sakuraConfig: config }}>
+<script is:inline define:vars={{ sakuraConfig: config }}>
 		let windowWidth = window.innerWidth;
 		let windowHeight = window.innerHeight;
 
@@ -203,7 +202,8 @@ const config = sakuraConfig;
 				this.ctx = this.canvas.getContext('2d');
 
 				// 监听窗口大小变化
-				window.addEventListener('resize', this.handleResize.bind(this));
+				this._boundHandleResize = this.handleResize.bind(this);
+				window.addEventListener('resize', this._boundHandleResize);
 			}
 
 			// 创建樱花列表
@@ -285,7 +285,10 @@ const config = sakuraConfig;
 					this.canvas = null;
 				}
 
-				window.removeEventListener('resize', this.handleResize.bind(this));
+				if (this._boundHandleResize) {
+					window.removeEventListener('resize', this._boundHandleResize);
+					this._boundHandleResize = null;
+				}
 				this.isRunning = false;
 			}
 
@@ -318,6 +321,7 @@ const config = sakuraConfig;
 
 		// 创建全局樱花管理器实例
 		let globalSakuraManager = null;
+		window.sakuraManager = null;
 
 		// 初始化樱花特效
 		function initSakura(config) {
@@ -325,6 +329,7 @@ const config = sakuraConfig;
 				globalSakuraManager.updateConfig(config);
 			} else {
 				globalSakuraManager = new SakuraManager(config);
+				window.sakuraManager = globalSakuraManager;
 				if (config.enable) {
 					globalSakuraManager.init();
 				}
@@ -340,10 +345,14 @@ const config = sakuraConfig;
 			
 			// 初始化樱花特效的函数
 			const setupSakura = () => {
-				if (sakuraConfig.enable && !window.sakuraInitialized) {
-					initSakura(sakuraConfig);
-					window.sakuraInitialized = true;
-				}
+				if (window.sakuraInitialized) return;
+				// 检查用户是否在设置中关闭了樱花特效
+				var storedEnabled = localStorage.getItem("sakuraEnabled");
+				var isEnabled = storedEnabled !== null ? storedEnabled === "true" : sakuraConfig.enable;
+				// 创建管理器并根据用户偏好决定是否启动
+				var cfg = Object.assign({}, sakuraConfig, { enable: isEnabled });
+				initSakura(cfg);
+				window.sakuraInitialized = true;
 			};
 			
 			// 页面加载完成后初始化樱花特效
@@ -353,5 +362,17 @@ const config = sakuraConfig;
 				setupSakura();
 			}
 		})();
+
+		// 监听设置面板的樱花特效切换事件
+		window.addEventListener('sakuraToggle', function(e) {
+			var enabled = e.detail.enabled;
+			var mgr = window.sakuraManager;
+			if (!mgr) return;
+			if (enabled && !mgr.getIsRunning()) {
+				mgr.config.enable = true;
+				mgr.init();
+			} else if (!enabled && mgr.getIsRunning()) {
+				mgr.stop();
+			}
+		});
 	</script>
-)}

@@ -13,6 +13,7 @@ import type { LIGHT_DARK_MODE, WALLPAPER_MODE } from "@/types/config";
 import {
 	backgroundWallpaper,
 	expressiveCodeConfig,
+	sakuraConfig,
 	siteConfig,
 } from "../config";
 import { isHomePage as checkIsHomePage } from "./layout-utils";
@@ -276,7 +277,10 @@ export function initThemeListener() {
 }
 
 // Wallpaper mode functions
-export function applyWallpaperModeToDocument(mode: WALLPAPER_MODE) {
+export function applyWallpaperModeToDocument(
+	mode: WALLPAPER_MODE,
+	animate = true,
+) {
 	// 检查是否允许切换壁纸模式
 	const isSwitchable = backgroundWallpaper.switchable ?? true;
 	if (!isSwitchable) {
@@ -318,11 +322,11 @@ export function applyWallpaperModeToDocument(mode: WALLPAPER_MODE) {
 		switch (mode) {
 			case WALLPAPER_BANNER:
 				body.classList.add("enable-banner");
-				showBannerMode();
+				showBannerMode(true);
 				break;
 			case WALLPAPER_FULLSCREEN:
 				body.classList.add("no-banner-layout");
-				showFullscreenMode(true);
+				showFullscreenMode(animate);
 				break;
 			case WALLPAPER_OVERLAY:
 				body.classList.add("wallpaper-transparent");
@@ -385,7 +389,7 @@ function ensureWallpaperState(mode: WALLPAPER_MODE) {
 	updateNavbarTransparency(mode);
 }
 
-function showBannerMode() {
+function showBannerMode(animate = false) {
 	// 显示 wallpaper-wrapper 并切换为 banner 模式
 	const wallpaperWrapper = document.getElementById("wallpaper-wrapper");
 	if (wallpaperWrapper) {
@@ -440,7 +444,7 @@ function showBannerMode() {
 	}
 
 	// 调整主内容位置
-	adjustMainContentPosition("banner");
+	adjustMainContentPosition("banner", animate);
 
 	// 处理移动端非首页主内容区域位置
 	const mainContentWrapper = document.querySelector(
@@ -532,7 +536,7 @@ function showFullscreenMode(animate = false) {
 	}
 
 	// 调整主内容位置
-	adjustMainContentPosition("fullscreen");
+	adjustMainContentPosition("fullscreen", animate);
 
 	// 移除透明效果（全屏壁纸模式不使用半透明）
 	adjustMainContentTransparency(false);
@@ -671,13 +675,23 @@ function updateNavbarTransparency(mode: WALLPAPER_MODE) {
 	}
 }
 
+// 跟踪全屏模式动画的 setTimeout，快速切换时需要取消
+let fullscreenAnimationTimeout: ReturnType<typeof setTimeout> | null = null;
+
 function adjustMainContentPosition(
 	mode: WALLPAPER_MODE | "banner" | "none" | "overlay" | "fullscreen",
+	animate = false,
 ) {
 	const mainContent = document.querySelector(
 		".w-full.z-30.pointer-events-none",
 	) as HTMLElement;
 	if (!mainContent) return;
+
+	// 取消上一次全屏模式动画的 setTimeout，防止快速切换时竞态覆盖
+	if (fullscreenAnimationTimeout) {
+		clearTimeout(fullscreenAnimationTimeout);
+		fullscreenAnimationTimeout = null;
+	}
 
 	// 移除现有的位置类
 	mainContent.classList.remove("mobile-main-no-banner", "no-banner-layout");
@@ -686,32 +700,34 @@ function adjustMainContentPosition(
 		case "banner": {
 			// Banner模式：主内容在banner下方
 			const isHome = checkIsHomePage(window.location.pathname);
+			const bannerTargetTop = "calc(var(--banner-height) - 3rem)";
+
+			// 禁用 CSS transition，防止整个定位过程中的值变化触发过渡动画
+			mainContent.style.setProperty("transition", "none", "important");
+			// 清除 fullscreen 模式特有的 inline 样式（position: relative, top: 0 等）
+			mainContent.style.position = "";
+			mainContent.style.zIndex = "";
+			mainContent.style.top = "";
+			mainContent.style.setProperty("margin-top", "");
+
 			if (!isHome) {
-				// 移动端非首页隐藏banner，主内容从导航栏下方开始
 				mainContent.classList.add("mobile-main-no-banner");
 				if (window.innerWidth < 1024) {
 					mainContent.style.setProperty("top", "5.5rem", "important");
 				} else {
-					// 桌面端：与首页相同定位（保留grid transform）
-					mainContent.style.setProperty(
-						"top",
-						"calc(var(--banner-height) - 3rem)",
-						"important",
-					);
+					mainContent.style.setProperty("top", bannerTargetTop, "important");
 				}
 			} else {
-				mainContent.style.setProperty(
-					"top",
-					"calc(var(--banner-height) - 3rem)",
-					"important",
-				);
+				mainContent.style.setProperty("top", bannerTargetTop, "important");
 			}
-			// 清除main-grid的内联transform，恢复CSS规则控制
 			const bannerGrid = document.getElementById("main-grid");
 			if (bannerGrid) {
 				bannerGrid.style.transform = "";
 				bannerGrid.style.transition = "";
 			}
+			// 所有定位操作完成后，强制回流并恢复 CSS transition
+			void mainContent.offsetWidth;
+			mainContent.style.removeProperty("transition");
 			break;
 		}
 		case "fullscreen": {
@@ -729,13 +745,40 @@ function adjustMainContentPosition(
 				mainContent.style.transition = "";
 				break;
 			}
-			mainContent.classList.add("no-banner-layout");
-			// relative + top:0：内容在文档流中紧跟壁纸，页面可滚动
-			mainContent.style.position = "relative";
-			mainContent.style.zIndex = "30";
-			mainContent.style.setProperty("top", "0", "important");
-			mainContent.style.setProperty("margin-top", "5.5rem", "important");
-			mainContent.style.transition = "";
+
+			if (animate) {
+				// 运行时切换：从当前位置动画滑到壁纸下方，完成后切换为 relative
+				const computedTop = mainContent.getBoundingClientRect().top;
+				mainContent.style.transition = "none";
+				mainContent.style.position = "absolute";
+				mainContent.style.zIndex = "30";
+				mainContent.style.setProperty("top", `${computedTop}px`, "important");
+				// absolute 定位下 margin-top 不影响布局，提前设好最终值避免切换 relative 时跳变
+				mainContent.style.setProperty("margin-top", "1rem", "important");
+				mainContent.classList.add("no-banner-layout");
+				void mainContent.offsetWidth;
+				mainContent.style.setProperty(
+					"transition",
+					"top 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+					"important",
+				);
+				mainContent.style.setProperty("top", "100vh", "important");
+				fullscreenAnimationTimeout = setTimeout(() => {
+					mainContent.style.transition = "none";
+					mainContent.style.position = "relative";
+					mainContent.style.setProperty("top", "0", "important");
+					void mainContent.offsetWidth;
+					mainContent.style.transition = "";
+				}, 450);
+			} else {
+				// 初始化：直接设置位置，无需动画
+				mainContent.classList.add("no-banner-layout");
+				mainContent.style.position = "relative";
+				mainContent.style.zIndex = "30";
+				mainContent.style.setProperty("top", "0", "important");
+				mainContent.style.setProperty("margin-top", "1rem", "important");
+				mainContent.style.transition = "";
+			}
 			break;
 		}
 		case "overlay":
@@ -815,7 +858,7 @@ export function initWallpaperMode(): void {
 	// 初始化透明模式参数（透明度/模糊度/卡片透明度）
 	applyStoredOverlaySettingsToDocument();
 	const storedMode = getStoredWallpaperMode();
-	applyWallpaperModeToDocument(storedMode);
+	applyWallpaperModeToDocument(storedMode, false);
 }
 
 export function getStoredWallpaperMode(): WALLPAPER_MODE {
@@ -1099,6 +1142,37 @@ export function applyGradientEnabledToDocument(enabled: boolean): void {
 			gradientElement.classList.add("gradient-disabled");
 		}
 	}
+}
+
+// Sakura effect functions
+export function getDefaultSakuraEnabled(): boolean {
+	return sakuraConfig?.enable ?? false;
+}
+
+export function getStoredSakuraEnabled(): boolean {
+	if (typeof localStorage === "undefined") {
+		return getDefaultSakuraEnabled();
+	}
+	const stored = localStorage.getItem("sakuraEnabled");
+	if (stored === null) {
+		return getDefaultSakuraEnabled();
+	}
+	return stored === "true";
+}
+
+export function setSakuraEnabled(enabled: boolean): void {
+	if (
+		typeof localStorage === "undefined" ||
+		typeof localStorage.setItem !== "function"
+	) {
+		return;
+	}
+	localStorage.setItem("sakuraEnabled", String(enabled));
+	document.documentElement.setAttribute("data-sakura-enabled", String(enabled));
+	// 实时切换樱花特效
+	window.dispatchEvent(
+		new CustomEvent("sakuraToggle", { detail: { enabled } }),
+	);
 }
 
 // Banner title functions

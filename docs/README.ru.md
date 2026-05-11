@@ -179,7 +179,7 @@ src/
 │   ├── footerConfig.ts       # Конфигурация подвала
 │   ├── FooterConfig.html     # HTML-контент подвала
 │   ├── expressiveCodeConfig.ts # Конфигурация подсветки кода
-│   ├── sakuraConfig.ts       # Конфигурация эффекта сакуры
+│   ├── effectsConfig.ts      # Конфигурация анимационных эффектов (сакура и др.)
 │   ├── fontConfig.ts         # Конфигурация шрифтов
 │   ├── sidebarConfig.ts      # Конфигурация макета боковой панели
 │   ├── navBarConfig.ts       # Конфигурация навигационной панели

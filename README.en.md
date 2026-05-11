@@ -177,7 +177,7 @@ src/
 │   ├── footerConfig.ts       # Footer configuration
 │   ├── FooterConfig.html     # Footer HTML content
 │   ├── expressiveCodeConfig.ts # Code highlighting configuration
-│   ├── sakuraConfig.ts       # Sakura effect configuration
+│   ├── effectsConfig.ts      # Animation effects config (sakura, etc.)
 │   ├── fontConfig.ts         # Font configuration
 │   ├── sidebarConfig.ts      # Sidebar layout configuration
 │   ├── navBarConfig.ts       # Navbar configuration
