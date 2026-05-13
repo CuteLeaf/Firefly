@@ -1,5 +1,7 @@
+import type { FontConfig } from "../types/config";
+
 // 字体配置
-export const fontConfig = {
+export const fontConfig: FontConfig = {
 	// 是否启用自定义字体功能
 	enable: false,
 	// 是否预加载字体文件
