@@ -35,10 +35,7 @@ export type SiteConfig = {
 	lang: "en" | "zh_CN" | "zh_TW" | "ja" | "ru";
 	/** 主题色配置 */
 	themeColor: {
-		/**
-		 * 主题色色相，范围 0-360。\
-		 * 红色：`0`，青色：`200`，蓝绿色：`250`，粉色：`345`
-		 */
+		/** 主题色色相，范围 0-360。 */
 		hue: number;
 		/** 是否对访问者隐藏主题色选择器 */
 		fixed: boolean;
@@ -130,7 +127,7 @@ export type SiteConfig = {
 			type: "icon" | "image" | "url";
 			/**
 			 * icon 名、本地图片路径或网络图片 URL\
-			 * 本地图片分为以 `/` 开头的 public 目录下的图片（不优化）和非以 `/` 开头的 src 目录下的图片（自动优化但会增加构建时间）
+			 * 本地图片分为以 `/` 开头的 public 目录下的图片（不优化）和以非 `/` 开头的 src 目录下的图片（自动优化但会增加构建时间）
 			 * @default "material-symbols:home-pin-outline"
 			 * @example "/assets/images/logo.webp"
 			 * @example "assets/images/logo.webp"
@@ -198,6 +195,8 @@ export type SiteConfig = {
 	postListLayout: {
 		/**
 		 * 默认布局模式
+		 * - "list" 列表模式（单列布局）
+		 * - "grid" 网格模式（多列布局）
 		 * @default "list"
 		 */
 		defaultMode: "list" | "grid";
@@ -236,7 +235,7 @@ export type SiteConfig = {
 		postsPerPage: number;
 	};
 
-	/** 统计分析 */
+	/** 统计分析配置 */
 	analytics?: {
 		/** Google Analytics ID */
 		googleAnalyticsId?: string;
@@ -280,7 +279,10 @@ export type SiteConfig = {
 				 * @default 300000
 				 */
 				maxDuration?: number;
-				/** 需要完全排除录制的元素 CSS 选择器 */
+				/**
+				 * 需要完全排除录制的元素 CSS 选择器
+				 * @example ".sensitive-widget"
+				 */
 				blockSelector?: string;
 			};
 		};
@@ -316,7 +318,10 @@ export type SiteConfig = {
 		};
 	};
 
-	/** 图片优化配置 */
+	/**
+	 * 图片优化配置
+	 * @see https://docs.astro.build/zh-cn/guides/images/
+	 */
 	imageOptimization?: {
 		/**
 		 * 输出图片格式
@@ -443,7 +448,7 @@ export type NavBarConfig = {
 export type ProfileConfig = {
 	/**
 	 * 头像图片路径\
-	 * 图片路径支持以 `/` 开头的 public 目录下的图片（不优化）和非以 `/` 开头的 src 目录下的图片（自动优化但会增加构建时间），以及远程 URL
+	 * 图片路径支持以 `/` 开头的 public 目录下的图片（不优化）和以非 `/` 开头的 src 目录下的图片（自动优化但会增加构建时间），以及远程 URL
 	 * @example "/assets/images/avatar.webp"
 	 * @example "assets/images/avatar.webp"
 	 * @example "https://example.com/avatar.jpg"
@@ -487,7 +492,7 @@ export type LicenseConfig = {
  */
 export type CommentConfig = {
 	/**
-	 * 评论系统类型
+	 * 评论系统类型，`"none"` 为不启用评论系统
 	 * @default "none"
 	 */
 	type: "none" | "twikoo" | "waline" | "giscus" | "disqus" | "artalk";
@@ -641,7 +646,8 @@ export type BlogPostData = {
 
 /**
  * 代码块配置\
- * 代码块配置基于 Expressive Code，支持自定义主题和代码折叠功能。
+ * 代码块配置基于 Expressive Code，支持自定义主题和代码折叠功能。\
+ * 修改本配置后需要重启Astro开发服务器才能生效。
  * @see https://expressive-code.com
  * @see https://docs-firefly.cuteleaf.cn/zh/guide/code-block.html
  */
@@ -703,22 +709,25 @@ export type PluginCollapsibleConfig = {
  */
 export type PlantUMLConfig = {
 	/**
-	 * 是否启用 PlantUML 渲染能力。关闭后 plantuml 代码块会退化为普通代码高亮。
+	 * 是否启用 PlantUML 渲染能力。关闭后 plantuml 代码块会退化为普通代码高亮，由 Expressive Code 处理。
 	 * @default true
 	 */
 	enable: boolean;
 	/**
-	 * PlantUML 服务器地址，尾部斜杠会自动归一化。
+	 * PlantUML 服务器地址，尾部斜杠会自动归一化。\
+	 * 默认使用官方公共服务器；敏感内容请部署自建服务器，并把此字段替换为自建地址。
 	 * @default "https://www.plantuml.com/plantuml"
 	 */
 	server: string;
 	/**
 	 * 亮色模式下注入的 PlantUML 主题名；空字符串表示不注入。
+	 * @see https://plantuml.com/zh/theme
 	 * @default ""
 	 */
 	lightTheme: string;
 	/**
 	 * 暗色模式下注入的 PlantUML 主题名；空字符串表示不注入。
+	 * @see https://plantuml.com/zh/theme
 	 * @default ""
 	 */
 	darkTheme: string;
@@ -848,7 +857,7 @@ export type CoverImageConfig = {
 		enable: boolean;
 		/** 随机图 API 列表 */
 		apis: string[];
-		/** API 失败时的回退图片路径，支持以 `/` 开头的 public 目录下的图片和非以 `/` 开头的 src 目录下的图片。 */
+		/** API 失败时的回退图片路径，支持以 `/` 开头的 public 目录下的图片和以非 `/` 开头的 src 目录下的图片。 */
 		fallback?: string;
 		/**
 		 * 是否显示加载动画
@@ -928,17 +937,18 @@ export type MobileBottomComponentConfig = {
 export type SidebarLayoutConfig = {
 	/** 是否启用侧边栏 */
 	enable: boolean;
-	/** 侧边栏位置 */
+	/** 侧边栏位置
+	 * - `left` 仅显示左侧边栏
+	 * - `right` 仅显示右侧边栏
+	 * - `both` 双侧边栏，1280px 以上同时显示左右，769-1279px 根据 tabletSidebar 配置显示其中一侧
+	 */
 	position: "left" | "right" | "both";
 	/**
 	 * 平板端（769-1279px）显示哪侧侧边栏，仅 `position` 为 `both` 时生效
 	 * @default "left"
 	 */
 	tabletSidebar?: "left" | "right";
-	/**
-	 * 当 `position` 为 `left` 或 `right` 时，
-	 * 是否在文章详情页显示双侧边栏
-	 */
+	/** 使用单侧栏时是否在文章详情页额外显示另一侧边栏 */
 	showBothSidebarsOnPostPage?: boolean;
 	/** 左侧边栏组件配置列表 */
 	leftComponents: WidgetComponentConfig[];
@@ -1014,7 +1024,7 @@ export type SpineModelConfig = {
 	enable: boolean;
 	/** 模型配置 */
 	model: {
-		/** 模型文件路径（`.json`） */
+		/** 模型文件路径（`.json`），相对于 `public` 目录 */
 		path: string;
 		/** 模型缩放比例 */
 		scale?: number;
@@ -1025,7 +1035,7 @@ export type SpineModelConfig = {
 	};
 	/** 位置配置 */
 	position: {
-		/** 显示位置 */
+		/** 显示位置，注意在右下角可能会挡住返回顶部按钮 */
 		corner: "bottom-left" | "bottom-right" | "top-left" | "top-right";
 		/** 水平偏移量
 		 * @default 20
@@ -1094,12 +1104,12 @@ export type Live2DModelConfig = {
 	/** 是否启用 Live2D 看板娘 */
 	enable: boolean;
 	model: {
-		/** 模型文件夹路径或 `model3.json` 文件路径 */
+		/** 模型文件夹路径或 `model3.json` 文件路径（相对于 `public` 目录） */
 		path: string;
 	};
 	/** 位置配置 */
 	position?: {
-		/** 显示位置 */
+		/** 显示位置，注意在右下角可能会挡住返回顶部按钮 */
 		corner?: "bottom-left" | "bottom-right" | "top-left" | "top-right";
 		/** 水平偏移量
 		 * @default 20
@@ -1127,7 +1137,7 @@ export type Live2DModelConfig = {
 		enabled?: boolean;
 		/**
 		 * 点击时随机显示的文字消息\
-		 * `motions` 和 `expressions` 将从模型 JSON 文件中自动读取
+		 * `motions` 与 `expressions` 将从模型 JSON 文件中自动读取
 		 */
 		clickMessages?: string[];
 		/**
@@ -1168,7 +1178,7 @@ export type BackgroundWallpaperConfig = {
 	switchable?: boolean;
 	/**
 	 * 背景图片配置\
-	 * 图片路径支持以 `/` 开头的 public 目录下的图片和非以 `/` 开头的 src 目录下的图片，以及网络图片 URL\
+	 * 图片路径支持以 `/` 开头的 public 目录下的图片和以非 `/` 开头的 src 目录下的图片，以及网络图片 URL\
 	 * 建议不要替换 d1-d6，m1-m6 这些默认示例图片（你可以删除掉节省空间），因为以后可能会更换示例图片，导致你自定义的图片被覆盖，同时建议使用自己的图片的时候命名为其他名称，不要使用 d1-d6，m1-m6 这些名称
 	 */
 	src:
@@ -1223,7 +1233,11 @@ export type BackgroundWallpaperConfig = {
 			subtitleSize?: string;
 			/** 打字机效果配置 */
 			typewriter?: {
-				/** 是否启用打字机效果 */
+				/**
+				* 是否启用打字机效果
+				* - 打字机开启 → 循环显示所有副标题
+				* - 打字机关闭 → 每次刷新随机显示一条副标题
+				*/
 				enable: boolean;
 				/** 打字速度（毫秒） */
 				speed: number;
@@ -1239,11 +1253,11 @@ export type BackgroundWallpaperConfig = {
 			 * 导航栏透明模式
 			 * - `semi`：半透明
 			 * - `full`：全透明
-			 * - `semifull`：半透明 + 全透明
+			 * - `semifull`：动态透明
 			 */
 			transparentMode?: "semi" | "full" | "semifull";
 			/**
-			 * 是否开启毛玻璃模糊效果
+			 * 是否开启毛玻璃模糊效果。开启可能会影响页面性能，如果不开启则是半透明
 			 * @default true
 			 */
 			enableBlur?: boolean;
@@ -1253,7 +1267,10 @@ export type BackgroundWallpaperConfig = {
 			 */
 			blur?: number;
 		};
-		/** 水波纹动画配置 */
+		/**
+		 * 水波纹动画配置\
+		 * 开启会影响页面性能，请酌情开启
+		 */
 		waves?: {
 			/**
 			 * 是否启用水波纹动画效果，支持分别设置桌面端和移动端
@@ -1315,12 +1332,12 @@ export type BackgroundWallpaperConfig = {
 	banner?: {
 		/** 壁纸位置，支持 CSS `object-position` 的所有值，包括百分比和像素值 */
 		position?: string;
-		/** 横幅图片轮播配置 */
+		/** 横幅图片轮播配置，仅在当配置多张图片时生效 */
 		carousel?: {
 			/** 是否启用横幅图片轮播 */
 			enable: boolean;
 			/**
-			 * 轮播间隔时间，单位毫秒
+			 * 轮播间隔时间（单位毫秒）
 			 * @default 5000
 			 */
 			interval?: number;
@@ -1333,7 +1350,7 @@ export type BackgroundWallpaperConfig = {
 	};
 	/** 全屏透明覆盖模式特有配置 */
 	overlay?: {
-		/** 透明模式参数是否可在控制面板调整，支持统一开关或分项开关 */
+		/** 是否允许用户通过控制面板调整全屏透明模式参数，支持统一开关或分项开关 */
 		switchable?:
 		| boolean
 		| {
@@ -1360,7 +1377,7 @@ export type BackgroundWallpaperConfig = {
 		 */
 		blur?: number;
 		/**
-		 * 卡片背景透明度，`0-1` 之间
+		 * 卡片背景透明度，`0-1` 之间，值越小越透明
 		 * @default 0.6
 		 */
 		cardOpacity?: number;
@@ -1537,7 +1554,7 @@ export type MusicPlayerConfig = {
 		type?: "song" | "playlist" | "album" | "search" | "artist";
 		/** 歌单/专辑/单曲 ID 或搜索关键词 */
 		id?: string;
-		/** 认证 token（可选） */
+		/** 认证 token */
 		auth?: string;
 		/** 备用 API 配置（当主 API 失败时使用） */
 		fallbackApis?: string[];
@@ -1554,7 +1571,12 @@ export type MusicPlayerConfig = {
 			url: string;
 			/** 封面图片路径（相对于 `public` 目录） */
 			cover?: string;
-			/** 歌词内容，支持 LRC 格式 */
+			/**
+			 * 歌词文件路径（相对于 `public` 目录），支持 LRC 格式\
+			 * 也可直接填入歌词内容
+			 * @example "/assets/music/lrc/使一颗心免于哀伤-哼唱.lrc"
+			 * @example "[00:00.00]歌词内容..."
+			 */
 			lrc?: string;
 		}>;
 	};
