@@ -647,7 +647,7 @@ export type BlogPostData = {
 /**
  * 代码块配置\
  * 代码块配置基于 Expressive Code，支持自定义主题和代码折叠功能。\
- * 修改本配置后需要重启Astro开发服务器才能生效。
+ * 修改本配置后需要重启 Astro 开发服务器才能生效。
  * @see https://expressive-code.com
  * @see https://docs-firefly.cuteleaf.cn/zh/guide/code-block.html
  */
