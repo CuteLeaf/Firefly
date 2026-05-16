@@ -25,7 +25,7 @@ const processedLinks = Astro.props.links.map((link: NavBarLink) => ({
             {link.children && link.children.length > 0 ? (
                 <!-- 有子菜单的项目 -->
                 <div class="mobile-dropdown" data-mobile-dropdown>
-                    <button 
+                    <button
                         class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-8 w-full text-left
                             hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
                         data-mobile-dropdown-trigger
@@ -41,7 +41,7 @@ const processedLinks = Astro.props.links.map((link: NavBarLink) => ({
                     </button>
                     <div class="mobile-submenu" data-mobile-submenu>
                         {link.children.map((child) => (
-                            <a href={child.external ? child.url : url(child.url)} 
+                            <a href={child.external ? child.url : url(child.url)}
                                class="group flex justify-between items-center py-2 pl-6 pr-1 rounded-lg gap-8
                                    hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
                                target={child.external ? "_blank" : null}
@@ -68,7 +68,7 @@ const processedLinks = Astro.props.links.map((link: NavBarLink) => ({
 						{link.icon && <Icon name={link.icon} is:inline class="text-[1.1rem] mr-2" />}
                         {link.name}
                     </div>
-					{!link.external && <Icon name="material-symbols:chevron-right-rounded" is:inline
+					{!link.external && <Icon name="material-symbols:chevron-right-rounded"
                           class="transition text-[1.25rem] text-(--primary)"
                     />}
 					{link.external && <Icon name="fa7-solid:arrow-up-right-from-square" is:inline
@@ -86,11 +86,11 @@ const processedLinks = Astro.props.links.map((link: NavBarLink) => ({
     .mobile-submenu {
         @apply max-h-0 overflow-hidden transition-all duration-300 ease-in-out;
     }
-    
+
     .mobile-dropdown[data-expanded="true"] .mobile-submenu {
         @apply max-h-96;
     }
-    
+
     .mobile-dropdown[data-expanded="true"] .mobile-dropdown-arrow {
         @apply rotate-180;
     }
@@ -99,17 +99,17 @@ const processedLinks = Astro.props.links.map((link: NavBarLink) => ({
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const mobileDropdowns = document.querySelectorAll('[data-mobile-dropdown]');
-        
+
         mobileDropdowns.forEach(dropdown => {
             const trigger = dropdown.querySelector('[data-mobile-dropdown-trigger]');
             const submenu = dropdown.querySelector('[data-mobile-submenu]');
-            
+
             if (!trigger || !submenu) return;
-            
+
             trigger.addEventListener('click', function(e) {
                 e.preventDefault();
                 const isExpanded = dropdown.getAttribute('data-expanded') === 'true';
-                
+
                 // 关闭其他打开的下拉菜单
                 mobileDropdowns.forEach(otherDropdown => {
                     if (otherDropdown !== dropdown) {
@@ -120,7 +120,7 @@ const processedLinks = Astro.props.links.map((link: NavBarLink) => ({
                         }
                     }
                 });
-                
+
                 // 切换当前下拉菜单
                 const newState = !isExpanded;
                 dropdown.setAttribute('data-expanded', newState.toString());
