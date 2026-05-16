@@ -35,30 +35,25 @@
 
 ## 🙏 致谢
 
-非常感谢 [saicaca](https://github.com/saicaca) 开发的 [fuwari](https://github.com/saicaca/fuwari) 模板，Firefly 就是基于这个模板二次开发
+非常感谢 [XiaYe](https://github.com/CuteLeaf) 开发的 [Firefly](https://github.com/CuteLeaf/Firefly) 模板。
 
 流萤部分相关图片素材版权归游戏 [《崩坏：星穹铁道》](https://sr.mihoyo.com/) 开发商 [米哈游](https://www.mihoyo.com/) 所有
 
-### 技术栈
+### 相关项目
 
 - [Astro](https://astro.build) 
 - [Tailwind CSS](https://tailwindcss.com) 
 - [Iconify](https://iconify.design)
-
-### 灵感项目
-
 - [fuwari](https://github.com/saicaca/fuwari)
 - [hexo-theme-shoka](https://github.com/amehime/hexo-theme-shoka)
 - [astro-koharu](https://github.com/cosZone/astro-koharu)
 - [Mizuki](https://github.com/matsuzaka-yuki/Mizuki)
 
-### 其他参考
-- 博主`霞葉`的 [Bangumi 收藏](https://kasuha.com/posts/fuwari-enhance-ep2/) 页面组件
-- 哔哩哔哩up主 `公公的日常` 的Q版 [流萤看板娘Spine切片数据](https://www.bilibili.com/video/BV1fuVzzdE5y) 
-
 ## 📝 许可协议
 
 本项目遵循 [MIT license](https://mit-license.org/) 开源协议，详细查看 [LICENSE](./LICENSE) 文件
+
+上游模版：[Firefly](https://github.com/CuteLeaf/Firefly)
 
 最初 Fork 自 [saicaca/fuwari](https://github.com/saicaca/fuwari)，感谢原作者的贡献
 
