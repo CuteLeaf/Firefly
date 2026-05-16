@@ -41,22 +41,57 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		// 桌面背景图片（支持单张或多张随机）
 		// desktop: "assets/images/DesktopWallpaper/d1.avif",
 		desktop: [
-			"assets/images/DesktopWallpaper/d1.avif",
-			"assets/images/DesktopWallpaper/d2.avif",
-			"assets/images/DesktopWallpaper/d3.avif",
-			"assets/images/DesktopWallpaper/d4.avif",
-			"assets/images/DesktopWallpaper/d5.avif",
-			"assets/images/DesktopWallpaper/d6.avif",
+			// "assets/images/DesktopWallpaper/d1.avif",
+			// "assets/images/DesktopWallpaper/d2.avif",
+			// "assets/images/DesktopWallpaper/d3.avif",
+			// "assets/images/DesktopWallpaper/d4.avif",
+			// "assets/images/DesktopWallpaper/d5.avif",
+			// "assets/images/DesktopWallpaper/d6.avif",
+			"assets/images/DesktopWallpaper/frame_0010.png",
+			"assets/images/DesktopWallpaper/d-1.png",
+			"assets/images/DesktopWallpaper/d-2.png",
+			"assets/images/DesktopWallpaper/d-3.png",
+			"assets/images/DesktopWallpaper/d-4.jpg",
+			"assets/images/DesktopWallpaper/d-5.png",
+			"assets/images/DesktopWallpaper/d-6.png",
+			"assets/images/DesktopWallpaper/d-7.png",
+			"assets/images/DesktopWallpaper/d-8.png",
+			"assets/images/DesktopWallpaper/d-9.png",
+			"assets/images/DesktopWallpaper/d-10.png",
+			"assets/images/DesktopWallpaper/d-11.jpg",
+			"assets/images/DesktopWallpaper/d-12.png",
+			"assets/images/DesktopWallpaper/d-13.png",
+			"assets/images/DesktopWallpaper/d-14.png",
+			"assets/images/DesktopWallpaper/d-15.png",
+			"assets/images/DesktopWallpaper/d-16.png",
+			"assets/images/DesktopWallpaper/d-17.jpg",
+			"assets/images/DesktopWallpaper/d-18.png",
+			"assets/images/DesktopWallpaper/d-19.png",
+			"assets/images/DesktopWallpaper/d-20.jpg",
+			"assets/images/DesktopWallpaper/d-21.png",
+			"assets/images/DesktopWallpaper/d-22.jpg",
+			"assets/images/DesktopWallpaper/d-23.png",
+			"assets/images/DesktopWallpaper/d-24.png",
+			"assets/images/DesktopWallpaper/d-25.jpg",
+			"assets/images/DesktopWallpaper/d-26.png",
+			"assets/images/DesktopWallpaper/d-27.png",
+			"assets/images/DesktopWallpaper/d-28.png",
+			"assets/images/DesktopWallpaper/d-29.png",
+			"assets/images/DesktopWallpaper/d-30.png",
 		],
 		// 移动背景图片（支持单张或多张随机）
 		// mobile: "assets/images/MobileWallpaper/m1.avif",
 		mobile: [
-			"assets/images/MobileWallpaper/m1.avif",
-			"assets/images/MobileWallpaper/m2.avif",
-			"assets/images/MobileWallpaper/m3.avif",
-			"assets/images/MobileWallpaper/m4.avif",
-			"assets/images/MobileWallpaper/m5.avif",
-			"assets/images/MobileWallpaper/m6.avif",
+			"assets/images/MobileWallpaper/m-1.png",
+			"assets/images/MobileWallpaper/m-2.apng",
+			"assets/images/MobileWallpaper/m-3.png",
+			"assets/images/MobileWallpaper/m-4.png",
+			"assets/images/MobileWallpaper/m-5.png",
+			"assets/images/MobileWallpaper/m-6.png",
+			"assets/images/MobileWallpaper/m-7.png",
+			"assets/images/MobileWallpaper/m-8.png",
+			"assets/images/MobileWallpaper/m-9.jpg",
+			"assets/images/MobileWallpaper/m-10.png",
 		],
 	},
 	// 横幅壁纸和全屏壁纸共享配置
@@ -66,7 +101,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		// 主页横幅文字
 		homeText: {
 			// 是否启用主页横幅文字
-			enable: true,
+			enable: false,
 			// 是否允许用户通过控制面板切换横幅标题显示
 			switchable: true,
 			// 主页横幅主标题
@@ -100,7 +135,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		// 导航栏配置
 		navbar: {
 			// 导航栏透明模式："semi" 半透明，"full" 完全透明，"semifull" 动态透明
-			transparentMode: "semi",
+			transparentMode: "semifull",
 			// 是否开启毛玻璃模糊效果，开启可能会影响页面性能，如果不开启则是半透明，请根据自己的喜好开启
 			enableBlur: true,
 			// 毛玻璃模糊度
