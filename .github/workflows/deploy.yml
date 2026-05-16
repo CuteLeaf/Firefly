@@ -16,9 +16,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+
+      - name: Update git submodules
+        run: git submodule update --init --recursive --remote
 
       - name: Setup Node
         uses: actions/setup-node@v4
