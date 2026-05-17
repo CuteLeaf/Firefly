@@ -1,0 +1,44 @@
+name: Update Submodules
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git to use HTTPS for submodules
+        run: git config --global url."https://github.com/".insteadOf "git@github.com:"
+
+      - name: Update submodules to latest
+        run: git submodule update --init --recursive --remote
+
+      - name: Commit and push if changed
+        run: |
+          if git diff --quiet; then
+            echo "No submodule updates found."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+
+            MSG="chore: update submodules to latest"
+            while IFS= read -r line; do
+              SM_PATH=$(echo "$line" | awk '{print $2}')
+              SM_HASH=$(git -C "$SM_PATH" rev-parse --short HEAD)
+              SM_SUBJECT=$(git -C "$SM_PATH" log -1 --format="%s")
+              MSG="$MSG"$'\n'"- $SM_PATH: $SM_HASH $SM_SUBJECT"
+            done < <(git submodule foreach --quiet 'echo "$sm_path"')
+
+            git commit -am "$MSG"
+            git push
+          fi
