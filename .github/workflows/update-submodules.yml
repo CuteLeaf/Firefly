@@ -33,7 +33,7 @@ jobs:
 
             MSG="ci: update submodules to latest"
             while IFS= read -r line; do
-              SM_PATH=$(echo "$line" | awk '{print $2}')
+              SM_PATH=$(echo "$line" | awk '{print $1}')
               SM_HASH=$(git -C "$SM_PATH" rev-parse --short HEAD)
               SM_SUBJECT=$(git -C "$SM_PATH" log -1 --format="%s")
               MSG="$MSG"$'\n'"- $SM_PATH: $SM_HASH $SM_SUBJECT"
