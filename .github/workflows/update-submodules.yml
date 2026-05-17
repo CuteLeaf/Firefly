@@ -15,7 +15,7 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
 
       - name: Configure Git to use HTTPS for submodules
         run: git config --global url."https://github.com/".insteadOf "git@github.com:"
