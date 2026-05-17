@@ -83,6 +83,7 @@ const allTags = [...new Set(albums.flatMap((a) => a.tags || []))].sort();
               location={album.location}
               tags={album.tags}
               photoCount={album.photoCount}
+              encrypted={!!album.password}
             />
           ))}
         </div>

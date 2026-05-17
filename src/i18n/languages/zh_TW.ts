@@ -307,7 +307,7 @@ export const zh_TW: Translation = {
 
 	// 密碼保護
 	[Key.passwordProtected]: "密碼保護",
-	[Key.passwordProtectedDesc]: "這篇文章已被密碼保護，請輸入密碼查看內容。",
+	[Key.passwordProtectedDesc]: "此內容已被密碼保護，請輸入密碼查看。",
 	[Key.passwordHint]: "提示",
 	[Key.passwordPlaceholder]: "請輸入密碼",
 	[Key.passwordSubmit]: "解鎖",

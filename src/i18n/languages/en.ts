@@ -315,7 +315,7 @@ export const en: Translation = {
 	// Password Protection
 	[Key.passwordProtected]: "Password Protected",
 	[Key.passwordProtectedDesc]:
-		"This article is password protected. Please enter the password to view the content.",
+		"This content is password protected. Please enter the password to view.",
 	[Key.passwordHint]: "Hint",
 	[Key.passwordPlaceholder]: "Enter password",
 	[Key.passwordSubmit]: "Unlock",

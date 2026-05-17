@@ -34,7 +34,20 @@ export function scanAlbumPhotos(albumId: string): string[] {
 		const [coverFile] = files.splice(coverIdx, 1);
 		files.unshift(coverFile);
 	}
-	return files.map((f) => withBase(`/gallery/${albumId}/${f}`));
+	const localPhotos = files.map((f) => withBase(`/gallery/${albumId}/${f}`));
+
+	// 读取 urls.txt 中的远程图片 URL
+	const urlsFile = path.join(dir, "urls.txt");
+	let remotePhotos: string[] = [];
+	if (fs.existsSync(urlsFile)) {
+		remotePhotos = fs
+			.readFileSync(urlsFile, "utf-8")
+			.split("\n")
+			.map((line) => line.trim())
+			.filter((line) => line && !line.startsWith("#"));
+	}
+
+	return [...localPhotos, ...remotePhotos];
 }
 
 /**

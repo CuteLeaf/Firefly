@@ -1,5 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
+import EncryptedContent from "@/components/features/EncryptedContent.astro";
 import PhotoCard from "@/components/pages/gallery/PhotoCard.astro";
 import { galleryConfig, siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
@@ -124,14 +125,27 @@ const columnWidth = galleryConfig.columnWidth || 240;
   <div class="w-full rounded-(--radius-large) overflow-hidden relative mt-4">
     <div class="card-base z-10 px-6 py-6 relative w-full">
       {photos.length > 0 ? (
-        <div
-          class="gallery-masonry"
-          style={`column-count: 2; column-gap: 0.75rem; --col-width: ${columnWidth}px;`}
-        >
-          {photos.map((photo) => (
-            <PhotoCard src={photo} albumId={albumMeta.id} />
-          ))}
-        </div>
+        albumMeta.password ? (
+          <EncryptedContent password={albumMeta.password} slug={albumMeta.id} hint={albumMeta.passwordHint}>
+            <div
+              class="gallery-masonry"
+              style={`column-count: 2; column-gap: 0.75rem; --col-width: ${columnWidth}px;`}
+            >
+              {photos.map((photo) => (
+                <PhotoCard src={photo} albumId={albumMeta.id} />
+              ))}
+            </div>
+          </EncryptedContent>
+        ) : (
+          <div
+            class="gallery-masonry"
+            style={`column-count: 2; column-gap: 0.75rem; --col-width: ${columnWidth}px;`}
+          >
+            {photos.map((photo) => (
+              <PhotoCard src={photo} albumId={albumMeta.id} />
+            ))}
+          </div>
+        )
       ) : (
         <div class="flex flex-col items-center justify-center py-16 text-neutral-400 dark:text-neutral-500">
           <Icon name="material-symbols:photo-library" class="text-6xl mb-4 opacity-50" />

@@ -316,7 +316,7 @@ export const ru: Translation = {
 	// Защита паролем
 	[Key.passwordProtected]: "Защищено паролем",
 	[Key.passwordProtectedDesc]:
-		"Эта статья защищена паролем. Пожалуйста, введите пароль для просмотра содержимого.",
+		"Этот контент защищён паролем. Пожалуйста, введите пароль для просмотра.",
 	[Key.passwordHint]: "Подсказка",
 	[Key.passwordPlaceholder]: "Введите пароль",
 	[Key.passwordSubmit]: "Разблокировать",

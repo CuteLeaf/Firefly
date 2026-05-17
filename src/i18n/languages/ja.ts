@@ -314,7 +314,7 @@ export const ja: Translation = {
 	// パスワード保護
 	[Key.passwordProtected]: "パスワード保護",
 	[Key.passwordProtectedDesc]:
-		"この記事はパスワードで保護されています。内容を表示するにはパスワードを入力してください。",
+		"このコンテンツはパスワードで保護されています。表示するにはパスワードを入力してください。",
 	[Key.passwordHint]: "ヒント",
 	[Key.passwordPlaceholder]: "パスワードを入力",
 	[Key.passwordSubmit]: "ロック解除",
