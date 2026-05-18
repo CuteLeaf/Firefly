@@ -27,6 +27,6 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
   // 语言徽章插件配置
   pluginLanguageBadge: {
     // 是否启用语言徽章插件
-    enable: true,
+    enable: false,
   },
 };
