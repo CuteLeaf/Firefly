@@ -2,11 +2,17 @@ import type { CommentConfig } from "../types/config";
 
 export const commentConfig: CommentConfig = {
 	// 评论系统类型: none, twikoo, waline, giscus, disqus, artalk，默认为none，即不启用评论系统
-	type: "none",
+	type: "twikoo",
 
 	//twikoo评论系统配置，版本1.7.4
+	//你可以前往 public/assets/css/twikoo.css 搜索 .tk-input .el-textarea__inner 修改评论背景图配置
+	//你可以前往 public/assets/css/twikoo.css 搜索 .el-textarea__inner(第8行) 修改评论占位符颜色
+	/*	::-webkit-input-placeholder：Chrome、Edge、Safari
+		:-ms-input-placeholder：IE 10-11
+		::-ms-input-placeholder：Edge 旧版本
+		::placeholder：现代浏览器标准写法   */
 	twikoo: {
-		envId: "https://twikoo.vercel.app",
+		envId: "https://twikoo.542000.xyz",
 		// 设置 Twikoo 评论系统语言
 		lang: "zh-CN",
 		// 是否启用文章访问量统计功能
