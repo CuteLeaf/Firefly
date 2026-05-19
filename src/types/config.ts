@@ -722,6 +722,7 @@ export type SponsorMethod = {
 // 赞助者列表项
 export type SponsorItem = {
 	name: string; // 赞助者名称，如果想显示匿名，可以直接设置为"匿名"或使用 i18n
+	avatar?: string; // 赞助者头像图片路径(可选,相对于 public 目录 或者 网络图片)
 	amount?: string; // 赞助金额（可选）
 	date?: string; // 赞助日期（可选，ISO 格式）
 };

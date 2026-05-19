@@ -133,9 +133,21 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
             {sponsors.map((sponsor) => (
               <div class="group flex items-center gap-3 p-3 rounded-xl border border-(--line-divider) hover:border-(--primary) transition-all duration-200">
                 {/* 头像占位 */}
-                <div class="w-9 h-9 rounded-full bg-(--primary)/10 flex items-center justify-center shrink-0 group-hover:bg-(--primary)/20 transition-colors">
-                  <span class="text-sm font-bold text-(--primary)">{sponsor.name.charAt(0)}</span>
-                </div>
+                <!-- 新的头像逻辑：有头像用图片，没有用首字母 -->
+                {sponsor.avatar ? (
+                  <img 
+                    src={url(sponsor.avatar)}
+                    alt={sponsor.name}
+                    class="w-9 h-9 rounded-full object-cover shrink-0"
+                    loading="lazy"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                  />
+                ) : null}
+
+                <!-- 首字母头像（作为兜底，图片加载失败也会显示这个） -->
+                <div 
+                  class={`w-9 h-9 rounded-full bg-(--primary)/10 flex items-center justify-center shrink-0 group-hover:bg-(--primary)/20 transition-colors ${sponsor.avatar ? 'hidden' : ''}`}
+                >
 
                 {/* 信息 */}
                 <div class="flex-1 min-w-0">
