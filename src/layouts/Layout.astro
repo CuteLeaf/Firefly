@@ -550,6 +550,17 @@ const siteLang = lang.replace("_", "-");
 
     <!-- Font Manager -->
     <FontManager />
+    
+    <!-- 评论区支持Katex语法，对所有评论系统生效 -->
+
+    <!-- 1. 加载 KaTeX 核心样式表：用于数学公式的渲染样式 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+
+    <!-- 2. 加载 KaTeX 核心脚本：实现数学公式解析与渲染能力 -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+
+    <!-- 3. 加载自动渲染插件：自动识别页面中 $...$ $$...$$ 语法并渲染公式 -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"></script>
   </head>
   <body
     class="min-h-screen"
