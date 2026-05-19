@@ -62,7 +62,7 @@ export const sponsorConfig: SponsorConfig = {
 		// 示例：已实名赞助者
 		{
 			name: "夏叶",
-			// avatar: "https://weavatar.com/avatar/d252655d40d6874417a720bad0a6c5f77f8f6a1fd2f882f8f338402dc37e4190?s=640",
+			avatar: "https://weavatar.com/avatar/d252655d40d6874417a720bad0a6c5f77f8f6a1fd2f882f8f338402dc37e4190?s=640",
 			amount: "¥50",
 			date: "2025-10-01",
 		},
