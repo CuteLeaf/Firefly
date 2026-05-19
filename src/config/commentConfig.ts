@@ -3,11 +3,11 @@ import type { CommentConfig } from "../types/config";
 //评论区个性化设置 src/components/comment/index.astro 搜索 评论区装饰性背景
 export const commentConfig: CommentConfig = {
 	// 评论系统类型: none, twikoo, waline, giscus, disqus, artalk，默认为none，即不启用评论系统
-	type: "twikoo",
+	type: "none",
 
 	//twikoo评论系统配置，版本1.7.4
 	twikoo: {
-		envId: "https://twikoo.542000.xyz",
+		envId: "https://twikoo.vercel.app",
 		// 设置 Twikoo 评论系统语言
 		lang: "zh-CN",
 		// 是否启用文章访问量统计功能
