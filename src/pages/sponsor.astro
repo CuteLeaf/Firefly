@@ -148,6 +148,8 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
                 <div 
                   class={`w-9 h-9 rounded-full bg-(--primary)/10 flex items-center justify-center shrink-0 group-hover:bg-(--primary)/20 transition-colors ${sponsor.avatar ? 'hidden' : ''}`}
                 >
+                  <span class="text-sm font-bold text-(--primary)">{sponsor.name.charAt(0)}</span>
+                </div>
 
                 {/* 信息 */}
                 <div class="flex-1 min-w-0">
