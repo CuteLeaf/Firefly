@@ -2,7 +2,7 @@ import type { CommentConfig } from "../types/config";
 
 export const commentConfig: CommentConfig = {
 	// 评论系统类型: none, twikoo, waline, giscus, disqus, artalk，默认为none，即不启用评论系统
-	type: "twikoo",
+	type: "none",
 
 	//twikoo评论系统配置，版本1.7.4
 	//你可以前往 public/assets/css/twikoo.css 搜索 .tk-input .el-textarea__inner 修改评论背景图配置
@@ -12,7 +12,7 @@ export const commentConfig: CommentConfig = {
 		::-ms-input-placeholder：Edge 旧版本
 		::placeholder：现代浏览器标准写法   */
 	twikoo: {
-		envId: "https://twikoo.542000.xyz",
+		envId: "https://twikoo.vercel.app",
 		// 设置 Twikoo 评论系统语言
 		lang: "zh-CN",
 		// 是否启用文章访问量统计功能
