@@ -56,34 +56,13 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		],
 	});
 
-	// 自定义导航栏链接,并且支持多级菜单
-	links.push({
-		name: "链接",
-		url: "/links/",
-		icon: "material-symbols:link",
-
-		// 子菜单
-		children: [
-			{
-				name: "GitHub",
-				url: "https://github.com/CuteLeaf/Firefly",
-				external: true,
-				icon: "fa7-brands:github",
-			},
-			{
-				name: "Gitee",
-				url: "https://gitee.com/CuteLeaf/Firefly",
-				external: true,
-				icon: "fa7-brands:gitee",
-			},
-			{
-				name: "QQ交流群",
-				url: "https://qm.qq.com/q/ZGsFa8qX2G",
-				external: true,
-				icon: "fa7-brands:qq",
-			},
-		],
-	});
+	// 自定义导航栏链接（清空预设，可按需添加）
+	// links.push({
+	// 	name: "链接",
+	// 	url: "/links/",
+	// 	icon: "material-symbols:link",
+	// 	children: [],
+	// });
 
 	// 仅返回链接，其它导航搜索相关配置在模块顶层常量中独立导出
 	return { links } as NavBarConfig;
