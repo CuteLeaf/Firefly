@@ -51,9 +51,14 @@ export default defineConfig({
 
 	// 图像优化配置
 	image: {
-		// 全局响应式布局
-		layout: "constrained",
-	},
+    // Keep your layout setting intact
+    layout: "constrained",
+    
+    // ADD THIS LINE: Tells Astro to just copy images without heavy processing
+    service: {
+      entrypoint: 'astro/assets/services/noop' 
+    }
+  },
 
 	experimental: {
 		// Rust 编译器以提升构建性能（实验性），部分平台可能会导致构建失败，可以根据需要启用或禁用
