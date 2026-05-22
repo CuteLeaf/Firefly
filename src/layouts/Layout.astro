@@ -694,7 +694,8 @@ const siteLang = lang.replace("_", "-");
   }
 
   @media (max-width: 1023px) {
-    body.enable-banner:not(.lg\:is-home) #main-grid {
+    /* 移动端 banner 已由响应式 top 定位内容，不再叠加桌面端的 main-grid 偏移 */
+    body.enable-banner #main-grid {
       transform: none !important;
     }
 
@@ -1131,7 +1132,7 @@ function disableAnimation() {
           wallpaperWrapper.style.display = "";
           setTimeout(() => {
             mainContentWrapper.classList.remove("mobile-main-no-banner");
-            // 恢复与 SSR 一致的内联 top，而非 removeProperty（否则 CSS 的 70vh 会生效导致内容下移）
+            // 移动端首页交给响应式 CSS 定位，避免叠加桌面端 banner 偏移
             const visitCurrentMode = document.documentElement.getAttribute("data-wallpaper-mode");
             if (visitCurrentMode === "fullscreen") {
               mainContentWrapper.style.position = "relative";
@@ -1144,7 +1145,7 @@ function disableAnimation() {
               mainContentWrapper.style.zIndex = "";
               mainContentWrapper.style.setProperty("margin-top", "0", "important");
             } else {
-              mainContentWrapper.style.setProperty("top", "calc(var(--banner-height) - 3.5rem)", "important");
+              mainContentWrapper.style.removeProperty("top");
               mainContentWrapper.style.position = "";
               mainContentWrapper.style.zIndex = "";
               mainContentWrapper.style.setProperty("margin-top", "0", "important");

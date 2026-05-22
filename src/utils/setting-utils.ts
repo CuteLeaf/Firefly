@@ -717,6 +717,9 @@ function adjustMainContentPosition(
 				} else {
 					mainContent.style.setProperty("top", bannerTargetTop, "important");
 				}
+			} else if (window.innerWidth < 1024) {
+				// 移动端首页由 layout-styles.css 的响应式 top 接管，避免与 main-grid 偏移叠加。
+				mainContent.style.removeProperty("top");
 			} else {
 				mainContent.style.setProperty("top", bannerTargetTop, "important");
 			}
