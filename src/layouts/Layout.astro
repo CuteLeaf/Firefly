@@ -694,7 +694,7 @@ const siteLang = lang.replace("_", "-");
   }
 
   @media (max-width: 1023px) {
-    body.enable-banner:not(.lg\:is-home) #main-grid {
+    body.enable-banner #main-grid {
       transform: none !important;
     }
 
@@ -993,7 +993,11 @@ function disableAnimation() {
 
       // 桌面端横幅模式：统一用banner高度定位，不改变grid transform
       if (!isMobileForBanner && currentMode === "banner" && mainEl) {
-        mainEl.style.setProperty("top", "calc(var(--banner-height) - 3rem)", "important");
+        if (isHome) {
+          mainEl.style.setProperty("top", "calc(var(--banner-height) - 3rem)");
+        } else {
+          mainEl.style.setProperty("top", "calc(var(--banner-height) - 3rem)", "important");
+        }
         mainEl.style.position = "";
         mainEl.style.zIndex = "";
         mainEl.style.setProperty("margin-top", "0", "important");
@@ -1131,7 +1135,7 @@ function disableAnimation() {
           wallpaperWrapper.style.display = "";
           setTimeout(() => {
             mainContentWrapper.classList.remove("mobile-main-no-banner");
-            // 恢复与 SSR 一致的内联 top，而非 removeProperty（否则 CSS 的 70vh 会生效导致内容下移）
+            // 保留与 SSR 一致的内联 top，切回桌面端时可恢复横幅定位；移动端由断点 CSS 接管具体位置
             const visitCurrentMode = document.documentElement.getAttribute("data-wallpaper-mode");
             if (visitCurrentMode === "fullscreen") {
               mainContentWrapper.style.position = "relative";
@@ -1144,7 +1148,7 @@ function disableAnimation() {
               mainContentWrapper.style.zIndex = "";
               mainContentWrapper.style.setProperty("margin-top", "0", "important");
             } else {
-              mainContentWrapper.style.setProperty("top", "calc(var(--banner-height) - 3.5rem)", "important");
+              mainContentWrapper.style.setProperty("top", "calc(var(--banner-height) - 3.5rem)");
               mainContentWrapper.style.position = "";
               mainContentWrapper.style.zIndex = "";
               mainContentWrapper.style.setProperty("margin-top", "0", "important");
@@ -1176,7 +1180,11 @@ function disableAnimation() {
           }
           // 桌面端横幅模式：统一用banner高度定位，不改变grid transform
           if (visitDesktopMode === "banner") {
-            mainContentWrapper.style.setProperty("top", "calc(var(--banner-height) - 3rem)", "important");
+            if (isHomePage) {
+              mainContentWrapper.style.setProperty("top", "calc(var(--banner-height) - 3rem)");
+            } else {
+              mainContentWrapper.style.setProperty("top", "calc(var(--banner-height) - 3rem)", "important");
+            }
             mainContentWrapper.style.position = "";
             mainContentWrapper.style.zIndex = "";
             mainContentWrapper.style.setProperty("margin-top", "0", "important");
@@ -1262,7 +1270,11 @@ function disableAnimation() {
 
       // 桌面端横幅模式：统一用banner高度定位，不改变grid transform
       if (!isMobileForBanner && currentMode === "banner" && mainEl) {
-        mainEl.style.setProperty("top", "calc(var(--banner-height) - 3rem)", "important");
+        if (isHome) {
+          mainEl.style.setProperty("top", "calc(var(--banner-height) - 3rem)");
+        } else {
+          mainEl.style.setProperty("top", "calc(var(--banner-height) - 3rem)", "important");
+        }
         mainEl.style.position = "";
         mainEl.style.zIndex = "";
         mainEl.style.setProperty("margin-top", "0", "important");
