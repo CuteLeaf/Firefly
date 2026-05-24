@@ -281,18 +281,22 @@ export function applyWallpaperModeToDocument(
 	mode: WALLPAPER_MODE,
 	animate = true,
 ) {
-	// 检查是否允许切换壁纸模式
-	const isSwitchable = backgroundWallpaper.switchable ?? true;
-	if (!isSwitchable) {
-		// 如果不允许切换，直接返回，不执行任何操作
-		return;
-	}
-
 	// 获取当前的壁纸模式
 	const currentMode =
 		(document.documentElement.getAttribute(
 			"data-wallpaper-mode",
 		) as WALLPAPER_MODE) || backgroundWallpaper.mode;
+
+	// 检查是否允许切换壁纸模式
+	const isSwitchable = backgroundWallpaper.switchable ?? true;
+	if (!isSwitchable) {
+		// 不允许切换时，仍需初始化当前模式的UI状态（添加 wallpaper-initialized 等）
+		if (currentMode === mode) {
+			adjustMainContentPosition(mode, false);
+			ensureWallpaperState(mode);
+		}
+		return;
+	}
 
 	// 如果模式没有变化，直接返回
 	if (currentMode === mode) {

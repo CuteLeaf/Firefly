@@ -197,6 +197,8 @@ enum I18nKey {
 	randomPosts = "randomPosts",
 	smartRecommend = "smartRecommend",
 	randomRecommend = "randomRecommend",
+	noRelatedPosts = "noRelatedPosts",
+	noRandomPosts = "noRandomPosts",
 
 	// 加密
 	postEncrypted = "postEncrypted",

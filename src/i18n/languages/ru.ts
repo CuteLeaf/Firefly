@@ -208,6 +208,8 @@ export const ru: Translation = {
 	[Key.randomPosts]: "Случайные статьи",
 	[Key.smartRecommend]: "Умный",
 	[Key.randomRecommend]: "Случайный",
+	[Key.noRelatedPosts]: "Нет похожих статей",
+	[Key.noRandomPosts]: "Нет случайных статей",
 
 	// Зашифровано
 	[Key.postEncrypted]: "Эта статья зашифрована",

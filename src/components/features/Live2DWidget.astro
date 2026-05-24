@@ -1,453 +1,238 @@
 ---
-import MessageBox from "@/components/common/PioMessageBox.astro";
-import type { Live2DModelConfig } from "@/types/config";
 import { url } from "@/utils/url-utils";
 
+interface MenuItem {
+	icon?: string;
+	label: string;
+	action: string;
+}
+
 interface Props {
-	config: Live2DModelConfig;
+	config: {
+		enable: boolean;
+		model:
+			| {
+					path: string;
+					volume?: number;
+					scale?: number;
+					x?: number;
+					y?: number;
+			  }
+			| {
+					path: string;
+					volume?: number;
+					scale?: number;
+					x?: number;
+					y?: number;
+			  }[];
+		position?: "bottom-left" | "bottom-right";
+		size?: number | { width: number; height: number };
+		primaryColor?: string;
+		transitionDuration?: number;
+		transitionType?: "slide" | "fade";
+		menus?: {
+			items?: MenuItem[];
+			extraItems?: MenuItem[];
+			align?: "left" | "right";
+		};
+		tips?: {
+			welcomeMessage?: string[];
+			messages?: string[];
+			duration?: number;
+			interval?: number;
+		};
+		responsive?: {
+			hideOnMobile?: boolean;
+			mobileBreakpoint?: number;
+		};
+	};
 }
 
 const { config } = Astro.props;
 
-// 获取位置和尺寸配置
-const position = config.position || {
-	corner: "bottom-right" as const,
-	offsetX: 20,
-	offsetY: 20,
-};
-const size = config.size || { width: 280, height: 250 };
+// 构建模型配置
+const models = Array.isArray(config.model) ? config.model : [config.model];
+const modelConfigs = models.map((m) => ({
+	path: url(m.path),
+	...(m.volume !== undefined && { volume: m.volume }),
+	...(m.scale !== undefined && { scale: m.scale }),
+	...(m.x !== undefined && { x: m.x }),
+	...(m.y !== undefined && { y: m.y }),
+}));
+
+// 序列化菜单配置（只保留 icon, label, action）
+function serializeMenus(menus: Props["config"]["menus"]) {
+	if (!menus) return {};
+	const serialize = (items: MenuItem[]) =>
+		items.map(({ icon, label, action }) => ({ icon, label, action }));
+	const result: {
+		items?: ReturnType<typeof serialize>;
+		extraItems?: ReturnType<typeof serialize>;
+		align?: string;
+	} = {};
+	if (menus.items) result.items = serialize(menus.items);
+	if (menus.extraItems) result.extraItems = serialize(menus.extraItems);
+	if (menus.align) result.align = menus.align;
+	return result;
+}
 ---
 
 <div
-  id="live2d-widget"
-  class="live2d-widget"
-  style={`
-    width: ${size.width}px;
-    height: ${size.height}px;
-    ${position.corner?.includes("right") ? "right" : "left"}: ${position.offsetX}px;
-    ${position.corner?.includes("top") ? "top" : "bottom"}: ${position.offsetY}px;
-  `}
+	id="l2d-widget-container"
+	style="position: fixed; z-index: 999;"
+	data-models={JSON.stringify(modelConfigs)}
+	data-position={config.position || "bottom-left"}
+	data-size={JSON.stringify(config.size || 300)}
+	data-primary-color={config.primaryColor || ""}
+	data-transition-duration={config.transitionDuration?.toString() || ""}
+	data-transition-type={config.transitionType || ""}
+	data-menus={JSON.stringify(serializeMenus(config.menus))}
+	data-tips={JSON.stringify(config.tips || {})}
+	data-responsive={JSON.stringify(config.responsive || {})}
 >
-  <canvas id="live2d-canvas" width={size.width} height={size.height}></canvas>
 </div>
 
-<!-- 引入消息框组件 -->
-<MessageBox />
-
-<script is:inline define:vars={{ config, modelPathUrl: url(config.model.path), sdkPath: url("/pio/static/live2d-sdk/live2d.min.js") }}>
-  let motionGroups = {};
-  let hitAreas = {};
-  let currentMotionGroup = "idle";
-  let currentMotionIndex = 0;
-
-  // Use loadlive2d function from the working project
-  function initLive2D() {
-    if (!window.loadlive2d) {
-      console.error("loadlive2d function not available");
-      return;
-    }
-
-    if (!config.model || !config.model.path) {
-      console.error("No model path configured");
-      return;
-    }
-
-    const modelPath = modelPathUrl; // 使用重命名后的变量
-
-    // Load model data first to get motion groups and hit areas
-    fetch(modelPath)
-      .then((response) => response.json())
-      .then((data) => {
-        motionGroups = data.motions || {};
-        hitAreas = data.hit_areas_custom || data.hit_areas || {};
-
-        console.log("Loaded model data:", {
-          motionGroups: Object.keys(motionGroups),
-          hitAreas: Object.keys(hitAreas),
-        });
-
-        // Load the model using loadlive2d
-        window.loadlive2d("live2d-canvas", modelPath);
-
-        // Setup interactions after a delay to ensure model is loaded
-        setTimeout(() => {
-          setupInteractions();
-        }, 2000);
-      })
-      .catch((error) => {
-        console.error("Failed to load model data:", error);
-      });
-  }
-
-  // Setup click interactions and drag functionality
-  function setupInteractions() {
-    const canvas = document.getElementById("live2d-canvas");
-    const container = document.getElementById("live2d-widget");
-    if (!canvas || !container) return;
-
-    canvas.addEventListener("click", handleClick);
-
-    // 添加拖拽功能
-    let isDragging = false;
-    let dragStart = { x: 0, y: 0 };
-    let containerStart = { x: 0, y: 0 };
-
-    // 鼠标事件
-    container.addEventListener("mousedown", (e) => {
-      if (e.button !== 0) return; // 只响应左键
-      isDragging = true;
-      dragStart = { x: e.clientX, y: e.clientY };
-
-      const rect = container.getBoundingClientRect();
-      containerStart = { x: rect.left, y: rect.top };
-
-      container.style.cursor = "grabbing";
-      e.preventDefault();
-    });
-
-    document.addEventListener("mousemove", (e) => {
-      if (!isDragging) return;
-
-      const deltaX = e.clientX - dragStart.x;
-      const deltaY = e.clientY - dragStart.y;
-
-      const newX = containerStart.x + deltaX;
-      const newY = containerStart.y + deltaY;
-
-      // 边界检查
-      const maxX = window.innerWidth - container.offsetWidth;
-      const maxY = window.innerHeight - container.offsetHeight;
-
-      const clampedX = Math.max(0, Math.min(newX, maxX));
-      const clampedY = Math.max(0, Math.min(newY, maxY));
-
-      container.style.left = clampedX + "px";
-      container.style.right = "auto";
-      container.style.top = clampedY + "px";
-      container.style.bottom = "auto";
-    });
-
-    document.addEventListener("mouseup", () => {
-      if (isDragging) {
-        isDragging = false;
-        container.style.cursor = "grab";
-      }
-    });
-
-    // 触摸事件（移动端支持）
-    container.addEventListener("touchstart", (e) => {
-      if (e.touches.length !== 1) return;
-      isDragging = true;
-      const touch = e.touches[0];
-      dragStart = { x: touch.clientX, y: touch.clientY };
-
-      const rect = container.getBoundingClientRect();
-      containerStart = { x: rect.left, y: rect.top };
-
-      e.preventDefault();
-    });
-
-    document.addEventListener("touchmove", (e) => {
-      if (!isDragging || e.touches.length !== 1) return;
-
-      const touch = e.touches[0];
-      const deltaX = touch.clientX - dragStart.x;
-      const deltaY = touch.clientY - dragStart.y;
-
-      const newX = containerStart.x + deltaX;
-      const newY = containerStart.y + deltaY;
-
-      // 边界检查
-      const maxX = window.innerWidth - container.offsetWidth;
-      const maxY = window.innerHeight - container.offsetHeight;
-
-      const clampedX = Math.max(0, Math.min(newX, maxX));
-      const clampedY = Math.max(0, Math.min(newY, maxY));
-
-      container.style.left = clampedX + "px";
-      container.style.right = "auto";
-      container.style.top = clampedY + "px";
-      container.style.bottom = "auto";
-
-      e.preventDefault();
-    });
-
-    document.addEventListener("touchend", () => {
-      isDragging = false;
-    });
-
-    // 设置初始光标样式
-    container.style.cursor = "grab";
-
-    // 窗口大小变化时重新检查边界
-    window.addEventListener("resize", () => {
-      const rect = container.getBoundingClientRect();
-      const maxX = window.innerWidth - container.offsetWidth;
-      const maxY = window.innerHeight - container.offsetHeight;
-
-      if (rect.left > maxX) {
-        container.style.left = maxX + "px";
-        container.style.right = "auto";
-      }
-      if (rect.top > maxY) {
-        container.style.top = maxY + "px";
-        container.style.bottom = "auto";
-      }
-    });
-
-    console.log("Live2D interactions and drag functionality setup complete");
-  }
-
-  // Handle click events
-  function handleClick(event) {
-    if (!motionGroups || Object.keys(motionGroups).length === 0) {
-      console.log("No motion groups available");
-      return;
-    }
-
-    const rect = event.target.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    // Convert to normalized coordinates
-    const normalizedX = (x / rect.width) * 2 - 1;
-    const normalizedY = -((y / rect.height) * 2 - 1);
-
-    console.log("Click at:", { x: normalizedX, y: normalizedY });
-
-    // Determine which motion to play based on hit areas
-    let motionGroup = "tap_body"; // default
-
-    // Check head area
-    if (hitAreas.head_x && hitAreas.head_y) {
-      const [headXMin, headXMax] = hitAreas.head_x;
-      const [headYMin, headYMax] = hitAreas.head_y;
-
-      if (
-        normalizedX >= headXMin &&
-        normalizedX <= headXMax &&
-        normalizedY >= headYMin &&
-        normalizedY <= headYMax
-      ) {
-        motionGroup = "flick_head";
-        console.log("Head area clicked - playing flick_head motion");
-      }
-    }
-
-    // Check body area (if not head)
-    if (motionGroup === "tap_body" && hitAreas.body_x && hitAreas.body_y) {
-      const [bodyXMin, bodyXMax] = hitAreas.body_x;
-      const [bodyYMin, bodyYMax] = hitAreas.body_y;
-
-      if (
-        normalizedX >= bodyXMin &&
-        normalizedX <= bodyXMax &&
-        normalizedY >= bodyYMin &&
-        normalizedY <= bodyYMax
-      ) {
-        console.log("Body area clicked - playing tap_body motion");
-      }
-    }
-
-    // Play motion
-    playMotion(motionGroup);
-
-    // Show message
-    showMessage();
-  }
-
-  // 消息框功能已移至公共组件 MessageBox.astro
-
-  // Show random message using the common MessageBox component
-  function showMessage() {
-    const messages = config.interactive?.clickMessages || [
-      "你好！伊利雅~",
-      "有什么需要帮助的吗？",
-      "今天天气真不错呢！",
-      "要不要一起玩游戏？",
-      "记得按时休息哦！",
-    ];
-
-    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-
-    // 使用公共消息框组件
-    if (window.showModelMessage) {
-      window.showModelMessage(randomMessage, {
-        containerId: "live2d-widget",
-        displayTime: config.interactive?.messageDisplayTime || 3000
-      });
-    }
-  }
-
-  // Play motion from a specific group
-  function playMotion(groupName) {
-    if (!motionGroups[groupName] || motionGroups[groupName].length === 0) {
-      console.log(`No motions available for group: ${groupName}`);
-      // Fallback to any available motion group
-      const availableGroups = Object.keys(motionGroups).filter(
-        (key) => motionGroups[key].length > 0
-      );
-      if (availableGroups.length > 0) {
-        groupName = availableGroups[0];
-        console.log(`Using fallback group: ${groupName}`);
-      } else {
-        return;
-      }
-    }
-
-    const motions = motionGroups[groupName];
-    let motionIndex;
-
-    if (groupName === currentMotionGroup) {
-      // Cycle through motions in the same group
-      currentMotionIndex = (currentMotionIndex + 1) % motions.length;
-      motionIndex = currentMotionIndex;
-    } else {
-      // Random motion from new group
-      motionIndex = Math.floor(Math.random() * motions.length);
-      currentMotionIndex = motionIndex;
-    }
-
-    currentMotionGroup = groupName;
-
-    console.log(`Playing motion ${motionIndex} from group ${groupName}`);
-
-    // Trigger motion change by reloading model with different parameters
-    // This is a workaround since we can't directly control motions in loadlive2d
-    const canvas = document.getElementById("live2d-canvas");
-    if (canvas && window.loadlive2d) {
-      // Add motion info to canvas data for potential future use
-      canvas.dataset.currentMotionGroup = groupName;
-      canvas.dataset.currentMotionIndex = motionIndex;
-
-      // Trigger a visual feedback
-      canvas.style.transform = "scale(1.05)";
-      setTimeout(() => {
-        canvas.style.transform = "scale(1)";
-      }, 150);
-    }
-  }
-
-  // Load Live2D and initialize
-  function loadLive2DSDK() {
-    // 检查移动端显示设置，如果隐藏则不加载运行时
-    if (
-      config.responsive?.hideOnMobile &&
-      window.innerWidth <= (config.responsive.mobileBreakpoint || 768)
-    ) {
-      console.log("📱 Mobile device detected, skipping Live2D model initialization");
-      const widget = document.getElementById("live2d-widget");
-      if (widget) widget.style.display = "none";
-      return;
-    }
-
-    // Check if Live2D SDK is already loaded
-    if (window.loadlive2d) {
-      initLive2D();
-      return;
-    }
-
-    // Load Live2D SDK
-    const script = document.createElement("script");
-    script.src = sdkPath;
-    script.onload = () => {
-      // Wait a bit for the SDK to initialize
-      setTimeout(() => {
-        if (window.loadlive2d) {
-          initLive2D();
-        } else {
-          console.error("loadlive2d function not found after loading SDK");
-        }
-      }, 100);
-    };
-    script.onerror = () => {
-      console.error("Failed to load Live2D SDK");
-    };
-    document.head.appendChild(script);
-  }
-
-  // Handle responsive display
-  function handleResponsive() {
-    const widget = document.getElementById("live2d-widget");
-    if (!widget) return;
-
-    const responsive = config.responsive;
-    if (responsive?.hideOnMobile) {
-      const breakpoint = responsive.mobileBreakpoint || 768;
-      if (window.innerWidth <= breakpoint) {
-        widget.style.display = "none";
-      } else {
-        widget.style.display = "block";
-      }
-    }
-  }
-
-  // Initialize when ready (only once)
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-      // 检查是否已经初始化
-      if (!window.live2dModelInitialized) {
-        loadLive2DSDK();
-        window.live2dModelInitialized = true;
-      }
-      handleResponsive();
-    });
-  } else {
-    // 检查是否已经初始化
-    if (!window.live2dModelInitialized) {
-      loadLive2DSDK();
-      window.live2dModelInitialized = true;
-    }
-    handleResponsive();
-  }
-
-  // Handle window resize for responsive behavior
-  window.addEventListener("resize", handleResponsive);
-
-  // 监听 Swup 页面切换事件（如果使用了 Swup）
-  if (typeof window.swup !== "undefined" && window.swup.hooks) {
-    window.swup.hooks.on("content:replace", () => {
-      // 只更新响应式显示，不重新创建模型
-      setTimeout(() => {
-        handleResponsive();
-      }, 100);
-    });
-  } else {
-    // 如果 Swup 还未加载，监听启用事件
-    document.addEventListener("swup:enable", () => {
-      if (window.swup && window.swup.hooks) {
-        window.swup.hooks.on("content:replace", () => {
-          setTimeout(() => {
-            handleResponsive();
-          }, 100);
-        });
-      }
-    });
-  }
+<script>
+	import { createWidget } from "l2d-widget";
+
+	// 修复 l2d-widget 气泡 不会自动换行
+	// l2d-widget 使用行内样式，CSS 无法覆盖，需用 JS 修改
+	function patchTipBubble(el: HTMLElement) {
+		if (el.style.whiteSpace === "nowrap") {
+			el.style.whiteSpace = "normal";
+			el.style.width = "190px";
+		}
+	}
+
+	const tipObserver = new MutationObserver((mutations) => {
+		for (const m of mutations) {
+			for (const node of m.addedNodes) {
+				if (node instanceof HTMLElement) {
+					if (node.style.whiteSpace === "nowrap") patchTipBubble(node);
+					node.querySelectorAll<HTMLElement>('*').forEach(patchTipBubble);
+				}
+			}
+		}
+	});
+	tipObserver.observe(document.body, { childList: true, subtree: true });
+
+	// 菜单动作映射
+	const menuActions: Record<string, (widget: any) => void> = {
+		home: () => (window.location.href = "/"),
+		scrollToTop: () => window.scrollTo({ top: 0, behavior: "smooth" }),
+		sleep: (widget) => widget.sleep(),
+		github: () => window.open("https://github.com/CuteLeaf/Firefly", "_blank"),
+	};
+
+	function initWidget() {
+		const container = document.getElementById("l2d-widget-container");
+		if (!container) return;
+
+		try {
+			const models = JSON.parse(container.dataset.models || "[]");
+			const position = container.dataset.position || "bottom-left";
+			const size = JSON.parse(container.dataset.size || "300");
+			const primaryColor = container.dataset.primaryColor || undefined;
+			const transitionDuration = container.dataset.transitionDuration
+				? parseInt(container.dataset.transitionDuration)
+				: undefined;
+			const transitionType = container.dataset.transitionType || undefined;
+			const menus = JSON.parse(container.dataset.menus || "{}");
+			const tips = JSON.parse(container.dataset.tips || "{}");
+			const responsive = JSON.parse(container.dataset.responsive || "{}");
+
+			// 响应式检查：移动端隐藏
+			if (responsive.hideOnMobile) {
+				const breakpoint = responsive.mobileBreakpoint || 768;
+				if (window.innerWidth <= breakpoint) {
+					container.style.display = "none";
+					return;
+				}
+			}
+
+			if (models.length === 0) {
+				console.warn("No Live2D models configured");
+				return;
+			}
+
+			const options: any = {
+				model: models.length === 1 ? models[0] : models,
+				position: position,
+				size: size,
+			};
+
+			if (primaryColor) options.primaryColor = primaryColor;
+			if (transitionDuration) options.transitionDuration = transitionDuration;
+			if (transitionType) options.transitionType = transitionType;
+
+			// 菜单配置 - 将 action 字符串映射为实际函数
+			if (menus.items || (menus.extraItems && menus.extraItems.length > 0)) {
+				options.menus = {};
+				if (menus.items) {
+					options.menus.items = menus.items.map((item: any) => ({
+						icon: item.icon,
+						label: item.label,
+						onClick: menuActions[item.action] || (() => {}),
+					}));
+				}
+				if (menus.extraItems) {
+					options.menus.extraItems = menus.extraItems.map((item: any) => ({
+						icon: item.icon,
+						label: item.label,
+						onClick: menuActions[item.action] || (() => {}),
+					}));
+				}
+				if (menus.align) {
+					options.menus.align = menus.align;
+				}
+			}
+
+			// 提示配置
+			if (tips && tips.enable === false) {
+				// 显式禁用提示气泡
+				if (!Array.isArray(options.model)) {
+					options.model.tips = false;
+				}
+			} else if (tips && (tips.welcomeMessage || tips.messages)) {
+				if (!Array.isArray(options.model)) {
+					options.model.tips = {
+						welcomeMessage: tips.welcomeMessage,
+						messages: tips.messages,
+						duration: tips.duration,
+						interval: tips.interval,
+						offset: tips.offset,
+					};
+				}
+			}
+
+			createWidget(options);
+		} catch (e) {
+			console.error("Failed to initialize Live2D widget:", e);
+		}
+	}
+
+	// 确保只初始化一次
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", initWidget);
+	} else {
+		initWidget();
+	}
+
+	// 响应式处理：窗口大小变化时显示/隐藏
+	function handleResponsive() {
+		const container = document.getElementById("l2d-widget-container");
+		if (!container) return;
+
+		const responsive = JSON.parse(container.dataset.responsive || "{}");
+		if (responsive.hideOnMobile) {
+			const breakpoint = responsive.mobileBreakpoint || 768;
+			if (window.innerWidth <= breakpoint) {
+				container.style.display = "none";
+			} else {
+				container.style.display = "";
+			}
+		}
+	}
+
+	window.addEventListener("resize", handleResponsive);
 </script>
-
-<style>
-  .live2d-widget {
-    position: fixed;
-    z-index: 999;
-    pointer-events: auto; /* 启用指针事件以支持拖拽 */
-    cursor: grab; /* 默认显示拖拽光标 */
-  }
-
-  #live2d-canvas {
-    pointer-events: auto;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 100%;
-    height: 100%;
-  }
-
-  .live2d-widget:hover #live2d-canvas {
-    opacity: 1;
-  }
-
-  /* 拖拽时的光标样式 */
-  .live2d-widget:active {
-    cursor: grabbing;
-  }
-</style>

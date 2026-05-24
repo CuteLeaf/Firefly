@@ -206,6 +206,8 @@ export const ja: Translation = {
 	[Key.randomPosts]: "ランダム記事",
 	[Key.smartRecommend]: "スマート",
 	[Key.randomRecommend]: "ランダム",
+	[Key.noRelatedPosts]: "関連記事がありません",
+	[Key.noRandomPosts]: "ランダム記事がありません",
 
 	// 暗号化
 	[Key.postEncrypted]: "この記事は暗号化されています",

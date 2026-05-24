@@ -14,7 +14,7 @@ import TypewriterText from "@/components/features/TypewriterText.astro";
 import CategoryBar from "@/components/layout/CategoryBar.astro";
 import {
 	backgroundWallpaper,
-	live2dModelConfig,
+	live2dWidgetConfig,
 	sidebarLayoutConfig,
 	siteConfig,
 } from "@/config";
@@ -895,7 +895,7 @@ const bannerCarouselInterval = Math.max(
         </div>
 
         <SpineModel></SpineModel>
-        {live2dModelConfig.enable && <Live2DWidget config={live2dModelConfig} />}
+        {live2dWidgetConfig.enable && <Live2DWidget config={live2dWidgetConfig} />}
     </div>
 </div>
 

@@ -199,6 +199,8 @@ export const zh_CN: Translation = {
 	[Key.randomPosts]: "随机文章",
 	[Key.smartRecommend]: "智能推荐",
 	[Key.randomRecommend]: "随机推荐",
+	[Key.noRelatedPosts]: "暂无相关文章",
+	[Key.noRandomPosts]: "暂无随机文章",
 
 	// 加密
 	[Key.postEncrypted]: "本文已加密",

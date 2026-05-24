@@ -207,6 +207,8 @@ export const en: Translation = {
 	[Key.randomPosts]: "Random Posts",
 	[Key.smartRecommend]: "Smart",
 	[Key.randomRecommend]: "Random",
+	[Key.noRelatedPosts]: "No related posts",
+	[Key.noRandomPosts]: "No random posts",
 
 	// Encrypted
 	[Key.postEncrypted]: "This post is encrypted",
