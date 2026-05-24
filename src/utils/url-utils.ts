@@ -19,14 +19,18 @@ export function pathsEqual(path1: string, path2: string) {
  * 智能拼接URL，正确处理网络URL和本地路径
  */
 function joinUrl(...parts: string[]): string {
-  // 如果第一个部分是网络URL，直接返回拼接后的结果（不处理协议头的//）
-  if (parts[0]?.startsWith('http://') || parts[0]?.startsWith('https://') || parts[0]?.startsWith('//')) {
-    return parts.join('').replace(/(?<!:)\/+/g, '/');
-  }
-  
-  // 本地路径正常拼接
-  const joined = parts.join("/");
-  return joined.replace(/\/+/g, "/");
+	// 如果第一个部分是网络URL，直接返回拼接后的结果（不处理协议头的//）
+	if (
+		parts[0]?.startsWith("http://") ||
+		parts[0]?.startsWith("https://") ||
+		parts[0]?.startsWith("//")
+	) {
+		return parts.join("").replace(/(?<!:)\/+/g, "/");
+	}
+
+	// 本地路径正常拼接
+	const joined = parts.join("/");
+	return joined.replace(/\/+/g, "/");
 }
 
 export function getPostUrlBySlug(slug: string): string {
@@ -69,15 +73,15 @@ export function getSearchUrl(query: string): string {
 }
 
 export function url(path: string): string {
-  // 关键修复：如果是网络URL，直接返回原地址
-  if (
-    path.startsWith('http://') || 
-    path.startsWith('https://') || 
-    path.startsWith('//')
-  ) {
-    return path;
-  }
-  
-  // 只有本地相对路径才添加BASE_URL
-  return joinUrl("", import.meta.env.BASE_URL, path);
+	// 关键修复：如果是网络URL，直接返回原地址
+	if (
+		path.startsWith("http://") ||
+		path.startsWith("https://") ||
+		path.startsWith("//")
+	) {
+		return path;
+	}
+
+	// 只有本地相对路径才添加BASE_URL
+	return joinUrl("", import.meta.env.BASE_URL, path);
 }
