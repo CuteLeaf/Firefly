@@ -1,38 +1,24 @@
-# 关于我 / About Me
+# 关于我
 
-你好！我是 **夏叶** ，一个在数字世界中默默无闻的一片叶子。
+你好，我是 **风绘**，HuiDev Blog 的作者。
 
-## 🛠️ 关于本站
+这是我的技术笔记与随笔空间，记录我在计算机应用实践中的心得、工具与技巧，分享项目经验与解决方案。站点标题为“风绘的技术笔记”，地址是 https://huidev.com。
 
-这个网站使用 **Astro** 框架构建，采用了 [Firefly](https://github.com/CuteLeaf/Firefly) 模板，Firefly 是基于 [Fuwari](https://github.com/saicaca/fuwari) 的二次开发。
+个人签名：欲买桂花同载酒，终不似，少年游。
 
-**Firefly** 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。
+我主要写作方向包括：
 
+- 前端与现代构建工具
+- 后端实践与工程化
+- 性能优化与图像处理
+- 开发者工具与工作流
+- 书籍、番剧与个人兴趣随笔
 
-**🖥️在线预览： [Firefly - Demo site](https://firefly.cuteleaf.cn/)**
+你可以通过以下方式联系或关注我：
 
-**🏠我的博客： [https://blog.cuteleaf.cn](https://blog.cuteleaf.cn/)**
+- GitHub：https://github.com/huidev-com
+- 邮箱：fenghui@huidev.com
+- 订阅 RSS：<https://huidev.com/rss/>
 
-**📝Firefly使用文档： [https://docs-firefly.cuteleaf.cn](https://docs-firefly.cuteleaf.cn/)**
-
-**⭐Firefly开源地址：[https://github.com/CuteLeaf/Firefly](https://github.com/CuteLeaf/Firefly)** 
-
-**⭐Fuwari开源地址：[https://github.com/saicaca/fuwari](https://github.com/saicaca/fuwari)**
-
-::github{repo="CuteLeaf/Firefly"}
-
-::github{repo="saicaca/fuwari"}
-
-
-## 📫 联系方式
-
-如果你想和我交流技术问题，分享有趣的想法，或者只是想打个招呼，欢迎通过以下方式联系我：
-
-- 💻 **GitHub**: [CuteLeaf](https://github.com/CuteLeaf)
-- ✉️ **Email**: [xiaye@msn.com](mailto:xiaye@msn.com)
-- 🐧 **QQ交流群：[1087127207](https://qm.qq.com/q/ZGsFa8qX2G)**
-
----
-
-*感谢你的来访！希望在这里能找到对你有用的内容！*
+欢迎在文章下留言、提出建议或提出合作想法。需要我在“关于我”里突出显示的内容（例如工作经历、项目、技能栈或更详细的联系方式），请告诉我，我会帮你补充和调整。
 

@@ -6,13 +6,13 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	// 是否允许用户通过导航栏切换壁纸模式
 	// 且同时维护多种壁纸模式过于复杂（已经屎山代码），在切换时有时候可能会出现一些奇怪的过渡效果或者bug
 	// 推荐只选择自己喜欢的模式并关闭切换功能
-	switchable: true,
+	switchable: false,
 	/**
 	 * 背景图片配置
 	 * 图片路径支持三种格式：
 	 * 1. public 目录（以 "/" 开头，不优化）："/assets/images/banner.avif"
 	 * 2. src 目录（不以 "/" 开头，自动优化但会增加构建时间，推荐）："assets/images/banner.avif"
-	 * 3. 远程 URL："https://example.com/banner.jpg"
+	 * 3. 远程 URL："https://www.loliapi.com/acg/"
 	 * 注意：远程URL和public目录的图片不会被优化，请确保图片体积足够小以免影响加载速度
 	 *
 	 * 建议不要替换d1-d6，m1-m6这些默认示例图片，但你可以删除掉节省空间
@@ -41,22 +41,12 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		// 桌面背景图片（支持单张或多张随机）
 		// desktop: "assets/images/DesktopWallpaper/d1.avif",
 		desktop: [
-			"assets/images/DesktopWallpaper/d1.avif",
-			"assets/images/DesktopWallpaper/d2.avif",
-			"assets/images/DesktopWallpaper/d3.avif",
-			"assets/images/DesktopWallpaper/d4.avif",
-			"assets/images/DesktopWallpaper/d5.avif",
-			"assets/images/DesktopWallpaper/d6.avif",
+			"https://www.loliapi.com/acg/pc/",
 		],
 		// 移动背景图片（支持单张或多张随机）
 		// mobile: "assets/images/MobileWallpaper/m1.avif",
 		mobile: [
-			"assets/images/MobileWallpaper/m1.avif",
-			"assets/images/MobileWallpaper/m2.avif",
-			"assets/images/MobileWallpaper/m3.avif",
-			"assets/images/MobileWallpaper/m4.avif",
-			"assets/images/MobileWallpaper/m5.avif",
-			"assets/images/MobileWallpaper/m6.avif",
+			"https://www.loliapi.com/acg/mp/",
 		],
 	},
 	// 横幅壁纸和全屏壁纸共享配置
@@ -66,11 +56,11 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		// 主页横幅文字
 		homeText: {
 			// 是否启用主页横幅文字
-			enable: true,
+			enable: false,
 			// 是否允许用户通过控制面板切换横幅标题显示
-			switchable: true,
+			switchable: false,
 			// 主页横幅主标题
-			title: "Lovely firefly!",
+			title: "HuiDev Blog",
 			// 主页横幅主标题字体大小
 			titleSize: "3.8rem",
 			// 主页横幅副标题
@@ -88,7 +78,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 				// 是否启用打字机效果
 				// 打字机开启 → 循环显示所有副标题
 				// 打字机关闭 → 每次刷新随机显示一条副标题
-				enable: true,
+				enable: false,
 				// 打字速度（毫秒）
 				speed: 100,
 				// 删除速度（毫秒）
@@ -100,7 +90,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		// 导航栏配置
 		navbar: {
 			// 导航栏透明模式："semi" 半透明，"full" 完全透明，"semifull" 动态透明
-			transparentMode: "semi",
+			transparentMode: "semifull",
 			// 是否开启毛玻璃模糊效果，开启可能会影响页面性能，如果不开启则是半透明，请根据自己的喜好开启
 			enableBlur: true,
 			// 毛玻璃模糊度
