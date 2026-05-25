@@ -10,14 +10,14 @@ export const siteConfig: SiteConfig = {
 	title: "lyf:Blog",
 
 	// 站点副标题
-	subtitle: "lyf.blog",
+	subtitle: "欢迎回家",
 
 	// 站点 URL
 	site_url: "https://f3f3.top",
 
 	// 站点描述
 	description:
-		"这是Astro博客",
+		"这是lyf的技术博客",
 
 	// 站点关键词
 	keywords: [
