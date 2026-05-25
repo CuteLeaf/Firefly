@@ -14,7 +14,10 @@
     "format": "biome format --write ./src",
     "lint": "biome check --write ./src",
     "preinstall": "npx only-allow pnpm",
-    "icons": "node scripts/generate-icons.js"
+    "icons": "node scripts/generate-icons.js",
+    "deploy": "pnpm build && git add . && git commit -m 'update' && git push",
+    "deploy:cloud": "pnpm build && npx wrangler deploy",
+    "deploy:vercel": "pnpm build && npx vercel --prod"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
