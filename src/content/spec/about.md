@@ -1,38 +1,24 @@
 # 关于我 / About Me
 
-你好！我是 **LyF** ，一个在数字世界中默默无闻的一飞。
+你好！我是 **一飞** ，一名计算机技术爱好者。
+
+如果你喜欢，那么欢迎来到我的世界
 
 ## 🛠️ 关于本站
 
-这个网站使用 **Astro** 框架构建，采用了 [Firefly](https://github.com/CuteLeaf/Firefly) 模板，Firefly 是基于 [Fuwari](https://github.com/saicaca/fuwari) 的二次开发。
+这是我的个人博客，使用 Astro 框架搭建，主题基于 Firefly 开发。
 
-**Firefly** 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。
-
-
-**🖥️在线预览： [Firefly - Demo site](https://f3f3.top/)**
-
-**🏠我的博客： [https://f3f3.top](https://f3f3.top/)**
-
-**📝Firefly使用文档： [https://docs-firefly.cuteleaf.cn](https://docs-firefly.cuteleaf.cn/)**
-
-**⭐Firefly开源地址：[https://github.com/CuteLeaf/Firefly](https://github.com/CuteLeaf/Firefly)** 
-
-**⭐Fuwari开源地址：[https://github.com/saicaca/fuwari](https://github.com/saicaca/fuwari)**
-
-::github{repo="CuteLeaf/Firefly"}
-
-::github{repo="saicaca/fuwari"}
+在这里，我会分享一些关于技术、生活和兴趣的内容。
 
 
 ## 📫 联系方式
 
 如果你想和我交流技术问题，分享有趣的想法，或者只是想打个招呼，欢迎通过以下方式联系我：
 
-- 💻 **GitHub**: [CuteLeaf](https://github.com/CuteLeaf)
+- 💻 **GitHub**: [lyf-top](https://github.com/lyf-top)
 - ✉️ **Email**: [2860556024@qq.com](mailto:2860556024@qq.com)
-- 🐧 **QQ交流群：[1087127207](https://qm.qq.com/q/ZGsFa8qX2G)**
 
 ---
 
-*感谢你的来访！希望在这里能找到对你有用的内容！*
+*感谢你的来访！
 
