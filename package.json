@@ -18,8 +18,10 @@
     "icons": "node scripts/generate-icons.js",
     "deploy": "pnpm build && git add . && git commit -m 'update' && git push",
     "deploy:cloud": "pnpm build && npx wrangler deploy",
-    "deploy:vercel": "pnpm build && npx vercel --prod"
+    "deploy:vercel": "pnpm build && npx vercel --prod",
+    "gen:abbr": "node scripts/generate-abbrlink.mjs"
   },
+
   "dependencies": {
     "@astrojs/check": "^0.9.9",
     "@astrojs/compiler-rs": "^0.2.0",
@@ -45,6 +47,7 @@
     "astro": "6.3.5",
     "astro-expressive-code": "^0.42.0",
     "astro-icon": "^1.1.5",
+    "crc-32": "^1.2.2",
     "dayjs": "^1.11.20",
     "expressive-code-collapsible": "^0.1.0",
     "expressive-code-language-badge": "^1.1.0",

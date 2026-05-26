@@ -30,8 +30,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 	const publishedPosts = allPosts.filter((post) => !post.data.draft);
 
 	return publishedPosts.map((post) => {
-		// 将 id 转换为 slug（移除扩展名）以匹配路由参数
-		const slug = removeFileExtension(post.id);
+		const slug = post.data.abbrlink || removeFileExtension(post.id);
 		return {
 			params: { slug },
 			props: { post },

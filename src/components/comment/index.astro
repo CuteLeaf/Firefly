@@ -20,7 +20,7 @@ const { post, customPath, title: customTitle } = Astro.props as Props;
 
 // 根据页面类型确定路径
 const slugFromPath = (customPath || "/").replace(/^\/+|\/+$/g, "") || "index";
-const slug = post ? removeFileExtension(post.id) : slugFromPath;
+const slug = post ? (post.data.abbrlink || removeFileExtension(post.id)) : slugFromPath;
 const path = customPath
 	? customPath
 	: post

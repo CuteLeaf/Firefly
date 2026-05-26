@@ -30,17 +30,27 @@ import { sponsorConfig } from "@/config/sponsorConfig";
 import { formatDateToYYYYMMDD } from "@/utils/date-utils";
 import { getApiUrlList, processCoverImageSync } from "@/utils/image-utils";
 import { url } from "@/utils/url-utils";
-
+//文章短链接设置
 export async function getStaticPaths() {
 	const blogEntries = await getSortedPosts();
-	return blogEntries.map((entry) => {
-		// 将 id 转换为 slug（移除扩展名）以匹配路由参数
-		const slug = removeFileExtension(entry.id);
-		return {
-			params: { slug },
-			props: { entry },
-		};
-	});
+  return blogEntries.flatMap((entry) => {
+    const paths = [
+      {
+        params: { slug: entry.slug },
+        props: { entry },
+      },
+    ];
+
+    // 如果有 abbrlink，额外生成短链路由
+    if (entry.data.abbrlink) {
+      paths.push({
+        params: { slug: entry.data.abbrlink },
+        props: { entry },
+      });
+    }
+
+    return paths;
+  });
 }
 
 const { entry } = Astro.props;
