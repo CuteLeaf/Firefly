@@ -33,6 +33,8 @@ import { url } from "@/utils/url-utils";
 //文章短链接设置
 export async function getStaticPaths() {
 	const blogEntries = await getSortedPosts();
+	const usedSlugs = new Set<string>();
+
   return blogEntries.flatMap((entry) => {
     const paths = [
       {
@@ -40,13 +42,15 @@ export async function getStaticPaths() {
         props: { entry },
       },
     ];
+		usedSlugs.add(entry.slug);
 
-    // 如果有 abbrlink，额外生成短链路由
-    if (entry.data.abbrlink) {
+    // 如果有 abbrlink，额外生成短链路由（避免与已有 slug 重复）
+    if (entry.data.abbrlink && !usedSlugs.has(entry.data.abbrlink)) {
       paths.push({
         params: { slug: entry.data.abbrlink },
         props: { entry },
       });
+			usedSlugs.add(entry.data.abbrlink);
     }
 
     return paths;

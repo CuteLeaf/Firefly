@@ -24,11 +24,14 @@ export default async function deploy(args, flags) {
     await runCommand("pnpm", ["build"]);
     await runCommand("npx", ["wrangler", "deploy"]);
   } else {
-    await runCommand("pnpm", ["build"]);
-    await runCommand("npx", ["vercel", "--prod"]);
+    // 先提交并推送代码
     await runCommand("git", ["add", "."]);
     await runCommand("git", ["commit", "-m", "update"]);
     await runCommand("git", ["push"]);
+
+    // 推送后立即用 vercel --prod 部署最新代码到生产环境
+    await runCommand("pnpm", ["build"]);
+    await runCommand("npx", ["vercel", "--prod"]);
   }
 
   console.log("\n  Deploy done!");
