@@ -3,10 +3,10 @@
   "type": "module",
   "version": "6.10.5",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "pnpm gen:abbr && astro dev",
     "start": "pnpm dev",
     "check": "astro check",
-    "build": "node scripts/generate-icons.js && astro build && pagefind --site dist",
+    "build": "pnpm gen:abbr && node scripts/generate-icons.js && astro build && pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro",
     "type-check": "tsc --noEmit --isolatedDeclarations",
@@ -16,7 +16,7 @@
     "lint": "biome check --write ./src",
     "preinstall": "npx only-allow pnpm",
     "icons": "node scripts/generate-icons.js",
-    "deploy": "pnpm build && git add . && git commit -m 'update' && git push",
+    "deploy": "node scripts/cli.js deploy",
     "deploy:cloud": "pnpm build && npx wrangler deploy",
     "deploy:vercel": "pnpm build && npx vercel --prod",
     "gen:abbr": "node scripts/generate-abbrlink.mjs"

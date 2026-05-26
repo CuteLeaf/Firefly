@@ -1,22 +1,34 @@
 import { runCommand } from "../utils/run.js";
+import { detectProxy, setGitProxy } from "../utils/proxy.js";
 
 export default async function deploy(args, flags) {
-	const target = args.trim() || "git";
+  const target = args.trim() || "git";
 
-	console.log(`\n  Deploying via ${target}...\n`);
+  console.log(`\n  Deploying via ${target}...\n`);
 
-	if (target === "vercel") {
-		await runCommand("pnpm", ["build"]);
-		await runCommand("npx", ["vercel", "--prod"]);
-	} else if (target === "cloud") {
-		await runCommand("pnpm", ["build"]);
-		await runCommand("npx", ["wrangler", "deploy"]);
-	} else {
-		await runCommand("pnpm", ["build"]);
-		await runCommand("git", ["add", "."]);
-		await runCommand("git", ["commit", "-m", "update"]);
-		await runCommand("git", ["push"]);
-	}
+  // Auto-detect and configure proxy for git operations
+  if (target === "git") {
+    const proxy = detectProxy();
+    if (proxy) {
+      console.log(`  Detected proxy: ${proxy}`);
+      setGitProxy(proxy);
+    } else {
+      console.log("  No proxy detected, using direct connection.");
+    }
+  }
 
-	console.log("\n  Deploy done!");
+  if (target === "vercel") {
+    await runCommand("pnpm", ["build"]);
+    await runCommand("npx", ["vercel", "--prod"]);
+  } else if (target === "cloud") {
+    await runCommand("pnpm", ["build"]);
+    await runCommand("npx", ["wrangler", "deploy"]);
+  } else {
+    await runCommand("pnpm", ["build"]);
+    await runCommand("git", ["add", "."]);
+    await runCommand("git", ["commit", "-m", "update"]);
+    await runCommand("git", ["push"]);
+  }
+
+  console.log("\n  Deploy done!");
 }
