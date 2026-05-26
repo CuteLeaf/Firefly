@@ -4,9 +4,8 @@ description: 🥧java学习之路开启
 image: 'https://img.f3f3.top/img/2026/05/10/47777df32b45be53db5473bd0fb17004.webp'
 #文章封面页
 tags:
-  - javase
   - java基础
-  - 学习笔记
+category: JAVA学习 
   #永久连接id
 abbrlink: "20"
 # 文章置顶

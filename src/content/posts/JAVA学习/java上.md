@@ -4,13 +4,12 @@ title: java学习笔记上
 description: 🥧java学习之路开启
 image: 'https://img.f3f3.top/picgo/650324.webp'#文章封面页
 tags:
-  - javase
   - java基础
-  - 学习笔记
+category: JAVA学习 
   #永久连接id
 abbrlink: "201345"
 # 文章置顶
-pinned: true #文章置顶
+pinned: false #文章置顶
 published: 2022-08-09 18:19:03
 updated: 2026-03-12 10:43:03
 ---

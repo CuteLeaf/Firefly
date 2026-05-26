@@ -25,6 +25,7 @@ export default async function deploy(args, flags) {
     await runCommand("npx", ["wrangler", "deploy"]);
   } else {
     await runCommand("pnpm", ["build"]);
+    await runCommand("npx", ["vercel", "--prod"]);
     await runCommand("git", ["add", "."]);
     await runCommand("git", ["commit", "-m", "update"]);
     await runCommand("git", ["push"]);
