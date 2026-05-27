@@ -116,6 +116,7 @@ export const siteConfig: SiteConfig = {
 	generateOgImages: false,
 
 	// bangumi配置
+	//番茄组计划配置
 	bangumi: {
 		// Bangumi用户ID
 		userId: "1143164",
@@ -138,6 +139,18 @@ export const siteConfig: SiteConfig = {
 		bangumi: true,
 		// 相册页面开关
 		gallery: true,
+		//说说开关
+		talks: true,
+		// 友情链接页面开关
+		friendLink: true,
+		// 站点地图页面开关
+		sitemap: true,
+		// 搜索页面开关
+		search: true,
+		// 404页面开关
+		notFound: true,
+		// 仪表盘页面开关
+		dashboard: true,
 	},
 
 	// 分类导航栏开关，在首页和归档页顶部显示分类快捷导航

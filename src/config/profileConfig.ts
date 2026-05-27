@@ -1,5 +1,5 @@
 import type { ProfileConfig } from "../types/config";
-
+//侧边栏个人信息配置
 export const profileConfig: ProfileConfig = {
 	// 头像
 	// 图片路径支持三种格式：
@@ -22,23 +22,35 @@ export const profileConfig: ProfileConfig = {
 	// showName: true 时显示图标和名称，false 时只显示图标
 	links: [
 		{
+			name: "Twitter",
+			icon: "fa7-brands:x-twitter",
+			url: "https://twitter.com/lyf_top",
+			showName: false,
+		},
+		{
 			name: "qq",
 			icon: "fa7-brands:qq",
-			url: "https://qm.qq.com/q/ZGsFa8qX2G",
+			url: "https://img.f3f3.top/img/2026/04/28/e33f856532011d1d2b188f154f8f4883.webp",
+			showName: false,
+		},
+		{
+			name: "qq",
+			icon: "fa7-brands:weixin",
+			url: "https://img.f3f3.top/img/2026/04/28/bd534d9f78d8c58ffa667d61d3c0b290.webp",
 			showName: false,
 		},
 		{
 			name: "GitHub",
 			icon: "fa7-brands:github",
-			url: "https://github.com/CuteLeaf",
+			url: "https://github.com/lyf-top",
 			showName: false,
 		},
-		{
-			name: "Email",
-			icon: "fa7-solid:envelope",
-			url: "mailto:xiaye@msn.com",
-			showName: false,
-		},
+		// {
+		// 	name: "Email",
+		// 	icon: "fa7-solid:envelope",
+		// 	url: "28602960@qq.com",
+		// 	showName: false,
+		// },
 		{
 			name: "RSS",
 			icon: "fa7-solid:rss",

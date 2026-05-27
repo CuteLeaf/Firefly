@@ -79,13 +79,14 @@ export type SiteConfig = {
 	outdatedThreshold?: number; // 文章过期阈值（天数），超过此天数才显示"上次编辑"卡片
 	sharePoster?: boolean; // 是否显示分享海报按钮
 
-	// 页面开关配置
+	// 页面开关配置lock
 	pages: {
 		friends: boolean; // 友链页面开关
 		sponsor: boolean; // 赞助页面开关
 		guestbook: boolean; // 留言板页面开关
 		bangumi: boolean;
 		gallery: boolean; // 相册页面开关
+	  talk: boolean;   //新增导航说说开关
 	};
 
 	// 分类导航栏开关
@@ -169,7 +170,7 @@ export type Favicon = {
 	theme?: "light" | "dark";
 	sizes?: string;
 };
-
+// 1.导航栏配置2.页面开关配置lock前面呢3.siteConfig.ts打开开关
 export enum LinkPreset {
 	Home = 0,
 	Archive = 1,
@@ -179,6 +180,7 @@ export enum LinkPreset {
 	Guestbook = 5,
 	Bangumi = 6,
 	Gallery = 7,
+	Talk=8,
 }
 
 export type NavBarLink = {

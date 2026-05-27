@@ -22,31 +22,60 @@ export const friendsPageConfig: FriendsPageConfig = {
 
 // 友链配置
 export const friendsConfig: FriendLink[] = [
+
 	{
-		title: "夏夜流萤",
-		imgurl:
-			"https://weavatar.com/avatar/d252655d40d6874417a720bad0a6c5f77f8f6a1fd2f882f8f338402dc37e4190?s=640",
-		desc: "飞萤之火自无梦的长夜亮起，绽放在终竟的明天。",
-		siteurl: "https://blog.cuteleaf.cn",
+		title: "u7",
+		imgurl: "https://avatars.githubusercontent.com/u/10252805?v=4&s=640",
+		desc: "悠然的Hexo博客",
+		siteurl: "https://u7u7.top",
 		tags: ["Blog"],
-		weight: 10, // 权重，数字越大排序越靠前
+		weight: 11, // 权重，数字越大排序越靠前
 		enabled: true, // 是否启用
 	},
 	{
-		title: "Firefly Docs",
+		title: "团子和蛋糕",
+		imgurl: "https://avatars.githubusercontent.com/u/10252805?v=4&s=640",
+		desc: "团子和蛋糕的博客",
+		siteurl: "https://blog.tsh520.cn",
+		tags: ["Blog"],
+		weight: 12, // 权重，数字越大排序越靠前
+		enabled: true, // 是否启用
+	},
+
+	{
+		title: "一飞",
+		imgurl:
+			"https://weavatar.com/avatar/d252655d40d6874417a720bad0a6c5f77f8f6a1fd2f882f8f338402dc37e4190?s=640",
+		desc: "一飞的博客",
+		siteurl: "https://f3f3.top",
+		tags: ["Blog"],
+		weight: 99, // 权重，数字越大排序越靠前
+		enabled: true, // 是否启用
+	},
+	{
+		title: "阿夜",
 		imgurl: "https://docs-firefly.cuteleaf.cn/logo.png",
-		desc: "Firefly主题模板文档",
-		siteurl: "https://docs-firefly.cuteleaf.cn",
-		tags: ["Docs"],
+		desc: "这是基于springbootvue3的博客系统",
+		siteurl: "https://blog.ayeez.cn/",
+		tags: ["Blog"],
 		weight: 9,
 		enabled: true,
 	},
 	{
-		title: "Astro",
+		title: "Fqlr",
 		imgurl: "https://avatars.githubusercontent.com/u/44914786?v=4&s=640",
-		desc: "The web framework for content-driven websites. ⭐️ Star to support our work!",
-		siteurl: "https://github.com/withastro/astro",
-		tags: ["Framework"],
+		desc: "番茄主理人",
+		siteurl: "https://fqzlr.com",
+		tags: ["Blog"],
+		weight: 8,
+		enabled: true,
+	},
+	{
+		title: "喵斯基部落",
+		imgurl: "https://avatars.githubusercontent.com/u/44914786?v=4&s=640",
+		desc: "运维博客",
+		siteurl: "https://blog.moewah.com",
+		tags: ["Blog"],
 		weight: 8,
 		enabled: true,
 	},

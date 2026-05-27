@@ -1,13 +1,16 @@
 ---
-
+//新建路由
+//读取makdown文件
 import { getEntry, render } from "astro:content";
+//导入博客通用makkdown组件
 import Markdown from "@components/common/Markdown.astro";
+//多语言相关
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
-
+//读取makdwon文件src/content/spec/about.md
 const aboutPost = await getEntry("spec", "about");
-
+//检查页面是否可用
 if (!aboutPost) {
 	throw new Error("About page content not found");
 }

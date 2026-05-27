@@ -1,5 +1,5 @@
 import type { BackgroundWallpaperConfig } from "@/types/config";
-
+//壁纸配置
 export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	// 壁纸模式："banner" 横幅壁纸，"fullscreen" 全屏壁纸，"overlay" 全屏透明，"none" 纯色背景无壁纸
 	mode: "banner",

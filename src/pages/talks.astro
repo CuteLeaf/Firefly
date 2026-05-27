@@ -1,0 +1,30 @@
+---
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { getEntry, render } from "astro:content";
+import Markdown from "@components/common/Markdown.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+
+// 读取 src/content/spec/talks.md
+const talksPost = await getEntry("spec", "talks");
+
+// 检查页面是否可用（和 about 写法一致）
+if (!talksPost) {
+  throw new Error("Talks page content not found");
+}
+
+const { Content } = await render(talksPost);
+---
+
+<MainGridLayout 
+  title={i18n(I18nKey.talks)} 
+  description={i18n(I18nKey.talksDescription)}
+>
+  <div class="flex w-full rounded-(--radius-large) overflow-hidden">
+    <div class="card-base z-10 px-9 py-6 relative w-full">
+      <Markdown class="mt-2">
+        <Content />
+      </Markdown>
+    </div>
+  </div>
+</MainGridLayout>

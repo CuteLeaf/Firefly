@@ -1,7 +1,7 @@
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import { LinkPreset, type NavBarLink } from "@/types/config";
-
+//导航栏访问路径配置
 export const LinkPresets: { [key in LinkPreset]: NavBarLink } = {
 	[LinkPreset.Home]: {
 		name: i18n(I18nKey.home),
@@ -42,5 +42,10 @@ export const LinkPresets: { [key in LinkPreset]: NavBarLink } = {
 		name: i18n(I18nKey.gallery),
 		url: "/gallery/",
 		icon: "material-symbols:photo-library",
+	},
+	[LinkPreset.Talk]: {
+		name: i18n(I18nKey.talks),
+		url: "/talks/",
+		icon: "material-symbols:chat",
 	},
 };
