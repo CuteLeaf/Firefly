@@ -7,7 +7,7 @@ export const sakuraConfig: SakuraConfig = {
 	enable: false,
 
 	// 是否允许用户在设置中切换
-	switchable: true,
+	switchable: false,
 
 	// 樱花数量
 	sakuraNum: 21,
