@@ -41,13 +41,13 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		],
 		},
 		{
-			name: "赞助",
-			url: "/sponsor",
+			name: "联系站长",
+			url: "/about/",
 			icon: "",
 		},
 		{
-			name: "联系站长",
-			url: "/about",
+			name: "留言区",
+			url: "/comment/",
 			icon: "",
 		},
 		{
