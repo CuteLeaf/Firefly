@@ -1,6 +1,7 @@
 ---
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
+import { getLqipProps } from "@/utils/lqip-utils";
 import { url } from "@/utils/url-utils";
 
 interface Props {
@@ -26,6 +27,9 @@ const {
 	photoCount,
 	encrypted,
 } = Astro.props;
+
+// LQIP 渐变占位
+const lqipProps = cover ? getLqipProps(cover, undefined, true) : { style: "" };
 ---
 
 <a
@@ -36,13 +40,16 @@ const {
   <!-- Cover Image -->
   <div class="aspect-4/3 relative overflow-hidden">
     {cover ? (
-      <img
-        src={cover}
-        alt={name}
-        class="w-full h-full object-cover pointer-events-none transition-transform duration-500 group-hover:scale-105"
-        loading="lazy"
-        decoding="async"
-      />
+      <>
+        <div class="lqip-placeholder absolute inset-0 pointer-events-none" style={lqipProps.style} aria-hidden="true"></div>
+        <img
+          src={cover}
+          alt={name}
+          class="w-full h-full object-cover pointer-events-none opacity-0 transition-all duration-500 ease-out group-hover:scale-105"
+          loading="lazy"
+          decoding="async"
+        />
+      </>
     ) : (
       <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
         <div class="text-gray-400 text-5xl">&#x1f4f7;</div>

@@ -5,6 +5,7 @@ import { commentConfig, siteConfig, sponsorConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { getLqipProps } from "@/utils/lqip-utils";
 import { url } from "@/utils/url-utils";
 
 // 检查页面是否启用
@@ -24,6 +25,11 @@ const description =
 const enabledMethods = sponsorConfig.methods.filter((method) => method.enabled);
 const sponsors = sponsorConfig.sponsors || [];
 const showSponsorsList = sponsorConfig.showSponsorsList !== false;
+
+// LQIP 渐变占位
+function getQrLqipProps(qrCode: string) {
+	return getLqipProps(qrCode, undefined, true);
+}
 ---
 
 <MainGridLayout title={title} description={description}>
@@ -81,11 +87,12 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
 
                         <!-- 二维码或链接 -->
                         {method.qrCode && (
-                          <div class="relative w-full max-w-[200px] aspect-square bg-white rounded-lg p-4 shadow-md mb-4">
+                          <div class="relative w-full max-w-[200px] aspect-square bg-white rounded-lg p-4 shadow-md mb-4 overflow-hidden">
+                            <div class="lqip-placeholder absolute inset-0 rounded-lg pointer-events-none" style={getQrLqipProps(method.qrCode).style} aria-hidden="true"></div>
                             <img
                               src={url(method.qrCode)}
                               alt={`${method.name} ${i18n(I18nKey.scanToSponsor)}`}
-                              class="w-full h-full object-contain"
+                              class="relative w-full h-full object-contain opacity-0 transition-opacity duration-500 ease-out"
                               loading="lazy"
                             />
                           </div>

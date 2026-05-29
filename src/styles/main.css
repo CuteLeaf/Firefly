@@ -207,6 +207,16 @@ html {
         @apply rounded-(--radius-large) overflow-hidden bg-(--card-bg-transparent) transition-colors duration-150;
     }
 
+    /* LQIP 占位渐变 */
+    .lqip-placeholder {
+        z-index: 0;
+        transition: opacity 0.5s ease-out;
+    }
+    .lqip-placeholder.loaded {
+        opacity: 0;
+    }
+
+
     /* 开启边框和阴影效果时的样式 */
     .enable-card-border .card-base {
         @apply transition-all duration-300 border border-(--line-divider) shadow-xs;

@@ -10,6 +10,7 @@ import {
 	getImageQuality,
 	shouldAddNoReferrer,
 } from "@/utils/image-utils";
+import { getLqipProps } from "@/utils/lqip-utils";
 import { url } from "@/utils/url-utils";
 
 interface Props {
@@ -95,8 +96,16 @@ if (fallbackPath && !isLocal && !isFallbackPublic) {
 }
 
 // 图片样式
-const imageClass = "w-full h-full object-cover";
+const imageClass =
+	"w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-out";
 const imageStyle = `object-position: ${position};`;
+
+// LQIP 渐变占位
+const lqipProps = isLocal
+	? getLqipProps(src, basePath)
+	: isPublic
+		? getLqipProps(src, basePath, true)
+		: getLqipProps(src);
 
 // 响应式配置
 const widths = preview ? [320, 480, 640, 960] : [800, 1200, 1600, 2000];
@@ -127,6 +136,9 @@ const remoteReferrerPolicy =
 	data-loading={showLoading ? "true" : "false"}
 	data-api-urls={apiUrls.length > 0 ? JSON.stringify(apiUrls) : undefined}
 >
+	<!-- LQIP 渐变占位 -->
+	<div class="lqip-placeholder absolute inset-0 pointer-events-none" style={lqipProps.style} aria-hidden="true"></div>
+
 	<!-- 加载动画 -->
 	{showLoading && (
 		<div class="loading-spinner absolute inset-0 flex items-center justify-center z-10" style="background-color: var(--card-bg);">
@@ -294,11 +306,16 @@ const remoteReferrerPolicy =
 
 			const hideLoading = () => {
 				container.setAttribute('data-loading', 'false');
+				img.style.opacity = '1';
+				const placeholder = container.querySelector('.lqip-placeholder') as HTMLElement | null;
+				if (placeholder) placeholder.classList.add('loaded');
 			};
 
 			const showError = () => {
 				container.setAttribute('data-loading', 'false');
 				container.setAttribute('data-error', 'true');
+				const placeholder = container.querySelector('.lqip-placeholder') as HTMLElement | null;
+				if (placeholder) placeholder.classList.add('loaded');
 			};
 
 			// 统一的错误处理：尝试下一个API或显示回退

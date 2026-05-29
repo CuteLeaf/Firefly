@@ -9,6 +9,7 @@ import {
 	getImageQuality,
 	shouldAddNoReferrer,
 } from "@/utils/image-utils";
+import { getLqipProps } from "@/utils/lqip-utils";
 import { url } from "@/utils/url-utils";
 
 interface Props {
@@ -79,7 +80,8 @@ if (isLocal) {
 	}
 }
 
-const imageClass = "w-full h-full object-cover";
+const imageClass =
+	"w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-out";
 const imageStyle = `object-position: ${position}`;
 
 // 检查是否需要添加 referrerpolicy（仅对非本地图片）
@@ -94,8 +96,16 @@ const responsiveProps = {
 	...(sizes && { sizes }),
 	...(quality && { quality }),
 };
+
+// LQIP 渐变占位
+const lqipProps = isLocal
+	? getLqipProps(src, basePath)
+	: isPublic
+		? getLqipProps(src, basePath, true)
+		: getLqipProps(src);
 ---
 <div id={id} class:list={[className, 'overflow-hidden relative']}>
+    <div class="lqip-placeholder absolute inset-0 pointer-events-none" style={lqipProps.style} aria-hidden="true"></div>
     <div class="transition absolute inset-0 dark:bg-black/10 pointer-events-none"></div>
     {isLocal && img && usePicture && (
         <Picture

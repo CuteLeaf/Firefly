@@ -2,6 +2,7 @@
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import type { UserSubjectCollection } from "@/types/bangumi";
+import { getLqipProps } from "@/utils/lqip-utils";
 
 interface Props {
 	item: UserSubjectCollection;
@@ -9,6 +10,10 @@ interface Props {
 }
 
 const { item, loadImage = false } = Astro.props;
+
+// LQIP 渐变占位（外部链接自动降级为 --muted 背景）
+const coverSrc = item.subject?.images?.medium || "";
+const lqipProps = coverSrc ? getLqipProps(coverSrc) : { style: "" };
 
 const subject_base_url = "https://bgm.tv/subject/";
 
@@ -79,14 +84,17 @@ const hiddenCoverTagCount = Math.max(
 >
   <div class="aspect-2/3 relative overflow-hidden">
     {item.subject?.images?.medium ? (
-      <img
-        src={loadImage ? item.subject.images.medium : undefined}
-        data-src={loadImage ? undefined : item.subject.images.medium}
-        alt={item.subject.name_cn || item.subject.name}
-        class="w-full h-full object-cover pointer-events-none transition-transform duration-500 group-hover:scale-105"
-        loading="lazy"
-        decoding="async"
-      />
+      <>
+        <div class="lqip-placeholder absolute inset-0 pointer-events-none" style={lqipProps.style} aria-hidden="true"></div>
+        <img
+          src={loadImage ? item.subject.images.medium : undefined}
+          data-src={loadImage ? undefined : item.subject.images.medium}
+          alt={item.subject.name_cn || item.subject.name}
+          class="w-full h-full object-cover pointer-events-none opacity-0 transition-all duration-500 ease-out group-hover:scale-105"
+          loading="lazy"
+          decoding="async"
+        />
+      </>
     ) : (
       <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
         <div class="text-gray-400 text-4xl">📖</div>

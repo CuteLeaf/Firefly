@@ -36,10 +36,18 @@ interface Props {
 			align?: "left" | "right";
 		};
 		tips?: {
+			enable?: boolean;
 			welcomeMessage?: string[];
 			messages?: string[];
 			duration?: number;
 			interval?: number;
+			offset?: { x?: number; y?: number };
+			typing?: {
+				param?: string;
+				speed?: number;
+				minValue?: number;
+				maxValue?: number;
+			};
 		};
 		responsive?: {
 			hideOnMobile?: boolean;
@@ -198,20 +206,22 @@ function serializeMenus(menus: Props["config"]["menus"]) {
 			}
 
 			// 提示配置
-			if (tips && tips.enable === false) {
-				// 显式禁用提示气泡
-				if (!Array.isArray(options.model)) {
-					options.model.tips = false;
-				}
-			} else if (tips && (tips.welcomeMessage || tips.messages)) {
-				if (!Array.isArray(options.model)) {
-					options.model.tips = {
-						welcomeMessage: tips.welcomeMessage,
-						messages: tips.messages,
-						duration: tips.duration,
-						interval: tips.interval,
-						offset: tips.offset,
-					};
+			if (tips) {
+				const tipsConfig = tips.enable === false ? false : {
+					...(tips.welcomeMessage && { welcomeMessage: tips.welcomeMessage }),
+					...(tips.messages && { messages: tips.messages }),
+					...(tips.duration !== undefined && { duration: tips.duration }),
+					...(tips.interval !== undefined && { interval: tips.interval }),
+					...(tips.offset && { offset: tips.offset }),
+					...(tips.typing && { typing: tips.typing }),
+				};
+				
+				if (tipsConfig === false || Object.keys(tipsConfig).length > 0) {
+					if (Array.isArray(options.model)) {
+						options.model.forEach((m: any) => m.tips = tipsConfig);
+					} else {
+						options.model.tips = tipsConfig;
+					}
 				}
 			}
 

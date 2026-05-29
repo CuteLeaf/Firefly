@@ -23,6 +23,7 @@ const ICON_SETS = {
 	"fa7-regular": "@iconify-json/fa7-regular",
 	mdi: "@iconify-json/mdi",
 	"simple-icons": "@iconify-json/simple-icons",
+	mingcute: "@iconify-json/mingcute",
 	"svg-spinners": "@iconify-json/svg-spinners",
 };
 
