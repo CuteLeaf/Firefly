@@ -5,10 +5,10 @@ export const announcementConfig: AnnouncementConfig = {
 	title: "公告",
 
 	// 公告内容
-	content: "欢迎来到我的博客！这是一则示例公告。",
+	content: "积木好课新站点，由Autodesk官方认证教师创办，研究生学历，12年一线软件经验。服务众多科研院所、高校、企业培训，一对一个人定制教学。已帮助数万学员朋友，旧站点23万访问。",
 
 	// 是否允许用户关闭公告
-	closable: true,
+	closable: false,
 
 	link: {
 		// 启用链接
