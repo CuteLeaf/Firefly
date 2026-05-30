@@ -74,7 +74,7 @@ export const siteConfig: SiteConfig = {
 		// 4. 网络图片: { type: "url", value: "https://example.com/logo.png", alt: "Logo" }
 		logo: {
 			type: "image",
-			value: "/assets/images/logo.webp",
+			value: "assets/images/logo.webp",
 			alt: "积木好课",
 		},
 		// 导航栏标题
@@ -112,7 +112,7 @@ export const siteConfig: SiteConfig = {
 	sharePoster: true,
 
 	// OpenGraph图片功能,注意开启后要渲染很长时间，不建议本地调试的时候开启
-	generateOgImages: true,
+	generateOgImages: false,
 
 	// bangumi配置
 	bangumi: {
