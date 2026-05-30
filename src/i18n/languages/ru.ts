@@ -315,6 +315,10 @@ export const ru: Translation = {
 	[Key.galleryNoAlbums]: "Пока нет альбомов",
 	[Key.galleryBackToAlbums]: "Вернуться к альбомам",
 
+	// Страница разговоров
+	[Key.talks]: "Разговоры",
+	[Key.talksDescription]: "Мои ежедневные обновления и мысли",
+
 	// Защита паролем
 	[Key.passwordProtected]: "Защищено паролем",
 	[Key.passwordProtectedDesc]:

@@ -94,6 +94,7 @@ const widgetId =
 <!-- Progress Bar (Slim) -->
 <div class="px-1">
     <div class="progress-container relative w-full h-1 bg-neutral-100 dark:bg-neutral-700/50 rounded-full cursor-pointer touch-none mb-2 group mt-2" role="slider" aria-label={i18n(I18nKey.musicProgress)} aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="buffer-bar absolute left-0 top-0 h-full bg-neutral-200 dark:bg-neutral-600 rounded-full w-0 transition-[width] duration-300"></div>
         <div class="progress-bar absolute left-0 top-0 h-full bg-(--primary) rounded-full w-0 transition-[width] duration-100"></div>
         <!-- Hover Thumb -->
         <div class="progress-thumb absolute top-1/2 -mt-1.5 -ml-1.5 w-3 h-3 bg-(--primary) ring-2 ring-white dark:ring-neutral-800 rounded-full shadow-sm scale-0 group-hover:scale-100 transition-transform duration-200"></div>
@@ -194,6 +195,7 @@ const widgetId =
         title: widget.querySelector('.music-title'),
         artist: widget.querySelector('.music-artist'),
         progressBar: widget.querySelector('.progress-bar'),
+        bufferBar: widget.querySelector('.buffer-bar'),
         progressThumb: widget.querySelector('.progress-thumb'),
         progressContainer: widget.querySelector('.progress-container'),
         currentTime: widget.querySelector('.current-time'),
@@ -324,6 +326,7 @@ const widgetId =
 
         // Reset progress
         ui.progressBar.style.width = '0%';
+        ui.bufferBar.style.width = '0%';
         ui.progressThumb.style.left = '0%';
         ui.progressContainer.setAttribute('aria-valuenow', '0');
         ui.currentTime.innerText = '0:00';
@@ -531,6 +534,22 @@ const widgetId =
 
     on('fm:error', function (e) {
         ui.title.innerText = e.detail.message || cfg.i18n.error;
+    });
+
+    on('fm:buffering', function (e) {
+        setLoading(e.detail.buffering);
+    });
+
+    on('fm:buffer', function (e) {
+        var d = e.detail;
+        if (!d.duration || !d.buffered || d.buffered.length === 0) return;
+        // Show the furthest buffered point as a percentage
+        var maxEnd = 0;
+        for (var i = 0; i < d.buffered.length; i++) {
+            if (d.buffered[i].end > maxEnd) maxEnd = d.buffered[i].end;
+        }
+        var pct = (maxEnd / d.duration) * 100;
+        ui.bufferBar.style.width = pct + '%';
     });
 
     // ── Button click delegates ───────────────────────────────

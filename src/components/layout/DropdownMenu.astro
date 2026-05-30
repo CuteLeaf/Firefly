@@ -97,13 +97,11 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 		@apply absolute top-full left-0 pt-2 opacity-0 invisible pointer-events-none transition-all duration-200 ease-out transform translate-y-[-8px] z-50;
 	}
 
-	.dropdown-container:hover .dropdown-menu,
-	.dropdown-container:focus-within .dropdown-menu {
+	.dropdown-container.dropdown-open .dropdown-menu {
 		@apply opacity-100 visible pointer-events-auto translate-y-0;
 	}
 
-	.dropdown-container:hover .dropdown-arrow,
-	.dropdown-container:focus-within .dropdown-arrow {
+	.dropdown-container.dropdown-open .dropdown-arrow {
 		@apply rotate-180;
 	}
 
@@ -120,84 +118,103 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 </style>
 
 <script>
-	// 键盘导航支持
-	document.addEventListener('DOMContentLoaded', function() {
+	// 点击触发 + 键盘导航支持
+	function initDropdowns() {
 		const dropdowns = document.querySelectorAll('[data-dropdown]');
-		
+
 		dropdowns.forEach(dropdown => {
 			const trigger = dropdown.querySelector('[data-dropdown-trigger]') as HTMLElement | null;
 			const menu = dropdown.querySelector('[data-dropdown-menu]');
 			const items = dropdown.querySelectorAll('.dropdown-item') as NodeListOf<HTMLElement>;
-			
+
 			if (!trigger || !menu) return;
-			
+
+			// 清除旧的事件监听器（通过克隆节点避免重复绑定）
+			const newTrigger = trigger.cloneNode(true) as HTMLElement;
+			trigger.parentNode?.replaceChild(newTrigger, trigger);
+
+			// 点击触发器 → 切换下拉菜单
+			newTrigger.addEventListener('click', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				dropdown.classList.toggle('dropdown-open');
+				const isOpen = dropdown.classList.contains('dropdown-open');
+				newTrigger.setAttribute('aria-expanded', String(isOpen));
+			});
+
 			// 键盘事件处理
-			trigger.addEventListener('keydown', function(e: KeyboardEvent) {
+			newTrigger.addEventListener('keydown', function(e: KeyboardEvent) {
 				if (e.key === 'Enter' || e.key === ' ') {
 					e.preventDefault();
-					toggleDropdown(dropdown, trigger, menu);
+					dropdown.classList.toggle('dropdown-open');
+					const isOpen = dropdown.classList.contains('dropdown-open');
+					newTrigger.setAttribute('aria-expanded', String(isOpen));
 				} else if (e.key === 'ArrowDown') {
 					e.preventDefault();
-					openDropdown(dropdown, trigger, menu);
-					if (items.length > 0) {
-						items[0].focus();
-					}
+					dropdown.classList.add('dropdown-open');
+					newTrigger.setAttribute('aria-expanded', 'true');
+					const firstItem = dropdown.querySelector('.dropdown-item') as HTMLElement | null;
+					if (firstItem) firstItem.focus();
 				} else if (e.key === 'Escape') {
-					closeDropdown(dropdown, trigger, menu);
+					dropdown.classList.remove('dropdown-open');
+					newTrigger.setAttribute('aria-expanded', 'false');
+					newTrigger.focus();
 				}
 			});
-			
-			// 菜单项键盘导航
-			items.forEach((item, index) => {
+
+			// 菜单项键盘导航（重新查询，因为trigger已被替换）
+			const freshItems = dropdown.querySelectorAll('.dropdown-item') as NodeListOf<HTMLElement>;
+			freshItems.forEach((item, index) => {
 				item.addEventListener('keydown', function(e: KeyboardEvent) {
 					if (e.key === 'ArrowDown') {
 						e.preventDefault();
-						const nextIndex = (index + 1) % items.length;
-						items[nextIndex].focus();
+						const nextIndex = (index + 1) % freshItems.length;
+						freshItems[nextIndex].focus();
 					} else if (e.key === 'ArrowUp') {
 						e.preventDefault();
-						const prevIndex = (index - 1 + items.length) % items.length;
-						items[prevIndex].focus();
+						const prevIndex = (index - 1 + freshItems.length) % freshItems.length;
+						freshItems[prevIndex].focus();
 					} else if (e.key === 'Escape') {
-						closeDropdown(dropdown, trigger, menu);
-						trigger.focus();
+						dropdown.classList.remove('dropdown-open');
+						newTrigger.setAttribute('aria-expanded', 'false');
+						newTrigger.focus();
 					}
 				});
 			});
 		});
-		
-		// 点击外部关闭下拉菜单
+	}
+
+	// 点击外部关闭所有下拉菜单
+	function initDropdownCloseHandlers() {
 		document.addEventListener('click', function(e) {
+			const dropdowns = document.querySelectorAll('[data-dropdown]');
 			dropdowns.forEach(dropdown => {
 				if (!dropdown.contains(e.target as Node)) {
+					dropdown.classList.remove('dropdown-open');
 					const trigger = dropdown.querySelector('[data-dropdown-trigger]');
-					const menu = dropdown.querySelector('[data-dropdown-menu]');
-					if (trigger && menu) {
-						closeDropdown(dropdown, trigger, menu);
-					}
+					if (trigger) trigger.setAttribute('aria-expanded', 'false');
 				}
 			});
 		});
-	});
-	
-	function toggleDropdown(_dropdown: Element, trigger: Element, menu: Element) {
-		const isOpen = trigger.getAttribute('aria-expanded') === 'true';
-		if (isOpen) {
-			closeDropdown(_dropdown, trigger, menu);
-		} else {
-			openDropdown(_dropdown, trigger, menu);
-		}
+
+		// Escape 键关闭所有下拉菜单
+		document.addEventListener('keydown', function(e) {
+			if (e.key === 'Escape') {
+				const dropdowns = document.querySelectorAll('[data-dropdown]');
+				dropdowns.forEach(dropdown => {
+					dropdown.classList.remove('dropdown-open');
+					const trigger = dropdown.querySelector('[data-dropdown-trigger]');
+					if (trigger) {
+						trigger.setAttribute('aria-expanded', 'false');
+						(trigger as HTMLElement).focus();
+					}
+				});
+			}
+		});
 	}
-	
-	function openDropdown(_dropdown: Element, trigger: Element, menu: Element) {
-		trigger.setAttribute('aria-expanded', 'true');
-		menu.classList.remove('opacity-0', 'invisible', 'pointer-events-none', 'translate-y-[-8px]');
-		menu.classList.add('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
-	}
-	
-	function closeDropdown(_dropdown: Element, trigger: Element, menu: Element) {
-		trigger.setAttribute('aria-expanded', 'false');
-		menu.classList.add('opacity-0', 'invisible', 'pointer-events-none', 'translate-y-[-8px]');
-		menu.classList.remove('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
-	}
+
+	initDropdowns();
+	initDropdownCloseHandlers();
+	document.addEventListener('astro:page-load', initDropdowns);
+	document.addEventListener('swup:contentReplaced', initDropdowns);
 </script>

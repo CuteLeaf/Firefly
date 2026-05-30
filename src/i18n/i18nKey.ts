@@ -301,9 +301,9 @@ enum I18nKey {
 	galleryNoAlbums = "galleryNoAlbums",
 	galleryBackToAlbums = "galleryBackToAlbums",
 
- // i18nKey.ts说说页面
- Talks = "talks",
- TalksDescription = "talksDescription",
+	// 说说页面
+	talks = "talks",
+	talksDescription = "talksDescription",
 
 	// 密码保护
 	passwordProtected = "passwordProtected",

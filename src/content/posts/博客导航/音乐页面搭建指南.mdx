@@ -1,0 +1,606 @@
+---
+title: 音乐页面搭建指南
+published: 2026-05-28
+description: 博客音乐页面的完整搭建流程，包括本地歌曲配置、封面设置和云端音乐获取。
+tags: [博客, 音乐, 教程]
+category: 博客导航
+abbrlink: music-guide
+---
+
+本指南详细介绍音乐页面的搭建流程和配置方法。
+
+## 架构概览
+
+音乐系统由三部分组成：
+
+```
+MusicManager (音频引擎，单例)
+    ↓ fm:* 事件通信
+MusicPlayer (侧边栏/导航栏小播放器)
+MusicPage   (独立音乐页面，大播放器 + 歌曲网格)
+```
+
+- **MusicManager** — 管理 `<audio>` 元素、播放状态、歌词解析，通过 `fm:*` 自定义事件广播状态
+- **MusicPlayer** — 侧边栏和导航栏的小型播放器 UI
+- **MusicPage** — 独立音乐页面，大尺寸黑胶唱片播放器 + 收藏网格 + 歌词面板
+
+## 配置文件
+
+所有音乐配置在 `src/config/musicConfig.ts`：
+
+```ts
+import type { MusicPlayerConfig } from "../types/config";
+
+export const musicPlayerConfig: MusicPlayerConfig = {
+    // 导航栏显示音乐入口
+    showInNavbar: true,
+
+    // 模式："meting" 用云端 API，"local" 用本地文件
+    mode: "meting",
+
+    // 默认音量
+    volume: 0.7,
+
+    // 播放模式：list / one / random
+    playMode: "list",
+
+    // 启用歌词
+    showLyrics: true,
+
+    // Meting API 配置
+    meting: {
+        api: "https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&r=:r",
+        server: "netease",
+        type: "playlist",
+        id: "10046455237",
+        auth: "",
+        fallbackApis: [
+            "https://api.injahow.cn/meting/?server=:server&type=:type&id=:id",
+            "https://api.moeyao.cn/meting/?server=:server&type=:type&id=:id",
+        ],
+    },
+
+    // 本地音乐配置
+    local: {
+        playlist: [
+            {
+                name: "歌曲名",
+                artist: "歌手名",
+                url: "/assets/music/歌曲.mp3",
+                cover: "/assets/music/cover/封面.webp",
+                lrc: "",
+            },
+        ],
+    },
+};
+```
+
+## 使用云端音乐（Meting API）
+
+### 什么是 Meting API
+
+Meting 是一个开源的音乐聚合 API，支持网易云音乐、QQ 音乐、酷狗等平台。无需服务器，使用公共 API 即可获取歌曲信息、音频链接和歌词。
+
+### 配置步骤
+
+**1. 选择音乐平台**
+
+```ts
+meting: {
+    server: "netease",  // netease=网易云, tencent=QQ, kugou=酷狗
+}
+```
+
+**2. 选择获取类型**
+
+```ts
+meting: {
+    type: "playlist",  // song=单曲, playlist=歌单, album=专辑, artist=艺术家
+}
+```
+
+**3. 填入 ID**
+
+- 歌单 ID：打开网易云歌单页面，URL 中的数字就是 ID
+- 专辑 ID：同理
+- 单曲 ID：歌曲页面 URL 中的数字
+
+示例 — 网易云歌单 `https://music.163.com/#/playlist?id=10046455237`，ID 为 `10046455237`
+
+```ts
+meting: {
+    server: "netease",
+    type: "playlist",
+    id: "10046455237",
+}
+```
+
+**4. 配置备用 API（推荐）**
+
+公共 API 可能不稳定，配置多个 fallback：
+
+```ts
+meting: {
+    api: "https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&r=:r",
+    fallbackApis: [
+        "https://api.injahow.cn/meting/?server=:server&type=:type&id=:id",
+        "https://api.moeyao.cn/meting/?server=:server&type=:type&id=:id",
+    ],
+}
+```
+
+工作流程：主 API 失败 → 依次尝试 fallback → 全部失败 → 自动回退到本地播放列表
+
+### 常用公共 Meting API
+
+| API 地址 | 说明 |
+|----------|------|
+| `https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&r=:r` | 主 API |
+| `https://api.injahow.cn/meting/?server=:server&type=:type&id=:id` | 备用 1 |
+| `https://api.moeyao.cn/meting/?server=:server&type=:type&id=:id` | 备用 2 |
+
+## 使用本地音乐
+
+### 第一步：准备文件
+
+在 `public/assets/music/` 目录下放置音频文件：
+
+```
+public/
+└── assets/
+    └── music/
+        ├── 歌曲1.mp3
+        ├── 歌曲2.mp3
+        ├── cover/
+        │   ├── 封面1.webp
+        │   └── 封面2.webp
+        └── lrc/
+            ├── 歌曲1.lrc
+            └── 歌曲2.lrc
+```
+
+支持格式：MP3、M4A、OGG、WAV
+
+### 第二步：修改配置
+
+将 `mode` 改为 `"local"`，并配置播放列表：
+
+```ts
+export const musicPlayerConfig: MusicPlayerConfig = {
+    mode: "local",
+
+    local: {
+        playlist: [
+            {
+                name: "知我",
+                artist: "国风堂",
+                url: "/assets/music/知我.mp3",
+                cover: "/assets/music/cover/知我.webp",
+                lrc: "/assets/music/lrc/知我.lrc",
+            },
+            {
+                name: "女孩",
+                artist: "韦礼安",
+                url: "/assets/music/女孩.mp3",
+                cover: "/assets/music/cover/女孩.webp",
+                lrc: "",
+            },
+        ],
+    },
+};
+```
+
+### 字段说明
+
+| 字段 | 必填 | 说明 |
+|------|------|------|
+| `name` | 是 | 歌曲名称 |
+| `artist` | 是 | 歌手名称 |
+| `url` | 是 | 音频文件路径（`public/` 下的相对路径或完整 URL） |
+| `cover` | 否 | 封面图片路径（不填显示默认音符图标） |
+| `lrc` | 否 | LRC 歌词文件路径，支持同步滚动歌词 |
+
+### 添加更多歌曲
+
+只需在 `playlist` 数组中追加新条目：
+
+```ts
+playlist: [
+    // ... 已有歌曲
+    {
+        name: "新歌曲名",
+        artist: "新歌手名",
+        url: "/assets/music/新歌曲.mp3",
+        cover: "/assets/music/cover/新封面.webp",
+        lrc: "/assets/music/lrc/新歌词.lrc",
+    },
+],
+```
+
+### 更改封面
+
+封面图片要求：
+- 推荐尺寸：300x300 像素
+- 推荐格式：WebP（体积小）或 JPG
+- 放在 `public/assets/music/cover/` 目录
+
+在配置中引用：
+
+```ts
+{
+    name: "歌曲名",
+    artist: "歌手名",
+    url: "/assets/music/歌曲.mp3",
+    cover: "/assets/music/cover/新封面.webp",  // 修改这里
+}
+```
+
+### LRC 歌词文件格式
+
+LRC 是标准的歌词时间轴格式：
+
+```txt
+[00:00.00]歌曲标题
+[00:01.00]歌手名
+[00:05.00]第一句歌词
+[00:10.50]第二句歌词
+[00:15.20]第三句歌词
+```
+
+格式：`[分:秒.毫秒]歌词内容`
+
+获取 LRC 歌词的方式：
+- 网易云音乐网页版 → 开发者工具 → 搜索 `lrc` 获取歌词接口
+- 使用 Python 脚本批量下载（如 `fetch-lrc.py`）
+- 手动编写
+
+## Fallback 机制
+
+当配置 `mode: "meting"` 时，系统会按以下顺序尝试：
+
+```
+1. Meting 主 API → 成功则使用云端歌曲
+2. Meting 备用 API 1 → 成功则使用云端歌曲
+3. Meting 备用 API 2 → 成功则使用云端歌曲
+4. 全部失败 → 自动切换到 local.playlist 本地歌曲
+```
+
+如果本地播放列表也为空，则显示"暂无歌曲"。
+
+## 页面组件说明
+
+### MusicPage（独立音乐页面）
+
+位于 `src/components/pages/MusicPage.astro`，是 `/music/` 页面的核心组件。
+
+布局结构：
+```
+┌──────────────────────┬──────────────┐
+│                      │ 播放列表      │
+│   黑胶唱片封面        │ ┌──┬──┬──┐  │
+│   （旋转动画）        │ │歌│歌│歌│  │
+│                      │ ├──┼──┼──┤  │
+│      歌名            │ │歌│歌│歌│  │
+│      歌手            │ └──┴──┴──┘  │
+│  ━━━━━━━━━━━━━━━━    │              │
+│  0:00        3:45   │ 我的音乐收藏  │
+│                      │ ┌──┬──┬──┐  │
+│  ⟲  ⏮  ▶  ⏭  🔊   │ │♡ │♡ │♡ │  │
+└──────────────────────┴──┴──┴──┘──┘
+┌──────────────────────────────────────┐
+│ 🎵 歌词          歌名 - 歌手        │
+│  ┃                                    │
+│  ┃  演唱：A-Lin黄丽玲                │
+│  ┃  作词：邬裕康                      │
+│  ┃  ...（自动滚动高亮当前行）          │
+└──────────────────────────────────────┘
+```
+
+右侧包含两个独立区块：
+- **播放列表**：3 列网格，显示所有歌曲，点击播放
+- **我的音乐收藏**：3 列网格，显示已收藏歌曲（localStorage 存储）
+
+下方歌词面板为独立卡片，蓝色左边框装饰，播放时自动滚动到当前歌词行。
+
+### MusicPlayer（侧边栏播放器）
+
+位于 `src/components/features/MusicPlayer.astro`，用于侧边栏和导航栏浮动面板。
+
+## 歌词功能
+
+### 工作原理
+
+歌词系统由 MusicManager 驱动：
+
+1. 加载歌曲时，MusicManager 解析 LRC 文件或内嵌歌词字符串
+2. 播放过程中，通过 `fm:time` 事件同步当前时间
+3. 计算当前应高亮的歌词行，通过 `fm:lrc-index` 事件广播
+4. MusicPage 监听事件，高亮对应行并自动滚动居中
+
+### LRC 歌词格式
+
+```txt
+[00:00.00]歌曲标题
+[00:01.00]歌手名
+[00:05.00]第一句歌词
+[00:10.50]第二句歌词
+```
+
+格式：`[分:秒.毫秒]歌词内容`
+
+### 歌词来源
+
+**方式一：LRC 文件（推荐）**
+
+将 `.lrc` 文件放在 `public/assets/music/lrc/` 目录，在配置中引用：
+
+```ts
+{
+    name: "歌曲名",
+    artist: "歌手名",
+    url: "/assets/music/歌曲.mp3",
+    lrc: "/assets/music/lrc/歌曲.lrc",  // LRC 文件路径
+}
+```
+
+**方式二：内嵌歌词字符串**
+
+直接在配置中写入 LRC 格式字符串：
+
+```ts
+{
+    name: "歌曲名",
+    artist: "歌手名",
+    url: "/assets/music/歌曲.mp3",
+    lrc: "[00:05.00]第一句歌词\n[00:10.50]第二句歌词",
+}
+```
+
+**方式三：云端 API 自动获取**
+
+使用 Meting API 时，API 返回的数据中已包含 `lrc` 字段（LRC 格式字符串），无需额外配置。
+
+### 获取 LRC 歌词
+
+- **网易云音乐**：网页版 → F12 开发者工具 → Network → 搜索 `lyric` → 找到歌词接口返回的内容
+- **QQ 音乐**：类似方式，搜索 `lrc` 或 `lyric` 接口
+- **第三方工具**：使用 `fetch-lrc.py` 等 Python 脚本批量下载
+- **手动编写**：用文本编辑器按 LRC 格式编写
+
+### 歌词面板样式
+
+歌词面板位于播放器下方，带有蓝色左边框：
+
+```astro
+<div class="lyrics-panel border-l-4 border-l-(--primary)">
+    <div class="lyrics-header">歌词</div>
+    <div class="lyrics-container h-64 overflow-y-auto">
+        <!-- 歌词行 -->
+    </div>
+</div>
+```
+
+修改歌词面板高度：
+
+```css
+.lyrics-container {
+    height: 16rem;  /* 默认 h-64，可改为 h-48 或 h-80 */
+}
+```
+
+### 歌词自动滚动行为
+
+播放时歌词会自动滚动到当前行并居中高亮。滚动行为支持智能检测：
+
+- **自动滚动**：播放过程中，当前歌词行自动居中显示
+- **手动滚动暂停**：用户滚动歌词（鼠标滚轮或触摸滑动）时，累计滚动距离超过 50px 后暂停自动滚动
+- **自动恢复**：停止手动滚动 2 秒后，自动跳回当前歌词行并恢复自动滚动
+- **点击跳转**：点击任意歌词行可跳转到对应时间点播放
+
+```js
+// 滚动检测核心逻辑
+var scrollDeltaAccum = 0;
+ui.lyricsContainer.addEventListener('wheel', function(e) {
+    scrollDeltaAccum += Math.abs(e.deltaY);
+    if (scrollDeltaAccum > 50) {
+        isUserScrolling = true;  // 暂停自动滚动
+        resetScrollTimeout();    // 2秒后恢复
+    }
+    // 300ms 内无新滚动则重置累积值
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(function() { scrollDeltaAccum = 0; }, 300);
+});
+```
+
+## 收藏功能
+
+### 工作原理
+
+收藏功能使用 `localStorage` 存储，无需后端：
+
+1. 每首歌卡片右上角有 ♡ 收藏按钮
+2. 点击后将歌曲信息 `{ name, artist, pic }` 存入 `localStorage`
+3. 右侧"我的音乐收藏"网格实时显示已收藏歌曲
+4. 点击收藏卡片可播放对应歌曲
+5. 悬停收藏卡片显示 ✕ 按钮，可取消收藏
+
+### 存储结构
+
+```ts
+// localStorage key: "music-favorites"
+// value: JSON 数组
+[
+    { name: "知我", artist: "国风堂", pic: "https://..." },
+    { name: "女孩", artist: "韦礼安", pic: "https://..." },
+]
+```
+
+### 自定义收藏键名
+
+如需修改 localStorage 的 key，在 `MusicPage.astro` 的 `<script>` 中修改：
+
+```js
+var FAVORITES_KEY = 'music-favorites';  // 改为你想要的 key
+```
+
+### 清空收藏
+
+在浏览器控制台执行：
+
+```js
+localStorage.removeItem('music-favorites');
+```
+
+## 搭建过程
+
+### 第一步：创建 MusicPage 组件
+
+在 `src/components/pages/` 下创建 `MusicPage.astro`，包含：
+
+1. **左侧播放器区域**
+   - 黑胶唱片封面（`vinyl-ring` 渐变圆环 + 内圈封面图）
+   - 轨道信息（歌名、歌手）
+   - 进度条（可点击跳转）
+   - 控制按钮（循环、上一首、播放/暂停、下一首、音量）
+
+2. **右侧收藏网格**
+   - 3 列网格布局
+   - 每张卡片：封面图 + 歌名 + 歌手 + 收藏按钮
+
+3. **底部歌词面板**
+   - 蓝色左边框装饰
+   - 歌词头部信息栏
+   - 可滚动歌词容器，自动高亮当前行
+
+### 第二步：接入 MusicManager 事件系统
+
+MusicPage 通过监听 `fm:*` 自定义事件与 MusicManager 通信：
+
+```js
+// 监听事件
+window.addEventListener('fm:init', function(e) { /* 播放列表加载完成 */ });
+window.addEventListener('fm:track', function(e) { /* 切换歌曲 */ });
+window.addEventListener('fm:play-state', function(e) { /* 播放/暂停 */ });
+window.addEventListener('fm:time', function(e) { /* 进度更新 */ });
+window.addEventListener('fm:lyrics', function(e) { /* 歌词加载 */ });
+window.addEventListener('fm:lrc-index', function(e) { /* 歌词行高亮 */ });
+window.addEventListener('fm:volume', function(e) { /* 音量变化 */ });
+window.addEventListener('fm:mode', function(e) { /* 播放模式变化 */ });
+
+// 调用 API 控制播放
+window.__fireflyMusic.togglePlay();      // 播放/暂停
+window.__fireflyMusic.playNext();        // 下一首
+window.__fireflyMusic.playPrev();        // 上一首
+window.__fireflyMusic.seek(percent);     // 跳转进度 (0-1)
+window.__fireflyMusic.setVolume(val);    // 设置音量 (0-1)
+window.__fireflyMusic.cyclePlayMode();   // 切换播放模式
+window.__fireflyMusic.playTrackByIndex(i); // 播放指定歌曲
+```
+
+### 第三步：更新 music.astro 页面
+
+将 `src/pages/music.astro` 改为使用 MusicPage 组件：
+
+```astro
+---
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import MusicPage from "@/components/pages/MusicPage.astro";
+---
+
+<MainGridLayout title="音乐" description="我喜欢的音乐">
+    <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+        <div class="card-base z-10 px-6 md:px-9 py-6 relative w-full">
+            <MusicPage />
+        </div>
+    </div>
+</MainGridLayout>
+```
+
+### 第四步：配置音乐源
+
+编辑 `src/config/musicConfig.ts`，选择 `meting` 或 `local` 模式（详见上方配置章节）。
+
+### 第五步：验证
+
+```bash
+pnpm dev
+```
+
+访问 `/music/` 检查：
+- 黑胶唱片封面旋转动画
+- 播放控制功能正常
+- 歌词自动滚动高亮
+- 收藏/取消收藏功能
+- 收藏数据刷新后保留
+
+## 自定义样式
+
+### 修改播放器颜色
+
+播放器使用 CSS 变量 `--primary` 作为主题色，在 `src/styles/main.css` 中修改：
+
+```css
+:root {
+    --primary: oklch(0.65 0.15 250);  /* 蓝色 */
+}
+```
+
+### 修改唱片旋转速度
+
+在 `MusicPage.astro` 的 `<style>` 中修改：
+
+```css
+@keyframes vinyl-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.vinyl-ring {
+    animation: vinyl-spin 20s linear infinite;  /* 改这里的 20s */
+}
+```
+
+### 修改歌曲网格列数
+
+在 `MusicPage.astro` 中修改 grid 类：
+
+```astro
+<div class="song-grid grid grid-cols-3 gap-3">
+```
+
+改为 `grid-cols-2`（2 列）或 `grid-cols-4`（4 列）。
+
+## 常见问题
+
+### Q: 音频无法播放？
+
+检查：
+1. 音频文件是否在 `public/assets/music/` 目录下
+2. 配置中的路径是否正确（相对于 `public/`）
+3. 浏览器控制台是否有 CORS 错误（云端音频需要 `crossOrigin = 'anonymous'`）
+
+### Q: 封面不显示？
+
+检查：
+1. 图片文件是否存在
+2. 路径是否正确
+3. 图片格式是否被浏览器支持
+
+### Q: Meting API 不可用？
+
+1. 检查网络连接
+2. 尝试切换其他备用 API
+3. 如果所有 API 都不可用，系统会自动回退到本地播放列表
+4. 也可以直接将 `mode` 改为 `"local"` 使用本地文件
+
+### Q: 如何禁用音乐播放器？
+
+在 `musicConfig.ts` 中：
+
+```ts
+export const musicPlayerConfig: MusicPlayerConfig = {
+    showInNavbar: false,  // 禁用导航栏入口
+};
+```
+
+侧边栏播放器在 `src/config/sidebarConfig.ts` 中将 `music` 组件的 `enable` 设为 `false`。

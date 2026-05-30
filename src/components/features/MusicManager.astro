@@ -114,7 +114,8 @@ const managerConfigStr = JSON.stringify({
         currentLrcIndex: -1,
         initialized: false,
         initializing: false,
-        error: null
+        error: null,
+        buffering: false
     };
 
     // Map config playMode string to number
@@ -206,6 +207,8 @@ const managerConfigStr = JSON.stringify({
         var track = state.playlist[index];
 
         audio.src = track.url;
+        state.buffering = true;
+        emit('fm:buffering', { buffering: true });
 
         loadLyrics(track);
 
@@ -335,6 +338,36 @@ const managerConfigStr = JSON.stringify({
         }
     });
 
+    // ── Buffering state ──────────────────────────────────────
+    audio.addEventListener('waiting', function () {
+        state.buffering = true;
+        emit('fm:buffering', { buffering: true });
+    });
+
+    audio.addEventListener('canplay', function () {
+        if (state.buffering) {
+            state.buffering = false;
+            emit('fm:buffering', { buffering: false });
+        }
+    });
+
+    audio.addEventListener('canplaythrough', function () {
+        state.buffering = false;
+        emit('fm:buffering', { buffering: false });
+    });
+
+    audio.addEventListener('progress', function () {
+        if (!audio.duration || !audio.buffered.length) return;
+        var buffered = [];
+        for (var i = 0; i < audio.buffered.length; i++) {
+            buffered.push({
+                start: audio.buffered.start(i),
+                end: audio.buffered.end(i)
+            });
+        }
+        emit('fm:buffer', { buffered: buffered, duration: audio.duration });
+    });
+
     audio.addEventListener('ended', function () {
         playNext(true);
     });
@@ -351,7 +384,16 @@ const managerConfigStr = JSON.stringify({
 
         try {
             if (config.mode === 'meting' && config.meting) {
-                await fetchMetingData();
+                try {
+                    await fetchMetingData();
+                } catch (metingErr) {
+                    console.warn('Meting API failed, falling back to local:', metingErr);
+                    if (config.localPlaylist && config.localPlaylist.length > 0) {
+                        state.playlist = config.localPlaylist;
+                    } else {
+                        throw metingErr;
+                    }
+                }
             } else if (config.mode === 'local') {
                 state.playlist = config.localPlaylist || [];
             }

@@ -1,0 +1,38 @@
+---
+interface Props {
+    type: "feature" | "improvement" | "fix" | "removal";
+    text?: string;
+}
+
+const { type, text } = Astro.props;
+
+const config = {
+    feature: { label: text || "功能新增", bg: "oklch(0.85 0.15 145)", color: "oklch(0.35 0.15 145)" },
+    improvement: { label: text || "功能优化", bg: "oklch(0.85 0.15 250)", color: "oklch(0.35 0.15 250)" },
+    fix: { label: text || "问题修复", bg: "oklch(0.85 0.15 25)", color: "oklch(0.35 0.15 25)" },
+    removal: { label: text || "移除", bg: "oklch(0.85 0.12 0)", color: "oklch(0.35 0.12 0)" },
+};
+
+const c = config[type];
+---
+
+<span
+    class="tag-badge"
+    style={`--badge-bg: ${c.bg}; --badge-color: ${c.color};`}
+>
+    {c.label}
+</span>
+
+<style>
+    .tag-badge {
+        display: inline-block;
+        padding: 0.1rem 0.55rem;
+        border-radius: 9999px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        line-height: 1.6;
+        background: var(--badge-bg);
+        color: var(--badge-color);
+        white-space: nowrap;
+    }
+</style>

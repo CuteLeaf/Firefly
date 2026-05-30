@@ -1,0 +1,140 @@
+---
+import TagBadge from "./TagBadge.astro";
+
+interface Props {
+    date: string;
+    type?: "feature" | "improvement" | "fix" | "removal";
+    version?: string;
+}
+
+const { date, type = "feature", version } = Astro.props;
+---
+
+<div class="timeline-item">
+    <div class="timeline-dot"></div>
+    <div class="timeline-content">
+        <div class="timeline-meta">
+            <span class="timeline-date">{date}</span>
+            {version && <span class="timeline-version">{version}</span>}
+            <TagBadge type={type} />
+        </div>
+        <div class="timeline-body">
+            <slot />
+        </div>
+    </div>
+</div>
+
+<style>
+    .timeline-item {
+        position: relative;
+        padding-left: 2rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .timeline-item:last-child {
+        padding-bottom: 0;
+    }
+
+    /* 竖线 */
+    .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: 5px;
+        top: 0.5rem;
+        bottom: 0;
+        width: 2px;
+        background: oklch(0.85 0.02 250);
+    }
+
+    .timeline-item:last-child::before {
+        display: none;
+    }
+
+    :global(.dark) .timeline-item::before {
+        background: oklch(0.3 0.02 250);
+    }
+
+    /* 圆点 */
+    .timeline-dot {
+        position: absolute;
+        left: 0;
+        top: 0.45rem;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: oklch(0.65 0.15 250);
+        border: 2px solid oklch(0.95 0 0);
+        box-shadow: 0 0 0 2px oklch(0.65 0.15 250 / 0.3);
+    }
+
+    :global(.dark) .timeline-dot {
+        border-color: oklch(0.2 0 0);
+    }
+
+    .timeline-content {
+        background: oklch(0.97 0.005 250);
+        border-radius: 0.75rem;
+        padding: 0.75rem 1rem;
+        border: 1px solid oklch(0.9 0.01 250);
+        transition: box-shadow 0.2s;
+    }
+
+    .timeline-content:hover {
+        box-shadow: 0 2px 8px oklch(0 0 0 / 0.06);
+    }
+
+    :global(.dark) .timeline-content {
+        background: oklch(0.2 0.01 250);
+        border-color: oklch(0.3 0.01 250);
+    }
+
+    :global(.dark) .timeline-content:hover {
+        box-shadow: 0 2px 8px oklch(0 0 0 / 0.3);
+    }
+
+    .timeline-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.4rem;
+        flex-wrap: wrap;
+    }
+
+    .timeline-date {
+        font-size: 0.8rem;
+        color: oklch(0.55 0.02 250);
+        font-weight: 500;
+    }
+
+    :global(.dark) .timeline-date {
+        color: oklch(0.65 0.02 250);
+    }
+
+    .timeline-version {
+        font-size: 0.7rem;
+        padding: 0.05rem 0.4rem;
+        border-radius: 0.25rem;
+        background: oklch(0.93 0.02 250);
+        color: oklch(0.45 0.08 250);
+        font-family: monospace;
+    }
+
+    :global(.dark) .timeline-version {
+        background: oklch(0.25 0.02 250);
+        color: oklch(0.7 0.08 250);
+    }
+
+    .timeline-body {
+        font-size: 0.9rem;
+        line-height: 1.7;
+        color: oklch(0.35 0.02 250);
+    }
+
+    :global(.dark) .timeline-body {
+        color: oklch(0.8 0.02 250);
+    }
+
+    .timeline-body :global(p) {
+        margin: 0.25rem 0;
+    }
+</style>

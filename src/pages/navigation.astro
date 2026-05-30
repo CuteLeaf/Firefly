@@ -1,0 +1,152 @@
+---
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { Icon } from "astro-icon/components";
+import { navigationConfig, categoryColorMap } from "@/config/navigationConfig";
+
+const { title, description, categories } = navigationConfig;
+---
+
+<MainGridLayout title={title} description={description}>
+  <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+    <div class="card-base z-10 px-6 md:px-9 py-6 relative w-full">
+
+      <!-- Category Filter Tabs -->
+      <div class="flex flex-wrap gap-2 mb-8">
+        <button
+          class="category-tab active"
+          data-category="all"
+        >
+          <span class="dot" style="background-color: #374151;"></span>
+          <span>全部</span>
+        </button>
+        {categories.map((cat) => (
+          <button
+            class="category-tab"
+            data-category={cat.id}
+          >
+            <span class="dot" style={`background-color: ${cat.dotColor || cat.color};`}></span>
+            <span>{cat.name}</span>
+          </button>
+        ))}
+      </div>
+
+      <!-- Navigation Sections -->
+      <div id="navigation-sections">
+        {categories.map((cat) => (
+          <div
+            class="nav-section mb-8"
+            data-category={cat.id}
+            style={`display: ${cat.sites.length === 0 ? 'none' : 'block'};`}
+          >
+            {/* Section Header */}
+            <div class="flex items-center gap-3 mb-4">
+              <div
+                class="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={`background-color: ${cat.color}15;`}
+              >
+                <Icon
+                  name={cat.icon}
+                  class="text-xl"
+                  style={`color: ${cat.color};`}
+                />
+              </div>
+              <div>
+                <h2 class="text-xl font-bold text-neutral-900 dark:text-neutral-100">
+                  {cat.name}
+                </h2>
+                <p class="text-sm text-neutral-500 dark:text-neutral-400">
+                  {cat.sites.length} 个网站
+                </p>
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div
+              class="h-0.5 mb-4 rounded-full"
+              style={`background: linear-gradient(to right, ${cat.color}, transparent);`}
+            ></div>
+
+            {/* Sites Grid */}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {cat.sites.map((site) => (
+                <a
+                  href={site.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="site-card group"
+                  style={`border-left-color: ${categoryColorMap[cat.id] || cat.color};`}
+                >
+                  <div class="flex items-start gap-3">
+                    {/* Icon */}
+                    <div
+                      class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
+                      style={`background-color: ${site.iconColor || cat.color}15;`}
+                    >
+                      <Icon
+                        name={site.icon}
+                        class="text-2xl"
+                        style={`color: ${site.iconColor || cat.color};`}
+                      />
+                    </div>
+
+                    {/* Content */}
+                    <div class="flex-1 min-w-0">
+                      <h3 class="font-bold text-neutral-900 dark:text-neutral-100 group-hover:text-(--primary) transition-colors duration-300 truncate">
+                        {site.name}
+                      </h3>
+                      <p class="text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2 mt-0.5">
+                        {site.description}
+                      </p>
+                      {/* Tags */}
+                      <div class="flex flex-wrap gap-1.5 mt-2">
+                        {site.tags.map((tag) => (
+                          <span
+                            class="text-xs px-2 py-0.5 rounded-full"
+                            style={`background-color: ${categoryColorMap[cat.id] || cat.color}15; color: ${categoryColorMap[cat.id] || cat.color};`}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </div>
+</MainGridLayout>
+
+<script>
+  // Category filter functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabs = document.querySelectorAll('.category-tab');
+    const sections = document.querySelectorAll('.nav-section');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Update active tab
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        const category = tab.getAttribute('data-category');
+
+        // Show/hide sections
+        sections.forEach(section => {
+          const sectionCategory = section.getAttribute('data-category');
+          if (category === 'all') {
+            (section as HTMLElement).style.display = 'block';
+          } else if (sectionCategory === category) {
+            (section as HTMLElement).style.display = 'block';
+          } else {
+            (section as HTMLElement).style.display = 'none';
+          }
+        });
+      });
+    });
+  });
+</script>

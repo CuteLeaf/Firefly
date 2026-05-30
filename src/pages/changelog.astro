@@ -1,0 +1,21 @@
+---
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { getEntry, render } from "astro:content";
+import Markdown from "@components/common/Markdown.astro";
+
+const changelogPost = await getEntry("spec", "changelog");
+if (!changelogPost) {
+	throw new Error("Changelog page content not found");
+}
+const { Content } = await render(changelogPost);
+---
+
+<MainGridLayout title="更新日志" description="博客的重要更新和变更">
+	<div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+		<div class="card-base z-10 px-9 py-6 relative w-full">
+			<Markdown class="mt-2">
+				<Content />
+			</Markdown>
+		</div>
+	</div>
+</MainGridLayout>

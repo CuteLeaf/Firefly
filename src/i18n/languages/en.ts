@@ -314,6 +314,10 @@ export const en: Translation = {
 	[Key.galleryNoAlbums]: "No albums yet",
 	[Key.galleryBackToAlbums]: "Back to albums",
 
+	// Talks Page
+	[Key.talks]: "Talks",
+	[Key.talksDescription]: "My daily updates and thoughts",
+
 	// Password Protection
 	[Key.passwordProtected]: "Password Protected",
 	[Key.passwordProtectedDesc]:

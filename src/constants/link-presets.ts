@@ -48,4 +48,29 @@ export const LinkPresets: { [key in LinkPreset]: NavBarLink } = {
 		url: "/talks/",
 		icon: "material-symbols:chat",
 	},
+	[LinkPreset.Categories]: {
+		name: i18n(I18nKey.categories),
+		url: "/categories/",
+		icon: "material-symbols:folder-open",
+	},
+	[LinkPreset.Books]: {
+		name: "书架",
+		url: "/books/",
+		icon: "material-symbols:book-5",
+	},
+	[LinkPreset.MoviesGames]: {
+		name: "影视与游戏",
+		url: "/movies-games/",
+		icon: "material-symbols:movie",
+	},
+	[LinkPreset.MusicPage]: {
+		name: i18n(I18nKey.music),
+		url: "/music/",
+		icon: "material-symbols:music-note",
+	},
+	[LinkPreset.Changelog]: {
+		name: "更新日志",
+		url: "/changelog/",
+		icon: "material-symbols:history",
+	},
 };

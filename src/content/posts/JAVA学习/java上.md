@@ -1147,7 +1147,7 @@ static关键字的使用
 
 ![](https://img.f3f3.top/picgo/20260424110613503.png)
 
-```static
+```java
 class Chinese{
 String name;
 int age;

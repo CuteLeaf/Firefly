@@ -1,0 +1,66 @@
+---
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import { Icon } from "astro-icon/components";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { getCategoryList } from "@/utils/content-utils";
+
+const categories = await getCategoryList();
+const totalCategories = categories.length;
+const totalPosts = categories.reduce((sum, cat) => sum + cat.count, 0);
+---
+
+<MainGridLayout title={i18n(I18nKey.categories)}>
+    <div class="card-base p-6 md:p-8 onload-animation">
+        <!-- 标题区域 -->
+        <div class="flex items-center gap-3 mb-6">
+            <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-(--primary) text-white">
+                <Icon name="material-symbols:folder-open" class="text-[1.5rem]" />
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-black/90 dark:text-white/90">
+                    {i18n(I18nKey.categories)}
+                </h1>
+                <p class="text-sm text-black/50 dark:text-white/50">
+                    共 {totalCategories} 个分类，{totalPosts} 篇文章
+                </p>
+            </div>
+        </div>
+
+        <!-- 分类网格 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {categories.map((cat) => (
+                <a
+                    href={`/archive/?category=${encodeURIComponent(cat.name)}`}
+                    class="group card-base p-4 transition-all duration-200 hover:translate-y-[-2px] hover:shadow-lg"
+                >
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-(--primary)/10 text-(--primary) group-hover:bg-(--primary) group-hover:text-white transition-all duration-200">
+                            <Icon name="material-symbols:folder" class="text-[1.25rem]" />
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-bold text-black/80 dark:text-white/80 truncate group-hover:text-(--primary) transition-colors">
+                                {cat.name}
+                            </h3>
+                            <p class="text-xs text-black/40 dark:text-white/40">
+                                {cat.count} 篇文章
+                            </p>
+                        </div>
+                        <Icon
+                            name="material-symbols:chevron-right-rounded"
+                            class="text-lg text-black/20 dark:text-white/20 group-hover:text-(--primary) transition-all group-hover:translate-x-1"
+                        />
+                    </div>
+                </a>
+            ))}
+        </div>
+
+        <!-- 空状态 -->
+        {totalCategories === 0 && (
+            <div class="text-center py-12">
+                <Icon name="material-symbols:folder-off" class="text-4xl text-black/20 dark:text-white/20 mb-3" />
+                <p class="text-black/40 dark:text-white/40">暂无分类</p>
+            </div>
+        )}
+    </div>
+</MainGridLayout>

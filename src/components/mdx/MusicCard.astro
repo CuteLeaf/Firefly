@@ -1,0 +1,147 @@
+---
+interface Props {
+    title: string;
+    artist: string;
+    cover?: string;
+    url?: string;
+}
+
+const { title, artist, cover, url } = Astro.props;
+---
+
+<div class="music-card">
+    <div class="music-cover">
+        {cover ? (
+            <img src={cover} alt={title} loading="lazy" />
+        ) : (
+            <div class="music-cover-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 18V5l12-2v13"/>
+                    <circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+                </svg>
+            </div>
+        )}
+    </div>
+    <div class="music-info">
+        <div class="music-title">{title}</div>
+        <div class="music-artist">{artist}</div>
+        {url && (
+            <a href={url} target="_blank" rel="noopener noreferrer" class="music-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+                播放
+            </a>
+        )}
+    </div>
+</div>
+
+<style>
+    .music-card {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem;
+        border-radius: 0.75rem;
+        background: oklch(0.97 0.005 250);
+        border: 1px solid oklch(0.9 0.01 250);
+        transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .music-card:hover {
+        box-shadow: 0 2px 12px oklch(0 0 0 / 0.06);
+        transform: translateY(-1px);
+    }
+
+    :global(.dark) .music-card {
+        background: oklch(0.2 0.01 250);
+        border-color: oklch(0.3 0.01 250);
+    }
+
+    :global(.dark) .music-card:hover {
+        box-shadow: 0 2px 12px oklch(0 0 0 / 0.3);
+    }
+
+    .music-cover {
+        width: 56px;
+        height: 56px;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .music-cover img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .music-cover-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: oklch(0.9 0.02 250);
+        color: oklch(0.55 0.05 250);
+    }
+
+    :global(.dark) .music-cover-placeholder {
+        background: oklch(0.25 0.02 250);
+        color: oklch(0.6 0.05 250);
+    }
+
+    .music-info {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .music-title {
+        font-weight: 600;
+        font-size: 0.9rem;
+        line-height: 1.4;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .music-artist {
+        font-size: 0.8rem;
+        color: oklch(0.55 0.02 250);
+        margin-top: 0.1rem;
+    }
+
+    :global(.dark) .music-artist {
+        color: oklch(0.65 0.02 250);
+    }
+
+    .music-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-top: 0.3rem;
+        padding: 0.15rem 0.5rem;
+        font-size: 0.7rem;
+        font-weight: 500;
+        color: oklch(0.55 0.15 250);
+        background: oklch(0.93 0.05 250);
+        border-radius: 9999px;
+        text-decoration: none;
+        transition: background 0.2s, color 0.2s;
+    }
+
+    .music-link:hover {
+        background: oklch(0.6 0.15 250);
+        color: oklch(0.98 0 0);
+    }
+
+    :global(.dark) .music-link {
+        background: oklch(0.25 0.05 250);
+        color: oklch(0.7 0.15 250);
+    }
+
+    :global(.dark) .music-link:hover {
+        background: oklch(0.55 0.15 250);
+        color: oklch(0.98 0 0);
+    }
+</style>

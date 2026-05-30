@@ -14,78 +14,88 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		// 主页
 		LinkPreset.Home,
 
+		// 分类
+		LinkPreset.Categories,
+
 		// 归档
 		LinkPreset.Archive,
+
+		// 网站导航
+		{
+			name: "网站导航",
+			url: "/navigation/",
+			icon: "material-symbols:public",
+		},
 	];
 
-	// 根据配置决定是否添加友链，在siteConfig关闭pages.friends时导航栏不显示友链
-	// if (siteConfig.pages.friends) {
-	// 	links.push(LinkPreset.Friends);
-	// }
-
-	// 根据配置决定是否添加留言板，在siteConfig关闭pages.guestbook时导航栏不显示留言板
-	if (siteConfig.pages.guestbook) {
-		links.push(LinkPreset.Guestbook);
-	}
-
-	// 我的及其子菜单
+	// 动态及其子菜单
 	links.push({
 		name: "动态",
 		url: "/my/",
-		icon: "material-symbols:person",
+		icon: "material-symbols:local-cafe",
 		children: [
-			// 根据配置决定是否添加相册，在siteConfig关闭pages.gallery时导航栏不显示相册
-			...(siteConfig.pages.gallery ? [LinkPreset.Gallery] : []),
 			// 根据配置决定是否添加说说
 			...(siteConfig.pages.talks ? [LinkPreset.Talk] : []),
-			// 根据配置决定是否添加番组计划，在siteConfig关闭pages.bangumi时导航栏不显示番组计划
-			...(siteConfig.pages.bangumi ? [LinkPreset.Bangumi] : []),
+			// 根据配置决定是否添加相册，在siteConfig关闭pages.gallery时导航栏不显示相册
+			...(siteConfig.pages.gallery ? [LinkPreset.Gallery] : []),
+			// 留言板
+			...(siteConfig.pages.guestbook ? [LinkPreset.Guestbook] : []),
+		],
+	});
+
+	// 记录及其子菜单
+	links.push({
+		name: "记录",
+		url: "/records/",
+		icon: "material-symbols:camera-outdoor",
+		children: [
+			{
+				name: "书架",
+				url: "/books/",
+				icon: "material-symbols:book-5",
+			},
+			{
+				name: "影视与游戏",
+				url: "/movies-games/",
+				icon: "material-symbols:movie",
+			},
+			{
+				name: "音乐",
+				url: "/music/",
+				icon: "material-symbols:music-note",
+			},
+			{
+				name: "更新日志",
+				url: "/changelog/",
+				icon: "material-symbols:history",
+			},
+			{
+				name: "规划",
+				url: "/life/routines/",
+				icon: "material-symbols:list-alt",
+			},
+			{
+				name: "足迹",
+				url: "/life/places/",
+				icon: "material-symbols:location-on",
+			},
 		],
 	});
 
 	// 关于及其子菜单
 	links.push({
 		name: "关于",
-		url: "/content/",
+		url: "/about/",
 		icon: "material-symbols:info",
 		children: [
-			// 根据配置决定是否添加赞助，在siteConfig关闭pages.sponsor时导航栏不显示赞助
-			...(siteConfig.pages.sponsor ? [LinkPreset.Sponsor] : []),
-			//根据配置决定是否添加友链，在siteConfig关闭pages.sponsor时导航栏不显示赞助
-			...(siteConfig.pages.friends ? [LinkPreset.Friends] : []),
 			// 关于页面
 			LinkPreset.About,
+			// 根据配置决定是否添加友链，在siteConfig关闭pages.friends时导航栏不显示友链
+			...(siteConfig.pages.friends ? [LinkPreset.Friends] : []),
+			// 根据配置决定是否添加赞助，在siteConfig关闭pages.sponsor时导航栏不显示赞助
+			...(siteConfig.pages.sponsor ? [LinkPreset.Sponsor] : []),
 		],
 	});
-
-	// // 自定义导航栏链接,并且支持多级菜单
-	// links.push({
-	// 	name: "链接",
-	// 	url: "/links/",
-	// 	icon: "material-symbols:link",
-
-	// 	// 子菜单
-	// 	children: [
-	// 		{
-	// 			name: "GitHub",
-	// 			url: "https://github.com/CuteLeaf/Firefly",
-	// 			external: true,
-	// 			icon: "fa7-brands:github",
-	// 		},
-	// 		{
-	// 			name: "Gitee",
-	// 			url: "https://gitee.com/CuteLeaf/Firefly",
-	// 			external: true,
-	// 			icon: "fa7-brands:gitee",
-	// 		},
-	// 		{
-	// 			name: "QQ交流群",
-	// 			url: "https://qm.qq.com/q/ZGsFa8qX2G",
-	// 			external: true,
-	// 			icon: "fa7-brands:qq",
-	// 		},
-	// 	],
-	// });
 
 	// 仅返回链接，其它导航搜索相关配置在模块顶层常量中独立导出
 	return { links } as NavBarConfig;

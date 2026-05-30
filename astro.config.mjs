@@ -1,5 +1,6 @@
 import sitemap from "@astrojs/sitemap";
 import svelte from "@astrojs/svelte";
+import vercel from "@astrojs/vercel";
 import tailwindcss from "@tailwindcss/vite";
 import { setMaxListeners } from "node:events";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
@@ -8,6 +9,9 @@ import swup from "@swup/astro";
 import { defineConfig } from "astro/config";
 import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
+import { loadEnv } from "vite";
+
+const env = loadEnv("", process.cwd(), "APOS");
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeComponents from "rehype-components"; /* Render the custom directive content */
 import rehypeKatex from "rehype-katex";
@@ -45,9 +49,10 @@ if (process.env.NODE_ENV === "development") {
 // https://astro.build/config
 export default defineConfig({
 	site: siteConfig.site_url,
-	
 	base: "/",
-	trailingSlash: "always",
+	trailingSlash: "ignore",
+	output: "server",
+	adapter: vercel(),
 
 	// 图像优化配置
 	image: {
@@ -248,6 +253,10 @@ export default defineConfig({
 	},
 	vite: {
 		plugins: [tailwindcss()],
+		define: {
+			"process.env.APOS_EXTERNAL_FRONT_KEY": JSON.stringify(env.APOS_EXTERNAL_FRONT_KEY),
+			"process.env.APOS_HOST": JSON.stringify(env.APOS_HOST),
+		},
 		server: {
 			watch: {
 				ignored: ["**/package/**", "**/Firefly-docs/**"],

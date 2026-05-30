@@ -69,6 +69,7 @@ export type SiteConfig = {
 			alt?: string; // 图片alt文本
 		};
 		title?: string; // 导航栏标题，如果不设置则使用 title
+		hoverTitle?: string; // 鼠标悬停在Logo上时显示的标题
 		widthFull?: boolean; // 导航栏是否占满屏幕宽度
 		menuAlign?: "left" | "center"; // 导航菜单对齐方式（仅桌面端菜单）
 		followTheme?: boolean; // 导航栏图标和标题是否跟随主题色
@@ -180,7 +181,12 @@ export enum LinkPreset {
 	Guestbook = 5,
 	Bangumi = 6,
 	Gallery = 7,
-	Talk=8,
+	Talk = 8,
+	Categories = 9,
+	Books = 10,
+	MoviesGames = 11,
+	MusicPage = 12,
+	Changelog = 13,
 }
 
 export type NavBarLink = {

@@ -1,0 +1,21 @@
+---
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { getEntry, render } from "astro:content";
+import Markdown from "@components/common/Markdown.astro";
+
+const routinesPost = await getEntry("spec", "routines");
+if (!routinesPost) {
+	throw new Error("Routines page content not found");
+}
+const { Content } = await render(routinesPost);
+---
+
+<MainGridLayout title="规划" description="我的学习和生活规划">
+	<div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+		<div class="card-base z-10 px-9 py-6 relative w-full">
+			<Markdown class="mt-2">
+				<Content />
+			</Markdown>
+		</div>
+	</div>
+</MainGridLayout>

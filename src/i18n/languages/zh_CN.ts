@@ -14,6 +14,8 @@ export const zh_CN: Translation = {
 	[Key.searchViewMore]: "查看更多结果 ({count} 个更多)",
 	[Key.other]: "其他",
 	[Key.all]: "全部",
+	[Key.talks]: "说说",
+  [Key.talksDescription]: "我的日常动态",
 
 	[Key.tags]: "标签",
 	[Key.categories]: "分类",
@@ -304,6 +306,10 @@ export const zh_CN: Translation = {
 	[Key.galleryAlbums]: "本相册",
 	[Key.galleryNoAlbums]: "暂无相册",
 	[Key.galleryBackToAlbums]: "返回相册列表",
+
+	// 说说页面
+	[Key.talks]: "说说",
+	[Key.talksDescription]: "我的日常动态和碎碎念",
 
 	// 密码保护
 	[Key.passwordProtected]: "密码保护",

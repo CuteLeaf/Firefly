@@ -313,6 +313,10 @@ export const ja: Translation = {
 	[Key.galleryNoAlbums]: "アルバムがありません",
 	[Key.galleryBackToAlbums]: "アルバム一覧に戻る",
 
+	// トークページ
+	[Key.talks]: "トーク",
+	[Key.talksDescription]: "日常の更新と thoughts",
+
 	// パスワード保護
 	[Key.passwordProtected]: "パスワード保護",
 	[Key.passwordProtectedDesc]:

@@ -13,7 +13,7 @@ function walk(dir) {
     if (fs.statSync(fullPath).isDirectory()) {
       return walk(fullPath);
     }
-    return fullPath.endsWith(".md") ? [fullPath] : [];
+    return /\.(md|mdx)$/.test(fullPath) ? [fullPath] : [];
   });
 }
 

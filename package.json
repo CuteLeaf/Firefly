@@ -6,7 +6,7 @@
     "dev": "pnpm gen:abbr && astro dev",
     "start": "pnpm dev",
     "check": "astro check",
-    "build": "pnpm gen:abbr && node scripts/generate-icons.js && astro build && pagefind --site dist",
+    "build": "pnpm gen:abbr && node scripts/generate-icons.js && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "type-check": "tsc --noEmit --isolatedDeclarations",
@@ -21,14 +21,16 @@
     "deploy:vercel": "pnpm build && npx vercel --prod",
     "gen:abbr": "node scripts/generate-abbrlink.mjs"
   },
-
   "dependencies": {
+    "@apostrophecms/apostrophe-astro": "^1.12.0",
     "@astrojs/check": "^0.9.9",
     "@astrojs/compiler-rs": "^0.2.0",
     "@astrojs/mdx": "^5.0.6",
+    "@astrojs/node": "^10.1.1",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
-    "@astrojs/svelte": "8.1.1",
+    "@astrojs/svelte": "^8.1.2",
+    "@astrojs/vercel": "^10.0.8",
     "@expressive-code/core": "^0.42.0",
     "@expressive-code/plugin-collapsible-sections": "^0.42.0",
     "@expressive-code/plugin-line-numbers": "^0.42.0",
@@ -44,6 +46,7 @@
     "@iconify/utils": "^3.1.1",
     "@swup/astro": "^1.8.0",
     "@tailwindcss/typography": "^0.5.16",
+    "@vercel/kv": "^3.0.0",
     "astro": "6.3.5",
     "astro-expressive-code": "^0.42.0",
     "astro-icon": "^1.1.5",
@@ -54,6 +57,7 @@
     "glob": "^11.1.0",
     "gray-matter": "^4.0.3",
     "hastscript": "^9.0.1",
+    "ioredis": "^5.11.0",
     "katex": "^0.16.47",
     "l2d-widget": "^0.0.2",
     "marked": "^16.4.2",
@@ -82,7 +86,11 @@
     "svelte": "^5.55.8",
     "typescript": "^5.9.2",
     "unist-util-is": "^6.0.1",
-    "unist-util-visit": "^5.1.0"
+    "unist-util-visit": "^5.1.0",
+    "vite": "^7.0.0"
+  },
+  "overrides": {
+    "vite": "^7.0.0"
   },
   "devDependencies": {
     "@astrojs/ts-plugin": "^1.10.9",

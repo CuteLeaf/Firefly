@@ -41,6 +41,7 @@ const navbarBlur =
 
 // 获取导航栏标题，如果没有设置则使用 siteConfig.title
 const navbarTitle = siteConfig.navbar.title || siteConfig.title;
+const navbarHoverTitle = siteConfig.navbar.hoverTitle || "";
 
 // 获取导航栏宽度配置
 const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
@@ -89,13 +90,13 @@ if (isLocalSrcLogo) {
 	}
 }
 ---
-<div id="navbar" class="z-50" style={`--navbar-glass-blur: ${navbarBlur}px;`} data-transparent-mode={navbarTransparentMode} data-enable-blur={String(navbarEnableBlur)} data-is-home={isHomePageCheck} data-full-width={navbarWidthFull}>
+<div id="navbar" class="z-50" style={`--navbar-glass-blur: ${navbarBlur}px;`} data-transparent-mode={navbarTransparentMode} data-enable-blur={String(navbarEnableBlur)} data-is-home={isHomePageCheck} data-full-width={navbarWidthFull} data-hover-title={navbarHoverTitle}>
     <div class:list={[
         className,
         "overflow-visible! h-18 px-4"
     ]}>
         <div class="mx-auto h-full w-full max-w-(--page-width) grid grid-cols-[auto_minmax(0,1fr)_auto] items-center">
-            <a href={url('/')} class="btn-plain scale-animation rounded-lg h-13 px-5 font-bold active:scale-95">
+            <a href={url('/')} class="btn-plain scale-animation rounded-lg h-13 px-5 font-bold active:scale-95 navbar-logo-link" data-original-title={navbarTitle}>
                 <div class:list={[
                     "flex flex-row items-center text-md",
                     siteConfig.navbar.followTheme ? "text-(--primary)" : "dark:text-white text-black"
@@ -227,6 +228,37 @@ function loadButtonScript() {
 }
 
 loadButtonScript();
+
+// hoverTitle 功能：鼠标悬停在Logo上时标题变化
+function initHoverTitle() {
+    const navbar = document.getElementById('navbar');
+    if (!navbar) return;
+    const hoverTitle = navbar.getAttribute('data-hover-title');
+    if (!hoverTitle) return;
+
+    const logoLink = navbar.querySelector('.navbar-logo-link') as HTMLElement | null;
+    if (!logoLink) return;
+
+    const logoText = logoLink.querySelector('span, div');
+    if (!logoText) return;
+
+    logoLink.addEventListener('mouseenter', function() {
+        const currentText = logoText.textContent;
+        logoText.setAttribute('data-text', currentText || '');
+        logoText.textContent = hoverTitle;
+    });
+
+    logoLink.addEventListener('mouseleave', function() {
+        const originalText = logoText.getAttribute('data-text');
+        if (originalText) {
+            logoText.textContent = originalText;
+        }
+    });
+}
+
+initHoverTitle();
+document.addEventListener('astro:page-load', initHoverTitle);
+document.addEventListener('swup:contentReplaced', initHoverTitle);
 
 // 为semifull模式添加滚动检测逻辑
 function initSemifullScrollDetection() {

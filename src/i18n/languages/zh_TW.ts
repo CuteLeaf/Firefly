@@ -307,6 +307,10 @@ export const zh_TW: Translation = {
 	[Key.galleryNoAlbums]: "暫無相簿",
 	[Key.galleryBackToAlbums]: "返回相簿列表",
 
+	// 說說頁面
+	[Key.talks]: "說說",
+	[Key.talksDescription]: "我的日常動態和碎碎念",
+
 	// 密碼保護
 	[Key.passwordProtected]: "密碼保護",
 	[Key.passwordProtectedDesc]: "此內容已被密碼保護，請輸入密碼查看。",

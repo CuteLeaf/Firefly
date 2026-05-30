@@ -354,12 +354,12 @@ html {
         @apply absolute top-full left-0 pt-2 opacity-0 invisible pointer-events-none transition-all duration-200 ease-out transform translate-y-[-8px] z-50;
     }
 
-    .dropdown-container:hover .dropdown-menu,
+    .dropdown-container.dropdown-open .dropdown-menu,
     .dropdown-container:focus-within .dropdown-menu {
         @apply opacity-100 visible pointer-events-auto translate-y-0;
     }
 
-    .dropdown-container:hover .dropdown-arrow,
+    .dropdown-container.dropdown-open .dropdown-arrow,
     .dropdown-container:focus-within .dropdown-arrow {
         @apply rotate-180;
     }
@@ -565,4 +565,89 @@ html {
 /* 分页信息样式 */
 .pagination-info {
   @apply text-sm text-(--text-secondary) text-center mb-2;
+}
+
+/* 导航页面样式 */
+/* Category Tab */
+.category-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(75 85 99);
+  background-color: rgb(243 244 246);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+:root.dark .category-tab {
+  color: rgb(209 213 219);
+  background-color: rgb(55 65 81);
+}
+
+.category-tab:hover {
+  background-color: rgb(229 231 235);
+}
+
+:root.dark .category-tab:hover {
+  background-color: rgb(75 85 99);
+}
+
+.category-tab.active {
+  background-color: rgb(59 130 246);
+  color: white;
+  border-color: rgb(59 130 246);
+}
+
+:root.dark .category-tab.active {
+  background-color: rgb(96 165 250);
+  border-color: rgb(96 165 250);
+}
+
+.category-tab .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.category-tab.active .dot {
+  background-color: white !important;
+}
+
+/* Site Card */
+.site-card {
+  display: block;
+  padding: 16px;
+  background-color: rgb(249 250 251);
+  border-radius: 12px;
+  border-left: 4px solid transparent;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+:root.dark .site-card {
+  background-color: rgb(55 65 81);
+}
+
+.site-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgb(0 0 0 / 0.1);
+}
+
+:root.dark .site-card:hover {
+  box-shadow: 0 8px 25px -5px rgb(0 0 0 / 0.3);
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }

@@ -1,0 +1,21 @@
+---
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { getEntry, render } from "astro:content";
+import Markdown from "@components/common/Markdown.astro";
+
+const moviesGamesPost = await getEntry("spec", "movies-games");
+if (!moviesGamesPost) {
+	throw new Error("Movies & Games page content not found");
+}
+const { Content } = await render(moviesGamesPost);
+---
+
+<MainGridLayout title="影视与游戏" description="我看过的影视和玩过的游戏">
+	<div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+		<div class="card-base z-10 px-9 py-6 relative w-full">
+			<Markdown class="mt-2">
+				<Content />
+			</Markdown>
+		</div>
+	</div>
+</MainGridLayout>

@@ -1,0 +1,84 @@
+---
+title: MDX 组件使用指南
+published: 2026-05-28
+description: 博客自定义 MDX 组件的使用方法，包括时间轴、音乐卡片和标签徽章。
+tags: [博客, MDX, 教程]
+category: 博客导航
+abbrlink: mdx-guide
+---
+
+本指南介绍博客中可用的自定义 MDX 组件。在 `.mdx` 文件中通过 `import` 导入后即可使用。
+
+## Timeline 时间轴
+
+用于展示更新日志，左侧竖线 + 圆点 + 标签徽章。
+
+### 参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `date` | string | 是 | 日期文本，如 `"2026-05-28"` |
+| `type` | string | 否 | `feature` / `improvement` / `fix` / `removal`，默认 `feature` |
+| `version` | string | 否 | 版本号，如 `"v1.2.0"` |
+
+### 示例
+
+```mdx
+import Timeline from "../../components/mdx/Timeline.astro";
+
+<Timeline date="2026-05-28" type="feature" version="v1.2.0">
+新增音乐页面，支持本地播放列表。
+</Timeline>
+
+<Timeline date="2026-05-27" type="fix">
+修复移动端导航栏显示问题。
+</Timeline>
+```
+
+## MusicCard 音乐卡片
+
+展示单首歌曲信息，包含封面、歌名、歌手和播放链接。
+
+### 参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `title` | string | 是 | 歌曲名称 |
+| `artist` | string | 是 | 歌手名称 |
+| `cover` | string | 否 | 封面图片 URL |
+| `url` | string | 否 | 播放链接 |
+
+### 示例
+
+```mdx
+import MusicCard from "../../components/mdx/MusicCard.astro";
+
+<MusicCard title="知我" artist="国风堂" />
+<MusicCard title="女孩" artist="韦礼安" cover="/images/cover.jpg" url="https://music.163.com" />
+```
+
+## TagBadge 标签徽章
+
+通用类型标签，用于标记内容类别。
+
+### 参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `type` | string | 是 | `feature` / `improvement` / `fix` / `removal` |
+| `text` | string | 否 | 自定义文本，不填则使用默认中文标签 |
+
+### 示例
+
+```mdx
+import TagBadge from "../../components/mdx/TagBadge.astro";
+
+<TagBadge type="feature" />
+<TagBadge type="fix" text="Bug Fix" />
+```
+
+## 使用须知
+
+- 这些组件只能在 `.mdx` 文件中使用，普通 `.md` 文件不支持 `import` 语法
+- 导入路径根据组件所在位置确定，一般为 `../../components/mdx/组件名.astro`
+- 组件样式已内置，无需额外配置
