@@ -178,7 +178,7 @@ export const siteConfig: SiteConfig = {
 		// Umami 统计配置
 		umamiAnalytics: {
 			// Umami Website ID
-			websiteId: "cb169e2e-99e2-4bb4-b903-c495fb04b096",
+			websiteId: "",
 			// Umami JS地址，支持使用自建
 			scriptUrl: "https://cloud.umami.is/script.js",
 			// Umami 会话回放脚本地址，支持使用自建
@@ -204,17 +204,17 @@ export const siteConfig: SiteConfig = {
 		// 51la 统计配置
 		la51Analytics: {
 			// 51la 统计 ID
-			Id: "",
+			Id: "3Q5qajWb3P3Css8u",
 			// 自定义 SDK JS 地址，防止 DNS 污染，留空使用默认地址
 			sdkUrl: "",
 			// 多个统计 ID 的数据分离标识，留空则使用 Id
-			ck: "",
+			ck: "3Q5qajWb3P3Css8u",
 			// 是否开启事件分析功能
 			autoTrack: false,
 			//  Hash路由模式, 项目使用History API路由, 所以不必开启默认false
 			hashMode: false,
 			// 是否开启网站录屏功能
-			screenRecord: true,
+			screenRecord: false,
 		},
 	},
 
