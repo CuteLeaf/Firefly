@@ -45,12 +45,12 @@ Specify ending point for line definition指定线型的终点：这里选择H字
 
 AutoCAD二维制图课程：
 
-[https://jimuhaoke.com/blog/autocad-2d-drafting-course](https://jimuhaoke.com/blog/autocad-2d-drafting-course)
+[https://jimuhaoke.com/posts/autocad-2d-drafting-course/](https://jimuhaoke.com/posts/autocad-2d-drafting-course/)
 
 AutoCAD三维建模课程：
 
-[https://jimuhaoke.com/blog/autocad-3d-modeling-course](https://jimuhaoke.com/blog/autocad-3d-modeling-course)
+[https://jimuhaoke.com/posts/autocad-3d-modeling-course/](https://jimuhaoke.com/posts/autocad-3d-modeling-course/)
 
 AutoCAD高级渲染课程：
 
-[https://jimuhaoke.com/blog/autocad-advanced-rendering-course](https://jimuhaoke.com/blog/autocad-advanced-rendering-course)
+[https://jimuhaoke.com/posts/autocad-advanced-rendering-course/](https://jimuhaoke.com/posts/autocad-advanced-rendering-course/)

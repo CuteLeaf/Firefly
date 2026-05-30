@@ -8,9 +8,9 @@ draft: false
 image: "./AutoCAD2027.webp"
 ---
 ### 第一步：下载安装包  
-搜索或者微信扫描下面的公众号：积木好课  
+关注微信公众号：陈成龙  
 回复关键词：CAD2027  
-![积木好课微信公众号](../public-wechat.webp)
+![微信公众号](../public-wechat.webp)
 ### 第二步：安装主程序  
 下载解压后的文件，然后双击 Setup.exe 文件开始安装，弹出的窗口选择：是。  
 开许可界面，勾选我同意使用条款，然后点击下一步按钮  
@@ -27,16 +27,16 @@ C:\Program Files\Autodesk\AutoCAD 2027
 
 ### 相关学习：  
 Autodesk认证教师私人定制或一对一教学：  
-[https://jimuhaoke.com/blog/one-on-one-teaching](https://jimuhaoke.com/blog/one-on-one-teaching)
+[https://jimuhaoke.com/posts/one-on-one-teaching/](https://jimuhaoke.com/posts/one-on-one-teaching/)
 
 AutoCAD二维制图课程：
 
-[https://jimuhaoke.com/blog/autocad-2d-drafting-course](https://jimuhaoke.com/blog/autocad-2d-drafting-course)
+[https://jimuhaoke.com/posts/autocad-2d-drafting-course/](https://jimuhaoke.com/posts/autocad-2d-drafting-course/)
 
 AutoCAD三维建模课程：
 
-[https://jimuhaoke.com/blog/autocad-3d-modeling-course](https://jimuhaoke.com/blog/autocad-3d-modeling-course)
+[https://jimuhaoke.com/posts/autocad-3d-modeling-course/](https://jimuhaoke.com/posts/autocad-3d-modeling-course/)
 
 AutoCAD高级渲染课程：
 
-[https://jimuhaoke.com/blog/autocad-advanced-rendering-course](https://jimuhaoke.com/blog/autocad-advanced-rendering-course)
+[https://jimuhaoke.com/posts/autocad-advanced-rendering-course/](https://jimuhaoke.com/posts/autocad-advanced-rendering-course/)

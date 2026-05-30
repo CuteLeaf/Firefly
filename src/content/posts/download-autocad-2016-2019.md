@@ -47,10 +47,10 @@ AutoCAD2019	001K1
 
 相关学习：  
 AutoCAD二维制图课程：  
-https://jimuhaoke.com/blog/autocad-2d-drafting-course  
+https://jimuhaoke.com/posts/autocad-2d-drafting-course/  
 AutoCAD三维建模课程：  
-https://jimuhaoke.com/blog/autocad-3d-modeling-course  
+https://jimuhaoke.com/posts/autocad-3d-modeling-course/  
 AutoCAD高级渲染课程：  
-https://jimuhaoke.com/blog/autocad-advanced-rendering-course  
+https://jimuhaoke.com/posts/autocad-advanced-rendering-course/  
 
 免责声明：本内容整理于互联网共享资源。“仅限个人用户基于测试学习交流，不能用于商业用途”，下载之后请在24小时之内删除安装包，谢谢配合！如有侵犯您的版权或其它利益的，请联系我们，我们会在收到消息后的三个工作日内处理。

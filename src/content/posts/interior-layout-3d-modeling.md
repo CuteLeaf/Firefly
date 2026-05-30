@@ -33,12 +33,12 @@ image: "https://cdn.jimuhaoke.com/2025/%E5%AE%A4%E5%86%85%E7%A9%BA%E8%B0%83%E5%A
 
 AutoCAD二维制图课程：
 
-[https://jimuhaoke.com/blog/autocad-2d-drafting-course](https://jimuhaoke.com/blog/autocad-2d-drafting-course)
+[https://jimuhaoke.com/posts/autocad-2d-drafting-course/](https://jimuhaoke.com/posts/autocad-2d-drafting-course/)
 
 AutoCAD三维建模课程：
 
-[https://jimuhaoke.com/blog/autocad-3d-modeling-course](https://jimuhaoke.com/blog/autocad-3d-modeling-course)
+[https://jimuhaoke.com/posts/autocad-3d-modeling-course/](https://jimuhaoke.com/posts/autocad-3d-modeling-course/)
 
 AutoCAD高级渲染课程：
 
-[https://jimuhaoke.com/blog/autocad-advanced-rendering-course](https://jimuhaoke.com/blog/autocad-advanced-rendering-course)
+[https://jimuhaoke.com/posts/autocad-advanced-rendering-course/](https://jimuhaoke.com/posts/autocad-advanced-rendering-course/)

@@ -38,4 +38,4 @@ AutoCAD三维机械建模
 
 **原创AutoCAD视频教程三维建模**
 
-[https://jimuhaoke.com/blog/autocad-3d-modeling-course](https://jimuhaoke.com/blog/autocad-3d-modeling-course)
+[https://jimuhaoke.com/posts/autocad-3d-modeling-course/](https://jimuhaoke.com/posts/autocad-3d-modeling-course/)
