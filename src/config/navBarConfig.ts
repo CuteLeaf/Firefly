@@ -46,11 +46,6 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 			icon: "",
 		},
 		{
-			name: "留言区",
-			url: "/guestbook/",
-			icon: "",
-		},
-		{
 			name: "淘宝店铺",
 			url: "https://51yimucang.taobao.com/",
 			external: true,
