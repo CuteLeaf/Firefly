@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "/blog/:slug",
+      "destination": "/posts/:slug/",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/:slug/",
+      "destination": "/posts/:slug/",
+      "statusCode": 301
+    }
+  ]
+}
