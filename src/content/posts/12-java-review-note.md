@@ -10,70 +10,197 @@ draft: false
 
 # Java复习笔记
 
-## 零、简单输入输出
-```java
-//读入
-Scanner in = new Scanner(System.in); //声明一个Scanner类型的in，从标准输入流（System.in）读取数据
-int a = in.nextInt();  //使用nextInt()读取下一个int类型并存入a中
-double b = in.nextDouble(); //使用nextDouble()读取下一个double类型并存入b中
-String input = in.nextLine(); //使用nextLine()读取一整行并存入input中
-String input = in.next(); //使用next()读取一个单词并存入input中
-in.close(); //关闭scanner
+## 一、大题：
 
-//读出
-System.out.println("打印一行文字并换行");
-System.out.print("打印一行文字");
+### 1.类之间的关系
+```java
+public ClassA extends ClassB{...}  //继承
 ```
 
-## 一、数组的实现
-例子：`JPanel panel[] = new JPanel[8];`
-- 这里声明了一个变量 `panel` , 其类型是 `JPanel[]`（即 `JPanel` 类型的数组）
-- `new` 关键字开辟了一块连续的空间
+## 二、单选题知识点整理
 
-**注意：此时不能直接调用panel[0]，因为`new JPanel[8]` 只是创建了“容器”，容器里的每个格子都是空的，`panel[0]` 还没有指向任何实际的 `JPanel` 对象。**
+### 1.Arraylist
 
-还需要 `panel[i] = new JPanel()` 来初始化
+- ArrayList 继承了 AbstractList ，并实现了 List 接口
+- Arraylist 线程不安全（Vector线程安全）
+- ArrayList 存储的是对象引用，不能存基本数据类型
+- ArrayList 是按照插入顺序的有序集合
+- ArrayList 可以动态扩展，每次扩展到1.5倍
 
+```java
+ArrayList<T> a = new ArrayList<T>();  // T为Arraylist中元素类型
+a.get(n) //来获取Arraylist中的第 `n+1` 个元素（index从0开始）
+a.set(2, "Wiki"); // 第一个参数为索引位置，第二个为要修改的值
+a.remove(3); // 删除第四个元素
+a.size(); // 计算 ArrayList 中的元素数量
+for(String i : a) // 迭代Arraylist中的元素
+```
 
-## 二、常见的类的用法 JFrame JPanel JButton JMenuBar JTabbedPane BorderLayout CardLayout GridLayout JList JPasswordField JCheckBox JToggleButton JRadioButton BasicArrowButton Border
+### 2.继承
 
-## 三、接口
-**接口不是类，而是对希望符合这个接口的类的一组需求**
+- `a instanceof b` 只要左对象的实际类型是右类型 本身、子类、间接子类，结果为 true。
+- `null instanceof` 任意类，结果永远是 `false`
+- String类、基本类型类、System类、Math类、Collections类被 final 修饰，不能被继承。
 
-## 四、继承
+### 3.接口
+`public ClassA implements InterfaceA`
+- 接口不能被实例化，只能被实现
+- 接口中的字段默认是 public static final（常量），不能定义普通成员变量，且接口常量必须在声明时直接赋值，且不能修改
+- 接口中的方法没有方法体
+- 接口中抽象方法默认修饰符为 public abstract
+- 接口可以多继承接口，类可以多实现接口。
+- 接口不能有 private 方法
 
-## 五、重写
+### 4.Srting类
+- String 是不可变字符串
+- String 是引用类型，不是基本数据类型
+- `String s1 = "hello"; String s2 = "hello";` 则 `s1 == s2` 为 `true`
+- String 类被 final 修饰，不能被继承
 
-## 六、enum
+### 5.数组
+- 数组的声明：
+    `int[] arr;` `int arr[];`(定义引用，未分配内存)
+    `int[][] matrix;`
+- 数组的声明+初始化：
+    `int[] arr = new int[3];` 
+    `int[] arr = {1, 2, 3};` 
+    `int[] arr = new int[3]{1, 2, 3};`
+    `int[][] matrix = new int[3][3];`
+    ```java
+    // 直接赋值，编译器自动计算行列
+    int[][] matrix = {{1, 2, 3},{4, 5, 6},{7, 8, 9}};
+    ```
+- 数组的初始化：
+    ```java
+    int[] arr; // 第一步：声明数组变量（无内存分配）
+    arr = new int[10]; // 第二步：初始化（分配内存，指定长度）
+    arr = new int[]{1,2,3}; // 或初始化并赋值
+    ```
+    
+    
+- 注意：Java 数组声明时 `[]` 内不能写大小
 
-## 七、ArrayList
+### 6.关键字
+- **`super` 关键字：**
+    - `super` 代表父类对象引用，只存在于子类中，作用：访问父类的成员变量、成员方法、构造方法。
+    - 同名变量、重写方法， `super.` 指向父类。
 
-## 八、抽象类
+- **`this` 关键字：**
+    - `this` 代表当前对象本身， `this()` 调用本类其他构造方法。
+    - `this()` 可以在构造方法中调用本类的其他构造方法
+    - `this` 既能在实例方法中使用，也能在构造方法中使用
+    - 静态方法中没有 this
 
-## 九、final
+- `this()` 和 `super()` 都必须放在构造方法第一行，两者都禁止在 `static` 中使用。
 
-## 十、重载
+- **`static` 关键字：**修饰类的成员（变量、方法、代码块、内部类），表示**属于类本身，而非对象实例** 不能被重写
 
-## 十一、初始化块
+- **`final` 关键字：** 不可修改、不可重写、不可继承
+    - 可以先声明、后赋值，但仅允许赋值 1 次
+    - 声明时不赋值不会报错，但使用前必须完成初始化。
+    - `static final`属于类，类加载时就要完成赋值
+- **`abstract` 关键字** 抽象、不完整，用来定义模板，强制子类补全实现。可修饰类、方法。
+    - 只有方法声明，没有方法体（末尾分号结束）
+    `public abstract void eat();`
+    - 抽象方法必须写在抽象类 / 接口中
+    - 子类继承抽象类后：必须重写所有抽象方法
+    - `abstract` 修饰抽象类，不能使用 new 直接实例化
+    - 普通子类继承抽象类 → 必须实现全部抽象方法
+    - 抽象子类继承抽象类 → 可不用实现抽象方法，继续交由下一代子类实现
+    - 包含抽象方法的类一定是抽象类
 
-## 十二、构造函数
+### 7.泛型
+- 泛型可用于类、接口、方法
+- 泛型在编译期进行类型检查，可用于增强类型安全
+- 泛型类型参数只能是引用类型，不能使用基本类型
+- 泛型在运行时不保留泛型信息，泛型只在编译时有效
+- 泛型集合之间无继承多态关系
 
-## 十三、泛型
+### 8.UML图绘制
+#### (1)访问权限符号
+|符号|访问修饰符|含义|
+|----|----------|-----|
+|+|	public|公共，所有类可访问|
+|-|	private|私有，仅本类访问|
+|#|	protected|受保护，本类 + 子类 + 同包|
+|~|	default|同包内可访问|
 
-## 十四、instanceof
+#### (2)语法格式
+- 属性：`可见符 变量名 : 类型 [= 默认值]` 例如：`- name : String`
+- 方法：`可见符 方法名(参数:类型) : 返回值类型` 例如：`+ setDir(dir:Direction) : void`
 
-## 十五、模式匹配
+#### (3)绘图线条
+- **箭头统一指向：被依赖 / 被继承 / 被实现的一方**
+- 实线 + 空心三角：继承（泛化）  ——▷
+- 虚线 + 空心三角：实现（接口）------▷
+- 实线（可带箭头）：关联  ———
+- 虚线 + 箭头：依赖  ------▶
+- 实线 + 空心菱形：聚合  ——◇
+- 实线 + 实心菱形：组合  ——◆
+- 一个类关联箭头指回自身时，表示该类的对象可以持有同类对象的引用，称为 self-containing class（自包含类）
 
-## 十六、Object超类
+#### (4)用例图
+- 描述参与者、功能（用例），多用于需求分析
+- 参与者：小人图标，表示人 / 外部系统
+- 用例：椭圆，代表系统功能
+- 关系：实线连接
 
-## 十七、hashCode
+#### (5)时序图
+- 对象之间按时间顺序的交互、方法调用流程
+- 对象：顶部矩形，格式：`对象名 : 类名`
+- 生命线：对象下方垂直虚线
+- 激活框：虚线上的细长矩形（表示对象正在执行）
+- 消息：水平箭头，表示方法调用，箭头指向被调用方
 
-## 十八、装箱拆箱
+### 9.五大设计模式
 
-## 十九、异常和断言
+- 单例模式
+    - 一个类在整个程序中，有且仅有一个实例，并提供全局唯一访问入口。
+    - 私有构造方法：禁止外部 `new`
+    ```java
+    public class SingletonPatternDemo{
+        public static void main(String[] args){
+            //不合法的构造函数
+            //编译时错误：构造函数 SingleObject() 是不可见的
+            //SingleObject object = new SingleObject();
+            //获取唯一可用的对象
+            SingleObject object = SingleObject.getInstance();
+            //显示消息
+            object.showMessage();
+        }
+    }
+    ```
+- 观察者模式
+    - 一对多依赖：当被观察者状态改变时，自动通知所有观察者并触发更新
+    - 被观察者：维护观察者列表，提供增删、通知方法
+    - 具体主题：状态改变，触发通知
+    - 抽象观察者：定义接收通知的更新接口
+    - 具体观察者：收到通知后执行具体逻辑想·
 
-## 二十、LinkedList
+### 小知识点
+- 类型转换
+    - 自动转换（隐式）：小范围到大范围
+    - 强制转换（显式）：大范围到小范围，需加 (类型) 强转符
+- 浮点数字面量默认是 double 类型
+    - 错误写法：`float x = 6.0;`
+    - 正确写法：`float x = (float) 6.0;` 或 `float x = 6.0f;`
+- 装箱 & 拆箱
+    - 装箱：基本类型 → 对应的包装类
+    - 拆箱：包装类 → 基本类型
+- 实例变量：属于对象，对象创建后才分配内存  
+  静态变量：被 static 修饰，属于类，所有对象共享，类加载时初始化
+- `import` 中 `*` 的作用：导入该包下所有类 / 接口，简化代码，无需逐个导入类
+- `JavaDoc`：专门用于生成程序帮助文档，一般用于类、方法、成员变量上方。
+- Java 标识符规则：只能由字母、数字、_ 、$ 组成，不能以数字开头，不能是关键字。
+- 数组索引从 `0` 开始
+- Java 独立运行的程序叫 `Application（应用程序）`，有 `main()` 方法作为入口。 `Applets` 运行在浏览器中（已废弃）， `Servlets` 运行在服务器端， `Midlets` 是 J2ME 移动程序
+- Java类初始化顺序（加载及实例化顺序）：
+    - `静态变量 → 静态代码块 → 构造代码块 → 构造方法`（同级按代码顺序）
+    - 静态变量/静态代码块（类加载时，只执行一次）
+    - 构造代码块（每次创建对象执行）
+- Java中所有类的根类是**Object类**，所有类都隐式继承Object
+- JVM = Java Virtual Machine（Java 虚拟机）。它负责将字节码（.class）翻译为机器码执行，是 Java "一次编写，到处运行"的基础。
+- Stack trace（堆栈跟踪）是异常发生时打印的方法调用链，显示从哪个方法调用到哪个方法最终触发了异常，帮助定位错误位置。还可用于理解执行流程、排查性能问题
+**栈轨迹是方法调用的序列，不是变量列表，也不是错误本身。**
 
-## 二十一、迭代器
-
-## 二十二、Lambda表达式
+- 集合（Collection）表示一个对象拥有多个其他对象，体现的是 `one-to-many`（一对多）关系
