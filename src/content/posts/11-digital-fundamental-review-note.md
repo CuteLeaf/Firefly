@@ -5,7 +5,7 @@ description: 大学数字逻辑计课程的复习笔记
 image: ./covers/cover12.webp
 tags: [复习笔记, 数字逻辑]
 category: 复习笔记
-draft: false
+draft: true
 ---
 
 # 数字逻辑复习笔记
