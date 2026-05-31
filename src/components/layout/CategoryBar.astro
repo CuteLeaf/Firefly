@@ -32,7 +32,7 @@ const archiveUrl = url("/archive/");
       data-category-name=""
       aria-label={i18n(I18nKey.home)}
     >
-      <Icon name="material-symbols:home" class="text-lg" />
+      <Icon name="material-symbols:home" is:inline class="text-lg" />
     </a>
     <a
       href={archiveUrl}
@@ -117,6 +117,9 @@ const archiveUrl = url("/archive/");
     color: var(--btn-content);
     background: transparent;
   }
+  .category-pill[data-category-name=""] {
+    color: var(--primary);
+  }
   .category-pill:hover {
     border-color: var(--primary);
     color: var(--primary);
@@ -147,6 +150,10 @@ const archiveUrl = url("/archive/");
     background: var(--primary);
     border-color: var(--primary);
     opacity: 0.9;
+  }
+  .category-pill[data-category-name=""][data-active],
+  .category-pill[data-category-name=""][data-active]:hover {
+    color: white;
   }
 </style>
 

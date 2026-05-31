@@ -17,6 +17,9 @@ importers:
       '@astrojs/markdown-remark':
         specifier: ^7.2.0
         version: 7.2.0
+      '@astrojs/markdown-satteri':
+        specifier: ^0.2.1
+        version: 0.2.1
       '@astrojs/mdx':
         specifier: ^6.0.1
         version: 6.0.1(@astrojs/markdown-satteri@0.2.1)(astro@6.4.2(@types/node@25.9.1)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@2.80.0)(stylus@0.64.0)(terser@5.46.0)(yaml@2.9.0))
@@ -143,6 +146,9 @@ importers:
       satori:
         specifier: ^0.26.0
         version: 0.26.0
+      satteri:
+        specifier: ^0.6.3
+        version: 0.6.3
       sharp:
         specifier: ^0.34.5
         version: 0.34.5
@@ -5616,7 +5622,6 @@ snapshots:
       '@astrojs/internal-helpers': 0.10.0
       github-slugger: 2.0.0
       satteri: 0.6.3
-    optional: true
 
   '@astrojs/mdx@4.3.14(astro@6.4.2(@types/node@25.9.1)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@2.80.0)(stylus@0.64.0)(terser@5.46.0)(yaml@2.9.0))':
     dependencies:
@@ -10967,7 +10972,6 @@ snapshots:
       '@bruits/satteri-linux-x64-gnu': 0.6.3
       '@bruits/satteri-wasm32-wasi': 0.6.3
       '@bruits/satteri-win32-x64-msvc': 0.6.3
-    optional: true
 
   sax@1.4.3: {}
 

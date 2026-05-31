@@ -8,7 +8,7 @@
 > 
 > ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen) 
 ![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
-![Astro](https://img.shields.io/badge/Astro-6.3.3-orange)
+![Astro](https://img.shields.io/badge/Astro-6.4.2-orange)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)
 >
 > [![Stars](https://img.shields.io/github/stars/CuteLeaf/Firefly?style=social)](https://github.com/CuteLeaf/Firefly/stargazers)
@@ -125,6 +125,9 @@
    pnpm dev
    ```
    部落格將在 `http://localhost:4321` 可用
+
+### 社區教程
+Cloudflare Workers部署：[【不用服务器，无需备案，零成本搭建一个自己的个人博客】](https://www.bilibili.com/video/BV1hX9XBKEhm)
 
 ### 平台託管部署
 - **參考[官方指南](https://docs.astro.build/zh-cn/guides/deploy/)將部落格部署至 Vercel, Netlify, Cloudflare Pages, EdgeOne Pages 等。**

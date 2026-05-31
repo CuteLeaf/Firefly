@@ -114,6 +114,14 @@ const sizes = preview
 	: "(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px";
 const quality = preview ? Math.round(configQuality * 0.9) : configQuality;
 
+const getPictureSizeProps = (image: ImageMetadata) => {
+	if (preview) {
+		return { width: 400, height: 300, widths, sizes };
+	}
+	const baseHeight = Math.round(1200 / (image.width / image.height));
+	return { width: 1200, height: baseHeight, widths, sizes };
+};
+
 // 是否显示加载动画
 const showLoading = coverImageConfig.randomCoverImage.showLoading ?? true;
 
@@ -159,15 +167,12 @@ const remoteReferrerPolicy =
 				alt="Fallback cover"
 				class={imageClass}
 				style={imageStyle}
-				width={preview ? 400 : 1200}
-				height={preview ? 300 : 800}
 				loading="lazy"
 				formats={formats}
 				fallbackFormat={fallbackFormat}
 				quality={quality}
-				widths={widths}
-				sizes={sizes}
 				layout={layout}
+				{...getPictureSizeProps(fallbackImg)}
 			/>
 		</div>
 	)}
@@ -192,15 +197,12 @@ const remoteReferrerPolicy =
 			alt={alt || ""}
 			class={imageClass}
 			style={imageStyle}
-			width={preview ? 400 : 1200}
-			height={preview ? 300 : 800}
 			loading={loading}
 			formats={formats}
 			fallbackFormat={fallbackFormat}
 			quality={quality}
-			widths={widths}
-			sizes={sizes}
 			layout={layout}
+			{...getPictureSizeProps(img)}
 			data-cover-img
 		/>
 	)}
