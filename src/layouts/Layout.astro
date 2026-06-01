@@ -27,6 +27,7 @@ import { getDefaultBackground, isHomePage } from "@/utils/layout-utils";
 import { url } from "@/utils/url-utils";
 
 import "@/styles/main.css";
+import "@/styles/ai.css";
 import "@/styles/variables.styl";
 import "@/styles/markdown-extend.styl";
 import "@rehype-callouts-theme";
@@ -1311,6 +1312,14 @@ function disableAnimation() {
       // 如果主题不匹配，静默更新（不触发事件，避免重新加载效果）
       if (currentTheme !== expectedTheme) {
         document.documentElement.setAttribute("data-theme", expectedTheme);
+      }
+
+      // AI 组件重新初始化
+      if ((window as any).setupAiChat) {
+        (window as any).setupAiChat();
+      }
+      if ((window as any).setupAiSummary) {
+        (window as any).setupAiSummary();
       }
 
       // 检查当前页面是否为文章页面，如果是则触发自定义事件用于初始化评论系统

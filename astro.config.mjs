@@ -268,6 +268,7 @@ export default defineConfig({
 			},
 		},
 		build: {
+			chunkSizeWarningLimit: 1500, // KB, 大型依赖包（KaTeX/Mermaid等）会产生较大chunk
 			minify: "esbuild",
 			esbuildOptions: {
 				minify: true,

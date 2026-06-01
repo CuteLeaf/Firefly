@@ -4,6 +4,7 @@ import BackToComment from "./BackToComment.astro";
 import BackToHome from "./BackToHome.astro";
 import BackToTop from "./BackToTop.astro";
 import FloatingTOC from "./FloatingTOC.astro";
+import AiChat from "@components/ai/AiChat.svelte";
 
 interface Props {
 	headings?: MarkdownHeading[];
@@ -17,6 +18,7 @@ const { headings } = Astro.props;
   <BackToComment />
   <BackToHome />
   <BackToTop />
+  <AiChat client:load />
 </div>
 
 <style>

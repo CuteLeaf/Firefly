@@ -328,4 +328,20 @@ export const en: Translation = {
 	[Key.passwordError]: "Incorrect password, please try again.",
 	[Key.passwordProtectedRss]:
 		"This article is encrypted. Please visit the website to view it.",
+
+	// AI Features
+	[Key.aiChat]: "AI Assistant",
+	[Key.aiChatTitle]: "AI Assistant",
+	[Key.aiChatPlaceholder]: "Type your question...",
+	[Key.aiChatSend]: "Send",
+	[Key.aiChatThinking]: "Thinking...",
+	[Key.aiChatLoading]: "Thinking...",
+	[Key.aiChatError]: "AI service is temporarily unavailable. Please try again later.",
+	[Key.aiChatWelcome]: "👋 Hello!",
+	[Key.aiChatWelcomeDesc]: "I can help you answer questions about this article",
+	[Key.aiSummary]: "AI Summary",
+	[Key.aiSummaryLoading]: "Generating summary...",
+	[Key.aiSummaryError]: "Failed to generate summary. Please try again later.",
+	[Key.aiSummaryThinking]: "Thinking Process",
+	[Key.aiSummarySuggestions]: "💡 You might also want to know",
 };

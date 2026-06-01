@@ -319,4 +319,20 @@ export const zh_CN: Translation = {
 	[Key.passwordSubmit]: "解锁",
 	[Key.passwordError]: "密码错误，请重试。",
 	[Key.passwordProtectedRss]: "本文已加密保护，请访问网站查看。",
+
+	// AI 功能
+	[Key.aiChat]: "AI 助手",
+	[Key.aiChatTitle]: "AI 助手",
+	[Key.aiChatPlaceholder]: "输入你的问题...",
+	[Key.aiChatSend]: "发送",
+	[Key.aiChatThinking]: "思考中...",
+	[Key.aiChatLoading]: "正在思考...",
+	[Key.aiChatError]: "AI 服务暂时不可用，请稍后再试",
+	[Key.aiChatWelcome]: "👋 你好！",
+	[Key.aiChatWelcomeDesc]: "我可以帮你解答关于这篇文章的问题",
+	[Key.aiSummary]: "AI 概括",
+	[Key.aiSummaryLoading]: "正在生成概括...",
+	[Key.aiSummaryError]: "概括生成失败，请稍后再试",
+	[Key.aiSummaryThinking]: "思考过程",
+	[Key.aiSummarySuggestions]: "💡 你可能还想了解",
 };

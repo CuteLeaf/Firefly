@@ -313,6 +313,22 @@ enum I18nKey {
 	passwordSubmit = "passwordSubmit",
 	passwordError = "passwordError",
 	passwordProtectedRss = "passwordProtectedRss",
+
+	// AI 功能
+	aiChat = "aiChat",
+	aiChatTitle = "aiChatTitle",
+	aiChatPlaceholder = "aiChatPlaceholder",
+	aiChatSend = "aiChatSend",
+	aiChatThinking = "aiChatThinking",
+	aiChatLoading = "aiChatLoading",
+	aiChatError = "aiChatError",
+	aiChatWelcome = "aiChatWelcome",
+	aiChatWelcomeDesc = "aiChatWelcomeDesc",
+	aiSummary = "aiSummary",
+	aiSummaryLoading = "aiSummaryLoading",
+	aiSummaryError = "aiSummaryError",
+	aiSummaryThinking = "aiSummaryThinking",
+	aiSummarySuggestions = "aiSummarySuggestions",
 }
 
 export default I18nKey;
