@@ -1,7 +1,7 @@
 ---
 title: 积木好课机械制图员四级技能认定考试视频教程
-published: 2026-05-11
-description: '全面讲授了基本设置部分，包含图层、图框、文字样式；计算机二维绘图考核的重难点、零件图的拆画和抄画、手工绘图的三视图绘制规范。'
+published: 2026-06-01
+description: '全面详解基本设置包含图层、图框、文字样式；计算机二维绘图考核的重难点、零件图的拆画和抄画、手工绘图三视图绘制规范。'
 image: 'https://cdn.jimuhaoke.com/img/%E8%81%8C%E4%B8%9A%E6%8A%80%E8%83%BD.webp'
 pinned: true
 tags: [CAD四级认证, CAD课程]
@@ -15,9 +15,13 @@ draft: false
 
 原创教师：Autodesk官方认证教师
 
-课程售后：购买即学、永久有效、免费答疑
+课程售后：购买即学、永久有效、免费答疑、提供工程文件对照操作练习
 
-课程链接：[https://www.bilibili.com/cheese/play/ss116047640](https://www.bilibili.com/cheese/play/ss116047640)
+课程链接：
+淘宝教育：  
+[https://item.taobao.com/item.htm?ft=t&id=919839247177](https://item.taobao.com/item.htm?ft=t&id=919839247177)  
+哔哩哔哩课堂：  
+[https://www.bilibili.com/cheese/play/ss116047640](https://www.bilibili.com/cheese/play/ss116047640)
 
 课程内容：依据广东省职业技能等级认定试卷的制图员（机械）技能等级认定四级技能考核试卷两套真题，从头开始全面讲授了基本设置部分，包含图层、图框、文字样式；计算机二维绘图考核的重难点、零件图的拆画和抄画、手工绘图的三视图绘制规范。
 
@@ -72,4 +76,8 @@ draft: false
 
 原创教师：Autodesk官方认证教师
 
-课程链接：[https://www.bilibili.com/cheese/play/ss116047640](https://www.bilibili.com/cheese/play/ss116047640)
+课程链接：
+淘宝教育：  
+[https://item.taobao.com/item.htm?ft=t&id=919839247177](https://item.taobao.com/item.htm?ft=t&id=919839247177)  
+哔哩哔哩课堂：  
+[https://www.bilibili.com/cheese/play/ss116047640](https://www.bilibili.com/cheese/play/ss116047640)
