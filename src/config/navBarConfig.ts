@@ -38,6 +38,12 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 				external: false,
 				icon: "",
 			},
+			{
+				name: "CAD机械四级考试",
+				url: "/posts/mechanical-level-course/",
+				external: false,
+				icon: "",
+			},
 		],
 		},
 		{
