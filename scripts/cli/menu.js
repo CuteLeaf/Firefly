@@ -5,7 +5,7 @@ const MENU_ITEMS = [
 	{ cmd: "new", label: "New Post", desc: "Create a new blog post" },
 	{ cmd: "media", label: "Media", desc: "Download movie/anime cover" },
 	{ cmd: "music", label: "Music", desc: "Download music + lyrics" },
-	{ cmd: "lrc", label: "Extract Lyrics", desc: "Extract M4A lyrics" },
+	{ cmd: "lrc", label: "Extract Lyrics", desc: "Extract M4A lyrics & cover" },
 	{ cmd: "desc", label: "AI Description", desc: "Generate article summary" },
 	{ cmd: "sync", label: "Sync Notes", desc: "Sync external notes" },
 	{ cmd: "dev", label: "Dev Server", desc: "Start dev server" },

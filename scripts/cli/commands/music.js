@@ -6,8 +6,28 @@ import { downloadFile } from "../utils/download.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "../../..");
 
-const DEFAULT_API = "https://api.i-meto.com/meting/api";
-const DEFAULT_SERVER = "netease";
+const NCM_HEADERS = {
+	"User-Agent":
+		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+	Referer: "https://music.163.com",
+};
+
+async function safeFetch(url, opts = {}) {
+	try {
+		const res = await fetch(url, {
+			headers: NCM_HEADERS,
+			signal: AbortSignal.timeout(15000),
+			...opts,
+		});
+		return res;
+	} catch {
+		return null;
+	}
+}
+
+// NetEase search + lyrics (free, no auth)
+// Cover from QQ Music CDN (free, no auth)
+// Audio: user downloads manually, then pnpm cli lrc extracts everything
 
 export default async function music(args, flags) {
 	if (!args) {
@@ -16,27 +36,29 @@ export default async function music(args, flags) {
 	}
 
 	const name = args.trim();
-	const server = flags.get("server") || DEFAULT_SERVER;
-	const apiBase = flags.get("api") || DEFAULT_API;
 	const autoYes = flags.has("y") || flags.has("yes");
 
-	console.log(`  Searching: "${name}" on ${server}`);
+	// Step 1: Search on NetEase
+	console.log(`  Searching: "${name}" on netease`);
+	const searchUrl = `https://music.163.com/api/search/get?s=${encodeURIComponent(name)}&type=1&limit=10`;
+	const searchRes = await safeFetch(searchUrl);
+	if (!searchRes) {
+		console.error("  Search failed (network error)");
+		return;
+	}
+	const searchData = await searchRes.json();
+	const songs = searchData.result?.songs || [];
 
-	const searchUrl = `${apiBase}?server=${server}&type=search&id=${encodeURIComponent(name)}`;
-	const res = await fetch(searchUrl);
-	if (!res.ok) throw new Error(`Search failed: ${res.status}`);
-	const results = await res.json();
-
-	if (!results.length) {
+	if (!songs.length) {
 		console.error("  No results found.");
 		return;
 	}
 
-	const displayResults = results.slice(0, 5);
+	const displayResults = songs.slice(0, 5);
 	console.log("\n  Results:");
-	displayResults.forEach((r, i) => {
-		const artist = r.artist || r.ar?.map((a) => a.name).join(", ") || "Unknown";
-		console.log(`  [${i + 1}] ${r.name || r.title} - ${artist}`);
+	displayResults.forEach((s, i) => {
+		const artist = s.artists?.map((a) => a.name).join(", ") || "Unknown";
+		console.log(`  [${i + 1}] ${s.name} - ${artist}`);
 	});
 
 	let selected;
@@ -54,58 +76,78 @@ export default async function music(args, flags) {
 		}
 	}
 
-	const songId = String(selected.id || selected.songid);
-	const songName = selected.name || selected.title;
-	const artistName = selected.artist || selected.ar?.map((a) => a.name).join(", ") || "";
+	const songId = selected.id;
+	const songName = selected.name;
+	const artistName = selected.artists?.map((a) => a.name).join(", ") || "";
+	const albumName = selected.album?.name || "";
 	console.log(`\n  Selected: ${songName} - ${artistName}`);
 
-	const urlRes = await fetch(`${apiBase}?server=${server}&type=url&id=${songId}`);
-	const urlData = await urlRes.json();
-	const songUrl = urlData.url;
-	if (!songUrl) {
-		console.error("  Could not get song URL.");
-		return;
-	}
-
-	const lrcRes = await fetch(`${apiBase}?server=${server}&type=lrc&id=${songId}`);
-	const lrcData = await lrcRes.json();
-	const lrc = typeof lrcData === "string" ? lrcData : lrcData.lrc || "";
-
-	const picRes = await fetch(`${apiBase}?server=${server}&type=pic&id=${songId}`);
-	const picData = await picRes.json();
-	const coverUrl = picData.pic || picData.url;
-
-	const safeName = songName.replace(/[\/\\?%*:|"<>]/g, "-");
+	const safeName = songName.replace(/[\/\\?%*:|"<>]/g, "-").replace(/\s+/g, "");
 	const musicDir = path.join(PROJECT_ROOT, "public/assets/music");
 	const coverDir = path.join(musicDir, "cover");
-
 	fs.mkdirSync(coverDir, { recursive: true });
 
-	const ext = songUrl.split(".").pop().split("?")[0] || "mp3";
-	const musicPath = path.join(musicDir, `${safeName}.${ext}`);
-	await downloadFile(songUrl, musicPath);
-	console.log(`  Music: public/assets/music/${safeName}.${ext}`);
-
-	let coverPath = "";
-	if (coverUrl) {
-		coverPath = path.join(coverDir, `${songId}.webp`);
-		await downloadFile(coverUrl, coverPath);
-		console.log(`  Cover: public/assets/music/cover/${songId}.webp`);
+	// Step 2: Get lyrics (free)
+	let lrc = "";
+	try {
+		const lrcUrl = `https://music.163.com/api/song/lyric?id=${songId}&lv=1`;
+		const lrcRes = await safeFetch(lrcUrl);
+		if (lrcRes) {
+			const lrcData = await lrcRes.json();
+			lrc = lrcData.lrc?.lyric || "";
+		}
+	} catch {
+		// ignore
 	}
 
 	if (lrc) {
 		const lrcPath = path.join(musicDir, `${safeName}.lrc`);
 		fs.writeFileSync(lrcPath, lrc, "utf-8");
 		console.log(`  Lyrics: public/assets/music/${safeName}.lrc`);
+	} else {
+		console.log("  [!] Lyrics not available");
 	}
 
-	console.log("\n  Add to musicConfig.ts local.playlist:");
-	const snippet = {
-		name: songName,
-		artist: artistName,
-		url: `/assets/music/${safeName}.${ext}`,
-		cover: coverUrl ? `/assets/music/cover/${songId}.webp` : "",
-		lrc: lrc ? "[00:00.00]Lyrics file saved separately" : "",
-	};
-	console.log("  " + JSON.stringify(snippet, null, 2).split("\n").join("\n  "));
+	// Step 3: Try to get song URL (may fail for VIP songs)
+	let downloadedFile = "";
+	try {
+		const urlUrl = `https://music.163.com/api/song/enhance/player/url?ids=[${songId}]&br=320000`;
+		const urlRes = await safeFetch(urlUrl);
+		if (urlRes) {
+			const urlData = await urlRes.json();
+			const songUrl = urlData.data?.[0]?.url;
+			if (songUrl) {
+				const ext = songUrl.split(".").pop().split("?")[0] || "mp3";
+				const musicPath = path.join(musicDir, `${safeName}.${ext}`);
+				await downloadFile(songUrl, musicPath);
+				downloadedFile = `${safeName}.${ext}`;
+				console.log(`  Music: public/assets/music/${downloadedFile}`);
+			}
+		}
+	} catch {
+		// ignore
+	}
+
+	// Step 4: Print instructions
+	console.log("\n  ─────────────────────────────────────────");
+	if (!downloadedFile) {
+		console.log("  Audio download: requires VIP or manual download");
+		console.log("  1. Open https://music.163.com/#/search/m/?s=" + encodeURIComponent(songName));
+		console.log("  2. Download the M4A/MP3 file");
+		console.log(`  3. Place it in public/assets/music/${safeName}.m4a`);
+		console.log(`  4. Run: pnpm cli lrc public/assets/music/${safeName}.m4a`);
+		console.log("     (extracts cover + lyrics from M4A)");
+	} else {
+		console.log("  All files downloaded!");
+		console.log("  To add to musicConfig.ts local.playlist:");
+		const snippet = {
+			name: songName,
+			artist: artistName,
+			url: `/assets/music/${downloadedFile}`,
+			cover: "", // will be filled by pnpm cli lrc if M4A has embedded cover
+			lrc: "",
+		};
+		console.log("  " + JSON.stringify(snippet, null, 2).split("\n").join("\n  "));
+	}
+	console.log("  ─────────────────────────────────────────");
 }

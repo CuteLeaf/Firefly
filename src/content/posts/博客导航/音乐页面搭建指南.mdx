@@ -1,13 +1,14 @@
 ---
 title: 音乐页面搭建指南
 published: 2026-05-28
-description: 博客音乐页面的完整搭建流程，包括本地歌曲配置、封面设置和云端音乐获取。
+updated: 2026-06-02
+description: 博客音乐页面的完整搭建流程，包括自动化下载工具、本地歌曲配置、封面设置和云端音乐获取。
 tags: [博客, 音乐, 教程]
 category: 博客导航
 abbrlink: music-guide
 ---
 
-本指南详细介绍音乐页面的搭建流程和配置方法。
+本指南详细介绍音乐页面的搭建流程和配置方法，包含自动化下载和元数据提取工具。
 
 ## 架构概览
 
@@ -150,16 +151,16 @@ public/
 └── assets/
     └── music/
         ├── 歌曲1.mp3
-        ├── 歌曲2.mp3
+        ├── 歌曲1.lrc
+        ├── 歌曲2.m4a
         ├── cover/
-        │   ├── 封面1.webp
-        │   └── 封面2.webp
-        └── lrc/
-            ├── 歌曲1.lrc
-            └── 歌曲2.lrc
+        │   ├── 封面1.jpg
+        │   └── 封面2.jpg
 ```
 
 支持格式：MP3、M4A、OGG、WAV
+
+> **快速获取文件：** 使用 `python scripts/download_music.py "歌名"` 一键下载音频+歌词+封面。
 
 ### 第二步：修改配置
 
@@ -202,6 +203,15 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 
 ### 添加更多歌曲
 
+**方式一：使用下载脚本（推荐）**
+
+```bash
+python scripts/download_music.py "歌名"
+# 脚本会输出配置信息，复制粘贴到 playlist 数组即可
+```
+
+**方式二：手动添加**
+
 只需在 `playlist` 数组中追加新条目：
 
 ```ts
@@ -211,8 +221,8 @@ playlist: [
         name: "新歌曲名",
         artist: "新歌手名",
         url: "/assets/music/新歌曲.mp3",
-        cover: "/assets/music/cover/新封面.webp",
-        lrc: "/assets/music/lrc/新歌词.lrc",
+        cover: "/assets/music/cover/新封面.jpg",
+        lrc: "",
     },
 ],
 ```
@@ -221,8 +231,10 @@ playlist: [
 
 封面图片要求：
 - 推荐尺寸：300x300 像素
-- 推荐格式：WebP（体积小）或 JPG
+- 推荐格式：JPG 或 WebP
 - 放在 `public/assets/music/cover/` 目录
+
+> **快速获取封面：** 使用 `python scripts/download_music.py "歌名"` 会自动下载封面。
 
 在配置中引用：
 
@@ -231,7 +243,7 @@ playlist: [
     name: "歌曲名",
     artist: "歌手名",
     url: "/assets/music/歌曲.mp3",
-    cover: "/assets/music/cover/新封面.webp",  // 修改这里
+    cover: "/assets/music/cover/新封面.jpg",  // 修改这里
 }
 ```
 
@@ -253,6 +265,145 @@ LRC 是标准的歌词时间轴格式：
 - 网易云音乐网页版 → 开发者工具 → 搜索 `lrc` 获取歌词接口
 - 使用 Python 脚本批量下载（如 `fetch-lrc.py`）
 - 手动编写
+
+## 自动化工具
+
+博客内置了两个 CLI 工具，帮你自动化音乐文件的下载和元数据提取。
+
+### 工具一：Python 下载脚本（推荐）
+
+`scripts/download_music.py` — 一条命令完成搜索、下载音频、歌词、封面。
+
+**环境要求：** Python 3.6+
+
+**基本用法：**
+
+```bash
+# 搜索并下载（交互式选择歌曲）
+python scripts/download_music.py "知我"
+
+# 指定输出目录
+python scripts/download_music.py "海阔天空" --dir=./my-music
+```
+
+**执行流程：**
+
+```
+搜索 → 显示结果列表 → 选择歌曲 → 下载 MP3 + LRC 歌词 + 封面 JPG
+```
+
+**输出示例：**
+
+```
+  Searching: 知我
+
+  Results:
+  [1] 知我 - 国风堂, 哦漏
+  [2] 知我（抒情版） - 尘ah.
+  [3] 肘我（知我加速版） - 神白sang
+
+  Select [1]: 1
+
+  Selected: 知我 - 国风堂, 哦漏
+  Downloading audio...
+  Music: 知我.mp3
+  Lyrics: 知我.lrc
+  Downloading cover...
+  Cover: cover/知我.jpg
+
+  ─────────────────────────────────────────
+  Done! All files saved to public/assets/music/
+
+  Add to musicConfig.ts local.playlist:
+  { name: "知我", artist: "国风堂, 哦漏",
+    url: "/assets/music/知我.mp3",
+    cover: "/assets/music/cover/知我.jpg", lrc: "" }
+  ─────────────────────────────────────────
+```
+
+**工作原理：**
+
+| 步骤 | API | 说明 |
+|------|-----|------|
+| 搜索 | 网易云 `/api/search/get` | 免费，无需认证 |
+| 歌词 | 网易云 `/api/song/lyric` | 免费，无需认证 |
+| 封面 | 网易云网页 `og:image` 抓取 | 免费，从歌曲页面提取 |
+| 音频 | 网易云 `/api/song/enhance/player/url` | 部分歌曲需要 VIP |
+
+**注意事项：**
+
+- 封面通过抓取网易云歌曲网页的 `og:image` 标签获取，无需 API 认证
+- 部分 VIP 步曲无法下载音频，脚本会提示手动下载
+- 输出文件自动放在 `public/assets/music/` 目录
+- 文件名自动清理特殊字符（`/\?%*:|"` 等替换为 `-`）
+- 已存在的文件不会被覆盖
+
+### 工具二：M4A/MP3 元数据提取
+
+`pnpm cli lrc` — 从本地 M4A 或 MP3 文件中提取内嵌的封面和歌词。
+
+**用法：**
+
+```bash
+# 提取单个文件
+pnpm cli lrc 歌曲.m4a
+
+# 提取整个目录
+pnpm cli lrc /path/to/music/
+```
+
+**支持格式：**
+
+| 格式 | 封面提取 | 歌词提取 |
+|------|---------|---------|
+| `.m4a` | ✅ 从 `udta > ilst > covr` atom 提取 | ✅ 从 `©lyr` atom 提取 |
+| `.mp3` | ✅ 从 ID3v2 `APIC` frame 提取 | ✅ 从 ID3v2 `USLT` frame 提取 |
+
+**输出示例：**
+
+```
+  Cover: 歌曲.jpg
+  Lyrics: 歌曲.lrc
+```
+
+**适用场景：**
+
+- 从其他渠道获取了 M4A/MP3 文件，需要提取封面和歌词
+- 音乐文件内嵌了元数据，想自动提取而不是手动下载
+
+### 推荐工作流
+
+**场景 A：从零开始添加新歌**
+
+```bash
+# 1. 搜索 + 下载（音频+歌词+封面全自动）
+python scripts/download_music.py "海阔天空"
+
+# 2. 把脚本输出的配置信息添加到 musicConfig.ts
+# 编辑 src/config/musicConfig.ts，加入 playlist 条目
+```
+
+**场景 B：已有 M4A/MP3 文件**
+
+```bash
+# 1. 把文件放到 public/assets/music/ 目录
+# 2. 从文件中提取封面和歌词
+pnpm cli lrc public/assets/music/歌曲.m4a
+
+# 3. 手动添加配置到 musicConfig.ts
+```
+
+**场景 C：批量导入**
+
+```bash
+# 批量下载多首歌
+python scripts/download_music.py "歌名1"
+python scripts/download_music.py "歌名2"
+python scripts/download_music.py "歌名3"
+
+# 批量提取元数据
+pnpm cli lrc public/assets/music/
+```
 
 ## Fallback 机制
 
@@ -362,9 +513,8 @@ LRC 是标准的歌词时间轴格式：
 
 ### 获取 LRC 歌词
 
+- **自动化脚本**（推荐）：使用内置 Python 脚本一键下载（详见下方「自动化工具」章节）
 - **网易云音乐**：网页版 → F12 开发者工具 → Network → 搜索 `lyric` → 找到歌词接口返回的内容
-- **QQ 音乐**：类似方式，搜索 `lrc` 或 `lyric` 接口
-- **第三方工具**：使用 `fetch-lrc.py` 等 Python 脚本批量下载
 - **手动编写**：用文本编辑器按 LRC 格式编写
 
 ### 歌词面板样式
@@ -585,6 +735,23 @@ pnpm dev
 1. 图片文件是否存在
 2. 路径是否正确
 3. 图片格式是否被浏览器支持
+4. 使用 `python scripts/download_music.py` 下载的封面会自动放在 `cover/` 目录
+
+### Q: Python 脚本下载失败？
+
+常见原因及解决方案：
+
+| 错误 | 原因 | 解决方案 |
+|------|------|---------|
+| 音频下载失败 | VIP 步曲限制 | 手动下载后放到 `public/assets/music/` |
+| 封面下载失败 | 网页抓取被限流 | 稍后重试或手动下载封面图片 |
+| 搜索无结果 | 网络问题 | 检查网络连接，确认能访问 music.163.com |
+
+### Q: `pnpm cli lrc` 提取不到封面？
+
+1. 确认文件是 `.m4a` 或 `.mp3` 格式
+2. 确认文件内嵌了封面数据（部分下载的 MP3 没有内嵌封面）
+3. 使用 `python scripts/download_music.py` 下载的歌曲会自动获取封面
 
 ### Q: Meting API 不可用？
 
