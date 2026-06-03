@@ -14,7 +14,29 @@ draft: false
 
 ### 1.类之间的关系
 ```java
-public ClassA extends ClassB{...}  //继承
+public class ClassA extends ClassB{...}  //继承
+public class ClassA implements ClassB{...}  //接口
+public abstract class TrafficTool{...} //抽象类
+public abstract void slowDown(); //抽象类中抽象类的写法（后面重写）
+```
+### 2.常用写法
+```java
+public static void main(String[] args) //Main函数写法
+```
+```
+for(ClassName i : ArrayListName)  //循环写法
+ArrayList<ClassName> ArrayListName = new ArrayList<>(); //新建ArrayList
+lists.add(new ClassA); // 加入到ArrayList中
+```
+```
+System.out.println(""); //输出
+```
+```
+public interface Vehicle {
+    void speedUp();
+    void slowDown();
+} // 接口内直接声明，后续实现
+
 ```
 
 ## 二、单选题知识点整理
@@ -81,7 +103,7 @@ for(String i : a) // 迭代Arraylist中的元素
     ```
     
     
-- 注意：Java 数组声明时 `[]` 内不能写大小
+- 注意：Java 数组声明时 `int[]` 内不能写大小
 
 ### 6.关键字
 - **`super` 关键字：**
@@ -118,15 +140,16 @@ for(String i : a) // 迭代Arraylist中的元素
 - 泛型类型参数只能是引用类型，不能使用基本类型
 - 泛型在运行时不保留泛型信息，泛型只在编译时有效
 - 泛型集合之间无继承多态关系
+- `<U extends T>` 是上界通配符，意思是 `U` 必须是 `T` 本身或 `T` 的子类（上界为 `T`）。 对比：`<U super T>` 是下界通配符，`U` 必须是 `T` 或 `T` 的超类。
 
 ### 8.UML图绘制
 #### (1)访问权限符号
 |符号|访问修饰符|含义|
 |----|----------|-----|
-|+|	public|公共，所有类可访问|
-|-|	private|私有，仅本类访问|
-|#|	protected|受保护，本类 + 子类 + 同包|
-|~|	default|同包内可访问|
+|`+`|	`public`|公共，所有类可访问|
+|`-`|	`private`|私有，仅本类访问|
+|`#`|	`protected`|受保护，本类 + 子类 + 同包|
+|`~`|	`default`|同包内可访问|
 
 #### (2)语法格式
 - 属性：`可见符 变量名 : 类型 [= 默认值]` 例如：`- name : String`
@@ -306,8 +329,9 @@ for(String i : a) // 迭代Arraylist中的元素
 
 ### 14.构造方法
 - **构造方法：类创建对象时，自动调用的特殊方法，作用是初始化对象成员**
-- 构造方法不能被继承，但子类可通过 super() 调用
-- 构造方法没有返回值类型声明
+- 构造方法只有`new`的时候才会调用，平时不使用
+- 构造方法不能被继承，但子类可通过 `super()` 调用
+- 构造方法没有返回值类型声明（void 也没有）
 - 构造方法名必须与类名完全相同
 - 一个类可以有多个构造方法（构造方法重载）
 - `this()` 与 `super()` 调用构造
@@ -320,6 +344,11 @@ for(String i : a) // 迭代Arraylist中的元素
 - 不能用 static、final、abstract、native 修饰构造方法
 - 构造方法只存在重载、不存在重写
 - 抽象类有构造方法、接口没有构造方法
+
+### 15.多态
+- 同一个方法，不同对象执行不同实现；父类引用指向子类对象
+- 多态可以通过继承或接口实现，然后重写父类方法
+- 多态的优点：提高代码扩展性和可维护性
 
 ### 小知识点
 - 类型转换
@@ -334,7 +363,7 @@ for(String i : a) // 迭代Arraylist中的元素
 - 实例变量：属于对象，对象创建后才分配内存  
   静态变量：被 static 修饰，属于类，所有对象共享，类加载时初始化
 - `import` 中 `*` 的作用：导入该包下所有类 / 接口，简化代码，无需逐个导入类
-- `JavaDoc`：专门用于生成程序帮助文档，一般用于类、方法、成员变量上方。
+- `JavaDoc`：专门用于生成程序帮助文档，一般用于类、方法、成员变量上方
 - Java 标识符规则：只能由字母、数字、_ 、$ 组成，不能以数字开头，不能是关键字。
 - 数组索引从 `0` 开始
 - Java 独立运行的程序叫 `Application（应用程序）`，有 `main()` 方法作为入口。 `Applets` 运行在浏览器中（已废弃）， `Servlets` 运行在服务器端， `Midlets` 是 J2ME 移动程序
@@ -351,3 +380,11 @@ for(String i : a) // 迭代Arraylist中的元素
 - `java.util.Calendar` 使用 单例模式，通过 `Calendar.getInstance()` 获取实例，构造方法是 `protected`，不允许直接 `new`。
 `Runtime` 类（`Runtime.getRuntime()`）也是典型单例。
 - Java 编译器自动隐式导入 `java.lang.*`，所以 `String、System、Math、Object` 等无需 `import`。`java.util` 需要手动 `import`
+- 文件读写
+    - 打开不存在的文件进行读取时，Java 会抛出 `FileNotFoundException`，这是 `IOException` 的子类，属于 `Checked Exception`，必须处理。
+- `Object` 类的方法：`toString`、`equals`、`hashCode`、`getClass`、`clone`、`wait`、`notify`、`notifyAll`、`finalize`
+- 静态方法：
+    - 静态方法中没有 this（无当前对象）
+    - 静态方法不能是 abstract（abstract 要求子类实现，静态方法不被重写）
+    - 静态方法只能直接访问静态变量和静态方法
+    - 静态方法属于类本身，通过 类名.方法名() 调用
