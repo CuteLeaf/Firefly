@@ -36,7 +36,53 @@ public interface Vehicle {
     void speedUp();
     void slowDown();
 } // 接口内直接声明，后续实现
+```
+```
+import java.util.Arrays;
 
+public class Test {
+    public static void main(String[] args) {
+        int[] arr = {3,1,4,2};
+
+        // 1. 打印数组（直接打印数组会输出地址，用Arrays才会输出内容）
+        System.out.println(Arrays.toString(arr)); // [3, 1, 4, 2]
+
+        // 2. 数组排序
+        Arrays.sort(arr);
+        System.out.println(Arrays.toString(arr)); // [1, 2, 3, 4]
+
+        // 3. 数组查找
+        int index = Arrays.binarySearch(arr, 3); // 找元素3的下标
+        System.out.println(index); // 2
+
+        // 4. 数组复制
+        int[] newArr = Arrays.copyOf(arr, arr.length);
+    }
+}
+```
+```
+// 创建 String 对象
+String str1 = "Hello Java";  // 直接赋值
+String str2 = new String("Hello Java");  // 构造方法创建（新对象）
+
+// 获取长度
+int len = str1.length();  
+
+// 按索引获取字符
+char ch = str1.charAt(0);  // 获取索引0的字符：'H'
+
+// 字符串拼接
+String concatStr = str1.concat(" World");  // 拼接："Hello Java World"
+String addStr = str1 + "!!!";  // 最常用拼接方式
+
+// 分割字符串
+String str = "a,b,c,d";
+String[] splitArray = str.split(",");  // 按逗号分割，返回数组：["a","b","c","d"]
+
+// 遍历字符串
+for (int i = 0; i < str1.length(); i++) {
+    System.out.println(str1.charAt(i));
+}
 ```
 
 ## 二、单选题知识点整理
