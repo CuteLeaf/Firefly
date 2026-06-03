@@ -294,10 +294,21 @@ ZIP	ETRANSMIT / 创建自解压或压缩传递包的步骤。
 
 由https://jimuhaoke.com/ 积木好课整理AutoCAD快捷键大全  
 转载必须注明本文链接，谢谢！  
+
 相关学习：  
+
 AutoCAD二维制图课程：  
+
 https://jimuhaoke.com/posts/autocad-2d-drafting-course/  
+
 AutoCAD三维建模课程：  
+
 https://jimuhaoke.com/posts/autocad-3d-modeling-course/  
+
 AutoCAD高级渲染课程：  
+
 https://jimuhaoke.com/posts/autocad-advanced-rendering-course/  
+
+AutoCAD机械制图员四级认证考试视频课程：  
+
+[https://jimuhaoke.com/posts/mechanical-level-course/](https://jimuhaoke.com/posts/mechanical-level-course/)

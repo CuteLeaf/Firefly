@@ -2,7 +2,7 @@
 title: CAD异形三通变径Y三通三维结构精确设计案例
 published: 2025-10-21
 description: 使用CAD绘制变径Y三通三维结构，曲面建模运用到钣金CAD在变径或者说异形三通结构中的应用。
-tags: [CAD三维, CAD项目, 机械钣金]
+tags: [CAD项目, 机械钣金]
 category: 项目案例
 draft: false
 image: "https://cdn.jimuhaoke.com/2025/%E5%8F%98%E5%BE%84%E4%B8%89%E9%80%9A%E5%BB%BA%E6%A8%A1.webp"
@@ -31,4 +31,8 @@ AutoCAD三维建模课程：
 
 AutoCAD高级渲染课程：
 
-[https://jimuhaoke.com/posts/autocad-advanced-rendering-course/](https://jimuhaoke.com/posts/autocad-advanced-rendering-course/)
+[https://jimuhaoke.com/posts/autocad-advanced-rendering-course/](https://jimuhaoke.com/posts/autocad-advanced-rendering-course/)  
+
+AutoCAD机械制图员四级认证考试视频课程：  
+
+[https://jimuhaoke.com/posts/mechanical-level-course/](https://jimuhaoke.com/posts/mechanical-level-course/)

@@ -52,4 +52,8 @@ AutoCAD三维建模课程：
 
 AutoCAD高级渲染课程：
 
-[https://jimuhaoke.com/posts/autocad-advanced-rendering-course/](https://jimuhaoke.com/posts/autocad-advanced-rendering-course/)
+[https://jimuhaoke.com/posts/autocad-advanced-rendering-course/](https://jimuhaoke.com/posts/autocad-advanced-rendering-course/)  
+
+AutoCAD机械制图员四级认证考试视频课程：  
+
+[https://jimuhaoke.com/posts/mechanical-level-course/](https://jimuhaoke.com/posts/mechanical-level-course/)
