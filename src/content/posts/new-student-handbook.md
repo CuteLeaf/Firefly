@@ -44,7 +44,8 @@ image: "https://cdn.jimuhaoke.com/img/%E5%AD%A6%E5%91%98%E6%89%8B%E5%86%8C.webp"
 
 [**AutoCAD2020****~****2026简体中文版下载**](https://jimuhaoke.com/posts/download-autocad-2020-2026/)  
 
-[**AutoCAD2027简体中文版下载**](https://jimuhaoke.com/posts/download-setup-autocad2027/)
+[**AutoCAD2027简体中文版下载**](https://jimuhaoke.com/posts/download-setup-autocad2027/)  
+
 安装视频请查看课程最前面的章节。
 
 ### 💻观看课程：
@@ -56,7 +57,7 @@ image: "https://cdn.jimuhaoke.com/img/%E5%AD%A6%E5%91%98%E6%89%8B%E5%86%8C.webp"
 
 [jiaoyu.taobao.com](http://jiaoyu.taobao.com/)
 
-登录购买课程的淘宝账号，如下图：点击**右上角“我的学习”**即可找到已购买的课程。  
+登录购买课程的淘宝账号，如下图：点击右上角“我的学习” 即可找到已购买的课程。  
 
 ![淘宝教育登录](https://cdn.jimuhaoke.com/2025/%E6%B7%98%E5%AE%9D%E6%95%99%E8%82%B2.webp)  
 
