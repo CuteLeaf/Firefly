@@ -15,20 +15,15 @@ image: "https://cdn.jimuhaoke.com/2025/CAD%E4%BA%8C%E7%BB%B4%E8%AF%BE%E7%A8%8B.w
  Autodesk认证讲师 · 13年CAD技术服务 · 研究生学历
 
 **`录播教学` `下单即学` `终身有效`  `真人答疑`** 
----
 ## 购买链接：
 [https://item.taobao.com/item.htm?ft=t&id=651978883873](https://item.taobao.com/item.htm?ft=t&id=651978883873)
-
-## 你将获得
-
+## 你将获得  
 - 零基础开始学习AutoCAD二维制图全套
 - 科学学习路径：基础 → 进阶 → 综合案例
 - 工程文件与行业案例本站持续追加
 - 可反复回看，快速章节检索，学习效率提升
 - 手机、电脑和平板均可以学习，永久有效
-
 ## 课程目录：
-
 ### 第一章：导论
 
 1.1学习方法
@@ -238,7 +233,6 @@ image: "https://cdn.jimuhaoke.com/2025/CAD%E4%BA%8C%E7%BB%B4%E8%AF%BE%E7%A8%8B.w
 ![AutoCAD系统课](https://cdn.jimuhaoke.com/2025/AutoCAD%E5%85%A8%E5%A5%97%E8%AF%BE%E7%A8%8B5.webp)
 
 ![AutoCAD系统课](https://cdn.jimuhaoke.com/2025/AutoCAD%E5%85%A8%E5%A5%97%E8%AF%BE%E7%A8%8B%E8%A7%86%E9%A2%91%E7%89%B9%E8%89%B2.webp)
----
 ## 常见问题（FAQ）
 
 **Q：零基础能学吗？**

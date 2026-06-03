@@ -1,6 +1,6 @@
 ---
 title: AutoCAD三维建模机械爪全流程案例视频教程
-published: 2026-04-09
+published: 2026-05-29
 description: 使用AutoCAD进行三维机械建模，机械爪经典机械结构全流程案例视频教程，帮助学习AutoCAD机械设计和三维精确机械建模的朋友。
 tags: [AutoCAD教程, 三维建模]
 category: AutoCAD课程
@@ -38,4 +38,8 @@ AutoCAD三维机械建模
 
 **原创AutoCAD视频教程三维建模**
 
-[https://jimuhaoke.com/posts/autocad-3d-modeling-course/](https://jimuhaoke.com/posts/autocad-3d-modeling-course/)
+[https://jimuhaoke.com/posts/autocad-3d-modeling-course/](https://jimuhaoke.com/posts/autocad-3d-modeling-course/)  
+
+AutoCAD机械制图员四级认证考试视频课程：
+
+[https://jimuhaoke.com/posts/mechanical-level-course/](https://jimuhaoke.com/posts/mechanical-level-course/)

@@ -1,6 +1,6 @@
 ---
 title: 隔热铝合金窗精确AutoCAD三维建模和渲染全流程
-published: 2026-04-08
+published: 2026-05-28
 description: 隔热铝合金窗要实现精确的三维建模，本案例使用AutoCAD进行三维建模和渲染全流程技术。
 tags: [AutoCAD教程, 三维建模]
 category: 项目案例
@@ -59,12 +59,9 @@ image: "https://cdn.jimuhaoke.com/2025/%E9%93%9D%E5%90%88%E9%87%91%E7%AA%97%E5%B
 
 最后结合ps添加文案即可使用到电商平台。
 
-<aside>
-💡
+> [!TIP] 提醒
+> 本案例视频教程单独售卖，如有需要请联系站长。
 
-**本案例视频教程单独售卖，如有需要请联系站长。**
-
-</aside>
 
 ### 相关学习：
 
@@ -78,4 +75,8 @@ AutoCAD三维建模课程：
 
 AutoCAD高级渲染课程：
 
-[https://jimuhaoke.com/posts/autocad-advanced-rendering-course/](https://jimuhaoke.com/posts/autocad-advanced-rendering-course/)
+[https://jimuhaoke.com/posts/autocad-advanced-rendering-course/](https://jimuhaoke.com/posts/autocad-advanced-rendering-course/)  
+
+AutoCAD机械制图员四级认证考试视频课程：
+
+[https://jimuhaoke.com/posts/mechanical-level-course/](https://jimuhaoke.com/posts/mechanical-level-course/)

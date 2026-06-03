@@ -1,6 +1,6 @@
 ---
 title: AutoCAD2027简体中文版下载和安装教程
-published: 2026-04-24
+published: 2026-05-24
 description: AutoCAD2027简体中文版下载和安装教程，包含下载安装和激活全部流程。
 tags: [CAD下载, AutoCAD2027]
 category: 软件安装
@@ -39,4 +39,8 @@ AutoCAD三维建模课程：
 
 AutoCAD高级渲染课程：
 
-[https://jimuhaoke.com/posts/autocad-advanced-rendering-course/](https://jimuhaoke.com/posts/autocad-advanced-rendering-course/)
+[https://jimuhaoke.com/posts/autocad-advanced-rendering-course/](https://jimuhaoke.com/posts/autocad-advanced-rendering-course/)  
+
+AutoCAD机械制图员四级认证考试视频课程：
+
+[https://jimuhaoke.com/posts/mechanical-level-course/](https://jimuhaoke.com/posts/mechanical-level-course/)

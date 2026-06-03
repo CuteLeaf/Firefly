@@ -1,7 +1,7 @@
 ---
 title: 积木好课原创AutoCAD三维建模视频教程
-published: 2026-04-10
-description: 积木好课AutoCAD三维建模教程，全面掌握实体曲面网格建模、布尔运算与三视图，搭配实战案例，快速掌握专业建模能力。
+published: 2026-06-03
+description: 积木好课AutoCAD三维建模字典式视频教程，全面掌握实体、曲面、网格建模、布尔运算与三视图，搭配实战案例，快速掌握专业建模能力。
 tags: [AutoCAD教程, CAD三维]
 category: AutoCAD课程
 pinned: true
@@ -27,23 +27,20 @@ image: "https://cdn.jimuhaoke.com/2025/CAD%E4%B8%89%E7%BB%B4%E5%BB%BA%E6%A8%A1%E
 - 可反复回看，快速章节检索，学习效率提升
 - 手机、电脑和平板均可以学习，永久有效
 - Autodesk官方认证教师真人答疑  
----
 
 ## 学员作品展示
 
-![下载.webp](https://cdn.jimuhaoke.com/2025/AutoCAD%E5%85%A8%E5%A5%97%E8%AF%BE%E7%A8%8B1.webp)
+![AutoCAD系统课](https://cdn.jimuhaoke.com/2025/AutoCAD%E5%85%A8%E5%A5%97%E8%AF%BE%E7%A8%8B1.webp)
 
-![下载 (1).webp](https://cdn.jimuhaoke.com/2025/AutoCAD%E5%85%A8%E5%A5%97%E8%AF%BE%E7%A8%8B2.webp)
+![AutoCAD系统课](https://cdn.jimuhaoke.com/2025/AutoCAD%E5%85%A8%E5%A5%97%E8%AF%BE%E7%A8%8B2.webp)
 
-![下载 (2).webp](https://cdn.jimuhaoke.com/2025/AutoCAD%E5%85%A8%E5%A5%97%E8%AF%BE%E7%A8%8B3.webp)
+![AutoCAD系统课](https://cdn.jimuhaoke.com/2025/AutoCAD%E5%85%A8%E5%A5%97%E8%AF%BE%E7%A8%8B3.webp)
 
-![下载 (3).webp](https://cdn.jimuhaoke.com/2025/AutoCAD%E5%85%A8%E5%A5%97%E8%AF%BE%E7%A8%8B4.webp)
+![AutoCAD系统课](https://cdn.jimuhaoke.com/2025/AutoCAD%E5%85%A8%E5%A5%97%E8%AF%BE%E7%A8%8B4.webp)
 
-![下载 (4).webp](https://cdn.jimuhaoke.com/2025/AutoCAD%E5%85%A8%E5%A5%97%E8%AF%BE%E7%A8%8B5.webp)
+![AutoCAD系统课](https://cdn.jimuhaoke.com/2025/AutoCAD%E5%85%A8%E5%A5%97%E8%AF%BE%E7%A8%8B5.webp)
 
-![下载 (5).webp](https://cdn.jimuhaoke.com/2025/AutoCAD%E5%85%A8%E5%A5%97%E8%AF%BE%E7%A8%8B%E8%A7%86%E9%A2%91%E7%89%B9%E8%89%B2.webp)
-
----
+![AutoCAD系统课](https://cdn.jimuhaoke.com/2025/AutoCAD%E5%85%A8%E5%A5%97%E8%AF%BE%E7%A8%8B%E8%A7%86%E9%A2%91%E7%89%B9%E8%89%B2.webp)
 
 ## 课程大纲
 
@@ -150,19 +147,16 @@ image: "https://cdn.jimuhaoke.com/2025/CAD%E4%B8%89%E7%BB%B4%E5%BB%BA%E6%A8%A1%E
 13.11模型调整和阵列造型  
 13.12最终渲染  
 
----
 ## 常见问题（FAQ）
 
 **Q：三维是零基础能学吗？**  
-A：可以。课程从零基础的三维界面开始，逐步进阶坐标和常用建模命令直到三维建模与输出，提供练习素材，新手 2–4 周可完成学习。
+A：有二维的基础，会画矩形和圆等基本图形就可以。课程从零基础的三维界面开始，逐步进阶坐标和常用建模命令直到三维建模与输出，提供练习素材，新手 2–4 周可完成学习。
 
 **Q：支持哪些版本？**  
-A：适配 AutoCAD 2016及以上，界面没有明显差异，建模命令完全一致。
+A：适配 AutoCAD 2016及以上版本，高版本界面没有明显差异，建模命令完全一致。
 
 **Q：有答疑与作业批改吗？**  
-A：提供 一对一真人答疑和学习社群。自愿提交作业免费点评服务。
+A：提供一对一真人答疑服务，自愿提交作业免费点评。
 
 **Q：能开票吗？**  
-A：支持开票普通电子发票。  
-
----
+A：支持开普通电子发票。

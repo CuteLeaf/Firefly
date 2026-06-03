@@ -1,6 +1,6 @@
 ---
 title: 黑胡桃茶几AutoCAD家具三维建模和渲染全流程
-published: 2026-04-07
+published: 2026-05-27
 description: 以黑胡桃茶几为案例，使用AutoCAD进行家具三维建模和渲染全流程的案例演示，打通CAD精确家具建模和生产全流程技术。
 tags: [AutoCAD教程, 三维建模]
 category: 项目案例
@@ -55,4 +55,8 @@ AutoCAD三维建模课程：
 
 AutoCAD高级渲染课程：
 
-[https://jimuhaoke.com/posts/autocad-advanced-rendering-course/](https://jimuhaoke.com/posts/autocad-advanced-rendering-course/)
+[https://jimuhaoke.com/posts/autocad-advanced-rendering-course/](https://jimuhaoke.com/posts/autocad-advanced-rendering-course/)  
+
+AutoCAD机械制图员四级认证考试视频课程：
+
+[https://jimuhaoke.com/posts/mechanical-level-course/](https://jimuhaoke.com/posts/mechanical-level-course/)
