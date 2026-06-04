@@ -1,4 +1,5 @@
 ---
+import RelationshipTimer from "@/components/widget/RelationshipTimer.astro";  // 引入恋爱计时组件
 import type { MarkdownHeading } from "astro";
 import Advertisement from "@/components/widget/Advertisement.astro";
 import Announcement from "@/components/widget/Announcement.astro";
@@ -49,6 +50,7 @@ const componentMap = {
 	stats: SiteStats,
 	calendar: Calendar,
 	music: Music,
+	relationship: RelationshipTimer,
 } satisfies Record<WidgetComponentType, typeof Profile>;
 
 // 获取侧边栏位置

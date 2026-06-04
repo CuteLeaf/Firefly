@@ -1,0 +1,131 @@
+<!-- 恋爱倒计时组件 -->
+---
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import { relationshipConfig } from "@/config/relationshipConfig";
+
+const config = relationshipConfig;
+
+interface Props {
+  class?: string;
+  style?: string;
+}
+const className = Astro.props.class;
+const style = Astro.props.style;
+---
+
+<WidgetLayout
+  name={config.title || "暗恋时光"}
+  id="relationship"
+  class={className}
+  style={style}
+>
+  <div class="flex flex-col items-center p-2">
+    <!-- 顶部名称栏 -->
+    <div class="flex items-center justify-center gap-2 mb-4 text-sm font-medium text-neutral-600 dark:text-neutral-400">
+      <span>{config.name1}</span>
+      <span class="text-red-500 animate-pulse">❤️</span>
+      <span>{config.name2}</span>
+    </div>
+
+    <!-- 头像和爱心 -->
+    <div class="flex items-center justify-center gap-4 mb-6">
+      <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-white dark:border-neutral-800 shadow-md transition-transform hover:scale-110">
+        <img src={config.avatar1} alt={config.name1} class="w-full h-full object-cover" />
+      </div>
+      <div class="text-2xl text-red-500 transform transition-all hover:scale-125 hover:rotate-12 cursor-pointer">
+        ❤️
+      </div>
+      <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-white dark:border-neutral-800 shadow-md transition-transform hover:scale-110">
+        <img src={config.avatar2} alt={config.name2} class="w-full h-full object-cover" />
+      </div>
+    </div>
+
+    <!-- 计时器 -->
+    <div class="relationship-timer flex items-center justify-center gap-x-1 text-sm whitespace-nowrap overflow-x-auto">
+      <span class="timer-num" data-timer-years>0</span><span class="timer-unit bg-red-400">年</span>
+      <span class="timer-num" data-timer-months>0</span><span class="timer-unit bg-red-300">月</span>
+      <span class="timer-num" data-timer-days>0</span><span class="timer-unit bg-blue-400">天</span>
+      <span class="timer-num" data-timer-hours>0</span><span class="timer-unit bg-orange-400">时</span>
+      <span class="timer-num" data-timer-minutes>0</span><span class="timer-unit bg-blue-500">分</span>
+      <span class="timer-num" data-timer-seconds>00</span><span class="timer-unit bg-purple-400">秒</span>
+    </div>
+  </div>
+</WidgetLayout>
+
+<style>
+  @reference "tailwindcss";
+
+  .timer-num {
+    @apply font-bold text-neutral-700 dark:text-neutral-200 min-w-[0rem] text-center;
+    color: var(--primary);
+  }
+  .timer-unit {
+    @apply px-1 py-0.5 rounded text-[10px] text-white font-medium shrink-0;
+  }
+</style>
+
+<script is:inline define:vars={{ startDateStr: config.startDate }}>
+  function updateRelationshipTimer() {
+    const startDate = new Date(startDateStr);
+    const now = new Date();
+
+    let diff = now.getTime() - startDate.getTime();
+
+    if (diff < 0) return;
+
+    // 计算年月日时分秒的差值
+    let years = now.getFullYear() - startDate.getFullYear();
+    let months = now.getMonth() - startDate.getMonth();
+    let days = now.getDate() - startDate.getDate();
+    let hours = now.getHours() - startDate.getHours();
+    let minutes = now.getMinutes() - startDate.getMinutes();
+    let seconds = now.getSeconds() - startDate.getSeconds();
+
+    // 处理借位逻辑
+    if (seconds < 0) {
+      seconds += 60;
+      minutes--;
+    }
+    if (minutes < 0) {
+      minutes += 60;
+      hours--;
+    }
+    if (hours < 0) {
+      hours += 24;
+      days--;
+    }
+    if (days < 0) {
+      const lastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+      days += lastMonth.getDate();
+      months--;
+    }
+    if (months < 0) {
+      months += 12;
+      years--;
+    }
+
+    // 更新所有实例，避免移动端和电脑端 ID 冲突
+    const update = (attr, value) => {
+      const elements = document.querySelectorAll(`[data-timer-${attr}]`);
+      elements.forEach(el => {
+        el.innerText = value;
+      });
+    };
+
+    update('years', years);
+    update('months', months);
+    update('days', days);
+    update('hours', hours);
+    update('minutes', minutes);
+    update('seconds', seconds.toString().padStart(2, '0'));
+  }
+
+  // 立即运行并每秒更新
+  updateRelationshipTimer();
+  if (!window.relationshipTimerInterval) {
+    window.relationshipTimerInterval = setInterval(updateRelationshipTimer, 1000);
+  }
+
+  // 监听 Swup 页面切换
+  document.addEventListener('swup:content:replace', updateRelationshipTimer);
+</script>

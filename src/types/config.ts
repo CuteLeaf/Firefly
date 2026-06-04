@@ -112,6 +112,9 @@ export type SiteConfig = {
 		postsPerPage: number; // 每页显示的文章数量
 	};
 
+	// 组件配置类型定义
+	widgetComponentType?: "relationship";
+
 	// 统计分析
 	analytics?: {
 		googleAnalyticsId?: string; // Google Analytics ID
