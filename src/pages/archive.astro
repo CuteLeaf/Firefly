@@ -9,5 +9,20 @@ const sortedPostsList = await getSortedPostsList();
 ---
 
 <MainGridLayout title={i18n(I18nKey.archive)}>
+  <script is:inline>
+    (function() {
+      var p = new URLSearchParams(location.search);
+      var cat = p.get("category") || "";
+      var tag = p.get("tag") || "";
+      var unc = p.get("uncategorized");
+      var t = cat || (unc ? "未分类" : "") || (tag ? "#" + tag : "");
+      if (t) {
+        requestAnimationFrame(function() {
+          var el = document.querySelector(".banner-page-title-text");
+          if (el) el.textContent = t;
+        });
+      }
+    })();
+  </script>
   <ArchivePanel sortedPosts={sortedPostsList} client:only="svelte" />
 </MainGridLayout>

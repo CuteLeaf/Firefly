@@ -1,7 +1,7 @@
 {
   "name": "firefly",
   "type": "module",
-  "version": "6.10.7",
+  "version": "6.10.9",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -19,6 +19,8 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
+    "@astrojs/cloudflare": "^13.6.0",
+    "@napi-rs/wasm-runtime": "^1.1.4",
     "@astrojs/compiler-rs": "^0.2.1",
     "@astrojs/markdown-remark": "^7.2.0",
     "@astrojs/markdown-satteri": "^0.2.1",
@@ -69,7 +71,8 @@
     "stylus": "^0.64.0",
     "svelte": "^5.55.9",
     "typescript": "^5.9.2",
-    "unist-util-visit": "^5.1.0"
+    "unist-util-visit": "^5.1.0",
+    "wrangler": "^4.95.0"
   },
   "devDependencies": {
     "@astrojs/ts-plugin": "^1.10.9",

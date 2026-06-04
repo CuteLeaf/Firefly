@@ -1,0 +1,70 @@
+---
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { getTagList } from "@/utils/content-utils";
+import { getTagUrl } from "@/utils/url-utils";
+
+const tags = await getTagList();
+
+// 计算标签颜色深度 0~1：数量越多颜色越深
+const maxCount = Math.max(...tags.map((t) => t.count), 1);
+const minCount = Math.min(...tags.map((t) => t.count), 1);
+const getDepth = (count: number) => {
+	if (maxCount === minCount) return 0.5;
+	return (count - minCount) / (maxCount - minCount);
+};
+---
+
+<MainGridLayout title={i18n(I18nKey.allTags)} description={i18n(I18nKey.allTags)}>
+    <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+        <div class="card-base z-10 px-9 py-6 relative w-full">
+            <div class="mb-6">
+                <div class="flex items-center justify-between mb-0">
+                    <div class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+                        {i18n(I18nKey.allTags)}
+                    </div>
+                    <span class="text-sm font-medium px-2.5 py-0.5 rounded-full
+                                 bg-[oklch(0.95_0.025_var(--hue))] dark:bg-[oklch(0.25_0.025_var(--hue))]
+                                 text-neutral-500 dark:text-neutral-400">
+                        {tags.length}
+                    </span>
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-3">
+                {tags.map((t) => (
+                    <a href={getTagUrl(t.name)}
+                       class="tag-item group inline-flex items-center gap-0 rounded-lg
+                              overflow-hidden transition-all duration-200
+                              hover:scale-105 hover:shadow-md"
+                       style={`--tag-depth: ${getDepth(t.count)}`}
+                    >
+                        <span class="tag-name text-sm font-medium px-4 py-2">
+                            <span class="opacity-50 mr-0.5">#</span>{t.name.trim()}
+                        </span>
+                        <span class="tag-count inline-flex items-center justify-center h-full px-3 py-2 text-xs font-bold
+                                     border-l border-black/8 dark:border-white/10">
+                            {t.count}
+                        </span>
+                    </a>
+                ))}
+            </div>
+        </div>
+    </div>
+</MainGridLayout>
+
+<style>
+    .tag-item {
+        /* color-mix 将主题色按深度比例混入背景 */
+        background: color-mix(in oklch, var(--primary) calc(var(--tag-depth) * 35%), var(--page-bg));
+        color: var(--primary);
+    }
+    .tag-item:hover {
+        background: color-mix(in oklch, var(--primary) calc(var(--tag-depth) * 35% + 15%), var(--page-bg));
+    }
+    .tag-count {
+        /* 计数徽章比主体稍深一点 */
+        background: color-mix(in oklch, var(--primary) calc(var(--tag-depth) * 35% + 10%), var(--page-bg));
+		color: var(--primary);
+    }
+</style>

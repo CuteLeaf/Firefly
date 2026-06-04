@@ -17,6 +17,8 @@ export const ru: Translation = {
 
 	[Key.tags]: "Теги",
 	[Key.categories]: "Категории",
+	[Key.allCategories]: "Все категории",
+	[Key.allTags]: "Все теги",
 	[Key.recentPosts]: "Последние посты",
 	[Key.postList]: "Список постов",
 	[Key.tableOfContents]: "Содержание",
@@ -298,6 +300,8 @@ export const ru: Translation = {
 	[Key.calendarOctober]: "Окт",
 	[Key.calendarNovember]: "Ноя",
 	[Key.calendarDecember]: "Дек",
+	[Key.calendar]: "Календарь сайта",
+	[Key.calendarHeatmapWeek]: "Неделя {week} {month}, {count} записей",
 
 	[Key.shareArticle]: "Поделиться",
 	[Key.generatingPoster]: "Создание постера...",

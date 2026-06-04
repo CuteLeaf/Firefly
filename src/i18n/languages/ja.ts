@@ -17,6 +17,8 @@ export const ja: Translation = {
 
 	[Key.tags]: "タグ",
 	[Key.categories]: "カテゴリ",
+	[Key.allCategories]: "すべてのカテゴリ",
+	[Key.allTags]: "すべてのタグ",
 	[Key.recentPosts]: "最近の投稿",
 	[Key.postList]: "投稿リスト",
 	[Key.tableOfContents]: "目次",
@@ -296,6 +298,8 @@ export const ja: Translation = {
 	[Key.calendarOctober]: "10月",
 	[Key.calendarNovember]: "11月",
 	[Key.calendarDecember]: "12月",
+	[Key.calendar]: "サイトカレンダー",
+	[Key.calendarHeatmapWeek]: "{month}月第{week}週、{count}記事",
 
 	[Key.shareArticle]: "共有",
 	[Key.generatingPoster]: "ポスター生成中...",

@@ -3,7 +3,6 @@ import { getCollection } from "astro:content";
 import * as fs from "node:fs";
 import type { APIContext, GetStaticPaths } from "astro";
 import satori from "satori";
-import sharp from "sharp";
 import { removeFileExtension } from "@/utils/url-utils";
 
 import { profileConfig } from "../../config/profileConfig";
@@ -343,6 +342,7 @@ export async function GET({
 		fonts,
 	});
 
+	const sharp = (await import("sharp")).default;
 	const png = await sharp(Buffer.from(svg)).png().toBuffer();
 
 	return new Response(new Uint8Array(png), {

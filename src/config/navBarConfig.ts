@@ -13,10 +13,22 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 	const links: (NavBarLink | LinkPreset)[] = [
 		// 主页
 		LinkPreset.Home,
-
-		// 归档
-		LinkPreset.Archive,
 	];
+
+	// 文章及其子菜单
+	links.push({
+		name: "文章",
+		url: "/post/",
+		icon: "material-symbols:article-rounded",
+		children: [
+			// 归档
+			LinkPreset.Archive,
+			// 分类
+			LinkPreset.Categories,
+			// 标签
+			LinkPreset.Tags,
+		],
+	});
 
 	// 根据配置决定是否添加友链，在siteConfig关闭pages.friends时导航栏不显示友链
 	if (siteConfig.pages.friends) {

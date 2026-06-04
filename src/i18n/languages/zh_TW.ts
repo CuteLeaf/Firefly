@@ -17,6 +17,8 @@ export const zh_TW: Translation = {
 
 	[Key.tags]: "標籤",
 	[Key.categories]: "分類",
+	[Key.allCategories]: "所有分類",
+	[Key.allTags]: "所有標籤",
 	[Key.recentPosts]: "最新文章",
 	[Key.postList]: "文章列表",
 	[Key.tableOfContents]: "文章目錄",
@@ -290,6 +292,8 @@ export const zh_TW: Translation = {
 	[Key.calendarOctober]: "10月",
 	[Key.calendarNovember]: "11月",
 	[Key.calendarDecember]: "12月",
+	[Key.calendar]: "站點日曆",
+	[Key.calendarHeatmapWeek]: "{month}月第{week}週，{count}篇文章",
 
 	[Key.shareArticle]: "分享",
 	[Key.generatingPoster]: "海報生成中...",

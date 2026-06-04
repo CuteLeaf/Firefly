@@ -39,6 +39,33 @@ let activeFilters: ActiveFilter[] = [];
 let primaryFilter: ActiveFilter | null = null;
 let secondaryFilters: ActiveFilter[] = [];
 let filteredPostCount = 0;
+let collapsedYears: Set<number> = new Set();
+
+function toggleYear(year: number) {
+	const willCollapse = !collapsedYears.has(year);
+	if (willCollapse) {
+		collapsedYears.add(year);
+	} else {
+		collapsedYears.delete(year);
+	}
+	collapsedYears = new Set(collapsedYears);
+
+	// 用 Web Animations API 做旋转动画，绕开 Swup 对 CSS transition 的干扰
+	requestAnimationFrame(() => {
+		const arrow = document.querySelector(
+			`[data-year="${year}"] .archive-arrow`,
+		);
+		if (arrow) {
+			arrow.animate(
+				[
+					{ transform: willCollapse ? "rotate(0deg)" : "rotate(-90deg)" },
+					{ transform: willCollapse ? "rotate(-90deg)" : "rotate(0deg)" },
+				],
+				{ duration: 200, easing: "ease", fill: "forwards" },
+			);
+		}
+	});
+}
 
 function formatDate(date: Date) {
 	const month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -139,6 +166,33 @@ onMount(async () => {
 	groupedPostsArray.sort((a, b) => b.year - a.year);
 
 	groups = groupedPostsArray;
+
+	// 默认只展开最近一年，其他年份折叠
+	if (groupedPostsArray.length > 1) {
+		collapsedYears = new Set(groupedPostsArray.slice(1).map((g) => g.year));
+	}
+
+	// 更新横幅标题为当前筛选的分类名或标签名（带淡入淡出）
+	const bannerTitle = document.querySelector<HTMLElement>(
+		".banner-page-title-text",
+	);
+	if (bannerTitle) {
+		let newTitle = "";
+		if (categories.length > 0) {
+			newTitle = categories.join(" / ");
+		} else if (uncategorized) {
+			newTitle = i18n(I18nKey.uncategorized);
+		} else if (tags.length > 0) {
+			newTitle = tags.map((t) => `#${t}`).join(" / ");
+		}
+		if (newTitle && bannerTitle.textContent !== newTitle) {
+			bannerTitle.style.opacity = "0";
+			setTimeout(() => {
+				bannerTitle.textContent = newTitle;
+				bannerTitle.style.opacity = "1";
+			}, 260);
+		}
+	}
 });
 </script>
 
@@ -147,7 +201,8 @@ onMount(async () => {
 		<div class="mb-5">
 			<div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
 				<div class="min-w-0 text-sm text-75">
-					<span class="text-50">{i18n(primaryFilter.labelKey)}</span>
+					<a href={primaryFilter.labelKey === I18nKey.categories ? '/categories/' : '/tags/'}
+					   class="text-50 hover:text-(--primary) transition-colors">{i18n(primaryFilter.labelKey)}</a>
 					<span class="mx-2 text-30">/</span>
 					<span class="font-semibold text-(--primary)">{formatFilterValues(primaryFilter)}</span>
 					{#if secondaryFilters.length > 0}
@@ -156,17 +211,21 @@ onMount(async () => {
 				</div>
 				<div class="shrink-0 text-xs text-50">
 					{filteredPostCount} {i18n(filteredPostCount === 1 ? I18nKey.postCount : I18nKey.postsCount)}
-					<span class="mx-1.5 text-30">·</span>
-					{groups.length} {i18n(I18nKey.year)}
 				</div>
 			</div>
 		</div>
 	{/if}
 
 	{#each groups as group}
-		<div>
-			<div class="flex flex-row w-full items-center h-15">
-				<div class="w-[15%] md:w-[10%] transition text-2xl font-bold text-right text-75">
+		<div data-year={group.year}>
+			<button
+				class="flex flex-row w-full items-center h-15 cursor-pointer rounded-lg
+				       hover:bg-(--btn-plain-bg-hover) transition-colors group/yr"
+				on:click={() => toggleYear(group.year)}
+				aria-expanded={!collapsedYears.has(group.year)}
+			>
+				<div class="w-[15%] md:w-[10%] transition text-2xl font-bold text-right text-75
+				            group-hover/yr:text-(--primary)">
 					{group.year}
 				</div>
 				<div class="w-[15%] md:w-[10%]">
@@ -175,11 +234,18 @@ onMount(async () => {
                   -outline-offset-2 z-50 outline-3"
 					></div>
 				</div>
-				<div class="w-[70%] md:w-[80%] transition text-left text-50">
+				<div class="w-[70%] md:w-[80%] transition text-left text-50 flex items-center gap-2
+				            group-hover/yr:text-(--primary)">
 					{group.posts.length} {i18n(group.posts.length === 1 ? I18nKey.postCount : I18nKey.postsCount)}
+					<span class="archive-arrow">
+						<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+							<path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</span>
 				</div>
-			</div>
+			</button>
 
+			{#if !collapsedYears.has(group.year)}
 			{#each group.posts as post}
 				<a
 						href={getPostUrlBySlug(post.id)}
@@ -208,9 +274,17 @@ onMount(async () => {
 						<div
 								class="w-[70%] md:max-w-[65%] md:w-[65%] text-left font-bold
                      group-hover:translate-x-1 transition-all group-hover:text-(--primary)
-                     text-75 pr-8 whitespace-nowrap text-ellipsis overflow-hidden"
+                     text-75 pr-8 whitespace-nowrap text-ellipsis overflow-hidden flex items-center gap-2"
 						>
-							{post.data.title}
+							{#if post.data.category}
+								<span class="shrink-0 inline-block text-xs font-medium px-1.5 py-0.5 rounded
+								             bg-[oklch(0.95_0.025_var(--hue))] dark:bg-[oklch(0.25_0.025_var(--hue))]
+								             text-(--primary) group-hover:bg-(--primary) group-hover:text-white!
+								             transition-colors">
+									{post.data.category}
+								</span>
+							{/if}
+							<span class="truncate">{post.data.title}</span>
 						</div>
 
 						<!-- tag list -->
@@ -223,6 +297,13 @@ onMount(async () => {
 					</div>
 				</a>
 			{/each}
+			{/if}
 		</div>
 	{/each}
 </div>
+
+<style>
+	.archive-arrow {
+		display: inline-flex;
+	}
+</style>

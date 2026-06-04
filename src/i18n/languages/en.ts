@@ -17,6 +17,8 @@ export const en: Translation = {
 
 	[Key.tags]: "Tags",
 	[Key.categories]: "Categories",
+	[Key.allCategories]: "All Categories",
+	[Key.allTags]: "All Tags",
 	[Key.recentPosts]: "Recent Posts",
 	[Key.postList]: "Post List",
 	[Key.tableOfContents]: "Table of Contents",
@@ -297,6 +299,8 @@ export const en: Translation = {
 	[Key.calendarOctober]: "Oct",
 	[Key.calendarNovember]: "Nov",
 	[Key.calendarDecember]: "Dec",
+	[Key.calendar]: "Site Calendar",
+	[Key.calendarHeatmapWeek]: "Week {week} of {month}, {count} posts",
 
 	[Key.shareArticle]: "Share",
 	[Key.generatingPoster]: "Generating Poster...",

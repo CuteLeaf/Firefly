@@ -1,0 +1,54 @@
+---
+import { Icon } from "astro-icon/components";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { getCategoryList } from "@/utils/content-utils";
+
+const categories = await getCategoryList();
+---
+
+<MainGridLayout title={i18n(I18nKey.allCategories)} description={i18n(I18nKey.allCategories)}>
+    <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+        <div class="card-base z-10 px-9 py-6 relative w-full">
+            <div class="mb-6">
+                <div class="flex items-center justify-between mb-0">
+                    <div class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+                        {i18n(I18nKey.allCategories)}
+                    </div>
+                    <span class="text-sm font-medium px-2.5 py-0.5 rounded-full
+                                 bg-[oklch(0.95_0.025_var(--hue))] dark:bg-[oklch(0.25_0.025_var(--hue))]
+                                 text-neutral-500 dark:text-neutral-400">
+                        {categories.length}
+                    </span>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {categories.filter((c) => c.name.trim().toLowerCase() !== i18n(I18nKey.uncategorized).toLowerCase()).map((c) => (
+                    <a href={c.url}
+                       class="group flex items-center justify-between px-5 py-4 rounded-xl
+                              bg-[oklch(0.95_0.025_var(--hue))] dark:bg-[oklch(0.25_0.025_var(--hue))]
+                              hover:bg-[oklch(0.9_0.05_var(--hue))] dark:hover:bg-[oklch(0.3_0.05_var(--hue))]
+                              transition-all duration-200"
+                    >
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-lg
+                                        bg-(--primary) text-white text-lg shrink-0">
+                                <Icon name="material-symbols:folder-open-rounded" is:inline class:list={["text-xl"]} />
+                            </div>
+                            <span class="font-medium text-neutral-800 dark:text-neutral-200 truncate
+                                         group-hover:text-(--primary) transition-colors">
+                                {c.name.trim()}
+                            </span>
+                        </div>
+                        <span class="shrink-0 ml-3 px-2.5 py-1 rounded-full text-sm font-bold
+                                     text-(--btn-content) dark:text-(--deep-text)
+                                     bg-white/60 dark:bg-white/10">
+                            {c.count}
+                        </span>
+                    </a>
+                ))}
+            </div>
+        </div>
+    </div>
+</MainGridLayout>

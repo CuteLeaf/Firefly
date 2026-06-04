@@ -1,10 +1,20 @@
 ---
 import { Icon } from "astro-icon/components";
 import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import { sidebarLayoutConfig } from "@/config";
 import { siteConfig } from "@/config/siteConfig";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { url } from "@/utils/url-utils";
+
+// 从配置中获取日历组件的热力图配置
+const calendarComponent = [
+	...sidebarLayoutConfig.leftComponents,
+	...sidebarLayoutConfig.rightComponents,
+	...sidebarLayoutConfig.mobileBottomComponents,
+].find((c) => c.type === "calendar");
+
+const showHeatmap = calendarComponent?.responsive?.showHeatmap ?? true;
 
 interface Props {
 	class?: string;
@@ -43,6 +53,9 @@ const weekDays = [
 // 年份文本
 const yearText = i18n(I18nKey.year);
 
+// 热力图周数文本模板
+const heatmapWeekTemplate = i18n(I18nKey.calendarHeatmapWeek);
+
 // 获取当前语言
 const currentLang = siteConfig.lang || "en";
 
@@ -52,21 +65,30 @@ const postUrlPrefix = url("/posts/");
 
 <WidgetLayout id="calendar-widget" class={className} style={style}>
   <div class="calendar-container">
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex justify-between items-center mb-2">
         <button id="prev-month-btn" class="btn-plain rounded-lg w-8 h-8 flex items-center justify-center hover:bg-(--btn-plain-bg-hover) transition-colors" aria-label="Previous Month">
-            <Icon name="fa7-solid:chevron-left" class="text-sm" />
+            <Icon name="fa7-solid:chevron-left" is:inline class="text-sm" />
         </button>
         <div id="current-month-display" class="text-lg font-bold text-neutral-900 dark:text-neutral-100 cursor-pointer hover:text-(--primary) transition-colors select-none"></div>
         <div class="flex gap-2">
             <button id="reset-month-btn" class="btn-plain rounded-lg w-8 h-8 flex items-center justify-center hover:bg-(--btn-plain-bg-hover) transition-colors" aria-label="Back to Today">
-                <Icon name="fa7-solid:arrow-rotate-left" class="text-sm" />
+                <Icon name="fa7-solid:arrow-rotate-left" is:inline class="text-sm" />
             </button>
             <button id="next-month-btn" class="btn-plain rounded-lg w-8 h-8 flex items-center justify-center hover:bg-(--btn-plain-bg-hover) transition-colors" aria-label="Next Month">
-                <Icon name="fa7-solid:chevron-right" class="text-sm" />
+                <Icon name="fa7-solid:chevron-right" is:inline class="text-sm" />
             </button>
         </div>
     </div>
-    
+
+    <!-- 年度文章热力图 -->
+    {showHeatmap && (
+    <div id="heatmap-container" class="mb-2" style="display: none;">
+      <div class="heatmap-months grid gap-0.5 mb-1" id="heatmap-months" style="grid-template-columns: repeat(12, 1fr);"></div>
+      <div class="heatmap-grid grid gap-0.5" id="heatmap-grid" style="grid-template-columns: repeat(12, 1fr); grid-template-rows: repeat(4, 1fr);"></div>
+      <div class="border-b border-neutral-200 dark:border-neutral-700 mt-2"></div>
+    </div>
+    )}
+
     <!-- 日历视图容器 -->
     <div id="calendar-view-container">
       <!-- 星期标题 -->
@@ -77,7 +99,7 @@ const postUrlPrefix = url("/posts/");
           </div>
         ))}
       </div>
-      
+
       <!-- 日历格子（由客户端动态生成） -->
       <div class="calendar-grid grid grid-cols-7 gap-1 pb-1" id="calendar-grid">
         <!-- 将由 JavaScript 填充 -->
@@ -104,7 +126,7 @@ const postUrlPrefix = url("/posts/");
   </div>
 </WidgetLayout>
 
-<script is:inline data-swup-ignore-script define:vars={{ monthNames, weekDays, yearText, currentLang, calendarDataUrl, postUrlPrefix }}>
+<script is:inline data-swup-ignore-script define:vars={{ monthNames, weekDays, yearText, currentLang, calendarDataUrl, postUrlPrefix, heatmapWeekTemplate }}>
   // State variables
   let displayYear = new Date().getFullYear();
   let displayMonth = new Date().getMonth();
@@ -145,6 +167,65 @@ const postUrlPrefix = url("/posts/");
     }
   }
 
+  function renderHeatmap() {
+    const container = document.getElementById('heatmap-container');
+    const monthsEl = document.getElementById('heatmap-months');
+    const gridEl = document.getElementById('heatmap-grid');
+    if (!container || !monthsEl || !gridEl) return;
+
+    // Show heatmap only in day view
+    container.style.display = currentView === 'day' ? 'block' : 'none';
+    if (currentView !== 'day') return;
+
+    // Render month labels (numbers 1-12)
+    monthsEl.innerHTML = Array.from({length: 12}, (_, i) =>
+      `<span class="text-[10px] text-neutral-400 dark:text-neutral-500 text-center">${i + 1}</span>`
+    ).join('');
+
+    // Build weekly post counts: heatmapData[month][week] = count
+    const heatmapData = Array.from({ length: 12 }, () => [0, 0, 0, 0]);
+    allPostsData.forEach(post => {
+      const date = new Date(post.published);
+      if (date.getFullYear() !== displayYear) return;
+      const month = date.getMonth();
+      const day = date.getDate();
+      const week = Math.min(Math.floor((day - 1) / 7), 3); // 0-3
+      heatmapData[month][week]++;
+    });
+
+    // Find max for scaling
+    // Render grid cells: 12 columns × 4 rows, row-major order
+    // Use discrete opacity levels so low counts are still clearly visible
+    const opacityLevels = [0, 0.45, 0.65, 0.85, 1];
+    let cellsHtml = '';
+    for (let week = 0; week < 4; week++) {
+      for (let month = 0; month < 12; month++) {
+        const count = heatmapData[month][week];
+        const level = Math.min(count, 4);
+        const bgStyle = count === 0
+          ? 'background-color: var(--btn-plain-bg-hover)'
+          : `background-color: var(--primary); opacity: ${opacityLevels[level]}`;
+        // Generate tooltip text using i18n template
+        const tooltip = heatmapWeekTemplate
+          .replace('{month}', month + 1)
+          .replace('{week}', week + 1)
+          .replace('{count}', count);
+        cellsHtml += `<div class="heatmap-cell rounded-sm aspect-square" style="${bgStyle}" title="${tooltip}" data-month="${month}"></div>`;
+      }
+    }
+    gridEl.innerHTML = cellsHtml;
+
+    // Click on cell to navigate to that month
+    gridEl.querySelectorAll('.heatmap-cell[data-month]').forEach(cell => {
+      cell.addEventListener('click', () => {
+        const m = parseInt(cell.getAttribute('data-month'));
+        displayMonth = m;
+        currentView = 'day';
+        renderCalendar();
+      });
+    });
+  }
+
   // 客户端动态渲染日历
   function renderCalendar() {
     const container = document.getElementById('calendar-view-container');
@@ -167,6 +248,8 @@ const postUrlPrefix = url("/posts/");
     } else if (currentView === 'year') {
       renderYearView();
     }
+
+    renderHeatmap();
   }
 
   function updateHeader() {
@@ -514,5 +597,11 @@ const postUrlPrefix = url("/posts/");
   :global(.calendar-day-selected) {
     background-color: var(--btn-regular-bg);
     border-radius: 0.25rem;
+  }
+
+  /* 热力图单元格 */
+  :global(.heatmap-cell) {
+    cursor: pointer;
+    min-width: 0;
   }
 </style>
