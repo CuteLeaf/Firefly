@@ -38,6 +38,34 @@ import { remarkImageGrid } from "./src/plugins/remark-image-grid.js";
 import { remarkMermaid } from "./src/plugins/remark-mermaid.js";
 import { remarkPlantuml } from "./src/plugins/remark-plantuml.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
+import { defineConfig } from 'astro/config';
+
+export default defineConfig({
+  // ... 你的其他 Astro 配置 (比如 integrations, output, adapter 等)
+
+  vite: {
+    build: {
+      rollupOptions: {
+        // 解决 @napi-rs/wasm-runtime 解析失败的致命错误
+        external: ['@napi-rs/wasm-runtime'],
+      },
+    },
+    ssr: {
+      // 消除控制台里关于 prerender 阶段 Node.js 内置模块的警告
+      external: [
+        'node:fs', 
+        'node:path', 
+        'node:url', 
+        'node:async_hooks', 
+        'node:fs/promises',
+        'stream', 
+        'path', 
+        'url', 
+        'fs'
+      ],
+    }
+  }
+});
 
 if (process.env.NODE_ENV === "development") {
 	setMaxListeners(20);
