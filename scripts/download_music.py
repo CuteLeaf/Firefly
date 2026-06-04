@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-一键下载音乐：搜索 + 下载音频 + 歌词 + 封面
+一键下载音乐：搜索 + 下载音频 + 歌词 + 封面 + 自动更新配置
 用法: python scripts/download_music.py "歌名" [--dir=输出目录]
 """
 
@@ -16,18 +16,13 @@ HEADERS = {
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_DIR = os.path.join(PROJECT_ROOT, "public", "assets", "music")
+CONFIG_FILE = os.path.join(PROJECT_ROOT, "src", "config", "musicConfig.ts")
 
 
 def fetch_json(url):
     req = Request(url, headers=HEADERS)
     with urlopen(req, timeout=15) as resp:
         return json.loads(resp.read().decode("utf-8"))
-
-
-def fetch_bytes(url):
-    req = Request(url, headers=HEADERS)
-    with urlopen(req, timeout=30) as resp:
-        return resp.read()
 
 
 def safe_name(name):
@@ -62,17 +57,65 @@ def get_cover_url(song_id):
         req = Request(url, headers=HEADERS)
         with urlopen(req, timeout=15) as resp:
             html = resp.read().decode("utf-8", errors="ignore")
-        # Extract cover from og:image meta tag
         match = re.search(r'og:image["\s]+content="([^"]+)"', html)
         if match:
             return match.group(1).replace("http://", "https://")
-        # Fallback: find any music.126.net cover URL
         match = re.search(r'https://p[1-9]\.music\.126\.net/[^"\s]+\.jpg', html)
         if match:
             return match.group(0)
     except Exception:
         pass
     return ""
+
+
+def update_config(song_name, artist_name, music_file, cover_file, lrc_file):
+    """Update musicConfig.ts with the new song."""
+    try:
+        with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        # Check for duplicate
+        if f'"{music_file}"' in content:
+            print(f"  Config: Song already exists in config, skipping")
+            return False
+
+        music_path = f"/assets/music/{music_file}"
+        cover_path = f"/assets/music/cover/{cover_file}" if cover_file else ""
+        lrc_path = f"/assets/music/{lrc_file}" if lrc_file else ""
+
+        new_song = (
+            "\t\t\t{\n"
+            f'\t\t\t\tname: "{song_name}",\n'
+            f'\t\t\t\tartist: "{artist_name}",\n'
+            f'\t\t\t\turl: "{music_path}",\n'
+            f'\t\t\t\tcover: "{cover_path}",\n'
+            f'\t\t\t\tlrc: "{lrc_path}",\n'
+            "\t\t\t},"
+        )
+
+        # Find the closing of the playlist array
+        # Look for the last }, followed by \n\t\t], which closes local.playlist
+        markers = list(re.finditer(r'(\n\t\t\t\},)\n\t\t\],', content))
+        if not markers:
+            print("  [!] Could not find playlist end in config file")
+            return False
+        marker = markers[-1]
+
+        # Insert after the last }, and before \n\t\t],
+        # marker.group() = "\n\t\t\t},\n\t\t],"
+        # We want to insert between }," and \n\t\t],
+        insert_pos = marker.start() + len("\n\t\t\t},")
+        new_content = content[:insert_pos] + "\n" + new_song + content[insert_pos:]
+
+        with open(CONFIG_FILE, "w", encoding="utf-8") as f:
+            f.write(new_content)
+
+        print(f"  Config: Updated musicConfig.ts")
+        return True
+
+    except Exception as e:
+        print(f"  [!] Failed to update config: {e}")
+        return False
 
 
 def main():
@@ -137,6 +180,7 @@ def main():
         print(f"  [!] Audio download failed: {e}")
 
     # Download lyrics
+    lrc = ""
     try:
         lrc = get_lyric(song_id)
         if lrc:
@@ -150,6 +194,7 @@ def main():
         print(f"  [!] Lyrics download failed: {e}")
 
     # Download cover
+    cover_file_exists = False
     try:
         cover_url = get_cover_url(song_id)
         if cover_url:
@@ -157,19 +202,21 @@ def main():
             print(f"  Downloading cover...")
             urlretrieve(cover_url, cover_path)
             print(f"  Cover: cover/{sn}.jpg")
+            cover_file_exists = True
         else:
-            print("  [!] Cover not available (use pnpm cli lrc on M4A to extract)")
+            print("  [!] Cover not available")
     except Exception as e:
         print(f"  [!] Cover download failed: {e}")
 
-    # Summary
+    # Summary & auto-update config
     print("\n  ─────────────────────────────────────────")
     if music_file:
+        cover_file = f"{sn}.jpg" if cover_file_exists else ""
+        lrc_file = f"{sn}.lrc" if lrc else ""
+        update_config(song_name, artist_name, music_file, cover_file, lrc_file)
+
         print(f"  Done! All files saved to public/assets/music/")
-        print(f"\n  Add to musicConfig.ts local.playlist:")
-        print(f'  {{ name: "{song_name}", artist: "{artist_name}",')
-        print(f'    url: "/assets/music/{music_file}",')
-        print(f'    cover: "/assets/music/cover/{sn}.jpg", lrc: "" }}')
+        print(f"  Music player config has been updated automatically!")
     else:
         print(f"  Lyrics downloaded. Audio needs manual download.")
         print(f"  1. Download M4A from: https://music.163.com/#/search/m/?s={quote(song_name)}")

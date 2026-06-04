@@ -19,6 +19,12 @@
   h4,
   h5,
   h6 {
+    .heading-numbering {
+      @apply font-bold text-(--primary) mr-1;
+      font-size: 0.85em;
+      opacity: 0.85;
+    }
+
     .anchor {
       @apply transition! -m-0.5! ml-[0.2ch]! p-0.5! select-none! opacity-0! no-underline!;
 

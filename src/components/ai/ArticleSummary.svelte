@@ -96,18 +96,22 @@
       }
 
       const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
       let fullContent = '';
       let thinking = '';
       let hasContent = false;
 
       if (reader) {
+        let buffer = '';
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
 
-          const chunk = decoder.decode(value, { stream: true });
-          const lines = chunk.split('\n');
+          // Accumulate raw bytes, decode at end to avoid multi-byte split issues
+          buffer += new TextDecoder().decode(value, { stream: true });
+
+          // Process complete SSE lines
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || ''; // Keep incomplete last line in buffer
 
           for (const line of lines) {
             if (!line.startsWith('data: ')) continue;
@@ -128,23 +132,25 @@
                   hasContent = true;
                 }
                 fullContent += delta.content;
+                // Show raw streaming progress
                 summaryContent = fullContent;
               }
             } catch (e) {
-              // 忽略解析错误
+              // Skip unparseable SSE events
             }
           }
         }
       }
 
-      // 解析最终的 JSON 响应
+      // Parse final JSON response: { "p": [...], "q": [...] }
       try {
-        const parsed = JSON.parse(fullContent);
+        const trimmed = fullContent.trim();
+        const parsed = JSON.parse(trimmed);
         if (parsed.p && Array.isArray(parsed.p)) {
           summaryContent = parsed.p.join('\n\n');
           suggestions = parsed.q || [];
 
-          // 缓存结果
+          // Cache result
           sessionStorage.setItem(cacheKey, JSON.stringify({
             content: summaryContent,
             suggestions,
@@ -152,7 +158,24 @@
           }));
         }
       } catch (e) {
-        // 如果不是 JSON，保持原始内容
+        // If not valid JSON, try to extract JSON from the content
+        const jsonMatch = fullContent.match(/\{[\s\S]*"p"[\s\S]*\}/);
+        if (jsonMatch) {
+          try {
+            const parsed = JSON.parse(jsonMatch[0]);
+            if (parsed.p && Array.isArray(parsed.p)) {
+              summaryContent = parsed.p.join('\n\n');
+              suggestions = parsed.q || [];
+              sessionStorage.setItem(cacheKey, JSON.stringify({
+                content: summaryContent,
+                suggestions,
+                thinking: thinkingContent,
+              }));
+            }
+          } catch (e2) {
+            // Keep raw content as fallback
+          }
+        }
       }
 
       hasGenerated = true;

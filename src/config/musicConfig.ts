@@ -11,7 +11,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	showInNavbar: true,
 
 	// 使用方式："meting" 使用 Meting API，"local" 使用本地音乐列表
-	mode: "meting",
+	mode: "local",
 
 	// 默认音量 (0-1)
 	volume: 0.7,
@@ -55,6 +55,27 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 				url: "/assets/music/使一颗心免于哀伤-哼唱.mp3",
 				cover: "/assets/music/cover/109951169585655912.webp",
 				lrc: "",
+			},
+			{
+				name: "知我（抒情版）",
+				artist: "知我",
+				url: "/assets/music/知我（抒情版）.mp3",
+				cover: "/assets/music/cover/知我（抒情版）.jpg",
+				lrc: "/assets/music/知我（抒情版）.lrc",
+			},
+			{
+				name: "晴天(正式版)",
+				artist: "周杰伦., 溺死的鱼",
+				url: "/assets/music/晴天(正式版).mp3",
+				cover: "/assets/music/cover/晴天(正式版).jpg",
+				lrc: "/assets/music/晴天(正式版).lrc",
+			},
+			{
+				name: "晴天(正式版)",
+				artist: "周杰伦., 溺死的鱼",
+				url: "/assets/music/晴天(正式版).mp3",
+				cover: "/assets/music/cover/晴天(正式版).jpg",
+				lrc: "/assets/music/晴天(正式版).lrc",
 			},
 		],
 	},

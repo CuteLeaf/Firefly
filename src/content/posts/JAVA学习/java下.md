@@ -2434,31 +2434,119 @@ userList.stream().peek(user -> user.setId(user.getId()+1)).forEach(System.out::p
 
 #### 终端操作符
 
+<details>
+<summary style="cursor:pointer; font-weight:bold; color:var(--primary);">认识终端操作符</summary>
+
+Stream流执行完终端操作之后，无法再执行其他动作，否则会报状态异常，提示该流已经被执行操作或者被关闭，想要再次执行操作必须重新创建Stream流
+
+一个流有且只能有一个终端操作，当这个操作执行后，流就被关闭了，无法再被操作，因此一个流只能被遍历一次，若想在遍历需要通过源数据在生成流。
+
+终端操作的执行，才会真正开始流的遍历。如 count、collect 等
+
+</details>
+
 ##### collect
+
+收集器，将流转换为其他形式
+
+```
+//1、collect：收集器，将流转换为其他形式
+        Set set = userList.stream().collect(Collectors.toSet());
+        set.forEach(System.out::println);
+        System.out.println("--------------------------");
+        List list = userList.stream().collect(Collectors.toList());
+        list.forEach(System.out::println);
+```
 
 ##### forEach
 
+```
+//2、forEach：遍历流
+userList.stream().forEach(user -> System.out.println(user));
+userList.stream().filter(user -> "上海".equals(user.getCity())).forEach(System.out::println);
+```
+
 ##### findFirst和findAny
 
+```
+
+//3、findFirst：返回第一个元素
+User firstUser = userList.stream().findFirst().get();
+User firstUser1 = userList.stream().filter(user -> "上海".equals(user.getCity())).findFirst().get();
+//4、findAny：将返回当前流中的任意元素
+User findUser = userList.stream().findAny().get();
+User findUser1 = userList.stream().filter(user -> "上海".equals(user.getCity())).findAny().get();
 
 
+//5、count：返回流中元素总数
+long count = userList.stream().filter(user -> user.getAge() > 20).count();
+System.out.println(count);
+//6、sum：求和
+int sum = userList.stream().mapToInt(User::getId).sum();
+//7、max：最大值
+int max = userList.stream().max(Comparator.comparingInt(User::getId)).get().getId();
+//8、min：最小值
+int min = userList.stream().min(Comparator.comparingInt(User::getId)).get().getId();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
 
 ### Collect收集
+
+#### toList
+
+```
+//将用户ID存放到List集合中
+List<Integer> idList = userList.stream().map(User::getId).collect(Collectors.toList()) ;
+```
+
+#### toMap
+
+```
+Map<Integer,String> userMap = userList.stream().collect(Collectors.toMap(User::getId,User::getName));
+
+```
+
+#### toset
+
+```
+Set<String> citySet = userList.stream().map(User::getCity).collect(Collectors.toSet());
+
+```
+
+#### counting
+
+```
+//符合条件的用户总数
+long count = userList.stream().filter(user -> user.getId()>1).collect(Collectors.counting());
+
+```
+
+#### summingInt
+
+对结果元素即用户ID求和
+
+```
+Integer sumInt = userList.stream().filter(user -> user.getId()>2).collect(Collectors.summingInt(User::getId)) ;
+
+```
+
+#### **minBy**
+
+筛选元素中ID最小的用户
+
+```
+User maxId = userList.stream().collect(Collectors.minBy(Comparator.comparingInt(User::getId))).get() ;
+
+```
+
+#### joining
+
+将用户所在城市，以指定分隔符链接 成字符串；
+
+```
+String joinCity = userList.stream().map(User::getCity).collect(Collectors.joining("||"));
+
+```
 
 
 

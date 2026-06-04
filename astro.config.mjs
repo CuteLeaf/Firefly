@@ -39,6 +39,7 @@ import mdx from "@astrojs/mdx";
 import rehypeEmailProtection from "./src/plugins/rehype-email-protection.mjs";
 import rehypeExternalLinks from "./src/plugins/rehype-external-links.mjs";
 import rehypeFigure from "./src/plugins/rehype-figure.mjs";
+import { rehypeHeadingNumbering } from "./src/plugins/rehype-heading-numbering.mjs";
 import { remarkImageGrid } from "./src/plugins/remark-image-grid.js";
 import { plantumlConfig } from "./src/config";
 
@@ -216,6 +217,7 @@ export default defineConfig({
 			rehypeMermaid,
 			rehypePlantuml,
 			rehypeFigure,
+			rehypeHeadingNumbering,
 			[rehypeExternalLinks, { siteUrl: siteConfig.site_url }],
 			[rehypeEmailProtection, { method: "base64" }], // 邮箱保护插件，支持 'base64' 或 'rot13'
 			[

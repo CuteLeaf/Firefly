@@ -160,17 +160,17 @@ export class TOCManager {
 
 		let tocHTML = "";
 		// 跟踪每个级别的计数器，索引0=一级，索引1=二级，依此类推
-		const counts = [0, 0, 0, 0, 0]; // 支持5级标题
+		const counts = [0, 0, 0, 0, 0, 0]; // 支持6级标题
 
 		filteredHeadings.forEach((heading, index) => {
 			const depth = Number.parseInt(heading.tagName.charAt(1), 10);
 			const relativeDepth = depth - this.minDepth; // 相对于最小深度的级别（0=一级，1=二级...）
 
 			// 更新计数器（即使没有id也要更新）
-			if (relativeDepth >= 0 && relativeDepth < 5) {
+			if (relativeDepth >= 0 && relativeDepth < 6) {
 				counts[relativeDepth]++;
 				// 重置所有更深层级的计数器
-				for (let i = relativeDepth + 1; i < 5; i++) {
+				for (let i = relativeDepth + 1; i < 6; i++) {
 					counts[i] = 0;
 				}
 			}
