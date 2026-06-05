@@ -94,6 +94,16 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 			...(siteConfig.pages.friends ? [LinkPreset.Friends] : []),
 			// 根据配置决定是否添加赞助，在siteConfig关闭pages.sponsor时导航栏不显示赞助
 			...(siteConfig.pages.sponsor ? [LinkPreset.Sponsor] : []),
+			// 根据配置决定是否添加应用中心
+			...(siteConfig.pages.apps
+				? [
+						{
+							name: "应用",
+							url: "/apps/",
+							icon: "material-symbols:apps",
+						},
+					]
+				: []),
 		],
 	});
 

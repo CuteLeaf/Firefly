@@ -40,6 +40,8 @@ import rehypeEmailProtection from "./src/plugins/rehype-email-protection.mjs";
 import rehypeExternalLinks from "./src/plugins/rehype-external-links.mjs";
 import rehypeFigure from "./src/plugins/rehype-figure.mjs";
 import { rehypeHeadingNumbering } from "./src/plugins/rehype-heading-numbering.mjs";
+import rehypeImageAttrs from "./src/plugins/rehype-image-attrs.mjs";
+import rehypeImageFallback from "./src/plugins/rehype-image-fallback.mjs";
 import { remarkImageGrid } from "./src/plugins/remark-image-grid.js";
 import { plantumlConfig } from "./src/config";
 
@@ -192,6 +194,9 @@ export default defineConfig({
 				if (pathname === "/gallery/" && !siteConfig.pages.gallery) {
 					return false;
 				}
+				if (pathname === "/apps/" && !siteConfig.pages.apps) {
+					return false;
+				}
 
 				return true;
 			},
@@ -249,6 +254,15 @@ export default defineConfig({
 							},
 						],
 					},
+				},
+			],
+			rehypeImageAttrs,
+			[
+				rehypeImageFallback,
+				{
+					enable: false, // 默认关闭，需要时在下方配置主力/备用图床域名
+					originalDomain: "",
+					fallbackDomain: "",
 				},
 			],
 		],

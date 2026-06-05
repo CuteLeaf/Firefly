@@ -153,6 +153,8 @@ export const siteConfig: SiteConfig = {
 		notFound: true,
 		// 仪表盘页面开关
 		dashboard: true,
+		// 应用中心页面开关
+		apps: true,
 	},
 
 	// 分类导航栏开关，在首页和归档页顶部显示分类快捷导航
@@ -259,4 +261,16 @@ export const siteConfig: SiteConfig = {
 
 	// 站点语言，在本配置文件顶部SITE_LANG定义
 	lang: SITE_LANG,
+
+	// 应用中心 - 展示个人应用、工具和服务链接
+	apps: [
+		// 示例：取消注释并添加你自己的应用
+		// {
+		// 	name: "ChatGPT",
+		// 	description: "AI 对话助手",
+		// 	url: "https://chat.openai.com",
+		// 	image: "https://cdn.oaistatic.com/images/favicon-o.svg",
+		// 	external: true,
+		// },
+	],
 };

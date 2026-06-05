@@ -88,6 +88,7 @@ export type SiteConfig = {
 		bangumi: boolean;
 		gallery: boolean; // 相册页面开关
 	  talk: boolean;   //新增导航说说开关
+		apps?: boolean; // 应用中心页面开关
 	};
 
 	// 分类导航栏开关
@@ -164,6 +165,15 @@ export type SiteConfig = {
 		 */
 		noReferrerDomains?: string[];
 	};
+
+	// 应用中心配置
+	apps?: Array<{
+		name: string;
+		description?: string;
+		url: string;
+		image: string;
+		external?: boolean;
+	}>;
 };
 
 export type Favicon = {

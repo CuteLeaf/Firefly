@@ -1,0 +1,54 @@
+---
+import { siteConfig } from "@/config";
+import ImageWrapper from "@/components/common/ImageWrapper.astro";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+const apps = siteConfig.apps || [];
+---
+
+<MainGridLayout title="应用中心" description="博主推荐的实用工具和服务合集">
+  <div class="flex w-full rounded-(--radius-large) overflow-hidden relative mb-4">
+    <div id="post-container" class="card-base z-10 px-6 md:px-9 pt-6 pb-4 relative w-full">
+      <div class="transition w-full block font-bold mb-6
+                  text-3xl md:text-[2.25rem]/[2.75rem]
+                  text-black/90 dark:text-white/90
+                  md:before:w-1 before:h-5 before:rounded-md before:bg-(--primary)
+                  before:absolute before:top-3 before:-left-4.5">
+        应用
+      </div>
+
+      {apps.length > 0 ? (
+        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+          {apps.map((app) => (
+            <a
+              href={app.url}
+              target={app.external ? "_blank" : undefined}
+              rel={app.external ? "noopener noreferrer" : undefined}
+              class="card-base rounded-(--radius-large) overflow-hidden group block hover:scale-[1.02] transition-transform duration-300"
+            >
+              <div class="relative aspect-square bg-gradient-to-br from-black/5 to-black/10 dark:from-white/5 dark:to-white/10 flex items-center justify-center p-6">
+                <div class="w-full h-full max-w-[120px] max-h-[120px] md:max-w-[140px] md:max-h-[140px] relative">
+                  <ImageWrapper
+                    src={app.image}
+                    alt={app.name}
+                    class="w-full h-full object-contain rounded-2xl shadow-lg group-hover:shadow-xl transition-shadow duration-300"
+                    position="center"
+                  />
+                </div>
+                <div class="absolute inset-0 bg-[var(--primary)]/0 group-hover:bg-[var(--primary)]/5 transition-colors duration-300"></div>
+              </div>
+              <div class="p-4 text-center">
+                <div class="text-base md:text-lg font-bold mb-1 text-[var(--primary)] transition truncate">{app.name}</div>
+                {app.description && <div class="text-xs md:text-sm text-black/60 dark:text-white/60 line-clamp-2">{app.description}</div>}
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-12 text-black/40 dark:text-white/40">
+          <p>暂无应用，可以在 siteConfig.ts 的 apps 数组中添加。</p>
+        </div>
+      )}
+    </div>
+  </div>
+</MainGridLayout>
