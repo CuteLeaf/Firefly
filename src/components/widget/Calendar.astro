@@ -80,15 +80,6 @@ const postUrlPrefix = url("/posts/");
         </div>
     </div>
 
-    <!-- 年度文章热力图 -->
-    {showHeatmap && (
-    <div id="heatmap-container" class="mb-2" style="display: none;">
-      <div class="heatmap-months grid gap-0.5 mb-1" id="heatmap-months" style="grid-template-columns: repeat(12, 1fr);"></div>
-      <div class="heatmap-grid grid gap-0.5" id="heatmap-grid" style="grid-template-columns: repeat(12, 1fr); grid-template-rows: repeat(4, 1fr);"></div>
-      <div class="border-b border-neutral-200 dark:border-neutral-700 mt-2"></div>
-    </div>
-    )}
-
     <!-- 日历视图容器 -->
     <div id="calendar-view-container">
       <!-- 星期标题 -->
@@ -105,6 +96,15 @@ const postUrlPrefix = url("/posts/");
         <!-- 将由 JavaScript 填充 -->
       </div>
     </div>
+
+    <!-- 年度文章热力图 -->
+    {showHeatmap && (
+    <div id="heatmap-container" class="mb-2" style="display: none;">
+      <div class="heatmap-months grid gap-0.5 mb-1" id="heatmap-months" style="grid-template-columns: repeat(12, 1fr);"></div>
+      <div class="heatmap-grid grid gap-0.5" id="heatmap-grid" style="grid-template-columns: repeat(12, 1fr); grid-template-rows: repeat(4, 1fr);"></div>
+      {/* <div class="border-b border-neutral-200 dark:border-neutral-700 mt-2"></div> */}
+    </div>
+    )}
 
     <!-- 月份选择视图 -->
     <div id="month-view-container" class="grid grid-cols-3 gap-2" style="display: none;">

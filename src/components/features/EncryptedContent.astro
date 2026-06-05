@@ -114,6 +114,29 @@ const labels = {
     setTimeout(function() {
       document.dispatchEvent(new CustomEvent('password:decrypted'));
     }, 100);
+
+    // 初始化解密内容中图片的 LQIP 淡入
+    var placeholders = contentEl.querySelectorAll('.lqip-placeholder');
+    for (var i = 0; i < placeholders.length; i++) {
+      (function(placeholder) {
+        var container = placeholder.parentElement;
+        if (!container) return;
+        var img = container.querySelector('img');
+        if (!img) return;
+        if (img.complete && img.naturalWidth > 0) {
+          img.style.opacity = '1';
+          placeholder.classList.add('loaded');
+        } else {
+          img.addEventListener('load', function() {
+            img.style.opacity = '1';
+            placeholder.classList.add('loaded');
+          }, { once: true });
+          img.addEventListener('error', function() {
+            placeholder.classList.add('loaded');
+          }, { once: true });
+        }
+      })(placeholders[i]);
+    }
   }
 
   function showError() {

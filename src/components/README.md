@@ -58,7 +58,7 @@ Firefly 项目中所有可复用组件的集中管理。组件按照功能和职
 - `PioMessageBox.astro` - 消息框组件（Live2D/Spine 消息显示）
 
 **分页组件**
-- `ClientPagination.astro` - 客户端分页（JavaScript 控制）
+- `ClientPagination.svelte` - 客户端分页（JavaScript 控制）
 - `Pagination.astro` - 静态路由分页（Astro 原生）
 
 ### 🧩 widget/ - 小部件

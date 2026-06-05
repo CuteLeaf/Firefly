@@ -556,7 +556,50 @@ const bannerCarouselInterval = Math.max(
                 newSlot.innerHTML = frames[nextIndex];
                 oldSlot.parentNode.insertBefore(newSlot, oldSlot.nextSibling);
 
-                // 双 rAF：确保 opacity:0 已绘制，然后同时触发淡入 + Ken Burns
+                // 获取 LQIP 占位和图片元素
+                var placeholder = newSlot.querySelector('.lqip-placeholder');
+                var img = newSlot.querySelector('img');
+
+                // 利用 LQIP 做过渡桥接：立即开始交叉淡入淡出，不再等图片加载
+                // LQIP 渐变作为新层的"底色"遮住旧图，消除两张图同时可见的重影
+                var oldSlotRemoved = false;
+                function removeOldSlot() {
+                    if (!oldSlotRemoved && oldSlot.parentNode) {
+                        oldSlot.parentNode.removeChild(oldSlot);
+                        oldSlotRemoved = true;
+                    }
+                }
+
+                function showFullResImage() {
+                    if (img) {
+                        // 确保图片有过渡效果，从 LQIP 上方平滑淡入
+                        if (!img.style.transition) {
+                            img.style.transition = 'opacity 0.8s ease-out';
+                        }
+                        img.style.opacity = '1';
+                    }
+                    // 延迟隐藏 LQIP，让图片有时间完全显示
+                    if (placeholder) {
+                        setTimeout(function() {
+                            placeholder.classList.add('loaded');
+                        }, 200);
+                    }
+                }
+
+                if (img && img.complete && img.naturalWidth > 0) {
+                    // 图片已缓存：直接显示全分辨率，跳过 LQIP 阶段
+                    showFullResImage();
+                } else if (img) {
+                    // 图片未加载完：先显示 LQIP，加载完成后在 LQIP 上方淡入全分辨率图
+                    img.addEventListener('load', function() {
+                        showFullResImage();
+                    }, { once: true });
+                    img.addEventListener('error', function() {
+                        if (placeholder) placeholder.classList.add('loaded');
+                    }, { once: true });
+                }
+
+                // 立即开始交叉淡入淡出（LQIP 已就绪，可作为过渡层）
                 requestAnimationFrame(function() {
                     requestAnimationFrame(function() {
                         newSlot.style.opacity = '1';
@@ -566,7 +609,7 @@ const bannerCarouselInterval = Math.max(
 
                 // 淡入完成后：移除旧层，清理 transition（避免影响后续动画）
                 setTimeout(function() {
-                    if (oldSlot.parentNode) oldSlot.parentNode.removeChild(oldSlot);
+                    removeOldSlot();
                     newSlot.style.transition = '';
                 }, FADE_MS + 50);
             }

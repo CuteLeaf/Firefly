@@ -1,7 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
-import BangumiSection from "@/components/pages/bangumi/BangumiSection.astro";
-import TabNav from "@/components/pages/bangumi/TabNav.astro";
+import BangumiGrid from "@/components/pages/bangumi/BangumiGrid.svelte";
 import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
@@ -25,7 +24,10 @@ const buildTime = formatDateI18nWithTime(new Date());
 ////////////// Bangumi 配置 ////////////////////////
 const bangumiConfig = {
 	username: siteConfig.bangumi?.userId, // 在这里配置你的Bangumi用户名
-	apiUrl: "https://api.bgm.tv",
+	mode: (siteConfig.bangumi?.mode || "static") as "static" | "dynamic",
+	apiUrl: siteConfig.bangumi?.apiUrl || "https://api.bangumi.one",
+	subjectBaseUrl:
+		siteConfig.bangumi?.subjectBaseUrl || "https://bangumi.one/subject/",
 	categories: {
 		book: true,
 		anime: true,
@@ -41,6 +43,8 @@ const bangumiConfig = {
 	},
 };
 //////////////////////////////////////////////////
+
+const isDynamic = bangumiConfig.mode === "dynamic";
 
 // 分类映射
 const categoryMap = {
@@ -142,54 +146,58 @@ const isUserIdConfigured =
 
 if (!isUserIdConfigured) {
 	console.log("[Bangumi] ⚠️ 未配置 Bangumi 用户ID，跳过数据获取");
-} else {
-	console.log("[Bangumi] 🌐 从 API 获取数据");
+} else if (!isDynamic) {
+	console.log("[Bangumi] 🌐 从 API 获取数据（static 模式）");
 }
 
-for (const [categoryKey, enabled] of Object.entries(bangumiConfig.categories)) {
-	// 如果未配置用户ID，跳过数据获取
-	if (!isUserIdConfigured) {
-		break;
-	}
-	if (enabled && categoryMap[categoryKey as keyof typeof categoryMap]) {
-		const categoryInfo = categoryMap[categoryKey as keyof typeof categoryMap];
-		try {
-			const data = await fetchBangumiData(
-				// biome-ignore lint/style/noNonNullAssertion: Checked by isUserIdConfigured
-				bangumiConfig.username!,
-				categoryInfo.subjectType,
-			);
-			bangumiData[categoryKey] = data;
-			tabs.push({
-				id: categoryKey,
-				name: categoryInfo.name,
-				count: data.length,
-			});
-		} catch (error) {
-			console.error(`[Bangumi] 获取 ${categoryInfo.name} 数据失败:`, error);
-			fetchFailed = true;
+if (!isDynamic) {
+	for (const [categoryKey, enabled] of Object.entries(
+		bangumiConfig.categories,
+	)) {
+		// 如果未配置用户ID，跳过数据获取
+		if (!isUserIdConfigured) {
 			break;
 		}
+		if (enabled && categoryMap[categoryKey as keyof typeof categoryMap]) {
+			const categoryInfo = categoryMap[categoryKey as keyof typeof categoryMap];
+			try {
+				const data = await fetchBangumiData(
+					// biome-ignore lint/style/noNonNullAssertion: Checked by isUserIdConfigured
+					bangumiConfig.username!,
+					categoryInfo.subjectType,
+				);
+				bangumiData[categoryKey] = data;
+				tabs.push({
+					id: categoryKey,
+					name: categoryInfo.name,
+					count: data.length,
+				});
+			} catch (error) {
+				console.error(`[Bangumi] 获取 ${categoryInfo.name} 数据失败:`, error);
+				fetchFailed = true;
+				break;
+			}
+		}
 	}
-}
 
-// 根据 categoryOrder 配置对 tabs 进行排序
-const categoryOrder = siteConfig.bangumi?.categoryOrder || [];
-if (categoryOrder.length > 0) {
-	tabs.sort((a, b) => {
-		const aIndex = categoryOrder.indexOf(
-			a.id as (typeof categoryOrder)[number],
-		);
-		const bIndex = categoryOrder.indexOf(
-			b.id as (typeof categoryOrder)[number],
-		);
-		// 如果类型在配置中，按配置顺序排序；否则排在后面
-		if (aIndex === -1 && bIndex === -1) return 0;
-		if (aIndex === -1) return 1;
-		if (bIndex === -1) return -1;
-		return aIndex - bIndex;
-	});
-}
+	// 根据 categoryOrder 配置对 tabs 进行排序
+	const categoryOrder = siteConfig.bangumi?.categoryOrder || [];
+	if (categoryOrder.length > 0) {
+		tabs.sort((a, b) => {
+			const aIndex = categoryOrder.indexOf(
+				a.id as (typeof categoryOrder)[number],
+			);
+			const bIndex = categoryOrder.indexOf(
+				b.id as (typeof categoryOrder)[number],
+			);
+			// 如果类型在配置中，按配置顺序排序；否则排在后面
+			if (aIndex === -1 && bIndex === -1) return 0;
+			if (aIndex === -1) return 1;
+			if (bIndex === -1) return -1;
+			return aIndex - bIndex;
+		});
+	}
+} // end if (!isDynamic)
 
 const activeTab = tabs[0]?.id || "anime";
 ---
@@ -211,12 +219,45 @@ const activeTab = tabs[0]?.id || "anime";
                 <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
                     {i18n(I18nKey.bangumiSubtitle)}
                 </p>
+                {!isDynamic && (
                 <p class="text-xs text-neutral-500 dark:text-neutral-500 mt-2">
                     {i18n(I18nKey.bangumiLastUpdated)} {buildTime}
                 </p>
+                )}
             </div>
 
-      <!-- Tab 导航和内容 -->
+      {isDynamic ? (
+        /* ==================== Dynamic 模式 ==================== */
+        <>
+          {!isUserIdConfigured ? (
+            <div class="text-center py-16">
+              <div class="inline-flex items-center justify-center w-16 h-16 bg-(--btn-regular-bg) rounded-full mb-6 border border-(--line-divider)">
+                <Icon name="material-symbols:settings" class="text-[2rem] text-(--btn-content)" />
+              </div>
+              <h2 class="text-xl font-semibold text-black/80 dark:text-white/80 mb-3">
+                未配置 Bangumi 用户ID
+              </h2>
+              <p class="text-black/60 dark:text-white/60 mb-4 max-w-md mx-auto">
+                请在 src/config/siteConfig.ts 中配置你的 Bangumi 用户ID
+              </p>
+            </div>
+          ) : (
+            <BangumiGrid
+              client:load
+              subjectBaseUrl={bangumiConfig.subjectBaseUrl}
+              fetchConfig={{
+                username: bangumiConfig.username!,
+                apiUrl: bangumiConfig.apiUrl,
+                categories: bangumiConfig.categories,
+                categoryOrder: siteConfig.bangumi?.categoryOrder || [],
+                pagination: bangumiConfig.pagination,
+              }}
+            />
+          )}
+        </>
+      ) : (
+        /* ==================== Static 模式 ==================== */
+        <>
       {fetchFailed ? (
         <div class="text-center py-16">
           <div class="inline-flex items-center justify-center w-16 h-16 bg-(--btn-regular-bg) rounded-full mb-6 border border-(--line-divider)">
@@ -231,17 +272,7 @@ const activeTab = tabs[0]?.id || "anime";
         </div>
       ) : tabs.length > 0 ? (
         <>
-          <TabNav tabs={tabs} activeTab={activeTab} />
-
-          <!-- 内容区域 -->
-          {tabs.map((tab) => (
-                      <BangumiSection
-            sectionId={tab.id}
-            items={bangumiData[tab.id] || []}
-            isActive={tab.id === activeTab}
-            itemsPerPage={12}
-          />
-          ))}
+          <BangumiGrid client:load tabs={tabs} initialActiveTab={activeTab} bangumiData={bangumiData} subjectBaseUrl={bangumiConfig.subjectBaseUrl} />
         </>
       ) : (
         <div class="text-center py-16">
@@ -255,6 +286,8 @@ const activeTab = tabs[0]?.id || "anime";
             {isUserIdConfigured ? i18n(I18nKey.bangumiEmptyReason) : "请在 src/config/siteConfig.ts 中配置你的 Bangumi 用户ID"}
           </p>
         </div>
+      )}
+        </>
       )}
 		</div>
     </div>
