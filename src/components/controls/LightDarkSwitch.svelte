@@ -30,6 +30,7 @@ let displayedMode: LIGHT_DARK_MODE = $state(LIGHT_MODE); // 显示的实际主�
 function switchScheme(newMode: LIGHT_DARK_MODE) {
 	mode = newMode;
 	setTheme(newMode);
+	updateDisplayedMode();
 }
 
 // 更新显示的主题（用于显示当前实际主题）
