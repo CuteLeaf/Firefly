@@ -165,13 +165,14 @@ const widgetId =
 <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-neutral-50 dark:hover:bg-white/5 transition-colors group">
     <div class="w-8 h-8 rounded-md overflow-hidden shrink-0 relative bg-neutral-200 dark:bg-neutral-700">
         <img src="" class="item-cover w-full h-full object-cover" loading="lazy" alt="" />
-        <!-- Active Indicator overlay with animated equalizer -->
+        <!-- Active Indicator overlay with animated equalizer / play icon -->
         <div class="item-active-overlay absolute inset-0 bg-(--primary)/20 hidden items-center justify-center">
             <div class="eq-bars flex items-end gap-[2px] h-3.5">
                 <span class="eq-bar w-[3px] bg-(--primary) rounded-sm"></span>
                 <span class="eq-bar w-[3px] bg-(--primary) rounded-sm"></span>
                 <span class="eq-bar w-[3px] bg-(--primary) rounded-sm"></span>
             </div>
+            <svg class="eq-play-icon text-(--primary) hidden" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         </div>
     </div>
     <div class="flex-1 min-w-0">
@@ -279,6 +280,21 @@ const widgetId =
             ui.btnPlay.setAttribute('aria-label', cfg.i18n.play);
             ui.btnPlay.title = cfg.i18n.play;
         }
+        // Toggle eq-bars / play icon in playlist
+        var activeItems = ui.playlistContainer.querySelectorAll('.playlist-item[aria-current="true"]');
+        activeItems.forEach(function (item) {
+            var eqBars = item.querySelector('.eq-bars');
+            var playIcon = item.querySelector('.eq-play-icon');
+            if (isPlaying) {
+                eqBars.classList.remove('hidden');
+                eqBars.classList.add('flex');
+                playIcon.classList.add('hidden');
+            } else {
+                eqBars.classList.add('hidden');
+                eqBars.classList.remove('flex');
+                playIcon.classList.remove('hidden');
+            }
+        });
     }
 
     function updateModeUI(playMode) {
@@ -351,12 +367,24 @@ const widgetId =
     function vsApplyActiveStyle(el, isActive) {
         var overlay = el.querySelector('.item-active-overlay');
         var title = el.querySelector('.item-title');
+        var eqBars = el.querySelector('.eq-bars');
+        var playIcon = el.querySelector('.eq-play-icon');
+        var isPlaying = mgr.getState().isPlaying;
         if (isActive) {
             el.classList.add('bg-neutral-100', 'dark:bg-white/10');
             el.setAttribute('aria-current', 'true');
             overlay.classList.remove('hidden');
             overlay.classList.add('flex');
             title.style.color = PRIMARY_COLOR;
+            if (isPlaying) {
+                eqBars.classList.remove('hidden');
+                eqBars.classList.add('flex');
+                playIcon.classList.add('hidden');
+            } else {
+                eqBars.classList.add('hidden');
+                eqBars.classList.remove('flex');
+                playIcon.classList.remove('hidden');
+            }
         } else {
             el.classList.remove('bg-neutral-100', 'dark:bg-white/10');
             el.removeAttribute('aria-current');

@@ -24,7 +24,7 @@ export function getLqipGradient(
 		// public 图片：key 格式为 public:xxx（去掉开头的 /）
 		const relativePath = src.replace(/^\//, "");
 		const compact = lqips[`public:${relativePath}`] || lqips[relativePath];
-		if (!compact || compact.length !== 18) return undefined;
+		if (compact?.length !== 18) return undefined;
 		const c1 = `#${compact.slice(0, 6)}`;
 		const c2 = `#${compact.slice(6, 12)}`;
 		const c3 = `#${compact.slice(12, 18)}`;
@@ -38,7 +38,7 @@ export function getLqipGradient(
 		lqips[`src:${src}`] ||
 		lqips[fullPath] ||
 		lqips[src];
-	if (!compact || compact.length !== 18) return undefined;
+	if (compact?.length !== 18) return undefined;
 
 	const c1 = `#${compact.slice(0, 6)}`;
 	const c2 = `#${compact.slice(6, 12)}`;
