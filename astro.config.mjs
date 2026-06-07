@@ -85,7 +85,7 @@ export default defineConfig({
 				"#right-sidebar-dynamic",
 				"#floating-toc-wrapper",
 			],
-			smoothScrolling: false，
+			smoothScrolling: false,
 			cache: true,
 			preload: true,
 			accessibility: true,
@@ -160,7 +160,7 @@ export default defineConfig({
 					delHue: 0,
 					insHue: 180,
 					markHue: 250,
-				},
+				}，
 				languageBadge: {
 					fontSize: "0.75rem",
 					fontWeight: "bold",
