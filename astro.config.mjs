@@ -85,7 +85,7 @@ export default defineConfig({
 				"#right-sidebar-dynamic",
 				"#floating-toc-wrapper",
 			],
-			smoothScrolling: false，
+			smoothScrolling: false,
 			cache: true,
 			preload: true,
 			accessibility: true,
