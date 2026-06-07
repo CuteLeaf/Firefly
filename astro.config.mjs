@@ -51,7 +51,7 @@ const adapter = process.env.CF_WORKERS
 
 // https://astro.build/config
 export default defineConfig({
-	site: siteConfig.site_url,
+	site: "https://www.zsso.net",
 
 	base: "/",
 	trailingSlash: "always",
@@ -84,7 +84,7 @@ export default defineConfig({
 				"#left-sidebar-dynamic",
 				"#right-sidebar-dynamic",
 				"#floating-toc-wrapper",
-			],
+			]，
 			smoothScrolling: false,
 			cache: true,
 			preload: true,
