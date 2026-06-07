@@ -85,7 +85,7 @@ export default defineConfig({
 				"#right-sidebar-dynamic",
 				"#floating-toc-wrapper",
 			],
-			smoothScrolling: false,
+			smoothScrolling: false，
 			cache: true,
 			preload: true,
 			accessibility: true,
@@ -219,7 +219,7 @@ export default defineConfig({
 				[rehypeKatex, { katex }],
 				[rehypeCallouts, { theme: siteConfig.rehypeCallouts.theme }],
 				rehypeSlug,
-				rehypeMermaid(留空，什么都不写)
+				rehypeMermaid(留空,什么都不写)
 				rehypePlantuml,
 				rehypeFigure,
 				[rehypeExternalLinks, { siteUrl: siteConfig.site_url }],
