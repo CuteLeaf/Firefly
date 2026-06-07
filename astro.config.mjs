@@ -162,7 +162,7 @@ export default defineConfig({
 					markHue: 250,
 				},
 				languageBadge: {
-					fontSize: "0.75rem"，
+					fontSize: "0.75rem",
 					fontWeight: "bold",
 					borderRadius: "0.25rem",
 					opacity: "1",
