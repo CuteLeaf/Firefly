@@ -86,12 +86,12 @@ export default defineConfig({
 				"#floating-toc-wrapper",
 			],
 			smoothScrolling: false,
-			cache: true，
+			cache: true,
 			preload: true,
-			accessibility: true，
+			accessibility: true,
 			updateHead: true,
-			updateBodyClass: false，
-			globalInstance: true，
+			updateBodyClass: false,
+			globalInstance: true,
 			// 滚动相关配置优化
 			resolveUrl: (url) => url,
 			animateHistoryBrowsing: false,
