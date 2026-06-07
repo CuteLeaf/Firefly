@@ -113,7 +113,7 @@ export default defineConfig({
 		}),
 		expressiveCode({
 			themes: [expressiveCodeConfig.darkTheme,expressiveCodeConfig.lightTheme],
-			useDarkModeMediaQuery: false,
+			useDarkModeMediaQuery: false，
 			themeCssSelector: (theme) => `[data-theme='${theme.name}']`,
 			plugins: [
 				// pluginLanguageBadge 配置 - 从expressiveCodeConfig读取设置
@@ -121,7 +121,7 @@ export default defineConfig({
 					? [pluginLanguageBadge()]
 					: []),
 				pluginCollapsibleSections(),
-				pluginLineNumbers(),
+				pluginLineNumbers()，
 				// pluginCollapsible 配置 - 从expressiveCodeConfig读取设置（留空，什么都不写）使用i18n文本
 				...(expressiveCodeConfig.pluginCollapsible?.enable === true
 					? [
@@ -160,7 +160,7 @@ export default defineConfig({
 					delHue: 0,
 					insHue: 180,
 					markHue: 250,
-				},
+				}，
 				languageBadge: {
 					fontSize: "0.75rem",
 					fontWeight: "bold",
