@@ -1,0 +1,76 @@
+---
+title: Win10系统分区对拷/系统迁移后无限转圈、无法进入桌面的一种解决方案
+published: 2026-05-15
+pinned: false
+description: 克隆系统分区后Win10卡在加载界面，原因是克隆导致磁盘签名改变，注册表仍指向旧签名。解决方法为：进入PE加载注册表SYSTEM配置单元，定位MountedDevices，删除其中的DosDevices数据值，卸载配置单元并重启，系统将重新扫描并重建盘符映射。
+image: ./images/win10xtfqdk.png
+tags: ["Windows疑难杂症", "系统对拷"]
+category: Windows
+draft: false
+comment: true
+slug: win10xtfqdk
+author: Summer
+summary: ">-"
+status: published
+publishedAt: "2026-05-15T12:00:00.000Z"
+createdAt: "2026-05-03T13:16:36.000Z"
+updatedAt: "2026-06-07T11:29:24.000Z"
+readTimeInMinutes: 2
+---
+
+> ## **问题描述**
+> 
+> _前两天有一块SATA固态要挂了，需要临时把系统分区克隆至另一硬盘中。原硬盘为双系统，多个分区，仅将Win10分区使用DG对拷至新分区，已提前建立ESP_
+> 
+> _MSR分区，并在对拷后修复了引导。开机后系统正常引导，但卡在了win10加载状态（无限转圈）：_
+> 
+> 1. 鼠标指针**可见可移动**；
+> 2. 五次shift**可弹出**粘滞键提示框
+> 
+> ![出现问题](https://hry.54120721.xyz/file/Windows/1778432436873_1.jpg)
+
+## **解决方案**
+
+0x00 : 进入PE，Windows + R 运行 regedit
+
+![步骤一](https://hry.54120721.xyz/file/Windows/1778432429285_2.jpg)
+
+0x01 : 单击HKEY_LOCAL_MACHINE选中（否则下一步按钮会置灰）
+
+![步骤二](https://hry.54120721.xyz/file/Windows/1778432433126_3.jpg)
+
+0x02 : 菜单栏 文件 -> 加载配置单元（HKEY_LOCAL_MACHINE需为选中状态）
+
+![步骤三](https://hry.54120721.xyz/file/Windows/1778432435224_4.jpg)
+
+0x03 : 进入**系统分区**，打开 **Windows\System32\config\SYSTEM**文件
+
+![步骤四](https://hry.54120721.xyz/file/Windows/1778432432100_5.jpg)
+
+0x04 : 在弹出的对话框中设置一个临时项名称(尽量使用英文且不与内部项名称相同)
+
+![步骤五](https://hry.54120721.xyz/file/Windows/1778432435445_6.jpg)
+
+0x05 : 展开刚刚的项名称所在项，单击“**MountedDevices**”
+
+![步骤六](https://hry.54120721.xyz/file/Windows/1778432442534_7.jpg)
+
+0x06 : 选中MountedDevices，仅删除右侧窗格中的数据值（\DosDevices\C:等），不要删除左侧的MountedDevices文件夹  
+注 : 此操作会导致系统重启后重新分配盘符。若原系统有多个分区，盘符可能与原顺序不同（如原D盘变E盘），进桌面后需在"磁盘管理"中手动调整。
+
+![步骤七](https://hry.54120721.xyz/file/Windows/1778432439737_8.jpg)
+
+0x07 : 重新选中刚刚设置的名称，文件 -> **卸载配置单元**（未选中则该选项会处于置灰状态）
+
+![步骤八](https://hry.54120721.xyz/file/Windows/1778432441975_9.jpg)
+
+![步骤九](https://hry.54120721.xyz/file/Windows/1778432434514_10.jpg)
+
+0x08 : 重启，系统正常进入，修复完成。
+
+## **原理简述**
+
+1. MountedDevices存储了磁盘签名与盘符的绑定关系。
+2. 硬盘对拷后，新盘的磁盘签名发生变化。
+3. 但注册表仍指向旧盘，导致系统加载时找不到系统分区而假死。
+4. 清空后Windows会重新扫描并重建映射。

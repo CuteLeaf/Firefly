@@ -1,6 +1,6 @@
 export const relationshipConfig = {
   // 恋爱开始日期
-  startDate: "2025-03-05",
+  startDate: "2025-04-05",
   // 双方名称
   name1: "---------PJX",
   name2: "HRY---------",

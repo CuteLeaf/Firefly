@@ -41,13 +41,14 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		// 桌面背景图片（支持单张或多张随机）
 		// desktop: "assets/images/DesktopWallpaper/d1.avif",
 		desktop: [
-	"https://hry.54120721.xyz/file/Wallpaper/1778399900602_【哲风壁纸】二次元-动漫女孩.png"
+	"assets/images/DesktopWallpaper/d1.png"
 ],
 		// 移动背景图片（支持单张或多张随机）
 		// mobile: "assets/images/MobileWallpaper/m1.avif",
 		mobile: [
-	"https://hry.54120721.xyz/file/Wallpaper/1778863340822_【哲风壁纸】竖屏-风景.png",
-	"https://hry.54120721.xyz/file/Wallpaper/1779471762965_【哲风壁纸】IPhone-渐变.png"
+	"assets/images/MobileWallpaper/m1.png",
+	"assets/images/MobileWallpaper/m2.png",
+	"assets/images/MobileWallpaper/m3.png"
 ],
 	},
 	// 横幅壁纸和全屏壁纸共享配置
@@ -81,7 +82,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 				// 打字速度（毫秒）
 				speed: 100,
 				// 删除速度（毫秒）
-				deleteSpeed: 50,
+				deleteSpeed: 100,
 				// 完全显示后的暂停时间（毫秒）
 				pauseTime: 2000,
 			},

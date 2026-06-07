@@ -2,6 +2,39 @@ import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 
+const ziyuanCollection = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/ziyuan" }),
+  schema: z.union([
+    z.object({
+      title: z.string(),
+      content: z.string(),
+      closable: z.boolean().optional().default(true),
+      link: z
+        .object({
+          enable: z.boolean().optional().default(true),
+          text: z.string(),
+          url: z.string(),
+          external: z.boolean().optional().default(false),
+        })
+        .optional(),
+      quotes: z.undefined().optional(),
+    }),
+    z.object({
+      title: z.string(),
+      quotes: z.array(
+        z.object({
+          text: z.string(),
+          author: z.string(),
+        })
+      ),
+      content: z.undefined().optional(),
+      closable: z.undefined().optional(),
+      link: z.undefined().optional(),
+    }),
+  ]),
+});
+
+
 const postsCollection = defineCollection({
 	loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/posts" }),
 	schema: z.object({
@@ -39,4 +72,5 @@ const specCollection = defineCollection({
 export const collections = {
 	posts: postsCollection,
 	spec: specCollection,
+	ziyuan: ziyuanCollection,
 };

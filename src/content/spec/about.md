@@ -1,28 +1,24 @@
 # 关于我 / About Me
 
-你好！我是 **夏叶** ，一个在数字世界中默默无闻的一片叶子。
+你好！我是 **Summer** ，一名爱折腾的初二生 马上要升初三啦！。
 
-## 🛠️ 关于本站
+## 生活态度
 
-这个网站使用 **Astro** 框架构建，采用了 [Firefly](https://github.com/CuteLeaf/Firefly) 模板，Firefly 是基于 [Fuwari](https://github.com/saicaca/fuwari) 的二次开发。
+1.  始终保持着一个积极向上、阳光开朗的三观 望向更美好的明天
+2.  无论今天的生活有多累多难 明天一切都会变得更好
+3.  “ Tomorrow everything will be fine ”
 
-**Firefly** 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。
+## 💻 专业技术
 
+擅长 Ai、Fw、Fl、Br、Ae、Pr、Id、Ps 等软件安装与卸载 精通 CSS、JavaScript、PHP、ASP、C、C++、C#、Java、Ruby、Perl、Lisp、Python、Objective-C、ActionScript、Pascal、spss、sas 等单词拼写 熟练掌握 Windows、Linux、Mac、Android、iOS、WP 等系统开关机 熟练掌握汉语｜精通划水语言
 
-**🖥️在线预览： [Firefly - Demo site](https://firefly.cuteleaf.cn/)**
+## 🚀 人生态度
 
-**🏠我的博客： [https://blog.cuteleaf.cn](https://blog.cuteleaf.cn/)**
+*   及时行乐： 人生忽如寄，莫负茶、汤、好天气，赴山海⛰️ 留光影🎬 享生活🌿
 
-**📝Firefly使用文档： [https://docs-firefly.cuteleaf.cn](https://docs-firefly.cuteleaf.cn/)**
+*   佛系躺平： 莫欺少年穷！莫欺中年穷！莫欺老年穷！主打一个顺其自然的松弛感
 
-**⭐Firefly开源地址：[https://github.com/CuteLeaf/Firefly](https://github.com/CuteLeaf/Firefly)** 
-
-**⭐Fuwari开源地址：[https://github.com/saicaca/fuwari](https://github.com/saicaca/fuwari)**
-
-::github{repo="CuteLeaf/Firefly"}
-
-::github{repo="saicaca/fuwari"}
-
+*   快乐优先： 我注重生活体验与幸福感提升，拒绝无效内卷，享受每一个当下
 ---
 
 *感谢你的来访！希望在这里能找到对你有用的内容！*

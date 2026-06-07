@@ -1,0 +1,496 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "blockquote",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": {
+            "id": "问题描述",
+            "data-toc-id": "问题描述",
+            "level": 2
+          },
+          "content": [
+            {
+              "type": "text",
+              "marks": [
+                {
+                  "type": "bold"
+                }
+              ],
+              "text": "问题描述"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "marks": [
+                {
+                  "type": "italic"
+                }
+              ],
+              "text": "前两天有一块SATA固态要挂了，需要临时把系统分区克隆至另一硬盘中。原硬盘为双系统，多个分区，仅将Win10分区使用DG对拷至新分区，已提前建立ESP"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "marks": [
+                {
+                  "type": "italic"
+                }
+              ],
+              "text": "MSR分区，并在对拷后修复了引导。开机后系统正常引导，但卡在了win10加载状态（无限转圈）："
+            }
+          ]
+        },
+        {
+          "type": "orderedList",
+          "attrs": {
+            "start": 1,
+            "type": null
+          },
+          "content": [
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "鼠标指针"
+                    },
+                    {
+                      "type": "text",
+                      "marks": [
+                        {
+                          "type": "bold"
+                        }
+                      ],
+                      "text": "可见可移动"
+                    },
+                    {
+                      "type": "text",
+                      "text": "；"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "五次shift"
+                    },
+                    {
+                      "type": "text",
+                      "marks": [
+                        {
+                          "type": "bold"
+                        }
+                      ],
+                      "text": "可弹出"
+                    },
+                    {
+                      "type": "text",
+                      "text": "粘滞键提示框"
+                    }
+                  ]
+                },
+                {
+                  "type": "image",
+                  "attrs": {
+                    "src": "https://hry.54120721.xyz/file/Windows/1778432436873_1.jpg",
+                    "alt": "出现问题",
+                    "title": null,
+                    "width": "100%",
+                    "height": null,
+                    "align": "center",
+                    "caption": "",
+                    "aspectRatio": null
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "id": "解决方案",
+        "data-toc-id": "解决方案",
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ],
+          "text": "解决方案"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "0x00 : 进入PE，Windows + R 运行 regedit"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "https://hry.54120721.xyz/file/Windows/1778432429285_2.jpg",
+        "alt": "步骤一",
+        "title": null,
+        "width": "100%",
+        "height": null,
+        "align": "center",
+        "caption": "",
+        "aspectRatio": null
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "0x01 : 单击HKEY_LOCAL_MACHINE选中（否则下一步按钮会置灰）"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "https://hry.54120721.xyz/file/Windows/1778432433126_3.jpg",
+        "alt": "步骤二",
+        "title": null,
+        "width": "100%",
+        "height": null,
+        "align": "center",
+        "caption": "",
+        "aspectRatio": null
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "0x02 : 菜单栏 文件 -> 加载配置单元（HKEY_LOCAL_MACHINE需为选中状态）"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "https://hry.54120721.xyz/file/Windows/1778432435224_4.jpg",
+        "alt": "步骤三",
+        "title": null,
+        "width": "100%",
+        "height": null,
+        "align": "center",
+        "caption": "",
+        "aspectRatio": null
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "0x03 : 进入"
+        },
+        {
+          "type": "text",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ],
+          "text": "系统分区"
+        },
+        {
+          "type": "text",
+          "text": "，打开 "
+        },
+        {
+          "type": "text",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ],
+          "text": "Windows\\System32\\config\\SYSTEM"
+        },
+        {
+          "type": "text",
+          "text": "文件"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "https://hry.54120721.xyz/file/Windows/1778432432100_5.jpg",
+        "alt": "步骤四",
+        "title": null,
+        "width": "100%",
+        "height": null,
+        "align": "center",
+        "caption": "",
+        "aspectRatio": null
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "0x04 : 在弹出的对话框中设置一个临时项名称(尽量使用英文且不与内部项名称相同)"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "https://hry.54120721.xyz/file/Windows/1778432435445_6.jpg",
+        "alt": "步骤五",
+        "title": null,
+        "width": "100%",
+        "height": null,
+        "align": "center",
+        "caption": "",
+        "aspectRatio": null
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "0x05 : 展开刚刚的项名称所在项，单击“"
+        },
+        {
+          "type": "text",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ],
+          "text": "MountedDevices"
+        },
+        {
+          "type": "text",
+          "text": "”"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "https://hry.54120721.xyz/file/Windows/1778432442534_7.jpg",
+        "alt": "步骤六",
+        "title": null,
+        "width": "100%",
+        "height": null,
+        "align": "center",
+        "caption": "",
+        "aspectRatio": null
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "0x06 : 选中MountedDevices，仅删除右侧窗格中的数据值（\\DosDevices\\C:等），不要删除左侧的MountedDevices文件夹"
+        },
+        {
+          "type": "hardBreak"
+        },
+        {
+          "type": "text",
+          "text": "注 : 此操作会导致系统重启后重新分配盘符。若原系统有多个分区，盘符可能与原顺序不同（如原D盘变E盘），进桌面后需在\"磁盘管理\"中手动调整。"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "https://hry.54120721.xyz/file/Windows/1778432439737_8.jpg",
+        "alt": "步骤七",
+        "title": null,
+        "width": "100%",
+        "height": null,
+        "align": "center",
+        "caption": "",
+        "aspectRatio": null
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "0x07 : 重新选中刚刚设置的名称，文件 -> "
+        },
+        {
+          "type": "text",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ],
+          "text": "卸载配置单元"
+        },
+        {
+          "type": "text",
+          "text": "（未选中则该选项会处于置灰状态）"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "https://hry.54120721.xyz/file/Windows/1778432441975_9.jpg",
+        "alt": "步骤八",
+        "title": null,
+        "width": "100%",
+        "height": null,
+        "align": "center",
+        "caption": "",
+        "aspectRatio": null
+      }
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "https://hry.54120721.xyz/file/Windows/1778432434514_10.jpg",
+        "alt": "步骤九",
+        "title": null,
+        "width": "100%",
+        "height": null,
+        "align": "center",
+        "caption": "",
+        "aspectRatio": null
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "0x08 : 重启，系统正常进入，修复完成。"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "id": "原理简述",
+        "data-toc-id": "原理简述",
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ],
+          "text": "原理简述"
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "attrs": {
+        "start": 1,
+        "type": null
+      },
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "MountedDevices存储了磁盘签名与盘符的绑定关系。"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "硬盘对拷后，新盘的磁盘签名发生变化。"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "但注册表仍指向旧盘，导致系统加载时找不到系统分区而假死。"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "清空后Windows会重新扫描并重建映射。"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph"
+    }
+  ]
+}

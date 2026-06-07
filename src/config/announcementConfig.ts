@@ -2,7 +2,7 @@ import type { AnnouncementConfig } from "../types/config";
 
 export const announcementConfig: AnnouncementConfig = {
 	// 公告标题
-	title: "公告",
+	title: "欢迎大家👏",
 
 	// 公告内容
 	content: "夜深忽梦少年事 梦啼妆泪红阑干.",

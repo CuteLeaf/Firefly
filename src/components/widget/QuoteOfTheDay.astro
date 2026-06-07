@@ -1,0 +1,83 @@
+---
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import { getCollection } from "astro:content";
+
+// 从 content/ziyuan/quote.md 读取名言数据
+const ziyuanEntries = await getCollection("ziyuan");
+const quoteEntry = ziyuanEntries.find((e) => e.id === "quote");
+const quoteData = quoteEntry?.data as any;
+const quotes = quoteData?.quotes || [];
+
+interface Props {
+  class?: string;
+  style?: string;
+}
+
+const { class: className, style } = Astro.props;
+
+// 使用日期作为随机种子，确保同一天显示相同的名言
+const today = new Date();
+const dateStr = today.toISOString().split("T")[0];
+const seed = dateStr.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+const randomIndex = seed % quotes.length;
+const quote = quotes[randomIndex] || { text: "暂无名言", author: "" };
+---
+
+<WidgetLayout name="✨ 今日一言" id="quote-of-the-day" class={className} style={style}>
+  <div class="quote-content">
+    <blockquote class="quote-text">
+      <span class="quote-mark">"</span>
+      {quote.text}
+      <span class="quote-mark">"</span>
+    </blockquote>
+    <cite class="quote-author">—— {quote.author}</cite>
+  </div>
+</WidgetLayout>
+
+<style>
+  .quote-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+  }
+
+  .quote-text {
+    position: relative;
+    font-style: italic;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-color);
+    padding: 0 0.5rem;
+    margin: 0;
+  }
+
+  .quote-mark {
+    font-size: 1.5rem;
+    line-height: 0;
+    vertical-align: middle;
+    color: var(--primary);
+    opacity: 0.6;
+    font-family: Georgia, serif;
+  }
+
+  .quote-author {
+    display: block;
+    text-align: right;
+    font-size: 0.75rem;
+    color: var(--content-meta);
+    font-style: normal;
+    margin-top: 0.25rem;
+  }
+
+  /* 深色模式优化 */
+  :global(html.dark) .quote-text {
+    color: var(--text-color);
+  }
+
+  /* 悬停效果 */
+  :global(.quote-content:hover .quote-text) {
+    color: var(--primary);
+    transition: color 0.2s ease;
+  }
+</style>

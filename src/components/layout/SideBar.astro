@@ -1,7 +1,9 @@
 ---
 import RelationshipTimer from "@/components/widget/RelationshipTimer.astro";  // 引入恋爱计时组件
 import type { MarkdownHeading } from "astro";
+import UmamiStats from "@/components/widget/UmamiStats.astro";  // 引入 Umami 组件
 import Advertisement from "@/components/widget/Advertisement.astro";
+import QuoteOfTheDay from "@/components/widget/QuoteOfTheDay.astro";
 import Announcement from "@/components/widget/Announcement.astro";
 import Calendar from "@/components/widget/Calendar.astro";
 import Categories from "@/components/widget/Categories.astro";
@@ -50,8 +52,10 @@ const componentMap = {
 	stats: SiteStats,
 	calendar: Calendar,
 	music: Music,
+	umamiStats: UmamiStats,
+	quoteOfTheDay: QuoteOfTheDay,
 	relationship: RelationshipTimer,
-} satisfies Record<WidgetComponentType, typeof Profile>;
+} as Record<WidgetComponentType, any>;
 
 // 获取侧边栏位置
 const side = (Astro.props.side ||

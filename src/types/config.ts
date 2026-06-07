@@ -428,7 +428,10 @@ export type WidgetComponentType =
 	| "advertisement"
 	| "stats"
 	| "calendar"
-	| "music";
+	| "profile"
+	| "announcement"
+	| "music"
+	| "quoteOfTheDay";  // 确保这一行存在
 
 export type WidgetComponentConfig = {
 	type: WidgetComponentType; // 组件类型

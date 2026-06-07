@@ -23,33 +23,60 @@ export const friendsPageConfig: FriendsPageConfig = {
 // 友链配置
 export const friendsConfig: FriendLink[] = [
 	{
-		title: "夏夜流萤",
-		imgurl:
-			"https://weavatar.com/avatar/d252655d40d6874417a720bad0a6c5f77f8f6a1fd2f882f8f338402dc37e4190?s=640",
-		desc: "飞萤之火自无梦的长夜亮起，绽放在终竟的明天。",
-		siteurl: "https://blog.cuteleaf.cn",
-		tags: ["Blog"],
-		weight: 10, // 权重，数字越大排序越靠前
-		enabled: true, // 是否启用
+		title: "Summerの图床",
+		imgurl: "https://hry.54120721.xyz/file/头像/1778338329973_myy2.jpeg",
+		desc: "傻傻的钰钰...... 窈窕淑女 君子好逑.",
+		siteurl: "https://hry.54120721.xyz/",
+		tags: [
+			"图床"
+		],
+		weight: 100,
+		enabled: true
 	},
 	{
-		title: "Firefly Docs",
-		imgurl: "https://docs-firefly.cuteleaf.cn/logo.png",
-		desc: "Firefly主题模板文档",
-		siteurl: "https://docs-firefly.cuteleaf.cn",
-		tags: ["Docs"],
-		weight: 9,
-		enabled: true,
+		title: "West2Cloud",
+		imgurl: "https://hry.54120721.xyz/file/头像/1778338161140_myy.png",
+		desc: "您的个性化云服务-为您开启畅想IDC之旅",
+		siteurl: "https://west2cloud.cn/",
+		tags: [
+			"云服务器"
+		],
+		weight: 99,
+		enabled: true
 	},
 	{
-		title: "Astro",
-		imgurl: "https://avatars.githubusercontent.com/u/44914786?v=4&s=640",
-		desc: "The web framework for content-driven websites. ⭐️ Star to support our work!",
-		siteurl: "https://github.com/withastro/astro",
-		tags: ["Framework"],
-		weight: 8,
-		enabled: true,
+		title: "番茄主理人",
+		imgurl: "https://q1.qlogo.cn/g?b=qq&nk=20447289&s=640",
+		desc: "坐而言不如起而行.",
+		siteurl: "https://fqzlr.com/",
+		tags: [
+			"Blog"
+		],
+		weight: 98,
+		enabled: true
 	},
+	{
+		title: "UpXuu's blog",
+		imgurl: "https://upxuu.com/images/20260214145619.jpg",
+		desc: "逐光而上",
+		siteurl: "https://upxuu.com",
+		tags: [
+			"Blog"
+		],
+		weight: 97,
+		enabled: true
+	},
+	{
+		title: "团子和蛋糕",
+		imgurl: "https://re.tsh520.cn/zl/tx.webp",
+		desc: "如果你喜欢那么欢迎来到我的世界！",
+		siteurl: "https://blog.tsh520.cn",
+		tags: [
+			"Blog"
+		],
+		weight: 96,
+		enabled: true
+	}
 ];
 
 // 获取启用的友链并进行排序

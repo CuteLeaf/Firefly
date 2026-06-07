@@ -1,0 +1,33 @@
+{
+  "id": "20260607-014228",
+  "name": "",
+  "createdAt": "2026-06-06T17:42:28.636Z",
+  "reason": "save-before",
+  "summary": "保存前备份，涉及 3 个文件：src/config/announcementConfig.ts: 公告标题 (announcementConfig.title)；src/config/friendsConfig.ts: 友链列表 (friendsConfig)；src/config/galleryConfig.ts: 画廊相册 (galleryConfig.albums)",
+  "files": [
+    {
+      "path": "src/config/announcementConfig.ts",
+      "backupPath": "20260607-014228__src__config__announcementConfig.ts.bak",
+      "existed": true,
+      "changes": [
+        "公告标题 (announcementConfig.title)"
+      ]
+    },
+    {
+      "path": "src/config/friendsConfig.ts",
+      "backupPath": "20260607-014228__src__config__friendsConfig.ts.bak",
+      "existed": true,
+      "changes": [
+        "友链列表 (friendsConfig)"
+      ]
+    },
+    {
+      "path": "src/config/galleryConfig.ts",
+      "backupPath": "20260607-014228__src__config__galleryConfig.ts.bak",
+      "existed": true,
+      "changes": [
+        "画廊相册 (galleryConfig.albums)"
+      ]
+    }
+  ]
+}
