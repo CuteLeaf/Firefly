@@ -81,11 +81,11 @@ export default defineConfig({
 				"#banner-overlay-container",
 				"#banner-dim-container",
 				"#swup-container",
-				"#left-sidebar-dynamic",
+				"#left-sidebar-dynamic"，
 				"#right-sidebar-dynamic",
 				"#floating-toc-wrapper",
 			],
-			smoothScrolling: false,
+			smoothScrolling: false，
 			cache: true,
 			preload: true,
 			accessibility: true,
@@ -112,7 +112,7 @@ export default defineConfig({
 			},
 		}),
 		expressiveCode({
-			themes: [expressiveCodeConfig.darkTheme， expressiveCodeConfig。lightTheme],
+			themes: [expressiveCodeConfig.darkTheme,expressiveCodeConfig。lightTheme],
 			useDarkModeMediaQuery: false,
 			themeCssSelector: (theme) => `[data-theme='${theme.name}']`,
 			plugins: [
