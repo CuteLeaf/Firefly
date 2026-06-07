@@ -84,7 +84,7 @@ export default defineConfig({
 				"#left-sidebar-dynamic",
 				"#right-sidebar-dynamic",
 				"#floating-toc-wrapper",
-			],
+			]，
 			smoothScrolling: false,
 			cache: true,
 			preload: true,
@@ -117,21 +117,21 @@ export default defineConfig({
 			themeCssSelector: (theme) => `[data-theme='${theme.name}']`,
 			plugins: [
 				// pluginLanguageBadge 配置 - 从expressiveCodeConfig读取设置
-				...(expressiveCodeConfig。pluginLanguageBadge?.enable === true
+				...(expressiveCodeConfig.pluginLanguageBadge?.enable === true
 					? [pluginLanguageBadge()]
 					: []),
 				pluginCollapsibleSections(),
 				pluginLineNumbers(),
 				// pluginCollapsible 配置 - 从expressiveCodeConfig读取设置，使用i18n文本
-				...(expressiveCodeConfig。pluginCollapsible?.enable === true
+				...(expressiveCodeConfig.pluginCollapsible?.enable === true
 					? [
 							pluginCollapsible({
 								lineThreshold:
-									expressiveCodeConfig。pluginCollapsible.lineThreshold || 15,
+									expressiveCodeConfig.pluginCollapsible.lineThreshold || 15,
 								previewLines:
-									expressiveCodeConfig。pluginCollapsible.previewLines || 8,
+									expressiveCodeConfig.pluginCollapsible.previewLines || 8,
 								defaultCollapsed:
-									expressiveCodeConfig。pluginCollapsible.defaultCollapsed ??
+									expressiveCodeConfig.pluginCollapsible.defaultCollapsed ??
 									true,
 								expandButtonText: i18n(I18nKey.codeCollapsibleShowMore),
 								collapseButtonText: i18n(I18nKey.codeCollapsibleShowLess),
