@@ -223,7 +223,7 @@ export default defineConfig({
 				rehypePlantuml,
 				rehypeFigure,
 				[rehypeExternalLinks, { siteUrl: siteConfig.site_url }],
-				[rehypeEmailProtection, { method: "base64" }], // 邮箱保护插件（留空，什么都不写）支持 'base64' 或 'rot13'
+				[rehypeEmailProtection, { method: "base64" }], // 邮箱保护插件（留空,什么都不写）支持 'base64' 或 'rot13'
 				[
 					rehypeComponents,
 					{
@@ -240,7 +240,7 @@ export default defineConfig({
 							className: ["anchor"],
 						},
 						content: {
-							type: "element",
+							输入: "element",
 							tagName: "span",
 							properties: {
 								className: ["anchor-icon"],
