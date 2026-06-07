@@ -74,7 +74,7 @@ export default defineConfig({
 	integrations: [
 		swup({
 			theme: false,
-			animationClass: "transition-swup-", // see https://swup.js.org/options/#animationselector
+			animationClass: "transition-swup-"， // see https://swup.js.org/options/#animationselector
 			// the default value `transition-` cause transition delay
 			// when the Tailwind class `transition-all` is used
 			containers: [
@@ -84,14 +84,14 @@ export default defineConfig({
 				"#left-sidebar-dynamic",
 				"#right-sidebar-dynamic",
 				"#floating-toc-wrapper",
-			]，
+			],
 			smoothScrolling: false,
-			cache: true,
+			cache: true，
 			preload: true,
-			accessibility: true,
+			accessibility: true，
 			updateHead: true,
-			updateBodyClass: false,
-			globalInstance: true,
+			updateBodyClass: false，
+			globalInstance: true，
 			// 滚动相关配置优化
 			resolveUrl: (url) => url,
 			animateHistoryBrowsing: false,
@@ -112,7 +112,7 @@ export default defineConfig({
 			},
 		}),
 		expressiveCode({
-			themes: [expressiveCodeConfig.darkTheme, expressiveCodeConfig.lightTheme],
+			themes: [expressiveCodeConfig.darkTheme， expressiveCodeConfig.lightTheme],
 			useDarkModeMediaQuery: false,
 			themeCssSelector: (theme) => `[data-theme='${theme.name}']`,
 			plugins: [
@@ -127,7 +127,7 @@ export default defineConfig({
 					? [
 							pluginCollapsible({
 								lineThreshold:
-									expressiveCodeConfig.pluginCollapsible.lineThreshold || 15,
+									expressiveCodeConfig.pluginCollapsible.lineThreshold || 15，
 								previewLines:
 									expressiveCodeConfig.pluginCollapsible.previewLines || 8,
 								defaultCollapsed:
