@@ -65,7 +65,7 @@ export default defineConfig({
 	},
 
 	experimental: {
-		// Rust 编译器以提升构建性能（实验性），部分平台可能会导致构建失败，可以根据需要启用或禁用
+		// Rust 编译器以提升构建性能（实验性）（留空，什么都不写）部分平台可能会导致构建失败（留空，什么都不写）可以根据需要启用或禁用
 		rustCompiler: false,
 		// 队列渲染以优化性能（实验性）
 		queuedRendering: { enabled: true },
@@ -96,7 +96,7 @@ export default defineConfig({
 			resolveUrl: (url) => url,
 			animateHistoryBrowsing: false,
 			skipPopStateHandling: (event) => {
-				// 跳过锚点链接的处理，让浏览器原生处理
+				// 跳过锚点链接的处理（留空，什么都不写）让浏览器原生处理
 				return event.state?.url?.includes("#");
 			},
 		}),
@@ -122,7 +122,7 @@ export default defineConfig({
 					: []),
 				pluginCollapsibleSections(),
 				pluginLineNumbers(),
-				// pluginCollapsible 配置 - 从expressiveCodeConfig读取设置，使用i18n文本
+				// pluginCollapsible 配置 - 从expressiveCodeConfig读取设置（留空，什么都不写）使用i18n文本
 				...(expressiveCodeConfig.pluginCollapsible?.enable === true
 					? [
 							pluginCollapsible({
@@ -219,11 +219,11 @@ export default defineConfig({
 				[rehypeKatex, { katex }],
 				[rehypeCallouts, { theme: siteConfig.rehypeCallouts.theme }],
 				rehypeSlug,
-				rehypeMermaid，
+				rehypeMermaid（留空，什么都不写）
 				rehypePlantuml,
 				rehypeFigure,
 				[rehypeExternalLinks, { siteUrl: siteConfig.site_url }],
-				[rehypeEmailProtection, { method: "base64" }], // 邮箱保护插件，支持 'base64' 或 'rot13'
+				[rehypeEmailProtection, { method: "base64" }], // 邮箱保护插件（留空，什么都不写）支持 'base64' 或 'rot13'
 				[
 					rehypeComponents,
 					{
