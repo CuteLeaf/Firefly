@@ -85,7 +85,7 @@ export default defineConfig({
 				"#right-sidebar-dynamic",
 				"#floating-toc-wrapper",
 			],
-			smoothScrolling: false，
+			smoothScrolling: false,
 			cache: true,
 			preload: true,
 			accessibility: true,
@@ -112,26 +112,26 @@ export default defineConfig({
 			},
 		}),
 		expressiveCode({
-			themes: [expressiveCodeConfig.darkTheme， expressiveCodeConfig.lightTheme],
+			themes: [expressiveCodeConfig.darkTheme， expressiveCodeConfig。lightTheme],
 			useDarkModeMediaQuery: false,
 			themeCssSelector: (theme) => `[data-theme='${theme.name}']`,
 			plugins: [
 				// pluginLanguageBadge 配置 - 从expressiveCodeConfig读取设置
-				...(expressiveCodeConfig.pluginLanguageBadge?.enable === true
+				...(expressiveCodeConfig。pluginLanguageBadge?.enable === true
 					? [pluginLanguageBadge()]
 					: []),
 				pluginCollapsibleSections(),
 				pluginLineNumbers(),
 				// pluginCollapsible 配置 - 从expressiveCodeConfig读取设置，使用i18n文本
-				...(expressiveCodeConfig.pluginCollapsible?.enable === true
+				...(expressiveCodeConfig。pluginCollapsible?.enable === true
 					? [
 							pluginCollapsible({
 								lineThreshold:
-									expressiveCodeConfig.pluginCollapsible.lineThreshold || 15，
+									expressiveCodeConfig。pluginCollapsible.lineThreshold || 15,
 								previewLines:
-									expressiveCodeConfig.pluginCollapsible.previewLines || 8,
+									expressiveCodeConfig。pluginCollapsible.previewLines || 8,
 								defaultCollapsed:
-									expressiveCodeConfig.pluginCollapsible.defaultCollapsed ??
+									expressiveCodeConfig。pluginCollapsible.defaultCollapsed ??
 									true,
 								expandButtonText: i18n(I18nKey.codeCollapsibleShowMore),
 								collapseButtonText: i18n(I18nKey.codeCollapsibleShowLess),
@@ -165,13 +165,13 @@ export default defineConfig({
 					fontSize: "0.75rem",
 					fontWeight: "bold",
 					borderRadius: "0.25rem",
-					opacity: "1"，
+					opacity: "1",
 					borderWidth: "0px",
 					borderColor: "transparent",
 				},
 			},
 			frames: {
-				showCopyToClipboardButton: true，
+				showCopyToClipboardButton: true,
 			},
 		}),
 		svelte(),
@@ -221,7 +221,7 @@ export default defineConfig({
 				rehypeSlug,
 				rehypeMermaid,
 				rehypePlantuml,
-				rehypeFigure，
+				rehypeFigure,
 				[rehypeExternalLinks, { siteUrl: siteConfig.site_url }],
 				[rehypeEmailProtection, { method: "base64" }], // 邮箱保护插件，支持 'base64' 或 'rot13'
 				[
