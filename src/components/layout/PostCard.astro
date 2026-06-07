@@ -32,6 +32,7 @@ const {
 	title,
 	url,
 	published,
+	updated,
 	tags,
 	category,
 	image,
@@ -109,6 +110,7 @@ const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
     <!-- metadata -->
     <PostMetadata
       published={published}
+      updated={updated}
       tags={tags}
       showTags={false}
       category={category || undefined}
