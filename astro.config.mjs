@@ -112,7 +112,7 @@ export default defineConfig({
 			},
 		}),
 		expressiveCode({
-			themes: [expressiveCodeConfig.darkTheme,expressiveCodeConfig。lightTheme],
+			themes: [expressiveCodeConfig.darkTheme,expressiveCodeConfig.lightTheme],
 			useDarkModeMediaQuery: false,
 			themeCssSelector: (theme) => `[data-theme='${theme.name}']`,
 			plugins: [
