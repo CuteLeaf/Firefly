@@ -62,7 +62,7 @@ export default defineConfig({
 	image: {
 		// 全局响应式布局
 		layout: "constrained",
-	}，
+	},
 
 	experimental: {
 		// Rust 编译器以提升构建性能（实验性），部分平台可能会导致构建失败，可以根据需要启用或禁用
@@ -85,7 +85,7 @@ export default defineConfig({
 				"#right-sidebar-dynamic",
 				"#floating-toc-wrapper",
 			],
-			smoothScrolling: false,
+			smoothScrolling: false，
 			cache: true,
 			preload: true,
 			accessibility: true,
