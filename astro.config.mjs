@@ -62,7 +62,7 @@ export default defineConfig({
 	image: {
 		// 全局响应式布局
 		layout: "constrained",
-	},
+	}，
 
 	experimental: {
 		// Rust 编译器以提升构建性能（实验性），部分平台可能会导致构建失败，可以根据需要启用或禁用
@@ -165,13 +165,13 @@ export default defineConfig({
 					fontSize: "0.75rem",
 					fontWeight: "bold",
 					borderRadius: "0.25rem",
-					opacity: "1",
+					opacity: "1"，
 					borderWidth: "0px",
 					borderColor: "transparent",
 				},
 			},
 			frames: {
-				showCopyToClipboardButton: true,
+				showCopyToClipboardButton: true，
 			},
 		}),
 		svelte(),
@@ -221,7 +221,7 @@ export default defineConfig({
 				rehypeSlug,
 				rehypeMermaid,
 				rehypePlantuml,
-				rehypeFigure,
+				rehypeFigure，
 				[rehypeExternalLinks, { siteUrl: siteConfig.site_url }],
 				[rehypeEmailProtection, { method: "base64" }], // 邮箱保护插件，支持 'base64' 或 'rot13'
 				[
