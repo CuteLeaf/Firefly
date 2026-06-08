@@ -203,7 +203,7 @@ export const siteConfig: SiteConfig = {
 				// 录制会话采样率，范围 0-1，例如 0.15 表示记录 15% 的会话
 				sampleRate: 0.15,
 				// 隐私遮罩级别："moderate" 会遮罩所有输入框；"strict" 额外遮罩页面全部文本
-				maskLevel: "moderate"，
+				maskLevel: "moderate",
 				// 单次录制最大时长（毫秒）
 				maxDuration: 300000,
 				// 需要排除录制的元素 CSS 选择器，例如 ".sensitive-widget"
