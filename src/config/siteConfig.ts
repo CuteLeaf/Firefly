@@ -209,7 +209,7 @@ export const siteConfig: SiteConfig = {
 				// 需要排除录制的元素 CSS 选择器，例如 ".sensitive-widget"
 				blockSelector: "",
 			},
-		}，
+		},
 		// 51la 统计配置
 		la51Analytics: {
 			// 51la 统计 ID
