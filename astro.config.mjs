@@ -1,4 +1,5 @@
 import { setMaxListeners } from "node:events";
+import { unified } from "@astrojs/markdown-remark";
 import sitemap from "@astrojs/sitemap";
 import svelte from "@astrojs/svelte";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
@@ -48,13 +49,10 @@ const adapter = process.env.CF_WORKERS
 		})
 	: undefined;
 
-// https://astro.build/config
 export default defineConfig({
 	site: "https://www.zsso.net",
-
 	base: "/",
 	trailingSlash: "always",
-
 	adapter,
 
 	image: {
@@ -115,13 +113,9 @@ export default defineConfig({
 				...(expressiveCodeConfig.pluginCollapsible?.enable === true
 					? [
 							pluginCollapsible({
-								lineThreshold:
-									expressiveCodeConfig.pluginCollapsible.lineThreshold || 15,
-								previewLines:
-									expressiveCodeConfig.pluginCollapsible.previewLines || 8,
-								defaultCollapsed:
-									expressiveCodeConfig.pluginCollapsible.defaultCollapsed ??
-									true,
+								lineThreshold: expressiveCodeConfig.pluginCollapsible.lineThreshold || 15,
+								previewLines: expressiveCodeConfig.pluginCollapsible.previewLines || 8,
+								defaultCollapsed: expressiveCodeConfig.pluginCollapsible.defaultCollapsed ?? true,
 								expandButtonText: i18n(I18nKey.codeCollapsibleShowMore),
 								collapseButtonText: i18n(I18nKey.codeCollapsibleShowLess),
 								expandedAnnouncement: i18n(I18nKey.codeCollapsibleExpanded),
@@ -133,127 +127,46 @@ export default defineConfig({
 			defaultProps: {
 				wrap: false,
 				overridesByLang: {
-					shellsession: {
-						showLineNumbers: false,
-					},
+					shellsession: { showLineNumbers: false },
 				},
 			},
 			styleOverrides: {
 				borderRadius: "0.75rem",
 				codeFontSize: "0.875rem",
-				codeFontFamily:
-					"'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+				codeFontFamily: "'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
 				codeLineHeight: "1.5rem",
-				frames: {},
-				textMarkers: {
-					delHue: 0,
-					insHue: 180,
-					markHue: 250,
-				},
+				textMarkers: { delHue: 0, insHue: 180, markHue: 250 },
 				languageBadge: {
 					fontSize: "0.75rem",
 					fontWeight: "bold",
 					borderRadius: "0.25rem",
 					opacity: "1",
 					borderWidth: "0px",
-					borderColor: "transparent",
 				},
 			},
-			frames: {
-				showCopyToClipboardButton: true,
-			},
+			frames: { showCopyToClipboardButton: true },
 		}),
 		svelte(),
 		sitemap({
 			filter: (page) => {
 				const url = new URL(page);
-				const pathname = url.pathname;
-
-				if (pathname === "/friends/" && !siteConfig.pages.friends) {
-					return false;
-				}
-				if (pathname === "/sponsor/" && !siteConfig.pages.sponsor) {
-					return false;
-				}
-				if (pathname === "/guestbook/" && !siteConfig.pages.guestbook) {
-					return false;
-				}
-				if (pathname === "/bangumi/" && !siteConfig.pages.bangumi) {
-					return false;
-				}
-				if (pathname === "/gallery/" && !siteConfig.pages.gallery) {
-					return false;
-				}
-
+				const p = url.pathname;
+				if (p === "/friends/" && !siteConfig.pages.friends) return false;
+				if (p === "/sponsor/" && !siteConfig.pages.sponsor) return false;
+				if (p === "/guestbook/" && !siteConfig.pages.guestbook) return false;
+				if (p === "/bangumi/" && !siteConfig.pages.bangumi) return false;
+				if (p === "/gallery/" && !siteConfig.pages.gallery) return false;
 				return true;
 			},
 		}),
 		mdx(),
 	],
 
-	// 👇 这是修复后的正确 markdown 配置（关键！）
-	markdown: {
-		remarkPlugins: [
-			remarkMath,
-			remarkReadingTime,
-			remarkImageGrid,
-			remarkExcerpt,
-			remarkDirective,
-			remarkSectionize,
-			parseDirectiveNode,
-			remarkMermaid,
-			[remarkPlantuml, plantumlConfig],
-		],
-		rehypePlugins: [
-			[rehypeKatex, { katex }],
-			[rehypeCallouts, { theme: siteConfig.rehypeCallouts.theme }],
-			rehypeSlug,
-			rehypeMermaid(),
-			rehypePlantuml,
-			rehypeFigure,
-			[rehypeExternalLinks, { siteUrl: siteConfig.site_url }],
-			[rehypeEmailProtection, { method: "base64" }],
-			[
-				rehypeComponents,
-				{
-					components: {
-						github: GithubCardComponent,
-					},
-				},
-			],
-			[
-				rehypeAutolinkHeadings,
-				{
-					behavior: "append",
-					properties: {
-						className: ["anchor"],
-					},
-					content: {
-						type: "element",
-						tagName: "span",
-						properties: {
-							className: ["anchor-icon"],
-							"data-pagefind-ignore": true,
-						},
-						children: [
-							{
-								type: "text",
-								value: "#",
-							},
-						],
-					},
-				},
-			],
-		],
-	},
+	markdown: {},
 
 	vite: {
 		plugins: [tailwindcss()],
-		server: {
-			watch: {
-				ignored: ["**/package/**", "**/Firefly-docs/**"],
-			},
-		},
+		server: { watch: { ignored: ["**/package/**", "**/Firefly-docs/**"] } },
 		resolve: {
 			alias: {
 				"@rehype-callouts-theme": `rehype-callouts/theme/${siteConfig.rehypeCallouts.theme}`,
@@ -261,19 +174,11 @@ export default defineConfig({
 		},
 		build: {
 			minify: "esbuild",
-			esbuildOptions: {
-				minify: true,
-				drop: ["console", "debugger"],
-			},
+			esbuildOptions: { minify: true, drop: ["console", "debugger"] },
 			rollupOptions: {
-				onwarn(warning, warn) {
-					if (
-						warning.message.includes("is dynamically imported by") &&
-						warning.message.includes("but also statically imported by")
-					) {
-						return;
-					}
-					warn(warning);
+				onwarn(w, warn) {
+					if (w.message.includes("dynamically imported by") && w.message.includes("statically imported")) return;
+					warn(w);
 				},
 			},
 			cssCodeSplit: true,
