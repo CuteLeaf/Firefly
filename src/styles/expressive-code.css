@@ -34,6 +34,25 @@
   }
 }
 
+/* 折叠渐变样式适配亮暗色 */
+/* 亮色模式：白色渐变 */
+.ec-collapse__gradient {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 1) 100%
+  ) !important;
+}
+
+/* 暗色模式：黑色渐变 */
+.dark .ec-collapse__gradient {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 1) 100%
+  ) !important;
+}
+
 /* 透明模式下的代码块样式 */
 /*
  * 仅处理外层容器背景，避免清空 ANSI token 的背景色。
