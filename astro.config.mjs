@@ -121,7 +121,7 @@ export default defineConfig({
 					? [pluginLanguageBadge()]
 					: []),
 				pluginCollapsibleSections(),
-				pluginLineNumbers()，
+				pluginLineNumbers(),
 				// pluginCollapsible 配置 - 从expressiveCodeConfig读取设置（留空，什么都不写）使用i18n文本
 				...(expressiveCodeConfig.pluginCollapsible?.enable === true
 					? [
