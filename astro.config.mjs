@@ -1,5 +1,4 @@
 import { setMaxListeners } from "node:events";
-import { unified } from "@astrojs/markdown-remark";
 import sitemap from "@astrojs/sitemap";
 import svelte from "@astrojs/svelte";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
@@ -191,62 +190,63 @@ export default defineConfig({
 		}),
 		mdx(),
 	],
+
+	// 👇 这是修复后的正确 markdown 配置（关键！）
 	markdown: {
-		processor: unified({
-			remarkPlugins: [
-				remarkMath,
-				remarkReadingTime,
-				remarkImageGrid,
-				remarkExcerpt,
-				remarkDirective,
-				remarkSectionize,
-				parseDirectiveNode,
-				remarkMermaid,
-				[remarkPlantuml, plantumlConfig],
-			],
-			rehypePlugins: [
-				[rehypeKatex, { katex }],
-				[rehypeCallouts, { theme: siteConfig.rehypeCallouts.theme }],
-				rehypeSlug,
-				rehypeMermaid(),
-				rehypePlantuml,
-				rehypeFigure,
-				[rehypeExternalLinks, { siteUrl: siteConfig.site_url }],
-				[rehypeEmailProtection, { method: "base64" }],
-				[
-					rehypeComponents,
-					{
-						components: {
-							github: GithubCardComponent,
-						},
+		remarkPlugins: [
+			remarkMath,
+			remarkReadingTime,
+			remarkImageGrid,
+			remarkExcerpt,
+			remarkDirective,
+			remarkSectionize,
+			parseDirectiveNode,
+			remarkMermaid,
+			[remarkPlantuml, plantumlConfig],
+		],
+		rehypePlugins: [
+			[rehypeKatex, { katex }],
+			[rehypeCallouts, { theme: siteConfig.rehypeCallouts.theme }],
+			rehypeSlug,
+			rehypeMermaid(),
+			rehypePlantuml,
+			rehypeFigure,
+			[rehypeExternalLinks, { siteUrl: siteConfig.site_url }],
+			[rehypeEmailProtection, { method: "base64" }],
+			[
+				rehypeComponents,
+				{
+					components: {
+						github: GithubCardComponent,
 					},
-				],
-				[
-					rehypeAutolinkHeadings,
-					{
-						behavior: "append",
+				},
+			],
+			[
+				rehypeAutolinkHeadings,
+				{
+					behavior: "append",
+					properties: {
+						className: ["anchor"],
+					},
+					content: {
+						type: "element",
+						tagName: "span",
 						properties: {
-							className: ["anchor"],
+							className: ["anchor-icon"],
+							"data-pagefind-ignore": true,
 						},
-						content: {
-							type: "element",
-							tagName: "span",
-							properties: {
-								className: ["anchor-icon"],
-								"data-pagefind-ignore": true,
+						children: [
+							{
+								type: "text",
+								value: "#",
 							},
-							children: [
-								{
-									type: "text",
-									value: "#",
-								},
-							],
-						},
+						],
 					},
-				],
+				},
 			],
-		}),
+		],
 	},
+
 	vite: {
 		plugins: [tailwindcss()],
 		server: {
