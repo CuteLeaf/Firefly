@@ -78,21 +78,21 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		children: [
 			{
 				name: "GitHub",
-				url: "https://github.com/CuteLeaf/Firefly",
+				url: "https://github.com/ZSSO-NET",
 				external: true,
 				icon: "fa7-brands:github",
 			},
 			{
-				name: "Gitee",
-				url: "https://gitee.com/CuteLeaf/Firefly",
-				external: true,
-				icon: "fa7-brands:gitee",
-			},
-			{
 				name: "QQ交流群",
-				url: "https://qm.qq.com/q/ZGsFa8qX2G",
+				url: "https://qm.qq.com/q/LB5jDVgEgc",
 				external: true,
 				icon: "fa7-brands:qq",
+			},
+			{
+				name: "小生图床",
+				url: "https://img.zsso.net",
+				external: true,
+				icon: "fa7-brands:gitee",
 			},
 		],
 	});
