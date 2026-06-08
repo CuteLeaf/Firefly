@@ -113,7 +113,7 @@ export default defineConfig({
 		}),
 		expressiveCode({
 			themes: [expressiveCodeConfig.darkTheme,expressiveCodeConfig.lightTheme],
-			useDarkModeMediaQuery: false，
+			useDarkModeMediaQuery: false,
 			themeCssSelector: (theme) => `[data-theme='${theme.name}']`,
 			plugins: [
 				// pluginLanguageBadge 配置 - 从expressiveCodeConfig读取设置
