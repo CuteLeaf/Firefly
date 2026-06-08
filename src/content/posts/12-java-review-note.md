@@ -1,6 +1,6 @@
 ---
 title: Java复习笔记
-published: 2026-04-16
+published: 2026-06-08
 description: 大学java面向对象程序设计课程的复习笔记
 image: ./covers/cover11.webp
 tags: [复习笔记, Java, 软件开发]
@@ -20,23 +20,28 @@ public abstract class TrafficTool{...} //抽象类
 public abstract void slowDown(); //抽象类中抽象类的写法（后面重写）
 ```
 ### 2.常用写法
+#### (1) Main函数
 ```java
 public static void main(String[] args) //Main函数写法
 ```
+#### (2) ArrayList和循环
 ```
 for(ClassName i : ArrayListName)  //循环写法
 ArrayList<ClassName> ArrayListName = new ArrayList<>(); //新建ArrayList
 lists.add(new ClassA); // 加入到ArrayList中
 ```
+#### (3) 输出
 ```
 System.out.println(""); //输出
 ```
+#### (4) 接口声明
 ```
 public interface Vehicle {
     void speedUp();
     void slowDown();
-} // 接口内直接声明，后续实现
+} // 接口内直接声明，后续重写实现
 ```
+#### (5) 数组相关
 ```
 import java.util.Arrays;
 
@@ -60,6 +65,7 @@ public class Test {
     }
 } 
 ```
+#### (6) 字符串相关
 ```
 // 创建 String 对象
 String str1 = "Hello Java";  // 直接赋值
@@ -84,11 +90,53 @@ for (int i = 0; i < str1.length(); i++) {
     System.out.println(str1.charAt(i));
 }
 ```
+#### (7) Vector相关
+```java
+Vector vector = new Vector(); //定义
+vector.add("country China"); //增加内容
+
+//遍历输出所有元素
+Iterator it = vector.iterator();//使用迭代器
+while(it.hasNext()){
+    System.out.println(it.next());
+}
+
+//删除/查找
+while(it.hasNext()){
+    String str = (String) it.next();
+    if(str.startsWith(prefix)){  //考过的 判断str是否以perfix为开头
+        it.remove(); //安全删除
+    }
+}
+```
+#### 文件读入
+```java
+//文件读入
+import java.io.*;
+public class ReadFile {
+    public static void main(String[] args) {
+        try {
+            // 按题目提示：FileInputStream → InputStreamReader → BufferedReader
+            FileInputStream fis = new FileInputStream("java.txt");
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+            br.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
 
 ## 二、单选题知识点整理
 
-### 1.Arraylist
-
+### 1.Arraylist和vector
 - ArrayList 继承了 AbstractList ，并实现了 List 接口
 - Arraylist 线程不安全（Vector线程安全）
 - ArrayList 存储的是对象引用，不能存基本数据类型
@@ -103,6 +151,7 @@ a.remove(3); // 删除第四个元素
 a.size(); // 计算 ArrayList 中的元素数量
 for(String i : a) // 迭代Arraylist中的元素
 ```
+- Vector删除时必须用 `it.remove()` 而非 `vector.remove()`，否则会抛出 `ConcurrentModificationException`。
 
 ### 2.继承
 
@@ -110,6 +159,7 @@ for(String i : a) // 迭代Arraylist中的元素
 - `null instanceof` 任意类，结果永远是 `false`
 - String类、基本类型类、System类、Math类、Collections类被 final 修饰，不能被继承。
 - Java只支持单继承（一个类只能 `extends` 一个父类），但可以实现多个接口（implements 多个）
+- 子类未必有更多成员（若没有新增成员则相同）
 
 ### 3.接口
 `public ClassA implements InterfaceA`
@@ -320,7 +370,7 @@ for(String i : a) // 迭代Arraylist中的元素
 - Java中Exception和Error类都来自于Throwable类
 - 非检查异常（Unchecked） = `RuntimeException` 及其子类，编译器不强制处理： `NullPointerException` `ArrayIndexOutOfBoundsException` `ClassCastException` 等。
 - 检查异常（Checked）：`IOException` `SQLException` `ClassNotFoundException`，必须 try-catch 或 throws
-- 运行时异常（Unchecked Exception）编译器不强制处理
+- 运行时异常（UncheckedException）编译器不强制处理
 - RuntimeException（非检查异常）不必显式捕获
 - 同一异常对象可以被 catch 后再 throw，可以多次抛出
 - `try-catch-finally` 异常处理 
@@ -334,6 +384,11 @@ for(String i : a) // 迭代Arraylist中的元素
         // 捕获对应异常后的处理逻辑
         // 多个 catch 遵循：子类异常在前，父类异常在后
         // 只会执行第一个匹配到异常类型的 catch，其余 catch 不再执行
+        
+        // 常见打印报错用的语句：
+        // e.getMessage(); 只打印异常原因文本，无类名、堆栈
+        // e.toString(); 打印异常类名 + 异常原因
+        // e.printStackTrace(); 输出异常类型、原因、代码报错行号、调用栈
     } finally {
         // 正常执行、出现异常、catch 中 return，finally 都会执行
         // 属于无论是否发生异常，**必定执行**的代码
@@ -345,6 +400,13 @@ for(String i : a) // 迭代Arraylist中的元素
     - 无异常：`try` → `finally`
     - 有异常，被 `catch` 捕获：`try`(中断) → `catch` → `finally`
     - 有异常，无对应 `catch`：`try`(中断) → `finally` → 异常向外抛出
+```
+Throwable (父类)
+├── Error (错误，不可处理)
+└── Exception (异常，可处理)
+    ├── RuntimeException (运行时异常，非受检)
+    └── UncheckedException (编译时异常，受检)
+```
 
 ### 13.内部类
 - 写在另一个类内部的类，外部包裹的类叫外部类
@@ -422,6 +484,28 @@ for(String i : a) // 迭代Arraylist中的元素
     - 既包含静态结构（类图）
     - 也包含动态行为（序列图、状态图、活动图、协作图）
 
+### 18.文件读写
+- 文件写入：
+    - PrintWriter
+        - `print()`：输出内容不换行
+        - `println()`：输出内容末尾自动换行
+        - `printf()`：格式化输出
+        - 必须调用 `close()` 关闭流释放资源
+    - FileWriter：基础字符写入流，可写单个字符、字符串、字符数组，支持 `flush()` 刷新缓冲区、`close()` 关闭
+    - BufferedWriter：缓冲字符写入流，效率更高，`newLine()` 实现跨平台换行
+- 文件读入：
+    - Scanner
+        - `hasNext()`：判断是否还有数据
+        - `next()/nextInt()/nextDouble()`：按分隔符读取数据
+        - `nextLine()`：读取一整行
+    - FileReader：基础字符读取流，`read()` 读单个字符，读到文件末尾返回 `-1`
+    - BufferedReader
+        - `readLine()`：读取一整行，文件末尾返回 `null`
+- 多层包装：FileInputStream → InputStreamReader → BufferedReader（字节流转字符流 + 缓冲）
+- 异常处理
+    - 读文件：文件不存在 → 抛出 `FileNotFoundException`（受检异常，必须捕获 / 声明）
+    - 写文件：文件不存在 → 自动创建，不报错
+    - 所有流操作异常父类：`IOException`
 ### 小知识点
 - 类型转换
     - 自动转换（隐式）：小范围到大范围
@@ -464,6 +548,9 @@ for(String i : a) // 迭代Arraylist中的元素
     - 静态方法属于类本身，通过 类名.方法名() 调用
 - 抽象类和接口都可以有数据字段，只是接口中的数据字段默认为常量
 - `equals(Object obj)`用来测试两个字符串是否相等
+- `public static void main` 中修饰符的顺序可以改变
+- `FlowLayout` 是 `Panel` 和 `Applet` 的默认布局管理器（从左到右，超出则换行）。`JFrame/Frame` 默认是 `BorderLayout`；`JPanel` 默认也是 `FlowLayout`
+- java.awt.* 是 Java AWT 图形界面的基础包，含 Frame、Panel、Button、Label 等核心组件
 
 ## 三、易错题&难题
 ![alt text](image-36.png)
