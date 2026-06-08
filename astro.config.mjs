@@ -11,19 +11,19 @@ import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
 import katex from "katex";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypeComponents from "rehype-components"; /* Render the custom directive content */
+import rehypeComponents from "rehype-components";
 import rehypeKatex from "rehype-katex";
-import "katex/dist/contrib/mhchem.mjs"; // 加载 mhchem 扩展
+import "katex/dist/contrib/mhchem.mjs";
 import cloudflare from "@astrojs/cloudflare";
 import mdx from "@astrojs/mdx";
-import { pluginCollapsible } from "expressive-code-collapsible"; /* Collapsible */
-import { pluginLanguageBadge } from "expressive-code-language-badge"; /* Language Badge */
+import { pluginCollapsible } from "expressive-code-collapsible";
+import { pluginLanguageBadge } from "expressive-code-language-badge";
 import rehypeCallouts from "rehype-callouts";
 import rehypeSlug from "rehype-slug";
-import remarkDirective from "remark-directive"; /* Handle directives */
+import remarkDirective from "remark-directive";
 import remarkMath from "remark-math";
 import remarkSectionize from "remark-sectionize";
-import { expressiveCodeConfig,plantumlConfig,siteConfig } from "./src/config";
+import { expressiveCodeConfig, plantumlConfig, siteConfig } from "./src/config";
 import I18nKey from "./src/i18n/i18nKey";
 import { i18n } from "./src/i18n/translation";
 import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.mjs";
@@ -58,25 +58,19 @@ export default defineConfig({
 
 	adapter,
 
-	// 图像优化配置
 	image: {
-		// 全局响应式布局
 		layout: "constrained",
 	},
 
 	experimental: {
-		// Rust 编译器以提升构建性能（实验性）（留空，什么都不写）部分平台可能会导致构建失败（留空，什么都不写）可以根据需要启用或禁用
 		rustCompiler: false,
-		// 队列渲染以优化性能（实验性）
 		queuedRendering: { enabled: true },
 	},
 
 	integrations: [
 		swup({
 			theme: false,
-			animationClass: "transition-swup-", // see https://swup.js.org/options/#animationselector
-			// the default value `transition-` cause transition delay
-			// when the Tailwind class `transition-all` is used
+			animationClass: "transition-swup-",
 			containers: [
 				"#banner-overlay-container",
 				"#banner-dim-container",
@@ -92,11 +86,9 @@ export default defineConfig({
 			updateHead: true,
 			updateBodyClass: false,
 			globalInstance: true,
-			// 滚动相关配置优化
 			resolveUrl: (url) => url,
 			animateHistoryBrowsing: false,
 			skipPopStateHandling: (event) => {
-				// 跳过锚点链接的处理（留空，什么都不写）让浏览器原生处理
 				return event.state?.url?.includes("#");
 			},
 		}),
@@ -112,17 +104,15 @@ export default defineConfig({
 			},
 		}),
 		expressiveCode({
-			themes: [expressiveCodeConfig.darkTheme,expressiveCodeConfig.lightTheme],
+			themes: [expressiveCodeConfig.darkTheme, expressiveCodeConfig.lightTheme],
 			useDarkModeMediaQuery: false,
 			themeCssSelector: (theme) => `[data-theme='${theme.name}']`,
 			plugins: [
-				// pluginLanguageBadge 配置 - 从expressiveCodeConfig读取设置
 				...(expressiveCodeConfig.pluginLanguageBadge?.enable === true
 					? [pluginLanguageBadge()]
 					: []),
 				pluginCollapsibleSections(),
 				pluginLineNumbers(),
-				// pluginCollapsible 配置 - 从expressiveCodeConfig读取设置（留空，什么都不写）使用i18n文本
 				...(expressiveCodeConfig.pluginCollapsible?.enable === true
 					? [
 							pluginCollapsible({
@@ -160,7 +150,7 @@ export default defineConfig({
 					delHue: 0,
 					insHue: 180,
 					markHue: 250,
-				}，
+				},
 				languageBadge: {
 					fontSize: "0.75rem",
 					fontWeight: "bold",
@@ -177,7 +167,6 @@ export default defineConfig({
 		svelte(),
 		sitemap({
 			filter: (page) => {
-				// 根据页面开关配置过滤sitemap
 				const url = new URL(page);
 				const pathname = url.pathname;
 
@@ -223,7 +212,7 @@ export default defineConfig({
 				rehypePlantuml,
 				rehypeFigure,
 				[rehypeExternalLinks, { siteUrl: siteConfig.site_url }],
-				[rehypeEmailProtection, { method: "base64" }], // 邮箱保护插件（留空,什么都不写）支持 'base64' 或 'rot13'
+				[rehypeEmailProtection, { method: "base64" }],
 				[
 					rehypeComponents,
 					{
@@ -240,7 +229,7 @@ export default defineConfig({
 							className: ["anchor"],
 						},
 						content: {
-							输入: "element",
+							type: "element",
 							tagName: "span",
 							properties: {
 								className: ["anchor-icon"],
@@ -274,12 +263,10 @@ export default defineConfig({
 			minify: "esbuild",
 			esbuildOptions: {
 				minify: true,
-				// 移除 console.log 和 debugger
 				drop: ["console", "debugger"],
 			},
 			rollupOptions: {
 				onwarn(warning, warn) {
-					// temporarily suppress this warning
 					if (
 						warning.message.includes("is dynamically imported by") &&
 						warning.message.includes("but also statically imported by")
@@ -289,7 +276,6 @@ export default defineConfig({
 					warn(warning);
 				},
 			},
-			// CSS 优化
 			cssCodeSplit: true,
 			cssMinify: "esbuild",
 			assetsInlineLimit: 4096,
