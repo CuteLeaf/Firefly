@@ -7,7 +7,7 @@ const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "落雨带伞",
+	title: "Overlight",
 
 	// 站点副标题
 	subtitle: "LYDS",
