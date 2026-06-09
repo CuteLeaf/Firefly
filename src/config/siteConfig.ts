@@ -79,7 +79,7 @@ export const siteConfig: SiteConfig = {
 			alt: "🍀",
 		},
 		// 导航栏标题
-		title: "Firefly",
+		title: "Overligt",
 		// 全宽导航栏，导航栏是否占满屏幕宽度
 		widthFull: false,
 		// 导航菜单对齐方式，left：左对齐，center：居中
@@ -104,7 +104,7 @@ export const siteConfig: SiteConfig = {
 	},
 
 	// 文章页底部的"上次编辑时间"卡片开关
-	showLastModified: true,
+	showLastModified: false,
 
 	// 文章过期阈值（天数），超过此天数才显示"上次编辑"卡片
 	outdatedThreshold: 30,
