@@ -133,6 +133,10 @@ public class ReadFile {
     }
 }
 ```
+### 3.UML题目做题策略
+- 1.根据题目找出有几个类，类里面分别有哪些变量，变量的属性应该是什么？
+- 2.根据题目描述找出每个类之间的关系，继承、接口等（注意分析题目中暗示的继承关系）
+- 3.判断每个类中有哪些东西是super，哪些是this，哪些可以直接复用
 
 ## 二、单选题知识点整理
 
@@ -281,16 +285,26 @@ for(String i : a) // 迭代Arraylist中的元素
     - 一个类在整个程序中，有且仅有一个实例，并提供全局唯一访问入口。
     - 私有构造方法：禁止外部 `new`
     ```java
-    public class SingletonPatternDemo{
-        public static void main(String[] args){
-            //不合法的构造函数
-            //编译时错误：构造函数 SingleObject() 是不可见的
-            //SingleObject object = new SingleObject();
-            //获取唯一可用的对象
-            SingleObject object = SingleObject.getInstance();
-            //显示消息
-            object.showMessage();
-        }
+    //懒汉式
+    public class Singleton {  
+        private static Singleton instance;  
+        private Singleton (){}  
+        public static Singleton getInstance() {  
+            if (instance == null) {  
+                instance = new Singleton();  
+            }  
+            return instance;  
+        }  
+    }
+    ```
+    ```java
+    //懒汉式
+    public class Singleton {  
+        private static Singleton instance = new Singleton();  
+        private Singleton (){}  
+        public static Singleton getInstance() {  
+        return instance;  
+        }  
     }
     ```
 - 观察者模式
@@ -300,6 +314,9 @@ for(String i : a) // 迭代Arraylist中的元素
         - 具体主题：状态改变，触发通知
         - 抽象观察者：定义接收通知的更新接口
         - 具体观察者：收到通知后执行具体逻辑
+    ```java
+
+    ```
 
 - 策略模式
     - 定义一系列算法，把每个算法封装成独立类，算法之间可自由切换
@@ -309,9 +326,41 @@ for(String i : a) // 迭代Arraylist中的元素
         - 抽象策略：接口 / 抽象类，定义算法统一规范
         - 具体策略：实现不同算法
         - 环境上下文：持有策略引用，对外提供调用入口
+    ```java
+    // Strategy.java
+    public interface Strategy {
+        public int doOperation(int num1, int num2);
+    }
+
+    // Operation1.java
+    public class Operation1 implements Strategy{
+        @Override
+        public int doOperation(int num1, int num2) {
+            return num1 + num2;
+        }
+    }
+
+    // Context.java
+    public class Context {
+        private Strategy strategy;
+        public Context(Strategy strategy){
+            this.strategy = strategy;
+        }
+        public int executeStrategy(int num1, int num2){
+            return strategy.doOperation(num1, num2);
+        }
+    }
+
+    // MainClass.java
+    public class MainClass {
+        public static void main(String[] args) {
+            Context context = new Context(new OperationAdd());
+        }
+    }
+    ```
 
 - 装饰器模式
-    - 动态地给一个对象添加额外的职责，同时  不改变其结构
+    - 动态地给一个对象添加额外的职责，同时不改变其结构
     - 提供了一种灵活的替代继承方式来扩展功能
     - 核心角色
         - 抽象构件：顶层抽象接口/类，定义核心行为
