@@ -43,11 +43,9 @@ if (process.env.NODE_ENV === "development") {
 	setMaxListeners(20);
 }
 
-const adapter = process.env.CF_WORKERS
-	? cloudflare({
-			prerenderEnvironment: "node",
-		})
-	: undefined;
+const adapter = cloudflare({
+	prerenderEnvironment: "node",
+});
 
 // https://astro.build/config
 export default defineConfig({
