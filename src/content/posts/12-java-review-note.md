@@ -5,7 +5,7 @@ description: 大学java面向对象程序设计课程的复习笔记
 image: ./covers/cover11.webp
 tags: [复习笔记, Java, 软件开发]
 category: 复习笔记
-draft: false
+draft: true
 ---
 
 # Java复习笔记
@@ -553,5 +553,12 @@ Throwable (父类)
 - java.awt.* 是 Java AWT 图形界面的基础包，含 Frame、Panel、Button、Label 等核心组件
 
 ## 三、易错题&难题
-![alt text](image-36.png)
-![alt text](image-37.png)
+![](image-36.png)
+![](image-37.png)
+
+## 四、历年真题
+[16-17年AB卷](2016_2017_AB_answers.html)
+[17-18年AB卷](2017_2018_AB_answers.html)
+[18-19年AB卷](2018_2019_AB_answers.html)
+[19-20年B卷](2019_2020_B_answers.html)
+[20-21年AB卷](2020_2021_AB_answers.html)

@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>面向对象程序设计导论 2020-2021 A/B卷 答案解析</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d1117;--surf:#161b22;--surf2:#1c2333;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;--purple:#bc8cff;--orange:#ffa657;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans SC',sans-serif;font-size:14.5px;line-height:1.7;}
+/* ── Header & Tabs ── */
+.header{background:var(--surf);border-bottom:1px solid var(--border);padding:18px 0;position:sticky;top:0;z-index:100;}
+.h-inner{max-width:1140px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.h-title{font-family:'Noto Serif SC',serif;font-size:18px;font-weight:700;}
+.h-sub{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:2px;}
+.tabs{display:flex;gap:6px;}
+.tab{padding:7px 20px;border-radius:8px;border:1px solid var(--border);background:var(--surf2);color:var(--muted);cursor:pointer;font-size:13px;font-family:'Noto Sans SC',sans-serif;font-weight:500;transition:all .2s;}
+.tab:hover{border-color:var(--accent);color:var(--text);}
+.tab.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+/* ── Layout ── */
+.layout{max-width:1140px;margin:0 auto;padding:28px 20px 80px;display:grid;grid-template-columns:252px 1fr;gap:24px;align-items:start;}
+/* ── Sidebar ── */
+.sidebar{position:sticky;top:78px;}
+.card{background:var(--surf);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px;}
+.card-hd{padding:11px 16px;border-bottom:1px solid var(--border);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);display:flex;align-items:center;gap:8px;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.card-bd{padding:14px 16px;}
+.ans-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;}
+.ac{display:flex;flex-direction:column;align-items:center;padding:6px 3px;border-radius:7px;border:1px solid var(--border);background:var(--surf2);cursor:pointer;transition:all .15s;text-decoration:none;}
+.ac:hover{border-color:var(--accent);transform:translateY(-1px);}
+.ac .n{font-size:9px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+.ac .v{font-size:13px;font-weight:700;color:var(--green);font-family:'JetBrains Mono',monospace;margin-top:1px;}
+.sec-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;margin:10px 0 6px;}
+/* ── Paper panels ── */
+.paper{display:none;}
+.paper.active{display:block;}
+/* ── Section header ── */
+.sec-hd{display:flex;align-items:center;gap:12px;margin:0 0 18px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.sec-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:4px 11px;border-radius:20px;background:rgba(88,166,255,.13);color:var(--accent);border:1px solid rgba(88,166,255,.3);}
+.sec-title{font-family:'Noto Serif SC',serif;font-size:17px;font-weight:700;}
+.sec-meta{margin-left:auto;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+/* ── Question card ── */
+.q{background:var(--surf);border:1px solid var(--border);border-radius:11px;margin-bottom:12px;overflow:hidden;transition:border-color .2s;}
+.q:hover{border-color:rgba(88,166,255,.28);}
+.q:target{border-color:var(--accent);box-shadow:0 0 0 3px rgba(88,166,255,.12);}
+.qh{padding:13px 16px 9px;display:flex;align-items:flex-start;gap:11px;}
+.qnum{min-width:28px;height:28px;border-radius:7px;background:var(--surf2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--muted);flex-shrink:0;margin-top:2px;}
+.qb{flex:1;}
+.qt{font-size:14px;color:var(--text);margin-bottom:9px;line-height:1.6;}
+.qt code{font-family:'JetBrains Mono',monospace;font-size:12.5px;background:var(--surf2);padding:1px 5px;border-radius:4px;border:1px solid var(--border);color:var(--orange);}
+.opts{display:flex;flex-direction:column;gap:5px;}
+.opt{display:flex;align-items:flex-start;gap:9px;padding:7px 11px;border-radius:7px;border:1px solid var(--border);background:var(--surf2);font-size:13px;}
+.opt.ok{background:rgba(63,185,80,.07);border-color:rgba(63,185,80,.28);}
+.opt.ok .ol{background:var(--green);color:#fff;border-color:var(--green);}
+.ol{min-width:20px;height:20px;border-radius:4px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--muted);flex-shrink:0;margin-top:1px;}
+.ot{flex:1;line-height:1.5;color:var(--muted);}
+.opt.ok .ot{color:var(--text);}
+.q-ar{display:flex;align-items:center;gap:8px;padding:0 16px 11px;}
+.abadge{display:inline-flex;align-items:center;gap:5px;padding:3px 11px;border-radius:20px;background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.32);font-size:11px;font-weight:700;color:var(--green);font-family:'JetBrains Mono',monospace;}
+.sbadge{padding:3px 9px;border-radius:20px;background:var(--surf2);border:1px solid var(--border);font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+/* ── Explanation ── */
+.exp{margin:0 16px 14px;padding:13px 15px;background:rgba(88,166,255,.04);border:1px solid rgba(88,166,255,.14);border-radius:8px;font-size:13px;color:#c9d1d9;line-height:1.7;}
+.exp-t{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:7px;display:flex;align-items:center;gap:5px;}
+.exp-t::before{content:'';display:inline-block;width:3px;height:13px;background:var(--accent);border-radius:2px;}
+.exp ul{padding-left:15px;margin-top:5px;}
+.exp li{margin-bottom:3px;}
+.wr{color:var(--red);font-weight:500;}
+.rt{color:var(--green);font-weight:500;}
+/* ── Code blocks ── */
+.cb{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:13px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#c9d1d9;margin:8px 0;overflow-x:auto;white-space:pre;line-height:1.65;}
+.kw{color:#ff7b72;}.cls{color:#ffa657;}.str{color:#a5d6ff;}.cmt{color:#8b949e;font-style:italic;}.fn{color:#d2a8ff;}.num{color:#79c0ff;}
+/* ── Essay questions ── */
+.pq .qnum{background:rgba(188,140,255,.1);color:var(--purple);}
+.pq .abadge{background:rgba(188,140,255,.1);border-color:rgba(188,140,255,.3);color:var(--purple);}
+/* ── Divider ── */
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:28px 0;}
+/* ── Scroll top ── */
+.stb{position:fixed;bottom:26px;right:26px;width:42px;height:42px;border-radius:11px;background:var(--accent);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 4px 18px rgba(88,166,255,.4);z-index:200;transition:all .2s;opacity:0;}
+.stb.vis{opacity:1;}
+.stb:hover{transform:translateY(-3px);}
+@media(max-width:768px){.layout{grid-template-columns:1fr;}.sidebar{position:static;}.ans-grid{grid-template-columns:repeat(10,1fr);}}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="h-inner">
+    <div>
+      <div class="h-title">面向对象程序设计导论 · 2020–2021 学年第 2 学期</div>
+      <div class="h-sub">四川大学 · 期末考试答案解析 · 软件工程2020级</div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchPaper('a',this)">A 卷</button>
+      <button class="tab" onclick="switchPaper('b',this)">B 卷</button>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar">
+    <!-- A卷 answer card -->
+    <div id="card-a" class="card">
+      <div class="card-hd"><span class="dot"></span>A 卷 · 快速对答案</div>
+      <div class="card-bd">
+        <div class="sec-lbl">一、单选题（1–20）</div>
+        <div class="ans-grid">
+          <a href="#a1" class="ac"><span class="n">1</span><span class="v">C</span></a>
+          <a href="#a2" class="ac"><span class="n">2</span><span class="v">B</span></a>
+          <a href="#a3" class="ac"><span class="n">3</span><span class="v">A</span></a>
+          <a href="#a4" class="ac"><span class="n">4</span><span class="v">D</span></a>
+          <a href="#a5" class="ac"><span class="n">5</span><span class="v">A</span></a>
+          <a href="#a6" class="ac"><span class="n">6</span><span class="v">D</span></a>
+          <a href="#a7" class="ac"><span class="n">7</span><span class="v">B</span></a>
+          <a href="#a8" class="ac"><span class="n">8</span><span class="v">C</span></a>
+          <a href="#a9" class="ac"><span class="n">9</span><span class="v">A</span></a>
+          <a href="#a10" class="ac"><span class="n">10</span><span class="v">D</span></a>
+          <a href="#a11" class="ac"><span class="n">11</span><span class="v">A</span></a>
+          <a href="#a12" class="ac"><span class="n">12</span><span class="v">C</span></a>
+          <a href="#a13" class="ac"><span class="n">13</span><span class="v">D</span></a>
+          <a href="#a14" class="ac"><span class="n">14</span><span class="v">A</span></a>
+          <a href="#a15" class="ac"><span class="n">15</span><span class="v">C</span></a>
+          <a href="#a16" class="ac"><span class="n">16</span><span class="v">B</span></a>
+          <a href="#a17" class="ac"><span class="n">17</span><span class="v">C</span></a>
+          <a href="#a18" class="ac"><span class="n">18</span><span class="v">A</span></a>
+          <a href="#a19" class="ac"><span class="n">19</span><span class="v">B</span></a>
+          <a href="#a20" class="ac"><span class="n">20</span><span class="v">B</span></a>
+        </div>
+        <div class="sec-lbl">二、编程题（1–5）&amp; 三、UML（1–2）</div>
+        <div class="ans-grid">
+          <a href="#ap1" class="ac" style="grid-column:span 5"><span class="n">编程1~5 &amp; UML 见解析</span><span class="v" style="font-size:10px">→ 详解</span></a>
+        </div>
+      </div>
+    </div>
+    <!-- B卷 answer card -->
+    <div id="card-b" class="card" style="display:none">
+      <div class="card-hd"><span class="dot" style="background:var(--purple);box-shadow:0 0 6px var(--purple)"></span>B 卷 · 快速对答案</div>
+      <div class="card-bd">
+        <div class="sec-lbl">一、单选题（1–20）</div>
+        <div class="ans-grid">
+          <a href="#b1" class="ac"><span class="n">1</span><span class="v">C</span></a>
+          <a href="#b2" class="ac"><span class="n">2</span><span class="v">A</span></a>
+          <a href="#b3" class="ac"><span class="n">3</span><span class="v">B</span></a>
+          <a href="#b4" class="ac"><span class="n">4</span><span class="v">D</span></a>
+          <a href="#b5" class="ac"><span class="n">5</span><span class="v">D</span></a>
+          <a href="#b6" class="ac"><span class="n">6</span><span class="v">C</span></a>
+          <a href="#b7" class="ac"><span class="n">7</span><span class="v">B</span></a>
+          <a href="#b8" class="ac"><span class="n">8</span><span class="v">C</span></a>
+          <a href="#b9" class="ac"><span class="n">9</span><span class="v">B</span></a>
+          <a href="#b10" class="ac"><span class="n">10</span><span class="v">A</span></a>
+          <a href="#b11" class="ac"><span class="n">11</span><span class="v">B</span></a>
+          <a href="#b12" class="ac"><span class="n">12</span><span class="v">D</span></a>
+          <a href="#b13" class="ac"><span class="n">13</span><span class="v">B</span></a>
+          <a href="#b14" class="ac"><span class="n">14</span><span class="v">C</span></a>
+          <a href="#b15" class="ac"><span class="n">15</span><span class="v">A</span></a>
+          <a href="#b16" class="ac"><span class="n">16</span><span class="v">D</span></a>
+          <a href="#b17" class="ac"><span class="n">17</span><span class="v">C</span></a>
+          <a href="#b18" class="ac"><span class="n">18</span><span class="v">D</span></a>
+          <a href="#b19" class="ac"><span class="n">19</span><span class="v">B</span></a>
+          <a href="#b20" class="ac"><span class="n">20</span><span class="v">A</span></a>
+        </div>
+        <div class="sec-lbl">二、问答题 &amp; 三、编程设计（见解析）</div>
+        <div class="ans-grid">
+          <a href="#bp1" class="ac" style="grid-column:span 5"><span class="n">问答 &amp; 编程见解析</span><span class="v" style="font-size:10px">→ 详解</span></a>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN CONTENT ═══ -->
+  <main>
+
+  <!-- ╔══════════════════════════╗ -->
+  <!-- ║          A 卷             ║ -->
+  <!-- ╚══════════════════════════╝ -->
+  <div id="paper-a" class="paper active">
+
+    <div class="sec-hd">
+      <span class="sec-tag">A卷 · 一</span>
+      <span class="sec-title">单项选择题</span>
+      <span class="sec-meta">20题 · 40分 · 每题2分</span>
+    </div>
+
+    <!-- A1 -->
+    <div id="a1" class="q">
+      <div class="qh"><div class="qnum">1</div><div class="qb">
+        <div class="qt">What's wrong about the main method of a Java program is this ( ).</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">Java program can have multiple main() methods</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">The main() method is the entry point to the Java program</span></div>
+          <div class="opt ok"><span class="ol">C</span><span class="ot">The main() method is decorated with public, static, and void, and the <strong>order cannot be changed</strong></span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">The main() method is followed by a pair of curly braces containing the commands</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：C</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        <span class="wr">C是错误描述</span>：<code>public static void main</code> 中修饰符的顺序<strong>可以改变</strong>，例如 <code>static public void main</code> 也是合法的。A✓：每个类都可以有自己的 main()；B✓：main 是程序入口；D✓：方法体用 {} 包裹。
+      </div>
+    </div>
+
+    <!-- A2 -->
+    <div id="a2" class="q">
+      <div class="qh"><div class="qnum">2</div><div class="qb">
+        <div class="qt">The default layout manager for panels and applets is ( ).</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">Card Layout</span></div>
+          <div class="opt ok"><span class="ol">B</span><span class="ot">Flow Layout</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">Border Layout</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">Grid Layout</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：B</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        <span class="rt">FlowLayout</span> 是 Panel 和 Applet 的默认布局管理器（从左到右，超出则换行）。JFrame/Frame 默认是 BorderLayout；JPanel 默认也是 FlowLayout。
+      </div>
+    </div>
+
+    <!-- A3 -->
+    <div id="a3" class="q">
+      <div class="qh"><div class="qnum">3</div><div class="qb">
+        <div class="qt"><code>int[] x = new int[10];</code> Which of the following statements is true ( ).</div>
+        <div class="opts">
+          <div class="opt ok"><span class="ol">A</span><span class="ot">x[9] is 0</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">x[9] undefined</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">x[10] is 0</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">x[0] is null</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：A</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        int 数组默认值为 <span class="rt">0</span>，x[9] 是最后一个有效元素，值为 0。<br>
+        C错：x[10] 越界（合法索引 0–9）；D错：int 是基本类型，不能为 null。
+      </div>
+    </div>
+
+    <!-- A4 -->
+    <div id="a4" class="q">
+      <div class="qh"><div class="qnum">4</div><div class="qb">
+        <div class="qt">The following statement is <strong>incorrect</strong> ( ).</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">Methods defined in interfaces are abstract methods with no method body</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">A Java class can have only one parent class, but can implement multiple interfaces</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">In class declaration, declare the interface with the <code>implements</code> keyword</span></div>
+          <div class="opt ok"><span class="ol">D</span><span class="ot">Use the <code>implements</code> keyword when <strong>defining</strong> interfaces.</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：D</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        <span class="wr">D错</span>：定义接口使用 <code>interface</code> 关键字（如 <code>public interface Flyable</code>）；接口继承另一接口使用 <code>extends</code>；只有类实现接口时才用 <code>implements</code>。
+      </div>
+    </div>
+
+    <!-- A5 -->
+    <div id="a5" class="q">
+      <div class="qh"><div class="qnum">5</div><div class="qb">
+        <div class="qt">When writing Java graphical interface (GUI) programs, which package should be introduced ( ).</div>
+        <div class="opts">
+          <div class="opt ok"><span class="ol">A</span><span class="ot">java.awt.*</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">java.applet.*</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">java.io.*</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">java.awt.event.*</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：A</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        <code>java.awt.*</code> 是 Java AWT 图形界面的基础包，含 Frame、Panel、Button、Label 等核心组件。D（java.awt.event.*）是事件处理包，属于 GUI 的一部分，但不是"主要引入"的包。
+      </div>
+    </div>
+
+    <!-- A6 -->
+    <div id="a6" class="q">
+      <div class="qh"><div class="qnum">6</div><div class="qb">
+        <div class="qt">Which of the following is not a valid identifier in Java ( ).</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">$per（$ 合法）</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">twoNum（合法）</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">_myVar（_ 合法）</span></div>
+          <div class="opt ok"><span class="ol">D</span><span class="ot">*point（* 非法字符）</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：D</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        Java 标识符规则：只能由<strong>字母、数字、$、_</strong> 组成，不能以数字开头，不能是关键字。<code>*</code> 是运算符，不能出现在标识符中。
+      </div>
+    </div>
+
+    <!-- A7 -->
+    <div id="a7" class="q">
+      <div class="qh"><div class="qnum">7</div><div class="qb">
+        <div class="qt">In the Java language, the following description of class inheritance is correct ( ).</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">A class can inherit from more than one parent class</span></div>
+          <div class="opt ok"><span class="ol">B</span><span class="ot">A class can have more than one subclass</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">A subclass can use all the methods of its parent class</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">Subclass has more members than the parent class</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：B</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        <ul>
+          <li><span class="wr">A错</span>：Java 只支持单继承（单一父类），可实现多个接口</li>
+          <li><span class="rt">B正确</span>：一个父类可以有任意多个子类</li>
+          <li><span class="wr">C错</span>：子类不能使用父类的 private 方法</li>
+          <li><span class="wr">D错</span>：子类未必有更多成员（若没有新增成员则相同）</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- A8 -->
+    <div id="a8" class="q">
+      <div class="qh"><div class="qnum">8</div><div class="qb">
+        <div class="qt">The method definition of the subclass is exactly the same as that of the superclass, but the implementation is different, which takes the ( ) of the method.</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">overload（重载）</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">implementation</span></div>
+          <div class="opt ok"><span class="ol">C</span><span class="ot">override（重写/覆盖）</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">inherit（继承）</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：C</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        子类对父类方法的<strong>重写（Override）</strong>：方法签名（名称 + 参数列表）完全相同，但方法体不同。重载（Overload）是同一类中方法名相同但参数列表不同。
+      </div>
+    </div>
+
+    <!-- A9 -->
+    <div id="a9" class="q">
+      <div class="qh"><div class="qnum">9</div><div class="qb">
+        <div class="qt"><code>System.out.println("5" + 2);</code> What is the output ( ).</div>
+        <div class="opts">
+          <div class="opt ok"><span class="ol">A</span><span class="ot">52</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">7</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">2</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">5</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：A</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        <code>"5"</code> 是 String，与 int 做 <code>+</code> 时，int 被自动转为 String，执行<strong>字符串拼接</strong>，结果为 <code>"52"</code>。若是 <code>2 + 3 + "5"</code> 则先计算 2+3=5，再拼接得 "55"。
+      </div>
+    </div>
+
+    <!-- A10 -->
+    <div id="a10" class="q">
+      <div class="qh"><div class="qnum">10</div><div class="qb">
+        <div class="qt">Which is the output of the program ( ).</div>
+        <div class="cb"><span class="kw">int</span> count = <span class="num">1</span>;
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= <span class="num">5</span>; i++) {
+    count += i;
+}
+System.out.println(count);</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">5</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">1</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">15</span></div>
+          <div class="opt ok"><span class="ol">D</span><span class="ot">16</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：D</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        count 初始为 1，循环累加 i=1~5：1 + (1+2+3+4+5) = 1 + 15 = <span class="rt">16</span>。
+        选 C 的陷阱是忘记了 count 初始值为 1 而非 0。
+      </div>
+    </div>
+
+    <!-- A11 -->
+    <div id="a11" class="q">
+      <div class="qh"><div class="qnum">11</div><div class="qb">
+        <div class="qt">Which is correct about the interface? ( ).</div>
+        <div class="opts">
+          <div class="opt ok"><span class="ol">A</span><span class="ot">Implementing an interface must implement all methods of the interface</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">A class can implement only one interface</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">There can be no inheritance relationship between interfaces</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">Interfaces and abstract classes are the same thing</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：A</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        <ul>
+          <li><span class="rt">A正确</span>：具体类实现接口必须实现所有抽象方法（若类本身是抽象类则可以不全实现）</li>
+          <li><span class="wr">B错</span>：一个类可以实现多个接口（<code>implements A, B, C</code>）</li>
+          <li><span class="wr">C错</span>：接口之间可以用 <code>extends</code> 继承，且可多继承</li>
+          <li><span class="wr">D错</span>：接口与抽象类有本质区别（构造方法、成员变量等）</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- A12 -->
+    <div id="a12" class="q">
+      <div class="qh"><div class="qnum">12</div><div class="qb">
+        <div class="qt">Suppose x, y, z are int. If <code>(x == y)</code> is true, which conditions below are ALWAYS true?<br>
+          I. <code>(x==y) &amp;&amp; (y==z) &amp;&amp; (x==z)</code><br>
+          II. <code>(x==y) || (y==z) &amp;&amp; (x==z)</code><br>
+          III. <code>(x-y)*(x-z)*(y-z) == 0</code>
+        </div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">Only I</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">Only II</span></div>
+          <div class="opt ok"><span class="ol">C</span><span class="ot">II and III only</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">I, II, and III</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：C</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        当 x==y 成立时：<br>
+        I：还需 y==z，z 可能不等于 x/y，<span class="wr">不一定成立</span><br>
+        II：运算符优先级 <code>&amp;&amp; &gt; ||</code>，等价于 <code>(x==y) || (...)</code>，因 x==y 为 true，短路求值直接为 <span class="rt">true，必然成立</span><br>
+        III：x-y = 0，乘积为 0，<span class="rt">必然成立</span>
+      </div>
+    </div>
+
+    <!-- A13 -->
+    <div id="a13" class="q">
+      <div class="qh"><div class="qnum">13</div><div class="qb">
+        <div class="qt">A collection typically models a ( ) relationship.</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">zero-to-one</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">one-to-one</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">many-to-many</span></div>
+          <div class="opt ok"><span class="ol">D</span><span class="ot">one-to-many</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：D</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        集合（Collection）体现的是<strong>一对多（one-to-many）</strong>关系：一个容器持有多个元素对象。例如一个班级（对象）含有多名学生（集合元素）。
+      </div>
+    </div>
+
+    <!-- A14 -->
+    <div id="a14" class="q">
+      <div class="qh"><div class="qnum">14</div><div class="qb">
+        <div class="qt">Which is the Java keyword used to denote a class method?</div>
+        <div class="opts">
+          <div class="opt ok"><span class="ol">A</span><span class="ot">static</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">class</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">private</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">final</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：A</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        "Class method（类方法）"= 属于类本身而非某个实例的方法，用 <code>static</code> 修饰。通过类名直接调用，无需创建对象。
+      </div>
+    </div>
+
+    <!-- A15 -->
+    <div id="a15" class="q">
+      <div class="qh"><div class="qnum">15</div><div class="qb">
+        <div class="qt">Which of the following statements is (are) true about inheritance in Java?<br>
+          I. A class can extend more than one abstract class.<br>
+          II. A class can implement more than one interface.
+        </div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">I and II</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">None</span></div>
+          <div class="opt ok"><span class="ol">C</span><span class="ot">II only</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">I only</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：C</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        I：Java 类<span class="wr">不能继承多个抽象类</span>（单继承限制）。II：<span class="rt">可以实现多个接口</span>（<code>class A implements B, C, D</code>），这是 Java 实现多态性的重要手段。
+      </div>
+    </div>
+
+    <!-- A16 -->
+    <div id="a16" class="q">
+      <div class="qh"><div class="qnum">16</div><div class="qb">
+        <div class="qt">UML class diagrams can describe which of the following?<br>I. The internal structure of classes&nbsp;&nbsp;&nbsp;II. Relationships between classes</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">None</span></div>
+          <div class="opt ok"><span class="ol">B</span><span class="ot">I and II</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">I only</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">II only</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：B</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        UML 类图同时描述：①<strong>类的内部结构</strong>（属性、方法）②<strong>类之间的关系</strong>（继承、实现、关联、聚合、组合、依赖）。两者都是 UML 类图的核心内容。
+      </div>
+    </div>
+
+    <!-- A17 -->
+    <div id="a17" class="q">
+      <div class="qh"><div class="qnum">17</div><div class="qb">
+        <div class="qt">If method <code>int sum(int a, int b)</code> is defined in class C, which of the following <strong>cannot</strong> coexist as a different method in class C?</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">int sum(float a, int b)</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">float sum(int x, float y)</span></div>
+          <div class="opt ok"><span class="ol">C</span><span class="ot">int sum(int x, int y)</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">int sum(int x, float y)</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：C</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        方法重载区分依据：<strong>参数列表</strong>（个数/类型/顺序），与参数名和返回值无关。<br>
+        C 的参数类型同为 <code>(int, int)</code>，与原方法完全相同，<span class="wr">不能共存</span>（参数名不同不影响签名）。A/B/D 参数类型不同，可以重载。
+      </div>
+    </div>
+
+    <!-- A18 -->
+    <div id="a18" class="q">
+      <div class="qh"><div class="qnum">18</div><div class="qb">
+        <div class="qt">From within a child class, its parent class is referred to via the keyword ( ).</div>
+        <div class="opts">
+          <div class="opt ok"><span class="ol">A</span><span class="ot">super</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">this</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">parent（非Java关键字）</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">base（C# 关键字）</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：A</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        <code>super</code> 在子类中引用父类：<code>super.方法名()</code> 调用父类方法，<code>super(参数)</code> 调用父类构造方法。<code>this</code> 代表当前对象本身。
+      </div>
+    </div>
+
+    <!-- A19 -->
+    <div id="a19" class="q">
+      <div class="qh"><div class="qnum">19</div><div class="qb">
+        <div class="qt">An object that contains methods that traverse a collection linearly from start to finish is known as a(n) ( ).</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">int</span></div>
+          <div class="opt ok"><span class="ol">B</span><span class="ot">iterator（迭代器）</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">loop</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">Exception</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：B</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        <strong>迭代器（Iterator）</strong>提供统一的线性遍历接口，核心方法：<code>hasNext()</code> 判断是否有下一个、<code>next()</code> 返回下一个元素。Java 中通过 <code>collection.iterator()</code> 获取。
+      </div>
+    </div>
+
+    <!-- A20 -->
+    <div id="a20" class="q">
+      <div class="qh"><div class="qnum">20</div><div class="qb">
+        <div class="qt">The subclass of an abstract class must ( ).</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">be abstract</span></div>
+          <div class="opt ok"><span class="ol">B</span><span class="ot">be abstract OR implement all of the parent's abstract methods</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">be abstract AND implement all of the parent's abstract methods</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">implement all of the parent's abstract methods</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：B</span><span class="sbadge">2分</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        抽象类的子类只有两种选择：①<strong>也声明为 abstract</strong>（可以不实现父类抽象方法），或 ②<strong>实现父类所有抽象方法</strong>（成为具体类）。"必须且同时满足两者"（C）过于严格。
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- PROGRAMMING SECTION -->
+    <div class="sec-hd">
+      <span class="sec-tag" style="background:rgba(188,140,255,.13);color:var(--purple);border-color:rgba(188,140,255,.3);">A卷 · 二</span>
+      <span class="sec-title">设计与编程题</span>
+      <span class="sec-meta">5题 · 40分</span>
+    </div>
+
+    <!-- AP1 -->
+    <div id="ap1" class="q pq">
+      <div class="qh"><div class="qnum" style="background:rgba(188,140,255,.1);color:var(--purple);">1</div><div class="qb">
+        <div class="qt">Write a program to find the sum of all integers from 1 to 100, and output the results. (5 points)</div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">5分</span></div>
+      <div class="exp"><div class="exp-t">参考答案（输出：5050）</div>
+        <div class="cb"><span class="kw">public class</span> <span class="cls">SumDemo</span> {
+    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {
+        <span class="kw">int</span> sum = <span class="num">0</span>;
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= <span class="num">100</span>; i++) {
+            sum += i;
+        }
+        System.out.println(<span class="str">"Sum from 1 to 100 = "</span> + sum);
+        <span class="cmt">// 输出: Sum from 1 to 100 = 5050</span>
+    }
+}</div>
+        也可用等差数列公式：<code>sum = 100 * 101 / 2 = 5050</code>
+      </div>
+    </div>
+
+    <!-- AP2 -->
+    <div id="ap2" class="q pq">
+      <div class="qh"><div class="qnum" style="background:rgba(188,140,255,.1);color:var(--purple);">2</div><div class="qb">
+        <div class="qt">Complete the MainClass: ① printElements()  ② deleteStartsWith(String prefix)  ③ printStartsWith(String prefix)&nbsp;&nbsp;(5 points)</div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">5分</span></div>
+      <div class="exp"><div class="exp-t">参考答案（三个方法填空）</div>
+        <div class="cb"><span class="kw">import</span> java.util.Iterator;
+<span class="kw">import</span> java.util.Vector;
+
+<span class="kw">public class</span> <span class="cls">MainClass</span> {
+    <span class="cls">Vector</span> vector = <span class="kw">new</span> <span class="cls">Vector</span>();
+
+    <span class="kw">public</span> <span class="cls">MainClass</span>() {
+        vector.add(<span class="str">"country China"</span>);
+        vector.add(<span class="str">"country America"</span>);
+        vector.add(<span class="str">"country English"</span>);
+        vector.add(<span class="str">"name Mary"</span>);
+        vector.add(<span class="str">"name Linda"</span>);
+        vector.add(<span class="str">"name Mike"</span>);
+        vector.add(<span class="str">"name John"</span>);
+    }
+
+    <span class="cmt">// ① 遍历输出所有元素</span>
+    <span class="kw">public void</span> <span class="fn">printElements</span>() {
+        Iterator it = vector.iterator();
+        <span class="kw">while</span> (it.hasNext()) {
+            System.out.println(it.next());
+        }
+    }
+
+    <span class="cmt">// ② 删除以指定前缀开头的字符串（用 Iterator 避免 ConcurrentModificationException）</span>
+    <span class="kw">public void</span> <span class="fn">deleteStartsWith</span>(String prefix) {
+        Iterator it = vector.iterator();
+        <span class="kw">while</span> (it.hasNext()) {
+            String str = (String) it.next();
+            <span class="kw">if</span> (str.startsWith(prefix)) {
+                it.remove();   <span class="cmt">// 安全删除</span>
+            }
+        }
+    }
+
+    <span class="cmt">// ③ 打印以指定前缀开头的字符串</span>
+    <span class="kw">public void</span> <span class="fn">printStartsWith</span>(String prefix) {
+        Iterator it = vector.iterator();
+        <span class="kw">while</span> (it.hasNext()) {
+            String str = (String) it.next();
+            <span class="kw">if</span> (str.startsWith(prefix)) {
+                System.out.println(str);
+            }
+        }
+    }
+}</div>
+        <strong>注意</strong>：删除时必须用 <code>it.remove()</code> 而非 <code>vector.remove()</code>，否则会抛出 ConcurrentModificationException。
+      </div>
+    </div>
+
+    <!-- AP3 -->
+    <div id="ap3" class="q pq">
+      <div class="qh"><div class="qnum" style="background:rgba(188,140,255,.1);color:var(--purple);">3</div><div class="qb">
+        <div class="qt">Write a class to read a given text file (java.txt) and output contents to console. Hint: BufferedReader, FileInputStream, InputStreamReader. (10 points)</div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">10分</span></div>
+      <div class="exp"><div class="exp-t">参考答案</div>
+        <div class="cb"><span class="kw">import</span> java.io.*;
+
+<span class="kw">public class</span> <span class="cls">ReadFile</span> {
+    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {
+        <span class="kw">try</span> {
+            <span class="cmt">// 按题目提示：FileInputStream → InputStreamReader → BufferedReader</span>
+            FileInputStream fis = <span class="kw">new</span> <span class="cls">FileInputStream</span>(<span class="str">"java.txt"</span>);
+            InputStreamReader isr = <span class="kw">new</span> <span class="cls">InputStreamReader</span>(fis);
+            BufferedReader br = <span class="kw">new</span> <span class="cls">BufferedReader</span>(isr);
+
+            String line;
+            <span class="kw">while</span> ((line = br.readLine()) != <span class="kw">null</span>) {
+                System.out.println(line);
+            }
+            br.close();
+
+        } <span class="kw">catch</span> (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+<span class="cmt">// 输出:
+// This is a java test
+// 1 2 3 4 5</span></div>
+        三层包装链：字节流 FileInputStream → 字符流 InputStreamReader（可指定编码）→ 带缓冲的 BufferedReader（支持 readLine()）。
+      </div>
+    </div>
+
+    <!-- AP4 -->
+    <div id="ap4" class="q pq">
+      <div class="qh"><div class="qnum" style="background:rgba(188,140,255,.1);color:var(--purple);">4</div><div class="qb">
+        <div class="qt">Complete TestCardAccount to unit test CardAccount: for each method, one test case checking ① function call success ② balance correctness. (10 points)</div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">10分</span></div>
+      <div class="exp"><div class="exp-t">参考答案（① 处填写）</div>
+        <div class="cb"><span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {
+    <span class="kw">boolean</span> result;
+    CardAccount accountOne = <span class="kw">new</span> <span class="cls">CardAccount</span>();
+
+    <span class="cmt">// Test 1: constructor + getBalance → initial balance == 0</span>
+    <span class="fn">assertTrue</span>(<span class="str">"Initial balance should be 0.0"</span>,
+        accountOne.getBalance() == <span class="num">0.0</span>);
+
+    <span class="cmt">// Test 2: deposit valid amount</span>
+    result = accountOne.deposit(<span class="num">100.0</span>);
+    <span class="fn">assertTrue</span>(<span class="str">"deposit(100) should return true"</span>, result);
+    <span class="fn">assertTrue</span>(<span class="str">"Balance after deposit(100) should be 100.0"</span>,
+        accountOne.getBalance() == <span class="num">100.0</span>);
+
+    <span class="cmt">// Test 3: deposit invalid amount (negative)</span>
+    result = accountOne.deposit(-<span class="num">20.0</span>);
+    <span class="fn">assertTrue</span>(<span class="str">"deposit(-20) should return false"</span>, !result);
+    <span class="fn">assertTrue</span>(<span class="str">"Balance unchanged after invalid deposit"</span>,
+        accountOne.getBalance() == <span class="num">100.0</span>);
+
+    <span class="cmt">// Test 4: cost valid amount</span>
+    result = accountOne.cost(<span class="num">40.0</span>);
+    <span class="fn">assertTrue</span>(<span class="str">"cost(40) should return true when balance=100"</span>, result);
+    <span class="fn">assertTrue</span>(<span class="str">"Balance after cost(40) should be 60.0"</span>,
+        accountOne.getBalance() == <span class="num">60.0</span>);
+
+    <span class="cmt">// Test 5: cost more than balance</span>
+    result = accountOne.cost(<span class="num">200.0</span>);
+    <span class="fn">assertTrue</span>(<span class="str">"cost(200) should return false when balance=60"</span>, !result);
+    <span class="fn">assertTrue</span>(<span class="str">"Balance unchanged after failed cost"</span>,
+        accountOne.getBalance() == <span class="num">60.0</span>);
+}</div>
+      </div>
+    </div>
+
+    <!-- AP5 -->
+    <div id="ap5" class="q pq">
+      <div class="qh"><div class="qnum" style="background:rgba(188,140,255,.1);color:var(--purple);">5</div><div class="qb">
+        <div class="qt">Complete the singleton pattern for StudentInfo (only one instance can be created). ① field ② constructor ③ getSingletonInstance(). (10 points)</div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">10分</span></div>
+      <div class="exp"><div class="exp-t">参考答案（懒汉式单例）</div>
+        <div class="cb"><span class="kw">public class</span> <span class="cls">StudentInfo</span> {
+
+    <span class="cmt">// ① 私有静态实例字段（延迟初始化）</span>
+    <span class="kw">private static</span> <span class="cls">StudentInfo</span> instance = <span class="kw">null</span>;
+
+    <span class="kw">private</span> String name;
+    <span class="kw">private</span> String ID;
+
+    <span class="cmt">// ② 私有构造方法，防止外部 new</span>
+    <span class="kw">private</span> <span class="cls">StudentInfo</span>() {
+        name = <span class="str">""</span>;
+        ID = <span class="str">""</span>;
+    }
+
+    <span class="cmt">// ③ 公有静态工厂方法，第一次调用时创建实例</span>
+    <span class="kw">static public</span> <span class="cls">StudentInfo</span> <span class="fn">getSingletonInstance</span>() {
+        <span class="kw">if</span> (instance == <span class="kw">null</span>) {
+            instance = <span class="kw">new</span> <span class="cls">StudentInfo</span>();
+        }
+        <span class="kw">return</span> instance;
+    }
+
+    <span class="kw">public</span> String <span class="fn">getName</span>() { <span class="kw">return</span> name; }
+    <span class="kw">public</span> String <span class="fn">getID</span>()   { <span class="kw">return</span> ID; }
+}</div>
+        单例模式三要素：① 私有静态实例字段 ② 私有构造方法 ③ 公有静态获取方法。以上为<strong>懒汉式</strong>（第一次使用时创建）；若写 <code>= new StudentInfo()</code> 则为<strong>饿汉式</strong>（类加载时创建）。
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- UML SECTION -->
+    <div class="sec-hd">
+      <span class="sec-tag" style="background:rgba(255,166,87,.13);color:var(--orange);border-color:rgba(255,166,87,.3);">A卷 · 三</span>
+      <span class="sec-title">UML 设计题</span>
+      <span class="sec-meta">2题 · 20分</span>
+    </div>
+
+    <!-- AUML1 -->
+    <div id="auml1" class="q pq">
+      <div class="qh"><div class="qnum" style="background:rgba(255,166,87,.1);color:var(--orange);">1</div><div class="qb">
+        <div class="qt">Draw the UML class diagram for the C/S registration system (RegisterForm, UserDTO, IUserDAO, OracleUserDAO). UserDTO contains userAccount, userPassword and GET/SET; IUserDAO has addUser(). (9 points)</div>
+      </div></div>
+      <div class="q-ar"><span class="abadge" style="background:rgba(255,166,87,.1);border-color:rgba(255,166,87,.3);color:var(--orange);">9分</span></div>
+      <div class="exp"><div class="exp-t">UML 类图（ASCII）</div>
+        <div class="cb">+──────────────────+      uses       +──────────────────────────+
+│  RegisterForm    │───────────────►│        UserDTO           │
++──────────────────+                +──────────────────────────+
+│                  │   creates      │ -userAccount: String     │
++──────────────────+                │ -userPassword: String    │
+│ +register()      │                +──────────────────────────+
++──────────────────+                │ +getUserAccount(): String│
+         │                          │ +setUserAccount(String)  │
+         │ uses (dependency)        │ +getUserPassword(): String│
+         ▼                          │ +setUserPassword(String) │
++──────────────────+                +──────────────────────────+
+│  &lt;&lt;interface&gt;&gt;   │
+│   IUserDAO       │
++──────────────────+
+│ +addUser(UserDTO)│
+│   : boolean      │
++──────────────────+
+         ▲
+         │ implements (虚线+空心三角)
+         │
++──────────────────+
+│  OracleUserDAO   │
++──────────────────+
+│ +addUser(UserDTO)│
+│   : boolean      │
++──────────────────+</div>
+      </div>
+    </div>
+
+    <!-- AUML2 -->
+    <div id="auml2" class="q pq">
+      <div class="qh"><div class="qnum" style="background:rgba(255,166,87,.1);color:var(--orange);">2</div><div class="qb">
+        <div class="qt">Complete the source code for the above UML (no need to finish function bodies). (11 points)</div>
+      </div></div>
+      <div class="q-ar"><span class="abadge" style="background:rgba(255,166,87,.1);border-color:rgba(255,166,87,.3);color:var(--orange);">11分</span></div>
+      <div class="exp"><div class="exp-t">参考代码（框架，方法体可留空）</div>
+        <div class="cb"><span class="cmt">// UserDTO.java</span>
+<span class="kw">public class</span> <span class="cls">UserDTO</span> {
+    <span class="kw">private</span> String userAccount;
+    <span class="kw">private</span> String userPassword;
+
+    <span class="kw">public</span> String <span class="fn">getUserAccount</span>()  { <span class="kw">return</span> userAccount; }
+    <span class="kw">public void</span>   <span class="fn">setUserAccount</span>(String acc) { <span class="kw">this</span>.userAccount = acc; }
+    <span class="kw">public</span> String <span class="fn">getUserPassword</span>() { <span class="kw">return</span> userPassword; }
+    <span class="kw">public void</span>   <span class="fn">setUserPassword</span>(String pwd) { <span class="kw">this</span>.userPassword = pwd; }
+}
+
+<span class="cmt">// IUserDAO.java（接口）</span>
+<span class="kw">public interface</span> <span class="cls">IUserDAO</span> {
+    <span class="kw">boolean</span> <span class="fn">addUser</span>(<span class="cls">UserDTO</span> user);
+}
+
+<span class="cmt">// OracleUserDAO.java（实现类）</span>
+<span class="kw">public class</span> <span class="cls">OracleUserDAO</span> <span class="kw">implements</span> <span class="cls">IUserDAO</span> {
+    <span class="kw">public boolean</span> <span class="fn">addUser</span>(<span class="cls">UserDTO</span> user) {
+        <span class="cmt">// Oracle specific implementation</span>
+        <span class="kw">return true</span>;
+    }
+}
+
+<span class="cmt">// RegisterForm.java</span>
+<span class="kw">public class</span> <span class="cls">RegisterForm</span> {
+    <span class="kw">private</span> <span class="cls">IUserDAO</span> userDAO;
+
+    <span class="kw">public</span> <span class="cls">RegisterForm</span>(<span class="cls">IUserDAO</span> dao) {
+        <span class="kw">this</span>.userDAO = dao;
+    }
+
+    <span class="kw">public void</span> <span class="fn">register</span>(String account, String password) {
+        <span class="cls">UserDTO</span> dto = <span class="kw">new</span> <span class="cls">UserDTO</span>();
+        dto.<span class="fn">setUserAccount</span>(account);
+        dto.<span class="fn">setUserPassword</span>(password);
+        userDAO.<span class="fn">addUser</span>(dto);
+    }
+}</div>
+        <strong>面向接口编程</strong>：RegisterForm 依赖 IUserDAO 接口而非具体实现，更换数据库只需换一个不同的 DAO 实现类，体现了开放-封闭原则（OCP）。
+      </div>
+    </div>
+
+  </div><!-- end paper-a -->
+
+  <!-- ╔══════════════════════════╗ -->
+  <!-- ║          B 卷             ║ -->
+  <!-- ╚══════════════════════════╝ -->
+  <div id="paper-b" class="paper">
+
+    <div class="sec-hd">
+      <span class="sec-tag" style="background:rgba(188,140,255,.13);color:var(--purple);border-color:rgba(188,140,255,.3);">B卷 · 一</span>
+      <span class="sec-title">单项选择题</span>
+      <span class="sec-meta">20题 · 40分 · 每题2分</span>
+    </div>
+
+    <!-- B1 -->
+    <div id="b1" class="q">
+      <div class="qh"><div class="qnum">1</div><div class="qb">
+        <div class="qt">The JVM stands for:</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">Java virtual model</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">Java visual model</span></div>
+          <div class="opt ok"><span class="ol">C</span><span class="ot">Java virtual machine</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">Java visual machine</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：C</span></div>
+      <div class="exp"><div class="exp-t">解析</div>JVM = <strong>Java Virtual Machine（Java 虚拟机）</strong>，负责将字节码（.class）翻译为机器码执行，是 Java "一次编写，处处运行"的基础。</div>
+    </div>
+
+    <!-- B2 -->
+    <div id="b2" class="q">
+      <div class="qh"><div class="qnum">2</div><div class="qb">
+        <div class="qt">In Java, you can write stand-alone programs known as ( ).</div>
+        <div class="opts">
+          <div class="opt ok"><span class="ol">A</span><span class="ot">Application（应用程序）</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">Midlets（J2ME 移动应用）</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">Applets（浏览器小程序，已废弃）</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">Servlets（服务端程序）</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：A</span></div>
+      <div class="exp"><div class="exp-t">解析</div>Java <strong>Application</strong>（应用程序）可独立运行，以含有 <code>public static void main(String[] args)</code> 的类为入口。</div>
+    </div>
+
+    <!-- B3 -->
+    <div id="b3" class="q">
+      <div class="qh"><div class="qnum">3</div><div class="qb">
+        <div class="qt">Which java tool creates HTML help files from source code?</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">javah（生成 JNI 头文件）</span></div>
+          <div class="opt ok"><span class="ol">B</span><span class="ot">Javadoc（文档生成工具）</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">java（运行程序）</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">javac（编译器）</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：B</span></div>
+      <div class="exp"><div class="exp-t">解析</div><strong>Javadoc</strong> 从源代码中的 <code>/** ... */</code> 注释生成 HTML 格式的 API 文档，如 JDK 官方文档就是用 Javadoc 生成的。</div>
+    </div>
+
+    <!-- B4 -->
+    <div id="b4" class="q">
+      <div class="qh"><div class="qnum">4</div><div class="qb">
+        <div class="qt">A stack trace is ( ).</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">only available through a typical debugger's step into feature</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">a fatal error that causes a typical debugger to terminate</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">a list of variables allocated on a program's stack</span></div>
+          <div class="opt ok"><span class="ol">D</span><span class="ot">a sequence of method calls</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：D</span></div>
+      <div class="exp"><div class="exp-t">解析</div>Stack trace（堆栈跟踪）是异常发生时打印的<strong>方法调用链</strong>，从异常抛出点向上追溯，帮助开发者定位出错位置。</div>
+    </div>
+
+    <!-- B5 -->
+    <div id="b5" class="q">
+      <div class="qh"><div class="qnum">5</div><div class="qb">
+        <div class="qt">Consider the UML class diagram (ClassA has a self-referential association: -ca, multiplicity 1..*). The diagram describes a</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">class without methods</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">relationship between a subclass and a superclass</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">one-to-one relationship</span></div>
+          <div class="opt ok"><span class="ol">D</span><span class="ot">self-containing class</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：D</span></div>
+      <div class="exp"><div class="exp-t">解析</div>ClassA 有指向自身的关联线（multiplicity 1..*），表示该类的对象可以持有<strong>同类对象的集合</strong>，称为 <strong>self-containing class（自包含类）</strong>。典型例子：链表节点含 <code>next</code> 字段，树节点含 <code>children</code> 列表。</div>
+    </div>
+
+    <!-- B6 -->
+    <div id="b6" class="q">
+      <div class="qh"><div class="qnum">6</div><div class="qb">
+        <div class="qt">A collection typically models a ( ) relationship.</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">one-to-one</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">zero-to-one</span></div>
+          <div class="opt ok"><span class="ol">C</span><span class="ot">one-to-many</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">many-to-many</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：C</span></div>
+      <div class="exp"><div class="exp-t">解析</div>集合建模<strong>一对多（1:N）</strong>关系：一个容器对象持有多个元素对象。</div>
+    </div>
+
+    <!-- B7 -->
+    <div id="b7" class="q">
+      <div class="qh"><div class="qnum">7</div><div class="qb">
+        <div class="qt"><code>int[] intArray = new int[3];</code> Which expression gives the number of elements in intArray?</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">intArray.size（不存在）</span></div>
+          <div class="opt ok"><span class="ol">B</span><span class="ot">intArray.length（数组字段）</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">intArray.length()（数组无此方法）</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">intArray.size()（是集合的方法）</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：B</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        数组使用 <code>.length</code>（<strong>属性/字段</strong>，无括号）；String 使用 <code>.length()</code>（方法）；集合（List/Set）使用 <code>.size()</code>（方法）。此处是数组，用 <code>intArray.length</code>。
+      </div>
+    </div>
+
+    <!-- B8 -->
+    <div id="b8" class="q">
+      <div class="qh"><div class="qnum">8</div><div class="qb">
+        <div class="qt">Which of the following is NOT a method of the Object class?</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">toString()</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">clone()</span></div>
+          <div class="opt ok"><span class="ol">C</span><span class="ot">finally()</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">finalize()</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：C</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        Object 的方法有：toString, equals, hashCode, getClass, clone, wait, notify, notifyAll, <code>finalize</code>。<br>
+        <span class="wr">C（finally）是关键字</span>，不是方法；<code>finalize()</code> 才是 Object 的方法（在 GC 前调用）。
+      </div>
+    </div>
+
+    <!-- B9 -->
+    <div id="b9" class="q">
+      <div class="qh"><div class="qnum">9</div><div class="qb">
+        <div class="qt">What is the output of the following code?</div>
+        <div class="cb"><span class="kw">class</span> <span class="cls">Tree</span> { }
+<span class="kw">class</span> <span class="cls">Oak</span> <span class="kw">extends</span> <span class="cls">Tree</span> { }
+<span class="cls">Tree</span> t = <span class="kw">new</span> <span class="cls">Oak</span>();
+<span class="kw">if</span> (t <span class="kw">instanceof</span> <span class="cls">Tree</span>) System.out.print(<span class="str">" Tree "</span>);
+<span class="kw">if</span> (t <span class="kw">instanceof</span> <span class="cls">Oak</span>)  System.out.print(<span class="str">" Oak "</span>);</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">Tree</span></div>
+          <div class="opt ok"><span class="ol">B</span><span class="ot">Tree Oak</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">Oak</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">No output</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：B</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        <code>t</code> 实际是 Oak 对象。<code>instanceof</code> 判断对象是否为该类或其子类实例：<code>t instanceof Tree</code> → true（Oak 是 Tree 子类），<code>t instanceof Oak</code> → true，两个 if 都执行。
+      </div>
+    </div>
+
+    <!-- B10 -->
+    <div id="b10" class="q">
+      <div class="qh"><div class="qnum">10</div><div class="qb">
+        <div class="qt">Given: <code>int x = Integer.parseInt(str);</code> Which exception should be handled?</div>
+        <div class="opts">
+          <div class="opt ok"><span class="ol">A</span><span class="ot">NumberFormatException</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">IOException</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">ArrayIndexOutOfBoundsException</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">ClassCastException</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：A</span></div>
+      <div class="exp"><div class="exp-t">解析</div>当 <code>str</code> 不是合法整数字符串（如 "abc"）时，<code>Integer.parseInt()</code> 抛出 <strong>NumberFormatException</strong>（RuntimeException 的子类）。</div>
+    </div>
+
+    <!-- B11 -->
+    <div id="b11" class="q">
+      <div class="qh"><div class="qnum">11</div><div class="qb">
+        <div class="qt">When a subclass defines an instance method with the same return type and signature as a method in its parent, the parent's method is said to be ( ).</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">hidden（隐藏，适用于静态方法）</span></div>
+          <div class="opt ok"><span class="ol">B</span><span class="ot">overridden（覆盖/重写）</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">private</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">overloaded（重载）</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：B</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        实例方法：子类同签名 → <strong>覆盖（overridden）</strong>，运行时动态分派。<br>
+        静态方法：子类同签名 → <strong>隐藏（hidden）</strong>，编译期静态绑定。
+      </div>
+    </div>
+
+    <!-- B12 -->
+    <div id="b12" class="q">
+      <div class="qh"><div class="qnum">12</div><div class="qb">
+        <div class="qt">Which of the below is NOT a valid classification of design pattern?</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">Creational pattern（创建型）</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">Structural pattern（结构型）</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">Behavioural pattern（行为型）</span></div>
+          <div class="opt ok"><span class="ol">D</span><span class="ot">Strategy patterns</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：D</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        GoF 的三大分类：<strong>创建型（Creational）、结构型（Structural）、行为型（Behavioural）</strong>。<br>
+        Strategy 是<strong>行为型中的具体模式</strong>，不是分类名称。
+      </div>
+    </div>
+
+    <!-- B13 -->
+    <div id="b13" class="q">
+      <div class="qh"><div class="qnum">13</div><div class="qb">
+        <div class="qt">Which of the following describes the <strong>Composite pattern</strong> correctly?</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">Builds a complex object step by step using simple objects（Builder 模式）</span></div>
+          <div class="opt ok"><span class="ol">B</span><span class="ot">Used where we need to treat a group of objects in similar way as a single object</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">Hides complexities and provides an interface to the client（Facade 模式）</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">Primarily used to reduce number of objects created（Flyweight 模式）</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：B</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        <strong>组合模式（Composite）</strong>：将对象组织成树形结构，<strong>以统一方式处理单个对象和对象组合</strong>。例如文件系统中，File 和 Folder 都实现同一接口，Folder 可包含 File 和其他 Folder。
+      </div>
+    </div>
+
+    <!-- B14 -->
+    <div id="b14" class="q">
+      <div class="qh"><div class="qnum">14</div><div class="qb">
+        <div class="qt">In order to read and write files in Java, you should import which packages ( ).</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">javax.swing</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">java.util</span></div>
+          <div class="opt ok"><span class="ol">C</span><span class="ot">java.io</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">java.awt</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：C</span></div>
+      <div class="exp"><div class="exp-t">解析</div><code>java.io</code> 包含所有 I/O 相关类：FileInputStream, FileOutputStream, BufferedReader, BufferedWriter, FileReader, FileWriter 等。</div>
+    </div>
+
+    <!-- B15 -->
+    <div id="b15" class="q">
+      <div class="qh"><div class="qnum">15</div><div class="qb">
+        <div class="qt">To read from a character stream, you should use a class that extends which of the following abstract classes?</div>
+        <div class="opts">
+          <div class="opt ok"><span class="ol">A</span><span class="ot">Reader（字符输入流）</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">InputStream（字节输入流）</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">OutputStream（字节输出流）</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">Writer（字符输出流）</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：A</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        Java I/O 四大抽象类：Reader/Writer（字符流），InputStream/OutputStream（字节流）。<br>
+        <strong>读取字符流</strong> → 继承 <code>Reader</code>（如 BufferedReader、InputStreamReader、FileReader）。
+      </div>
+    </div>
+
+    <!-- B16 -->
+    <div id="b16" class="q">
+      <div class="qh"><div class="qnum">16</div><div class="qb">
+        <div class="qt">The subclass of an abstract class must ( ).</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">be abstract AND implement all of the parent's abstract methods</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">implement all of the parent's abstract methods</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">be abstract</span></div>
+          <div class="opt ok"><span class="ol">D</span><span class="ot">be abstract OR implement all of the parent's abstract methods</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：D</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        抽象类的子类二选一：①声明为 abstract（可不实现抽象方法）；②实现父类所有抽象方法成为具体类。两个条件是"或"关系，不是"且"。
+      </div>
+    </div>
+
+    <!-- B17 -->
+    <div id="b17" class="q">
+      <div class="qh"><div class="qnum">17</div><div class="qb">
+        <div class="qt">The lazy instantiation in a singleton pattern creates instance ( ).</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">at compile time</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">at load time（饿汉式）</span></div>
+          <div class="opt ok"><span class="ol">C</span><span class="ot">when required（懒汉式，按需创建）</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">none of above</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：C</span></div>
+      <div class="exp"><div class="exp-t">解析</div>
+        <strong>懒汉式（Lazy Instantiation）</strong>：第一次调用 getInstance() 时才创建实例（按需创建）。<br>
+        <strong>饿汉式（Eager）</strong>：类加载时（at load time）立即创建实例：<code>private static Singleton instance = new Singleton();</code>
+      </div>
+    </div>
+
+    <!-- B18 -->
+    <div id="b18" class="q">
+      <div class="qh"><div class="qnum">18</div><div class="qb">
+        <div class="qt">If a file opened for reading does not exist, which of the following events will occur in Java?</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">A new file will be created.</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">A run-time error will occur.</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">A NullPointerException will be raised.</span></div>
+          <div class="opt ok"><span class="ol">D</span><span class="ot">A FileNotFoundException will be raised.</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：D</span></div>
+      <div class="exp"><div class="exp-t">解析</div><code>FileNotFoundException</code> 是 <code>IOException</code> 的子类，属于 Checked Exception，在尝试打开不存在的文件时抛出。注意：新建文件时（FileOutputStream）若父目录不存在才会失败，并不自动创建。</div>
+    </div>
+
+    <!-- B19 -->
+    <div id="b19" class="q">
+      <div class="qh"><div class="qnum">19</div><div class="qb">
+        <div class="qt">In the JDK library, which one uses singleton design pattern ( ).</div>
+        <div class="opts">
+          <div class="opt"><span class="ol">A</span><span class="ot">Wrapper classes</span></div>
+          <div class="opt ok"><span class="ol">B</span><span class="ot">Calendar classes</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">Event handling frameworks</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">Collections classes</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：B</span></div>
+      <div class="exp"><div class="exp-t">解析</div><code>java.util.Calendar</code> 通过 <code>Calendar.getInstance()</code> 获取实例，构造方法 protected，不能直接 new，是单例/工厂方法模式的典型示例。<code>Runtime</code> 类（<code>Runtime.getRuntime()</code>）也是单例。</div>
+    </div>
+
+    <!-- B20 -->
+    <div id="b20" class="q">
+      <div class="qh"><div class="qnum">20</div><div class="qb">
+        <div class="qt">What is the signature of the method specified in the Java ActionListener interface?</div>
+        <div class="opts">
+          <div class="opt ok"><span class="ol">A</span><span class="ot">void actionPerformed(ActionEvent ae)</span></div>
+          <div class="opt"><span class="ol">B</span><span class="ot">void actionPerformed(ActionListener al)</span></div>
+          <div class="opt"><span class="ol">C</span><span class="ot">void actionListener(ActionEvent ae)</span></div>
+          <div class="opt"><span class="ol">D</span><span class="ot">void actionEvent(ActionPerformed ap)</span></div>
+        </div>
+      </div></div>
+      <div class="q-ar"><span class="abadge">✓ 答案：A</span></div>
+      <div class="exp"><div class="exp-t">解析</div><code>java.awt.event.ActionListener</code> 接口只有一个方法：<code>void actionPerformed(ActionEvent e)</code>。当按钮被点击等动作发生时，此方法被调用，参数是 <code>ActionEvent</code> 对象。</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- B ESSAY -->
+    <div class="sec-hd">
+      <span class="sec-tag" style="background:rgba(255,166,87,.13);color:var(--orange);border-color:rgba(255,166,87,.3);">B卷 · 二</span>
+      <span class="sec-title">问答题</span>
+      <span class="sec-meta">1题 · 20分</span>
+    </div>
+
+    <div id="bp1" class="q pq">
+      <div class="qh"><div class="qnum" style="background:rgba(255,166,87,.1);color:var(--orange);">1</div><div class="qb">
+        <div class="qt">Describe two design patterns that are used in Java GUI with class diagram. (20 points)</div>
+      </div></div>
+      <div class="q-ar"><span class="abadge" style="background:rgba(255,166,87,.1);border-color:rgba(255,166,87,.3);color:var(--orange);">20分</span></div>
+      <div class="exp">
+        <div class="exp-t">设计模式一：Observer Pattern（观察者模式 / 事件监听）</div>
+        Java GUI 事件处理是 Observer 模式的经典应用。组件（如 JButton）是被观察者（Subject），事件监听器是观察者（Observer），按钮被点击时通知所有注册的监听器。
+        <div class="cb"><span class="cmt">// UML 简图：</span>
+<span class="cmt">// ┌──────────────────┐           ┌──────────────────────────────────┐</span>
+<span class="cmt">// │  JButton (Subject)│           │  &lt;&lt;interface&gt;&gt; ActionListener    │</span>
+<span class="cmt">// │------------------│           │  + actionPerformed(ActionEvent)  │</span>
+<span class="cmt">// │-listeners:List   │─────uses──▶│                                  │</span>
+<span class="cmt">// │+addActionListener│           └───────────────┬──────────────────┘</span>
+<span class="cmt">// │+removeListener() │                           │ implements</span>
+<span class="cmt">// └──────────────────┘                           ▼</span>
+<span class="cmt">//                                   ConcreteListener</span>
+<span class="cmt">//                                   + actionPerformed(ActionEvent e)</span>
+
+<span class="cmt">// 代码示例</span>
+<span class="kw">class</span> <span class="cls">MyListener</span> <span class="kw">implements</span> <span class="cls">ActionListener</span> {
+    <span class="kw">public void</span> <span class="fn">actionPerformed</span>(<span class="cls">ActionEvent</span> e) {
+        System.out.println(<span class="str">"Button clicked!"</span>);
+    }
+}
+<span class="cls">JButton</span> btn = <span class="kw">new</span> <span class="cls">JButton</span>(<span class="str">"Click"</span>);
+btn.<span class="fn">addActionListener</span>(<span class="kw">new</span> <span class="cls">MyListener</span>()); <span class="cmt">// 注册观察者</span></div>
+
+        <div class="exp-t" style="margin-top:16px">设计模式二：Strategy Pattern（策略模式 / 布局管理器）</div>
+        Java GUI 的 LayoutManager 是 Strategy 模式的实现。Container（容器）持有一个 LayoutManager 策略，可在运行时动态替换不同的布局算法。
+        <div class="cb"><span class="cmt">// UML 简图：</span>
+<span class="cmt">// ┌───────────────────┐               ┌──────────────────────────┐</span>
+<span class="cmt">// │Container (Context)│ ─────uses────▶│ &lt;&lt;interface&gt;&gt; LayoutMgr  │</span>
+<span class="cmt">// │-------------------│               │ + layoutContainer(Cont.) │</span>
+<span class="cmt">// │-layout:LayoutMgr  │               │ + preferredLayoutSize()  │</span>
+<span class="cmt">// │+setLayout(mgr)    │               └────────────┬─────────────┘</span>
+<span class="cmt">// │+add(Component)    │                            │ implements</span>
+<span class="cmt">// └───────────────────┘               ┌────────────┼────────────┐</span>
+<span class="cmt">//                               FlowLayout   BorderLayout  GridLayout</span>
+
+<span class="cmt">// 代码示例：运行时替换策略</span>
+<span class="cls">JPanel</span> panel = <span class="kw">new</span> <span class="cls">JPanel</span>();
+panel.<span class="fn">setLayout</span>(<span class="kw">new</span> <span class="cls">BorderLayout</span>()); <span class="cmt">// 切换为 BorderLayout 策略</span>
+panel.<span class="fn">setLayout</span>(<span class="kw">new</span> <span class="cls">GridLayout</span>(<span class="num">3</span>,<span class="num">3</span>)); <span class="cmt">// 切换为 GridLayout 策略</span></div>
+
+        <strong>两个模式对比：</strong>Observer 解决"事件通知"问题（谁在监听谁），Strategy 解决"算法切换"问题（如何布局）。两者都体现了针对接口编程的 OOP 原则。
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- B PROGRAMMING -->
+    <div class="sec-hd">
+      <span class="sec-tag" style="background:rgba(188,140,255,.13);color:var(--purple);border-color:rgba(188,140,255,.3);">B卷 · 三</span>
+      <span class="sec-title">编程、设计题</span>
+      <span class="sec-meta">2题 · 40分</span>
+    </div>
+
+    <!-- BP2: Person/Student/Employee -->
+    <div id="bp2" class="q pq">
+      <div class="qh"><div class="qnum" style="background:rgba(188,140,255,.1);color:var(--purple);">1</div><div class="qb">
+        <div class="qt">Use the UML class diagram (Person ← Student / Employee) to create Java classes. Person.display() prints name; Student.display() prints name+ID; Employee.display() prints name+salary; hasSameName(Person) compares names; isEqual(Student) uses hasSameName and also compares ID. (20 points)</div>
+      </div></div>
+      <div class="q-ar"><span class="abadge" style="background:rgba(188,140,255,.1);border-color:rgba(188,140,255,.3);color:var(--purple);">20分</span></div>
+      <div class="exp"><div class="exp-t">参考代码（完整实现）</div>
+        <div class="cb"><span class="cmt">// Person.java</span>
+<span class="kw">public class</span> <span class="cls">Person</span> {
+    <span class="kw">private</span> String name;
+
+    <span class="kw">public</span> <span class="cls">Person</span>() { <span class="kw">this</span>.name = <span class="str">""</span>; }
+    <span class="kw">public</span> <span class="cls">Person</span>(String name) { <span class="kw">this</span>.name = name; }
+
+    <span class="kw">public void</span>   <span class="fn">setName</span>(String name) { <span class="kw">this</span>.name = name; }
+    <span class="kw">public</span> String <span class="fn">getName</span>() { <span class="kw">return</span> name; }
+
+    <span class="kw">public void</span> <span class="fn">display</span>() {
+        System.out.println(<span class="str">"Name: "</span> + name);
+    }
+
+    <span class="kw">public boolean</span> <span class="fn">hasSameName</span>(<span class="cls">Person</span> p) {
+        <span class="kw">return this</span>.name.equals(p.<span class="fn">getName</span>());
+    }
+}
+
+<span class="cmt">// Student.java</span>
+<span class="kw">public class</span> <span class="cls">Student</span> <span class="kw">extends</span> <span class="cls">Person</span> {
+    <span class="kw">private int</span> studentID;
+
+    <span class="kw">public</span> <span class="cls">Student</span>() { <span class="kw">super</span>(); }
+    <span class="kw">public</span> <span class="cls">Student</span>(String name, <span class="kw">int</span> id) { <span class="kw">super</span>(name); <span class="kw">this</span>.studentID = id; }
+
+    <span class="kw">public void</span>  <span class="fn">setID</span>(<span class="kw">int</span> id) { <span class="kw">this</span>.studentID = id; }
+    <span class="kw">public int</span>   <span class="fn">getID</span>() { <span class="kw">return</span> studentID; }
+
+    <span class="kw">@Override</span>
+    <span class="kw">public void</span> <span class="fn">display</span>() {
+        System.out.println(<span class="str">"Name: "</span> + <span class="fn">getName</span>() + <span class="str">", ID: "</span> + studentID);
+    }
+
+    <span class="kw">public boolean</span> <span class="fn">isEqual</span>(<span class="cls">Student</span> s) {
+        <span class="kw">return</span> <span class="fn">hasSameName</span>(s) &amp;&amp; <span class="kw">this</span>.studentID == s.<span class="fn">getID</span>();
+    }
+}
+
+<span class="cmt">// Employee.java</span>
+<span class="kw">public class</span> <span class="cls">Employee</span> <span class="kw">extends</span> <span class="cls">Person</span> {
+    <span class="kw">private double</span> salary;
+
+    <span class="kw">public</span> <span class="cls">Employee</span>(String name, <span class="kw">double</span> salary) {
+        <span class="kw">super</span>(name);
+        <span class="kw">this</span>.salary = salary;
+    }
+
+    <span class="kw">public void</span>   <span class="fn">setSalary</span>(<span class="kw">double</span> salary) { <span class="kw">this</span>.salary = salary; }
+    <span class="kw">public double</span> <span class="fn">getSalary</span>() { <span class="kw">return</span> salary; }
+
+    <span class="kw">@Override</span>
+    <span class="kw">public void</span> <span class="fn">display</span>() {
+        System.out.println(<span class="str">"Name: "</span> + <span class="fn">getName</span>() + <span class="str">", Salary: "</span> + salary);
+    }
+}</div>
+      </div>
+    </div>
+
+    <!-- BP3: File reading + operations -->
+    <div id="bp3" class="q pq">
+      <div class="qh"><div class="qnum" style="background:rgba(188,140,255,.1);color:var(--purple);">2</div><div class="qb">
+        <div class="qt">(A) Read from students.txt &amp; employees.txt; (B) Find duplicate students; (C) Find students &amp; employees with same name; (D) Print top 3 employees by salary. (20 points)</div>
+      </div></div>
+      <div class="q-ar"><span class="abadge" style="background:rgba(188,140,255,.1);border-color:rgba(188,140,255,.3);color:var(--purple);">20分</span></div>
+      <div class="exp"><div class="exp-t">参考代码（完整实现 A–D）</div>
+        <div class="cb"><span class="kw">import</span> java.io.*;
+<span class="kw">import</span> java.util.*;
+
+<span class="kw">public class</span> <span class="cls">MainProgram</span> {
+
+    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) <span class="kw">throws</span> IOException {
+        List&lt;<span class="cls">Student</span>&gt;  students  = <span class="kw">new</span> ArrayList&lt;&gt;();
+        List&lt;<span class="cls">Employee</span>&gt; employees = <span class="kw">new</span> ArrayList&lt;&gt;();
+
+        <span class="cmt">// ─── (A) 读取 students.txt ───────────────────────────────────</span>
+        <span class="cls">BufferedReader</span> br = <span class="kw">new</span> <span class="cls">BufferedReader</span>(<span class="kw">new</span> <span class="cls">FileReader</span>(<span class="str">"students.txt"</span>));
+        String line;
+        <span class="kw">while</span> ((line = br.readLine()) != <span class="kw">null</span>) {
+            String[] p = line.trim().split(<span class="str">"\\s+"</span>);
+            <span class="kw">if</span> (p.length &gt;= <span class="num">2</span>)
+                students.add(<span class="kw">new</span> <span class="cls">Student</span>(p[<span class="num">0</span>], Integer.parseInt(p[<span class="num">1</span>])));
+        }
+        br.close();
+
+        <span class="cmt">// 读取 employees.txt</span>
+        br = <span class="kw">new</span> <span class="cls">BufferedReader</span>(<span class="kw">new</span> <span class="cls">FileReader</span>(<span class="str">"employees.txt"</span>));
+        <span class="kw">while</span> ((line = br.readLine()) != <span class="kw">null</span>) {
+            String[] p = line.trim().split(<span class="str">"\\s+"</span>);
+            <span class="kw">if</span> (p.length &gt;= <span class="num">2</span>)
+                employees.add(<span class="kw">new</span> <span class="cls">Employee</span>(p[<span class="num">0</span>], Double.parseDouble(p[<span class="num">1</span>])));
+        }
+        br.close();
+
+        <span class="cmt">// ─── (B) 查找重复学生记录（name 和 ID 均相同）─────────────────</span>
+        System.out.println(<span class="str">"=== Duplicate Students ==="</span>);
+        <span class="kw">boolean</span> found = <span class="kw">false</span>;
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; students.size(); i++) {
+            <span class="kw">for</span> (<span class="kw">int</span> j = i + <span class="num">1</span>; j &lt; students.size(); j++) {
+                <span class="kw">if</span> (students.get(i).isEqual(students.get(j))) {
+                    System.out.print(<span class="str">"Duplicate: "</span>);
+                    students.get(i).display();
+                    found = <span class="kw">true</span>;
+                }
+            }
+        }
+        <span class="kw">if</span> (!found) System.out.println(<span class="str">"No exact duplicates found."</span>);
+
+        <span class="cmt">// ─── (C) 查找同名的学生和员工 ─────────────────────────────────</span>
+        System.out.println(<span class="str">"\n=== Students &amp; Employees with Same Name ==="</span>);
+        <span class="kw">for</span> (<span class="cls">Student</span>  s : students) {
+            <span class="kw">for</span> (<span class="cls">Employee</span> e : employees) {
+                <span class="kw">if</span> (s.hasSameName(e)) {
+                    System.out.println(<span class="str">"Match found:"</span>);
+                    s.display(); e.display();
+                }
+            }
+        }
+        <span class="cmt">// 预期输出: Shirley（学生 751）和 Shirley（员工 7500）同名</span>
+
+        <span class="cmt">// ─── (D) 薪资最高的 3 名员工 ──────────────────────────────────</span>
+        System.out.println(<span class="str">"\n=== Top 3 Employees by Salary ==="</span>);
+        employees.sort((a, b) -&gt; Double.compare(b.getSalary(), a.getSalary()));
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; Math.min(<span class="num">3</span>, employees.size()); i++) {
+            employees.get(i).display();
+        }
+        <span class="cmt">// 预期: Alex(15000), Steven(12800), Vivian(12300)</span>
+    }
+}</div>
+        <strong>数据说明</strong>：给定数据中 Shirley 在 students.txt（ID=751）和 employees.txt（salary=7500）均出现，会被 C 检测到。Top 3 薪资：Alex 15000 &gt; Steven 12800 &gt; Vivian 12300。
+      </div>
+    </div>
+
+  </div><!-- end paper-b -->
+
+  </main>
+</div>
+
+<button class="stb" id="stb" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+function switchPaper(id, btn) {
+  document.querySelectorAll('.paper').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('paper-' + id).classList.add('active');
+  document.getElementById('card-a').style.display = id === 'a' ? '' : 'none';
+  document.getElementById('card-b').style.display = id === 'b' ? '' : 'none';
+  btn.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+window.addEventListener('scroll', () => {
+  document.getElementById('stb').classList.toggle('vis', window.scrollY > 300);
+});
+// Init sidebar display
+document.getElementById('card-b').style.display = 'none';
+</script>
+</body>
+</html>

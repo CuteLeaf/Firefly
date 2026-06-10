@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>面向对象程序设计导论 2018-2019 A/B卷 答案解析</title>
+<link rel="icon" href="data:,">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d1117;--surf:#161b22;--surf2:#1c2333;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;--purple:#bc8cff;--orange:#ffa657;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:"Noto Sans SC","Microsoft YaHei",Arial,sans-serif;font-size:14.5px;line-height:1.7}
+.header{background:var(--surf);border-bottom:1px solid var(--border);padding:18px 0;position:sticky;top:0;z-index:100}
+.h-inner{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.h-title{font-family:"Noto Serif SC","SimSun",serif;font-size:19px;font-weight:700}
+.h-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}.tab{padding:7px 18px;border-radius:8px;border:1px solid var(--border);background:var(--surf2);color:var(--muted);cursor:pointer;font-weight:600}.tab:hover{border-color:var(--accent);color:var(--text)}.tab.active{background:var(--accent);border-color:var(--accent);color:white}
+.layout{width:100%;max-width:1180px;margin:0 auto;padding:28px 20px 80px;display:grid;grid-template-columns:270px minmax(0,1fr);gap:24px;align-items:start}
+.layout main,.paper,.q,.exp,.cb{min-width:0}
+.sidebar{position:sticky;top:82px}.card{background:var(--surf);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px}.card-hd{padding:11px 16px;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--muted);display:flex;gap:8px;align-items:center}.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green)}.card-bd{padding:14px 16px}.sec-lbl{font-size:11px;color:var(--muted);font-weight:700;margin:10px 0 6px}.ans-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.ac{display:flex;flex-direction:column;align-items:center;text-decoration:none;padding:6px 3px;border:1px solid var(--border);border-radius:7px;background:var(--surf2);transition:.15s}.ac:hover{border-color:var(--accent);transform:translateY(-1px)}.ac .n{font:10px "JetBrains Mono",Consolas,monospace;color:var(--muted)}.ac .v{font:700 13px "JetBrains Mono",Consolas,monospace;color:var(--green)}
+.paper{display:none}.paper.active{display:block}.sec-hd{display:flex;align-items:center;gap:12px;margin:0 0 18px;padding-bottom:12px;border-bottom:1px solid var(--border)}.sec-tag{font-size:11px;font-weight:700;letter-spacing:.08em;padding:4px 11px;border-radius:20px;background:rgba(88,166,255,.13);color:var(--accent);border:1px solid rgba(88,166,255,.3)}.sec-title{font-family:"Noto Serif SC","SimSun",serif;font-size:17px;font-weight:700}.sec-meta{margin-left:auto;font-size:11px;color:var(--muted)}
+.q{background:var(--surf);border:1px solid var(--border);border-radius:11px;margin-bottom:12px;overflow:hidden}.q:target{border-color:var(--accent);box-shadow:0 0 0 3px rgba(88,166,255,.12)}.qh{padding:13px 16px 9px;display:flex;align-items:flex-start;gap:11px}.qnum{min-width:30px;height:30px;border-radius:7px;background:var(--surf2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font:700 11px "JetBrains Mono",Consolas,monospace;color:var(--muted);flex-shrink:0}.qb{flex:1}.qt{color:var(--text);line-height:1.6;white-space:pre-wrap}.opts{display:flex;flex-direction:column;gap:5px;margin-top:10px}.opt{display:flex;align-items:flex-start;gap:9px;padding:7px 11px;border-radius:7px;border:1px solid var(--border);background:var(--surf2);font-size:13px}.opt.ok{background:rgba(63,185,80,.07);border-color:rgba(63,185,80,.28)}.opt.ok .ol{background:var(--green);color:white;border-color:var(--green)}.ol{min-width:20px;height:20px;border-radius:4px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font:700 10px "JetBrains Mono",Consolas,monospace;color:var(--muted);flex-shrink:0;margin-top:1px}.ot{flex:1;line-height:1.5;color:var(--muted);white-space:pre-wrap}.opt.ok .ot{color:var(--text)}.q-ar{display:flex;align-items:center;gap:8px;padding:0 16px 11px}.abadge{display:inline-flex;align-items:center;gap:5px;padding:3px 11px;border-radius:20px;background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.32);font-size:12px;font-weight:700;color:var(--green)}.abadge.warn{background:rgba(210,153,34,.12);border-color:rgba(210,153,34,.35);color:var(--yellow)}.sbadge{padding:3px 9px;border-radius:20px;background:var(--surf2);border:1px solid var(--border);font-size:11px;color:var(--muted)}
+.prompt{margin-top:9px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surf2);color:#c9d1d9;white-space:pre-wrap;font-size:13px}.prompt-t{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}.exp{margin:0 16px 14px;padding:13px 15px;background:rgba(88,166,255,.04);border:1px solid rgba(88,166,255,.14);border-radius:8px;color:#c9d1d9}.exp-t{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--accent);margin-bottom:7px}.exp p{margin:6px 0}.exp ul{padding-left:18px;margin:6px 0}.exp li{margin:3px 0}.cb{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:13px 16px;font:12px/1.65 "JetBrains Mono",Consolas,monospace;color:#c9d1d9;margin:8px 0;overflow:auto;white-space:pre}.note{color:var(--yellow);font-weight:600}.rt{color:var(--green);font-weight:600}.wr{color:var(--red);font-weight:600}.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:24px 0}.stb{position:fixed;bottom:26px;right:26px;width:42px;height:42px;border-radius:11px;background:var(--accent);border:0;color:white;cursor:pointer;font-size:17px;box-shadow:0 4px 18px rgba(88,166,255,.4);opacity:0;transition:.2s}.stb.vis{opacity:1}.stb:hover{transform:translateY(-3px)}
+@media(max-width:820px){.layout{grid-template-columns:1fr}.sidebar{position:static}.ans-grid{grid-template-columns:repeat(10,1fr)}.sec-hd{align-items:flex-start;flex-wrap:wrap}.sec-meta{margin-left:0}}
+</style>
+</head>
+<body>
+<header class="header"><div class="h-inner"><div><div class="h-title">面向对象程序设计导论 2018-2019 A/B卷 答案解析</div><div class="h-sub">四川大学 · 期末考试答案解析 · 参照 2020-2021 版式整理</div></div><div class="tabs"><button class="tab active" onclick="switchPaper('a',this)">2018-2019 A 卷</button>
+<button class="tab" onclick="switchPaper('b',this)">2018-2019 B 卷</button></div></div></header>
+<div class="layout"><aside class="sidebar">
+        <div id="card-a" class="card" style="display:">
+          <div class="card-hd"><span class="dot"></span>2018-2019 A 卷 · 快速对答案</div>
+          <div class="card-bd">
+            <div class="sec-lbl">选择题</div>
+            <div class="ans-grid"><a href="#a1" class="ac"><span class="n">1</span><span class="v">A</span></a>
+<a href="#a2" class="ac"><span class="n">2</span><span class="v">D</span></a>
+<a href="#a3" class="ac"><span class="n">3</span><span class="v">D</span></a>
+<a href="#a4" class="ac"><span class="n">4</span><span class="v">C</span></a>
+<a href="#a5" class="ac"><span class="n">5</span><span class="v">B</span></a>
+<a href="#a6" class="ac"><span class="n">6</span><span class="v">B</span></a>
+<a href="#a7" class="ac"><span class="n">7</span><span class="v">B</span></a>
+<a href="#a8" class="ac"><span class="n">8</span><span class="v">C</span></a>
+<a href="#a9" class="ac"><span class="n">9</span><span class="v">D</span></a>
+<a href="#a10" class="ac"><span class="n">10</span><span class="v">D</span></a>
+<a href="#a11" class="ac"><span class="n">11</span><span class="v">C</span></a>
+<a href="#a12" class="ac"><span class="n">12</span><span class="v">D</span></a>
+<a href="#a13" class="ac"><span class="n">13</span><span class="v">D</span></a>
+<a href="#a14" class="ac"><span class="n">14</span><span class="v">C</span></a>
+<a href="#a15" class="ac"><span class="n">15</span><span class="v">C</span></a>
+<a href="#a16" class="ac"><span class="n">16</span><span class="v">A</span></a>
+<a href="#a17" class="ac"><span class="n">17</span><span class="v">B</span></a>
+<a href="#a18" class="ac"><span class="n">18</span><span class="v">C</span></a>
+<a href="#a19" class="ac"><span class="n">19</span><span class="v">D</span></a>
+<a href="#a20" class="ac"><span class="n">20</span><span class="v">A</span></a>
+<a href="#a21" class="ac"><span class="n">21</span><span class="v">C</span></a>
+<a href="#a22" class="ac"><span class="n">22</span><span class="v">D</span></a>
+<a href="#a23" class="ac"><span class="n">23</span><span class="v">B</span></a>
+<a href="#a24" class="ac"><span class="n">24</span><span class="v">C</span></a>
+<a href="#a25" class="ac"><span class="n">25</span><span class="v">C</span></a>
+<a href="#a26" class="ac"><span class="n">26</span><span class="v">D</span></a>
+<a href="#a27" class="ac"><span class="n">27</span><span class="v">D</span></a>
+<a href="#a28" class="ac"><span class="n">28</span><span class="v">C</span></a>
+<a href="#a29" class="ac"><span class="n">29</span><span class="v">A</span></a>
+<a href="#a30" class="ac"><span class="n">30</span><span class="v">B</span></a></div>
+            <div class="sec-lbl">主观题</div>
+            <div class="ans-grid"><a href="#as1" class="ac" style="grid-column:span 5"><span class="n">主观题 1</span><span class="v" style="font-size:10px">详解</span></a>
+<a href="#as2" class="ac" style="grid-column:span 5"><span class="n">主观题 2</span><span class="v" style="font-size:10px">详解</span></a></div>
+          </div>
+        </div>
+        <div id="card-b" class="card" style="display:none">
+          <div class="card-hd"><span class="dot"></span>2018-2019 B 卷 · 快速对答案</div>
+          <div class="card-bd">
+            <div class="sec-lbl">选择题</div>
+            <div class="ans-grid"><a href="#b1" class="ac"><span class="n">1</span><span class="v">B</span></a>
+<a href="#b2" class="ac"><span class="n">2</span><span class="v">A</span></a>
+<a href="#b3" class="ac"><span class="n">3</span><span class="v">C</span></a>
+<a href="#b4" class="ac"><span class="n">4</span><span class="v">D</span></a>
+<a href="#b5" class="ac"><span class="n">5</span><span class="v">题误</span></a>
+<a href="#b6" class="ac"><span class="n">6</span><span class="v">B</span></a>
+<a href="#b7" class="ac"><span class="n">7</span><span class="v">D</span></a>
+<a href="#b8" class="ac"><span class="n">8</span><span class="v">B</span></a>
+<a href="#b9" class="ac"><span class="n">9</span><span class="v">A</span></a>
+<a href="#b10" class="ac"><span class="n">10</span><span class="v">D</span></a>
+<a href="#b11" class="ac"><span class="n">11</span><span class="v">D</span></a>
+<a href="#b12" class="ac"><span class="n">12</span><span class="v">C</span></a>
+<a href="#b13" class="ac"><span class="n">13</span><span class="v">B</span></a>
+<a href="#b14" class="ac"><span class="n">14</span><span class="v">A</span></a>
+<a href="#b15" class="ac"><span class="n">15</span><span class="v">B</span></a></div>
+            <div class="sec-lbl">主观题</div>
+            <div class="ans-grid"><a href="#bs1" class="ac" style="grid-column:span 5"><span class="n">主观题 1</span><span class="v" style="font-size:10px">详解</span></a>
+<a href="#bs2" class="ac" style="grid-column:span 5"><span class="n">主观题 2</span><span class="v" style="font-size:10px">详解</span></a></div>
+          </div>
+        </div></aside><main>
+        <div id="paper-a" class="paper active">
+          <div class="sec-hd"><span class="sec-tag">2018-2019 A 卷</span><span class="sec-title">单项选择题</span><span class="sec-meta">30 题</span></div>
+          
+            <div id="a1" class="q">
+              <div class="qh"><div class="qnum">1</div><div class="qb"><div class="qt">The term wrapper classes refers to〔 〕</div><div class="opts"><div class="opt ok"><span class="ol">A</span><span class="ot">a collection of Java classes that &quot;wrap&quot; Java primitive types</span></div><div class="opt"><span class="ol">B</span><span class="ot">a collection of Java classes that contain other Java classes</span></div><div class="opt"><span class="ol">C</span><span class="ot">the Java classes that contain at least two data fields</span></div><div class="opt"><span class="ol">D</span><span class="ot">the Java classes that contain themselves</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：A</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>包装类用于把基本类型包装成引用类型对象，如 Integer、Double。</p></div>
+            </div>
+            <div id="a2" class="q">
+              <div class="qh"><div class="qnum">2</div><div class="qb"><div class="qt">A difference between the methods print and println of the class java. io. Print Writer is that
+〔 〕</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">println inserts a new line at the beginning of its output, but print does not</span></div><div class="opt"><span class="ol">B</span><span class="ot">print inserts a new line at the beginning of its output, but println does not</span></div><div class="opt"><span class="ol">C</span><span class="ot">print appends a new line to the end of its output, but println does not</span></div><div class="opt ok"><span class="ol">D</span><span class="ot">println appends a new line to the end of its output, but print does not</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：D</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>println 在输出末尾追加换行，print 不追加。</p></div>
+            </div>
+            <div id="a3" class="q">
+              <div class="qh"><div class="qnum">3</div><div class="qb"><div class="qt">Consider the following Java program segment. 〔 〕
+int x = 10;
+int y = 11;
+System. out. Println (x + &quot;0&quot; + y);
+Which of the following statements is true about the program segment?</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">The output caused by the code will be 21.</span></div><div class="opt"><span class="ol">B</span><span class="ot">The output caused by the code will be 10 0 11.</span></div><div class="opt"><span class="ol">C</span><span class="ot">The code will cause a compilation error.</span></div><div class="opt ok"><span class="ol">D</span><span class="ot">The output caused by the code will be 10011.</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：D</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>从遇到字符串开始执行字符串连接，得到 10011。</p></div>
+            </div>
+            <div id="a4" class="q">
+              <div class="qh"><div class="qnum">4</div><div class="qb"><div class="qt">Suppose x, y, and z are variables of type int. Consider the following three conditions:
+I. (x == y) &amp;&amp; (y == z) &amp;&amp; (x == z)
+II. (x == y) || (y == z) &amp;&amp; (x == z)
+III. (x - y) * (x - z) * (y - z) == 0
+Which of these conditions is (are) always true if (x == y) is true? 〔 〕</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">I. Only</span></div><div class="opt"><span class="ol">B</span><span class="ot">II. Only</span></div><div class="opt ok"><span class="ol">C</span><span class="ot">II. and III. only</span></div><div class="opt"><span class="ol">D</span><span class="ot">I. and II. and III</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：C</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>II 因 x==y 为真而成立；III 因 x-y 为 0 而成立；I 还要求 y==z。</p></div>
+            </div>
+            <div id="a5" class="q">
+              <div class="qh"><div class="qnum">5</div><div class="qb"><div class="qt">All Java exception classes are derived from the class〔 〕</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">java.lang.Error</span></div><div class="opt ok"><span class="ol">B</span><span class="ot">java.lang.Throwable</span></div><div class="opt"><span class="ol">C</span><span class="ot">java.lang.RuntimeException</span></div><div class="opt"><span class="ol">D</span><span class="ot">java.io.IOException</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：B</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>Error 与 Exception 都继承自 Throwable。</p></div>
+            </div>
+            <div id="a6" class="q">
+              <div class="qh"><div class="qnum">6</div><div class="qb"><div class="qt">Given the following code, what value will be output by the last statement? 〔 〕
+StringTokenizer st = new StringTokenizer(&quot;there are apples;bananas&quot;, &quot;;&quot;);
+String s;
+int count = 0;
+while (st.hasMoreTokens()) {
+s = st.nextToken();
+++count;
+}
+stdOut.println(count);</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">1</span></div><div class="opt ok"><span class="ol">B</span><span class="ot">2</span></div><div class="opt"><span class="ol">C</span><span class="ot">3</span></div><div class="opt"><span class="ol">D</span><span class="ot">4</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：B</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>用 ; 分隔后有两个 token。</p></div>
+            </div>
+            <div id="a7" class="q">
+              <div class="qh"><div class="qnum">7</div><div class="qb"><div class="qt">After a typical debugger encounters a breakpoint, the programmer using the debugger
+may perform which of the following actions? 〔 〕
+I.Examine the values of variables in the halted program
+II.Execute the current line
+III.Resume execution of the halted program</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">I only</span></div><div class="opt ok"><span class="ol">B</span><span class="ot">I, II, and III</span></div><div class="opt"><span class="ol">C</span><span class="ot">I and II only</span></div><div class="opt"><span class="ol">D</span><span class="ot">III only</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：B</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>可查看变量、执行当前行、继续运行。</p></div>
+            </div>
+            <div id="a8" class="q">
+              <div class="qh"><div class="qnum">8</div><div class="qb"><div class="qt">Consider the following method.
+public int multiply(int n) {
+if (n == 0)
+return 1;
+else if (n % 2 == 1)
+return n;
+else
+return n * multiply(n - 2);
+}
+What will be returned by a call to multiply(6)? 〔 〕</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">1</span></div><div class="opt"><span class="ol">B</span><span class="ot">8</span></div><div class="opt ok"><span class="ol">C</span><span class="ot">48</span></div><div class="opt"><span class="ol">D</span><span class="ot">642</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：C</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>6*4*2*multiply(0)=48。</p></div>
+            </div>
+            <div id="a9" class="q">
+              <div class="qh"><div class="qnum">9</div><div class="qb"><div class="qt">Which of the following statements is (are) true about the use of an asterisk (*) in a Java
+import statement? 〔 〕
+I.It does not incur run-time overhead.
+II.It can be used to import multiple packages with a single statement.
+III.It can be used to import multiple classes with a single statement.</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">III only</span></div><div class="opt"><span class="ol">B</span><span class="ot">I, II, and III</span></div><div class="opt"><span class="ol">C</span><span class="ot">I only</span></div><div class="opt ok"><span class="ol">D</span><span class="ot">I and III only</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：D</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>I 和 III 正确；* 不能一次导入多个包。</p></div>
+            </div>
+            <div id="a10" class="q">
+              <div class="qh"><div class="qnum">10</div><div class="qb"><div class="qt">Consider the following Java program segment. 〔 〕
+import java.io.*;
+public class SomeClass{
+public void x() new IOException{
+throw new IOException(&quot;Exception from x&quot;);
+}
+public void y(){
+
+
+x();
+}
+}
+Which of the following is true concerning the definitions for the methods x and y?</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">x has an illegal definition, but y has a legal definition.</span></div><div class="opt"><span class="ol">B</span><span class="ot">Neither x nor y has a legal definition.</span></div><div class="opt"><span class="ol">C</span><span class="ot">Both x and y have legal definitions.</span></div><div class="opt ok"><span class="ol">D</span><span class="ot">x has a legal definition, but y has an illegal definition.</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：D</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>x 若声明 throws IOException 是合法的；y 调用 x 却未捕获/声明 checked exception，非法。</p></div>
+            </div>
+            <div id="a11" class="q">
+              <div class="qh"><div class="qnum">11</div><div class="qb"><div class="qt">Which package does not need to be explicitly imported into a Java program? 〔 〕</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">java.applet</span></div><div class="opt"><span class="ol">B</span><span class="ot">java.io</span></div><div class="opt ok"><span class="ol">C</span><span class="ot">java.lang</span></div><div class="opt"><span class="ol">D</span><span class="ot">java.awt</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：C</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>java.lang 默认自动导入。</p></div>
+            </div>
+            <div id="a12" class="q">
+              <div class="qh"><div class="qnum">12</div><div class="qb"><div class="qt">In a UML class diagram&#x27;s representation of a class, the top, middle, and lower
+rectangular compartments respectively describe the _____ of the class. 〔 〕</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">name, methods, and constants</span></div><div class="opt"><span class="ol">B</span><span class="ot">attributes, methods, and constants</span></div><div class="opt"><span class="ol">C</span><span class="ot">attributes, methods, and name</span></div><div class="opt ok"><span class="ol">D</span><span class="ot">name, attributes, and methods</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：D</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>从上到下分别是类名、属性、方法。</p></div>
+            </div>
+            <div id="a13" class="q">
+              <div class="qh"><div class="qnum">13</div><div class="qb"><div class="qt">A collection typically models a _____ relationship. 〔 〕</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">zero-to-one</span></div><div class="opt"><span class="ol">B</span><span class="ot">one-to-one</span></div><div class="opt"><span class="ol">C</span><span class="ot">many-to-many</span></div><div class="opt ok"><span class="ol">D</span><span class="ot">one-to-many</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：D</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>集合通常表示一个对象关联多个元素的一对多关系。</p></div>
+            </div>
+            <div id="a14" class="q">
+              <div class="qh"><div class="qnum">14</div><div class="qb"><div class="qt">Which of the following is true about association and aggregation in UML class diagrams?
+〔 〕</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">Association is a special form of aggregation.</span></div><div class="opt"><span class="ol">B</span><span class="ot">Association and aggregation have no meaningful relationship.</span></div><div class="opt ok"><span class="ol">C</span><span class="ot">Aggregation is a special form of association.</span></div><div class="opt"><span class="ol">D</span><span class="ot">Association is the opposite of aggregation.</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：C</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>聚合是关联的一种特殊形式。</p></div>
+            </div>
+            <div id="a15" class="q">
+              <div class="qh"><div class="qnum">15</div><div class="qb"><div class="qt">Consider the following Java program segment. 〔 〕
+import java.io.*;
+public class Test {
+public Test( ) {
+System.out.println(&quot;default test&quot;);
+}
+public Test( int i ) {
+System.out.println(&quot;non-default test&quot;);
+}
+
+
+public static void main(String[] args) {
+Test t = new Test(2);
+}
+}
+Which of the following will be output during execution of the program segment?</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">The line of text &quot;default test&quot; followed by the line of text &quot;non-default&quot;</span></div><div class="opt"><span class="ol">B</span><span class="ot">The line of text &quot;non-default test&quot; followed by the line of text &quot;default&quot;</span></div><div class="opt ok"><span class="ol">C</span><span class="ot">The line of text &quot;non-default test&quot;</span></div><div class="opt"><span class="ol">D</span><span class="ot">The line of text &quot;default test&quot;</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：C</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>只调用带 int 参数的构造器，输出 non-default test。</p></div>
+            </div>
+            <div id="a16" class="q">
+              <div class="qh"><div class="qnum">16</div><div class="qb"><div class="qt">Which is the Java keyword used to denote a class method? 〔 〕</div><div class="opts"><div class="opt ok"><span class="ol">A</span><span class="ot">static</span></div><div class="opt"><span class="ol">B</span><span class="ot">class</span></div><div class="opt"><span class="ol">C</span><span class="ot">private</span></div><div class="opt"><span class="ol">D</span><span class="ot">final</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：A</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>class method 即 static method。</p></div>
+            </div>
+            <div id="a17" class="q">
+              <div class="qh"><div class="qnum">17</div><div class="qb"><div class="qt">Consider the following declarations. 〔 〕
+public interface Flyer {
+int fliesHigherThan (Flyer other);
+//Other methods are not shown.
+}
+public class Eagle implements Flyer {
+//Methods are not shown.
+}
+Which of the following method headers of fliesHigherThan can be added to the Eagle
+class so that it will satisfy the Flyer interface?</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">public int fliesHigherThan(Eagle other)</span></div><div class="opt ok"><span class="ol">B</span><span class="ot">public int fliesHigherThan(Flyer other)</span></div><div class="opt"><span class="ol">C</span><span class="ot">public boolean fliesHigherThan(Flyer other)</span></div><div class="opt"><span class="ol">D</span><span class="ot">int fliesHigherThan (Flyer other)</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：B</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>参数类型和返回类型必须与接口方法一致，且实现方法应为 public。</p></div>
+            </div>
+            <div id="a18" class="q">
+              <div class="qh"><div class="qnum">18</div><div class="qb"><div class="qt">If the method int myMethod(int a, int b) is defined in a Java class C, which of the
+following methods cannot coexist as a different method in class C? 〔 〕</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">int myMethod(float a, int b)</span></div><div class="opt"><span class="ol">B</span><span class="ot">float myMethod(int x, float y)</span></div><div class="opt ok"><span class="ol">C</span><span class="ot">int myMethod(int x, int y)</span></div><div class="opt"><span class="ol">D</span><span class="ot">int myMethod(int x, float y)</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：C</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>只改参数名不改变签名，不能与原方法共存。</p></div>
+            </div>
+            <div id="a19" class="q">
+              <div class="qh"><div class="qnum">19</div><div class="qb"><div class="qt">Which is a Java access modifier used to designate that a particular data field will not be
+inherited by a subclass? 〔 〕</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">protected</span></div><div class="opt"><span class="ol">B</span><span class="ot">default</span></div><div class="opt"><span class="ol">C</span><span class="ot">final</span></div><div class="opt ok"><span class="ol">D</span><span class="ot">private</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：D</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>private 成员对子类不可直接继承访问。</p></div>
+            </div>
+            <div id="a20" class="q">
+              <div class="qh"><div class="qnum">20</div><div class="qb"><div class="qt">From within a child class, its parent class is referred to via the keyword〔 〕</div><div class="opts"><div class="opt ok"><span class="ol">A</span><span class="ot">super</span></div><div class="opt"><span class="ol">B</span><span class="ot">parent</span></div><div class="opt"><span class="ol">C</span><span class="ot">base</span></div><div class="opt"><span class="ol">D</span><span class="ot">this</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：A</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>使用 super。</p></div>
+            </div>
+            <div id="a21" class="q">
+              <div class="qh"><div class="qnum">21</div><div class="qb"><div class="qt">Consider the following Java program segment.
+String[] str = {&quot;Three&quot;,&quot;Two&quot;,&quot;One&quot;};
+for (int i = 0; i &lt; str.length; ++i) {
+System.out.println(str[i]+&quot;/&quot;);
+}
+What will be output upon execution of the program segment? 〔 〕</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">Three,Two,One</span></div><div class="opt"><span class="ol">B</span><span class="ot">One/Two/Three/</span></div><div class="opt ok"><span class="ol">C</span><span class="ot">Three/Two/One/</span></div><div class="opt"><span class="ol">D</span><span class="ot">One,Two,Three</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：C</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>按数组顺序打印 Three/、Two/、One/。</p></div>
+            </div>
+            <div id="a22" class="q">
+              <div class="qh"><div class="qnum">22</div><div class="qb"><div class="qt">Consider the following method call, where c is an instance of the class java.util.ArrayList.
+c.size();
+This method call returns the number of〔 〕</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">bytes used by c</span></div><div class="opt"><span class="ol">B</span><span class="ot">times that the method c.add has been called</span></div><div class="opt"><span class="ol">C</span><span class="ot">ArrayList objects that have been instantiated</span></div><div class="opt ok"><span class="ol">D</span><span class="ot">elements in the ArrayList represented by c</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：D</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>返回当前元素个数。</p></div>
+            </div>
+            <div id="a23" class="q">
+              <div class="qh"><div class="qnum">23</div><div class="qb"><div class="qt">Consider the following Java program fragment.
+public void drive(Vehicle v) {
+...
+}
+...
+drive(obj);
+The method call drive(obj) is valid if obj is which of the following? 〔 〕
+I. A descendent of class Vehicle
+II. An ancestor of class Vehicle
+III. An object of class Vehicle</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">III only</span></div><div class="opt ok"><span class="ol">B</span><span class="ot">I and III only</span></div><div class="opt"><span class="ol">C</span><span class="ot">I, II, and III</span></div><div class="opt"><span class="ol">D</span><span class="ot">II and III only</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：B</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>Vehicle 类型及其子类对象都可传入。</p></div>
+            </div>
+            <div id="a24" class="q">
+              <div class="qh"><div class="qnum">24</div><div class="qb"><div class="qt">The Strategy design pattern is likely to be useful when implementing which of the
+following? 〔 〕
+I. An application that offers several alternate sorting algorithms
+II. A simple class to store the address of an organization of which only one instance can
+be instantiated</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">None</span></div><div class="opt"><span class="ol">B</span><span class="ot">I and II</span></div><div class="opt ok"><span class="ol">C</span><span class="ot">I only</span></div><div class="opt"><span class="ol">D</span><span class="ot">II only</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：C</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>多种排序算法可作为可替换策略；唯一实例是 Singleton。</p></div>
+            </div>
+            <div id="a25" class="q">
+              <div class="qh"><div class="qnum">25</div><div class="qb"><div class="qt">Which of the following statements is (are) true about inheritance in Java? 〔 〕
+I. A class can extend more than one abstract class.
+II. A class can implement more than one interface.</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">I and II</span></div><div class="opt"><span class="ol">B</span><span class="ot">None</span></div><div class="opt ok"><span class="ol">C</span><span class="ot">II only</span></div><div class="opt"><span class="ol">D</span><span class="ot">I only</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：C</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>类不能继承多个抽象类，但可实现多个接口。</p></div>
+            </div>
+            <div id="a26" class="q">
+              <div class="qh"><div class="qnum">26</div><div class="qb"><div class="qt">The ActionEvent class and ActionListener interface are available in the _____ package
+of Java. 〔 〕</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">javax.event</span></div><div class="opt"><span class="ol">B</span><span class="ot">java.event</span></div><div class="opt"><span class="ol">C</span><span class="ot">javax.swing.event</span></div><div class="opt ok"><span class="ol">D</span><span class="ot">java.awt.event</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：D</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>二者位于 java.awt.event。</p></div>
+            </div>
+            <div id="a27" class="q">
+              <div class="qh"><div class="qnum">27</div><div class="qb"><div class="qt">What is the signature of the method specified in the Java ActionListener interface?
+〔 〕</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">void actionListener (ActionEvent ae)</span></div><div class="opt"><span class="ol">B</span><span class="ot">void actionPerformed (ActionListener al)</span></div><div class="opt"><span class="ol">C</span><span class="ot">void actionEvent (ActionPerformed ap)</span></div><div class="opt ok"><span class="ol">D</span><span class="ot">void actionPerformed (ActionEvent ae)</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：D</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>接口方法为 void actionPerformed(ActionEvent ae)。</p></div>
+            </div>
+            <div id="a28" class="q">
+              <div class="qh"><div class="qnum">28</div><div class="qb"><div class="qt">Consider the following Java program segment.
+PrintWriter fileOut = new PrintWriter(new FileWriter(&quot;output.txt&quot;));
+If the file output.txt already exists, which of the following events will occur when the
+program segment is executed? 〔 〕</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">A run-time error will be generated.</span></div><div class="opt"><span class="ol">B</span><span class="ot">The existing contents of output.txt will be preserved.</span></div><div class="opt ok"><span class="ol">C</span><span class="ot">The existing contents of output.txt will be erased.</span></div><div class="opt"><span class="ol">D</span><span class="ot">A FileAlreadyExists exception will be raised.</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：C</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>未指定 append=true 时，新 FileWriter 会截断已有内容。</p></div>
+            </div>
+            <div id="a29" class="q">
+              <div class="qh"><div class="qnum">29</div><div class="qb"><div class="qt">The multiplicity of an association between two classes indicates the number of〔 〕</div><div class="opts"><div class="opt ok"><span class="ol">A</span><span class="ot">instances of one class that can be associated with an instance of the other class</span></div><div class="opt"><span class="ol">B</span><span class="ot">methods of one class that are called by the other class</span></div><div class="opt"><span class="ol">C</span><span class="ot">times that one class&#x27;s methods are called by the other class</span></div><div class="opt"><span class="ol">D</span><span class="ot">methods and variables common to both classes</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：A</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>多重性描述一个类的实例可与另一个类多少实例关联。</p></div>
+            </div>
+            <div id="a30" class="q">
+              <div class="qh"><div class="qnum">30</div><div class="qb"><div class="qt">The static model of a software system typically includes which of the following? 〔 〕
+I.Attributes of classes
+II.Actions that occur between classes
+III.Structural relationships between classes</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">I, II, and III</span></div><div class="opt ok"><span class="ol">B</span><span class="ot">I and III only</span></div><div class="opt"><span class="ol">C</span><span class="ot">II and III only</span></div><div class="opt"><span class="ol">D</span><span class="ot">I and II only</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：B</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>静态模型关注类属性和结构关系，不描述运行时动作。</p></div>
+            </div>
+          <div class="divider"></div>
+          <div class="sec-hd"><span class="sec-tag">2018-2019 A 卷</span><span class="sec-title">主观题参考答案</span><span class="sec-meta">2 题</span></div>
+          
+            <div id="as1" class="q">
+              <div class="qh"><div class="qnum">S1</div><div class="qb"><div class="qt">数组求和、ImgResource 单例、ClassA 单元测试</div><div class="prompt"><div class="prompt-t">原题要求</div>二、设计与编程题（本大题共 3 小题，共 20 分）
+评阅教师 得分
+1. Declare an array intArr, which include {1,2,3,4,5}, Please write a Java program to caculate
+the sum of the five elements, then output the result into console. 〔5 points〕
+
+
+2. There is a class named ImgResource, please applying singleton pattern to it, write the
+java code and draw the UML class diagram. 〔10 points〕
+3. There is a class A as following ,please write a java program to unit test this class，each
+method only need one test case;〔5 points〕
+public class Class A {
+public int multiply(int x,int y) {
+return x*y;
+}
+public int sum(int x,int y) {
+return x+y;
+}
+}</div></div></div>
+              <div class="q-ar"><span class="abadge">参考答案</span><span class="sbadge">20 分</span></div>
+              <div class="exp"><div class="exp-t">解析与实现</div><p>数组求和直接遍历；ImgResource 单例使用私有构造器和 static 实例；JUnit 分别测试 multiply 与 sum。</p><pre class="cb"><code>int[] intArr = {1, 2, 3, 4, 5};
+int sum = 0;
+for (int v : intArr) sum += v;
+System.out.println(sum);
+
+public class ImgResource {
+    private static final ImgResource INSTANCE = new ImgResource();
+    private ImgResource() {}
+    public static ImgResource getInstance() { return INSTANCE; }
+}
+// UML: ImgResource has -INSTANCE: ImgResource, -ImgResource(), +getInstance(): ImgResource
+
+public class ClassA {
+    public int multiply(int x, int y) { return x * y; }
+    public int sum(int x, int y) { return x + y; }
+}
+
+public class ClassATest {
+    @org.junit.Test public void testMultiply() {
+        org.junit.Assert.assertEquals(6, new ClassA().multiply(2, 3));
+    }
+    @org.junit.Test public void testSum() {
+        org.junit.Assert.assertEquals(5, new ClassA().sum(2, 3));
+    }
+}</code></pre></div>
+            </div>
+            <div id="as2" class="q">
+              <div class="qh"><div class="qnum">S2</div><div class="qb"><div class="qt">EIM 员工信息管理系统</div><div class="prompt"><div class="prompt-t">原题要求</div>三、UML 设计题（本大题共 2 小题，共 20 分）。
+评阅教师 得分
+A company needed development an Employee Information Management (EIM)
+Software to maintain the employee information. For example, project manager and general
+staff. Both of them have some common attributes :ID, name, salary. Also, the project
+manager has some own attributes (project funds), and the general staff has some own
+attributes (overtime pay);
+In addition, both of employee mentioned above should have two overridden functions: to
+String () and equals (); The function of to String () is used to show the information of the
+employee, include ID, salary. The function of equals () is used to compare by ID;
+A employee belongs to employee management system, and the class of EIS provide
+information management with the following functions:
+1. Add a new employee into the EIM
+2. Remove a employee from EIM by given ID
+Tasks:
+(1) Draw the class diagram (classes: EIM, Employee, Project Manager and General Staff).
+(11 分)
+(2) Write the classes based on the UML you created, and implement the functions of the
+classes designed. (9 分)</div></div></div>
+              <div class="q-ar"><span class="abadge">参考答案</span><span class="sbadge">20 分</span></div>
+              <div class="exp"><div class="exp-t">解析与实现</div><p>Employee 抽象出 id、name、salary；ProjectManager 与 GeneralStaff 扩展各自字段并重写 toString；equals 按 id 比较。EIM 使用集合完成添加和按 ID 删除。</p><pre class="cb"><code>import java.util.*;
+
+abstract class Employee {
+    private String id, name;
+    private double salary;
+    public Employee(String id, String name, double salary) {
+        this.id = id; this.name = name; this.salary = salary;
+    }
+    public String getId() { return id; }
+    public double getSalary() { return salary; }
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Employee)) return false;
+        return id.equals(((Employee)obj).id);
+    }
+    public String toString() {
+        return &quot;id=&quot; + id + &quot;, name=&quot; + name + &quot;, salary=&quot; + salary;
+    }
+}
+
+class ProjectManager extends Employee {
+    private double projectFunds;
+    public ProjectManager(String id, String name, double salary, double projectFunds) {
+        super(id, name, salary); this.projectFunds = projectFunds;
+    }
+    public String toString() { return &quot;ProjectManager[&quot; + super.toString() + &quot;, projectFunds=&quot; + projectFunds + &quot;]&quot;; }
+}
+
+class GeneralStaff extends Employee {
+    private double overtimePay;
+    public GeneralStaff(String id, String name, double salary, double overtimePay) {
+        super(id, name, salary); this.overtimePay = overtimePay;
+    }
+    public String toString() { return &quot;GeneralStaff[&quot; + super.toString() + &quot;, overtimePay=&quot; + overtimePay + &quot;]&quot;; }
+}
+
+class EIM {
+    private ArrayList&lt;Employee&gt; employees = new ArrayList&lt;Employee&gt;();
+    public void add(Employee e) { employees.add(e); }
+    public boolean removeById(String id) {
+        for (int i = 0; i &lt; employees.size(); i++) {
+            if (employees.get(i).getId().equals(id)) {
+                employees.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+}
+// UML: Employee &lt;|-- ProjectManager; Employee &lt;|-- GeneralStaff; EIM &quot;1&quot; o-- &quot;*&quot; Employee</code></pre></div>
+            </div>
+        </div>
+        <div id="paper-b" class="paper">
+          <div class="sec-hd"><span class="sec-tag">2018-2019 B 卷</span><span class="sec-title">单项选择题</span><span class="sec-meta">15 题</span></div>
+          
+            <div id="b1" class="q">
+              <div class="qh"><div class="qnum">1</div><div class="qb"><div class="qt">What is the size of a char variable in Java?</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">1 byte</span></div><div class="opt ok"><span class="ol">B</span><span class="ot">2 bytes</span></div><div class="opt"><span class="ol">C</span><span class="ot">4 bytes</span></div><div class="opt"><span class="ol">D</span><span class="ot">It depends on the compiler settings</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：B</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>Java char 是 UTF-16 code unit，占 2 bytes。</p></div>
+            </div>
+            <div id="b2" class="q">
+              <div class="qh"><div class="qnum">2</div><div class="qb"><div class="qt">What is the right way to handle abnormalities in input on Java?</div><div class="opts"><div class="opt ok"><span class="ol">A</span><span class="ot">By handling these problems by providing exception handlers</span></div><div class="opt"><span class="ol">B</span><span class="ot">By writing while loops to guard against bad input</span></div><div class="opt"><span class="ol">C</span><span class="ot">By using the class File Filter which gracefully filters out bad input data</span></div><div class="opt"><span class="ol">D</span><span class="ot">By always specifying the throws clause in every method header where file I/O is
+performed</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：A</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>应提供异常处理器处理异常输入。</p></div>
+            </div>
+            <div id="b3" class="q">
+              <div class="qh"><div class="qnum">3</div><div class="qb"><div class="qt">Suppose x, y, and z are variables of type int. Consider the following three conditions:
+I. (x == y) &amp;&amp; (y == z) &amp;&amp; (x == z)
+II. (x == y) || (y == z) &amp;&amp; (x == z)
+III. (x - y) * (x - z) * (y - z) == 0
+
+
+Which of these conditions is (are) always true if x == y is true?</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">I. Only</span></div><div class="opt"><span class="ol">B</span><span class="ot">II. Only</span></div><div class="opt ok"><span class="ol">C</span><span class="ot">II. and III. only</span></div><div class="opt"><span class="ol">D</span><span class="ot">I. and II. and III</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：C</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>II 与 III 恒真，I 不一定。</p></div>
+            </div>
+            <div id="b4" class="q">
+              <div class="qh"><div class="qnum">4</div><div class="qb"><div class="qt">Consider the following method.
+public int multiply (int n) {
+if (n == 0)
+return 1;
+else if (n % 2 == 1)
+return n;
+else
+return n * multiply(n - 2);
+}
+What will be returned by a call to multiply (8)?</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">1</span></div><div class="opt"><span class="ol">B</span><span class="ot">8</span></div><div class="opt"><span class="ol">C</span><span class="ot">(8)(7)(6)(5)(4)(3)(2)</span></div><div class="opt ok"><span class="ol">D</span><span class="ot">(8)(6)(4)(2)</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：D</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>8*6*4*2*multiply(0)，即 (8)(6)(4)(2)。</p></div>
+            </div>
+            <div id="b5" class="q">
+              <div class="qh"><div class="qnum">5</div><div class="qb"><div class="qt">Consider the inheritance hierarchy of classes below.
+Which of the following declarations will cause an error? You may assume that each of the
+classes above has a default constructor.
+I. Library Item = new Library Item ();
+II. Book b = new Library Item ();
+III. Library Item cd = new CD ();
+
+[图示说明] LibraryItem 标注为 &lt;&lt;abstract&gt;&gt;，CD 与 Book 继承自 LibraryItem。</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">I. Only</span></div><div class="opt"><span class="ol">B</span><span class="ot">II. Only</span></div><div class="opt"><span class="ol">C</span><span class="ot">III. only</span></div><div class="opt"><span class="ol">D</span><span class="ot">II. and III. only</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge warn">答案：题误</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>严格按图中 &lt;&lt;abstract&gt;&gt; 判断，I 直接实例化抽象类错误，II 既实例化抽象类又把父类赋给子类引用也错误，III 正确；选项没有 I and II only。若忽略 abstract 标记，常见命题意图会选 B。</p></div>
+            </div>
+            <div id="b6" class="q">
+              <div class="qh"><div class="qnum">6</div><div class="qb"><div class="qt">Consider the following declarations.
+public interface Flyer {
+
+
+int flies Higher Than (Flyer other);
+//Other methods are not shown.
+}
+public class Eagle implements Flyer {
+//Methods are not shown.
+}
+Which of the following method headers of flies Higher Than can be added to the Eagle
+class so that it will satisfy the Flyer interface?</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">public int flies Higher Than (Eagle other)</span></div><div class="opt ok"><span class="ol">B</span><span class="ot">public int flies Higher Than (Flyer other)</span></div><div class="opt"><span class="ol">C</span><span class="ot">public Boolean flies Higher Than (Flyer other)</span></div><div class="opt"><span class="ol">D</span><span class="ot">int flies Higher Than (Flyer other)</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：B</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>实现接口方法必须保持 int fliesHigherThan(Flyer other)，并用 public 暴露。</p></div>
+            </div>
+            <div id="b7" class="q">
+              <div class="qh"><div class="qnum">7</div><div class="qb"><div class="qt">A collection typically models a _____ relationship.</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">one-to-one</span></div><div class="opt"><span class="ol">B</span><span class="ot">zero-to-one</span></div><div class="opt"><span class="ol">C</span><span class="ot">many-to-many</span></div><div class="opt ok"><span class="ol">D</span><span class="ot">one-to-many</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：D</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>集合通常表达一对多。</p></div>
+            </div>
+            <div id="b8" class="q">
+              <div class="qh"><div class="qnum">8</div><div class="qb"><div class="qt">What is used to indicate that a method does not return a value?</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">the keyword static</span></div><div class="opt ok"><span class="ol">B</span><span class="ot">the keyword void</span></div><div class="opt"><span class="ol">C</span><span class="ot">the name of the class to which it belongs</span></div><div class="opt"><span class="ol">D</span><span class="ot">the omission of the return type</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：B</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>void 表示方法不返回值。</p></div>
+            </div>
+            <div id="b9" class="q">
+              <div class="qh"><div class="qnum">9</div><div class="qb"><div class="qt">Array elements may only be retrieved using _____, whereas vector elements may also
+be retrieved using _____.</div><div class="opts"><div class="opt ok"><span class="ol">A</span><span class="ot">indexes, iterators</span></div><div class="opt"><span class="ol">B</span><span class="ot">iterators, indexes</span></div><div class="opt"><span class="ol">C</span><span class="ot">names, indexes</span></div><div class="opt"><span class="ol">D</span><span class="ot">indexes, names</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：A</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>数组只能按下标访问；Vector 还可通过 Iterator 遍历。</p></div>
+            </div>
+            <div id="b10" class="q">
+              <div class="qh"><div class="qnum">10</div><div class="qb"><div class="qt">A design pattern is typically used to _____.</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">ensure that code executes at optimal speed during runtime</span></div><div class="opt"><span class="ol">B</span><span class="ot">reduce the number of classes in the design of a program</span></div><div class="opt"><span class="ol">C</span><span class="ot">allow the use of object-orientated concepts in a language that is not object-oriented</span></div><div class="opt ok"><span class="ol">D</span><span class="ot">describe a practical solution to a common design problem</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：D</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>设计模式描述常见设计问题的实践方案。</p></div>
+            </div>
+            <div id="b11" class="q">
+              <div class="qh"><div class="qnum">11</div><div class="qb"><div class="qt">If a file opened for reading does not exist, which of the following events will occur in
+
+
+Java?</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">A new file will be created.</span></div><div class="opt"><span class="ol">B</span><span class="ot">A run-time error will occur.</span></div><div class="opt"><span class="ol">C</span><span class="ot">A Null Pointer Exception will be raised.</span></div><div class="opt ok"><span class="ol">D</span><span class="ot">A File Not Found Exception will be raised.</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：D</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>打开不存在文件进行读取会抛出 FileNotFoundException。</p></div>
+            </div>
+            <div id="b12" class="q">
+              <div class="qh"><div class="qnum">12</div><div class="qb"><div class="qt">Refer to the following data field and method.
+private int [] arr;
+/** Precondition: arr contains at least one element. */
+public void do Something () {
+int sum1 = 0;
+int sum2 = 0;
+for (int num: arr)
+{
+if (num &gt; 0 || Math. abs (num) % 2! = 0)
+sum1 += num;
+else if (num &lt; 0 &amp;&amp; Math. abs (num) % 2 == 0)
+sum2 += num;
+}
+System. out. println (sum1);
+System. out. println (sum2);
+}
+Which of the following best describes the value of sum1 output by method do Something?</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">The sum of all positive values in arr</span></div><div class="opt"><span class="ol">B</span><span class="ot">The sum of all odd values in arr</span></div><div class="opt ok"><span class="ol">C</span><span class="ot">The sum of all positive values and odd negative values in arr</span></div><div class="opt"><span class="ol">D</span><span class="ot">The sum of all positive values and even negative values in arr</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：C</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>条件 num&gt;0 或 abs(num) 为奇数，因此 sum1 累加所有正数和负奇数。</p></div>
+            </div>
+            <div id="b13" class="q">
+              <div class="qh"><div class="qnum">13</div><div class="qb"><div class="qt">Refer to the following data field and method.
+private Array List&lt;String&gt; list;
+public void my stery () {
+String str1 = &quot;&quot;, str2 = &quot;&quot;;
+for (String s: list)
+{
+str1 += s. substring (1);
+str2 += s. substring (1, 2);
+}
+System. out. println (str1);
+System. out. println (str2);
+
+
+}
+Assume that the contents of list are: dog cat cow bird
+What will be output for str1 by a call to mystery?</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">dogcatcowbird</span></div><div class="opt ok"><span class="ol">B</span><span class="ot">ogatowird</span></div><div class="opt"><span class="ol">C</span><span class="ot">oaoi</span></div><div class="opt"><span class="ol">D</span><span class="ot">dccb</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：B</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>dog/cat/cow/bird 去掉首字符后拼接为 ogatowird。</p></div>
+            </div>
+            <div id="b14" class="q">
+              <div class="qh"><div class="qnum">14</div><div class="qb"><div class="qt">Consider the following declarations.
+public class ClassA { ...
+public void do Something (ClassB b, ClassC c)
+{ ...
+}
+}
+public class ClassB extends ClassA {
+...
+}
+public class ClassC extends Class B {
+...
+}
+Class A obj A = new Class A ();
+Class B obj B = new Class B ();
+Class C obj C = new Class C ();
+Which of the following is a correct call to do Something?</div><div class="opts"><div class="opt ok"><span class="ol">A</span><span class="ot">objC. doSomething (objC, objC);</span></div><div class="opt"><span class="ol">B</span><span class="ot">objC. doSomething (objA, objA);</span></div><div class="opt"><span class="ol">C</span><span class="ot">objB. doSomething (objC, objB);</span></div><div class="opt"><span class="ol">D</span><span class="ot">objB. doSomething (objB, objB);</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：A</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>objC 既是 ClassC，又可向上转型为 ClassB；两个参数均满足。</p></div>
+            </div>
+            <div id="b15" class="q">
+              <div class="qh"><div class="qnum">15</div><div class="qb"><div class="qt">Consider the following Java classes:
+class A {
+public void foo (Object o) {System. out. println (&quot;A&quot;);}
+}
+class B {
+public void foo (String o) {System. out. println (&quot;B&quot;); }
+}
+class C extends A {
+public void foo (String s) {System. out. Println (&quot;C&quot;);}
+}
+
+
+class D extends B {
+public void foo (Object o) {System. out. println (&quot;D&quot;);}
+}
+class Main {
+public static void main (String [] args) {
+A a = new C (); a. foo(&quot;Java&quot;);
+C c = new C (); c. foo(&quot;Java&quot;);
+B b = new D (); b. foo(&quot;Java&quot;);
+D d = new D (); d. foo(&quot;Java&quot;);
+}
+}
+What is the output of the execution of the method main in class Main?</div><div class="opts"><div class="opt"><span class="ol">A</span><span class="ot">The code will print A C B D</span></div><div class="opt ok"><span class="ol">B</span><span class="ot">The code will print A C B B</span></div><div class="opt"><span class="ol">C</span><span class="ot">The code will print C C B B</span></div><div class="opt"><span class="ol">D</span><span class="ot">The code will print C C B D</span></div></div></div></div>
+              <div class="q-ar"><span class="abadge">答案：B</span><span class="sbadge">选择题</span></div>
+              <div class="exp"><div class="exp-t">解析</div><p>依次为 A、C、B、B；重载先看编译期类型，重写才动态分派。</p></div>
+            </div>
+          <div class="divider"></div>
+          <div class="sec-hd"><span class="sec-tag">2018-2019 B 卷</span><span class="sec-title">主观题参考答案</span><span class="sec-meta">2 题</span></div>
+          
+            <div id="bs1" class="q">
+              <div class="qh"><div class="qnum">S1</div><div class="qb"><div class="qt">TermDay 封装、压缩存储、不可变对象与 Flyweight</div><div class="prompt"><div class="prompt-t">原题要求</div>二、编程、设计及分析题（本大题 4 小题，共 35 分）。
+评阅教师 得分
+提示：每小题给出了一个程序设计要求，请按照要求写出源程序代码，如果源程序代码中
+出现语法错误或逻辑错误，则酌情扣分。
+Consider the following Java class that is intended to represent a specific day in an
+eight-week University term.
+public class Term Day {
+public int day; // The day of the week as a number 0-6
+public int week; // The week of the term as a number 0-7
+};
+1. (10 points) Create a class Encapsulated Term Day, which applies the principles of data
+encapsulation as an alternative to Term Day. Your modified class should throw
+an exception if an invalid day of the week or week number is specified.
+2. (5 points) The use of two int variables to represent the day and the week requires
+64 bits of storage. How many bits are actually required? Adapt
+Encapsulated Term Day class to achieve the same functionality using only one
+member variable of a primitive type. You should justify your choice of type.
+3. (5 points) Create a class Immutable Term Day that is an immutable version of Term Day.
+4. (15ponts) By applying one or more appropriate design patterns and adapting
+
+
+Immutable Term Day appropriately, show how to ensure that only one
+Immutable Term Day object is ever created for a given day/week combination. Give the
+class diagram of the design pattern you use and implement the source code.</div></div></div>
+              <div class="q-ar"><span class="abadge">参考答案</span><span class="sbadge">35 分</span></div>
+              <div class="exp"><div class="exp-t">解析与实现</div><p>day 取 0..6，week 取 0..7，共 56 种状态，理论上 6 bit 足够；Java 最小整型可用 byte 存储 packed = week*7 + day。</p><p>确保每个 day/week 只创建一个不可变对象，可用 Flyweight/Multiton：静态二维缓存保存所有 56 个实例。</p><pre class="cb"><code>class EncapsulatedTermDay {
+    private byte packed; // week * 7 + day, range 0..55
+    public EncapsulatedTermDay(int day, int week) { set(day, week); }
+    private void check(int day, int week) {
+        if (day &lt; 0 || day &gt; 6 || week &lt; 0 || week &gt; 7) {
+            throw new IllegalArgumentException(&quot;invalid day/week&quot;);
+        }
+    }
+    public void set(int day, int week) {
+        check(day, week);
+        packed = (byte)(week * 7 + day);
+    }
+    public int getDay() { return packed % 7; }
+    public int getWeek() { return packed / 7; }
+}
+
+final class ImmutableTermDay {
+    private static final ImmutableTermDay[][] CACHE = new ImmutableTermDay[8][7];
+    static {
+        for (int w = 0; w &lt; 8; w++)
+            for (int d = 0; d &lt; 7; d++)
+                CACHE[w][d] = new ImmutableTermDay(d, w);
+    }
+    private final int day;
+    private final int week;
+    private ImmutableTermDay(int day, int week) { this.day = day; this.week = week; }
+    public static ImmutableTermDay valueOf(int day, int week) {
+        if (day &lt; 0 || day &gt; 6 || week &lt; 0 || week &gt; 7) {
+            throw new IllegalArgumentException(&quot;invalid day/week&quot;);
+        }
+        return CACHE[week][day];
+    }
+    public int getDay() { return day; }
+    public int getWeek() { return week; }
+}
+// UML: ImmutableTermDay has private constructor and static CACHE; client calls valueOf(day, week).</code></pre></div>
+            </div>
+            <div id="bs2" class="q">
+              <div class="qh"><div class="qnum">S2</div><div class="qb"><div class="qt">SRS 学生注册系统 UML 类图</div><div class="prompt"><div class="prompt-t">原题要求</div>三、程序设计（本题共 35 分）
+评阅教师 得分
+Modeling the Student Registration System (SRS) by UML class diagram.
+Requirement Specification:
+We have been asked to develop an automated Student Registration System (SRS).
+1. This system will enable students to register online for courses each semester, as well as
+track a student’s progress toward completion of his or her degree.
+2. When a student first enrolls at the university, the student uses the SRS to set forth a plan
+of study as to which courses, he or she plans on taking to satisfy a particular degree
+program, and chooses a faculty adviser.
+3. The SRS will verify whether or not the proposed plan of study satisfies the requirements of
+the degree that the student is seeking. Once a plan of study has been established, then,
+during the registration period preceding each semester, the student is able to view the
+schedule of classes online, and choose whichever classes he or she wishes to attend,
+indicating the preferred section (day of week and time of day) if the class is offered by
+more than one professor.
+4. The SRS will verify whether or not the student has satisfied the necessary prerequisites
+for each requested course by referring to the student’s online transcript of courses
+completed and grades received (the student may review his or her transcript online at any
+time).
+5. Assuming that (a) the prerequisites for the requested course(s) are satisfied, (b) the
+course(s) meets one of the student’s plan of study requirements, and (c) there is room
+available in each of the class(es), the student is enrolled in the class(es). If (a) and (b) are
+satisfied, but (c) is not, the student is placed on a first-come, first-served waiting list. If a
+class/section that the student was previously waitlisted for becomes available (either
+because some other student has dropped the class or because the seating capacity for
+the class has been increased), the student is automatically enrolled in the waitlisted class,
+and an email message to that effect is sent to the student.
+
+
+6. It is the student’s responsibility to drop the class if it is no longer desired; otherwise, he or
+she will be billed for the course. Students may drop a class up to the end of the first week
+of the semester in which the class is being taught.</div></div></div>
+              <div class="q-ar"><span class="abadge">参考答案</span><span class="sbadge">35 分</span></div>
+              <div class="exp"><div class="exp-t">解析与实现</div><p>可抽取 Student、DegreeProgram、PlanOfStudy、FacultyAdviser、Course、Section、Transcript、Registration、WaitingList 等类。</p><p>关键关系：Student 选择 1 个 adviser；Student 拥有 1 个 plan 和 1 个 transcript；DegreeProgram 规定多个 Course requirement；Course 可有多个 Section；Section 有 capacity、time、semester；Registration 连接 Student 与 Section 并记录 enrolled/waitlisted/dropped 状态。</p><pre class="cb"><code>Student &quot;1&quot; -- &quot;1&quot; PlanOfStudy
+Student &quot;1&quot; -- &quot;1&quot; Transcript
+Student &quot;*&quot; -- &quot;1&quot; FacultyAdviser
+PlanOfStudy &quot;*&quot; -- &quot;*&quot; Course
+DegreeProgram &quot;1&quot; -- &quot;*&quot; Course : requirements
+Course &quot;1&quot; -- &quot;*&quot; Section
+Course &quot;*&quot; -- &quot;*&quot; Course : prerequisites
+Student &quot;1&quot; -- &quot;*&quot; Registration
+Section &quot;1&quot; -- &quot;*&quot; Registration
+Section &quot;1&quot; -- &quot;0..1&quot; WaitingList
+WaitingList &quot;1&quot; -- &quot;*&quot; Student
+
+class Registration {
+    Student student;
+    Section section;
+    String status; // enrolled, waitlisted, dropped
+}</code></pre></div>
+            </div>
+        </div></main></div>
+<button id="stb" class="stb" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+function switchPaper(id, btn) {
+  document.querySelectorAll('.paper').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('[id^="card-"]').forEach(c => c.style.display = 'none');
+  document.getElementById('paper-' + id).classList.add('active');
+  document.getElementById('card-' + id).style.display = '';
+  btn.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+window.addEventListener('scroll', () => document.getElementById('stb').classList.toggle('vis', window.scrollY > 300));
+</script>
+</body>
+</html>
