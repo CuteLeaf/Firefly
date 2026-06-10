@@ -15,6 +15,8 @@ import type {
 	PrivateSpaceVisibility,
 } from "@/lib/private-space/types";
 
+export const prerender = false;
+
 type EntryAction = "publish" | "archive" | "delete" | "update";
 
 const validTypes: PrivateSpaceEntryType[] = [

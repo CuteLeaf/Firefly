@@ -12,6 +12,8 @@ import {
 } from "@/lib/private-space/viewer";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
 
+export const prerender = false;
+
 const currentUserId = resolvePrivateSpaceUserId(Astro.url);
 const entryId = Astro.params.id || "";
 const errorState = Astro.url.searchParams.get("error");
