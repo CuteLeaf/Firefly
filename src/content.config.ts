@@ -23,6 +23,14 @@ const postsCollection = defineCollection({
 		password: z.string().optional().default(""),
 		passwordHint: z.string().optional().default(""),
 
+		// Dual-space fields
+		recipient: z.string().optional().default(""),
+		privacy: z
+			.enum(["public", "semi-private", "private"]) // public: 默认，semi-private: 半公开，private: 私密（建议加密）
+			.optional()
+			.default("public"),
+		emoji: z.string().optional().default(""),
+
 		/* For internal use */
 		prevTitle: z.string().default(""),
 		prevSlug: z.string().default(""),

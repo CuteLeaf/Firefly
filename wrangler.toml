@@ -6,3 +6,11 @@ directory = "./dist"
 
 [vars]
 NODE_VERSION = "22"
+PRIVATE_SPACE_STORAGE = "kv"
+PRIVATE_SPACE_LOGIN_MODE = "placeholder"
+
+# Future binding placeholder for the private two-person space.
+# Uncomment and fill the namespace id when the write API is connected.
+# [[kv_namespaces]]
+# binding = "PRIVATE_SPACE_KV"
+# id = "replace-with-your-kv-namespace-id"

@@ -1,0 +1,151 @@
+---
+import SpaceSection from "@/components/pages/private-space/SpaceSection.astro";
+import ViewerSwitcher from "@/components/pages/private-space/ViewerSwitcher.astro";
+import {
+	getPrivateSpaceEntriesByUser,
+	getPrivateSpaceUsers,
+} from "@/lib/private-space/repository";
+import {
+	buildPrivateSpaceUrl,
+	resolvePrivateSpaceUserId,
+} from "@/lib/private-space/viewer";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+const currentUserId = resolvePrivateSpaceUserId(Astro.url);
+const actionState = Astro.url.searchParams.get("savedAction");
+const [users, mine] = await Promise.all([
+	getPrivateSpaceUsers(),
+	getPrivateSpaceEntriesByUser(currentUserId),
+]);
+
+const draftEntries = mine.filter((entry) => entry.status === "draft");
+const savedEntries = mine.filter((entry) => entry.status === "saved");
+const archivedEntries = mine.filter((entry) => entry.status === "archived");
+
+const actionMessageMap: Record<string, string> = {
+	publish: "草稿已经发布为可见内容。",
+	archive: "内容已经归档。",
+	delete: "内容已经删除。",
+	update: "内容已经保存修改。",
+};
+
+const redirectTo = buildPrivateSpaceUrl("/space/mine/", currentUserId);
+---
+
+<MainGridLayout title="我的内容" description="按当前身份查看并管理自己写下的记录、草稿与私密内容">
+	<ViewerSwitcher
+		users={users}
+		currentUserId={currentUserId}
+		currentPath="/space/mine/"
+	/>
+
+	{
+		actionState && actionMessageMap[actionState] && (
+			<div class="feedback card-base">{actionMessageMap[actionState]}</div>
+		)
+	}
+
+	<div class="manage-note card-base">
+		<strong>当前阶段已支持基础流转与编辑</strong>
+		<span>你现在可以在这里发布草稿、编辑内容、归档内容、删除内容。下一步再继续细化筛选和批量管理。</span>
+	</div>
+
+	<div class="status-overview card-base">
+		<div class="status-pill">
+			<strong>{draftEntries.length}</strong>
+			<span>草稿</span>
+		</div>
+		<div class="status-pill">
+			<strong>{savedEntries.length}</strong>
+			<span>已保存</span>
+		</div>
+		<div class="status-pill">
+			<strong>{archivedEntries.length}</strong>
+			<span>已归档</span>
+		</div>
+	</div>
+
+	<SpaceSection
+		title="草稿箱"
+		description="这里只有当前身份尚未正式发布的内容。你可以继续编辑，或直接发布进入可见视图。"
+		entries={draftEntries}
+		users={users}
+		emptyText="当前没有草稿。"
+		manageable={true}
+		currentUserId={currentUserId}
+		redirectTo={redirectTo}
+	/>
+
+	<SpaceSection
+		title="已保存内容"
+		description="这些内容已经进入你的空间体系，可能是 self、shared 或 joint。"
+		entries={savedEntries}
+		users={users}
+		emptyText="当前没有已保存内容。"
+		manageable={true}
+		currentUserId={currentUserId}
+		redirectTo={redirectTo}
+	/>
+
+	<SpaceSection
+		title="已归档内容"
+		description="归档内容会从主视图里退出，但仍然保留在你的个人管理页中，方便后续回看。"
+		entries={archivedEntries}
+		users={users}
+		emptyText="当前没有归档内容。"
+		manageable={true}
+		currentUserId={currentUserId}
+		redirectTo={redirectTo}
+		compact={true}
+	/>
+</MainGridLayout>
+
+<style>
+	.feedback,
+	.manage-note,
+	.status-overview {
+		padding: 1rem;
+		margin-bottom: 1rem;
+	}
+
+	.feedback {
+		background: color-mix(in srgb, #9fd8b9 36%, white);
+	}
+
+	.manage-note {
+		display: grid;
+		gap: 0.35rem;
+	}
+
+	.manage-note span {
+		color: var(--text-secondary, rgba(0, 0, 0, 0.66));
+	}
+
+	.status-overview {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 0.85rem;
+	}
+
+	.status-pill {
+		display: grid;
+		gap: 0.2rem;
+		padding: 0.9rem 1rem;
+		border-radius: 1rem;
+		background: color-mix(in srgb, var(--btn-regular-bg) 68%, white);
+	}
+
+	.status-pill strong {
+		font-size: 1.4rem;
+	}
+
+	.status-pill span {
+		color: var(--text-secondary, rgba(0, 0, 0, 0.66));
+	}
+
+	@media (max-width: 720px) {
+		.status-overview {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

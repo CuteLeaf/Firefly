@@ -211,6 +211,23 @@ enum I18nKey {
 	// 加密
 	postEncrypted = "postEncrypted",
 
+	// 双人共享空间相关
+	dualSpaceTitle = "dualSpaceTitle",
+	dualSpaceDesc = "dualSpaceDesc",
+	dailyLog = "dailyLog",
+	recommendations = "recommendations",
+	fitnessPlan = "fitnessPlan",
+	privateThoughts = "privateThoughts",
+	recipient = "recipient",
+	privacy = "privacy",
+	privacyLevel = "privacyLevel",
+	by = "by",
+	viewMore = "viewMore",
+	noRecords = "noRecords",
+	noRecommendations = "noRecommendations",
+	noPlans = "noPlans",
+	noDaily = "noDaily",
+
 	// 壁纸模式
 	wallpaperMode = "wallpaperMode",
 	wallpaperBannerMode = "wallpaperBannerMode",

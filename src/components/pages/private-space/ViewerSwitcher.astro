@@ -1,0 +1,101 @@
+---
+import type { PrivateSpaceUser, PrivateSpaceUserId } from "@/lib/private-space/types";
+import { buildPrivateSpaceUrl } from "@/lib/private-space/viewer";
+
+interface Props {
+	users: PrivateSpaceUser[];
+	currentUserId: PrivateSpaceUserId;
+	currentPath: string;
+	title?: string;
+	description?: string;
+}
+
+const {
+	users,
+	currentUserId,
+	currentPath,
+	title = "当前身份",
+	description = "先用轻量身份切换模拟两个人分别登录后的视角。",
+} = Astro.props;
+---
+
+<section class="viewer-switcher card-base">
+	<div class="viewer-copy">
+		<p class="viewer-eyebrow">{title}</p>
+		<p class="viewer-desc">{description}</p>
+	</div>
+	<div class="viewer-actions">
+		{users.map((user) => (
+			<a
+				href={buildPrivateSpaceUrl(currentPath, user.id)}
+				class:list={["viewer-link", user.id === currentUserId && "is-active"]}
+			>
+				<strong>{user.name}</strong>
+				<span>{user.roleLabel}</span>
+			</a>
+		))}
+	</div>
+</section>
+
+<style>
+	.viewer-switcher {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		gap: 1rem;
+		padding: 1rem 1.1rem;
+		margin-bottom: 1rem;
+	}
+
+	.viewer-eyebrow {
+		margin: 0 0 0.35rem;
+		font-size: 0.78rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--text-secondary, rgba(0, 0, 0, 0.65));
+	}
+
+	.viewer-desc {
+		margin: 0;
+		color: var(--text-secondary, rgba(0, 0, 0, 0.7));
+	}
+
+	.viewer-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		align-items: center;
+		justify-content: flex-end;
+	}
+
+	.viewer-link {
+		display: grid;
+		gap: 0.1rem;
+		min-width: 8rem;
+		padding: 0.75rem 0.9rem;
+		border-radius: 1rem;
+		text-decoration: none;
+		background: color-mix(in srgb, var(--btn-regular-bg) 70%, white);
+		color: inherit;
+	}
+
+	.viewer-link span {
+		font-size: 0.84rem;
+		color: var(--text-secondary, rgba(0, 0, 0, 0.65));
+	}
+
+	.viewer-link.is-active {
+		background: color-mix(in srgb, var(--primary) 18%, white);
+		outline: 1px solid color-mix(in srgb, var(--primary) 36%, transparent);
+	}
+
+	@media (max-width: 840px) {
+		.viewer-switcher {
+			grid-template-columns: 1fr;
+		}
+
+		.viewer-actions {
+			justify-content: flex-start;
+		}
+	}
+</style>

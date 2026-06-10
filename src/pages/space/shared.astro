@@ -1,0 +1,136 @@
+---
+import SpaceSection from "@/components/pages/private-space/SpaceSection.astro";
+import ViewerSwitcher from "@/components/pages/private-space/ViewerSwitcher.astro";
+import {
+	getPrivateSpaceUserById,
+	getPrivateSpaceUsers,
+	getVisibleJointEntries,
+	getVisibleSharedEntries,
+} from "@/lib/private-space/repository";
+import { resolvePrivateSpaceUserId } from "@/lib/private-space/viewer";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+const currentUserId = resolvePrivateSpaceUserId(Astro.url);
+const partnerUserId = currentUserId === "you" ? "partner" : "you";
+
+const [users, currentUser, partnerUser, sharedEntries, jointEntries] =
+	await Promise.all([
+		getPrivateSpaceUsers(),
+		getPrivateSpaceUserById(currentUserId),
+		getPrivateSpaceUserById(partnerUserId),
+		getVisibleSharedEntries(currentUserId),
+		getVisibleJointEntries(currentUserId),
+	]);
+
+const incomingEntries = sharedEntries.filter(
+	(entry) => entry.recipient === currentUserId,
+);
+const outgoingEntries = sharedEntries.filter(
+	(entry) =>
+		entry.authorId === currentUserId && entry.recipient === partnerUserId,
+);
+const ambientSharedEntries = sharedEntries.filter(
+	(entry) =>
+		!incomingEntries.some((item) => item.id === entry.id) &&
+		!outgoingEntries.some((item) => item.id === entry.id),
+);
+---
+
+<MainGridLayout title="双方共享" description="按更贴近日常交流的方式查看 shared 与 joint 内容">
+	<ViewerSwitcher
+		users={users}
+		currentUserId={currentUserId}
+		currentPath="/space/shared/"
+	/>
+
+	<div class="shared-overview card-base">
+		<div class="shared-pill">
+			<strong>{incomingEntries.length}</strong>
+			<span>写给我的</span>
+		</div>
+		<div class="shared-pill">
+			<strong>{outgoingEntries.length}</strong>
+			<span>我写给 {partnerUser?.name || partnerUserId} 的</span>
+		</div>
+		<div class="shared-pill">
+			<strong>{ambientSharedEntries.length}</strong>
+			<span>共享记录</span>
+		</div>
+		<div class="shared-pill">
+			<strong>{jointEntries.length}</strong>
+			<span>共同内容</span>
+		</div>
+	</div>
+
+	<SpaceSection
+		title={`写给 ${currentUser?.name || currentUserId} 的内容`}
+		description="这里优先聚合那些明确以当前身份为接收对象的 shared 内容，更接近你们真实收到一段话时的阅读感受。"
+		entries={incomingEntries}
+		users={users}
+		emptyText="当前还没有明确写给你的 shared 内容。"
+	/>
+
+	<SpaceSection
+		title={`我写给 ${partnerUser?.name || partnerUserId} 的内容`}
+		description="这里放的是当前身份主动写给对方的 shared 内容，方便回看自己曾经表达过什么。"
+		entries={outgoingEntries}
+		users={users}
+		emptyText="当前还没有你主动写给对方的 shared 内容。"
+	/>
+
+	<SpaceSection
+		title="共享记录"
+		description="这里保留那些不强调具体接收对象、但仍属于双方都可见的 shared 记录，比如日常片段、共同阅读推荐等。"
+		entries={ambientSharedEntries}
+		users={users}
+		compact={true}
+		emptyText="当前没有额外的共享记录。"
+	/>
+
+	<SpaceSection
+		title="共同维护内容"
+		description="joint 更适合共同计划、一起维护的清单，或者不再区分发送对象的长期内容。"
+		entries={jointEntries}
+		users={users}
+		compact={true}
+		emptyText="当前视角下还没有 joint 内容。"
+	/>
+</MainGridLayout>
+
+<style>
+	.shared-overview {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 0.85rem;
+		padding: 1rem;
+		margin-bottom: 1rem;
+	}
+
+	.shared-pill {
+		display: grid;
+		gap: 0.2rem;
+		padding: 0.95rem 1rem;
+		border-radius: 1rem;
+		background: color-mix(in srgb, var(--btn-regular-bg) 68%, white);
+	}
+
+	.shared-pill strong {
+		font-size: 1.35rem;
+	}
+
+	.shared-pill span {
+		color: var(--text-secondary, rgba(0, 0, 0, 0.66));
+	}
+
+	@media (max-width: 900px) {
+		.shared-overview {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 640px) {
+		.shared-overview {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

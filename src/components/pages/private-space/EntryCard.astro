@@ -1,0 +1,198 @@
+---
+import type {
+	PrivateSpaceEntry,
+	PrivateSpaceUser,
+	PrivateSpaceUserId,
+} from "@/lib/private-space/types";
+import { buildPrivateSpaceUrl } from "@/lib/private-space/viewer";
+
+interface Props {
+	entry: PrivateSpaceEntry;
+	users: PrivateSpaceUser[];
+	compact?: boolean;
+	manageable?: boolean;
+	currentUserId?: PrivateSpaceUserId;
+	redirectTo?: string;
+}
+
+const {
+	entry,
+	users,
+	compact = false,
+	manageable = false,
+	currentUserId,
+	redirectTo = "/space/mine/",
+} = Astro.props;
+
+const author = users.find((user) => user.id === entry.authorId);
+
+const typeLabelMap: Record<PrivateSpaceEntry["type"], string> = {
+	daily: "日常",
+	recommendation: "推荐",
+	fitness: "计划",
+	hard_to_say: "不好开口",
+};
+
+const visibilityLabelMap: Record<PrivateSpaceEntry["visibility"], string> = {
+	self: "仅自己可见",
+	shared: "双方可见",
+	joint: "共同内容",
+};
+
+const statusLabelMap: Record<PrivateSpaceEntry["status"], string> = {
+	draft: "草稿",
+	saved: "已保存",
+	archived: "已归档",
+};
+---
+
+<article class:list={["entry-card card-base", compact && "compact-card"]}>
+	<div class="entry-topline">
+		<span class="entry-chip">{typeLabelMap[entry.type]}</span>
+		<span class="entry-chip muted">{visibilityLabelMap[entry.visibility]}</span>
+		<span class:list={["entry-chip", entry.status === "draft" ? "warning" : "neutral"]}>
+			{statusLabelMap[entry.status]}
+		</span>
+	</div>
+
+	<h3 class="entry-title">{entry.title}</h3>
+	<p class="entry-excerpt">{entry.excerpt}</p>
+
+	<div class="entry-meta">
+		<span>{author?.name || entry.authorId}</span>
+		<span>{new Date(entry.updatedAt).toLocaleDateString("zh-CN")}</span>
+		{entry.tags.length > 0 && <span>{entry.tags.join(" · ")}</span>}
+	</div>
+
+	{
+		manageable && currentUserId && (
+			<div class="entry-actions">
+				<a
+					href={buildPrivateSpaceUrl(`/space/edit/${entry.id}/`, currentUserId)}
+					class="action-link"
+				>
+					编辑
+				</a>
+
+				{entry.status === "draft" && (
+					<form method="POST" action={`/api/private-space/entries/${entry.id}/`}>
+						<input type="hidden" name="action" value="publish" />
+						<input type="hidden" name="userId" value={currentUserId} />
+						<input type="hidden" name="redirectTo" value={redirectTo} />
+						<button type="submit" class="action-btn primary">发布</button>
+					</form>
+				)}
+
+				{entry.status !== "archived" && (
+					<form method="POST" action={`/api/private-space/entries/${entry.id}/`}>
+						<input type="hidden" name="action" value="archive" />
+						<input type="hidden" name="userId" value={currentUserId} />
+						<input type="hidden" name="redirectTo" value={redirectTo} />
+						<button type="submit" class="action-btn">归档</button>
+					</form>
+				)}
+
+				<form method="POST" action={`/api/private-space/entries/${entry.id}/`}>
+					<input type="hidden" name="action" value="delete" />
+					<input type="hidden" name="userId" value={currentUserId} />
+					<input type="hidden" name="redirectTo" value={redirectTo} />
+					<button type="submit" class="action-btn danger">删除</button>
+				</form>
+			</div>
+		)
+	}
+</article>
+
+<style>
+	.entry-card {
+		padding: 1rem;
+		border-radius: 1rem;
+	}
+
+	.compact-card {
+		padding: 0.85rem;
+	}
+
+	.entry-topline {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-bottom: 0.75rem;
+	}
+
+	.entry-chip {
+		padding: 0.18rem 0.55rem;
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--primary) 16%, white);
+		color: color-mix(in srgb, var(--primary) 76%, black);
+		font-size: 0.78rem;
+		font-weight: 700;
+	}
+
+	.entry-chip.muted,
+	.entry-chip.neutral {
+		background: color-mix(in srgb, var(--btn-regular-bg) 72%, white);
+		color: var(--text-secondary, rgba(0, 0, 0, 0.65));
+	}
+
+	.entry-chip.warning {
+		background: #fff3cd;
+		color: #8a5b00;
+	}
+
+	.entry-title {
+		margin: 0 0 0.5rem;
+		font-size: 1.08rem;
+		line-height: 1.5rem;
+	}
+
+	.entry-excerpt {
+		margin: 0 0 0.9rem;
+		color: var(--text-secondary, rgba(0, 0, 0, 0.68));
+		line-height: 1.7;
+	}
+
+	.entry-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		font-size: 0.82rem;
+		color: var(--text-secondary, rgba(0, 0, 0, 0.58));
+	}
+
+	.entry-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.65rem;
+		margin-top: 1rem;
+	}
+
+	.entry-actions form {
+		margin: 0;
+	}
+
+	.action-link,
+	.action-btn {
+		border: 0;
+		border-radius: 999px;
+		padding: 0.58rem 0.9rem;
+		font-size: 0.84rem;
+		font-weight: 700;
+		background: color-mix(in srgb, var(--btn-regular-bg) 70%, white);
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.action-btn {
+		cursor: pointer;
+	}
+
+	.action-btn.primary {
+		background: color-mix(in srgb, var(--primary) 20%, white);
+	}
+
+	.action-btn.danger {
+		background: color-mix(in srgb, #f3b1b1 46%, white);
+		color: #7b1f1f;
+	}
+</style>

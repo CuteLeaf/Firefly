@@ -1,0 +1,117 @@
+---
+import { PRIVATE_SPACE_KV_KEYS } from "@/lib/private-space/kv-contract";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+---
+
+<MainGridLayout
+	title="KV 结构预览"
+	description="当前使用本地 KV 兼容存储层，未来只需要替换底层 binding"
+>
+	<section class="kv-shell">
+		<div class="kv-card card-base">
+			<h1>Cloudflare KV 接口形态已经固定</h1>
+			<p>
+				现在页面和仓库层已经不再直接读写 mock 数组，而是统一通过 KV 风格的
+				<code>get / put / delete / list</code>
+				接口访问数据。当前底层使用的是本地 JSON 持久化 binding，
+				未来接入真实 Cloudflare KV 时，只需要替换 binding，不需要再重写页面和业务逻辑。
+			</p>
+
+			<div class="kv-grid">
+				<div>
+					<h2>固定键</h2>
+					<ul>
+						<li><code>{PRIVATE_SPACE_KV_KEYS.users}</code></li>
+						<li><code>{PRIVATE_SPACE_KV_KEYS.stats}</code></li>
+						<li><code>{PRIVATE_SPACE_KV_KEYS.entryIndex}</code></li>
+						<li><code>{PRIVATE_SPACE_KV_KEYS.sharedFeed}</code></li>
+						<li><code>{PRIVATE_SPACE_KV_KEYS.jointFeed}</code></li>
+						<li><code>{PRIVATE_SPACE_KV_KEYS.drafts}</code></li>
+					</ul>
+				</div>
+				<div>
+					<h2>动态键</h2>
+					<ul>
+						<li><code>{PRIVATE_SPACE_KV_KEYS.entry("entry-id")}</code></li>
+						<li><code>{PRIVATE_SPACE_KV_KEYS.userFeed("you")}</code></li>
+						<li><code>{PRIVATE_SPACE_KV_KEYS.userFeed("partner")}</code></li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="kv-notes">
+				<div class="kv-note">
+					<strong>当前阶段</strong>
+					<span>本地 JSON 文件模拟 KV binding，便于开发时稳定保存和读取。</span>
+				</div>
+				<div class="kv-note">
+					<strong>下一阶段</strong>
+					<span>把本地 binding 换成 Wrangler 注入的真实 KV namespace。</span>
+				</div>
+			</div>
+
+			<pre class="kv-block">{`PrivateSpaceKVShape
+{
+  users: PrivateSpaceUser[],
+  stats: PrivateSpaceStats,
+  entryIndex: string[],
+  entries: Record<string, PrivateSpaceEntry>
+}`}</pre>
+		</div>
+	</section>
+</MainGridLayout>
+
+<style>
+	.kv-card {
+		padding: 1.2rem;
+	}
+
+	.kv-card p {
+		line-height: 1.8;
+	}
+
+	.kv-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1rem;
+		margin: 1rem 0;
+	}
+
+	.kv-grid ul {
+		margin: 0;
+		padding-left: 1.2rem;
+	}
+
+	.kv-notes {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1rem;
+		margin-bottom: 1rem;
+	}
+
+	.kv-note {
+		display: grid;
+		gap: 0.3rem;
+		padding: 1rem;
+		border-radius: 1rem;
+		background: color-mix(in srgb, var(--btn-regular-bg) 68%, white);
+	}
+
+	.kv-note span {
+		color: var(--text-secondary, rgba(0, 0, 0, 0.66));
+	}
+
+	.kv-block {
+		padding: 1rem;
+		border-radius: 1rem;
+		background: #f6f3ef;
+		overflow: auto;
+	}
+
+	@media (max-width: 720px) {
+		.kv-grid,
+		.kv-notes {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

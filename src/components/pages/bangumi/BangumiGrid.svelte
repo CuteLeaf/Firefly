@@ -32,9 +32,8 @@ const {
 
 const isDynamic = $derived(!!fetchConfig);
 
-// 状态
-let activeTab = $state(initialActiveTab || "");
-let loading = $state(isDynamic);
+let activeTab = $state("");
+let loading = $state(false);
 let error = $state(false);
 let errorTitle = $state("");
 let errorDesc = $state("");
@@ -49,6 +48,16 @@ let dynamicData = $state<Record<string, UserSubjectCollection[]>>({});
 // 合并后的数据
 const tabs = $derived(staticTabs || dynamicTabs);
 const bangumiData = $derived(staticData || dynamicData);
+
+$effect(() => {
+	if (activeTab === "") {
+		activeTab = initialActiveTab || "";
+	}
+});
+
+$effect(() => {
+	loading = isDynamic;
+});
 
 const categoryMap: Record<string, { name: string; subjectType: number }> = {
 	book: { name: i18n(I18nKey.bangumiCategoryBook), subjectType: 1 },
@@ -209,7 +218,7 @@ onMount(async () => {
 {:else if isDynamic && error}
   <div class="text-center py-16">
     <div class="inline-flex items-center justify-center w-16 h-16 bg-(--btn-regular-bg) rounded-full mb-6 border border-(--line-divider)">
-      <span class="text-[2rem] text-red-500">⚠</span>
+      <span class="text-[2rem] text-red-500">!</span>
     </div>
     <h2 class="text-xl font-semibold text-black/80 dark:text-white/80 mb-3">{errorTitle}</h2>
     <p class="text-black/60 dark:text-white/60 mb-4 max-w-md mx-auto">{errorDesc}</p>

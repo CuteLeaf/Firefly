@@ -1,0 +1,331 @@
+---
+import ViewerSwitcher from "@/components/pages/private-space/ViewerSwitcher.astro";
+import {
+	getComposeFieldConfig,
+	getPrivateSpaceUserById,
+	getPrivateSpaceUsers,
+	getVisibleDraftEntries,
+} from "@/lib/private-space/repository";
+import { buildPrivateSpaceUrl, resolvePrivateSpaceUserId } from "@/lib/private-space/viewer";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+const currentUserId = resolvePrivateSpaceUserId(Astro.url);
+const saveState = Astro.url.searchParams.get("saved");
+const errorState = Astro.url.searchParams.get("error");
+
+const [users, currentUser, composeFields, drafts] = await Promise.all([
+	getPrivateSpaceUsers(),
+	getPrivateSpaceUserById(currentUserId),
+	getComposeFieldConfig(),
+	getVisibleDraftEntries(currentUserId),
+]);
+
+const fieldMap = Object.fromEntries(composeFields.map((field) => [field.id, field]));
+---
+
+<MainGridLayout title="在线写作" description="未来两个人直接在网站写内容的入口原型">
+	<ViewerSwitcher
+		users={users}
+		currentUserId={currentUserId}
+		currentPath="/space/write/"
+	/>
+
+	<section class="writer-shell card-base">
+		<div class="writer-head">
+			<div>
+				<p class="eyebrow">现在可体验</p>
+				<h1>在线写作入口</h1>
+				<p>
+					现在已经可以先把内容提交到本地 mock 仓库层。它还没有接入 Cloudflare KV，
+					但已经具备“当前身份写入 -> 草稿或共享状态出现到页面里”的完整链路。
+				</p>
+			</div>
+			<div class="writer-state">
+				<strong>当前身份</strong>
+				<span>{currentUser?.name || currentUserId}</span>
+				<span>{currentUser?.roleLabel || "写作者"}</span>
+				<span>当前写入目标：本地 mock repository</span>
+			</div>
+		</div>
+
+		{saveState === "1" && (
+			<div class="feedback success">
+				内容已经写入本地 mock 数据层。现在可以去
+				<a href={buildPrivateSpaceUrl("/space/", currentUserId)}>空间首页</a>
+				或
+				<a href={buildPrivateSpaceUrl("/space/mine/", currentUserId)}>我的内容</a>
+				查看。
+			</div>
+		)}
+
+		{errorState === "1" && (
+			<div class="feedback error">
+				提交失败。请确认标题、正文、类型、可见范围和保存状态都已经填写。
+			</div>
+		)}
+
+		<div class="writer-grid">
+			<div class="compose-card">
+				<h2>写作面板</h2>
+				<form method="POST" action="/api/private-space/entries/" class="compose-form">
+					<input type="hidden" name="authorId" value={currentUserId} />
+
+					<label class="compose-field">
+						<span>{fieldMap.title.label}</span>
+						<input
+							type="text"
+							name="title"
+							placeholder={fieldMap.title.placeholder}
+							required
+						/>
+						<small>{fieldMap.title.helpText}</small>
+					</label>
+
+					<label class="compose-field">
+						<span>{fieldMap.content.label}</span>
+						<textarea
+							name="content"
+							placeholder={fieldMap.content.placeholder}
+							required
+						></textarea>
+						<small>{fieldMap.content.helpText}</small>
+					</label>
+
+					<div class="compose-split">
+						<label class="compose-field">
+							<span>内容类型</span>
+							<select name="type">
+								<option value="daily">日常记录</option>
+								<option value="recommendation">推荐内容</option>
+								<option value="fitness">锻炼计划</option>
+								<option value="hard_to_say">不好开口的话</option>
+							</select>
+							<small>决定内容会归到哪一类视图。</small>
+						</label>
+
+						<label class="compose-field">
+							<span>{fieldMap.visibility.label}</span>
+							<select name="visibility">
+								<option value="self">self</option>
+								<option value="shared">shared</option>
+								<option value="joint">joint</option>
+							</select>
+							<small>{fieldMap.visibility.helpText}</small>
+						</label>
+					</div>
+
+					<div class="compose-split">
+						<label class="compose-field">
+							<span>{fieldMap.recipient.label}</span>
+							<select name="recipient">
+								<option value="self">self</option>
+								<option value="partner">partner</option>
+								<option value="you">you</option>
+								<option value="both">both</option>
+							</select>
+							<small>{fieldMap.recipient.helpText}</small>
+						</label>
+
+						<label class="compose-field">
+							<span>保存状态</span>
+							<select name="status">
+								<option value="draft">draft</option>
+								<option value="saved">saved</option>
+							</select>
+							<small>先保存为草稿，或直接作为已保存内容进入空间。</small>
+						</label>
+					</div>
+
+					<label class="compose-field">
+						<span>标签</span>
+						<input
+							type="text"
+							name="tags"
+							placeholder="例如：日常, 晚安, 计划"
+						/>
+						<small>使用英文逗号分隔，提交后会拆分成 tags 数组。</small>
+					</label>
+
+					<div class="compose-actions">
+						<button type="submit">提交到本地 mock 仓库</button>
+					</div>
+				</form>
+			</div>
+
+			<div class="sidebar-card">
+				<h2>未来登录主体</h2>
+				<div class="user-list">
+					{users.map((user) => (
+						<div class="user-row">
+							<strong>{user.name}</strong>
+							<span>{user.roleLabel}</span>
+						</div>
+					))}
+				</div>
+
+				<h2>当前身份草稿</h2>
+				<ul class="draft-list">
+					{drafts.map((draft) => (
+						<li>
+							<strong>{draft.title}</strong>
+							<span>{new Date(draft.updatedAt).toLocaleString("zh-CN")}</span>
+						</li>
+					))}
+				</ul>
+				{drafts.length === 0 && <p class="draft-empty">当前身份还没有草稿。</p>}
+			</div>
+		</div>
+	</section>
+</MainGridLayout>
+
+<style>
+	.writer-shell {
+		padding: 1.2rem;
+	}
+
+	.eyebrow {
+		margin: 0 0 0.5rem;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+		font-size: 0.78rem;
+	}
+
+	.writer-head {
+		display: grid;
+		grid-template-columns: 1.4fr 0.9fr;
+		gap: 1rem;
+		margin-bottom: 1rem;
+	}
+
+	.writer-head h1,
+	.compose-card h2,
+	.sidebar-card h2 {
+		margin: 0 0 0.5rem;
+	}
+
+	.writer-state,
+	.compose-card,
+	.sidebar-card,
+	.feedback {
+		padding: 1rem;
+		border-radius: 1rem;
+		background: color-mix(in srgb, var(--btn-regular-bg) 68%, white);
+	}
+
+	.writer-state {
+		display: grid;
+		gap: 0.35rem;
+		align-content: start;
+	}
+
+	.feedback {
+		margin-bottom: 1rem;
+	}
+
+	.feedback.success {
+		background: color-mix(in srgb, #9fd8b9 38%, white);
+	}
+
+	.feedback.error {
+		background: color-mix(in srgb, #f3b1b1 36%, white);
+	}
+
+	.feedback a {
+		font-weight: 700;
+		margin: 0 0.2rem;
+	}
+
+	.writer-grid {
+		display: grid;
+		grid-template-columns: 1.35fr 0.85fr;
+		gap: 1rem;
+	}
+
+	.compose-form,
+	.user-list,
+	.draft-list {
+		display: grid;
+		gap: 0.6rem;
+	}
+
+	.compose-split {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.85rem;
+	}
+
+	.compose-field {
+		display: grid;
+		gap: 0.45rem;
+	}
+
+	.compose-field input,
+	.compose-field textarea,
+	.compose-field select {
+		width: 100%;
+		border: 1px solid color-mix(in srgb, var(--btn-regular-bg) 68%, black 5%);
+		border-radius: 0.8rem;
+		padding: 0.85rem 0.9rem;
+		background: rgba(255, 255, 255, 0.7);
+	}
+
+	.compose-field textarea {
+		min-height: 10rem;
+		resize: vertical;
+	}
+
+	.compose-field small {
+		color: var(--text-secondary, rgba(0, 0, 0, 0.66));
+	}
+
+	.compose-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-top: 0.25rem;
+	}
+
+	.compose-actions button {
+		border: 0;
+		border-radius: 999px;
+		padding: 0.82rem 1.15rem;
+		font-weight: 700;
+		cursor: pointer;
+		background: var(--primary);
+		color: white;
+	}
+
+	.user-row,
+	.draft-list li {
+		display: grid;
+		gap: 0.2rem;
+		padding: 0.75rem 0.85rem;
+		border-radius: 0.8rem;
+		background: rgba(255, 255, 255, 0.5);
+	}
+
+	.draft-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.draft-list span,
+	.user-row span,
+	.draft-empty {
+		color: var(--text-secondary, rgba(0, 0, 0, 0.66));
+		font-size: 0.88rem;
+	}
+
+	.draft-empty {
+		margin: 0.75rem 0 0;
+	}
+
+	@media (max-width: 900px) {
+		.writer-head,
+		.writer-grid,
+		.compose-split {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

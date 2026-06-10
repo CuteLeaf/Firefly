@@ -1,24 +1,78 @@
 ---
 import type { GetStaticPaths } from "astro";
 import Pagination from "@/components/common/Pagination.astro";
+import SpaceHero from "@/components/pages/private-space/SpaceHero.astro";
+import SpaceSection from "@/components/pages/private-space/SpaceSection.astro";
 import PostPage from "@/components/layout/PostPage.astro";
 import { siteConfig } from "@/config";
+import {
+	getJointEntries,
+	getPrivateSpaceFeed,
+	getPrivateSpaceStats,
+	getPrivateSpaceUsers,
+	getSharedEntries,
+} from "@/lib/private-space/repository";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
 import { getSortedPosts } from "@/utils/content-utils";
+
 export const getStaticPaths = (async ({ paginate }) => {
 	const allBlogPosts = await getSortedPosts();
-	// 使用配置中的文章数量
 	const pageSize = siteConfig.pagination.postsPerPage;
 	return paginate(allBlogPosts, { pageSize });
 }) satisfies GetStaticPaths;
-// https://github.com/withastro/astro/issues/6507#issuecomment-1489916992
 
 const { page } = Astro.props;
-
 const len = page.data.length;
+
+const [users, stats, feed, sharedEntries, jointEntries] = await Promise.all([
+	getPrivateSpaceUsers(),
+	getPrivateSpaceStats(),
+	getPrivateSpaceFeed(),
+	getSharedEntries(),
+	getJointEntries(),
+]);
 ---
 
 <MainGridLayout>
+  {
+    page.currentPage === 1 && (
+      <>
+        <SpaceHero users={users} stats={stats} />
+        <div class="home-space-nav card-base">
+          <a href="/space/">空间主页</a>
+          <a href="/space/mine/">我的内容</a>
+          <a href="/space/shared/">共享视图</a>
+          <a href="/space/write/">在线写作</a>
+        </div>
+        <SpaceSection
+          title="空间预览"
+          description="这部分先展示未来登录后最核心的内容流视图，让首页不再只是公开博客列表。"
+          entries={feed.slice(0, 3)}
+          users={users}
+          compact={true}
+        />
+        <div class="home-space-grid">
+          <SpaceSection
+            title="双方共享"
+            description="适合“我写给你看”的内容。"
+            entries={sharedEntries.slice(0, 2)}
+            users={users}
+            compact={true}
+            emptyText="暂时没有 shared 内容。"
+          />
+          <SpaceSection
+            title="共同内容"
+            description="适合计划、清单和共同维护的记录。"
+            entries={jointEntries.slice(0, 2)}
+            users={users}
+            compact={true}
+            emptyText="暂时没有 joint 内容。"
+          />
+        </div>
+      </>
+    )
+  }
+
   <PostPage page={page} />
   {
     page.total > page.size && (
@@ -31,40 +85,32 @@ const len = page.data.length;
   }
 </MainGridLayout>
 
-<script>
-  // 响应式分页处理脚本
-  document.addEventListener("DOMContentLoaded", function () {
-    // 如果启用了响应式分页，添加相应的CSS类
-    const responsiveEnabled = true; // ${siteConfig.pagination.responsive}
-    if (responsiveEnabled) {
-      const deviceType = getDeviceType();
-      document.body.classList.add(`device-${deviceType}`);
-
-      // 监听窗口大小变化
-      let resizeTimeout: any;
-      window.addEventListener("resize", function () {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(function () {
-          const newDeviceType = getDeviceType();
-          const currentDeviceType = document.body.className.match(
-            /device-(mobile|tablet|desktop)/
-          )?.[1];
-
-          if (currentDeviceType !== newDeviceType) {
-            document.body.classList.remove(`device-${currentDeviceType}`);
-            document.body.classList.add(`device-${newDeviceType}`);
-          }
-        }, 250);
-      });
-    }
-  });
-
-  function getDeviceType() {
-    if (typeof window === "undefined") return "desktop";
-
-    const width = window.innerWidth;
-    if (width < 768) return "mobile";
-    if (width < 1024) return "tablet";
-    return "desktop";
+<style>
+  .home-space-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
   }
-</script>
+
+  .home-space-nav a {
+    padding: 0.6rem 0.9rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--btn-regular-bg) 68%, white);
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  .home-space-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  @media (max-width: 900px) {
+    .home-space-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

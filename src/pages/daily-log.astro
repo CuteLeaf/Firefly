@@ -1,0 +1,24 @@
+---
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import DailyTimeline from "@/components/layout/DailyTimeline.svelte";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import { getFilteredPosts } from "@/utils/content-utils";
+
+const posts = (await getFilteredPosts({ includeSemiPrivate: true })).filter(
+	(p) => (p.data.category || "") === "daily-log",
+);
+---
+
+<MainGridLayout>
+  <section class="page-daily container">
+    <h1>{i18n(I18nKey.dailyLog)}</h1>
+    {posts.length === 0 ? <p>{i18n(I18nKey.noDaily)}</p> : <DailyTimeline posts={posts} />}
+  </section>
+</MainGridLayout>
+
+<style>
+  .page-daily {
+    padding: 1rem;
+  }
+</style>

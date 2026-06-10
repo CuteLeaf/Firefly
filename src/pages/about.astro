@@ -1,25 +1,105 @@
 ---
-
-import { getEntry, render } from "astro:content";
-import Markdown from "@components/common/Markdown.astro";
-import I18nKey from "@/i18n/i18nKey";
-import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
 
-const aboutPost = await getEntry("spec", "about");
-
-if (!aboutPost) {
-	throw new Error("About page content not found");
-}
-
-const { Content } = await render(aboutPost);
+const bullets = [
+	"这个站点的主要用户只有两个人，所以后续重点不再是公开展示，而是私有记录、共享阅读和长期归档。",
+	"内容模型会逐步从传统博客文章转向双人内容对象，核心维度包括 authorId、type、visibility、recipient 和 status。",
+	"在线写作会走“先搭结构、后接接口”的方式推进。当前已经预留 Cloudflare KV 的 key 组织与 mock 仓储层。",
+	"未来真正接入时，会优先补登录、KV 读写、草稿保存、shared/joint/self 三层可见性，以及图片上传能力。",
+];
 ---
-<MainGridLayout title={i18n(I18nKey.about)} description={i18n(I18nKey.about)}>
-    <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
-        <div class="card-base z-10 px-9 py-6 relative w-full ">
-            <Markdown class="mt-2">
-                <Content />
-            </Markdown>
-        </div>
+
+<MainGridLayout title="关于这个空间" description="双人私有网站的当前定位与后续方向">
+  <section class="about-shell card-base">
+    <p class="eyebrow">关于这个空间</p>
+    <h1>它正在从一个博客主题，慢慢变成一个只属于两个人的私有记录系统。</h1>
+    <p class="lead">
+      现在这版改造的重点，不是把所有接口一次性接完，而是先把最关键的产品结构固定下来：双人身份、shared/joint/self
+      三层内容边界、在线写作入口、以及 Cloudflare KV 的未来落点。
+    </p>
+
+    <div class="about-grid">
+      <div class="about-card">
+        <h2>当前完成</h2>
+        <ul>
+          <li>双人私有空间首页与视图入口</li>
+          <li>我的内容 / 双方共享 / 在线写作 / KV 结构预览页</li>
+          <li>KV key 约定、数据模型、mock 仓储层</li>
+          <li>首页从公开博客语境转向双人空间语境</li>
+        </ul>
+      </div>
+
+      <div class="about-card">
+        <h2>后续重点</h2>
+        <ul>
+          <li>接入登录与会话校验</li>
+          <li>接入 Cloudflare KV 的真实读写</li>
+          <li>在线编辑器与草稿流转</li>
+          <li>shared / joint / self 视图的真实权限控制</li>
+        </ul>
+      </div>
     </div>
+
+    <div class="about-notes">
+      {bullets.map((bullet) => (
+        <div class="note">{bullet}</div>
+      ))}
+    </div>
+  </section>
 </MainGridLayout>
+
+<style>
+  .about-shell {
+    padding: 1.3rem;
+  }
+
+  .eyebrow {
+    margin: 0 0 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+  }
+
+  h1 {
+    margin: 0;
+    line-height: 1.25;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+  }
+
+  .lead {
+    margin: 1rem 0 1.25rem;
+    line-height: 1.9;
+    color: var(--text-secondary, rgba(0, 0, 0, 0.7));
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .about-card,
+  .note {
+    padding: 1rem;
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--btn-regular-bg) 68%, white);
+  }
+
+  .about-card ul {
+    margin: 0.75rem 0 0;
+    padding-left: 1.2rem;
+    line-height: 1.8;
+  }
+
+  .about-notes {
+    display: grid;
+    gap: 0.8rem;
+    margin-top: 1rem;
+  }
+
+  @media (max-width: 760px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

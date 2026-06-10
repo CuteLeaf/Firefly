@@ -1,0 +1,167 @@
+---
+import type { PrivateSpaceStats, PrivateSpaceUser } from "@/lib/private-space/types";
+
+interface Props {
+	users: PrivateSpaceUser[];
+	stats: PrivateSpaceStats;
+}
+
+const { users, stats } = Astro.props;
+---
+
+<section class="space-hero card-base">
+  <div class="space-copy">
+    <p class="eyebrow">双人私有内容空间</p>
+    <h1>这里只服务你们两个人，不再假装是给所有人看的博客。</h1>
+    <p class="summary">
+      现在的页面已经按“自己 / 双方共享 / 共同内容”重新组织，并预留了未来接入在线写作和 KV 存储的结构。
+    </p>
+    <div class="hero-actions">
+      <a href="/space/" class="hero-link primary">进入空间主页</a>
+      <a href="/space/write/" class="hero-link">查看在线写作占位页</a>
+    </div>
+  </div>
+  <div class="space-side">
+    <div class="user-stack">
+      {users.map((user) => (
+        <div class="user-card">
+          <div class="avatar" style={`--accent:${user.accent}`}>{user.name.slice(0, 1)}</div>
+          <div>
+            <div class="user-name">{user.name}</div>
+            <div class="user-role">{user.roleLabel}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <strong>{stats.totalEntries}</strong>
+        <span>当前内容总数</span>
+      </div>
+      <div class="stat-card">
+        <strong>{stats.sharedEntries}</strong>
+        <span>双方共享</span>
+      </div>
+      <div class="stat-card">
+        <strong>{stats.jointEntries}</strong>
+        <span>共同内容</span>
+      </div>
+      <div class="stat-card">
+        <strong>{stats.draftEntries}</strong>
+        <span>草稿待整理</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .space-hero {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .eyebrow {
+    margin: 0 0 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.8rem;
+    color: var(--text-secondary, rgba(0, 0, 0, 0.6));
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.18;
+  }
+
+  .summary {
+    margin: 1rem 0 0;
+    line-height: 1.8;
+    color: var(--text-secondary, rgba(0, 0, 0, 0.7));
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 1.25rem;
+  }
+
+  .hero-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 700;
+    background: color-mix(in srgb, var(--btn-regular-bg) 70%, white);
+  }
+
+  .hero-link.primary {
+    background: var(--primary);
+    color: white;
+  }
+
+  .space-side {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .user-stack,
+  .stat-grid {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .user-card,
+  .stat-card {
+    display: flex;
+    gap: 0.85rem;
+    align-items: center;
+    padding: 0.9rem 1rem;
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--btn-regular-bg) 68%, white);
+  }
+
+  .avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    color: white;
+    background: var(--accent);
+  }
+
+  .user-name,
+  .stat-card strong {
+    font-weight: 700;
+  }
+
+  .user-role,
+  .stat-card span {
+    color: var(--text-secondary, rgba(0, 0, 0, 0.65));
+    font-size: 0.9rem;
+  }
+
+  .stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stat-card {
+    display: grid;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .space-hero {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+

@@ -1,0 +1,51 @@
+---
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { getFilteredPosts } from "@/utils/content-utils";
+
+const posts = (await getFilteredPosts({ includeSemiPrivate: true })).filter(
+	(p) => (p.data.category || "") === "fitness-plan",
+);
+---
+
+<MainGridLayout>
+  <section class="page-fitness container">
+    <h1>锻炼计划</h1>
+    {
+      posts.length === 0 ? (
+        <p>暂无锻炼计划</p>
+      ) : (
+        <ul class="fitness-list">
+          {posts.map((p) => (
+            <li class="fitness-item">
+              <a href={`/posts/${p.id}`}>{p.data.title}</a>
+              {p.data.description && <p class="fitness-desc">{p.data.description}</p>}
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+</MainGridLayout>
+
+<style>
+  .page-fitness {
+    padding: 1rem;
+  }
+
+  .fitness-list {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .fitness-item {
+    list-style: none;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: var(--card-bg);
+  }
+
+  .fitness-desc {
+    margin-top: 0.5rem;
+    opacity: 0.8;
+  }
+</style>

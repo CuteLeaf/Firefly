@@ -1,0 +1,258 @@
+---
+import ViewerSwitcher from "@/components/pages/private-space/ViewerSwitcher.astro";
+import {
+	getComposeFieldConfig,
+	getPrivateSpaceEntryById,
+	getPrivateSpaceUserById,
+	getPrivateSpaceUsers,
+} from "@/lib/private-space/repository";
+import {
+	buildPrivateSpaceUrl,
+	resolvePrivateSpaceUserId,
+} from "@/lib/private-space/viewer";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+const currentUserId = resolvePrivateSpaceUserId(Astro.url);
+const entryId = Astro.params.id || "";
+const errorState = Astro.url.searchParams.get("error");
+
+const [users, currentUser, composeFields, entry] = await Promise.all([
+	getPrivateSpaceUsers(),
+	getPrivateSpaceUserById(currentUserId),
+	getComposeFieldConfig(),
+	getPrivateSpaceEntryById(entryId),
+]);
+
+if (!entry || entry.authorId !== currentUserId) {
+	return Astro.redirect(buildPrivateSpaceUrl("/space/mine/", currentUserId));
+}
+
+const fieldMap = Object.fromEntries(composeFields.map((field) => [field.id, field]));
+---
+
+<MainGridLayout title="编辑内容" description="修改已有内容的字段和可见范围">
+	<ViewerSwitcher
+		users={users}
+		currentUserId={currentUserId}
+		currentPath={`/space/edit/${entry.id}/`}
+	/>
+
+	<section class="editor-shell card-base">
+		<div class="editor-head">
+			<div>
+				<p class="eyebrow">正在编辑</p>
+				<h1>{entry.title}</h1>
+				<p>你现在可以修改标题、正文、类型、可见范围、接收对象、状态和标签。</p>
+			</div>
+			<div class="editor-meta">
+				<strong>当前身份</strong>
+				<span>{currentUser?.name || currentUserId}</span>
+				<span>最后更新：{new Date(entry.updatedAt).toLocaleString("zh-CN")}</span>
+			</div>
+		</div>
+
+		{errorState === "1" && (
+			<div class="feedback error">保存失败，请确认必填字段都已经填写完成。</div>
+		)}
+
+		<form method="POST" action={`/api/private-space/entries/${entry.id}/`} class="editor-form">
+			<input type="hidden" name="action" value="update" />
+			<input type="hidden" name="userId" value={currentUserId} />
+			<input
+				type="hidden"
+				name="redirectTo"
+				value={buildPrivateSpaceUrl("/space/mine/", currentUserId)}
+			/>
+
+			<label class="compose-field">
+				<span>{fieldMap.title.label}</span>
+				<input type="text" name="title" value={entry.title} required />
+				<small>{fieldMap.title.helpText}</small>
+			</label>
+
+			<label class="compose-field">
+				<span>{fieldMap.content.label}</span>
+				<textarea name="content" required>{entry.content}</textarea>
+				<small>{fieldMap.content.helpText}</small>
+			</label>
+
+			<div class="compose-split">
+				<label class="compose-field">
+					<span>内容类型</span>
+					<select name="type">
+						<option value="daily" selected={entry.type === "daily"}>日常记录</option>
+						<option
+							value="recommendation"
+							selected={entry.type === "recommendation"}
+						>
+							推荐内容
+						</option>
+						<option value="fitness" selected={entry.type === "fitness"}>锻炼计划</option>
+						<option
+							value="hard_to_say"
+							selected={entry.type === "hard_to_say"}
+						>
+							不好开口的话
+						</option>
+					</select>
+				</label>
+
+				<label class="compose-field">
+					<span>{fieldMap.visibility.label}</span>
+					<select name="visibility">
+						<option value="self" selected={entry.visibility === "self"}>self</option>
+						<option value="shared" selected={entry.visibility === "shared"}>shared</option>
+						<option value="joint" selected={entry.visibility === "joint"}>joint</option>
+					</select>
+				</label>
+			</div>
+
+			<div class="compose-split">
+				<label class="compose-field">
+					<span>{fieldMap.recipient.label}</span>
+					<select name="recipient">
+						<option value="self" selected={entry.recipient === "self"}>self</option>
+						<option value="partner" selected={entry.recipient === "partner"}>partner</option>
+						<option value="you" selected={entry.recipient === "you"}>you</option>
+						<option value="both" selected={entry.recipient === "both"}>both</option>
+					</select>
+				</label>
+
+				<label class="compose-field">
+					<span>保存状态</span>
+					<select name="status">
+						<option value="draft" selected={entry.status === "draft"}>draft</option>
+						<option value="saved" selected={entry.status === "saved"}>saved</option>
+						<option value="archived" selected={entry.status === "archived"}>archived</option>
+					</select>
+				</label>
+			</div>
+
+			<label class="compose-field">
+				<span>标签</span>
+				<input type="text" name="tags" value={entry.tags.join(", ")} />
+				<small>使用英文逗号分隔。</small>
+			</label>
+
+			<div class="editor-actions">
+				<button type="submit">保存修改</button>
+				<a href={buildPrivateSpaceUrl("/space/mine/", currentUserId)}>返回我的内容</a>
+			</div>
+		</form>
+	</section>
+</MainGridLayout>
+
+<style>
+	.editor-shell {
+		padding: 1.2rem;
+	}
+
+	.eyebrow {
+		margin: 0 0 0.5rem;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+		font-size: 0.78rem;
+	}
+
+	.editor-head {
+		display: grid;
+		grid-template-columns: 1.4fr 0.9fr;
+		gap: 1rem;
+		margin-bottom: 1rem;
+	}
+
+	.editor-head h1 {
+		margin: 0 0 0.5rem;
+	}
+
+	.editor-meta,
+	.feedback,
+	.editor-form {
+		padding: 1rem;
+		border-radius: 1rem;
+		background: color-mix(in srgb, var(--btn-regular-bg) 68%, white);
+	}
+
+	.editor-meta {
+		display: grid;
+		gap: 0.35rem;
+		align-content: start;
+	}
+
+	.feedback {
+		margin-bottom: 1rem;
+	}
+
+	.feedback.error {
+		background: color-mix(in srgb, #f3b1b1 36%, white);
+	}
+
+	.editor-form {
+		display: grid;
+		gap: 0.75rem;
+	}
+
+	.compose-split {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.85rem;
+	}
+
+	.compose-field {
+		display: grid;
+		gap: 0.45rem;
+	}
+
+	.compose-field input,
+	.compose-field textarea,
+	.compose-field select {
+		width: 100%;
+		border: 1px solid color-mix(in srgb, var(--btn-regular-bg) 68%, black 5%);
+		border-radius: 0.8rem;
+		padding: 0.85rem 0.9rem;
+		background: rgba(255, 255, 255, 0.7);
+	}
+
+	.compose-field textarea {
+		min-height: 10rem;
+		resize: vertical;
+	}
+
+	.compose-field small {
+		color: var(--text-secondary, rgba(0, 0, 0, 0.66));
+	}
+
+	.editor-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-top: 0.25rem;
+	}
+
+	.editor-actions button,
+	.editor-actions a {
+		border: 0;
+		border-radius: 999px;
+		padding: 0.82rem 1.15rem;
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.editor-actions button {
+		cursor: pointer;
+		background: var(--primary);
+		color: white;
+	}
+
+	.editor-actions a {
+		background: color-mix(in srgb, var(--btn-regular-bg) 70%, white);
+		color: inherit;
+	}
+
+	@media (max-width: 900px) {
+		.editor-head,
+		.compose-split {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

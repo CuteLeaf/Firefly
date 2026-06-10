@@ -51,6 +51,32 @@ export async function getSortedPostsList(): Promise<PostForList[]> {
 
 	return sortedPostsList;
 }
+
+/**
+ * 获取过滤后的文章列表
+ * options:
+ *  - recipient: 如果传入，则只返回写给该收信人的文章
+ *  - includeSemiPrivate: 是否包含 semi-private
+ *  - includePrivate: 是否包含 private
+ */
+export async function getFilteredPosts(opts?: {
+	recipient?: string;
+	includeSemiPrivate?: boolean;
+	includePrivate?: boolean;
+}): Promise<PostForList[]> {
+	const sorted = await getRawSortedPosts();
+	const filtered = sorted.filter((post) => {
+		const privacy = (post.data as any).privacy || "public";
+		if (privacy === "private" && !opts?.includePrivate) return false;
+		if (privacy === "semi-private" && !opts?.includeSemiPrivate)
+			return false;
+		if (opts?.recipient && (post.data as any).recipient !== opts.recipient)
+			return false;
+		return true;
+	});
+
+	return filtered.map((post) => ({ id: post.id, data: post.data }));
+}
 export type Tag = {
 	name: string;
 	count: number;

@@ -1,0 +1,137 @@
+---
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import { getFilteredPosts } from "@utils/content-utils";
+import type { PostForList } from "@utils/content-utils";
+
+const allPosts = await getFilteredPosts({ includeSemiPrivate: true });
+const daily = allPosts.filter((p) => (p.data.category || "") === "daily-log");
+const recommends = allPosts.filter(
+	(p) => (p.data.category || "") === "recommendations",
+);
+const fitness = allPosts.filter(
+	(p) => (p.data.category || "") === "fitness-plan",
+);
+
+function preview(list: PostForList[]) {
+	return list.slice(0, 3);
+}
+
+function coverUrl(entry: PostForList) {
+	return entry.data.image || "";
+}
+
+function formatDate(entry: PostForList) {
+	return entry.data.published
+		? new Date(entry.data.published).toLocaleDateString()
+		: "";
+}
+---
+
+<section class="dual-space-overview">
+	<div class="col">
+		<div class="col-head">
+			<h3>{i18n(I18nKey.dailyLog)}</h3>
+			<a href="/daily-log/" class="view-all">{i18n(I18nKey.viewMore)}</a>
+		</div>
+		<div class="cards">
+			{preview(daily).map((p: PostForList) => (
+				<article class="mini-card">
+					{coverUrl(p) && (
+						<a class="thumb" href={`/posts/${p.id}`}>
+							<img src={coverUrl(p)} alt="cover" />
+						</a>
+					)}
+					<div class="mc-body">
+						<a class="mc-title" href={`/posts/${p.id}`}>{p.data.title || p.id}</a>
+						<div class="mc-meta">
+							{formatDate(p)}
+							{(p.data as any).recipient
+								? ` · ${i18n(I18nKey.by)} ${(p.data as any).recipient}`
+								: ""}
+						</div>
+					</div>
+					{(p.data as any).privacy &&
+						(p.data as any).privacy !== "public" && (
+							<div class="mc-privacy">
+								{(p.data as any).privacy === "private" ? "LOCKED" : "LIMITED"}
+							</div>
+						)}
+				</article>
+			))}
+			{daily.length === 0 && <div class="empty">{i18n(I18nKey.noDaily)}</div>}
+		</div>
+	</div>
+
+	<div class="col">
+		<div class="col-head">
+			<h3>{i18n(I18nKey.recommendations)}</h3>
+			<a href="/recommendations/" class="view-all">{i18n(I18nKey.viewMore)}</a>
+		</div>
+		<div class="cards">
+			{preview(recommends).map((p: PostForList) => (
+				<article class="mini-card">
+					{coverUrl(p) && (
+						<a class="thumb" href={`/posts/${p.id}`}>
+							<img src={coverUrl(p)} alt="cover" />
+						</a>
+					)}
+					<div class="mc-body">
+						<a class="mc-title" href={`/posts/${p.id}`}>{p.data.title || p.id}</a>
+						<div class="mc-meta">{formatDate(p)}</div>
+					</div>
+				</article>
+			))}
+			{recommends.length === 0 && (
+				<div class="empty">{i18n(I18nKey.noRecommendations)}</div>
+			)}
+		</div>
+	</div>
+
+	<div class="col">
+		<div class="col-head">
+			<h3>{i18n(I18nKey.fitnessPlan)}</h3>
+			<a href="/fitness-checkin/" class="view-all">{i18n(I18nKey.viewMore)}</a>
+		</div>
+		<div class="cards">
+			{preview(fitness).map((p: PostForList) => (
+				<article class="mini-card">
+					{coverUrl(p) && (
+						<a class="thumb" href={`/posts/${p.id}`}>
+							<img src={coverUrl(p)} alt="cover" />
+						</a>
+					)}
+					<div class="mc-body">
+						<a class="mc-title" href={`/posts/${p.id}`}>{p.data.title || p.id}</a>
+						<div class="mc-meta">{formatDate(p)}</div>
+					</div>
+				</article>
+			))}
+			{fitness.length === 0 && <div class="empty">{i18n(I18nKey.noPlans)}</div>}
+		</div>
+	</div>
+</section>
+
+<style>
+.dual-space-overview{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0}
+.dual-space-overview .col{background:var(--card-bg);padding:1rem;border-radius:10px}
+.col-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.col-head h3{margin:0}
+.view-all{font-size:.85rem;color:var(--muted);text-decoration:none}
+.cards{display:flex;flex-direction:column;gap:.6rem}
+.mini-card{display:flex;gap:.6rem;align-items:center;padding:.4rem;border-radius:8px;background:transparent}
+.thumb img{width:64px;height:48px;object-fit:cover;border-radius:6px}
+.mc-body{flex:1}
+.mc-title{font-weight:600;color:inherit;text-decoration:none}
+.mc-meta{font-size:.85rem;color:var(--muted)}
+.mc-privacy{font-size:.75rem;margin-left:.4rem;font-weight:700;letter-spacing:.04em;color:var(--text-secondary)}
+.empty{color:var(--muted);padding:.6rem}
+
+@media (max-width:900px){
+  .dual-space-overview{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:640px){
+  .dual-space-overview{grid-template-columns:1fr}
+  .thumb img{width:84px;height:56px}
+}
+</style>

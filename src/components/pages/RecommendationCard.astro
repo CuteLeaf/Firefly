@@ -1,0 +1,19 @@
+---
+import type { PostForList } from "@/utils/content-utils";
+
+interface Props { entry: PostForList }
+const { entry } = Astro.props as Props;
+const title = entry.data.title || entry.id;
+const desc = entry.data.description || '';
+const link = entry.data.sourceLink || `/posts/${entry.id}`;
+---
+<article class="rec-card card-base">
+  <h4 class="rec-title"><a href={link}>{title}</a></h4>
+  <div class="rec-desc">{desc}</div>
+</article>
+
+<style>
+.rec-card{padding:.75rem;border-radius:8px;background:var(--card-bg)}
+.rec-title{margin:0 0 .25rem 0}
+.rec-desc{color:var(--text-secondary);font-size:.95rem}
+</style>

@@ -212,6 +212,25 @@ export const zh_CN: Translation = {
 	// 加密
 	[Key.postEncrypted]: "本文已加密",
 
+	// 双人共享空间
+	[Key.dualSpaceTitle]: "属于我们的空间",
+	[Key.dualSpaceDesc]: "记录我们一起的生活、推荐与计划，留住那些说不出口的话。",
+	[Key.dailyLog]: "日常记录",
+	[Key.recommendations]: "推荐的东西",
+	[Key.fitnessPlan]: "锻炼计划",
+	[Key.privateThoughts]: "不好开口的地方",
+	[Key.recipient]: "收信人",
+	[Key.privacy]: "隐私级别",
+	[Key.privacyLevel]: "隐私",
+	[Key.by]: "来自",
+
+	// Dual space helpers
+	[Key.viewMore]: "更多",
+	[Key.noRecords]: "暂无记录",
+	[Key.noRecommendations]: "暂无推荐",
+	[Key.noPlans]: "暂无计划",
+	[Key.noDaily]: "暂无日常记录",
+
 	// 壁纸模式
 	[Key.wallpaperMode]: "壁纸模式",
 	[Key.wallpaperBannerMode]: "横幅壁纸",

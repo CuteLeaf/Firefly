@@ -1,0 +1,92 @@
+---
+import EntryCard from "./EntryCard.astro";
+import type {
+	PrivateSpaceEntry,
+	PrivateSpaceUser,
+	PrivateSpaceUserId,
+} from "@/lib/private-space/types";
+
+interface Props {
+	title: string;
+	description?: string;
+	entries: PrivateSpaceEntry[];
+	users: PrivateSpaceUser[];
+	emptyText?: string;
+	compact?: boolean;
+	manageable?: boolean;
+	currentUserId?: PrivateSpaceUserId;
+	redirectTo?: string;
+}
+
+const {
+	title,
+	description,
+	entries,
+	users,
+	emptyText = "这里还没有内容。",
+	compact = false,
+	manageable = false,
+	currentUserId,
+	redirectTo = "/space/mine/",
+} = Astro.props;
+---
+
+<section class="space-section">
+	<div class="space-section-head">
+		<div>
+			<h2>{title}</h2>
+			{description && <p>{description}</p>}
+		</div>
+	</div>
+	{
+		entries.length === 0 ? (
+			<div class="empty-card card-base">{emptyText}</div>
+		) : (
+			<div class:list={["entry-grid", compact && "compact-grid"]}>
+				{entries.map((entry) => (
+					<EntryCard
+						entry={entry}
+						users={users}
+						compact={compact}
+						manageable={manageable}
+						currentUserId={currentUserId}
+						redirectTo={redirectTo}
+					/>
+				))}
+			</div>
+		)
+	}
+</section>
+
+<style>
+	.space-section {
+		margin: 0 0 1.25rem;
+	}
+
+	.space-section-head h2 {
+		margin: 0;
+		font-size: 1.4rem;
+	}
+
+	.space-section-head p {
+		margin: 0.45rem 0 0;
+		color: var(--text-secondary, rgba(0, 0, 0, 0.68));
+	}
+
+	.entry-grid {
+		display: grid;
+		gap: 1rem;
+		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+		margin-top: 0.9rem;
+	}
+
+	.compact-grid {
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	}
+
+	.empty-card {
+		margin-top: 0.9rem;
+		padding: 1rem;
+		color: var(--text-secondary, rgba(0, 0, 0, 0.68));
+	}
+</style>

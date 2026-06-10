@@ -1,0 +1,22 @@
+---
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+---
+<section class="dual-space-hero">
+	<h1 class="dual-space-title">{i18n(I18nKey.dualSpaceTitle)}</h1>
+	<p class="dual-space-desc">{i18n(I18nKey.dualSpaceDesc)}</p>
+
+	<nav class="dual-space-nav">
+		<a class="card" href="/posts/?category=daily-log">{i18n(I18nKey.dailyLog)}</a>
+		<a class="card" href="/recommendations/">{i18n(I18nKey.recommendations)}</a>
+		<a class="card" href="/fitness-checkin/">{i18n(I18nKey.fitnessPlan)}</a>
+		<a class="card" href="/posts/?category=private-thoughts">{i18n(I18nKey.privateThoughts)}</a>
+	</nav>
+</section>
+<style>
+.dual-space-hero{padding:2rem 1rem;text-align:center}
+.dual-space-title{font-size:2rem;margin-bottom:.5rem}
+.dual-space-desc{color:var(--muted);margin-bottom:1rem}
+.dual-space-nav{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+.dual-space-nav .card{background:var(--card-bg);padding:0.8rem 1rem;border-radius:8px;text-decoration:none;color:inherit}
+</style>

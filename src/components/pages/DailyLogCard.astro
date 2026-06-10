@@ -1,0 +1,34 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import I18nKey from '@/i18n/i18nKey';
+import { i18n } from '@/i18n/translation';
+
+interface Props {
+  entry: CollectionEntry<'posts'>;
+}
+const { entry } = Astro.props as Props;
+const title = entry.data.title || entry.id;
+const date = entry.data.published ? new Date(entry.data.published).toLocaleDateString() : '';
+const excerpt = entry.data.description || '';
+const recipient = (entry.data as any).recipient || '';
+const privacy = (entry.data as any).privacy || 'public';
+---
+<article class="daily-log-card card-base">
+  <header class="dlc-header">
+    <h3 class="dlc-title"><a href={`/posts/${entry.id}`}>{title}</a></h3>
+    <div class="dlc-meta">{date} {recipient ? ` · ${i18n(I18nKey.by)} ${recipient}` : ''}</div>
+  </header>
+  <div class="dlc-body">{excerpt}</div>
+  {privacy !== 'public' && (
+    <div class="dlc-privacy">{privacy === 'private' ? '🔒 私密' : '🔐 半公开'}</div>
+  )}
+</article>
+
+<style>
+.daily-log-card { padding:0.75rem; border-radius:8px; background:var(--card-bg); }
+.dlc-header { display:flex; justify-content:space-between; align-items:center }
+.dlc-title { margin:0; font-size:1.05rem }
+.dlc-meta { color:var(--muted); font-size:0.85rem }
+.dlc-body { margin-top:0.5rem; color:var(--text-secondary) }
+.dlc-privacy { margin-top:0.5rem; font-size:0.85rem; color:var(--muted) }
+</style>

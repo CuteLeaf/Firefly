@@ -1,0 +1,120 @@
+---
+import SpaceHero from "@/components/pages/private-space/SpaceHero.astro";
+import SpaceSection from "@/components/pages/private-space/SpaceSection.astro";
+import ViewerSwitcher from "@/components/pages/private-space/ViewerSwitcher.astro";
+import {
+	getPrivateSpaceUserById,
+	getPrivateSpaceUsers,
+	getVisibleDraftEntries,
+	getVisibleJointEntries,
+	getVisiblePrivateSpaceFeed,
+	getVisiblePrivateSpaceStats,
+	getVisibleSharedEntries,
+} from "@/lib/private-space/repository";
+import {
+	buildPrivateSpaceUrl,
+	resolvePrivateSpaceUserId,
+} from "@/lib/private-space/viewer";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+const currentUserId = resolvePrivateSpaceUserId(Astro.url);
+const [users, currentUser, stats, feed, sharedEntries, jointEntries, draftEntries] =
+	await Promise.all([
+		getPrivateSpaceUsers(),
+		getPrivateSpaceUserById(currentUserId),
+		getVisiblePrivateSpaceStats(currentUserId),
+		getVisiblePrivateSpaceFeed(currentUserId),
+		getVisibleSharedEntries(currentUserId),
+		getVisibleJointEntries(currentUserId),
+		getVisibleDraftEntries(currentUserId),
+	]);
+---
+
+<MainGridLayout title="我们的空间" description="只属于两个人的私密内容空间">
+	<ViewerSwitcher
+		users={users}
+		currentUserId={currentUserId}
+		currentPath="/space/"
+	/>
+
+	<SpaceHero users={users} stats={stats} />
+
+	<div class="space-actions card-base">
+		<div class="space-actions-copy">
+			<strong>当前视角：{currentUser?.name || currentUserId}</strong>
+			<span>下面这些内容已经开始按“谁在看”进行区分。</span>
+		</div>
+		<div class="space-actions-links">
+			<a href={buildPrivateSpaceUrl("/space/mine/", currentUserId)}>我的内容</a>
+			<a href={buildPrivateSpaceUrl("/space/shared/", currentUserId)}>双方共享</a>
+			<a href={buildPrivateSpaceUrl("/space/write/", currentUserId)}>在线写作</a>
+			<a href={buildPrivateSpaceUrl("/space/kv-preview/", currentUserId)}>KV 结构</a>
+		</div>
+	</div>
+
+	<SpaceSection
+		title="最近更新"
+		description="这里展示当前身份可以看到的最新内容，包括双方共享、共同内容、以及仅自己可见或尚未发布的草稿。"
+		entries={feed}
+		users={users}
+	/>
+
+	<SpaceSection
+		title="双方共享"
+		description="作者归属仍然清晰，但两个人都能看到，适合日常记录、推荐和那些想明确写给对方的话。"
+		entries={sharedEntries}
+		users={users}
+		compact={true}
+		emptyText="当前还没有可见的 shared 内容。"
+	/>
+
+	<SpaceSection
+		title="共同内容"
+		description="不再强调“谁写给谁”，而是直接归到两个人共同维护的计划、清单或共享记忆里。"
+		entries={jointEntries}
+		users={users}
+		compact={true}
+		emptyText="当前还没有可见的 joint 内容。"
+	/>
+
+	<SpaceSection
+		title="草稿区预览"
+		description="这里目前只显示当前身份自己写下但还没正式进入共享视图的内容，后续会接上真实保存与发布流转。"
+		entries={draftEntries}
+		users={users}
+		compact={true}
+		emptyText="当前没有待整理草稿。"
+	/>
+</MainGridLayout>
+
+<style>
+	.space-actions {
+		display: grid;
+		gap: 1rem;
+		padding: 1rem;
+		margin-bottom: 1rem;
+	}
+
+	.space-actions-copy {
+		display: grid;
+		gap: 0.25rem;
+	}
+
+	.space-actions-copy span {
+		color: var(--text-secondary, rgba(0, 0, 0, 0.66));
+	}
+
+	.space-actions-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+
+	.space-actions-links a {
+		padding: 0.6rem 0.9rem;
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--btn-regular-bg) 68%, white);
+		text-decoration: none;
+		font-weight: 700;
+	}
+</style>

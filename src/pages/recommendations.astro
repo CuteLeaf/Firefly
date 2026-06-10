@@ -1,0 +1,34 @@
+---
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import RecommendationCard from "@/components/pages/RecommendationCard.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import { getFilteredPosts } from "@/utils/content-utils";
+
+const posts = (await getFilteredPosts({ includeSemiPrivate: true })).filter(
+	(p) => (p.data.category || "") === "recommendations",
+);
+---
+
+<MainGridLayout>
+  <section class="page-recommendations container">
+    <h1>{i18n(I18nKey.recommendations)}</h1>
+    {
+      posts.length === 0 ? (
+        <p>{i18n(I18nKey.noRecommendations)}</p>
+      ) : (
+        <div class="grid">
+          {posts.map((p) => <RecommendationCard entry={p} />)}
+        </div>
+      )
+    }
+  </section>
+</MainGridLayout>
+
+<style>
+  .page-recommendations .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+</style>

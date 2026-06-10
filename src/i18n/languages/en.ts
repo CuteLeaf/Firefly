@@ -334,4 +334,20 @@ export const en: Translation = {
 	[Key.passwordError]: "Incorrect password, please try again.",
 	[Key.passwordProtectedRss]:
 		"This article is encrypted. Please visit the website to view it.",
+	[Key.dualSpaceTitle]: "Our Shared Space",
+	[Key.dualSpaceDesc]:
+		"A private place for two people to keep daily notes, recommendations, plans, and the words that are hard to say out loud.",
+	[Key.dailyLog]: "Daily Log",
+	[Key.recommendations]: "Recommendations",
+	[Key.fitnessPlan]: "Fitness Plan",
+	[Key.privateThoughts]: "Hard to Say",
+	[Key.recipient]: "Recipient",
+	[Key.privacy]: "Privacy",
+	[Key.privacyLevel]: "Visibility",
+	[Key.by]: "by",
+	[Key.viewMore]: "View more",
+	[Key.noRecords]: "No records yet",
+	[Key.noRecommendations]: "No recommendations yet",
+	[Key.noPlans]: "No plans yet",
+	[Key.noDaily]: "No daily notes yet",
 };

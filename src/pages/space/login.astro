@@ -1,0 +1,81 @@
+---
+import { getPrivateSpaceUsers } from "@/lib/private-space/repository";
+import {
+	buildPrivateSpaceUrl,
+	resolvePrivateSpaceUserId,
+} from "@/lib/private-space/viewer";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+const users = await getPrivateSpaceUsers();
+const currentUserId = resolvePrivateSpaceUserId(Astro.url);
+---
+
+<MainGridLayout title="登录占位" description="先用身份切换模拟未来双人登录后的状态">
+	<section class="login-shell card-base">
+		<h1>双人身份切换占位页</h1>
+		<p>
+			这里还没有正式账号系统，但已经可以先用身份切换模拟“当前是谁在看、谁在写”。
+			进入空间页后，shared、joint、draft、自留内容都会开始按这个身份变化。
+		</p>
+		<div class="login-grid">
+			{users.map((user) => (
+				<div class="login-card">
+					<strong>{user.name}</strong>
+					<span>{user.roleLabel}</span>
+					<p>{user.bio}</p>
+					<a
+						href={buildPrivateSpaceUrl("/space/", user.id)}
+						class:list={["login-link", user.id === currentUserId && "is-active"]}
+					>
+						{
+							user.id === currentUserId
+								? "当前正在使用这个身份"
+								: `以 ${user.name} 的身份进入空间`
+						}
+					</a>
+				</div>
+			))}
+		</div>
+	</section>
+</MainGridLayout>
+
+<style>
+	.login-shell {
+		padding: 1.2rem;
+	}
+
+	.login-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1rem;
+		margin-top: 1rem;
+	}
+
+	.login-card {
+		display: grid;
+		gap: 0.5rem;
+		padding: 1rem;
+		border-radius: 1rem;
+		background: color-mix(in srgb, var(--btn-regular-bg) 68%, white);
+	}
+
+	.login-link {
+		display: inline-flex;
+		justify-content: center;
+		border-radius: 999px;
+		padding: 0.75rem 1rem;
+		text-decoration: none;
+		font-weight: 700;
+		background: color-mix(in srgb, var(--btn-regular-bg) 68%, white);
+	}
+
+	.login-link.is-active {
+		background: color-mix(in srgb, var(--primary) 18%, white);
+	}
+
+	@media (max-width: 720px) {
+		.login-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

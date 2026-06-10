@@ -63,6 +63,8 @@ const shouldClampDescription = descriptionLines > 0;
 
 const { remarkPluginFrontmatter } = await render(entry);
 const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
+const recipient = (entry.data as any).recipient || "";
+const privacyLevel = (entry.data as any).privacy || "public";
 ---
 
 <div
@@ -101,6 +103,19 @@ const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
           <Icon
             name="material-symbols:lock-outline"
             class="inline text-2xl align-middle -translate-y-px"
+          />
+        )
+      }
+      {
+        recipient && (
+          <span class="ml-2 text-sm text-(--muted) align-middle">{i18n(I18nKey.by)} {recipient}</span>
+        )
+      }
+      {
+        privacyLevel !== "public" && (
+          <Icon
+            name={privacyLevel === "private" ? "material-symbols:lock" : "material-symbols:visibility-off"}
+            class="inline text-lg align-middle ml-2 text-(--muted)"
           />
         )
       }
