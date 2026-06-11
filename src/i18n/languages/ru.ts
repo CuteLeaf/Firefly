@@ -73,7 +73,7 @@ export const ru: Translation = {
 	[Key.postsCount]: "постов",
 	[Key.tagsCount]: "тегов",
 	[Key.noData]: "Нет данных",
-
+	
 	[Key.themeColor]: "Цвет темы",
 
 	[Key.lightMode]: "Светлая",
@@ -152,6 +152,27 @@ export const ru: Translation = {
 	[Key.bangumiLastUpdated]: "Данные обновлены",
 	[Key.bangumiUpdatedAt]: "Время сборки",
 	[Key.bangumiDataStatic]: "Статические данные",
+
+	// Отслеживание аниме
+	[Key.anime]: "Аниме",
+	[Key.animeSubtitle]: "Мой список отслеживания аниме, данные из Bilibili и TMDB",
+	[Key.animeTotal]: "Всего",
+	[Key.animeAverageRating]: "Средний рейтинг",
+	[Key.animeSearch]: "Поиск аниме...",
+	[Key.animeAllTypes]: "Все типы",
+	[Key.animeTV]: "TV Аниме",
+	[Key.animeMovie]: "Фильм",
+	[Key.animeRatingDesc]: "По рейтингу ↓",
+	[Key.animeRatingAsc]: "По рейтингу ↑",
+	[Key.animeDateDesc]: "Сначала новые",
+	[Key.animeDateAsc]: "Сначала старые",
+	[Key.animeNoResults]: "Аниме не найдено",
+	[Key.animeLastUpdated]: "Данные обновлены",
+	[Key.animeSource]: "Источник",
+	[Key.animeEpStatus]: "Прогресс",
+	[Key.animeViewDetails]: "Подробнее",
+	[Key.animeNotConfigured]: "Источник данных не настроен",
+	[Key.animeNotConfiguredDesc]: "Настройте Bilibili UID или TMDB API Key в src/config/siteConfig.ts",
 
 	// Пагинация
 	[Key.paginationFirst]: "Первая",

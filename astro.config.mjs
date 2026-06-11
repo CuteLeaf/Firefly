@@ -197,6 +197,9 @@ export default defineConfig({
 				if (pathname === "/gallery/" && !siteConfig.pages.gallery) {
 					return false;
 				}
+				if (pathname === "/anime/" && !siteConfig.pages.anime) {
+					return false;
+				}
 
 				return true;
 			},
