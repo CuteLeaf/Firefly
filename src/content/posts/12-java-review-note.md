@@ -315,8 +315,50 @@ for(String i : a) // 迭代Arraylist中的元素
         - 抽象观察者：定义接收通知的更新接口
         - 具体观察者：收到通知后执行具体逻辑
     ```java
-
+    //Subject.java
+    public class Subject {
+        private List<Observer> observers = new ArrayList<Observer>();
+        private int state;
+        public int getState(){
+            return state;
+        }
+        public void setState(int state) {
+            this.state = state;
+            notifyAllObservers();
+        }
+        public void attach(Observer observer){
+            observers.add(observer);      
+        }
+        public void notifyAllObservers(){
+            for (Observer observer : observers) {
+                observer.update();
+            }
+        }  
+    }
     ```
+    ```java
+    // Observer.java
+    public abstract class Observer {
+        protected Subject subject;
+        public abstract void update();
+    }
+    ```
+    ```java
+    // BinaryObserver.java 实体观察者类
+    public class BinaryObserver extends Observer{
+    
+        public BinaryObserver(Subject subject){
+            this.subject = subject;
+            this.subject.attach(this);
+        }
+        
+        @Override
+        public void update() {
+            System.out.println( "Binary String: " + Integer.toBinaryString( subject.getState() ) ); 
+        }
+    }
+    ```
+    每次主函数中`subject.setState();`时，`subject`自动调用`notifyAllObservers();`通知所有attach过的observer，让其更新状态
 
 - 策略模式
     - 定义一系列算法，把每个算法封装成独立类，算法之间可自由切换
@@ -367,14 +409,57 @@ for(String i : a) // 迭代Arraylist中的元素
         - 具体构件：原始基础对象（被装饰的主体）
         - 抽象装饰器：继承/实现抽象构件，持有抽象构件引用
         - 具体装饰器：在原有功能上叠加新逻辑
+    ```java
+
+    ```
 
 - 组合模式
     - 把单个对象和由多个对象组成的 “整体容器”，当成一模一样的东西来用
+    - **单个节点、一组节点，调用方式完全一样**
     - 将对象组合成树形结构以表示"部分-整体"的层次结构，组合模式使得用户对单个对象和组合对象的使用具有一致性
     - 核心角色：
         - Component接口：定义了所有对象必须实现的操作
         - Leaf类：实现Component接口，代表树中的叶子节点
         - Composite类：也实现Component接口，并包含其他Component对象的集合
+    ```java
+    //抽象构件（统一接口）
+    public abstract class FileNode {
+        public abstract void show();
+    }
+
+    // 叶子节点（文件，无子节点）
+    public class File extends FileNode {
+        private String name;
+        public File(String name) { this.name = name; }
+        @Override
+        public void show() {
+            System.out.println("文件：" + name);
+        }
+    }
+
+    // 容器节点（文件夹，可存子节点）
+    import java.util.ArrayList;
+    import java.util.List;
+    public class Folder extends FileNode {
+        private String name;
+        private List<FileNode> childs = new ArrayList<>();
+        public Folder(String name) { this.name = name; }
+
+        // 添加子节点（文件/文件夹）⭐⭐⭐
+        public void add(FileNode node) {
+            childs.add(node);
+        }
+
+        @Override
+        public void show() {
+            System.out.println("文件夹：" + name);
+            // 遍历所有子节点
+            for (FileNode node : childs) {
+                node.show();
+            }
+        }
+    }
+    ```
 
 
 - **策略模式：换算法/换行为（做加法、减法、乘法，直接换一套逻辑）**
