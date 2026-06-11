@@ -109,6 +109,8 @@ export const siteConfig: SiteConfig = {
 		bangumi: true,
 		// 相册页面开关
 		gallery: true,
+		// 追番页面开关
+		anime: true,
 	},
 
 	// 分类导航栏开关，在首页和归档页顶部显示分类快捷导航
@@ -173,6 +175,19 @@ export const siteConfig: SiteConfig = {
 		categoryOrder: ["anime", "book", "music", "game"],
 	},
 
+	// 追番配置（Bilibili + TMDB）
+	anime: {
+		// Bilibili 配置
+		bilibili: {
+			uid: "442980782", // 你的 Bilibili 用户 UID
+		},
+		// TMDB 配置（可选，需要翻墙）
+		// tmdb: {
+		//   apiKey: "your_tmdb_api_key", // TMDB API 密钥
+		//   listId: "your_list_id",       // TMDB 列表 ID
+		// },
+	},
+
 	// 分页配置
 	pagination: {
 		// 每页显示的文章数量
@@ -195,7 +210,7 @@ export const siteConfig: SiteConfig = {
 		// 为特定域名的图片添加 referrerpolicy="no-referrer" 属性
 		// 支持通配符 *，例如：["i0.hdslb.com", "*.bilibili.com"]
 		// 可解决指定域名图片加载时的 403 问题（如防盗链图片）
-		noReferrerDomains: [],
+		noReferrerDomains: ["*.hdslb.com", "*.bilibili.com"],
 	},
 
 	// 站点语言，在本配置文件顶部SITE_LANG定义

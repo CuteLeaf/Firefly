@@ -1,5 +1,4 @@
 ---
-import { Icon } from "astro-icon/components";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
@@ -15,38 +14,36 @@ const getDepth = (count: number) => {
 	if (maxCount === minCount) return 0.5;
 	return (count - minCount) / (maxCount - minCount);
 };
-
-// Top 10 标签排行
-const topTags = [...tags].sort((a, b) => b.count - a.count).slice(0, 10);
-const topMaxCount = topTags.length > 0 ? topTags[0].count : 1;
 ---
 
-<MainGridLayout title={i18n(I18nKey.tags)} description={i18n(I18nKey.allTags)}>
-    <!-- 页面标题 -->
-    <div class="card-base px-8 py-6 mb-4">
-        <div class="text-2xl font-bold text-(--primary) mb-2">
-            {i18n(I18nKey.tags)}
-        </div>
-        <p class="text-30 text-sm">
-            {i18n(I18nKey.allTags)} · {tags.length} {i18n(I18nKey.tagsCount)}
-        </p>
-    </div>
-
+<MainGridLayout title={i18n(I18nKey.allTags)} description={i18n(I18nKey.allTags)}>
     <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
         <div class="card-base z-10 px-9 py-6 relative w-full">
-            <div class="flex flex-wrap gap-2.5">
+            <div class="mb-6">
+                <div class="flex items-center justify-between mb-0">
+                    <div class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+                        {i18n(I18nKey.allTags)}
+                    </div>
+                    <span class="text-sm font-medium px-2.5 py-0.5 rounded-full
+                                 bg-[oklch(0.95_0.025_var(--hue))] dark:bg-[oklch(0.25_0.025_var(--hue))]
+                                 text-neutral-500 dark:text-neutral-400">
+                        {tags.length}
+                    </span>
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-3">
                 {tags.map((t) => (
                     <a href={getTagUrl(t.name)}
-                       class="tag-item group inline-flex items-center gap-1.5 rounded-lg
-                              h-8 text-sm px-3 transition-all duration-200
+                       class="tag-item group inline-flex items-center gap-0 rounded-lg
+                              overflow-hidden transition-all duration-200
                               hover:scale-105 hover:shadow-md"
                        style={`--tag-depth: ${getDepth(t.count)}`}
                     >
-                        <span class="font-medium">
-                            <span class="opacity-50">#</span>{t.name.trim()}
+                        <span class="tag-name text-sm font-medium px-4 py-2">
+                            <span class="opacity-50 mr-0.5">#</span>{t.name.trim()}
                         </span>
-                        <span class="tag-count-badge text-xs font-bold px-1.5 rounded-md
-                                     min-w-[1.5rem] text-center">
+                        <span class="tag-count inline-flex items-center justify-center h-full px-3 py-2 text-xs font-bold
+                                     border-l border-black/8 dark:border-white/10">
                             {t.count}
                         </span>
                     </a>
@@ -54,53 +51,20 @@ const topMaxCount = topTags.length > 0 ? topTags[0].count : 1;
             </div>
         </div>
     </div>
-
-    <!-- 空状态 -->
-    {
-        tags.length === 0 && (
-            <div class="card-base px-8 py-12 text-center">
-                <Icon
-                    name="material-symbols:tag-off"
-                    class="text-5xl text-30 mx-auto mb-4"
-                />
-                <p class="text-30">{i18n(I18nKey.noData)}</p>
-            </div>
-        )
-    }
-
-    <!-- Top 10 标签排行 -->
-    {topTags.length > 0 && (
-        <div class="card-base px-8 py-6 mt-4">
-            <h2 class="text-lg font-bold text-75 mb-4">
-                Top 10
-            </h2>
-            <div class="flex flex-col gap-3">
-                {topTags.map((t, i) => (
-                    <a href={getTagUrl(t.name)}
-                       class="flex items-center gap-3 group hover:bg-(--btn-card-bg-hover) rounded-lg px-3 py-2 -mx-3 transition-colors"
-                    >
-                        <span class="text-sm font-bold text-(--primary) w-5 text-right shrink-0">
-                            {i + 1}
-                        </span>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="text-sm font-medium text-50 truncate group-hover:text-(--primary) transition-colors">
-                                    #{t.name.trim()}
-                                </span>
-                                <span class="text-xs text-(--primary) ml-2 shrink-0">
-                                    {t.count} {i18n(I18nKey.postsCount)}
-                                </span>
-                            </div>
-                            <div class="h-2 rounded-full bg-(--primary)/10 overflow-hidden">
-                                <div
-                                    class="h-full rounded-full bg-(--primary) transition-all duration-500"
-                                    style={`width: ${(t.count / topMaxCount) * 100}%`}
-                                />
-                            </div>
-                        </div>
-                    </a>
-                ))}
-            </div>
-        </div>
-    )}
 </MainGridLayout>
+
+<style>
+    .tag-item {
+        /* color-mix 将主题色按深度比例混入背景 */
+        background: color-mix(in oklch, var(--primary) calc(var(--tag-depth) * 35%), var(--page-bg));
+        color: var(--primary);
+    }
+    .tag-item:hover {
+        background: color-mix(in oklch, var(--primary) calc(var(--tag-depth) * 35% + 15%), var(--page-bg));
+    }
+    .tag-count {
+        /* 计数徽章比主体稍深一点 */
+        background: color-mix(in oklch, var(--primary) calc(var(--tag-depth) * 35% + 10%), var(--page-bg));
+		color: var(--primary);
+    }
+</style>

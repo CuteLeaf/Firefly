@@ -41,8 +41,6 @@ enum I18nKey {
 	minutesCount = "minutesCount",
 	postCount = "postCount",
 	postsCount = "postsCount",
-	tagsCount = "tagsCount",
-	noData = "noData",
 
 	// Music Widget
 	musicNoPlaying = "musicNoPlaying",
@@ -148,6 +146,27 @@ enum I18nKey {
 	bangumiLastUpdated = "bangumiLastUpdated",
 	bangumiUpdatedAt = "bangumiUpdatedAt",
 	bangumiDataStatic = "bangumiDataStatic",
+
+	// 追番
+	anime = "anime",
+	animeSubtitle = "animeSubtitle",
+	animeTotal = "animeTotal",
+	animeAverageRating = "animeAverageRating",
+	animeSearch = "animeSearch",
+	animeAllTypes = "animeAllTypes",
+	animeTV = "animeTV",
+	animeMovie = "animeMovie",
+	animeRatingDesc = "animeRatingDesc",
+	animeRatingAsc = "animeRatingAsc",
+	animeDateDesc = "animeDateDesc",
+	animeDateAsc = "animeDateAsc",
+	animeNoResults = "animeNoResults",
+	animeLastUpdated = "animeLastUpdated",
+	animeSource = "animeSource",
+	animeEpStatus = "animeEpStatus",
+	animeViewDetails = "animeViewDetails",
+	animeNotConfigured = "animeNotConfigured",
+	animeNotConfiguredDesc = "animeNotConfiguredDesc",
 
 	// 分页
 	paginationFirst = "paginationFirst",

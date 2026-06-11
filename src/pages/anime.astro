@@ -1,0 +1,683 @@
+---
+import { Icon } from "astro-icon/components";
+import { siteConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { formatDateI18nWithTime } from "@/utils/date-utils";
+import * as fs from "node:fs";
+import * as path from "node:path";
+
+// 检查页面是否启用
+if (!siteConfig.pages.anime) {
+	return Astro.redirect("/404/");
+}
+
+// 获取构建时间
+const buildTime = formatDateI18nWithTime(new Date());
+
+// 追番配置
+const animeConfig = siteConfig.anime;
+const TMDB_API_KEY = animeConfig?.tmdb?.apiKey;
+const TMDB_LIST_ID = animeConfig?.tmdb?.listId;
+const BILIBILI_UID = animeConfig?.bilibili?.uid;
+const TMDB_IMG = "https://image.tmdb.org/t/p/w500";
+
+// ============ 数据获取 ============
+
+// 1. TMDB 数据
+let tmdbItems: any[] = [];
+if (TMDB_API_KEY && TMDB_LIST_ID) {
+	try {
+		console.log(`[Anime] Fetching TMDB list: ${TMDB_LIST_ID}...`);
+		const firstResponse = await fetch(
+			`https://api.themoviedb.org/3/list/${TMDB_LIST_ID}?api_key=${TMDB_API_KEY}&language=zh-CN&page=1`,
+		);
+
+		if (firstResponse.ok) {
+			const firstData = await firstResponse.json();
+			const totalPages = firstData.total_pages || 1;
+			let allItems = [...(firstData.items || [])];
+
+			if (totalPages > 1) {
+				const promises = [];
+				for (let page = 2; page <= totalPages; page++) {
+					promises.push(
+						fetch(
+							`https://api.themoviedb.org/3/list/${TMDB_LIST_ID}?api_key=${TMDB_API_KEY}&language=zh-CN&page=${page}`,
+						)
+							.then((res) => res.json())
+							.then((data) => data.items || []),
+					);
+				}
+				const remainingItems = await Promise.all(promises);
+				remainingItems.forEach((items) => allItems.push(...items));
+			}
+
+			tmdbItems = allItems;
+			console.log(`[Anime] Fetched ${tmdbItems.length} items from TMDB.`);
+		} else {
+			console.error(`[Anime] TMDB fetch failed: ${firstResponse.status}`);
+			// 尝试读取本地缓存
+			try {
+				const localPath = path.resolve("public/anime-list.json");
+				if (fs.existsSync(localPath)) {
+					const fileContent = fs.readFileSync(localPath, "utf-8");
+					const localData = JSON.parse(fileContent);
+					tmdbItems = localData.items || localData[0]?.items || [];
+					console.log(`[Anime] Using local cache: ${tmdbItems.length} items.`);
+				}
+			} catch {}
+		}
+	} catch (error: any) {
+		console.error("[Anime] TMDB fetch error:", error.message);
+		// 尝试读取本地缓存
+		try {
+			const localPath = path.resolve("public/anime-list.json");
+			if (fs.existsSync(localPath)) {
+				const fileContent = fs.readFileSync(localPath, "utf-8");
+				const localData = JSON.parse(fileContent);
+				tmdbItems = localData.items || localData[0]?.items || [];
+				console.log(`[Anime] Using local cache: ${tmdbItems.length} items.`);
+			}
+		} catch {}
+	}
+}
+
+// 2. Bilibili 数据
+let bilibiliItems: any[] = [];
+if (BILIBILI_UID) {
+	try {
+		console.log(`[Anime] Fetching Bilibili list for UID: ${BILIBILI_UID}...`);
+		const ps = 30;
+		let pn = 1;
+		let hasMore = true;
+
+		while (hasMore) {
+			const res = await fetch(
+				`https://api.bilibili.com/x/space/bangumi/follow/list?type=1&vmid=${BILIBILI_UID}&pn=${pn}&ps=${ps}`,
+			);
+			const json = await res.json();
+
+			if (
+				json.code === 0 &&
+				json.data &&
+				json.data.list &&
+				json.data.list.length > 0
+			) {
+				bilibiliItems.push(...json.data.list);
+				if (json.data.total > bilibiliItems.length) {
+					pn++;
+				} else {
+					hasMore = false;
+				}
+			} else {
+				hasMore = false;
+			}
+
+			if (pn > 20) break;
+		}
+		console.log(
+			`[Anime] Fetched ${bilibiliItems.length} items from Bilibili.`,
+		);
+	} catch (e) {
+		console.error("[Anime] Bilibili fetch error:", e);
+	}
+}
+
+// ============ 数据标准化 ============
+
+// 标准化 TMDB 数据
+interface StandardizedAnime {
+	id: number;
+	title: string;
+	originalTitle: string;
+	poster: string | null;
+	type: "tv" | "movie";
+	source: "tmdb" | "bilibili";
+	rating: number;
+	date: string;
+	overview: string;
+	link: string;
+	epStatus: string | undefined;
+}
+
+let animeList: StandardizedAnime[] = tmdbItems.map((anime: any) => {
+	const title = anime.title || anime.name || "";
+	const originalTitle = anime.original_title || anime.original_name || "";
+	const date = anime.release_date || anime.first_air_date || "";
+	const type = anime.media_type || "tv";
+
+	return {
+		id: anime.id,
+		title,
+		originalTitle,
+		poster: anime.poster_path ? TMDB_IMG + anime.poster_path : null,
+		type: type as "tv" | "movie",
+		source: "tmdb",
+		rating: anime.vote_average || 0,
+		date,
+		overview: anime.overview || "",
+		link: `https://www.themoviedb.org/${type}/${anime.id}`,
+		epStatus: undefined,
+	};
+});
+
+// 标准化 Bilibili 数据并合并
+if (bilibiliItems.length > 0) {
+	const bilibiliMapped: StandardizedAnime[] = bilibiliItems.map(
+		(item: any) => ({
+			id: item.media_id,
+			title: item.title,
+			originalTitle: item.title,
+			poster: item.cover
+				? item.cover.replace("http://", "https://")
+				: null,
+			type:
+				item.season_type_name === "剧场版" ||
+				item.season_type_name === "电影"
+					? ("movie" as const)
+					: ("tv" as const),
+			source: "bilibili" as const,
+			rating: item.rating?.score || 0,
+			date: "",
+			overview: item.evaluate || item.brief || "",
+			link: `https://www.bilibili.com/bangumi/play/ss${item.season_id}`,
+			epStatus: item.new_ep?.index_show || "",
+		}),
+	);
+
+	// 去重：Bilibili 优先（带进度信息）
+	const bilibiliTitles = new Set(bilibiliMapped.map((item) => item.title));
+	animeList = animeList.filter((item) => !bilibiliTitles.has(item.title));
+	animeList = [...animeList, ...bilibiliMapped];
+}
+
+// 统计数据
+const totalCount = animeList.length;
+const tmdbAverageRating =
+	tmdbItems.length > 0
+		? (
+				tmdbItems.reduce(
+					(sum: number, item: any) =>
+						sum + (Number(item.vote_average) || 0),
+					0,
+				) / tmdbItems.length
+			).toFixed(1)
+		: "0.0";
+
+const isConfigured = !!(BILIBILI_UID || (TMDB_API_KEY && TMDB_LIST_ID));
+---
+
+<MainGridLayout title={i18n(I18nKey.anime)} description={i18n(I18nKey.animeSubtitle)}>
+  <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+    <div class="card-base z-10 px-9 py-6 relative w-full">
+      <!-- 页面标题 -->
+      <div class="relative w-full mb-8">
+        <div class="mb-6">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70">
+              <Icon name="material-symbols:tv-gen-outline" class="text-[1.5rem]"></Icon>
+            </div>
+            <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+              {i18n(I18nKey.anime)}
+            </div>
+          </div>
+          <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            {i18n(I18nKey.animeSubtitle)}
+          </p>
+          <p class="text-xs text-neutral-500 dark:text-neutral-500 mt-2">
+            {i18n(I18nKey.animeLastUpdated)} {buildTime}
+          </p>
+        </div>
+
+        {!isConfigured ? (
+          <!-- 未配置提示 -->
+          <div class="text-center py-16">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-(--btn-regular-bg) rounded-full mb-6 border border-(--line-divider)">
+              <Icon name="material-symbols:settings" class="text-[2rem] text-(--btn-content)" />
+            </div>
+            <h2 class="text-xl font-semibold text-black/80 dark:text-white/80 mb-3">
+              {i18n(I18nKey.animeNotConfigured)}
+            </h2>
+            <p class="text-black/60 dark:text-white/60 mb-4 max-w-md mx-auto">
+              {i18n(I18nKey.animeNotConfiguredDesc)}
+            </p>
+          </div>
+        ) : (
+          <>
+            <!-- 统计卡片 -->
+            <div class="grid grid-cols-2 gap-4 mb-6">
+              <div class="bg-(--card-bg) rounded-xl p-4 border border-(--line-divider)">
+                <div class="flex items-center gap-3">
+                  <div class="h-10 w-10 rounded-lg bg-(--primary)/10 flex items-center justify-center">
+                    <Icon name="material-symbols:movie-filter" class="text-[1.25rem] text-(--primary)" />
+                  </div>
+                  <div>
+                    <div class="text-xs text-neutral-500 dark:text-neutral-400">{i18n(I18nKey.animeTotal)}</div>
+                    <div class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{totalCount}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-(--card-bg) rounded-xl p-4 border border-(--line-divider)">
+                <div class="flex items-center gap-3">
+                  <div class="h-10 w-10 rounded-lg bg-yellow-500/10 flex items-center justify-center">
+                    <Icon name="material-symbols:star" class="text-[1.25rem] text-yellow-500" />
+                  </div>
+                  <div>
+                    <div class="text-xs text-neutral-500 dark:text-neutral-400">{i18n(I18nKey.animeAverageRating)}</div>
+                    <div class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{tmdbAverageRating}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 筛选工具栏 -->
+            <div class="flex flex-col sm:flex-row gap-3 bg-(--card-bg) p-4 rounded-xl border border-(--line-divider) mb-6">
+              <!-- 搜索框 -->
+              <div class="flex-1 relative">
+                <Icon
+                  name="material-symbols:search"
+                  class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400"
+                />
+                <input
+                  type="text"
+                  id="anime-search-input"
+                  placeholder={i18n(I18nKey.animeSearch)}
+                  class="w-full pl-10 pr-4 py-2 rounded-lg bg-(--btn-regular-bg) border border-(--line-divider) text-sm text-neutral-800 dark:text-neutral-200 placeholder-neutral-400 focus:outline-none focus:border-(--primary) transition-colors"
+                />
+              </div>
+
+              <div class="flex gap-2 flex-wrap items-center">
+                <!-- 类型筛选 -->
+                <div class="relative" id="type-filter-wrapper">
+                  <button
+                    type="button"
+                    id="type-filter-btn"
+                    class="flex items-center gap-2 px-3 py-2 rounded-lg bg-(--btn-regular-bg) border border-(--line-divider) text-sm text-neutral-700 dark:text-neutral-300 hover:bg-(--btn-regular-bg-hover) transition-colors cursor-pointer"
+                  >
+                    <span id="type-filter-text">{i18n(I18nKey.animeAllTypes)}</span>
+                    <Icon name="material-symbols:expand-more" class="w-4 h-4" />
+                  </button>
+                  <div
+                    id="type-filter-menu"
+                    class="hidden absolute z-50 mt-1 left-0 min-w-[120px] bg-(--card-bg) rounded-lg shadow-lg border border-(--line-divider) py-1"
+                  >
+                    <button type="button" data-value="all" class="filter-option active w-full text-left px-3 py-2 text-sm hover:bg-(--btn-regular-bg-hover) text-neutral-700 dark:text-neutral-300 transition-colors">
+                      {i18n(I18nKey.animeAllTypes)}
+                    </button>
+                    <button type="button" data-value="tv" class="filter-option w-full text-left px-3 py-2 text-sm hover:bg-(--btn-regular-bg-hover) text-neutral-700 dark:text-neutral-300 transition-colors">
+                      {i18n(I18nKey.animeTV)}
+                    </button>
+                    <button type="button" data-value="movie" class="filter-option w-full text-left px-3 py-2 text-sm hover:bg-(--btn-regular-bg-hover) text-neutral-700 dark:text-neutral-300 transition-colors">
+                      {i18n(I18nKey.animeMovie)}
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 排序筛选 -->
+                <div class="relative" id="sort-filter-wrapper">
+                  <button
+                    type="button"
+                    id="sort-filter-btn"
+                    class="flex items-center gap-2 px-3 py-2 rounded-lg bg-(--btn-regular-bg) border border-(--line-divider) text-sm text-neutral-700 dark:text-neutral-300 hover:bg-(--btn-regular-bg-hover) transition-colors cursor-pointer"
+                  >
+                    <span id="sort-filter-text">{i18n(I18nKey.animeRatingDesc)}</span>
+                    <Icon name="material-symbols:expand-more" class="w-4 h-4" />
+                  </button>
+                  <div
+                    id="sort-filter-menu"
+                    class="hidden absolute z-50 mt-1 right-0 min-w-[120px] bg-(--card-bg) rounded-lg shadow-lg border border-(--line-divider) py-1"
+                  >
+                    <button type="button" data-value="rating-desc" class="sort-option active w-full text-left px-3 py-2 text-sm hover:bg-(--btn-regular-bg-hover) text-neutral-700 dark:text-neutral-300 transition-colors">
+                      {i18n(I18nKey.animeRatingDesc)}
+                    </button>
+                    <button type="button" data-value="rating-asc" class="sort-option w-full text-left px-3 py-2 text-sm hover:bg-(--btn-regular-bg-hover) text-neutral-700 dark:text-neutral-300 transition-colors">
+                      {i18n(I18nKey.animeRatingAsc)}
+                    </button>
+                    <button type="button" data-value="date-desc" class="sort-option w-full text-left px-3 py-2 text-sm hover:bg-(--btn-regular-bg-hover) text-neutral-700 dark:text-neutral-300 transition-colors">
+                      {i18n(I18nKey.animeDateDesc)}
+                    </button>
+                    <button type="button" data-value="date-asc" class="sort-option w-full text-left px-3 py-2 text-sm hover:bg-(--btn-regular-bg-hover) text-neutral-700 dark:text-neutral-300 transition-colors">
+                      {i18n(I18nKey.animeDateAsc)}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 番剧卡片网格 -->
+            <div
+              id="anime-grid"
+              class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+            >
+              {animeList.map((anime) => (
+                <div
+                  class="anime-card group relative"
+                  data-title={anime.title.toLowerCase()}
+                  data-type={anime.type}
+                  data-rating={anime.rating}
+                  data-date={anime.date}
+                >
+                  <a
+                    href={anime.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="block rounded-xl overflow-hidden bg-(--card-bg) border border-(--line-divider) hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                  >
+                    <!-- 封面图 -->
+                    <div class="relative aspect-[2/3] overflow-hidden bg-(--btn-regular-bg)">
+                      {anime.poster ? (
+                        <img
+                          src={anime.poster}
+                          alt={anime.title}
+                          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          loading="lazy"
+                          referrerpolicy="no-referrer"
+                        />
+                      ) : (
+                        <div class="w-full h-full flex items-center justify-center text-neutral-400">
+                          <Icon name="material-symbols:image-not-supported" class="w-12 h-12" />
+                        </div>
+                      )}
+
+                      {/* 评分角标 */}
+                      {anime.rating > 0 && (
+                        <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-yellow-400 px-2 py-1 rounded-lg flex items-center gap-1 text-xs font-bold shadow-lg">
+                          <Icon name="material-symbols:star" class="w-3 h-3" />
+                          <span>{anime.rating.toFixed(1)}</span>
+                        </div>
+                      )}
+
+                      {/* 类型角标 */}
+                      <div class="absolute top-2 left-2 bg-(--primary)/80 backdrop-blur-sm text-white px-2 py-1 rounded-lg text-xs font-bold shadow-lg">
+                        {anime.type === "movie" ? i18n(I18nKey.animeMovie) : i18n(I18nKey.animeTV)}
+                      </div>
+
+                      {/* 悬停遮罩 */}
+                      <div class="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center p-4 text-center">
+                        <p class="text-white text-sm line-clamp-6 mb-4 leading-relaxed">
+                          {anime.overview || "暂无简介"}
+                        </p>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/50 text-white text-xs hover:bg-white/20 transition-colors">
+                          <Icon name="material-symbols:open-in-new" class="w-3.5 h-3.5" />
+                          {i18n(I18nKey.animeViewDetails)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* 信息区域 */}
+                    <div class="p-3">
+                      <h3
+                        class="font-bold text-sm mb-1 line-clamp-1 text-neutral-800 dark:text-neutral-200 group-hover:text-(--primary) transition-colors"
+                        title={anime.title}
+                      >
+                        {anime.title}
+                      </h3>
+                      <div class="flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-400">
+                        <span class="flex items-center gap-1">
+                          {anime.source === "bilibili" && anime.epStatus ? (
+                            <>
+                              <Icon name="material-symbols:play-circle" class="w-3 h-3" />
+                              {anime.epStatus}
+                            </>
+                          ) : (
+                            <>
+                              <Icon name="material-symbols:calendar-today" class="w-3 h-3" />
+                              {anime.date ? anime.date.split("-")[0] : "未知"}
+                            </>
+                          )}
+                        </span>
+                        <span class="flex items-center gap-1">
+                          <Icon name="material-symbols:favorite" class="w-3 h-3" />
+                          {anime.source === "bilibili" ? "Bilibili" : "TMDB"}
+                        </span>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              ))}
+            </div>
+
+            <!-- 无结果提示 -->
+            <div
+              id="anime-no-results"
+              class="hidden flex-col items-center justify-center py-20 text-neutral-400"
+            >
+              <Icon name="material-symbols:search-off" class="w-16 h-16 mb-4" />
+              <p class="text-lg">{i18n(I18nKey.animeNoResults)}</p>
+            </div>
+
+            <!-- 分页控件 -->
+            <div
+              id="anime-pagination"
+              class="flex items-center justify-center gap-2 mt-8 flex-wrap"
+            >
+              <button id="anime-btn-prev" class="w-9 h-9 rounded-lg bg-(--btn-regular-bg) border border-(--line-divider) flex items-center justify-center text-neutral-500 hover:text-(--primary) disabled:opacity-40 disabled:cursor-not-allowed transition-colors" disabled>
+                <Icon name="material-symbols:chevron-left" class="w-5 h-5" />
+              </button>
+              <div id="anime-page-numbers" class="flex items-center gap-1"></div>
+              <button id="anime-btn-next" class="w-9 h-9 rounded-lg bg-(--btn-regular-bg) border border-(--line-divider) flex items-center justify-center text-neutral-500 hover:text-(--primary) disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+                <Icon name="material-symbols:chevron-right" class="w-5 h-5" />
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getAnimeCols() {
+      const w = window.innerWidth;
+      if (w >= 1280) return 5;
+      if (w >= 1024) return 4;
+      if (w >= 768) return 3;
+      return 2;
+    }
+
+    function getAnimeItemsPerPage() {
+      return getAnimeCols() * 4;
+    }
+
+    document.addEventListener("astro:page-load", () => {
+      const searchInput = document.getElementById("anime-search-input") as HTMLInputElement;
+      const typeFilterBtn = document.getElementById("type-filter-btn");
+      const typeFilterMenu = document.getElementById("type-filter-menu");
+      const typeFilterText = document.getElementById("type-filter-text");
+      const sortFilterBtn = document.getElementById("sort-filter-btn");
+      const sortFilterMenu = document.getElementById("sort-filter-menu");
+      const sortFilterText = document.getElementById("sort-filter-text");
+      const grid = document.getElementById("anime-grid");
+      const noResults = document.getElementById("anime-no-results");
+      const pagination = document.getElementById("anime-pagination");
+      const pageNumbers = document.getElementById("anime-page-numbers");
+      const btnPrev = document.getElementById("anime-btn-prev") as HTMLButtonElement;
+      const btnNext = document.getElementById("anime-btn-next") as HTMLButtonElement;
+
+      if (!grid || !searchInput || !typeFilterBtn || !sortFilterBtn) return;
+
+      const cards = Array.from(grid.getElementsByClassName("anime-card")) as HTMLElement[];
+      let filteredCards: HTMLElement[] = [...cards];
+
+      let currentTypeValue = "all";
+      let currentSortValue = "rating-desc";
+      let currentPage = 1;
+
+      // 下拉菜单切换
+      function toggleDropdown(menu: HTMLElement | null, btn: HTMLElement | null) {
+        if (!menu || !btn) return;
+        const isHidden = menu.classList.contains("hidden");
+        // 关闭所有下拉菜单
+        document.querySelectorAll('[id$="-filter-menu"]').forEach((m) => m.classList.add("hidden"));
+        if (isHidden) {
+          menu.classList.remove("hidden");
+        }
+      }
+
+      typeFilterBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleDropdown(typeFilterMenu, typeFilterBtn);
+      });
+
+      sortFilterBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleDropdown(sortFilterMenu, sortFilterBtn);
+      });
+
+      // 点击外部关闭下拉菜单
+      document.addEventListener("click", () => {
+        typeFilterMenu?.classList.add("hidden");
+        sortFilterMenu?.classList.add("hidden");
+      });
+
+      // 阻止菜单内部点击冒泡
+      typeFilterMenu?.addEventListener("click", (e) => e.stopPropagation());
+      sortFilterMenu?.addEventListener("click", (e) => e.stopPropagation());
+
+      // 分页渲染
+      function goToPage(page: number) {
+        currentPage = page;
+        renderPage();
+      }
+
+      function renderPage() {
+        const perPage = getAnimeItemsPerPage();
+        const totalPages = Math.max(1, Math.ceil(filteredCards.length / perPage));
+        if (currentPage > totalPages) currentPage = totalPages;
+
+        const start = (currentPage - 1) * perPage;
+        const end = start + perPage;
+        filteredCards.forEach((card, i) => {
+          card.style.display = i >= start && i < end ? "" : "none";
+        });
+
+        // 更新分页按钮
+        if (btnPrev) btnPrev.disabled = currentPage <= 1;
+        if (btnNext) btnNext.disabled = currentPage >= totalPages;
+
+        // 渲染页码
+        if (pageNumbers) {
+          const pages: number[] = [];
+          const maxBtns = 7;
+          if (totalPages <= maxBtns) {
+            for (let i = 1; i <= totalPages; i++) pages.push(i);
+          } else {
+            pages.push(1);
+            if (currentPage > 3) pages.push(-1);
+            const s = Math.max(2, currentPage - 1);
+            const e = Math.min(totalPages - 1, currentPage + 1);
+            for (let i = s; i <= e; i++) pages.push(i);
+            if (currentPage < totalPages - 2) pages.push(-1);
+            pages.push(totalPages);
+          }
+
+          pageNumbers.innerHTML = pages
+            .map((p) => {
+              if (p === -1)
+                return '<span class="px-1 text-neutral-400">…</span>';
+              return `<button class="w-9 h-9 rounded-lg text-sm font-medium transition-colors ${p === currentPage ? "bg-(--primary) text-white" : "bg-(--btn-regular-bg) border border-(--line-divider) text-neutral-600 dark:text-neutral-400 hover:text-(--primary)"}" data-page="${p}">${p}</button>`;
+            })
+            .join("");
+
+          pageNumbers.querySelectorAll("button").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const num = parseInt(btn.dataset.page || "0");
+              if (num > 0) goToPage(num);
+            });
+          });
+        }
+
+        if (pagination) pagination.style.display = totalPages <= 1 ? "none" : "";
+        if (noResults) noResults.style.display = filteredCards.length === 0 ? "flex" : "none";
+      }
+
+      // 筛选和排序
+      function filterAndSort() {
+        const searchTerm = searchInput.value.toLowerCase();
+
+        filteredCards = cards.filter((card) => {
+          const title = card.dataset.title || "";
+          const type = card.dataset.type || "";
+          return (
+            title.includes(searchTerm) &&
+            (currentTypeValue === "all" || type === currentTypeValue)
+          );
+        });
+
+        filteredCards.sort((a, b) => {
+          const ratingA = parseFloat(a.dataset.rating || "0");
+          const ratingB = parseFloat(b.dataset.rating || "0");
+          const dateA = a.dataset.date || "";
+          const dateB = b.dataset.date || "";
+          switch (currentSortValue) {
+            case "rating-desc": return ratingB - ratingA;
+            case "rating-asc": return ratingA - ratingB;
+            case "date-desc": return dateB.localeCompare(dateA);
+            case "date-asc": return dateA.localeCompare(dateB);
+            default: return 0;
+          }
+        });
+
+        filteredCards.forEach((card) => grid?.appendChild(card));
+        currentPage = 1;
+        renderPage();
+      }
+
+      // 绑定事件
+      searchInput.addEventListener("input", filterAndSort);
+
+      btnPrev?.addEventListener("click", () => {
+        if (currentPage > 1) goToPage(currentPage - 1);
+      });
+      btnNext?.addEventListener("click", () => {
+        const total = Math.ceil(filteredCards.length / getAnimeItemsPerPage());
+        if (currentPage < total) goToPage(currentPage + 1);
+      });
+
+      // 类型筛选
+      typeFilterMenu?.querySelectorAll(".filter-option").forEach((item) => {
+        item.addEventListener("click", (e) => {
+          const target = e.currentTarget as HTMLElement;
+          const value = target.dataset.value;
+          const text = target.textContent?.trim();
+          if (value) {
+            currentTypeValue = value;
+            if (typeFilterText && text) typeFilterText.textContent = text;
+            typeFilterMenu.querySelectorAll(".filter-option").forEach((a) => a.classList.remove("active"));
+            target.classList.add("active");
+            typeFilterMenu.classList.add("hidden");
+            filterAndSort();
+          }
+        });
+      });
+
+      // 排序筛选
+      sortFilterMenu?.querySelectorAll(".sort-option").forEach((item) => {
+        item.addEventListener("click", (e) => {
+          const target = e.currentTarget as HTMLElement;
+          const value = target.dataset.value;
+          const text = target.textContent?.trim();
+          if (value) {
+            currentSortValue = value;
+            if (sortFilterText && text) sortFilterText.textContent = text;
+            sortFilterMenu.querySelectorAll(".sort-option").forEach((a) => a.classList.remove("active"));
+            target.classList.add("active");
+            sortFilterMenu.classList.add("hidden");
+            filterAndSort();
+          }
+        });
+      });
+
+      // 窗口大小变化时重新渲染分页
+      let resizeTimer: ReturnType<typeof setTimeout>;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(renderPage, 150);
+      });
+
+      // 初始渲染
+      filterAndSort();
+    });
+  </script>
+</MainGridLayout>

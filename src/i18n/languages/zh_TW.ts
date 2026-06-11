@@ -17,8 +17,8 @@ export const zh_TW: Translation = {
 
 	[Key.tags]: "標籤",
 	[Key.categories]: "分類",
-	[Key.allCategories]: "全部分類",
-	[Key.allTags]: "全部標籤",
+	[Key.allCategories]: "所有分類",
+	[Key.allTags]: "所有標籤",
 	[Key.recentPosts]: "最新文章",
 	[Key.postList]: "文章列表",
 	[Key.tableOfContents]: "文章目錄",
@@ -69,8 +69,6 @@ export const zh_TW: Translation = {
 	[Key.minutesCount]: "分鐘",
 	[Key.postCount]: "篇文章",
 	[Key.postsCount]: "篇文章",
-	[Key.tagsCount]: "個標籤",
-	[Key.noData]: "暫無資料",
 
 	[Key.themeColor]: "主題色相",
 
@@ -150,6 +148,27 @@ export const zh_TW: Translation = {
 	[Key.bangumiLastUpdated]: "數據更新於",
 	[Key.bangumiUpdatedAt]: "構建時間",
 	[Key.bangumiDataStatic]: "靜態數據",
+
+	// 追番
+	[Key.anime]: "追番",
+	[Key.animeSubtitle]: "我的追番列表，數據來自 Bilibili 和 TMDB",
+	[Key.animeTotal]: "總追番",
+	[Key.animeAverageRating]: "平均評分",
+	[Key.animeSearch]: "搜尋番劇...",
+	[Key.animeAllTypes]: "全部類型",
+	[Key.animeTV]: "TV 動畫",
+	[Key.animeMovie]: "劇場版",
+	[Key.animeRatingDesc]: "評分最高",
+	[Key.animeRatingAsc]: "評分最低",
+	[Key.animeDateDesc]: "最新發布",
+	[Key.animeDateAsc]: "最早發布",
+	[Key.animeNoResults]: "沒有找到匹配的番劇",
+	[Key.animeLastUpdated]: "數據更新於",
+	[Key.animeSource]: "數據來源",
+	[Key.animeEpStatus]: "進度",
+	[Key.animeViewDetails]: "查看詳情",
+	[Key.animeNotConfigured]: "未配置追番資料來源",
+	[Key.animeNotConfiguredDesc]: "請在 src/config/siteConfig.ts 中配置 Bilibili UID 或 TMDB API Key",
 
 	// 分頁
 	[Key.paginationFirst]: "首頁",

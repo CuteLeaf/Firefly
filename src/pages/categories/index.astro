@@ -6,64 +6,49 @@ import MainGridLayout from "@/layouts/MainGridLayout.astro";
 import { getCategoryList } from "@/utils/content-utils";
 
 const categories = await getCategoryList();
-const totalPosts = categories.reduce((sum, cat) => sum + cat.count, 0);
 ---
 
-<MainGridLayout title={i18n(I18nKey.categories)}>
-    <!-- 页面标题 -->
-    <div class="card-base px-8 py-6 mb-4">
-        <div class="text-2xl font-bold text-(--primary) mb-2">
-            {i18n(I18nKey.categories)}
-        </div>
-        <p class="text-30 text-sm">
-            {i18n(I18nKey.allCategories)} · {totalPosts} {i18n(I18nKey.postsCount)}
-        </p>
-    </div>
-
-    <!-- 分类卡片列表 -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-        {
-            categories.map((category, index) => (
-                <a
-                    href={category.url}
-                    class="card-base p-6 flex items-center gap-4 group onload-animation"
-                    style={`animation-delay: calc(var(--content-delay) + ${index * 50}ms);`}
-                >
-                    <div class="shrink-0 w-14 h-14 rounded-full bg-(--primary)/10 group-hover:bg-(--primary)/20 flex items-center justify-center transition-colors">
-                        <Icon
-                            name="material-symbols:folder-open"
-                            class="text-3xl text-(--primary)"
-                        />
+<MainGridLayout title={i18n(I18nKey.allCategories)} description={i18n(I18nKey.allCategories)}>
+    <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+        <div class="card-base z-10 px-9 py-6 relative w-full">
+            <div class="mb-6">
+                <div class="flex items-center justify-between mb-0">
+                    <div class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+                        {i18n(I18nKey.allCategories)}
                     </div>
-                    <div class="flex-1 min-w-0">
-                        <h2 class="text-lg font-bold text-90 truncate group-hover:text-(--primary) transition-colors">
-                            {category.name}
-                        </h2>
-                        <p class="text-sm text-30 mt-1 group-hover:text-(--primary)/60 transition-colors">
-                            {category.count} {i18n(I18nKey.postsCount)}
-                        </p>
-                    </div>
-                    <div class="shrink-0">
-                        <Icon
-                            name="material-symbols:chevron-right-rounded"
-                            class="text-2xl text-30 group-hover:text-(--primary) transition-colors "
-                        />
-                    </div>
-                </a>
-            ))
-        }
-    </div>
-
-    <!-- 空状态 -->
-    {
-        categories.length === 0 && (
-            <div class="card-base px-8 py-12 text-center">
-                <Icon
-                    name="material-symbols:folder-off"
-                    class="text-5xl text-30 mx-auto mb-4"
-                />
-                <p class="text-30">{i18n(I18nKey.noData)}</p>
+                    <span class="text-sm font-medium px-2.5 py-0.5 rounded-full
+                                 bg-[oklch(0.95_0.025_var(--hue))] dark:bg-[oklch(0.25_0.025_var(--hue))]
+                                 text-neutral-500 dark:text-neutral-400">
+                        {categories.length}
+                    </span>
+                </div>
             </div>
-        )
-    }
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {categories.filter((c) => c.name.trim().toLowerCase() !== i18n(I18nKey.uncategorized).toLowerCase()).map((c) => (
+                    <a href={c.url}
+                       class="group flex items-center justify-between px-5 py-4 rounded-xl
+                              bg-[oklch(0.95_0.025_var(--hue))] dark:bg-[oklch(0.25_0.025_var(--hue))]
+                              hover:bg-[oklch(0.9_0.05_var(--hue))] dark:hover:bg-[oklch(0.3_0.05_var(--hue))]
+                              transition-all duration-200"
+                    >
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-lg
+                                        bg-(--primary) text-white text-lg shrink-0">
+                                <Icon name="material-symbols:folder-open-rounded" is:inline class:list={["text-xl"]} />
+                            </div>
+                            <span class="font-medium text-neutral-800 dark:text-neutral-200 truncate
+                                         group-hover:text-(--primary) transition-colors">
+                                {c.name.trim()}
+                            </span>
+                        </div>
+                        <span class="shrink-0 ml-3 px-2.5 py-1 rounded-full text-sm font-bold
+                                     text-(--btn-content) dark:text-(--deep-text)
+                                     bg-white/60 dark:bg-white/10">
+                            {c.count}
+                        </span>
+                    </a>
+                ))}
+            </div>
+        </div>
+    </div>
 </MainGridLayout>

@@ -71,8 +71,6 @@ export const en: Translation = {
 	[Key.minutesCount]: "minutes",
 	[Key.postCount]: "post",
 	[Key.postsCount]: "posts",
-	[Key.tagsCount]: "tags",
-	[Key.noData]: "No data yet",
 
 	[Key.themeColor]: "Theme Color",
 
@@ -152,6 +150,27 @@ export const en: Translation = {
 	[Key.bangumiLastUpdated]: "Data updated at",
 	[Key.bangumiUpdatedAt]: "Build time",
 	[Key.bangumiDataStatic]: "Static data",
+
+	// Anime Tracking
+	[Key.anime]: "Anime",
+	[Key.animeSubtitle]: "My anime tracking list, data from Bilibili and TMDB",
+	[Key.animeTotal]: "Total",
+	[Key.animeAverageRating]: "Avg Rating",
+	[Key.animeSearch]: "Search anime...",
+	[Key.animeAllTypes]: "All Types",
+	[Key.animeTV]: "TV Anime",
+	[Key.animeMovie]: "Movie",
+	[Key.animeRatingDesc]: "Highest Rating",
+	[Key.animeRatingAsc]: "Lowest Rating",
+	[Key.animeDateDesc]: "Newest",
+	[Key.animeDateAsc]: "Oldest",
+	[Key.animeNoResults]: "No matching anime found",
+	[Key.animeLastUpdated]: "Data updated at",
+	[Key.animeSource]: "Source",
+	[Key.animeEpStatus]: "Progress",
+	[Key.animeViewDetails]: "View Details",
+	[Key.animeNotConfigured]: "Anime data source not configured",
+	[Key.animeNotConfiguredDesc]: "Please configure Bilibili UID or TMDB API Key in src/config/siteConfig.ts",
 
 	// Pagination
 	[Key.paginationFirst]: "First",

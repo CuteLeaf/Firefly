@@ -71,8 +71,6 @@ export const ja: Translation = {
 	[Key.minutesCount]: "分",
 	[Key.postCount]: "投稿",
 	[Key.postsCount]: "投稿",
-	[Key.tagsCount]: "タグ",
-	[Key.noData]: "データなし",
 
 	[Key.themeColor]: "テーマカラー",
 
@@ -152,6 +150,27 @@ export const ja: Translation = {
 	[Key.bangumiLastUpdated]: "データ更新",
 	[Key.bangumiUpdatedAt]: "ビルド時間",
 	[Key.bangumiDataStatic]: "静的データ",
+
+	// 追番（アニメ追跡）
+	[Key.anime]: "追番",
+	[Key.animeSubtitle]: "私のアニメ追跡リスト、Bilibili と TMDB からデータ取得",
+	[Key.animeTotal]: "合計",
+	[Key.animeAverageRating]: "平均評価",
+	[Key.animeSearch]: "アニメを検索...",
+	[Key.animeAllTypes]: "すべてのタイプ",
+	[Key.animeTV]: "TV アニメ",
+	[Key.animeMovie]: "劇場版",
+	[Key.animeRatingDesc]: "評価が高い順",
+	[Key.animeRatingAsc]: "評価が低い順",
+	[Key.animeDateDesc]: "新しい順",
+	[Key.animeDateAsc]: "古い順",
+	[Key.animeNoResults]: "一致するアニメが見つかりません",
+	[Key.animeLastUpdated]: "データ更新",
+	[Key.animeSource]: "データソース",
+	[Key.animeEpStatus]: "進捗",
+	[Key.animeViewDetails]: "詳細を見る",
+	[Key.animeNotConfigured]: "アニメデータソースが未設定",
+	[Key.animeNotConfiguredDesc]: "src/config/siteConfig.ts で Bilibili UID または TMDB API Key を設定してください",
 
 	// ページネーション
 	[Key.paginationFirst]: "最初",
