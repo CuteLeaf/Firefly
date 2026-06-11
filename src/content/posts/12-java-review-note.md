@@ -534,13 +534,13 @@ for(String i : a) // 迭代Arraylist中的元素
     - 无异常：`try` → `finally`
     - 有异常，被 `catch` 捕获：`try`(中断) → `catch` → `finally`
     - 有异常，无对应 `catch`：`try`(中断) → `finally` → 异常向外抛出
-```
-Throwable (父类)
-├── Error (错误，不可处理)
-└── Exception (异常，可处理)
-    ├── RuntimeException (运行时异常，非受检)
-    └── UncheckedException (编译时异常，受检)
-```
+    ```
+    Throwable (父类)
+    ├── Error (错误，不可处理)
+    └── Exception (异常，可处理)
+        ├── RuntimeException (运行时异常，非受检)
+        └── UncheckedException (编译时异常，受检)
+    ```
 
 ### 13.内部类
 - 写在另一个类内部的类，外部包裹的类叫外部类
