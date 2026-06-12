@@ -1,0 +1,79 @@
+name: Sync Fork with Upstream
+
+on:
+  schedule:
+    # 每天 UTC 02:00 检查一次上游变更。
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: '需要同步的 fork 分支'
+        required: false
+        default: 'master'
+
+permissions:
+  contents: write
+
+jobs:
+  rebase:
+    name: Rebase fork branch from upstream
+    runs-on: ubuntu-latest
+    if: ${{ github.event.repository.fork }}
+
+    steps:
+      - name: Checkout fork branch
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Configure Git user
+        env:
+          GITHUB_ACTOR_NAME: ${{ github.actor }}
+        run: |
+          git config user.name "$GITHUB_ACTOR_NAME"
+
+      - name: Fetch upstream changes
+        run: |
+          git remote add upstream "https://github.com/CuteLeaf/Firefly.git"
+          git fetch upstream master
+
+      - name: Rebase onto upstream
+        id: rebase
+        run: |
+          set +e
+          git rebase upstream/master
+          REBASE_EXIT_CODE=$?
+
+          if [ "$REBASE_EXIT_CODE" -ne 0 ]; then
+            echo "conflicted=true" >> "$GITHUB_OUTPUT"
+            git rebase --abort || true
+            echo "上游变更与当前 fork 分支存在冲突，已忽略本次同步。"
+            exit 0
+          fi
+
+          echo "conflicted=false" >> "$GITHUB_OUTPUT"
+
+      - name: Check whether branch changed
+        id: changed
+        if: ${{ steps.rebase.outputs.conflicted == 'false' }}
+        env:
+          TARGET_BRANCH: ${{ github.event.inputs.target_branch || 'master' }}
+        run: |
+          LOCAL_SHA="$(git rev-parse HEAD)"
+          REMOTE_SHA="$(git rev-parse "origin/$TARGET_BRANCH")"
+
+          if [ "$LOCAL_SHA" = "$REMOTE_SHA" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "当前 fork 分支已是最新，无需推送。"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Push rebased branch
+        if: ${{ steps.rebase.outputs.conflicted == 'false' && steps.changed.outputs.changed == 'true' }}
+        env:
+          TARGET_BRANCH: ${{ github.event.inputs.target_branch || 'master' }}
+        run: |
+          git push origin "HEAD:$TARGET_BRANCH" --force-with-lease
