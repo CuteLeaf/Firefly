@@ -89,7 +89,7 @@ export type SiteConfig = {
 	// 分类导航栏开关
 	categoryBar?: boolean;
 
-	// 是否折叠非最新年份文章
+	// 归档页是否折叠非最新年份文章
 	foldArticle?: boolean;
 
 	// 文章列表布局配置
