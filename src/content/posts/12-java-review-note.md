@@ -299,7 +299,7 @@ for(String i : a) // 迭代Arraylist中的元素
     }
     ```
     ```java
-    //懒汉式
+    //饿汉式
     public class Singleton {  
         private static Singleton instance = new Singleton();  
         private Singleton (){}  
