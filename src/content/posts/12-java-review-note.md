@@ -109,7 +109,8 @@ while(it.hasNext()){
     }
 }
 ```
-#### 文件读入
+#### (8) 文件读入
+**重点：readline**
 ```java
 //文件读入
 import java.io.*;
@@ -189,7 +190,7 @@ for(String i : a) // 迭代Arraylist中的元素
 - 数组的声明+初始化：
     `int[] arr = new int[3];` 
     `int[] arr = {1, 2, 3};` 
-    `int[] arr = new int[3]{1, 2, 3};`
+    `int[] arr = new int[]{1, 2, 3};`⭐
     `int[][] matrix = new int[3][3];`
     ```java
     // 直接赋值，编译器自动计算行列
@@ -507,6 +508,7 @@ for(String i : a) // 迭代Arraylist中的元素
 - 运行时异常（UncheckedException）编译器不强制处理
 - RuntimeException（非检查异常）不必显式捕获
 - 同一异常对象可以被 catch 后再 throw，可以多次抛出
+- 异常没有被处理，放在`callstack`（调用栈）中
 - `try-catch-finally` 异常处理 
     ```java
     // 标准格式
@@ -640,6 +642,7 @@ for(String i : a) // 迭代Arraylist中的元素
     - 读文件：文件不存在 → 抛出 `FileNotFoundException`（受检异常，必须捕获 / 声明）
     - 写文件：文件不存在 → 自动创建，不报错
     - 所有流操作异常父类：`IOException`
+- Reader读入字符 Stream读入字节
 ### 小知识点
 - 类型转换
     - 自动转换（隐式）：小范围到大范围
@@ -684,7 +687,7 @@ for(String i : a) // 迭代Arraylist中的元素
 - `equals(Object obj)`用来测试两个字符串是否相等
 - `public static void main` 中修饰符的顺序可以改变
 - `FlowLayout` 是 `Panel` 和 `Applet` 的默认布局管理器（从左到右，超出则换行）。`JFrame/Frame` 默认是 `BorderLayout`；`JPanel` 默认也是 `FlowLayout`
-- java.awt.* 是 Java AWT 图形界面的基础包，含 Frame、Panel、Button、Label 等核心组件
+- `java.awt.*` 是 Java AWT 图形界面的基础包，含 Frame、Panel、Button、Label 等核心组件
 
 ## 三、易错题&难题
 ![](image-36.png)
@@ -700,3 +703,335 @@ for(String i : a) // 迭代Arraylist中的元素
 [19-20年B卷](2019_2020_B_answers.html)
 
 [20-21年AB卷](2020_2021_AB_answers.html)
+
+## 五、大题整理（源自真题）
+**简单求和**
+```java
+//Write a program to find the sum of all integers from 1 to 100, and output the results.
+public class SumDemo {
+    public static void main(String[] args) {
+        int sum = 0;
+        for (int i = 1; i <= 100; i++) {
+            sum += i;
+        }
+        System.out.println("Sum from 1 to 100 = " + sum);
+    }
+}
+
+// Declare an array intArr, which include {1,2,3,4,5}, Please write a Java program to caculate the sum of the five elements, then output the result into console. 
+int[] intArr = {1, 2, 3, 4, 5};
+int sum = 0;
+for (int v : intArr) sum += v;
+System.out.println(sum);
+```
+**计算大写字母**
+```java
+// (Count uppercase letters) Write a program that prompts the user to enter a string and displays
+the number of the uppercase letters in the string.
+Scanner in = new Scanner(System.in);
+String s = in.nextLine();
+int count = 0;
+for (int i = 0; i < s.length(); i++) {
+    if (Character.isUpperCase(s.charAt(i))) count++;
+}
+System.out.println(count);
+```
+**数码频率**
+```java
+// Digit Frequency Counting: Counting the frequency of each digit occurrence in a single array by using “BufferedReader”
+BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+String line = br.readLine();
+int[] freq = new int[10];
+for (int i = 0; i < line.length(); i++) {
+    char ch = line.charAt(i);
+    if (Character.isDigit(ch)) freq[ch - '0']++;
+}
+for (int i = 0; i < freq.length; i++) {
+    System.out.println(i + ": " + freq[i]);
+}
+```
+**最大最小值**
+```java
+// Max/min of 10 integers
+Scanner input = new Scanner(System.in);
+int max = Integer.MIN_VALUE, min = Integer.MAX_VALUE;
+for (int i = 0; i < 10; i++) {
+    try {
+        int v = input.nextInt();
+        max = Math.max(max, v);
+        min = Math.min(min, v);
+    } catch (InputMismatchException ex) {
+        throw new IllegalArgumentException("input is not an integer");
+    }
+}
+System.out.println("Max=" + max);
+System.out.println("Min=" + min);
+```
+**字符串遍历、打印、删除、去重**
+```java
+import java.util.Iterator;
+import java.util.Vector;
+
+public class MainClass {
+    Vector vector = new Vector();
+    public MainClass() {
+        vector.add("country China");
+        vector.add("country America");
+        vector.add("country English");
+        vector.add("name Mary");
+        vector.add("name Linda");
+        vector.add("name Mike");
+        vector.add("name John");
+    }
+    // ① 遍历输出所有元素
+    public void printElements() {
+        Iterator it = vector.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
+        }
+    }
+    // ② 删除以指定前缀开头的字符串（用 Iterator 避免 ConcurrentModificationException）
+    public void deleteStartsWith(String prefix) {
+        Iterator it = vector.iterator();
+        while (it.hasNext()) {
+            String str = (String) it.next();
+            if (str.startsWith(prefix)) {
+                it.remove();   // 安全删除
+            }
+        }
+    }
+    // ③ 打印以指定前缀开头的字符串
+    public void printStartsWith(String prefix) {
+        Iterator it = vector.iterator();
+        while (it.hasNext()) {
+            String str = (String) it.next();
+            if (str.startsWith(prefix)) {
+                System.out.println(str);
+            }
+        }
+    }
+}
+```
+**文件读入**
+```java
+//Write a class to read a given text file (java.txt) and output contents to console. Hint: BufferedReader, FileInputStream, InputStreamReader.
+import java.io.*;
+public class ReadFile {
+    public static void main(String[] args) {
+        try {
+            // 按题目提示：FileInputStream → InputStreamReader → BufferedReader
+            FileInputStream fis = new FileInputStream("java.txt");
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+            br.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+**单例模式**
+```java
+// Complete the singleton pattern for StudentInfo (only one instance can be created). ① field ② constructor ③ getSingletonInstance(). (10 points)
+public class StudentInfo {
+    // ① 私有静态实例字段（延迟初始化）
+    private static StudentInfo instance = null;
+    private String name;
+    private String ID;
+    // ② 私有构造方法，防止外部 new
+    private StudentInfo() {
+        name = "";
+        ID = "";
+    }
+    // ③ 公有静态工厂方法，第一次调用时创建实例
+    static public StudentInfo getSingletonInstance() {
+        if (instance == null) {
+            instance = new StudentInfo();
+        }
+        return instance;
+    }
+    public String getName() { return name; }
+    public String getID()   { return ID; }
+}
+
+// There is a class named ImgResource, please applying singleton pattern to it, write the java code and draw the UML class diagram. 
+public class ImgResource {
+    private static final ImgResource INSTANCE = new ImgResource();
+    private ImgResource() {}
+    public static ImgResource getInstance() { return INSTANCE; }
+}
+```
+**UML图综合大题1**
+```java
+// UserDTO.java
+public class UserDTO {
+    private String userAccount;
+    private String userPassword;
+
+    public String getUserAccount()  { return userAccount; }
+    public void   setUserAccount(String acc) { this.userAccount = acc; }
+    public String getUserPassword() { return userPassword; }
+    public void   setUserPassword(String pwd) { this.userPassword = pwd; }
+}
+
+// IUserDAO.java（接口）
+public interface IUserDAO {
+    boolean addUser(UserDTO user);
+}
+
+// OracleUserDAO.java（实现类）
+public class OracleUserDAO implements IUserDAO {
+    public boolean addUser(UserDTO user) {
+        // Oracle specific implementation
+        return true;
+    }
+}
+
+// RegisterForm.java
+public class RegisterForm {
+    private IUserDAO userDAO;
+
+    public RegisterForm(IUserDAO dao) {
+        this.userDAO = dao;
+    }
+
+    public void register(String account, String password) {
+        UserDTO dto = new UserDTO();
+        dto.setUserAccount(account);
+        dto.setUserPassword(password);
+        userDAO.addUser(dto);
+    }
+}
+```
+**UML图综合大题2.1**
+```java
+// Use the UML class diagram (Person ← Student / Employee) to create Java classes. Person.display() prints name; Student.display() prints name+ID; Employee.display() prints name+salary; hasSameName(Person) compares names; isEqual(Student) uses hasSameName and also compares ID. 
+// Person.java
+public class Person {
+    private String name;
+
+    public Person() { this.name = ""; }
+    public Person(String name) { this.name = name; }
+
+    public void   setName(String name) { this.name = name; }
+    public String getName() { return name; }
+
+    public void display() {
+        System.out.println("Name: " + name);
+    }
+
+    public boolean hasSameName(Person p) {
+        return this.name.equals(p.getName());
+    }
+}
+
+// Student.java
+public class Student extends Person {
+    private int studentID;
+
+    public Student() { super(); }
+    public Student(String name, int id) { super(name); this.studentID = id; }
+
+    public void  setID(int id) { this.studentID = id; }
+    public int   getID() { return studentID; }
+
+    @Override
+    public void display() {
+        System.out.println("Name: " + getName() + ", ID: " + studentID);
+    }
+
+    public boolean isEqual(Student s) {
+        return hasSameName(s) && this.studentID == s.getID();
+    }
+}
+
+// Employee.java
+public class Employee extends Person {
+    private double salary;
+
+    public Employee(String name, double salary) {
+        super(name);
+        this.salary = salary;
+    }
+
+    public void   setSalary(double salary) { this.salary = salary; }
+    public double getSalary() { return salary; }
+
+    @Override
+    public void display() {
+        System.out.println("Name: " + getName() + ", Salary: " + salary);
+    }
+}
+```
+**UML图综合大题2.2**
+```java
+import java.io.*;
+import java.util.*;
+
+public class MainProgram {
+
+    public static void main(String[] args) throws IOException {
+        List<Student>  students  = new ArrayList<>();
+        List<Employee> employees = new ArrayList<>();
+
+        // ─── (A) 读取 students.txt ───────────────────────────────────
+        BufferedReader br = new BufferedReader(new FileReader("students.txt"));
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] p = line.trim().split("\\s+");
+            if (p.length >= 2)
+                students.add(new Student(p[0], Integer.parseInt(p[1])));
+        }
+        br.close();
+
+        // 读取 employees.txt
+        br = new BufferedReader(new FileReader("employees.txt"));
+        while ((line = br.readLine()) != null) {
+            String[] p = line.trim().split("\\s+");
+            if (p.length >= 2)
+                employees.add(new Employee(p[0], Double.parseDouble(p[1])));
+        }
+        br.close();
+
+        // ─── (B) 查找重复学生记录（name 和 ID 均相同）─────────────────
+        System.out.println("=== Duplicate Students ===");
+        boolean found = false;
+        for (int i = 0; i < students.size(); i++) {
+            for (int j = i + 1; j < students.size(); j++) {
+                if (students.get(i).isEqual(students.get(j))) {
+                    System.out.print("Duplicate: ");
+                    students.get(i).display();
+                    found = true;
+                }
+            }
+        }
+        if (!found) System.out.println("No exact duplicates found.");
+
+        // ─── (C) 查找同名的学生和员工 ─────────────────────────────────
+        System.out.println("\n=== Students & Employees with Same Name ===");
+        for (Student  s : students) {
+            for (Employee e : employees) {
+                if (s.hasSameName(e)) {
+                    System.out.println("Match found:");
+                    s.display(); e.display();
+                }
+            }
+        }
+        // 预期输出: Shirley（学生 751）和 Shirley（员工 7500）同名
+
+        // ─── (D) 薪资最高的 3 名员工 ──────────────────────────────────
+        System.out.println("\n=== Top 3 Employees by Salary ===");
+        employees.sort((a, b) -> Double.compare(b.getSalary(), a.getSalary()));
+        for (int i = 0; i < Math.min(3, employees.size()); i++) {
+            employees.get(i).display();
+        }
+        // 预期: Alex(15000), Steven(12800), Vivian(12300)
+    }
+}
+```
