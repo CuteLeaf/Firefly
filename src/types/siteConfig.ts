@@ -89,6 +89,9 @@ export type SiteConfig = {
 	// 分类导航栏开关
 	categoryBar?: boolean;
 
+	// 是否折叠非最新年份文章
+	foldArticle?: boolean;
+
 	// 文章列表布局配置
 	postListLayout: {
 		defaultMode: "list" | "grid"; // 默认布局模式：list=列表模式，grid=网格模式

@@ -1,6 +1,7 @@
 <script lang="ts">
 import { onMount } from "svelte";
 
+import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { getPostUrlBySlug } from "@/utils/url-utils";
@@ -167,8 +168,7 @@ onMount(async () => {
 
 	groups = groupedPostsArray;
 
-	// 默认只展开最近一年，其他年份折叠
-	if (groupedPostsArray.length > 1) {
+	if (siteConfig.foldArticle !== false && groupedPostsArray.length > 1) {
 		collapsedYears = new Set(groupedPostsArray.slice(1).map((g) => g.year));
 	}
 
