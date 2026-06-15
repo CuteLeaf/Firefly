@@ -63,6 +63,16 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	common: {
 		// 横幅文字遮罩暗度，0-1之间，值越大越暗
 		dimOpacity: 0.2,
+		// 背景视频播放地址，配置后将在壁纸区域显示视频播放按钮
+		// 支持单个视频路径（字符串）或多个视频循环（数组）
+		// 本地视频请放在 public/assets/videos/ 目录下
+		playerUrl: [
+			// "/assets/videos/fate.mp4",
+			"/assets/videos/sakurasou.mp4",
+			// "/assets/videos/spiral.mp4",
+		],
+		// 多视频播放模式："order" 顺序循环，"random" 随机切换（仅当 playerUrl 为数组时生效）
+		playerMode: "random",
 		// 主页横幅文字
 		homeText: {
 			// 是否启用主页横幅文字
