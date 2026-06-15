@@ -351,4 +351,10 @@ export const en: Translation = {
 	[Key.passwordError]: "Incorrect password, please try again.",
 	[Key.passwordProtectedRss]:
 		"This article is encrypted. Please visit the website to view it.",
+
+	// Background video player
+	[Key.videoPlay]: "Play background video",
+	[Key.videoPause]: "Pause background video",
+	[Key.videoPrev]: "Previous video",
+	[Key.videoNext]: "Next video",
 };

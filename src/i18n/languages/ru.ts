@@ -352,4 +352,10 @@ export const ru: Translation = {
 	[Key.passwordError]: "Неверный пароль, попробуйте снова.",
 	[Key.passwordProtectedRss]:
 		"Эта статья зашифрована. Пожалуйста, посетите сайт для просмотра.",
+
+	// Фоновый видеоплеер
+	[Key.videoPlay]: "Воспроизвести фоновое видео",
+	[Key.videoPause]: "Пауза фонового видео",
+	[Key.videoPrev]: "Предыдущее видео",
+	[Key.videoNext]: "Следующее видео",
 };

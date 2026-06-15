@@ -340,4 +340,10 @@ export const zh_CN: Translation = {
 	[Key.passwordSubmit]: "解锁",
 	[Key.passwordError]: "密码错误，请重试。",
 	[Key.passwordProtectedRss]: "本文已加密保护，请访问网站查看。",
+
+	// 背景视频播放器
+	[Key.videoPlay]: "播放背景视频",
+	[Key.videoPause]: "暂停背景视频",
+	[Key.videoPrev]: "上一个视频",
+	[Key.videoNext]: "下一个视频",
 };

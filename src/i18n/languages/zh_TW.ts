@@ -342,4 +342,10 @@ export const zh_TW: Translation = {
 	[Key.passwordSubmit]: "解鎖",
 	[Key.passwordError]: "密碼錯誤，請重試。",
 	[Key.passwordProtectedRss]: "本文已加密保護，請訪問網站查看。",
+
+	// 背景影片播放器
+	[Key.videoPlay]: "播放背景影片",
+	[Key.videoPause]: "暫停背景影片",
+	[Key.videoPrev]: "上一個影片",
+	[Key.videoNext]: "下一個影片",
 };

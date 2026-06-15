@@ -1,0 +1,195 @@
+---
+import { i18n } from "@/i18n/translation";
+import I18nKey from "@/i18n/i18nKey";
+
+export interface Props {
+	playerUrl: string | string[];
+	playerMode?: "order" | "random";
+}
+
+const { playerUrl, playerMode = "order" } = Astro.props;
+
+const urls = Array.isArray(playerUrl) ? playerUrl : playerUrl ? [playerUrl] : [];
+const hasMultiple = urls.length > 1;
+const urlsJson = JSON.stringify(urls);
+
+const tPlay = i18n(I18nKey.videoPlay);
+const tPause = i18n(I18nKey.videoPause);
+const tPrev = i18n(I18nKey.videoPrev);
+const tNext = i18n(I18nKey.videoNext);
+---
+
+{
+	urls.length > 0 && (
+		<div id="bg-player">
+			<div
+				id="bg-player-overlay"
+				class="absolute inset-0 z-15 overflow-hidden pointer-events-none transition-opacity duration-500 ease-in-out opacity-0"
+			>
+				<video id="bg-player-video" preload="auto" playsinline class="size-full object-cover"></video>
+			</div>
+
+			<div id="bg-player-controls" class="absolute bottom-4 left-4 z-30 flex items-center gap-1.5 group">
+				{hasMultiple && (
+					<button
+						id="bg-prev-btn"
+						class="w-11 h-11 flex items-center justify-center rounded-full border border-white/30 bg-black/35 text-white/50 backdrop-blur-sm cursor-pointer transition-all duration-200 opacity-0 scale-90 group-hover:opacity-50 group-hover:scale-100 hover:!opacity-80 hover:!scale-100"
+						title={tPrev}
+						aria-label={tPrev}
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+							<path fill-rule="evenodd" d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" />
+						</svg>
+					</button>
+				)}
+
+				<button
+					id="bg-play-btn"
+					class="w-11 h-11 flex items-center justify-center rounded-full border border-white/30 bg-black/35 text-white/50 backdrop-blur-sm cursor-pointer transition-all duration-200 opacity-50 hover:bg-black/55 hover:text-white/80 hover:opacity-80"
+					title={tPlay}
+					aria-label={tPlay}
+					data-i18n-play={tPlay}
+					data-i18n-pause={tPause}
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="18" height="18">
+						<path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" />
+					</svg>
+				</button>
+
+				{hasMultiple && (
+					<button
+						id="bg-next-btn"
+						class="w-11 h-11 flex items-center justify-center rounded-full border border-white/30 bg-black/35 text-white/50 backdrop-blur-sm cursor-pointer transition-all duration-200 opacity-0 scale-90 group-hover:opacity-50 group-hover:scale-100 hover:!opacity-80 hover:!scale-100"
+						title={tNext}
+						aria-label={tNext}
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+							<path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+						</svg>
+					</button>
+				)}
+			</div>
+		</div>
+	)
+}
+
+<script is:inline define:vars={{ urls: urlsJson, playerMode, hasMultiple }}>
+	(() => {
+		const urlList = JSON.parse(urls);
+		if (!urlList.length) return;
+
+		var overlay = document.getElementById("bg-player-overlay");
+		var video = document.getElementById("bg-player-video");
+		var playBtn = document.getElementById("bg-play-btn");
+		var prevBtn = document.getElementById("bg-prev-btn");
+		var nextBtn = document.getElementById("bg-next-btn");
+
+		if (!video || !playBtn) return;
+
+		var isPlaying = false;
+		var currentIndex = 0;
+		var i18nPlay = playBtn.getAttribute("data-i18n-play");
+		var i18nPause = playBtn.getAttribute("data-i18n-pause");
+
+		function pickIndex(except) {
+			if (urlList.length <= 1) return 0;
+			if (playerMode === "random") {
+				var n;
+				do { n = Math.floor(Math.random() * urlList.length); } while (n === except);
+				return n;
+			}
+			return (except + 1) % urlList.length;
+		}
+
+		function prevIndex() {
+			if (urlList.length <= 1) return 0;
+			if (playerMode === "random") return pickIndex(currentIndex);
+			return (currentIndex - 1 + urlList.length) % urlList.length;
+		}
+
+		function syncAttr() {
+			document.body.toggleAttribute("data-bg-video-playing", isPlaying);
+			document.documentElement.toggleAttribute("data-bg-video-playing", isPlaying);
+		}
+
+		function setPlayBtnText() {
+			var label = isPlaying ? i18nPause : i18nPlay;
+			var icon = isPlaying
+				? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path fill-rule="evenodd" d="M6.75 5.25a.75.75 0 0 1 .75-.75H9a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H7.5a.75.75 0 0 1-.75-.75V5.25Zm7.5 0A.75.75 0 0 1 15 4.5h1.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H15a.75.75 0 0 1-.75-.75V5.25Z" clip-rule="evenodd" /></svg>'
+				: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" /></svg>';
+			playBtn.innerHTML = icon;
+			playBtn.setAttribute("title", label);
+			playBtn.setAttribute("aria-label", label);
+			playBtn.classList.toggle("opacity-80", isPlaying);
+			playBtn.classList.toggle("opacity-50", !isPlaying);
+		}
+
+		function doPlay() {
+			video.src = urlList[currentIndex];
+			video.muted = true;
+			video.play()
+				.then(function () { setTimeout(function () { if (video) video.muted = false; }, 100); })
+				.catch(function () { isPlaying = false; syncAttr(); setPlayBtnText(); });
+		}
+
+		function switchTrack(index) {
+			if (index < 0 || index >= urlList.length) return;
+			currentIndex = index;
+			if (isPlaying) {
+				doPlay();
+			} else {
+				video.src = urlList[currentIndex];
+				video.load();
+			}
+		}
+
+		function toggle() {
+			isPlaying = !isPlaying;
+			if (isPlaying) {
+				if (currentIndex >= urlList.length) currentIndex = 0;
+				syncAttr();
+				if (overlay) { overlay.classList.remove("opacity-0"); overlay.classList.add("opacity-100"); }
+				requestAnimationFrame(function () { doPlay(); });
+			} else {
+				video.pause();
+				if (overlay) { overlay.classList.remove("opacity-100"); overlay.classList.add("opacity-0"); }
+				syncAttr();
+			}
+			setPlayBtnText();
+		}
+
+		function onEnded() {
+			if (hasMultiple) {
+				currentIndex = pickIndex(currentIndex);
+				doPlay();
+			} else {
+				isPlaying = false;
+				if (overlay) { overlay.classList.remove("opacity-100"); overlay.classList.add("opacity-0"); }
+				syncAttr();
+				setPlayBtnText();
+			}
+		}
+
+		playBtn.addEventListener("click", toggle);
+		video.addEventListener("ended", onEnded);
+		if (prevBtn) prevBtn.addEventListener("click", function () { switchTrack(prevIndex()); });
+		if (nextBtn) nextBtn.addEventListener("click", function () { switchTrack(pickIndex(currentIndex)); });
+
+		function cleanup() {
+			document.body.removeAttribute("data-bg-video-playing");
+			document.documentElement.removeAttribute("data-bg-video-playing");
+		}
+		document.addEventListener("astro:before-swap", cleanup);
+	})();
+</script>
+
+<style>
+	:global([data-bg-video-playing] #banner-images-container),
+	:global([data-bg-video-playing] #banner-dim-container),
+	:global([data-bg-video-playing] #banner-overlay-container),
+	:global([data-bg-video-playing] #header-waves),
+	:global([data-bg-video-playing] #wallpaper-gradient) {
+		opacity: 0 !important;
+		transition: opacity 0.5s ease;
+	}
+</style>
