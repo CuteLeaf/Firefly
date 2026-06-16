@@ -4,20 +4,31 @@ import {
 	type NavBarSearchConfig,
 	NavBarSearchMethod,
 } from "../types/navBarConfig";
+import { siteConfig } from "./siteConfig";
 
-// ============================================================================
-// 导航栏配置 - 根据顺序动态生成导航栏链接
-// NavBar Configuration - Dynamically generate navigation bar links based on order
-// ============================================================================
 const getDynamicNavBarConfig = (): NavBarConfig => {
-	// 基础导航栏链接
-	const links: NavBarLink[] = [
-		// 主页
-		LinkPresets.Home,
-	];
+	const pages = siteConfig.pages;
 
-	// 文章及其子菜单
-	links.push({
+	function isEnabled(link: NavBarLink): boolean {
+		if (!link.pageKey) return true;
+		return pages[link.pageKey as keyof typeof pages] !== false;
+	}
+
+	function processLink(link: NavBarLink): NavBarLink | null {
+		if (!link.children) {
+			return isEnabled(link) ? link : null;
+		}
+
+		const filteredChildren = link.children.filter(isEnabled);
+
+		if (filteredChildren.length === 0) return null;
+		if (filteredChildren.length === 1) return filteredChildren[0];
+		return { ...link, children: filteredChildren };
+	}
+
+	const rawLinks: NavBarLink[] = [LinkPresets.Home];
+
+	rawLinks.push({
 		name: "文章",
 		url: "#",
 		icon: "material-symbols:article",
@@ -26,21 +37,18 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 			LinkPresets.Archive,
 
 			// 分类
-			LinkPresets.Categories,
+LinkPresets.Categories,
 
 			// 标签
-			LinkPresets.Tags,
-		],
+LinkPresets.Tags,
+],
 	});
 
-	// 友链
-	links.push(LinkPresets.Friends);
+	rawLinks.push(LinkPresets.Friends);
 
-	// 留言板
-	links.push(LinkPresets.Guestbook);
+	rawLinks.push(LinkPresets.Guestbook);
 
-	// 我的及其子菜单
-	links.push({
+	rawLinks.push({
 		name: "我的",
 		url: "#",
 		icon: "material-symbols:person",
@@ -53,8 +61,7 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		],
 	});
 
-	// 关于及其子菜单
-	links.push({
+	rawLinks.push({
 		name: "关于",
 		url: "#",
 		icon: "material-symbols:info",
@@ -67,12 +74,10 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		],
 	});
 
-	// 自定义导航栏链接
-	links.push({
+	rawLinks.push({
 		name: "链接",
 		url: "#",
 		icon: "material-symbols:link",
-		// 子菜单
 		children: [
 			{
 				name: "GitHub",
@@ -100,14 +105,17 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 			},
 		],
 	});
-
 	// 文档链接
-	// links.push({
+	// rawLinks.push({
 	// 	name: "文档",
 	// 	url: "https://docs-firefly.cuteleaf.cn",
 	// 	external: true,
 	// 	icon: "material-symbols:docs",
 	// });
+
+	const links: NavBarLink[] = rawLinks
+		.map(processLink)
+		.filter((link): link is NavBarLink => link !== null);
 
 	return { links } as NavBarConfig;
 };
@@ -146,16 +154,19 @@ export const LinkPresets: Record<string, NavBarLink> = {
 		name: "友链",
 		url: "/friends/",
 		icon: "material-symbols:group",
+		pageKey: "friends",
 	},
 	Sponsor: {
 		name: "打赏",
 		url: "/sponsor/",
 		icon: "material-symbols:favorite",
+		pageKey: "sponsor",
 	},
 	Guestbook: {
 		name: "留言",
 		url: "/guestbook/",
 		icon: "material-symbols:chat",
+		pageKey: "guestbook",
 	},
 	About: {
 		name: "关于我",
@@ -166,11 +177,13 @@ export const LinkPresets: Record<string, NavBarLink> = {
 		name: "番组计划",
 		url: "/bangumi/",
 		icon: "material-symbols:movie",
+		pageKey: "bangumi",
 	},
 	Gallery: {
 		name: "相册",
 		url: "/gallery/",
 		icon: "material-symbols:photo-library",
+		pageKey: "gallery",
 	},
 };
 

@@ -96,8 +96,7 @@ export const siteConfig: SiteConfig = {
 	// 示例："Asia/Shanghai", "UTC", 如果为空，则按照构建服务器的时区进行时区转换
 	timezone: "Asia/Shanghai",
 
-	// 页面开关配置 - 控制特定页面的访问权限，设为false会返回404
-	// 关闭后请前往src/config/navBarConfig.ts中手动移除对应页面的导航栏链接
+	// 页面开关配置 - 控制特定页面的访问权限，设为false会返回404并自动隐藏对应的导航栏菜单项
 	pages: {
 		// 友链页面开关
 		friends: true,
