@@ -56,7 +56,29 @@ const allowLayoutSwitch = siteConfig.postListLayout.allowSwitch;
 const hasDisplaySettings =
 	showThemeColor || isWallpaperSwitchable || allowLayoutSwitch;
 
-let links: NavBarLink[] = navBarConfig.links;
+// 根据 siteConfig.pages 过滤导航栏链接
+const pages = siteConfig.pages;
+
+function isPageEnabled(link: NavBarLink): boolean {
+	if (!link.pageKey) return true;
+	return pages[link.pageKey as keyof typeof pages] !== false;
+}
+
+function filterLinks(link: NavBarLink): NavBarLink | null {
+	if (!link.children) {
+		return isPageEnabled(link) ? link : null;
+	}
+
+	const filteredChildren = link.children.filter(isPageEnabled);
+
+	if (filteredChildren.length === 0) return null;
+	if (filteredChildren.length === 1) return filteredChildren[0];
+	return { ...link, children: filteredChildren };
+}
+
+let links: NavBarLink[] = navBarConfig.links
+	.map(filterLinks)
+	.filter((link): link is NavBarLink => link !== null);
 
 // 处理导航栏 Logo 图片
 const logoValue = siteConfig.navbar.logo?.value || "";

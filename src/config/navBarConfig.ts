@@ -4,31 +4,20 @@ import {
 	type NavBarSearchConfig,
 	NavBarSearchMethod,
 } from "../types/navBarConfig";
-import { siteConfig } from "./siteConfig";
 
+// ============================================================================
+// 导航栏配置 - 根据顺序动态生成导航栏链接
+// NavBar Configuration - Dynamically generate navigation bar links based on order
+// ============================================================================
 const getDynamicNavBarConfig = (): NavBarConfig => {
-	const pages = siteConfig.pages;
+	// 基础导航栏链接
+	const links: NavBarLink[] = [
+		// 主页
+		LinkPresets.Home,
+	];
 
-	function isEnabled(link: NavBarLink): boolean {
-		if (!link.pageKey) return true;
-		return pages[link.pageKey as keyof typeof pages] !== false;
-	}
-
-	function processLink(link: NavBarLink): NavBarLink | null {
-		if (!link.children) {
-			return isEnabled(link) ? link : null;
-		}
-
-		const filteredChildren = link.children.filter(isEnabled);
-
-		if (filteredChildren.length === 0) return null;
-		if (filteredChildren.length === 1) return filteredChildren[0];
-		return { ...link, children: filteredChildren };
-	}
-
-	const rawLinks: NavBarLink[] = [LinkPresets.Home];
-
-	rawLinks.push({
+	// 文章及其子菜单
+	links.push({
 		name: "文章",
 		url: "#",
 		icon: "material-symbols:article",
@@ -37,18 +26,21 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 			LinkPresets.Archive,
 
 			// 分类
-LinkPresets.Categories,
+			LinkPresets.Categories,
 
 			// 标签
-LinkPresets.Tags,
-],
+			LinkPresets.Tags,
+		],
 	});
 
-	rawLinks.push(LinkPresets.Friends);
+	// 友链
+	links.push(LinkPresets.Friends);
 
-	rawLinks.push(LinkPresets.Guestbook);
+	// 留言板
+	links.push(LinkPresets.Guestbook);
 
-	rawLinks.push({
+	// 我的及其子菜单
+	links.push({
 		name: "我的",
 		url: "#",
 		icon: "material-symbols:person",
@@ -61,7 +53,8 @@ LinkPresets.Tags,
 		],
 	});
 
-	rawLinks.push({
+	// 关于及其子菜单
+	links.push({
 		name: "关于",
 		url: "#",
 		icon: "material-symbols:info",
@@ -74,10 +67,12 @@ LinkPresets.Tags,
 		],
 	});
 
-	rawLinks.push({
+	// 自定义导航栏链接
+	links.push({
 		name: "链接",
 		url: "#",
 		icon: "material-symbols:link",
+		// 子菜单
 		children: [
 			{
 				name: "GitHub",
@@ -105,17 +100,14 @@ LinkPresets.Tags,
 			},
 		],
 	});
+
 	// 文档链接
-	// rawLinks.push({
+	// links.push({
 	// 	name: "文档",
 	// 	url: "https://docs-firefly.cuteleaf.cn",
 	// 	external: true,
 	// 	icon: "material-symbols:docs",
 	// });
-
-	const links: NavBarLink[] = rawLinks
-		.map(processLink)
-		.filter((link): link is NavBarLink => link !== null);
 
 	return { links } as NavBarConfig;
 };
