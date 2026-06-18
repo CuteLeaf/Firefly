@@ -348,4 +348,5 @@ export const zh_TW: Translation = {
 	[Key.videoPause]: "暫停背景影片",
 	[Key.videoPrev]: "上一個影片",
 	[Key.videoNext]: "下一個影片",
+	[Key.videoLoadError]: "影片載入失敗",
 };

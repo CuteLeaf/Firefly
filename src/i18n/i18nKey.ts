@@ -343,6 +343,7 @@ enum I18nKey {
 	videoPause = "videoPause",
 	videoPrev = "videoPrev",
 	videoNext = "videoNext",
+	videoLoadError = "videoLoadError",
 }
 
 export default I18nKey;

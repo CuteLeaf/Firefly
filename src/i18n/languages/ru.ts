@@ -358,4 +358,5 @@ export const ru: Translation = {
 	[Key.videoPause]: "Пауза фонового видео",
 	[Key.videoPrev]: "Предыдущее видео",
 	[Key.videoNext]: "Следующее видео",
+	[Key.videoLoadError]: "Не удалось загрузить видео",
 };

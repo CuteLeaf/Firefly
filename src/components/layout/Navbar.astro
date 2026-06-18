@@ -135,6 +135,19 @@ if (isLocalSrcLogo) {
                         <Icon name="material-symbols:music-note-rounded" is:inline class="text-[1.25rem]"></Icon>
                     </button>
                 )}
+                {backgroundWallpaper.playerEnable && backgroundWallpaper.mode !== "none" && (
+                    <button
+                        aria-label={i18n(I18nKey.videoPlay)}
+                        class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90"
+                        id="bg-player-toggle"
+                        data-i18n-play={i18n(I18nKey.videoPlay)}
+                        data-i18n-pause={i18n(I18nKey.videoPause)}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="18" height="18">
+                            <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" />
+                        </svg>
+                    </button>
+                )}
                 {hasDisplaySettings && (
                         <button aria-label="Display Settings" class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="display-settings-switch">
                             <Icon name="material-symbols:palette-outline" is:inline class="text-[1.25rem]"></Icon>
@@ -187,6 +200,32 @@ function loadButtonScript() {
                 musicPanel.classList.toggle("float-panel-closed");
             }
         };
+    }
+
+    // 背景视频播放器控制按钮
+    let bgPlayerBtn = document.getElementById("bg-player-toggle");
+    if (bgPlayerBtn) {
+        bgPlayerBtn.onclick = function () {
+            window.dispatchEvent(new CustomEvent("bg-player-toggle"));
+        };
+        window.addEventListener("bg-player-state-change", function (e) {
+            var ce = e as CustomEvent;
+            var playing = ce.detail && ce.detail.playing;
+            var i18nPlay = bgPlayerBtn!.getAttribute("data-i18n-play") ?? "";
+            var i18nPause = bgPlayerBtn!.getAttribute("data-i18n-pause") ?? "";
+            var label = playing ? i18nPause : i18nPlay;
+            bgPlayerBtn!.innerHTML = playing
+                ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path fill-rule="evenodd" d="M6.75 5.25a.75.75 0 0 1 .75-.75H9a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H7.5a.75.75 0 0 1-.75-.75V5.25Zm7.5 0A.75.75 0 0 1 15 4.5h1.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H15a.75.75 0 0 1-.75-.75V5.25Z" clip-rule="evenodd" /></svg>'
+                : '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" /></svg>';
+            bgPlayerBtn!.setAttribute("title", label);
+            bgPlayerBtn!.setAttribute("aria-label", label);
+        });
+        // 切换壁纸模式时隐藏/显示播放按钮
+        window.addEventListener("wallpaperModeChange", function (e) {
+            var ce = e as CustomEvent;
+            var mode = ce.detail && ce.detail.mode;
+            bgPlayerBtn!.style.display = mode === "none" ? "none" : "";
+        });
     }
 
     let themeSwitchBtn = document.getElementById("scheme-switch");

@@ -346,4 +346,5 @@ export const zh_CN: Translation = {
 	[Key.videoPause]: "暂停背景视频",
 	[Key.videoPrev]: "上一个视频",
 	[Key.videoNext]: "下一个视频",
+	[Key.videoLoadError]: "视频加载失败",
 };

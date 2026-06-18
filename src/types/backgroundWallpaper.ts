@@ -1,18 +1,18 @@
 export type BackgroundWallpaperConfig = {
 	mode: "banner" | "fullscreen" | "overlay" | "none"; // 壁纸模式：banner横幅模式、fullscreen全屏壁纸、overlay全屏透明覆盖模式或none纯色背景
 	switchable?: boolean; // 是否允许用户通过导航栏切换壁纸模式，默认true
+	playerEnable?: boolean; // 是否启用背景视频播放，默认false
 	src:
 		| string
 		| string[]
 		| {
 				desktop?: string | string[];
 				mobile?: string | string[];
+				playerUrl?: string | string[]; // 背景视频播放地址，支持单个视频路径或数组（多视频列表循环）
 		  }; // 支持单个图片、图片数组或分别设置桌面端和移动端图片
-
 	// 横幅壁纸和全屏壁纸共享配置
 	common?: {
 		dimOpacity?: number; // 横幅文字遮罩暗度，0-1之间，值越大越暗，默认0.15
-		playerUrl?: string | string[]; // 背景视频播放地址，支持单个视频路径或数组（多视频列表循环）
 		playerMode?: "order" | "random"; // 多视频播放模式："order" 顺序循环（默认），"random" 随机切换
 		homeText?: {
 			enable: boolean; // 是否在首页显示自定义文字（全局开关）

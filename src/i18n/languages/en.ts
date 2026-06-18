@@ -357,4 +357,5 @@ export const en: Translation = {
 	[Key.videoPause]: "Pause background video",
 	[Key.videoPrev]: "Previous video",
 	[Key.videoNext]: "Next video",
+	[Key.videoLoadError]: "Video failed to load",
 };

@@ -356,4 +356,5 @@ export const ja: Translation = {
 	[Key.videoPause]: "背景動画を一時停止",
 	[Key.videoPrev]: "前の動画",
 	[Key.videoNext]: "次の動画",
+	[Key.videoLoadError]: "動画の読み込みに失敗しました",
 };
