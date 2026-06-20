@@ -16,7 +16,7 @@ export const siteConfig: SiteConfig = {
 
 	// 站点描述
 	description:
-		"寻找美好的生活轨迹",
+		"寻找美好的生活轨迹.",
 
 	// 站点关键词
 	keywords: [
