@@ -39,7 +39,7 @@ export const profileConfig: ProfileConfig = {
 			url: "https://space.bilibili.com/44820473",
 			showName: false,
 		},
-				{
+		{
 			name: "weibo",
 			icon: "fa7-brands:weibo",
 			url: "https://weibo.com/u/3208411043",

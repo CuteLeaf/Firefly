@@ -15,17 +15,10 @@ export const siteConfig: SiteConfig = {
 	site_url: "https://blog.weasel6.cn",
 
 	// 站点描述
-	description:
-		"寻找美好的生活轨迹",
+	description: "寻找美好的生活轨迹",
 
 	// 站点关键词
-	keywords: [
-		"黄鼠狼的树洞",
-		"Fuwari",
-		"Astro",
-		"博客",
-		"静态博客",
-	],
+	keywords: ["黄鼠狼的树洞", "Fuwari", "Astro", "博客", "静态博客"],
 
 	// 主题色
 	themeColor: {
