@@ -8,9 +8,21 @@ interface Props {
 }
 
 const processedLinks = Astro.props.links;
+
+// 判断图标是否为 URL（支持 iconUrl 字段或以 http/https/相对路径开头的 icon）
+function getIconInfo(icon?: string, iconUrl?: string): { isUrl: boolean; src: string } | null {
+	if (iconUrl) return { isUrl: true, src: iconUrl };
+	if (!icon) return null;
+	if (icon.startsWith("http://") || icon.startsWith("https://") || icon.startsWith("//") || icon.startsWith("/")) {
+		return { isUrl: true, src: icon };
+	}
+	return { isUrl: false, src: icon };
+}
 ---
 <div id="nav-menu-panel" class:list={["float-panel float-panel-closed transition-all fixed right-4 px-2 py-2 max-h-[80vh] overflow-y-auto"]}>
-    {processedLinks.map((link) => (
+    {processedLinks.map((link) => {
+        const linkIconInfo = getIconInfo(link.icon, link.iconurl);
+        return (
         <div class="mobile-menu-item">
             {link.children && link.children.length > 0 ? (
                 <!-- 有子菜单的项目 -->
@@ -22,7 +34,11 @@ const processedLinks = Astro.props.links;
                         aria-expanded="false"
                     >
                         <div class="flex items-center transition text-black/75 dark:text-white/75 font-bold group-hover:text-(--primary) group-active:text-(--primary)">
-							{link.icon && <Icon is:inline name={link.icon} class="text-[1.1rem] mr-2" />}
+							{linkIconInfo && (
+								linkIconInfo.isUrl
+									? <img src={linkIconInfo.src} alt="" class="text-[1.1rem] mr-2 w-[1.1rem] h-[1.1rem]" />
+									: <Icon is:inline name={linkIconInfo.src} class="text-[1.1rem] mr-2" />
+							)}
                             {link.name}
                         </div>
                         <Icon is:inline name="material-symbols:keyboard-arrow-down-rounded"
@@ -30,21 +46,28 @@ const processedLinks = Astro.props.links;
                         />
                     </button>
                     <div class="mobile-submenu" data-mobile-submenu>
-                        {link.children.map((child) => (
+                        {link.children.map((child) => {
+                            const childIconInfo = getIconInfo(child.icon, child.iconurl);
+                            return (
                             <a href={child.external ? child.url : url(child.url)}
                                class="group flex justify-between items-center py-2 pl-6 pr-1 rounded-lg gap-8
                                    hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
                                target={child.external ? "_blank" : null}
                             >
                                 <div class="flex items-center transition text-black/60 dark:text-white/60 font-medium group-hover:text-(--primary) group-active:text-(--primary)">
-									{child.icon && <Icon is:inline name={child.icon} class="text-[1.1rem] mr-2" />}
+									{childIconInfo && (
+										childIconInfo.isUrl
+											? <img src={childIconInfo.src} alt="" class="text-[1.1rem] mr-2 w-[1.1rem] h-[1.1rem]" />
+											: <Icon is:inline name={childIconInfo.src} class="text-[1.1rem] mr-2" />
+									)}
                                     {child.name}
                                 </div>
                                 {child.external && <Icon is:inline name="fa7-solid:arrow-up-right-from-square"
                                       class="transition text-[0.75rem] text-black/25 dark:text-white/25 -translate-x-1"
                                 />}
                             </a>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             ) : (
@@ -55,7 +78,11 @@ const processedLinks = Astro.props.links;
                    target={link.external ? "_blank" : null}
                 >
                     <div class="flex items-center transition text-black/75 dark:text-white/75 font-bold group-hover:text-(--primary) group-active:text-(--primary)">
-						{link.icon && <Icon is:inline name={link.icon} class="text-[1.1rem] mr-2" />}
+						{linkIconInfo && (
+							linkIconInfo.isUrl
+								? <img src={linkIconInfo.src} alt="" class="text-[1.1rem] mr-2 w-[1.1rem] h-[1.1rem]" />
+								: <Icon is:inline name={linkIconInfo.src} class="text-[1.1rem] mr-2" />
+						)}
                         {link.name}
                     </div>
 					{!link.external && <Icon is:inline name="material-symbols:chevron-right-rounded"
@@ -67,7 +94,8 @@ const processedLinks = Astro.props.links;
                 </a>
             )}
         </div>
-    ))}
+        );
+    })}
 </div>
 
 <style>
