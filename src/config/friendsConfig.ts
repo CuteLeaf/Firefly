@@ -17,7 +17,7 @@ export const friendsPageConfig: FriendsPageConfig = {
 	showComment: true,
 
 	// 是否开启随机排序配置，如果开启，就会忽略权重，构建时进行一次随机排序
-	randomizeSort: false,
+	randomizeSort: true,
 };
 
 // 友链配置

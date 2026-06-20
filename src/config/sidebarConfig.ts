@@ -16,7 +16,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 	// 平板端(769-1279px)显示哪侧侧边栏，仅position为both时生效
 	// left: 平板端显示左侧边栏
 	// right: 平板端显示右侧边栏
-	tabletSidebar: "left",
+	tabletSidebar: "right",
 
 	// 使用单侧栏(position为left或right)时，是否在文章详情页显示双侧边栏
 	// 当position为left时开启此项，文章详情页将额外显示右侧边栏
@@ -24,7 +24,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 	// 适用在只想用单侧栏，但在文章详情页想用对侧栏的目录等组件的场景
 	showBothSidebarsOnPostPage: true,
 
-	// 左侧边栏组件配置列表
+	// 右侧边栏组件配置列表
 	// 组件的渲染顺序完全取决于它们在配置数组中出现的顺序，但top的组件会优先于sticky位置的组件渲染
 	// type 组件类型
 	// enable 是否启用该组件
@@ -33,7 +33,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 	// showOnPostPage 是否在文章详情页显示该组件
 	// showOnNonPostPage 是否在非文章详情页显示该组件（除文章详情页外都显示）
 	// specificConfig 组件专属配置
-	leftComponents: [
+	rightComponents: [
 		{
 			// 组件类型：用户资料组件
 			type: "profile",
@@ -96,8 +96,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 		},
 	],
 
-	// 右侧边栏组件配置列表
-	rightComponents: [
+	// 左侧边栏组件配置列表
+	leftComponents: [
 		{
 			// 组件类型：站点统计组件
 			type: "stats",
