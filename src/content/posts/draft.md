@@ -1,6 +1,6 @@
 ---
 title: 草稿示例
-published: 1970-01-01
+published: 2026-06-20
 tags: [Markdown, 博客, 演示]
 category: 文章示例
 draft: true
