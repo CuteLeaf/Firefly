@@ -63,7 +63,7 @@ export const sponsorConfig: SponsorConfig = {
 		{
 			name: "朵朵",
 			avatar:
-				"https://temp.aoki.dpdns.org/temp/908e3bc20d773e82de55ae6dc9fcfe3e.jpg",
+				"https://cdn.jsdelivr.net/gh/Yutong2333/imges-bed/20210612144254_wgiwg.jpeg",
 			amount: "¥20",
 			date: "2026-06-20",
 		},
