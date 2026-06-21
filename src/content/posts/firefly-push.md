@@ -1,12 +1,12 @@
 ---
-title: Firefly 代码块示例
-published: 2026-06-20
+title: Astro框架Firefly主题部署到Github Actions教程
+published: 2026-06-21
 pinned: false
-description: 在Firefly中使用表达性代码的代码块在 Markdown 中的外观。
-tags: [Markdown, Firefly]
-category: 文章示例
+description: Astro框架Firefly主题部署到Github Actions的详细方法，记录自己踩过的坑。
+tags: [Astro, Firefly]
+category: 网上那些事
 draft: true
-image: ./images/cover1.avif
+image: ./images/cover3.avif
 ---
 
 在这里，我们将探索如何使用 [Expressive Code](https://expressive-code.com/) 展示代码块。提供的示例基于官方文档，您可以参考以获取更多详细信息。
