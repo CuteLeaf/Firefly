@@ -6,6 +6,7 @@ description: 一个包含 Mermaid 的 Markdown 博客文章简单示例。
 tags: [Markdown, 博客, Mermaid, Firefly]
 category: 文章示例
 draft: true
+image: ./images/firefly3.avif
 ---
 ## Markdown 中 Mermaid 图表完整指南
 

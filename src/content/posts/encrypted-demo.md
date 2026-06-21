@@ -7,6 +7,7 @@ category: 文章示例
 password: "123456"
 passwordHint: "示例文章密码123456"
 draft: true
+image: ./images/firefly3.avif
 ---
 
 ## 成功解锁了这篇文章！

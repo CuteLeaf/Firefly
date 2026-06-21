@@ -3,10 +3,10 @@ title: Markdown 扩展功能
 published: 2026-06-20
 updated: 2026-06-21
 description: "了解 Firefly 中的 Markdown 功能"
-image: ""
 tags: [演示, 示例, Markdown, Firefly]
 category: "文章示例"
 draft: true
+image: ./images/firefly2.avif
 ---
 
 ## GitHub 仓库卡片
