@@ -9,7 +9,7 @@ export type {
 	PluginCollapsibleConfig,
 	PluginLanguageBadgeConfig,
 } from "./expressiveCodeConfig";
-export type { FontConfig, FontItem } from "./fontConfig";
+export type { FontSelectionConfig } from "./fontConfig";
 export type { FooterConfig } from "./footerConfig";
 export type { FriendLink, FriendsPageConfig } from "./friendsConfig";
 export type { GalleryAlbum, GalleryConfig } from "./galleryConfig";

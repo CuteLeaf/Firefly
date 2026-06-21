@@ -4,7 +4,7 @@ import La51Analytics from "@components/analytics/La51Analytics.astro";
 import MicrosoftClarity from "@components/analytics/MicrosoftClarity.astro";
 import UmamiAnalytics from "@components/analytics/UmamiAnalytics.astro";
 import FancyboxManager from "@components/features/FancyboxManager.astro";
-import FontManager from "@components/features/FontManager.astro";
+import FontSetup from "@components/features/FontSetup.astro";
 import MusicManager from "@components/features/MusicManager.astro";
 import SakuraEffect from "@components/features/SakuraEffect.astro";
 import ConfigCarrier from "@components/layout/ConfigCarrier.astro";
@@ -13,7 +13,6 @@ import {
 	analyticsConfig,
 	backgroundWallpaper,
 	expressiveCodeConfig,
-	fontConfig,
 	profileConfig,
 	siteConfig,
 } from "@/config";
@@ -549,8 +548,8 @@ const siteLang = lang.replace("_", "-");
       href={`${Astro.site}rss.xml`}
     />
 
-    <!-- Font Manager -->
-    <FontManager />
+    <!-- Font Setup (Astro Font API) -->
+    <FontSetup />
   </head>
   <body
     class="min-h-screen"
@@ -563,12 +562,6 @@ const siteLang = lang.replace("_", "-");
         "enable-card-border": siteConfig.card?.border,
         "card-follow-theme-hue": siteConfig.card?.followTheme,
       },
-      ...(fontConfig.enable && fontConfig.selected
-        ? (Array.isArray(fontConfig.selected)
-            ? fontConfig.selected
-            : [fontConfig.selected]
-          ).map((fontId) => `font-${fontId}-enabled`)
-        : []),
     ]}
   >
 
