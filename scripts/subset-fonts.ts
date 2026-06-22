@@ -7,7 +7,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { glob } from "glob";
 import subsetFont from "subset-font";
-import { fontConfig, fonts } from "../src/config";
+import { fontConfig, fontsList } from "../src/config";
 
 // ─── 配置 ───────────────────────────────────────────────
 
@@ -36,9 +36,9 @@ function getLocalSubsetFonts(): LocalSubsetFont[] {
 	const subsetEntries = Object.entries(fontConfig.subsetFonts);
 	if (subsetEntries.length === 0) return [];
 
-	// 建立 cssVariable → fonts 条目的映射
+	// 建立 cssVariable → fontsList 条目的映射
 	const fontByCssVar = new Map<string, any>();
-	for (const f of fonts) {
+	for (const f of fontsList) {
 		if (f.cssVariable) fontByCssVar.set(f.cssVariable, f);
 	}
 

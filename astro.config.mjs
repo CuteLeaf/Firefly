@@ -27,6 +27,7 @@ import remarkSectionize from "remark-sectionize";
 import { expressiveCodeConfig, fontConfig, fontsList, plantumlConfig, siteConfig } from "./src/config";
 import I18nKey from "./src/i18n/i18nKey";
 import { i18n } from "./src/i18n/translation";
+import { fontProviders } from "astro/config";
 import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.mjs";
 import rehypeEmailProtection from "./src/plugins/rehype-email-protection.mjs";
 import rehypeExternalLinks from "./src/plugins/rehype-external-links.mjs";
@@ -66,7 +67,21 @@ export default defineConfig({
 		if (fontConfig.bannerTitleFont) used.add(fontConfig.bannerTitleFont);
 		if (fontConfig.bannerSubtitleFont) used.add(fontConfig.bannerSubtitleFont);
 		if (fontConfig.navbarTitleFont) used.add(fontConfig.navbarTitleFont);
-		return fontsList.filter((f) => used.has(f.cssVariable));
+		return fontsList
+			.filter((f) => used.has(f.cssVariable))
+			.map((f) => {
+				let provider;
+				switch (f.provider) {
+					case "google": provider = fontProviders.google(); break;
+					case "fontsource": provider = fontProviders.fontsource(); break;
+					case "local": provider = fontProviders.local(); break;
+					case "bunny": provider = fontProviders.bunny(); break;
+					case "fontshare": provider = fontProviders.fontshare(); break;
+					case "npm": provider = fontProviders.npm(); break;
+					default: provider = f.provider;
+				}
+				return { ...f, provider };
+			});
 	})(),
 
 	adapter,

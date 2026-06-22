@@ -11,17 +11,16 @@
  * 2. 在 fontConfig.selected 或区域字段中引用对应的 cssVariable
  *
  * 支持的 provider：https://docs.astro.build/en/reference/font-provider-reference/#built-in-providers
- *   fontProviders.google()     - Google Fonts
- *   fontProviders.fontsource() - Fontsource
- *   fontProviders.local()      - 本地字体文件
- *   fontProviders.bunny()      - Bunny Fonts
- *   fontProviders.fontshare()  - Fontshare
- *   fontProviders.npm()        - NPM 包（如 @fontsource/*）
+ *   "google"     - Google Fonts
+ *   "fontsource" - Fontsource
+ *   "local"      - 本地字体文件
+ *   "bunny"      - Bunny Fonts
+ *   "fontshare"  - Fontshare
+ *   "npm"        - NPM 包（如 @fontsource/*）
  *
  * 本地字体子集化：在 fontConfig.subsetFonts 中添加对应 cssVariable 的配置，
  * 构建时脚本会自动扫描页面字符并生成轻量 woff2 子集。
  */
-import { fontProviders } from "astro/config";
 import type { FontSelectionConfig } from "@/types/fontConfig";
 
 // ─── Astro Font API 字体定义 ───────────────────────────────
@@ -31,7 +30,7 @@ export const fontsList: Record<string, unknown>[] = [
 	{
 		name: "Zen Maru Gothic",
 		cssVariable: "--font-zen-maru-gothic",
-		provider: fontProviders.fontsource(),
+		provider: "fontsource",
 		weights: ["300", "400", "500", "600", "700"],
 		styles: ["normal"],
 		subsets: ["latin", "cyrillic"],
@@ -40,7 +39,7 @@ export const fontsList: Record<string, unknown>[] = [
 	{
 		name: "Inter",
 		cssVariable: "--font-inter",
-		provider: fontProviders.fontsource(),
+		provider: "fontsource",
 		weights: ["300", "400", "500", "600", "700"],
 		styles: ["normal"],
 		subsets: ["latin", "cyrillic"],
@@ -54,13 +53,13 @@ export const fontsList: Record<string, unknown>[] = [
 	{
 		name: "GreatVibes Regular 2",
 		cssVariable: "--font-greatvibes",
-		provider: fontProviders.local(),
+		provider: "local",
 		options: {
-			variants: [{
-				src: ["./public/assets/fonts/GreatVibes-Regular-2.otf"],
-				weight: "500",
-				style: "normal",
-			}],
+			variants: [
+				{
+					src: ["./public/assets/fonts/GreatVibes-Regular-2.otf"],
+				},
+			],
 		},
 		fallbacks: ["sans-serif"],
 	},
