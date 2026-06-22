@@ -24,7 +24,7 @@ import remarkAdmonitionToBlockquoteCallout from "remark-admonition-to-blockquote
 import remarkDirective from "remark-directive"; /* Handle directives */
 import remarkMath from "remark-math";
 import remarkSectionize from "remark-sectionize";
-import { expressiveCodeConfig, fontConfig, fonts, plantumlConfig, siteConfig } from "./src/config";
+import { expressiveCodeConfig, fontConfig, fontsList, plantumlConfig, siteConfig } from "./src/config";
 import I18nKey from "./src/i18n/i18nKey";
 import { i18n } from "./src/i18n/translation";
 import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.mjs";
@@ -66,7 +66,7 @@ export default defineConfig({
 		if (fontConfig.bannerTitleFont) used.add(fontConfig.bannerTitleFont);
 		if (fontConfig.bannerSubtitleFont) used.add(fontConfig.bannerSubtitleFont);
 		if (fontConfig.navbarTitleFont) used.add(fontConfig.navbarTitleFont);
-		return fonts.filter((f) => used.has(f.cssVariable));
+		return fontsList.filter((f) => used.has(f.cssVariable));
 	})(),
 
 	adapter,
@@ -295,11 +295,7 @@ export default defineConfig({
 				drop: ["debugger"],
 				pure: ["console.log", "console.debug"],
 			},
-			commonjsOptions: {
-				ignore: ["fsevents"],
-			},
 			rollupOptions: {
-				external: [/^node:/, "fsevents", "module", "fs", "path", "url", "os", "crypto", "stream", "util", "child_process", "net", "dns", "tty", "zlib", "readline", "perf_hooks", "worker_threads", "async_hooks", "http", "events"],
 				onwarn(warning, warn) {
 					// temporarily suppress this warning
 					if (
