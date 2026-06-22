@@ -281,6 +281,16 @@ export const en: Translation = {
 	[Key.siteStatsDays]: "{days} days",
 	[Key.today]: "Today",
 
+	// 51LA Visitor Statistics
+	[Key.laStats]: "Visitor Statistics",
+	[Key.laStatsOnline]: "Online Now",
+	[Key.laStatsTodayUV]: "Today Visitors",
+	[Key.laStatsTodayPV]: "Today Views",
+	[Key.laStatsYesterdayUV]: "Yesterday Visitors",
+	[Key.laStatsYesterdayPV]: "Yesterday Views",
+	[Key.laStatsMonthPV]: "This Month Views",
+	[Key.laStatsTotalPV]: "Total Views",
+
 	// Site Info
 	[Key.siteInfo]: "Site Info",
 	[Key.siteInfoBuildTime]: "Build Time",

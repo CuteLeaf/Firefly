@@ -280,6 +280,16 @@ export const ja: Translation = {
 	[Key.siteStatsDays]: "{days} 日",
 	[Key.today]: "今日",
 
+	// 51LA アクセス統計
+	[Key.laStats]: "アクセス統計",
+	[Key.laStatsOnline]: "現在オンライン",
+	[Key.laStatsTodayUV]: "本日の訪問者",
+	[Key.laStatsTodayPV]: "本日の閲覧数",
+	[Key.laStatsYesterdayUV]: "昨日の訪問者",
+	[Key.laStatsYesterdayPV]: "昨日の閲覧数",
+	[Key.laStatsMonthPV]: "今月の閲覧数",
+	[Key.laStatsTotalPV]: "累計閲覧数",
+
 	// サイト情報
 	[Key.siteInfo]: "サイト情報",
 	[Key.siteInfoBuildTime]: "ビルド日時",

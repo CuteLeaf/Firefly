@@ -272,6 +272,16 @@ export const zh_CN: Translation = {
 	[Key.siteStatsDays]: "{days} 天",
 	[Key.today]: "今天",
 
+	// 51LA 访问统计
+	[Key.laStats]: "访问统计",
+	[Key.laStatsOnline]: "当前在线",
+	[Key.laStatsTodayUV]: "今日访客",
+	[Key.laStatsTodayPV]: "今日浏览",
+	[Key.laStatsYesterdayUV]: "昨日访客",
+	[Key.laStatsYesterdayPV]: "昨日浏览",
+	[Key.laStatsMonthPV]: "本月浏览",
+	[Key.laStatsTotalPV]: "累计浏览",
+
 	// 站点信息
 	[Key.siteInfo]: "站点信息",
 	[Key.siteInfoBuildTime]: "构建时间",
