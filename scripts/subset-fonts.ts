@@ -29,6 +29,7 @@ type LocalSubsetFont = {
 /**
  * 从 fontConfig.subsetFonts 获取需要子集化的本地字体，
  * 交叉引用 fonts 数组获取字体文件路径。
+ * 仅处理实际被使用的字体（在 selected、bannerTitleFont 等区域字段中引用的）。
  */
 function getLocalSubsetFonts(): LocalSubsetFont[] {
 	if (!fontConfig.enable || !fontConfig.subsetFonts) return [];
@@ -36,14 +37,34 @@ function getLocalSubsetFonts(): LocalSubsetFont[] {
 	const subsetEntries = Object.entries(fontConfig.subsetFonts);
 	if (subsetEntries.length === 0) return [];
 
+	// 构建实际使用的字体 CSS 变量集合（与 astro.config.mjs 逻辑一致）
+	const used = new Set<string>();
+	const sel = fontConfig.selected as string | string[];
+	if (Array.isArray(sel)) {
+		for (const v of sel) {
+			if (v !== "system") used.add(v);
+		}
+	} else if (sel !== "system") {
+		used.add(sel);
+	}
+	if (fontConfig.bannerTitleFont) used.add(fontConfig.bannerTitleFont);
+	if (fontConfig.bannerSubtitleFont) used.add(fontConfig.bannerSubtitleFont);
+	if (fontConfig.navbarTitleFont) used.add(fontConfig.navbarTitleFont);
+
 	// 建立 cssVariable → fontsList 条目的映射
 	const fontByCssVar = new Map<string, any>();
 	for (const f of fontsList) {
-		if (f.cssVariable) fontByCssVar.set(f.cssVariable, f);
+		if (f.cssVariable) fontByCssVar.set(f.cssVariable as string, f);
 	}
 
 	const result: LocalSubsetFont[] = [];
 	for (const [cssVar, opts] of subsetEntries as [string, { extraChars?: string }][]) {
+		// 跳过未被使用的字体，避免生成无用的子集文件
+		if (!used.has(cssVar)) {
+			console.log(`   ⏭ Skipping '${cssVar}' — not referenced in selected or any font region.`);
+			continue;
+		}
+
 		const f = fontByCssVar.get(cssVar);
 		if (!f?.options?.variants) continue;
 
