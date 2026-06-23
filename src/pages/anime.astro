@@ -55,6 +55,22 @@ interface BilibiliItem {
 
 // ============ 数据获取 ============
 
+/** 从本地缓存读取 TMDB 数据，读取失败返回空数组 */
+function readTmdbLocalCache(): TmdbItem[] {
+	try {
+		const localPath = path.resolve("public/anime-list.json");
+		if (fs.existsSync(localPath)) {
+			const localData = JSON.parse(fs.readFileSync(localPath, "utf-8"));
+			const items = localData.items || localData[0]?.items || [];
+			console.log(`[Anime] Using local cache: ${items.length} items.`);
+			return items;
+		}
+	} catch {
+		// 本地缓存读取失败，忽略
+	}
+	return [];
+}
+
 // 1. TMDB 数据
 let tmdbItems: TmdbItem[] = [];
 if (TMDB_API_KEY && TMDB_LIST_ID) {
@@ -90,36 +106,14 @@ if (TMDB_API_KEY && TMDB_LIST_ID) {
 			console.log(`[Anime] Fetched ${tmdbItems.length} items from TMDB.`);
 		} else {
 			console.error(`[Anime] TMDB fetch failed: ${firstResponse.status}`);
-			// 尝试读取本地缓存
-			try {
-				const localPath = path.resolve("public/anime-list.json");
-				if (fs.existsSync(localPath)) {
-					const fileContent = fs.readFileSync(localPath, "utf-8");
-					const localData = JSON.parse(fileContent);
-					tmdbItems = localData.items || localData[0]?.items || [];
-					console.log(`[Anime] Using local cache: ${tmdbItems.length} items.`);
-				}
-			} catch {
-				// 本地缓存读取失败，忽略
-			}
+			tmdbItems = readTmdbLocalCache();
 		}
 	} catch (error: unknown) {
 		console.error(
 			"[Anime] TMDB fetch error:",
 			error instanceof Error ? error.message : error,
 		);
-		// 尝试读取本地缓存
-		try {
-			const localPath = path.resolve("public/anime-list.json");
-			if (fs.existsSync(localPath)) {
-				const fileContent = fs.readFileSync(localPath, "utf-8");
-				const localData = JSON.parse(fileContent);
-				tmdbItems = localData.items || localData[0]?.items || [];
-				console.log(`[Anime] Using local cache: ${tmdbItems.length} items.`);
-			}
-		} catch {
-			// 本地缓存读取失败，忽略
-		}
+		tmdbItems = readTmdbLocalCache();
 	}
 }
 
