@@ -48,11 +48,11 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 			// 相册
 			LinkPresets.Gallery,
 
-			// 番组计划
-			LinkPresets.Bangumi,
-
 			// 追番
 			LinkPresets.Anime,
+
+			// 番组计划
+			LinkPresets.Bangumi,
 		],
 	});
 
@@ -183,7 +183,8 @@ export const LinkPresets: Record<string, NavBarLink> = {
 	Anime: {
 		name: "追番",
 		url: "/anime/",
-		icon: "material-symbols:tv-gen-outline",
+		icon: "material-symbols:live-tv",
+		pageKey: "anime",
 	},
 };
 

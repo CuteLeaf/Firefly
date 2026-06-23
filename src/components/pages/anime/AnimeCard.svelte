@@ -1,115 +1,111 @@
 <script lang="ts">
-import I18nKey from "@/i18n/i18nKey";
-import { i18n } from "@/i18n/translation";
 import type { StandardizedAnime } from "@/types/anime";
 
 interface Props {
-	item: StandardizedAnime;
-	onselect?: (item: StandardizedAnime) => void;
+	anime: StandardizedAnime;
+	onclick?: (anime: StandardizedAnime) => void;
 }
 
-const { item, onselect }: Props = $props();
+let { anime, onclick }: Props = $props();
 
-function handleDetailClick(e: MouseEvent) {
-	e.preventDefault();
-	e.stopPropagation();
-	onselect?.(item);
+function handleClick() {
+	onclick?.(anime);
+}
+
+function getTypeLabel(type: string): string {
+	return type === "movie" ? "剧场版" : "TV";
+}
+
+function getTypeColor(type: string): string {
+	return type === "movie" ? "bg-purple-500" : "bg-blue-500";
 }
 </script>
 
-<a
-  href={item.link}
-  target="_blank"
-  rel="noopener noreferrer"
-  class="block rounded-xl overflow-hidden bg-(--card-bg) border border-(--line-divider) hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+<div
+	class="anime-card group relative overflow-hidden rounded-xl border border-(--line-divider) bg-(--card-bg) cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-(--primary)/30 hover:-translate-y-1"
+	onclick={handleClick}
+	onkeydown={(e) => e.key === "Enter" && handleClick()}
+	role="button"
+	tabindex="0"
 >
-  <!-- 封面图 -->
-  <div class="relative aspect-[2/3] overflow-hidden bg-(--btn-regular-bg)">
-    {#if item.poster}
-      <img
-        src={item.poster}
-        alt={item.title}
-        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        loading="lazy"
-        referrerpolicy="no-referrer"
-      />
-    {:else}
-      <div class="w-full h-full flex items-center justify-center text-neutral-400">
-        <svg xmlns="http://www.w3.org/2000/svg" width="3em" height="3em" viewBox="0 0 24 24"><path fill="currentColor" d="M21 5v6.5h-2V7H5v10h6.5v2H3V5zm4 4v10q0 .825-.587 1.413T20 21H8q-.825 0-1.412-.587T6 20V8q0-.825.588-1.412T8 5h10q.825 0 1.413.588T20 7zm-4 8V9H8v12h12zm-6-1"/></svg>
-      </div>
-    {/if}
+	<!-- 海报 -->
+	<div class="relative aspect-[2/3] overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+		{#if anime.poster}
+			<img
+				src={anime.poster}
+				alt={anime.title}
+				class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+				loading="lazy"
+			/>
+		{:else}
+			<div class="flex h-full w-full items-center justify-center">
+				<svg class="h-12 w-12 text-neutral-300 dark:text-neutral-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0 0 22.5 18.75V5.25A2.25 2.25 0 0 0 20.25 3H3.75A2.25 2.25 0 0 0 1.5 5.25v13.5A2.25 2.25 0 0 0 3.75 21Z" />
+				</svg>
+			</div>
+		{/if}
 
-    <!-- 评分角标 -->
-    {#if item.rating > 0}
-      <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-yellow-400 px-2 py-1 rounded-lg flex items-center gap-1 text-xs font-bold shadow-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" width="0.75em" height="0.75em" viewBox="0 0 24 24"><path fill="currentColor" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2L9.19 8.63L2 9.24l5.46 4.73L5.82 21z"/></svg>
-        <span>{item.rating.toFixed(1)}</span>
-      </div>
-    {/if}
+		<!-- 评分角标（右上） -->
+		{#if anime.rating > 0}
+			<div class="absolute top-2 right-2 flex items-center gap-1 rounded-lg bg-black/70 backdrop-blur-sm px-2 py-1 text-xs font-bold text-white">
+				<svg class="h-3 w-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+					<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+				</svg>
+				{anime.rating.toFixed(1)}
+			</div>
+		{/if}
 
-    <!-- 类型角标 -->
-    <div class="absolute top-2 left-2 bg-(--primary)/80 backdrop-blur-sm text-white px-2 py-1 rounded-lg text-xs font-bold shadow-lg">
-      {item.type === "movie" ? i18n(I18nKey.animeMovie) : i18n(I18nKey.animeTV)}
-    </div>
+		<!-- 类型角标（左上） -->
+		<div class="absolute top-2 left-2 rounded-lg {getTypeColor(anime.type)} px-2 py-1 text-xs font-bold text-white backdrop-blur-sm">
+			{getTypeLabel(anime.type)}
+		</div>
 
-    <!-- 悬停遮罩 -->
-    <div class="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center p-4 text-center">
-      <p class="text-white text-sm line-clamp-6 mb-4 leading-relaxed">
-        {item.overview || "暂无简介"}
-      </p>
-      <button
-        type="button"
-        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/50 text-white text-xs hover:bg-white/20 transition-colors cursor-pointer"
-        onclick={handleDetailClick}
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="0.875em" height="0.875em" viewBox="0 0 24 24"><path fill="currentColor" d="M12 16q-1.675 0-2.837-1.163T8 12t1.163-2.837T12 8t2.838 1.163T16 12t-1.162 2.838T12 16m0-1.8q.975 0 1.663-.687T14.4 12t-.687-1.663T12 9.6t-1.663.688T9.6 12t.687 1.663T12 14.2m0 4.8q-3.35 0-5.675-1.888T4 12q0-3.35 2.325-5.675T12 4q3.35 0 5.675 2.325T20 12q0 3.35-2.325 5.675T12 19M2 12q0-3.95 2.55-6.975T11.5 2.15q.425-.05.7.225t.25.675q0 .575-.2.95q-.15.275-.475.375q-2.325.525-3.863 2.45T6.5 12q0 2.625 1.538 4.55t3.862 2.45q.325.1.475.375t.2.95q0 .45-.25.675t-.7.225q-3.425-.7-5.975-3.725T2 12"/></svg>
-        {i18n(I18nKey.animeViewDetails)}
-      </button>
-    </div>
-  </div>
+		<!-- 来源标签 -->
+		<div class="absolute bottom-2 left-2 rounded-md {anime.source === 'bilibili' ? 'bg-pink-500/80' : 'bg-emerald-500/80'} px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
+			{anime.source === 'bilibili' ? 'Bilibili' : 'TMDB'}
+		</div>
 
-  <!-- 信息区域 -->
-  <div class="p-3">
-    <h3
-      class="font-bold text-sm mb-0.5 line-clamp-1 text-neutral-800 dark:text-neutral-200 group-hover:text-(--primary) transition-colors"
-      title={item.title}
-    >
-      {item.title}
-    </h3>
-    {#if item.originalTitle && item.originalTitle !== item.title}
-      <p class="text-[10px] text-neutral-400 dark:text-neutral-500 line-clamp-1 mb-1 font-mono" title={item.originalTitle}>
-        {item.originalTitle}
-      </p>
-    {/if}
-    <div class="flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-400">
-      <span class="flex items-center gap-1">
-        {#if item.source === "bilibili" && item.epStatus}
-          <svg xmlns="http://www.w3.org/2000/svg" width="0.75em" height="0.75em" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m-2 14.5v-9l6 4.5z"/></svg>
-          {item.epStatus}
-        {:else}
-          <svg xmlns="http://www.w3.org/2000/svg" width="0.75em" height="0.75em" viewBox="0 0 24 24"><path fill="currentColor" d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2m0 16H5V10h14zm0-12H5V6h14M9 14H7v-2h2zm4 0h-2v-2h2zm4 0h-2v-2h2zm-8 4H7v-2h2zm4 0h-2v-2h2zm4 0h-2v-2h2z"/></svg>
-          {item.date ? item.date.split("-")[0] : "未知"}
-        {/if}
-      </span>
-      <span class="flex items-center gap-1">
-        <svg xmlns="http://www.w3.org/2000/svg" width="0.75em" height="0.75em" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54z"/></svg>
-        {item.source === "bilibili" ? "Bilibili" : "TMDB"}
-      </span>
-    </div>
-  </div>
-</a>
+		<!-- 悬停遮罩 -->
+		<div class="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+			<div class="p-3">
+				<p class="mb-2 line-clamp-3 text-xs text-white/90 leading-relaxed">{anime.overview || "暂无简介"}</p>
+				<button class="w-full rounded-lg bg-(--primary) px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-(--primary)/80">
+					查看详情
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- 底部信息 -->
+	<div class="p-3">
+		<!-- 标题 -->
+		<h3 class="mb-1 line-clamp-1 text-sm font-semibold text-neutral-900 dark:text-neutral-100" title={anime.title}>
+			{anime.title}
+		</h3>
+		<!-- 原文标题 -->
+		{#if anime.originalTitle && anime.originalTitle !== anime.title}
+			<p class="mb-2 line-clamp-1 text-xs text-neutral-500 dark:text-neutral-400" title={anime.originalTitle}>
+				{anime.originalTitle}
+			</p>
+		{/if}
+		<!-- 底部信息行 -->
+		<div class="flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-400">
+			<span>{anime.epStatus || anime.date?.slice(0, 4) || ""}</span>
+		</div>
+	</div>
+</div>
 
 <style>
-  .line-clamp-6 {
-    display: -webkit-box;
-    -webkit-line-clamp: 6;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .line-clamp-1 {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
+	.line-clamp-1 {
+		display: -webkit-box;
+		-webkit-line-clamp: 1;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+	.line-clamp-3 {
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
 </style>

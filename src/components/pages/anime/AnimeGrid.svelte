@@ -1,258 +1,243 @@
 <script lang="ts">
-import ClientPagination from "@/components/common/ClientPagination.svelte";
-import I18nKey from "@/i18n/i18nKey";
-import { i18n } from "@/i18n/translation";
 import type { StandardizedAnime } from "@/types/anime";
 import AnimeCard from "./AnimeCard.svelte";
 import AnimeDetailModal from "./AnimeDetailModal.svelte";
 
 interface Props {
 	items: StandardizedAnime[];
-	itemsPerPage?: number;
 	bilibiliAverageRating?: string;
+	itemsPerPage?: number;
 }
 
-const { items, itemsPerPage = 20, bilibiliAverageRating = "0.0" }: Props = $props();
+let { items, bilibiliAverageRating, itemsPerPage = 20 }: Props = $props();
 
 // 状态
-let searchTerm = $state("");
-let typeFilter = $state<"all" | "tv" | "movie">("all");
+let searchQuery = $state("");
+let activeFilter = $state<"all" | "tv" | "movie">("all");
 let sortBy = $state<"rating-desc" | "rating-asc" | "date-desc" | "date-asc">("rating-desc");
 let currentPage = $state(1);
 let selectedAnime = $state<StandardizedAnime | null>(null);
 
-// TMDB 平均分
-const tmdbAverageRating = $derived(() => {
-	const tmdbItems = items.filter((item) => item.source === "tmdb");
-	if (!tmdbItems.length) return "0.0";
-	const sum = tmdbItems.reduce((acc, item) => acc + (item.rating || 0), 0);
-	return (sum / tmdbItems.length).toFixed(1);
-});
+// 筛选和排序后的数据
+let filteredItems = $derived(() => {
+	let result = [...items];
 
-function handleSelectAnime(item: StandardizedAnime) {
-	selectedAnime = item;
-}
-
-function handleCloseModal() {
-	selectedAnime = null;
-}
-
-// 下拉菜单开关状态
-let typeMenuOpen = $state(false);
-let sortMenuOpen = $state(false);
-
-// 类型计数
-const typeCounts = $derived(() => {
-	const counts = { all: items.length, tv: 0, movie: 0 };
-	for (const item of items) {
-		if (item.type === "tv") counts.tv++;
-		else if (item.type === "movie") counts.movie++;
+	// 搜索过滤
+	if (searchQuery.trim()) {
+		const query = searchQuery.toLowerCase().trim();
+		result = result.filter(
+			(item) =>
+				item.title.toLowerCase().includes(query) ||
+				item.originalTitle.toLowerCase().includes(query)
+		);
 	}
-	return counts;
-});
 
-// 筛选
-const filteredItems = $derived(() => {
-	const term = searchTerm.toLowerCase();
-	return items.filter((item) => {
-		const matchesSearch = !term || item.title.toLowerCase().includes(term);
-		const matchesType = typeFilter === "all" || item.type === typeFilter;
-		return matchesSearch && matchesType;
-	});
-});
+	// 类型过滤
+	if (activeFilter !== "all") {
+		result = result.filter((item) => item.type === activeFilter);
+	}
 
-// 排序
-const sortedItems = $derived(() => {
-	const arr = [...filteredItems()];
+	// 排序
 	switch (sortBy) {
 		case "rating-desc":
-			arr.sort((a, b) => b.rating - a.rating);
+			result.sort((a, b) => b.rating - a.rating);
 			break;
 		case "rating-asc":
-			arr.sort((a, b) => a.rating - b.rating);
+			result.sort((a, b) => a.rating - b.rating);
 			break;
 		case "date-desc":
-			arr.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+			result.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
 			break;
 		case "date-asc":
-			arr.sort((a, b) => (a.date || "").localeCompare(b.date || ""));
+			result.sort((a, b) => (a.date || "").localeCompare(b.date || ""));
 			break;
 	}
-	return arr;
+
+	return result;
 });
 
 // 分页
-const totalPages = $derived(Math.max(1, Math.ceil(sortedItems().length / itemsPerPage)));
-
-const pagedItems = $derived(() => {
-	const s = sortedItems();
+let totalPages = $derived(Math.ceil(filteredItems().length / itemsPerPage));
+let pagedItems = $derived(() => {
 	const start = (currentPage - 1) * itemsPerPage;
-	return s.slice(start, start + itemsPerPage);
+	return filteredItems().slice(start, start + itemsPerPage);
 });
 
-// 当筛选条件变化时重置到第一页
-$effect(() => {
-	// 读取这些值以建立依赖关系
-	searchTerm;
-	typeFilter;
-	sortBy;
+// 页码按钮（带省略号）
+let pageNumbers = $derived(() => {
+	const pages: (number | "...")[] = [];
+	const total = totalPages;
+	const current = currentPage;
+
+	if (total <= 7) {
+		for (let i = 1; i <= total; i++) pages.push(i);
+	} else {
+		pages.push(1);
+		if (current > 3) pages.push("...");
+		for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
+			pages.push(i);
+		}
+		if (current < total - 2) pages.push("...");
+		pages.push(total);
+	}
+	return pages;
+});
+
+// 筛选/搜索变化时重置到第一页
+function resetPage() {
 	currentPage = 1;
-});
-
-// 点击外部关闭下拉菜单
-$effect(() => {
-	function closeMenus(e: MouseEvent) {
-		const target = e.target as HTMLElement;
-		if (!target.closest("#anime-type-filter-wrapper")) {
-			typeMenuOpen = false;
-		}
-		if (!target.closest("#anime-sort-filter-wrapper")) {
-			sortMenuOpen = false;
-		}
-	}
-	document.addEventListener("click", closeMenus);
-	return () => document.removeEventListener("click", closeMenus);
-});
-
-function selectTypeFilter(value: "all" | "tv" | "movie") {
-	typeFilter = value;
-	typeMenuOpen = false;
 }
 
-function selectSort(value: "rating-desc" | "rating-asc" | "date-desc" | "date-asc") {
-	sortBy = value;
-	sortMenuOpen = false;
+function handleSearch(e: Event) {
+	searchQuery = (e.target as HTMLInputElement).value;
+	resetPage();
 }
 
-function handlePageChange(page: number) {
-	currentPage = page;
+function setFilter(filter: "all" | "tv" | "movie") {
+	activeFilter = filter;
+	resetPage();
 }
 
-function getTypeLabel(): string {
-	switch (typeFilter) {
-		case "all": return i18n(I18nKey.animeAllTypes);
-		case "tv": return i18n(I18nKey.animeTV);
-		case "movie": return i18n(I18nKey.animeMovie);
+function setSort(sort: typeof sortBy) {
+	sortBy = sort;
+	resetPage();
+}
+
+function goToPage(page: number) {
+	if (page >= 1 && page <= totalPages) {
+		currentPage = page;
 	}
 }
 
-function getSortLabel(): string {
-	switch (sortBy) {
-		case "rating-desc": return i18n(I18nKey.animeRatingDesc);
-		case "rating-asc": return i18n(I18nKey.animeRatingAsc);
-		case "date-desc": return i18n(I18nKey.animeDateDesc);
-		case "date-asc": return i18n(I18nKey.animeDateAsc);
-	}
+function openDetail(anime: StandardizedAnime) {
+	selectedAnime = anime;
 }
+
+function closeDetail() {
+	selectedAnime = null;
+}
+
+// 过滤计数
+let tvCount = $derived(items.filter((i) => i.type === "tv").length);
+let movieCount = $derived(items.filter((i) => i.type === "movie").length);
 </script>
 
-<!-- 筛选工具栏 -->
-<div class="flex flex-col sm:flex-row gap-3 bg-(--card-bg) p-4 rounded-xl border border-(--line-divider) mb-6">
-  <!-- 搜索框 -->
-  <div class="flex-1 relative">
-    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400">
-      <svg xmlns="http://www.w3.org/2000/svg" width="1.25em" height="1.25em" viewBox="0 0 24 24"><path fill="currentColor" d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14"/></svg>
-    </span>
-    <input
-      type="text"
-      placeholder={i18n(I18nKey.animeSearch)}
-      bind:value={searchTerm}
-      class="w-full pl-10 pr-4 py-2 rounded-lg bg-(--btn-regular-bg) border border-(--line-divider) text-sm text-neutral-800 dark:text-neutral-200 placeholder-neutral-400 focus:outline-none focus:border-(--primary) transition-colors"
-    />
-  </div>
+<div class="anime-grid">
+	<!-- 工具栏 -->
+	<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+		<!-- 搜索框 -->
+		<div class="relative flex-1 max-w-md">
+			<svg class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+			</svg>
+			<input
+				type="text"
+				placeholder="搜索番剧..."
+				value={searchQuery}
+				oninput={handleSearch}
+				class="w-full rounded-xl border border-(--line-divider) bg-(--card-bg) py-2.5 pl-10 pr-4 text-sm text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 outline-none transition-colors focus:border-(--primary)"
+			/>
+		</div>
 
-  <div class="flex gap-2 flex-wrap items-center">
-    <!-- 类型筛选下拉 -->
-    <div class="relative" id="anime-type-filter-wrapper">
-      <button
-        type="button"
-        onclick={(e) => { e.stopPropagation(); typeMenuOpen = !typeMenuOpen; sortMenuOpen = false; }}
-        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-(--btn-regular-bg) border border-(--line-divider) text-sm text-neutral-700 dark:text-neutral-300 hover:bg-(--btn-regular-bg-hover) transition-colors cursor-pointer"
-      >
-        <span>{getTypeLabel()}</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M12 15.4l-6-6L7.4 8l4.6 4.6L16.6 8L18 9.4z"/></svg>
-      </button>
-      {#if typeMenuOpen}
-        <div class="absolute z-50 mt-1 left-0 min-w-[120px] bg-(--card-bg) rounded-lg shadow-lg border border-(--line-divider) py-1">
-          <button type="button" onclick={() => selectTypeFilter("all")}
-            class="w-full text-left px-3 py-2 text-sm hover:bg-(--btn-regular-bg-hover) text-neutral-700 dark:text-neutral-300 transition-colors"
-            class:text-(--primary)={typeFilter === "all"}>
-            {i18n(I18nKey.animeAllTypes)} ({typeCounts().all})
-          </button>
-          <button type="button" onclick={() => selectTypeFilter("tv")}
-            class="w-full text-left px-3 py-2 text-sm hover:bg-(--btn-regular-bg-hover) text-neutral-700 dark:text-neutral-300 transition-colors"
-            class:text-(--primary)={typeFilter === "tv"}>
-            {i18n(I18nKey.animeTV)} ({typeCounts().tv})
-          </button>
-          <button type="button" onclick={() => selectTypeFilter("movie")}
-            class="w-full text-left px-3 py-2 text-sm hover:bg-(--btn-regular-bg-hover) text-neutral-700 dark:text-neutral-300 transition-colors"
-            class:text-(--primary)={typeFilter === "movie"}>
-            {i18n(I18nKey.animeMovie)} ({typeCounts().movie})
-          </button>
-        </div>
-      {/if}
-    </div>
+		<!-- 筛选和排序 -->
+		<div class="flex flex-wrap items-center gap-2">
+			<!-- 类型筛选 -->
+			<div class="flex rounded-lg border border-(--line-divider) overflow-hidden">
+				<button
+					class="px-3 py-1.5 text-xs font-medium transition-colors {activeFilter === 'all' ? 'bg-(--primary) text-white' : 'bg-(--card-bg) text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800'}"
+					onclick={() => setFilter("all")}
+				>
+					全部 ({items.length})
+				</button>
+				<button
+					class="px-3 py-1.5 text-xs font-medium transition-colors border-l border-(--line-divider) {activeFilter === 'tv' ? 'bg-(--primary) text-white' : 'bg-(--card-bg) text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800'}"
+					onclick={() => setFilter("tv")}
+				>
+					TV ({tvCount})
+				</button>
+				<button
+					class="px-3 py-1.5 text-xs font-medium transition-colors border-l border-(--line-divider) {activeFilter === 'movie' ? 'bg-(--primary) text-white' : 'bg-(--card-bg) text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800'}"
+					onclick={() => setFilter("movie")}
+				>
+					剧场版 ({movieCount})
+				</button>
+			</div>
 
-    <!-- 排序下拉 -->
-    <div class="relative" id="anime-sort-filter-wrapper">
-      <button
-        type="button"
-        onclick={(e) => { e.stopPropagation(); sortMenuOpen = !sortMenuOpen; typeMenuOpen = false; }}
-        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-(--btn-regular-bg) border border-(--line-divider) text-sm text-neutral-700 dark:text-neutral-300 hover:bg-(--btn-regular-bg-hover) transition-colors cursor-pointer"
-      >
-        <span>{getSortLabel()}</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M12 15.4l-6-6L7.4 8l4.6 4.6L16.6 8L18 9.4z"/></svg>
-      </button>
-      {#if sortMenuOpen}
-        <div class="absolute z-50 mt-1 right-0 min-w-[140px] bg-(--card-bg) rounded-lg shadow-lg border border-(--line-divider) py-1">
-          <button type="button" onclick={() => selectSort("rating-desc")}
-            class="w-full text-left px-3 py-2 text-sm hover:bg-(--btn-regular-bg-hover) text-neutral-700 dark:text-neutral-300 transition-colors"
-            class:text-(--primary)={sortBy === "rating-desc"}>
-            {i18n(I18nKey.animeRatingDesc)}
-          </button>
-          <button type="button" onclick={() => selectSort("rating-asc")}
-            class="w-full text-left px-3 py-2 text-sm hover:bg-(--btn-regular-bg-hover) text-neutral-700 dark:text-neutral-300 transition-colors"
-            class:text-(--primary)={sortBy === "rating-asc"}>
-            {i18n(I18nKey.animeRatingAsc)}
-          </button>
-          <button type="button" onclick={() => selectSort("date-desc")}
-            class="w-full text-left px-3 py-2 text-sm hover:bg-(--btn-regular-bg-hover) text-neutral-700 dark:text-neutral-300 transition-colors"
-            class:text-(--primary)={sortBy === "date-desc"}>
-            {i18n(I18nKey.animeDateDesc)}
-          </button>
-          <button type="button" onclick={() => selectSort("date-asc")}
-            class="w-full text-left px-3 py-2 text-sm hover:bg-(--btn-regular-bg-hover) text-neutral-700 dark:text-neutral-300 transition-colors"
-            class:text-(--primary)={sortBy === "date-asc"}>
-            {i18n(I18nKey.animeDateAsc)}
-          </button>
-        </div>
-      {/if}
-    </div>
-  </div>
+			<!-- 排序 -->
+			<select
+				value={sortBy}
+				onchange={(e) => setSort((e.target as HTMLSelectElement).value as typeof sortBy)}
+				class="rounded-lg border border-(--line-divider) bg-(--card-bg) px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 outline-none cursor-pointer"
+			>
+				<option value="rating-desc">评分从高到低</option>
+				<option value="rating-asc">评分从低到高</option>
+				<option value="date-desc">日期从新到旧</option>
+				<option value="date-asc">日期从旧到新</option>
+			</select>
+		</div>
+	</div>
+
+	<!-- 卡片网格 -->
+	{#if pagedItems().length > 0}
+		<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+			{#each pagedItems() as anime (anime.id)}
+				<AnimeCard {anime} onclick={openDetail} />
+			{/each}
+		</div>
+	{:else}
+		<div class="py-16 text-center">
+			<svg class="mx-auto h-12 w-12 text-neutral-300 dark:text-neutral-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+			</svg>
+			<p class="text-neutral-500 dark:text-neutral-400">没有找到匹配的番剧</p>
+		</div>
+	{/if}
+
+	<!-- 分页 -->
+	{#if totalPages > 1}
+		<div class="mt-8 flex items-center justify-center gap-1">
+			<!-- 上一页 -->
+			<button
+				class="flex h-9 w-9 items-center justify-center rounded-lg border border-(--line-divider) bg-(--card-bg) text-neutral-600 dark:text-neutral-400 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-40 disabled:cursor-not-allowed"
+				disabled={currentPage === 1}
+				onclick={() => goToPage(currentPage - 1)}
+			>
+				<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+				</svg>
+			</button>
+
+			{#each pageNumbers() as page}
+				{#if page === "..."}
+					<span class="flex h-9 w-9 items-center justify-center text-sm text-neutral-400">...</span>
+				{:else}
+					<button
+						class="flex h-9 w-9 items-center justify-center rounded-lg border text-sm font-medium transition-colors {currentPage === page ? 'border-(--primary) bg-(--primary) text-white' : 'border-(--line-divider) bg-(--card-bg) text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800'}"
+						onclick={() => goToPage(page as number)}
+					>
+						{page}
+					</button>
+				{/if}
+			{/each}
+
+			<!-- 下一页 -->
+			<button
+				class="flex h-9 w-9 items-center justify-center rounded-lg border border-(--line-divider) bg-(--card-bg) text-neutral-600 dark:text-neutral-400 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-40 disabled:cursor-not-allowed"
+				disabled={currentPage === totalPages}
+				onclick={() => goToPage(currentPage + 1)}
+			>
+				<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+				</svg>
+			</button>
+		</div>
+
+		<!-- 页码信息 -->
+		<p class="mt-3 text-center text-xs text-neutral-500 dark:text-neutral-400">
+			第 {currentPage} 页，共 {totalPages} 页 · 共 {filteredItems().length} 部番剧
+		</p>
+	{/if}
 </div>
 
-<!-- 卡片网格 -->
-{#if sortedItems().length > 0}
-  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-    {#each pagedItems() as anime (anime.id)}
-      <AnimeCard item={anime} onselect={handleSelectAnime} />
-    {/each}
-  </div>
-
-  <!-- 分页 -->
-  <ClientPagination
-    totalItems={sortedItems().length}
-    {itemsPerPage}
-    {currentPage}
-    onPageChange={handlePageChange}
-  />
-{:else}
-  <!-- 无结果提示 -->
-  <div class="flex flex-col items-center justify-center py-20 text-neutral-400">
-    <svg xmlns="http://www.w3.org/2000/svg" width="4em" height="4em" viewBox="0 0 24 24"><path fill="currentColor" d="M19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h14q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21zm2-2h10V5H5v14z"/></svg>
-    <p class="text-lg mt-4">{i18n(I18nKey.animeNoResults)}</p>
-  </div>
-{/if}
-
 <!-- 详情弹窗 -->
-<AnimeDetailModal item={selectedAnime} onclose={handleCloseModal} />
+<AnimeDetailModal anime={selectedAnime} onclose={closeDetail} />

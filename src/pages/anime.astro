@@ -25,10 +25,38 @@ const TMDB_LIST_ID = animeConfig?.tmdb?.listId;
 const BILIBILI_UID = animeConfig?.bilibili?.uid;
 const TMDB_IMG = "https://image.tmdb.org/t/p/w500";
 
+// ============ 类型定义 ============
+
+interface TmdbItem {
+	id: number
+	title?: string
+	name?: string
+	original_title?: string
+	original_name?: string
+	release_date?: string
+	first_air_date?: string
+	media_type?: string
+	poster_path?: string | null
+	vote_average?: number
+	overview?: string
+}
+
+interface BilibiliItem {
+	media_id: number
+	title: string
+	cover?: string
+	season_type_name?: string
+	rating?: { score?: number }
+	evaluate?: string
+	brief?: string
+	season_id: number
+	new_ep?: { index_show?: string }
+}
+
 // ============ 数据获取 ============
 
 // 1. TMDB 数据
-let tmdbItems: any[] = [];
+let tmdbItems: TmdbItem[] = [];
 if (TMDB_API_KEY && TMDB_LIST_ID) {
 	try {
 		console.log(`[Anime] Fetching TMDB list: ${TMDB_LIST_ID}...`);
@@ -42,7 +70,7 @@ if (TMDB_API_KEY && TMDB_LIST_ID) {
 			let allItems = [...(firstData.items || [])];
 
 			if (totalPages > 1) {
-				const promises = [];
+				const promises: Promise<TmdbItem[]>[] = [];
 				for (let page = 2; page <= totalPages; page++) {
 					promises.push(
 						fetch(
@@ -71,8 +99,8 @@ if (TMDB_API_KEY && TMDB_LIST_ID) {
 				}
 			} catch {}
 		}
-	} catch (error: any) {
-		console.error("[Anime] TMDB fetch error:", error.message);
+	} catch (error: unknown) {
+		console.error("[Anime] TMDB fetch error:", error instanceof Error ? error.message : error);
 		// 尝试读取本地缓存
 		try {
 			const localPath = path.resolve("public/anime-list.json");
@@ -87,7 +115,7 @@ if (TMDB_API_KEY && TMDB_LIST_ID) {
 }
 
 // 2. Bilibili 数据
-let bilibiliItems: any[] = [];
+let bilibiliItems: BilibiliItem[] = [];
 if (BILIBILI_UID) {
 	try {
 		console.log(`[Anime] Fetching Bilibili list for UID: ${BILIBILI_UID}...`);
@@ -130,7 +158,7 @@ if (BILIBILI_UID) {
 // ============ 数据标准化 ============
 
 // 标准化 TMDB 数据
-let animeList: StandardizedAnime[] = tmdbItems.map((anime: any) => {
+let animeList: StandardizedAnime[] = tmdbItems.map((anime) => {
 	const title = anime.title || anime.name || "";
 	const originalTitle = anime.original_title || anime.original_name || "";
 	const date = anime.release_date || anime.first_air_date || "";
@@ -154,7 +182,7 @@ let animeList: StandardizedAnime[] = tmdbItems.map((anime: any) => {
 // 标准化 Bilibili 数据并合并
 if (bilibiliItems.length > 0) {
 	const bilibiliMapped: StandardizedAnime[] = bilibiliItems.map(
-		(item: any) => ({
+		(item) => ({
 			id: item.media_id,
 			title: item.title,
 			originalTitle: item.title,
@@ -187,7 +215,7 @@ const tmdbAverageRating =
 	tmdbItems.length > 0
 		? (
 				tmdbItems.reduce(
-					(sum: number, item: any) =>
+					(sum, item) =>
 						sum + (Number(item.vote_average) || 0),
 					0,
 				) / tmdbItems.length
@@ -198,7 +226,7 @@ const bilibiliAverageRating =
 	bilibiliItems.length > 0
 		? (
 				bilibiliItems.reduce(
-					(sum: number, item: any) =>
+					(sum, item) =>
 						sum + (Number(item.rating?.score) || 0),
 					0,
 				) / bilibiliItems.length
@@ -216,7 +244,7 @@ const isConfigured = !!(BILIBILI_UID || (TMDB_API_KEY && TMDB_LIST_ID));
         <div class="mb-6">
           <div class="flex items-center gap-3 mb-3">
             <div class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70">
-              <Icon name="material-symbols:tv-gen-outline" class="text-[1.5rem]"></Icon>
+              <Icon name="material-symbols:live-tv" class="text-[1.5rem]"></Icon>
             </div>
             <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
               {i18n(I18nKey.anime)}
@@ -286,8 +314,10 @@ const isConfigured = !!(BILIBILI_UID || (TMDB_API_KEY && TMDB_LIST_ID));
                     <Icon name="material-symbols:database" class="text-[1.25rem] text-emerald-500" />
                   </div>
                   <div>
-                    <div class="text-xs text-neutral-500 dark:text-neutral-400">数据源</div>
-                    <div class="text-sm font-bold text-neutral-900 dark:text-neutral-100 mt-1">双源已同步</div>
+                    <div class="text-xs text-neutral-500 dark:text-neutral-400">{i18n(I18nKey.animeSource)}</div>
+                    <div class="text-sm font-bold text-neutral-900 dark:text-neutral-100 mt-1">
+                      {BILIBILI_UID && (TMDB_API_KEY && TMDB_LIST_ID) ? "双源已同步" : BILIBILI_UID ? "Bilibili" : "TMDB"}
+                    </div>
                   </div>
                 </div>
               </div>
