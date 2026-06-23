@@ -42,7 +42,7 @@ function getTypeColor(type: string): string {
 		aria-modal="true"
 		tabindex="-1"
 	>
-		<div class="relative w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-2xl bg-(--card-bg) border border-(--line-divider) shadow-2xl animate-in">
+		<div class="relative w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-xl sm:rounded-2xl bg-(--card-bg) border border-(--line-divider) shadow-2xl animate-in">
 			<!-- 关闭按钮 -->
 			<button
 				class="absolute top-4 right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-colors hover:bg-black/70"
@@ -57,7 +57,7 @@ function getTypeColor(type: string): string {
 			<!-- 内容区域 -->
 			<div class="flex flex-col md:flex-row">
 				<!-- 海报 -->
-				<div class="relative w-full md:w-72 shrink-0 aspect-2/3 md:aspect-auto bg-neutral-100 dark:bg-neutral-800">
+				<div class="relative w-full md:w-64 lg:w-72 shrink-0 aspect-2/3 md:aspect-auto bg-neutral-100 dark:bg-neutral-800">
 					{#if anime.poster}
 						<img
 							src={anime.poster}
@@ -74,9 +74,9 @@ function getTypeColor(type: string): string {
 				</div>
 
 				<!-- 详情 -->
-				<div class="flex-1 p-6 overflow-y-auto max-h-[60vh] md:max-h-none">
+				<div class="flex-1 p-4 sm:p-6 overflow-y-auto max-h-[60vh] md:max-h-none">
 					<!-- 标题 -->
-					<h2 class="mb-1 text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+					<h2 class="mb-1 text-xl sm:text-2xl font-bold text-neutral-900 dark:text-neutral-100">
 						{anime.title}
 					</h2>
 					{#if anime.originalTitle && anime.originalTitle !== anime.title}
