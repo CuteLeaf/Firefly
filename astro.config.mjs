@@ -65,12 +65,9 @@ export default defineConfig({
 		layout: "constrained",
 	},
 
-	experimental: {
-		// Rust 编译器以提升构建性能（实验性），部分平台可能会导致构建失败，可以根据需要启用或禁用
-		rustCompiler: false,
-		// 队列渲染以优化性能（实验性）
-		queuedRendering: { enabled: true },
-	},
+	// experimental: {
+	//   Astro v7 已将 rustCompiler 和 queuedRendering 设为默认行为，无需配置
+	// },
 
 	integrations: [
 		swup({
