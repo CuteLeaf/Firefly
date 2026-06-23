@@ -55,7 +55,7 @@ function getTypeColor(type: string): string {
 			<!-- 内容区域 -->
 			<div class="flex flex-col md:flex-row">
 				<!-- 海报 -->
-				<div class="relative w-full md:w-72 shrink-0 aspect-[2/3] md:aspect-auto bg-neutral-100 dark:bg-neutral-800">
+				<div class="relative w-full md:w-72 shrink-0 aspect-2/3 md:aspect-auto bg-neutral-100 dark:bg-neutral-800">
 					{#if anime.poster}
 						<img
 							src={anime.poster}

@@ -36,7 +36,7 @@ function getTypeColor(type: string): string {
 	tabindex="0"
 >
 	<!-- 海报 -->
-	<div class="relative aspect-[2/3] overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+	<div class="relative aspect-2/3 overflow-hidden bg-neutral-100 dark:bg-neutral-800">
 		{#if anime.poster}
 			<div class="lqip-placeholder absolute inset-0 pointer-events-none" style="background: var(--muted)" aria-hidden="true"></div>
 			<img
@@ -76,7 +76,7 @@ function getTypeColor(type: string): string {
 		</div>
 
 		<!-- 悬停遮罩 -->
-		<div class="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+		<div class="absolute inset-0 flex flex-col justify-end bg-linear-to-t from-black/80 via-black/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
 			<div class="p-3">
 				<p class="mb-2 line-clamp-3 text-xs text-white/90 leading-relaxed">{anime.overview || "暂无简介"}</p>
 				<button class="w-full rounded-lg bg-(--primary) px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-(--primary)/80">
@@ -108,13 +108,13 @@ function getTypeColor(type: string): string {
 <style>
 	.line-clamp-1 {
 		display: -webkit-box;
-		-webkit-line-clamp: 1;
+		line-clamp: 1;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
 	}
 	.line-clamp-3 {
 		display: -webkit-box;
-		-webkit-line-clamp: 3;
+		line-clamp: 3;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
 	}
