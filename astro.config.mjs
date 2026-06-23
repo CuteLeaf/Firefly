@@ -65,10 +65,6 @@ export default defineConfig({
 		layout: "constrained",
 	},
 
-	// experimental: {
-	//   Astro v7 已将 rustCompiler 和 queuedRendering 设为默认行为，无需配置
-	// },
-
 	integrations: [
 		swup({
 			theme: false,
