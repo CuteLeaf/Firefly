@@ -73,7 +73,7 @@ export const ru: Translation = {
 	[Key.postsCount]: "постов",
 	[Key.tagsCount]: "тегов",
 	[Key.noData]: "Нет данных",
-	
+
 	[Key.themeColor]: "Цвет темы",
 
 	[Key.lightMode]: "Светлая",
@@ -155,7 +155,8 @@ export const ru: Translation = {
 
 	// Отслеживание аниме
 	[Key.anime]: "Аниме",
-	[Key.animeSubtitle]: "Мой список отслеживания аниме, данные из Bilibili и TMDB",
+	[Key.animeSubtitle]:
+		"Мой список отслеживания аниме, данные из Bilibili и TMDB",
 	[Key.animeTotal]: "Всего",
 	[Key.animeAverageRating]: "Средний рейтинг",
 	[Key.animeSearch]: "Поиск аниме...",
@@ -172,7 +173,8 @@ export const ru: Translation = {
 	[Key.animeEpStatus]: "Прогресс",
 	[Key.animeViewDetails]: "Подробнее",
 	[Key.animeNotConfigured]: "Источник данных не настроен",
-	[Key.animeNotConfiguredDesc]: "Настройте Bilibili UID или TMDB API Key в src/config/siteConfig.ts",
+	[Key.animeNotConfiguredDesc]:
+		"Настройте Bilibili UID или TMDB API Key в src/config/siteConfig.ts",
 
 	// Пагинация
 	[Key.paginationFirst]: "Первая",

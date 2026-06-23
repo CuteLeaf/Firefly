@@ -172,7 +172,8 @@ export const en: Translation = {
 	[Key.animeEpStatus]: "Progress",
 	[Key.animeViewDetails]: "View Details",
 	[Key.animeNotConfigured]: "Anime data source not configured",
-	[Key.animeNotConfiguredDesc]: "Please configure Bilibili UID or TMDB API Key in src/config/siteConfig.ts",
+	[Key.animeNotConfiguredDesc]:
+		"Please configure Bilibili UID or TMDB API Key in src/config/siteConfig.ts",
 
 	// Pagination
 	[Key.paginationFirst]: "First",

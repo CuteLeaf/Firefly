@@ -73,7 +73,7 @@ export const ja: Translation = {
 	[Key.postsCount]: "投稿",
 	[Key.tagsCount]: "タグ",
 	[Key.noData]: "データなし",
-	
+
 	[Key.themeColor]: "テーマカラー",
 
 	[Key.lightMode]: "ライト",
@@ -172,7 +172,8 @@ export const ja: Translation = {
 	[Key.animeEpStatus]: "進捗",
 	[Key.animeViewDetails]: "詳細を見る",
 	[Key.animeNotConfigured]: "アニメデータソースが未設定",
-	[Key.animeNotConfiguredDesc]: "src/config/siteConfig.ts で Bilibili UID または TMDB API Key を設定してください",
+	[Key.animeNotConfiguredDesc]:
+		"src/config/siteConfig.ts で Bilibili UID または TMDB API Key を設定してください",
 
 	// ページネーション
 	[Key.paginationFirst]: "最初",

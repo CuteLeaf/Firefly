@@ -1,14 +1,14 @@
 ---
+import * as fs from "node:fs";
+import * as path from "node:path";
 import { Icon } from "astro-icon/components";
+import AnimeGrid from "@/components/pages/anime/AnimeGrid.svelte";
 import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
-import AnimeGrid from "@/components/pages/anime/AnimeGrid.svelte";
-import { formatDateI18nWithTime } from "@/utils/date-utils";
 import type { StandardizedAnime } from "@/types/anime";
-import * as fs from "node:fs";
-import * as path from "node:path";
+import { formatDateI18nWithTime } from "@/utils/date-utils";
 
 // 检查页面是否启用
 if (!siteConfig.pages.anime) {
@@ -28,29 +28,29 @@ const TMDB_IMG = "https://image.tmdb.org/t/p/w500";
 // ============ 类型定义 ============
 
 interface TmdbItem {
-	id: number
-	title?: string
-	name?: string
-	original_title?: string
-	original_name?: string
-	release_date?: string
-	first_air_date?: string
-	media_type?: string
-	poster_path?: string | null
-	vote_average?: number
-	overview?: string
+	id: number;
+	title?: string;
+	name?: string;
+	original_title?: string;
+	original_name?: string;
+	release_date?: string;
+	first_air_date?: string;
+	media_type?: string;
+	poster_path?: string | null;
+	vote_average?: number;
+	overview?: string;
 }
 
 interface BilibiliItem {
-	media_id: number
-	title: string
-	cover?: string
-	season_type_name?: string
-	rating?: { score?: number }
-	evaluate?: string
-	brief?: string
-	season_id: number
-	new_ep?: { index_show?: string }
+	media_id: number;
+	title: string;
+	cover?: string;
+	season_type_name?: string;
+	rating?: { score?: number };
+	evaluate?: string;
+	brief?: string;
+	season_id: number;
+	new_ep?: { index_show?: string };
 }
 
 // ============ 数据获取 ============
@@ -81,7 +81,9 @@ if (TMDB_API_KEY && TMDB_LIST_ID) {
 					);
 				}
 				const remainingItems = await Promise.all(promises);
-				remainingItems.forEach((items) => allItems.push(...items));
+				for (const items of remainingItems) {
+					allItems.push(...items);
+				}
 			}
 
 			tmdbItems = allItems;
@@ -100,7 +102,10 @@ if (TMDB_API_KEY && TMDB_LIST_ID) {
 			} catch {}
 		}
 	} catch (error: unknown) {
-		console.error("[Anime] TMDB fetch error:", error instanceof Error ? error.message : error);
+		console.error(
+			"[Anime] TMDB fetch error:",
+			error instanceof Error ? error.message : error,
+		);
 		// 尝试读取本地缓存
 		try {
 			const localPath = path.resolve("public/anime-list.json");
@@ -147,9 +152,7 @@ if (BILIBILI_UID) {
 
 			if (pn > 20) break;
 		}
-		console.log(
-			`[Anime] Fetched ${bilibiliItems.length} items from Bilibili.`,
-		);
+		console.log(`[Anime] Fetched ${bilibiliItems.length} items from Bilibili.`);
 	} catch (e) {
 		console.error("[Anime] Bilibili fetch error:", e);
 	}
@@ -181,27 +184,22 @@ let animeList: StandardizedAnime[] = tmdbItems.map((anime) => {
 
 // 标准化 Bilibili 数据并合并
 if (bilibiliItems.length > 0) {
-	const bilibiliMapped: StandardizedAnime[] = bilibiliItems.map(
-		(item) => ({
-			id: item.media_id,
-			title: item.title,
-			originalTitle: item.title,
-			poster: item.cover
-				? item.cover.replace("http://", "https://")
-				: null,
-			type:
-				item.season_type_name === "剧场版" ||
-				item.season_type_name === "电影"
-					? ("movie" as const)
-					: ("tv" as const),
-			source: "bilibili" as const,
-			rating: item.rating?.score || 0,
-			date: "",
-			overview: item.evaluate || item.brief || "",
-			link: `https://www.bilibili.com/bangumi/play/ss${item.season_id}`,
-			epStatus: item.new_ep?.index_show || "",
-		}),
-	);
+	const bilibiliMapped: StandardizedAnime[] = bilibiliItems.map((item) => ({
+		id: item.media_id,
+		title: item.title,
+		originalTitle: item.title,
+		poster: item.cover ? item.cover.replace("http://", "https://") : null,
+		type:
+			item.season_type_name === "剧场版" || item.season_type_name === "电影"
+				? ("movie" as const)
+				: ("tv" as const),
+		source: "bilibili" as const,
+		rating: item.rating?.score || 0,
+		date: "",
+		overview: item.evaluate || item.brief || "",
+		link: `https://www.bilibili.com/bangumi/play/ss${item.season_id}`,
+		epStatus: item.new_ep?.index_show || "",
+	}));
 
 	// 去重：Bilibili 优先（带进度信息）
 	const bilibiliTitles = new Set(bilibiliMapped.map((item) => item.title));
@@ -215,8 +213,7 @@ const tmdbAverageRating =
 	tmdbItems.length > 0
 		? (
 				tmdbItems.reduce(
-					(sum, item) =>
-						sum + (Number(item.vote_average) || 0),
+					(sum, item) => sum + (Number(item.vote_average) || 0),
 					0,
 				) / tmdbItems.length
 			).toFixed(1)
@@ -226,8 +223,7 @@ const bilibiliAverageRating =
 	bilibiliItems.length > 0
 		? (
 				bilibiliItems.reduce(
-					(sum, item) =>
-						sum + (Number(item.rating?.score) || 0),
+					(sum, item) => sum + (Number(item.rating?.score) || 0),
 					0,
 				) / bilibiliItems.length
 			).toFixed(1)

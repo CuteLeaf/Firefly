@@ -292,4 +292,3 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 		},
 	],
 };
-

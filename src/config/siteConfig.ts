@@ -182,14 +182,14 @@ export const siteConfig: SiteConfig = {
 		// Bilibili 配置
 		bilibili: {
 			// 你的 Bilibili 用户 UID
-			uid: "195888", 
+			uid: "38932988",
 		},
 		// TMDB 配置（可选，需要翻墙）
 		// tmdb: {
 		//   // TMDB API 密钥
-		//   apiKey: "your_tmdb_api_key", 
+		//   apiKey: "your_tmdb_api_key",
 		//   // TMDB 列表 ID
-		//   listId: "your_list_id",       
+		//   listId: "your_list_id",
 		// },
 	},
 

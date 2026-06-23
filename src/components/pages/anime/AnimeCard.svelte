@@ -8,6 +8,13 @@ interface Props {
 
 let { anime, onclick }: Props = $props();
 
+function handleLoad(e: Event) {
+	const img = e.currentTarget as HTMLImageElement;
+	img.style.opacity = "1";
+	const ph = img.parentElement?.querySelector(".lqip-placeholder");
+	if (ph) ph.classList.add("loaded");
+}
+
 function handleClick() {
 	onclick?.(anime);
 }
@@ -31,11 +38,14 @@ function getTypeColor(type: string): string {
 	<!-- 海报 -->
 	<div class="relative aspect-[2/3] overflow-hidden bg-neutral-100 dark:bg-neutral-800">
 		{#if anime.poster}
+			<div class="lqip-placeholder absolute inset-0 pointer-events-none" style="background: var(--muted)" aria-hidden="true"></div>
 			<img
 				src={anime.poster}
 				alt={anime.title}
-				class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+				class="h-full w-full object-cover transition-all duration-500 group-hover:scale-110 opacity-0"
 				loading="lazy"
+				decoding="async"
+				onload={handleLoad}
 			/>
 		{:else}
 			<div class="flex h-full w-full items-center justify-center">

@@ -71,7 +71,7 @@ export const zh_CN: Translation = {
 	[Key.postsCount]: "篇文章",
 	[Key.tagsCount]: "个标签",
 	[Key.noData]: "暂无数据",
-	
+
 	[Key.themeColor]: "主题色相",
 
 	[Key.lightMode]: "亮色",
@@ -168,7 +168,8 @@ export const zh_CN: Translation = {
 	[Key.animeEpStatus]: "进度",
 	[Key.animeViewDetails]: "查看详情",
 	[Key.animeNotConfigured]: "未配置追番数据源",
-	[Key.animeNotConfiguredDesc]: "请在 src/config/siteConfig.ts 中配置 Bilibili UID 或 TMDB API Key",
+	[Key.animeNotConfiguredDesc]:
+		"请在 src/config/siteConfig.ts 中配置 Bilibili UID 或 TMDB API Key",
 
 	// 分页
 	[Key.paginationFirst]: "首页",

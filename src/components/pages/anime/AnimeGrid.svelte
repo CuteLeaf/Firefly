@@ -1,4 +1,5 @@
 <script lang="ts">
+import ClientPagination from "@components/common/ClientPagination.svelte";
 import type { StandardizedAnime } from "@/types/anime";
 import AnimeCard from "./AnimeCard.svelte";
 import AnimeDetailModal from "./AnimeDetailModal.svelte";
@@ -14,7 +15,9 @@ let { items, bilibiliAverageRating, itemsPerPage = 20 }: Props = $props();
 // 状态
 let searchQuery = $state("");
 let activeFilter = $state<"all" | "tv" | "movie">("all");
-let sortBy = $state<"rating-desc" | "rating-asc" | "date-desc" | "date-asc">("rating-desc");
+let sortBy = $state<"rating-desc" | "rating-asc" | "date-desc" | "date-asc">(
+	"rating-desc",
+);
 let currentPage = $state(1);
 let selectedAnime = $state<StandardizedAnime | null>(null);
 
@@ -28,7 +31,7 @@ let filteredItems = $derived(() => {
 		result = result.filter(
 			(item) =>
 				item.title.toLowerCase().includes(query) ||
-				item.originalTitle.toLowerCase().includes(query)
+				item.originalTitle.toLowerCase().includes(query),
 		);
 	}
 
@@ -63,26 +66,6 @@ let pagedItems = $derived(() => {
 	return filteredItems().slice(start, start + itemsPerPage);
 });
 
-// 页码按钮（带省略号）
-let pageNumbers = $derived(() => {
-	const pages: (number | "...")[] = [];
-	const total = totalPages;
-	const current = currentPage;
-
-	if (total <= 7) {
-		for (let i = 1; i <= total; i++) pages.push(i);
-	} else {
-		pages.push(1);
-		if (current > 3) pages.push("...");
-		for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
-			pages.push(i);
-		}
-		if (current < total - 2) pages.push("...");
-		pages.push(total);
-	}
-	return pages;
-});
-
 // 筛选/搜索变化时重置到第一页
 function resetPage() {
 	currentPage = 1;
@@ -104,9 +87,7 @@ function setSort(sort: typeof sortBy) {
 }
 
 function goToPage(page: number) {
-	if (page >= 1 && page <= totalPages) {
-		currentPage = page;
-	}
+	currentPage = page;
 }
 
 function openDetail(anime: StandardizedAnime) {
@@ -194,49 +175,12 @@ let movieCount = $derived(items.filter((i) => i.type === "movie").length);
 	{/if}
 
 	<!-- 分页 -->
-	{#if totalPages > 1}
-		<div class="mt-8 flex items-center justify-center gap-1">
-			<!-- 上一页 -->
-			<button
-				class="flex h-9 w-9 items-center justify-center rounded-lg border border-(--line-divider) bg-(--card-bg) text-neutral-600 dark:text-neutral-400 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-40 disabled:cursor-not-allowed"
-				disabled={currentPage === 1}
-				onclick={() => goToPage(currentPage - 1)}
-			>
-				<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-				</svg>
-			</button>
-
-			{#each pageNumbers() as page}
-				{#if page === "..."}
-					<span class="flex h-9 w-9 items-center justify-center text-sm text-neutral-400">...</span>
-				{:else}
-					<button
-						class="flex h-9 w-9 items-center justify-center rounded-lg border text-sm font-medium transition-colors {currentPage === page ? 'border-(--primary) bg-(--primary) text-white' : 'border-(--line-divider) bg-(--card-bg) text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800'}"
-						onclick={() => goToPage(page as number)}
-					>
-						{page}
-					</button>
-				{/if}
-			{/each}
-
-			<!-- 下一页 -->
-			<button
-				class="flex h-9 w-9 items-center justify-center rounded-lg border border-(--line-divider) bg-(--card-bg) text-neutral-600 dark:text-neutral-400 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-40 disabled:cursor-not-allowed"
-				disabled={currentPage === totalPages}
-				onclick={() => goToPage(currentPage + 1)}
-			>
-				<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-				</svg>
-			</button>
-		</div>
-
-		<!-- 页码信息 -->
-		<p class="mt-3 text-center text-xs text-neutral-500 dark:text-neutral-400">
-			第 {currentPage} 页，共 {totalPages} 页 · 共 {filteredItems().length} 部番剧
-		</p>
-	{/if}
+	<ClientPagination
+		totalItems={filteredItems().length}
+		{itemsPerPage}
+		{currentPage}
+		onPageChange={goToPage}
+	/>
 </div>
 
 <!-- 详情弹窗 -->
