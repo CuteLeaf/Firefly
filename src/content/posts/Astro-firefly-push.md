@@ -12,18 +12,24 @@ image: https://cdn.jsdelivr.net/gh/Yutong2333/imges-bed/Astro-firefly-push.avif
 ## 前言
 好久没玩博客了，前段时间了解到现在流行[Astro](https://astro.build/)框架搭建博客，反而是前几年的hexo更新滞后了，就花了些时间琢磨了一下这个框架怎么部署，还看了一些主题，最后决定用[Firefly](https://docs-firefly.cuteleaf.cn/zh/)主题来部署我的新博客，期间踩了不少坑，下面分享我部署成功的步骤。
 
-### 本地安装所需要的工具
+### 本地安装所需要的工具（Windows系统）
 1.[nodejs](https://nodejs.org/zh-cn)<br>
 2.[Git](https://git-scm.com/)<br>
-*注意*：nodejs有三种安装方法，选择自己会的其中一种安装即可，Git的安装过程如果有add path选项的话记得勾选
-![选其中一种方法](https://cdn.jsdelivr.net/gh/Yutong2333/imges-bed/astro-firefly-push1.avif)
+*注意*：nodejs有三种安装方法，选择自己会的其中一种安装即可
+![nodejs选其中一种方法](https://cdn.jsdelivr.net/gh/Yutong2333/imges-bed/astro-firefly-push1.avif)
+git安装过程不再展示，一路下一步看到add path记得勾上就行
 
 ### 开始从Firefly的仓库部署到本地
 创建一个名为“blog”的文件夹（取别的名也行，自己记得住就好），并在文件夹里面点鼠标右键，选择“Open Git Bash here”
 ![创建文件夹](https://cdn.jsdelivr.net/gh/Yutong2333/imges-bed/Astro-firefly-push4.avif)
 点击了“Open Git Bash here”将会出现这个页面：
 ![Git的界面](https://cdn.jsdelivr.net/gh/Yutong2333/imges-bed/Astro-firefly-push5.avif)
-**安装**<br>
+安装[pnpm管理包](https://pnpm.io/zh/)：在git的界面里粘贴以下指令并回车：
+```bash
+npx pnpm@latest-11 dlx @pnpm/exe@latest-11 setup
+```
+
+**克隆仓库**<br>
 1.克隆Firefly仓库
 ```bash
 git clone https://github.com/CuteLeaf/Firefly.git
