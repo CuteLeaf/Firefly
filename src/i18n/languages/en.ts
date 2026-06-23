@@ -174,6 +174,17 @@ export const en: Translation = {
 	[Key.animeNotConfigured]: "Anime data source not configured",
 	[Key.animeNotConfiguredDesc]:
 		"Please configure Bilibili UID or TMDB API Key in src/config/siteConfig.ts",
+	[Key.animeBilibiliAvg]: "Bilibili Avg",
+	[Key.animeTmdbAvg]: "TMDB Avg",
+	[Key.animeDualSynced]: "Dual Synced",
+	[Key.animeNoOverview]: "No synopsis available",
+	[Key.animeClose]: "Close",
+	[Key.animeSynopsis]: "Synopsis",
+	[Key.animeWatchNow]: "Watch Now",
+	[Key.animeViewTmdb]: "View TMDB Details",
+	[Key.animeAllWithCount]: "All ({count})",
+	[Key.animeTVWithCount]: "TV ({count})",
+	[Key.animeMovieWithCount]: "Movie ({count})",
 
 	// Pagination
 	[Key.paginationFirst]: "First",

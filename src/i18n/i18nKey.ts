@@ -169,6 +169,17 @@ enum I18nKey {
 	animeViewDetails = "animeViewDetails",
 	animeNotConfigured = "animeNotConfigured",
 	animeNotConfiguredDesc = "animeNotConfiguredDesc",
+	animeBilibiliAvg = "animeBilibiliAvg",
+	animeTmdbAvg = "animeTmdbAvg",
+	animeDualSynced = "animeDualSynced",
+	animeNoOverview = "animeNoOverview",
+	animeClose = "animeClose",
+	animeSynopsis = "animeSynopsis",
+	animeWatchNow = "animeWatchNow",
+	animeViewTmdb = "animeViewTmdb",
+	animeAllWithCount = "animeAllWithCount",
+	animeTVWithCount = "animeTVWithCount",
+	animeMovieWithCount = "animeMovieWithCount",
 
 	// 分页
 	paginationFirst = "paginationFirst",

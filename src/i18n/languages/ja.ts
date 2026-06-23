@@ -174,6 +174,17 @@ export const ja: Translation = {
 	[Key.animeNotConfigured]: "アニメデータソースが未設定",
 	[Key.animeNotConfiguredDesc]:
 		"src/config/siteConfig.ts で Bilibili UID または TMDB API Key を設定してください",
+	[Key.animeBilibiliAvg]: "Bilibili 平均",
+	[Key.animeTmdbAvg]: "TMDB 平均",
+	[Key.animeDualSynced]: "デュアル同期済み",
+	[Key.animeNoOverview]: "あらすじなし",
+	[Key.animeClose]: "閉じる",
+	[Key.animeSynopsis]: "あらすじ",
+	[Key.animeWatchNow]: "今すぐ視聴",
+	[Key.animeViewTmdb]: "TMDB 詳細を見る",
+	[Key.animeAllWithCount]: "すべて ({count})",
+	[Key.animeTVWithCount]: "TV ({count})",
+	[Key.animeMovieWithCount]: "映画 ({count})",
 
 	// ページネーション
 	[Key.paginationFirst]: "最初",

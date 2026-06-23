@@ -1,5 +1,7 @@
 <script lang="ts">
 import ClientPagination from "@components/common/ClientPagination.svelte";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
 import type { StandardizedAnime } from "@/types/anime";
 import AnimeCard from "./AnimeCard.svelte";
 import AnimeDetailModal from "./AnimeDetailModal.svelte";
@@ -101,6 +103,17 @@ function closeDetail() {
 // 过滤计数
 let tvCount = $derived(items.filter((i) => i.type === "tv").length);
 let movieCount = $derived(items.filter((i) => i.type === "movie").length);
+
+// i18n 带参数
+let allLabel = $derived(
+	i18n(I18nKey.animeAllWithCount).replace("{count}", String(items.length)),
+);
+let tvLabel = $derived(
+	i18n(I18nKey.animeTVWithCount).replace("{count}", String(tvCount)),
+);
+let movieLabel = $derived(
+	i18n(I18nKey.animeMovieWithCount).replace("{count}", String(movieCount)),
+);
 </script>
 
 <div class="anime-grid">
@@ -113,7 +126,7 @@ let movieCount = $derived(items.filter((i) => i.type === "movie").length);
 			</svg>
 			<input
 				type="text"
-				placeholder="搜索番剧..."
+				placeholder={i18n(I18nKey.animeSearch)}
 				value={searchQuery}
 				oninput={handleSearch}
 				class="w-full rounded-xl border border-(--line-divider) bg-(--card-bg) py-2.5 pl-10 pr-4 text-sm text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 outline-none transition-colors focus:border-(--primary)"
@@ -128,19 +141,19 @@ let movieCount = $derived(items.filter((i) => i.type === "movie").length);
 					class="px-3 py-1.5 text-xs font-medium transition-colors {activeFilter === 'all' ? 'bg-(--primary) text-white' : 'bg-(--card-bg) text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800'}"
 					onclick={() => setFilter("all")}
 				>
-					全部 ({items.length})
+					{allLabel}
 				</button>
 				<button
 					class="px-3 py-1.5 text-xs font-medium transition-colors border-l border-(--line-divider) {activeFilter === 'tv' ? 'bg-(--primary) text-white' : 'bg-(--card-bg) text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800'}"
 					onclick={() => setFilter("tv")}
 				>
-					TV ({tvCount})
+					{tvLabel}
 				</button>
 				<button
 					class="px-3 py-1.5 text-xs font-medium transition-colors border-l border-(--line-divider) {activeFilter === 'movie' ? 'bg-(--primary) text-white' : 'bg-(--card-bg) text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800'}"
 					onclick={() => setFilter("movie")}
 				>
-					剧场版 ({movieCount})
+					{movieLabel}
 				</button>
 			</div>
 
@@ -150,10 +163,10 @@ let movieCount = $derived(items.filter((i) => i.type === "movie").length);
 				onchange={(e) => setSort((e.target as HTMLSelectElement).value as typeof sortBy)}
 				class="rounded-lg border border-(--line-divider) bg-(--card-bg) px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 outline-none cursor-pointer"
 			>
-				<option value="rating-desc">评分从高到低</option>
-				<option value="rating-asc">评分从低到高</option>
-				<option value="date-desc">日期从新到旧</option>
-				<option value="date-asc">日期从旧到新</option>
+				<option value="rating-desc">{i18n(I18nKey.animeRatingDesc)}</option>
+				<option value="rating-asc">{i18n(I18nKey.animeRatingAsc)}</option>
+				<option value="date-desc">{i18n(I18nKey.animeDateDesc)}</option>
+				<option value="date-asc">{i18n(I18nKey.animeDateAsc)}</option>
 			</select>
 		</div>
 	</div>
@@ -170,7 +183,7 @@ let movieCount = $derived(items.filter((i) => i.type === "movie").length);
 			<svg class="mx-auto h-12 w-12 text-neutral-300 dark:text-neutral-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
 			</svg>
-			<p class="text-neutral-500 dark:text-neutral-400">没有找到匹配的番剧</p>
+			<p class="text-neutral-500 dark:text-neutral-400">{i18n(I18nKey.animeNoResults)}</p>
 		</div>
 	{/if}
 

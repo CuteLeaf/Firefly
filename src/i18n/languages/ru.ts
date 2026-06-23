@@ -175,6 +175,17 @@ export const ru: Translation = {
 	[Key.animeNotConfigured]: "Источник данных не настроен",
 	[Key.animeNotConfiguredDesc]:
 		"Настройте Bilibili UID или TMDB API Key в src/config/siteConfig.ts",
+	[Key.animeBilibiliAvg]: "Bilibili ср.",
+	[Key.animeTmdbAvg]: "TMDB ср.",
+	[Key.animeDualSynced]: "Два источника",
+	[Key.animeNoOverview]: "Нет описания",
+	[Key.animeClose]: "Закрыть",
+	[Key.animeSynopsis]: "Описание",
+	[Key.animeWatchNow]: "Смотреть",
+	[Key.animeViewTmdb]: "Подробнее на TMDB",
+	[Key.animeAllWithCount]: "Все ({count})",
+	[Key.animeTVWithCount]: "ТВ ({count})",
+	[Key.animeMovieWithCount]: "Фильм ({count})",
 
 	// Пагинация
 	[Key.paginationFirst]: "Первая",

@@ -292,7 +292,7 @@ const isConfigured = !!(BILIBILI_UID || (TMDB_API_KEY && TMDB_LIST_ID));
                     <Icon name="material-symbols:favorite" class="text-[1.25rem] text-pink-500" />
                   </div>
                   <div>
-                    <div class="text-xs text-neutral-500 dark:text-neutral-400">Bilibili 均分</div>
+                    <div class="text-xs text-neutral-500 dark:text-neutral-400">{i18n(I18nKey.animeBilibiliAvg)}</div>
                     <div class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{bilibiliAverageRating}</div>
                   </div>
                 </div>
@@ -303,7 +303,7 @@ const isConfigured = !!(BILIBILI_UID || (TMDB_API_KEY && TMDB_LIST_ID));
                     <Icon name="material-symbols:star" class="text-[1.25rem] text-yellow-500" />
                   </div>
                   <div>
-                    <div class="text-xs text-neutral-500 dark:text-neutral-400">TMDB 均分</div>
+                    <div class="text-xs text-neutral-500 dark:text-neutral-400">{i18n(I18nKey.animeTmdbAvg)}</div>
                     <div class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{tmdbAverageRating}</div>
                   </div>
                 </div>
@@ -316,7 +316,7 @@ const isConfigured = !!(BILIBILI_UID || (TMDB_API_KEY && TMDB_LIST_ID));
                   <div>
                     <div class="text-xs text-neutral-500 dark:text-neutral-400">{i18n(I18nKey.animeSource)}</div>
                     <div class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
-                      {BILIBILI_UID && (TMDB_API_KEY && TMDB_LIST_ID) ? "双源已同步" : BILIBILI_UID ? "Bilibili" : "TMDB"}
+                      {BILIBILI_UID && (TMDB_API_KEY && TMDB_LIST_ID) ? i18n(I18nKey.animeDualSynced) : BILIBILI_UID ? "Bilibili" : "TMDB"}
                     </div>
                   </div>
                 </div>

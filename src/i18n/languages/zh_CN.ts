@@ -170,6 +170,17 @@ export const zh_CN: Translation = {
 	[Key.animeNotConfigured]: "未配置追番数据源",
 	[Key.animeNotConfiguredDesc]:
 		"请在 src/config/siteConfig.ts 中配置 Bilibili UID 或 TMDB API Key",
+	[Key.animeBilibiliAvg]: "Bilibili 均分",
+	[Key.animeTmdbAvg]: "TMDB 均分",
+	[Key.animeDualSynced]: "双源已同步",
+	[Key.animeNoOverview]: "暂无简介",
+	[Key.animeClose]: "关闭",
+	[Key.animeSynopsis]: "剧情简介",
+	[Key.animeWatchNow]: "立即观看",
+	[Key.animeViewTmdb]: "查看 TMDB 详情",
+	[Key.animeAllWithCount]: "全部 ({count})",
+	[Key.animeTVWithCount]: "TV ({count})",
+	[Key.animeMovieWithCount]: "剧场版 ({count})",
 
 	// 分页
 	[Key.paginationFirst]: "首页",

@@ -1,4 +1,6 @@
 <script lang="ts">
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
 import type { StandardizedAnime } from "@/types/anime";
 
 interface Props {
@@ -21,7 +23,7 @@ function handleKeydown(e: KeyboardEvent) {
 }
 
 function getTypeLabel(type: string): string {
-	return type === "movie" ? "剧场版" : "TV 动画";
+	return type === "movie" ? i18n(I18nKey.animeMovie) : i18n(I18nKey.animeTV);
 }
 
 function getTypeColor(type: string): string {
@@ -45,7 +47,7 @@ function getTypeColor(type: string): string {
 			<button
 				class="absolute top-4 right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-colors hover:bg-black/70"
 				onclick={onclose}
-				aria-label="关闭"
+				aria-label={i18n(I18nKey.animeClose)}
 			>
 				<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -109,7 +111,7 @@ function getTypeColor(type: string): string {
 					<!-- 简介 -->
 					{#if anime.overview}
 						<div class="mb-6">
-							<h3 class="mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300">剧情简介</h3>
+							<h3 class="mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300">{i18n(I18nKey.animeSynopsis)}</h3>
 							<p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed max-h-40 overflow-y-auto">
 								{anime.overview}
 							</p>
@@ -128,12 +130,12 @@ function getTypeColor(type: string): string {
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
 							</svg>
-							立即观看
+							{i18n(I18nKey.animeWatchNow)}
 						{:else}
 							<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
 							</svg>
-							查看 TMDB 详情
+							{i18n(I18nKey.animeViewTmdb)}
 						{/if}
 					</a>
 				</div>
