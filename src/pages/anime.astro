@@ -8,15 +8,11 @@ import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
 import type { StandardizedAnime } from "@/types/anime";
-import { formatDateI18nWithTime } from "@/utils/date-utils";
 
 // 检查页面是否启用
 if (!siteConfig.pages.anime) {
 	return Astro.redirect("/404/");
 }
-
-// 获取构建时间
-const buildTime = formatDateI18nWithTime(new Date());
 
 // 追番配置
 const animeConfig = siteConfig.anime;
@@ -246,9 +242,6 @@ const isConfigured = !!(BILIBILI_UID || (TMDB_API_KEY && TMDB_LIST_ID));
           </div>
           <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
             {i18n(I18nKey.animeSubtitle)}
-          </p>
-          <p class="text-xs text-neutral-500 dark:text-neutral-500 mt-2">
-            {i18n(I18nKey.animeLastUpdated)} {buildTime}
           </p>
         </div>
 
