@@ -99,7 +99,9 @@ if (TMDB_API_KEY && TMDB_LIST_ID) {
 					tmdbItems = localData.items || localData[0]?.items || [];
 					console.log(`[Anime] Using local cache: ${tmdbItems.length} items.`);
 				}
-			} catch {}
+			} catch {
+				// 本地缓存读取失败，忽略
+			}
 		}
 	} catch (error: unknown) {
 		console.error(
@@ -115,7 +117,9 @@ if (TMDB_API_KEY && TMDB_LIST_ID) {
 				tmdbItems = localData.items || localData[0]?.items || [];
 				console.log(`[Anime] Using local cache: ${tmdbItems.length} items.`);
 			}
-		} catch {}
+		} catch {
+			// 本地缓存读取失败，忽略
+		}
 	}
 }
 
