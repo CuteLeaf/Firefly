@@ -32,20 +32,20 @@ export const fontConfig: FontConfig = {
 				"system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
 		},
 
-		// Google Fonts - Zen Maru Gothic
+		// Google Fonts - Zen Maru Gothic (由 Astro Font API 加载，见 astro.config.mjs fonts 配置)
 		"zen-maru-gothic": {
 			id: "zen-maru-gothic",
 			name: "Zen Maru Gothic",
-			src: "https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap",
+			src: "", // Font API 管理，src 留空
 			family: "Zen Maru Gothic",
 			display: "swap" as const,
 		},
 
-		// Google Fonts - Inter
+		// Google Fonts - Inter (由 Astro Font API 加载，见 astro.config.mjs fonts 配置)
 		inter: {
 			id: "inter",
 			name: "Inter",
-			src: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap",
+			src: "", // Font API 管理，src 留空
 			family: "Inter",
 			display: "swap" as const,
 		},
