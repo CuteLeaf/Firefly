@@ -1,23 +1,38 @@
+/** 内置字体提供商名称 */
+export type BuiltinFontProvider =
+	| "google"
+	| "fontsource"
+	| "local"
+	| "bunny"
+	| "fontshare"
+	| "npm";
+
+/**
+ * 自定义字体提供商接口
+ *
+ * 当内置提供商无法满足需求时，可通过实现此接口来创建自定义 provider。
+ * @see https://docs.astro.build/en/reference/font-provider-reference/
+ */
+export interface CustomFontProvider {
+	/** 提供商标识名称 */
+	name: string;
+	/** 可序列化的配置对象，用于标识和缓存 */
+	config?: Record<string, unknown>;
+}
+
 /**
  * 字体定义（Astro Font API 配置项）
  *
  * 适用于 Astro Font API 的字体配置，支持自动下载、缓存和优化加载。
- * 支持的 provider：google, fontsource, local, bunny, fontshare, npm
+ * 支持的 provider：google, fontsource, local, bunny, fontshare, npm 或自定义 provider
  */
 export type FontDefinition = {
 	/** 字体名称 */
 	name: string;
 	/** 对应的 CSS 变量名（如 "--font-inter"） */
 	cssVariable: string;
-	/** 字体提供商（google, fontsource, local, bunny, fontshare, npm） */
-	provider:
-		| "google"
-		| "fontsource"
-		| "local"
-		| "bunny"
-		| "fontshare"
-		| "npm"
-		| Record<string, unknown>;
+	/** 字体提供商（内置名称或自定义 provider 对象） */
+	provider: BuiltinFontProvider | CustomFontProvider;
 	/** 字重列表 */
 	weights?: Array<string | number>;
 	/** 字体样式 */

@@ -21,15 +21,18 @@ const selectedIds: string[] =
 
 // 收集所有需要加载的 CSS 变量名（selected + 各区域字体，去重）
 // "system" 是特殊关键字，不是 CSS 变量，需排除
+// 启用时才收集区域字体，避免 enable=false 时仍加载字体
 const allCssVars = new Set<string>();
-for (const v of selectedIds) {
-	if (v !== "system") allCssVars.add(v);
+if (fontConfig.enable) {
+	for (const v of selectedIds) {
+		if (v !== "system") allCssVars.add(v);
+	}
+	if (fontConfig.bannerTitleFont) allCssVars.add(fontConfig.bannerTitleFont);
+	if (fontConfig.bannerSubtitleFont)
+		allCssVars.add(fontConfig.bannerSubtitleFont);
+	if (fontConfig.navbarTitleFont) allCssVars.add(fontConfig.navbarTitleFont);
+	if (fontConfig.codeFont) allCssVars.add(fontConfig.codeFont);
 }
-if (fontConfig.bannerTitleFont) allCssVars.add(fontConfig.bannerTitleFont);
-if (fontConfig.bannerSubtitleFont)
-	allCssVars.add(fontConfig.bannerSubtitleFont);
-if (fontConfig.navbarTitleFont) allCssVars.add(fontConfig.navbarTitleFont);
-if (fontConfig.codeFont) allCssVars.add(fontConfig.codeFont);
 
 // 生成 body 的 font-family 值
 // 每个字体的 fallback 由其在 fonts 中的 fallbacks 字段控制

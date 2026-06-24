@@ -63,6 +63,10 @@ function getLocalSubsetFonts(): LocalSubsetFont[] {
 			const rawSrc = v.src[0];
 			// 将本地路径（如 "./public/assets/fonts/MyFont.woff2"）转换为访问路径
 			const publicPath = toPublicPath(rawSrc);
+			if (publicPath === null) {
+				console.warn(`   ⚠ Skipping variant with unexpected src path: "${rawSrc}"`);
+				continue;
+			}
 			result.push({
 				id: `${f.name}-${v.weight || "default"}`.toLowerCase().replace(/\s+/g, "-"),
 				family: f.name,
