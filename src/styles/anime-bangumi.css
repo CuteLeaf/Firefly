@@ -1,0 +1,37 @@
+/* 追番页和番组计划的响应式网格列数适配 */
+
+/* 单侧边栏时限制列数（内容区较窄） */
+[data-sidebar-position="left"] .anime-card-grid,
+[data-sidebar-position="right"] .anime-card-grid,
+[data-sidebar-position="left"] .bangumi-masonry,
+[data-sidebar-position="right"] .bangumi-masonry {
+    grid-template-columns: repeat(2, 1fr) !important;
+}
+@media (min-width: 1100px) {
+    [data-sidebar-position="left"] .anime-card-grid,
+    [data-sidebar-position="right"] .anime-card-grid,
+    [data-sidebar-position="left"] .bangumi-masonry,
+    [data-sidebar-position="right"] .bangumi-masonry {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+}
+@media (min-width: 1280px) {
+    [data-sidebar-position="left"] .anime-card-grid,
+    [data-sidebar-position="right"] .anime-card-grid,
+    [data-sidebar-position="left"] .bangumi-masonry,
+    [data-sidebar-position="right"] .bangumi-masonry {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+}
+
+/* 双侧边栏时减少卡片列数（1280px以上才同时显示两侧边栏） */
+[data-sidebar-position="both"] .anime-card-grid,
+[data-sidebar-position="both"] .bangumi-masonry {
+    grid-template-columns: repeat(2, 1fr) !important;
+}
+@media (min-width: 900px) {
+    [data-sidebar-position="both"] .anime-card-grid,
+    [data-sidebar-position="both"] .bangumi-masonry {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+}

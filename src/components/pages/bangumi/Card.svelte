@@ -112,7 +112,7 @@ function handleLoad(e: Event) {
     {/if}
 
     <!-- Gradient overlay + info -->
-    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+    <div class="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent"></div>
     <div class="absolute bottom-0 left-0 right-0 p-3">
       <h3 class="font-bold text-sm text-white line-clamp-2 drop-shadow-lg">{title}</h3>
       {#if year}
@@ -138,13 +138,13 @@ function handleLoad(e: Event) {
 <style>
   .line-clamp-2 {
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
   .line-clamp-1 {
     display: -webkit-box;
-    -webkit-line-clamp: 1;
+    line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }

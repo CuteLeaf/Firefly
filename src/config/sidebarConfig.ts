@@ -31,7 +31,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 	// showTitle 是否显示该组件标题，默认true
 	// position 组件位置：top固定顶部，sticky粘性定位(会跟随页面滚动)
 	// showOnPostPage 是否在文章详情页显示该组件
-	// showOnNonPostPage 是否在非文章详情页显示该组件（除文章详情页外都显示）
+	// hideOnNonPostPage 是否在非文章详情页隐藏该组件（true=仅文章详情页显示）
 	// specificConfig 组件专属配置
 	leftComponents: [
 		{
@@ -153,8 +153,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			position: "sticky",
 			// 是否在文章详情页显示
 			showOnPostPage: true,
-			// 是否在非文章详情页显示
-			showOnNonPostPage: false,
+			// 是否在非文章详情页隐藏
+			hideOnNonPostPage: true,
 		},
 		{
 			// 组件类型：广告栏组件 1

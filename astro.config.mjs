@@ -90,13 +90,6 @@ export default defineConfig({
 		layout: "constrained",
 	},
 
-	experimental: {
-		// Rust 编译器以提升构建性能（实验性），部分平台可能会导致构建失败，可以根据需要启用或禁用
-		rustCompiler: false,
-		// 队列渲染以优化性能（实验性）
-		queuedRendering: { enabled: true },
-	},
-
 	integrations: [
 		swup({
 			theme: false,
@@ -220,6 +213,9 @@ export default defineConfig({
 					return false;
 				}
 				if (pathname === "/gallery/" && !siteConfig.pages.gallery) {
+					return false;
+				}
+				if (pathname === "/anime/" && !siteConfig.pages.anime) {
 					return false;
 				}
 

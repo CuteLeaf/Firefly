@@ -3,9 +3,16 @@ import { Icon } from "astro-icon/components";
 import ImageWrapper from "@/components/common/ImageWrapper.astro";
 import { profileConfig } from "@/config/profileConfig";
 import { url } from "@/utils/url-utils";
+
+interface Props {
+	class?: string;
+	style?: string;
+}
+const { style } = Astro.props;
+const className = Astro.props.class;
 ---
 
-<div class="card-base p-3">
+<div class:list={["card-base", "p-3", className]} style={style}>
   <a
     aria-label="Go to About Page"
     href={url("/about/")}

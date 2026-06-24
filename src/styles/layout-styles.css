@@ -393,6 +393,60 @@ html.is-page-transitioning .banner-home-text-overlay {
     }
 }
 
+/* ===== 壁纸轮播样式（基于 CSS transition） ===== */
+.slide-item {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 2;
+    transition-property: opacity, transform;
+    transition-duration: 1000ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+.slide-item.active {
+    opacity: 1;
+    z-index: 10;
+    pointer-events: auto;
+}
+/* Fade 效果 */
+.effect-fade .slide-item {
+    transition-property: opacity;
+}
+/* Zoom 效果 */
+.effect-zoom .slide-item {
+    transition-property: opacity, transform;
+    transform: scale(1.08);
+}
+.effect-zoom .slide-item.active {
+    transform: scale(1);
+}
+/* Slide 效果 */
+.effect-slide .slide-item {
+    transition-property: opacity, transform;
+    transform: translateX(100%);
+}
+.effect-slide .slide-item.active {
+    transform: translateX(0);
+}
+.effect-slide .slide-item.prev-waiting {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+/* Ken Burns 旋转木马效果 — 纯放大，配合 LQIP 过渡切换 */
+@keyframes kenburns {
+    from { transform: scale(1); }
+    to { transform: scale(1.1) translate(-2%, -1%); }
+}
+.effect-kenburns .slide-item {
+    transition-property: opacity;
+}
+.effect-kenburns .slide-item.active {
+    animation: kenburns var(--carousel-interval, 5000ms) ease-out forwards;
+}
+
 /* 当banner被禁用时的布局样式 */
 .no-banner-layout {
     top: 5.5rem !important;
@@ -706,7 +760,7 @@ html[data-wallpaper-mode="fullscreen"] body:not(.sticky-navbar) #top-row {
 #wallpaper-wrapper.wallpaper-fullscreen .waves {
     position: absolute !important;
     bottom: -1px !important;
-    z-index: 5 !important;
+    z-index: 15 !important;
 }
 
 /* Fullscreen 模式下滚动向下指示器 */

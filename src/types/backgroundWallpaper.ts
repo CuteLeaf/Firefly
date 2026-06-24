@@ -53,6 +53,13 @@ export type BackgroundWallpaperConfig = {
 			height?: string; // 渐变高度，默认 "30vh"
 			switchable?: boolean; // 是否允许用户通过控制面板切换渐变过渡
 		};
+		// 壁纸轮播配置，横幅壁纸和全屏壁纸共享
+		carousel?: {
+			enable: boolean; // 是否启用壁纸轮播
+			interval?: number; // 轮播间隔时间，单位毫秒
+			transitionEffect?: "fade" | "zoom" | "slide" | "kenburns"; // 过渡效果: 'fade' 渐变 | 'zoom' 缩放 | 'slide' 滑动 | 'kenburns' 旋转木马
+			switchable?: boolean; // 是否允许用户通过控制面板切换壁纸轮播
+		};
 	};
 
 	// Banner模式特有配置
@@ -77,11 +84,6 @@ export type BackgroundWallpaperConfig = {
 			| "right center"
 			| "right bottom"
 			| string; // 壁纸位置，支持CSS object-position的所有值，包括百分比和像素值
-		carousel?: {
-			enable: boolean; // 是否启用横幅图片轮播
-			interval?: number; // 轮播间隔时间，单位毫秒
-			switchable?: boolean; // 是否允许用户通过控制面板切换横幅轮播
-		};
 	};
 	// 全屏透明覆盖模式特有配置
 	overlay?: {

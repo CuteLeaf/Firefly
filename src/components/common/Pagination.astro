@@ -83,35 +83,31 @@ const getPageUrl = (p: number) => {
         aria-hidden="true"
       />
     </a>
-    <div
-      class="bg-(--card-bg) flex flex-row rounded-lg items-center text-neutral-700 dark:text-neutral-300 font-bold"
-    >
-      {
-        pages.map((p) => {
-          if (p == HIDDEN)
-            return <Icon is:inline name="material-symbols:more-horiz" class="mx-1" aria-hidden="true" />;
-          if (p == page.currentPage)
-            return (
-              <div
-                class="h-11 w-11 rounded-lg bg-(--primary) flex items-center justify-center
-                        font-bold text-white dark:text-black/70"
-                aria-current="page"
-              >
-                {p}
-              </div>
-            );
+    {
+      pages.map((p) => {
+        if (p == HIDDEN)
+          return <Icon is:inline name="material-symbols:more-horiz" class="w-11 h-11 flex items-center justify-center text-neutral-700 dark:text-neutral-300" aria-hidden="true" />;
+        if (p == page.currentPage)
           return (
-            <a
-              href={url(getPageUrl(p))}
-              aria-label={`${i18n(I18nKey.paginationPage)} ${p}`}
-              class="btn-card w-11 h-11 rounded-lg overflow-hidden active:scale-[0.85]"
+            <div
+              class="h-11 w-11 rounded-lg bg-(--primary) flex items-center justify-center
+                      font-bold text-white dark:text-black/70"
+              aria-current="page"
             >
               {p}
-            </a>
+            </div>
           );
-        })
-      }
-    </div>
+        return (
+          <a
+            href={url(getPageUrl(p))}
+            aria-label={`${i18n(I18nKey.paginationPage)} ${p}`}
+            class="btn-card w-11 h-11 rounded-lg overflow-hidden active:scale-[0.85] text-neutral-700 dark:text-neutral-300"
+          >
+            {p}
+          </a>
+        );
+      })
+    }
     <a
       href={page.url.next || "#"}
       aria-label={i18n(I18nKey.paginationNext)}

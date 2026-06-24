@@ -1559,7 +1559,7 @@ function disableAnimation() {
       isPostPage ? widget.classList.add("hidden") : widget.classList.remove("hidden");
     });
 
-    // 处理 showOnNonPostPage === false 的组件
+    // 处理 hideOnNonPostPage === true 的组件
     document.querySelectorAll(".widget-hide-on-non-post").forEach((widget) => {
       !isPostPage ? widget.classList.add("hidden") : widget.classList.remove("hidden");
     });

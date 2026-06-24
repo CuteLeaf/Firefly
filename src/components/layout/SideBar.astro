@@ -114,8 +114,8 @@ const isComponentInitiallyVisible = (
 		return false;
 	}
 	if (
-		"showOnNonPostPage" in config &&
-		config.showOnNonPostPage === false &&
+		"hideOnNonPostPage" in config &&
+		config.hideOnNonPostPage === true &&
 		!isPostPage
 	) {
 		return false;
@@ -134,7 +134,7 @@ const getComponentProps = (
 		widgetConfig: config,
 	};
 
-	// 添加 showOnPostPage 和 showOnNonPostPage 标记class（仅WidgetComponentConfig有这些属性）
+	// 添加 showOnPostPage 和 hideOnNonPostPage 标记class（仅WidgetComponentConfig有这些属性）
 	// 同时根据当前页面类型在服务端渲染时设置初始 hidden 状态，避免页面加载时闪烁
 	if ("showOnPostPage" in config && config.showOnPostPage === false) {
 		baseProps.class = `${baseProps.class} widget-hide-on-post`;
@@ -142,7 +142,7 @@ const getComponentProps = (
 			baseProps.class = `${baseProps.class} hidden`;
 		}
 	}
-	if ("showOnNonPostPage" in config && config.showOnNonPostPage === false) {
+	if ("hideOnNonPostPage" in config && config.hideOnNonPostPage === true) {
 		baseProps.class = `${baseProps.class} widget-hide-on-non-post`;
 		if (!isPostPage) {
 			baseProps.class = `${baseProps.class} hidden`;

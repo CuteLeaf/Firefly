@@ -108,6 +108,8 @@ export const siteConfig: SiteConfig = {
 		bangumi: true,
 		// 相册页面开关
 		gallery: true,
+		// 追番页面开关
+		anime: true,
 	},
 
 	// 分类导航栏开关，在首页和归档页顶部显示分类快捷导航
@@ -166,13 +168,29 @@ export const siteConfig: SiteConfig = {
 		// dynamic 模式在浏览器中实时请求 API，始终显示最新数据
 		mode: "dynamic",
 		// Bangumi API 地址
-		apiUrl: "https://api.bangumi.one",
+		apiUrl: "https://bgmapi.anibt.net",
 		// 详情页地址
-		subjectBaseUrl: "https://bangumi.one/subject/",
+		subjectBaseUrl: "https://bgmmi.anibt.net/subject/",
 		// 条目类型排序，数组中的类型将按顺序优先展示
 		// 可选值: "anime" | "book" | "music" | "game" | "real" (暂不支持"real"类型)
 		// 未列出的类型将按默认顺序排在后面
 		categoryOrder: ["anime", "book", "music", "game"],
+	},
+
+	// 追番配置（Bilibili + TMDB）
+	anime: {
+		// Bilibili 配置
+		bilibili: {
+			// 你的 Bilibili 用户 UID
+			uid: "38932988",
+		},
+		// TMDB 配置（可选，需要翻墙）
+		// tmdb: {
+		//   // TMDB API 密钥
+		//   apiKey: "your_tmdb_api_key",
+		//   // TMDB 列表 ID
+		//   listId: "your_list_id",
+		// },
 	},
 
 	// 分页配置
@@ -197,7 +215,7 @@ export const siteConfig: SiteConfig = {
 		// 为特定域名的图片添加 referrerpolicy="no-referrer" 属性
 		// 支持通配符 *，例如：["i0.hdslb.com", "*.bilibili.com"]
 		// 可解决指定域名图片加载时的 403 问题（如防盗链图片）
-		noReferrerDomains: [],
+		noReferrerDomains: ["*.hdslb.com", "*.bilibili.com"],
 	},
 
 	// 站点语言，在本配置文件顶部SITE_LANG定义

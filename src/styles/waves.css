@@ -27,7 +27,7 @@ html[data-waves-enabled="true"] #header-waves {
 
 .waves {
     overflow: visible;
-    z-index: 5;
+    z-index: 15;
     transform: translateZ(0);
     will-change: transform;
     contain: layout style;
@@ -183,7 +183,7 @@ html[data-waves-enabled="true"] #wallpaper-gradient {
    3. 渐变容器基础样式
    -------------------------------------------------------------------------- */
 #wallpaper-gradient {
-    z-index: 4;
+    z-index: 12;
     transition: opacity 0.3s ease;
 }
 
