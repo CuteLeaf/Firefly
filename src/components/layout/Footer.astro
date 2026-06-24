@@ -41,13 +41,13 @@ if (footerConfig.enable) {
     <div class="m-0.5 flex gap-2 justify-center flex-wrap">
       &copy; <span id="copyright-year">{currentYear}</span>
       {profileConfig.name}. All Rights Reserved.
-      <span>/</span>
+      <span aria-hidden="true">/</span>
       <a
         class="transition link text-(--primary) font-medium"
         target="_blank"
         href={url("rss.xml")}>RSS</a
       >
-      <span>/</span>
+      <span aria-hidden="true">/</span>
       <a
         class="transition link text-(--primary) font-medium"
         target="_blank"
@@ -61,7 +61,7 @@ if (footerConfig.enable) {
         target="_blank"
         href="https://astro.build">Astro</a
       >
-      <span>&</span>
+      <span aria-hidden="true">&</span>
       <a
         class="transition link text-(--primary) font-medium"
         target="_blank"
