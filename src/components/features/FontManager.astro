@@ -1,5 +1,5 @@
 ---
-import { type CssVariable, Font } from "astro:assets";
+import { Font } from "astro:assets";
 import { fontConfig } from "@/config";
 import { fontApiCssVariables } from "@/constants/font-api";
 
@@ -65,6 +65,14 @@ const fontFamilyStyle =
 		? `font-family: ${[...selectedFonts.map((f) => `"${f.family}"`), ...fallbacks].join(", ")};`
 		: "";
 
+// 辅助函数：解析本地字体的 src/格式/type（@font-face 和 preload 共用）
+const resolveLocalFont = (font: (typeof localFonts)[number]) => {
+	const isSubset = font.subset && !import.meta.env.DEV;
+	const src = isSubset ? `__SUBSET_FONT_${font.id}__` : font.src;
+	const format = isSubset ? "woff2" : font.format || "woff2";
+	return { src, format };
+};
+
 const bannerTitleFontFamily =
 	fontConfig.enable && fontConfig.bannerTitleFont
 		? resolveAreaFontValue(fontConfig.bannerTitleFont)
@@ -84,7 +92,7 @@ const navbarTitleFontFamily =
 	fontConfig.enable &&
 		Object.entries(fontApiCssVariables).map(([fontId, cssVar]) => {
 			const shouldPreload = fontConfig.preload && fontConfig.bannerTitleFont === fontId;
-			return <Font cssVariable={cssVar as CssVariable} preload={shouldPreload || undefined} />;
+			return <Font cssVariable={cssVar} preload={shouldPreload || undefined} />;
 		})
 }
 
@@ -93,21 +101,17 @@ const navbarTitleFontFamily =
 
 <!-- 非 Font API 管理的本地字体文件 -->
 {localFonts.map((font) => {
-	const isSubset = font.subset && !import.meta.env.DEV;
-	const fontSrc = isSubset ? `__SUBSET_FONT_${font.id}__` : font.src;
-	const fontFormat = isSubset ? 'format("woff2")' : font.format ? `format("${font.format}")` : "";
+	const { src, format } = resolveLocalFont(font);
 	return (
-		<style set:html={`@font-face { font-family: "${font.family}"; src: url("${fontSrc}") ${fontFormat};${font.weight ? ` font-weight: ${font.weight};` : ""}${font.style ? ` font-style: ${font.style};` : ""}${font.display ? ` font-display: ${font.display};` : ""}${font.unicodeRange ? ` unicode-range: ${font.unicodeRange};` : ""} }`} />
+		<style set:html={`@font-face { font-family: "${font.family}"; src: url("${src}") format("${format}");${font.weight ? ` font-weight: ${font.weight};` : ""}${font.style ? ` font-style: ${font.style};` : ""}${font.display ? ` font-display: ${font.display};` : ""}${font.unicodeRange ? ` unicode-range: ${font.unicodeRange};` : ""} }`} />
 	);
 })}
 
 <!-- 本地字体预加载（localFonts 已排除外部 URL，无需再过滤） -->
 {
 	fontConfig.enable && fontConfig.preload && localFonts.map((font) => {
-		const isSubset = font.subset && !import.meta.env.DEV;
-		const href = isSubset ? `__SUBSET_FONT_${font.id}__` : font.src;
-		const type = isSubset ? "font/woff2" : `font/${font.format || "woff2"}`;
-		return <link rel="preload" href={href} as="font" type={type} crossorigin />;
+		const { src, format } = resolveLocalFont(font);
+		return <link rel="preload" href={src} as="font" type={`font/${format}`} crossorigin />;
 	})
 }
 
