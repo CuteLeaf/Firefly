@@ -94,7 +94,7 @@ export const fontConfig: FontSelectionConfig = {
 	// 各区域独立字体设置（填写上方 fonts 中的 cssVariable，留空则使用全局 selected 字体）
 	// 例如：bannerTitleFont: "--font-inter", 表示主页横幅主标题使用 Inter 字体
 	// 主页横幅主标题字体
-	bannerTitleFont: "--font-inter",
+	bannerTitleFont: "--font-zen-maru-gothic",
 	// 主页横幅副标题字体
 	bannerSubtitleFont: "--font-inter",
 	// 导航栏标题字体

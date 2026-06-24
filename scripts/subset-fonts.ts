@@ -64,7 +64,10 @@ function getLocalSubsetFonts(): LocalSubsetFont[] {
 			// 将本地路径（如 "./public/assets/fonts/MyFont.woff2"）转换为访问路径
 			const publicPath = toPublicPath(rawSrc);
 			if (publicPath === null) {
-				console.warn(`   ⚠ Skipping variant with unexpected src path: "${rawSrc}"`);
+				console.warn(
+					`   ⚠ Skipping variant with unexpected src path: "${rawSrc}".\n` +
+					`     Expected a path under public/ (e.g. "./public/assets/fonts/MyFont.woff2") or an absolute path (e.g. "/assets/fonts/MyFont.woff2").`
+				);
 				continue;
 			}
 			result.push({

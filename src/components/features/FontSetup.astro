@@ -10,29 +10,21 @@
  */
 import { Font } from "astro:assets";
 import { fontConfig } from "@/config";
+import { collectUsedFontCssVars } from "@/utils/fontHelper";
 
-// 统一解析 selected 为数组
+// 使用共享的工具函数收集所有需要加载的 CSS 变量名（selected + 各区域字体，去重）
+// enable=false 时返回空集，不会加载任何字体
+const allCssVars = fontConfig.enable
+	? collectUsedFontCssVars(fontConfig)
+	: new Set<string>();
+
+// 统一解析 selected 为数组（用于后续 body font-family 和 preload 判断）
 const selectedIds: string[] =
 	fontConfig.enable && fontConfig.selected
 		? Array.isArray(fontConfig.selected)
 			? fontConfig.selected
 			: [fontConfig.selected]
 		: [];
-
-// 收集所有需要加载的 CSS 变量名（selected + 各区域字体，去重）
-// "system" 是特殊关键字，不是 CSS 变量，需排除
-// 启用时才收集区域字体，避免 enable=false 时仍加载字体
-const allCssVars = new Set<string>();
-if (fontConfig.enable) {
-	for (const v of selectedIds) {
-		if (v !== "system") allCssVars.add(v);
-	}
-	if (fontConfig.bannerTitleFont) allCssVars.add(fontConfig.bannerTitleFont);
-	if (fontConfig.bannerSubtitleFont)
-		allCssVars.add(fontConfig.bannerSubtitleFont);
-	if (fontConfig.navbarTitleFont) allCssVars.add(fontConfig.navbarTitleFont);
-	if (fontConfig.codeFont) allCssVars.add(fontConfig.codeFont);
-}
 
 // 生成 body 的 font-family 值
 // 每个字体的 fallback 由其在 fonts 中的 fallbacks 字段控制
