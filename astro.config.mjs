@@ -179,7 +179,7 @@ export default defineConfig({
 				borderRadius: "0.75rem",
 				codeFontSize: "0.875rem",
 				codeFontFamily:
-					"'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+					"var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
 				codeLineHeight: "1.5rem",
 				frames: {},
 				textMarkers: {

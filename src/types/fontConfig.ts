@@ -52,6 +52,8 @@ export type FontSelectionConfig = {
 	bannerTitleFont?: string;
 	bannerSubtitleFont?: string;
 	navbarTitleFont?: string;
+	/** 代码块字体 CSS 变量名（用于代码高亮和等宽字体场景） */
+	codeFont?: string;
 	/**
 	 * 本地字体子集化配置（构建时由 scripts/subset-fonts.ts 处理）
 	 * key 为 fonts 数组中对应的 cssVariable，value 为子集化选项。

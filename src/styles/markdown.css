@@ -53,7 +53,7 @@
     @apply bg-(--inline-code-bg) text-(--inline-code-color) px-1 py-0.5 rounded-md overflow-hidden;
 
     font-family:
-      "JetBrains Mono Variable",
+      var(--font-jetbrains-mono),
       ui-monospace,
       SFMono-Regular,
       Menlo,
