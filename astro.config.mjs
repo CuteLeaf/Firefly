@@ -7,6 +7,7 @@ import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import swup from "@swup/astro";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, fontProviders } from "astro/config";
+import { fontApiCssVariables } from "./src/constants/font-api.ts";
 import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
 import katex from "katex";
@@ -70,21 +71,21 @@ export default defineConfig({
 		{
 			provider: fontProviders.google(),
 			name: "Inter",
-			cssVariable: "--font-inter",
+			cssVariable: fontApiCssVariables.inter,
 			weights: [300, 400, 500, 600, 700],
 			styles: ["normal"],
 		},
 		{
 			provider: fontProviders.google(),
 			name: "Zen Maru Gothic",
-			cssVariable: "--font-zen-maru-gothic",
+			cssVariable: fontApiCssVariables["zen-maru-gothic"],
 			weights: [300, 400, 500, 700, 900],
 			styles: ["normal"],
 		},
 		{
 			provider: fontProviders.local(),
 			name: "JetBrains Mono",
-			cssVariable: "--font-code",
+			cssVariable: fontApiCssVariables["jetbrains-mono"],
 			fallbacks: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
 			options: {
 				variants: [
