@@ -119,14 +119,14 @@ const navbarTitleFontFamily =
 {fontConfig.enable && fontFamilyStyle && (
 	<style set:html={`
 :root {
-	--font-family-custom: ${selectedFonts.filter((f) => f.src).map((f) => `"${f.family}"`).join(", ")};
+	--font-family-custom: ${selectedFonts.map((f) => `"${f.family}"`).join(", ")};
 	--font-family-fallback: ${fallbacks.join(", ")};
 	${bannerTitleFontFamily ? `--font-banner-title: ${bannerTitleFontFamily};` : ""}
 	${bannerSubtitleFontFamily ? `--font-banner-subtitle: ${bannerSubtitleFontFamily};` : ""}
 	${navbarTitleFontFamily ? `--font-navbar-title: ${navbarTitleFontFamily};` : ""}
 }
 body { ${fontFamilyStyle} }
-${selectedFonts.filter((f) => f.src).map((f) => `.font-${f.id}, .font-${f.id} * { font-family: "${f.family}", var(--font-family-fallback) !important; }`).join("\n")}
+${selectedFonts.map((f) => `.font-${f.id}, .font-${f.id} * { font-family: "${f.family}", var(--font-family-fallback) !important; }`).join("\n")}
 `} />
 )}
 
