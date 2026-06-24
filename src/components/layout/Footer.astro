@@ -38,7 +38,7 @@ if (footerConfig.enable) {
     <div class="mb-2">
       {customFooterHtml && <div set:html={customFooterHtml} />}
     </div>
-    <div class="m-0.5 flex gap-2 justify-center">
+    <div class="m-0.5 flex gap-2 justify-center flex-wrap">
       &copy; <span id="copyright-year">{currentYear}</span>
       {profileConfig.name}. All Rights Reserved.
       <span>/</span>
@@ -54,7 +54,7 @@ if (footerConfig.enable) {
         href={url("sitemap-index.xml")}>Sitemap</a
       >
     </div>
-    <div class="m-0.5 flex gap-2 justify-center">
+    <div class="m-0.5 flex gap-2 justify-center flex-wrap">
       <span>Powered by</span>
       <a
         class="transition link text-(--primary) font-medium"
