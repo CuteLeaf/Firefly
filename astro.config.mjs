@@ -6,7 +6,7 @@ import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-s
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import swup from "@swup/astro";
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
 import katex from "katex";
@@ -64,6 +64,39 @@ export default defineConfig({
 		// 全局响应式布局
 		layout: "constrained",
 	},
+
+	// Astro Font API - 自托管字体，自动优化加载性能和隐私
+	fonts: [
+		{
+			provider: fontProviders.google(),
+			name: "Inter",
+			cssVariable: "--font-inter",
+			weights: [300, 400, 500, 600, 700],
+			styles: ["normal"],
+		},
+		{
+			provider: fontProviders.google(),
+			name: "Zen Maru Gothic",
+			cssVariable: "--font-zen-maru-gothic",
+			weights: [300, 400, 500, 700, 900],
+			styles: ["normal"],
+		},
+		{
+			provider: fontProviders.local(),
+			name: "JetBrains Mono",
+			cssVariable: "--font-code",
+			fallbacks: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
+			options: {
+				variants: [
+					{
+						src: ["./node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2"],
+						weight: "100 800",
+						style: "normal",
+					},
+				],
+			},
+		},
+	],
 
 	integrations: [
 		swup({
@@ -147,7 +180,7 @@ export default defineConfig({
 				borderRadius: "0.75rem",
 				codeFontSize: "0.875rem",
 				codeFontFamily:
-					"'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+					"var(--font-code), 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
 				codeLineHeight: "1.5rem",
 				frames: {},
 				textMarkers: {
