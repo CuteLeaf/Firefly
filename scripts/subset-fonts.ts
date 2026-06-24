@@ -8,6 +8,7 @@ import path from "node:path";
 import { glob } from "glob";
 import subsetFont from "subset-font";
 import { fontConfig, fontsList } from "../src/config";
+import { collectUsedFontCssVars, toPublicPath } from "../src/utils/fontHelper";
 
 // ─── 配置 ───────────────────────────────────────────────
 
@@ -37,28 +38,17 @@ function getLocalSubsetFonts(): LocalSubsetFont[] {
 	const subsetEntries = Object.entries(fontConfig.subsetFonts);
 	if (subsetEntries.length === 0) return [];
 
-	// 构建实际使用的字体 CSS 变量集合（与 astro.config.mjs 逻辑一致）
-	const used = new Set<string>();
-	const sel = fontConfig.selected as string | string[];
-	if (Array.isArray(sel)) {
-		for (const v of sel) {
-			if (v !== "system") used.add(v);
-		}
-	} else if (sel !== "system") {
-		used.add(sel);
-	}
-	if (fontConfig.bannerTitleFont) used.add(fontConfig.bannerTitleFont);
-	if (fontConfig.bannerSubtitleFont) used.add(fontConfig.bannerSubtitleFont);
-	if (fontConfig.navbarTitleFont) used.add(fontConfig.navbarTitleFont);
+	// 构建实际使用的字体 CSS 变量集合（与 astro.config.mjs 共享同一逻辑）
+	const used = collectUsedFontCssVars(fontConfig);
 
 	// 建立 cssVariable → fontsList 条目的映射
-	const fontByCssVar = new Map<string, any>();
+	const fontByCssVar = new Map<string, typeof fontsList[number]>();
 	for (const f of fontsList) {
-		if (f.cssVariable) fontByCssVar.set(f.cssVariable as string, f);
+		if (f.cssVariable) fontByCssVar.set(f.cssVariable, f);
 	}
 
 	const result: LocalSubsetFont[] = [];
-	for (const [cssVar, opts] of subsetEntries as [string, { extraChars?: string }][]) {
+	for (const [cssVar, opts] of subsetEntries) {
 		// 跳过未被使用的字体，避免生成无用的子集文件
 		if (!used.has(cssVar)) {
 			console.log(`   ⏭ Skipping '${cssVar}' — not referenced in selected or any font region.`);
@@ -70,9 +60,9 @@ function getLocalSubsetFonts(): LocalSubsetFont[] {
 
 		for (const v of f.options.variants) {
 			if (!v.src?.length) continue;
-			// src 是相对路径如 "./public/assets/fonts/MyFont.woff2"，提取 public/ 后的部分作为访问路径
-			const rawSrc = v.src[0] as string;
-			const publicPath = rawSrc.replace(/^\.?\/?public\//, "/");
+			const rawSrc = v.src[0];
+			// 将本地路径（如 "./public/assets/fonts/MyFont.woff2"）转换为访问路径
+			const publicPath = toPublicPath(rawSrc);
 			result.push({
 				id: `${f.name}-${v.weight || "default"}`.toLowerCase().replace(/\s+/g, "-"),
 				family: f.name,

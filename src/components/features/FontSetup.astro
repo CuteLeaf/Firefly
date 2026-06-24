@@ -87,7 +87,7 @@ const navbarTitleFontVar = fontConfig.enable
       .then(() => {
         document.dispatchEvent(new CustomEvent("fontsLoaded"));
       })
-      .catch((error: Error) => {
+      .catch((error) => {
         console.warn("Font loading failed:", error);
       });
   }

@@ -25,6 +25,7 @@ import remarkDirective from "remark-directive"; /* Handle directives */
 import remarkMath from "remark-math";
 import remarkSectionize from "remark-sectionize";
 import { expressiveCodeConfig, fontConfig, fontsList, plantumlConfig, siteConfig } from "./src/config";
+import { collectUsedFontCssVars } from "./src/utils/fontHelper";
 import I18nKey from "./src/i18n/i18nKey";
 import { i18n } from "./src/i18n/translation";
 import { fontProviders } from "astro/config";
@@ -60,13 +61,10 @@ export default defineConfig({
 
 	// 字体配置 - 只加载实际使用的字体，跳过未引用的以加快构建
 	fonts: (() => {
-		const used = new Set();
-		const sel = fontConfig.selected;
-		if (Array.isArray(sel)) sel.forEach((v) => { if (v !== "system") used.add(v); });
-		else if (sel !== "system") used.add(sel);
-		if (fontConfig.bannerTitleFont) used.add(fontConfig.bannerTitleFont);
-		if (fontConfig.bannerSubtitleFont) used.add(fontConfig.bannerSubtitleFont);
-		if (fontConfig.navbarTitleFont) used.add(fontConfig.navbarTitleFont);
+		// 禁用字体功能时直接返回空数组，跳过 Astro Font API 集成
+		if (!fontConfig.enable) return [];
+
+		const used = collectUsedFontCssVars(fontConfig);
 		return fontsList
 			.filter((f) => used.has(f.cssVariable))
 			.map((f) => {

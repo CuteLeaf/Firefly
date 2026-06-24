@@ -1,3 +1,44 @@
+/**
+ * 字体定义（Astro Font API 配置项）
+ *
+ * 适用于 Astro Font API 的字体配置，支持自动下载、缓存和优化加载。
+ * 支持的 provider：google, fontsource, local, bunny, fontshare, npm
+ */
+export type FontDefinition = {
+	/** 字体名称 */
+	name: string;
+	/** 对应的 CSS 变量名（如 "--font-inter"） */
+	cssVariable: string;
+	/** 字体提供商（google, fontsource, local, bunny, fontshare, npm） */
+	provider:
+		| "google"
+		| "fontsource"
+		| "local"
+		| "bunny"
+		| "fontshare"
+		| "npm"
+		| Record<string, unknown>;
+	/** 字重列表 */
+	weights?: Array<string | number>;
+	/** 字体样式 */
+	styles?: Array<"normal" | "italic" | "oblique">;
+	/** 字符子集 */
+	subsets?: string[];
+	/** 回退字体列表 */
+	fallbacks?: string[];
+	/** 字体显示策略 */
+	display?: "auto" | "optional" | "fallback" | "block" | "swap";
+	/** 本地字体的额外选项（如 variants 定义） */
+	options?: {
+		variants?: Array<{
+			src: string[];
+			weight?: string | number;
+			style?: string;
+		}>;
+		[key: string]: unknown;
+	};
+};
+
 export type FontSelectionConfig = {
 	/** 是否启用自定义字体功能 */
 	enable: boolean;
