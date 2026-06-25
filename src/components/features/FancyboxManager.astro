@@ -102,7 +102,6 @@ import "@/styles/fancybox-custom.css";
   async function preprocessSvgImages() {
     const promises: Promise<void>[] = [];
 
-    // 处理 <img> 元素（文章内图片、封面等）
     document.querySelectorAll<HTMLImageElement>(IMG_SELECTOR).forEach((img) => {
       if (img.dataset.svgFixed) return;
       const src = img.getAttribute("src") || "";
@@ -111,21 +110,26 @@ import "@/styles/fancybox-custom.css";
       const fallbackH = img.naturalHeight || img.clientHeight || 900;
       promises.push(
         getSvgBlobUrl(src, fallbackW, fallbackH).then((blobUrl) => {
-          if (blobUrl) { img.src = blobUrl; img.dataset.svgFixed = "true"; }
+          if (blobUrl) {
+            img.dataset.originalSrc = src;
+            img.src = blobUrl;
+            img.dataset.svgFixed = "true";
+          }
         })
       );
     });
 
-    // 处理 data-fancybox 链接（gallery、moment 等的 data-src/href 指向 SVG）
-    document.querySelectorAll<HTMLElement>(".moment-images a[data-fancybox], [data-fancybox]:not(.moment-images a)").forEach((el) => {
+    const linkSelector = [SVG_SELECTORS[1], SVG_SELECTORS[2]].join(", ");
+    document.querySelectorAll<HTMLElement>(linkSelector).forEach((el) => {
       if (el.dataset.svgFixed) return;
-      const svgSrc = el.getAttribute("data-src") || el.getAttribute("href") || "";
+      const attr = el.hasAttribute("data-src") ? "data-src" : "href";
+      const svgSrc = el.getAttribute(attr) || "";
       if (!isSvgSrc(svgSrc)) return;
       promises.push(
         getSvgBlobUrl(svgSrc, 1600, 900).then((blobUrl) => {
           if (blobUrl) {
-            if (el.hasAttribute("data-src")) el.setAttribute("data-src", blobUrl);
-            else el.setAttribute("href", blobUrl);
+            el.dataset.originalSrc = svgSrc;
+            el.setAttribute(attr, blobUrl);
             el.dataset.svgFixed = "true";
           }
         })
@@ -170,6 +174,16 @@ import "@/styles/fancybox-custom.css";
       Fancybox.close();
       Fancybox.unbind(document.body);
     }
+    // 恢复原始 URL 并清除标记，避免 blob URL 被 revoke 后图片损坏
+    document.querySelectorAll<HTMLElement>("[data-svg-fixed]").forEach((el) => {
+      const original = el.dataset.originalSrc;
+      if (!original) return;
+      if (el instanceof HTMLImageElement) el.src = original;
+      else if (el.hasAttribute("data-src")) el.setAttribute("data-src", original);
+      else if (el.hasAttribute("href")) el.setAttribute("href", original);
+      delete el.dataset.svgFixed;
+      delete el.dataset.originalSrc;
+    });
     revokeAllSvgBlobUrls();
   }
 
