@@ -155,4 +155,4 @@ git push
 ```
 推送之后GitHub Actions会自动构建并部署到GitHub Pages上，这里查看部署进度：
 ![Actions上查看进度](./images/Astro-firefly-push12.avif)
-Actions部署完成可以输入github送的二级域名（用户名.github.io）查看你的网站啦
+Actions部署完成可以输入github送的二级域名（用户名.github.io）查看你的网站啦！
