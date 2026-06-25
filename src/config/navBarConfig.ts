@@ -47,28 +47,9 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		children: [
 			// 相册
 			LinkPresets.Gallery,
-
-			// 追番
-			LinkPresets.Anime,
-
-			// 番组计划
-			LinkPresets.Bangumi,
 		],
 	});
 
-	// 关于及其子菜单
-	links.push({
-		name: "关于",
-		url: "#",
-		icon: "material-symbols:info",
-		children: [
-			// 打赏
-			LinkPresets.Sponsor,
-
-			// 关于页面
-			LinkPresets.About,
-		],
-	});
 
 	// 自定义导航栏链接
 	links.push({
@@ -79,27 +60,21 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		children: [
 			{
 				name: "GitHub",
-				url: "https://github.com/CuteLeaf/Firefly",
+				url: "https://github.com/Eon-02",
 				external: true,
 				icon: "fa7-brands:github",
 			},
 			{
-				name: "Gitee",
-				url: "https://gitee.com/CuteLeaf/Firefly",
+				name: "bilibili",
 				external: true,
-				icon: "fa7-brands:gitee",
+				url: "https://space.bilibili.com/3546845504604892?spm_id_from=333.788.0.0",
+				icon: "fa7-brands:bilibili",
 			},
 			{
-				name: "QQ交流群",
-				url: "https://qm.qq.com/q/ZGsFa8qX2G",
+				name: "QQ",
+				url: "https://wpa.qq.com/msgrd?v=3&uin=3952246969&site=qq&menu=yes",
 				external: true,
 				icon: "fa7-brands:qq",
-			},
-			{
-				name: "Firefly文档",
-				url: "https://docs-firefly.cuteleaf.cn",
-				external: true,
-				icon: "material-symbols:docs",
 			},
 		],
 	});
@@ -151,12 +126,6 @@ export const LinkPresets: Record<string, NavBarLink> = {
 		icon: "material-symbols:group",
 		pageKey: "friends",
 	},
-	Sponsor: {
-		name: "打赏",
-		url: "/sponsor/",
-		icon: "material-symbols:favorite",
-		pageKey: "sponsor",
-	},
 	Guestbook: {
 		name: "留言",
 		url: "/guestbook/",
@@ -168,23 +137,11 @@ export const LinkPresets: Record<string, NavBarLink> = {
 		url: "/about/",
 		icon: "material-symbols:person",
 	},
-	Bangumi: {
-		name: "番组计划",
-		url: "/bangumi/",
-		icon: "material-symbols:movie",
-		pageKey: "bangumi",
-	},
 	Gallery: {
 		name: "相册",
 		url: "/gallery/",
 		icon: "material-symbols:photo-library",
 		pageKey: "gallery",
-	},
-	Anime: {
-		name: "追番",
-		url: "/anime/",
-		icon: "material-symbols:live-tv",
-		pageKey: "anime",
 	},
 };
 
