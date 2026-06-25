@@ -7,15 +7,17 @@ import "@/styles/fancybox-custom.css";
 <script>
   let Fancybox: any;
   const IMG_SELECTOR = ".custom-md img, #post-cover img, .moment-images img";
-  const SVG_SELECTORS = [
-    IMG_SELECTOR,
-    ".moment-images a[data-fancybox]",
-    "[data-fancybox]:not(.moment-images a)",
-  ];
+  const LINK_SELECTOR = ".moment-images a[data-fancybox], [data-fancybox]:not(.moment-images a)";
   const svgBlobUrlCache = new Map<string, string>();
 
   function isSvgSrc(src: string): boolean {
-    return !!src && (src.match(/\.svg($|\?)/i) !== null || src.match(/[?&]f=svg/i) !== null);
+    if (!src) return false;
+    try {
+      const url = new URL(src, location.href);
+      if (url.pathname.toLowerCase().endsWith(".svg")) return true;
+      if (url.searchParams.get("f")?.toLowerCase() === "svg") return true;
+    } catch { return false; }
+    return false;
   }
 
   function revokeAllSvgBlobUrls() {
@@ -119,8 +121,7 @@ import "@/styles/fancybox-custom.css";
       );
     });
 
-    const linkSelector = [SVG_SELECTORS[1], SVG_SELECTORS[2]].join(", ");
-    document.querySelectorAll<HTMLElement>(linkSelector).forEach((el) => {
+    document.querySelectorAll<HTMLElement>(LINK_SELECTOR).forEach((el) => {
       if (el.dataset.svgFixed) return;
       const attr = el.hasAttribute("data-src") ? "data-src" : "href";
       const svgSrc = el.getAttribute(attr) || "";
@@ -140,8 +141,7 @@ import "@/styles/fancybox-custom.css";
   }
 
   async function setup() {
-    const hasElements = SVG_SELECTORS.some(selector => document.querySelector(selector));
-    if (!hasElements) return;
+    if (!document.querySelector(IMG_SELECTOR) && !document.querySelector(LINK_SELECTOR)) return;
 
     if (!Fancybox) {
       const mod = await import("@fancyapps/ui");
@@ -161,12 +161,10 @@ import "@/styles/fancybox-custom.css";
       },
     });
 
-    Fancybox.bind(".moment-images a[data-fancybox]", {
+    Fancybox.bind(LINK_SELECTOR, {
       ...commonOptions,
       source: (el: any) => el.getAttribute("data-src") || el.getAttribute("href"),
     });
-
-    Fancybox.bind("[data-fancybox]:not(.moment-images a)", commonOptions);
   }
 
   function cleanupFancybox() {
