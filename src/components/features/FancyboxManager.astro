@@ -99,24 +99,39 @@ import "@/styles/fancybox-custom.css";
     };
   }
 
-  async function preprocessSvgImages(imgSelector: string) {
+  async function preprocessSvgImages() {
     const promises: Promise<void>[] = [];
-    document.querySelectorAll(imgSelector).forEach((el) => {
-      const img = el as HTMLImageElement;
+
+    // 处理 <img> 元素（文章内图片、封面等）
+    document.querySelectorAll<HTMLImageElement>(IMG_SELECTOR).forEach((img) => {
       if (img.dataset.svgFixed) return;
       const src = img.getAttribute("src") || "";
       if (!isSvgSrc(src)) return;
-      const fallbackW = img.naturalWidth || img.clientWidth || 1100;
-      const fallbackH = img.naturalHeight || img.clientHeight || 650;
+      const fallbackW = img.naturalWidth || img.clientWidth || 1600;
+      const fallbackH = img.naturalHeight || img.clientHeight || 900;
       promises.push(
         getSvgBlobUrl(src, fallbackW, fallbackH).then((blobUrl) => {
+          if (blobUrl) { img.src = blobUrl; img.dataset.svgFixed = "true"; }
+        })
+      );
+    });
+
+    // 处理 data-fancybox 链接（gallery、moment 等的 data-src/href 指向 SVG）
+    document.querySelectorAll<HTMLElement>(".moment-images a[data-fancybox], [data-fancybox]:not(.moment-images a)").forEach((el) => {
+      if (el.dataset.svgFixed) return;
+      const svgSrc = el.getAttribute("data-src") || el.getAttribute("href") || "";
+      if (!isSvgSrc(svgSrc)) return;
+      promises.push(
+        getSvgBlobUrl(svgSrc, 1600, 900).then((blobUrl) => {
           if (blobUrl) {
-            img.src = blobUrl;
-            img.dataset.svgFixed = "true";
+            if (el.hasAttribute("data-src")) el.setAttribute("data-src", blobUrl);
+            else el.setAttribute("href", blobUrl);
+            el.dataset.svgFixed = "true";
           }
         })
       );
     });
+
     await Promise.allSettled(promises);
   }
 
@@ -131,7 +146,7 @@ import "@/styles/fancybox-custom.css";
 
     const commonOptions = getCommonOptions();
 
-    await preprocessSvgImages(IMG_SELECTOR);
+    await preprocessSvgImages();
 
     Fancybox.bind(IMG_SELECTOR, {
       ...commonOptions,
