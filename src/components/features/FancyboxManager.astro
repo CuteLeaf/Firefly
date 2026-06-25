@@ -6,27 +6,42 @@ import "@/styles/fancybox-custom.css";
 
 <script>
   let Fancybox: any;
+  // SVG 缓存：原始 src → 包含 width/height 的 blob URL
+  const svgBlobUrlCache = new Map<string, string>();
 
-  async function setup() {
-    const selectors = [
-      ".custom-md img, #post-cover img, .moment-images img",
-      ".moment-images a[data-fancybox]",
-      "[data-fancybox]:not(.moment-images a)"
-    ];
+  function isSvgSrc(src: string): boolean {
+    return !!src && (src.match(/\.svg($|\?)/i) !== null || src.match(/[?&]f=svg/i) !== null);
+  }
 
-    // 检查页面是否存在需要 Fancybox 的元素
-    const hasElements = selectors.some(selector => document.querySelector(selector));
-
-    if (!hasElements) return;
-
-    // 动态导入资源
-    if (!Fancybox) {
-      const mod = await import("@fancyapps/ui");
-      Fancybox = mod.Fancybox;
+  async function getSvgBlobUrl(src: string): Promise<string> {
+    const cached = svgBlobUrlCache.get(src);
+    if (cached) return cached;
+    const resp = await fetch(src);
+    if (!resp.ok) throw new Error(`fetch failed: ${resp.status}`);
+    let svgText = await resp.text();
+    const match = svgText.match(/<svg([^>]*)>/);
+    if (match) {
+      const attrs = match[1];
+      const hasWidth = /\bwidth\s*=/i.test(attrs);
+      const hasHeight = /\bheight\s*=/i.test(attrs);
+      if (!hasWidth || !hasHeight) {
+        const vbMatch = attrs.match(/viewBox\s*=\s*["']?\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)/i);
+        const w = vbMatch ? vbMatch[3] : "1100";
+        const h = vbMatch ? vbMatch[4] : "650";
+        let newAttrs = attrs;
+        if (!hasWidth) newAttrs += ` width="${w}"`;
+        if (!hasHeight) newAttrs += ` height="${h}"`;
+        svgText = svgText.replace(match[0], `<svg${newAttrs}>`);
+      }
     }
+    const blob = new Blob([svgText], { type: "image/svg+xml" });
+    const blobUrl = URL.createObjectURL(blob);
+    svgBlobUrlCache.set(src, blobUrl);
+    return blobUrl;
+  }
 
-    // 通用配置
-    const commonOptions = {
+  function getCommonOptions() {
+    return {
       Thumbs: {
         autoStart: true,
         showOnStart: "yes",
@@ -68,9 +83,63 @@ import "@/styles/fancybox-custom.css";
       },
       caption: false,
     };
+  }
 
-    // 绑定图片
-    Fancybox.bind(".custom-md img, #post-cover img, .moment-images img", {
+  function setupSvgClickHandlers(imgSelector: string) {
+    document.querySelectorAll(imgSelector).forEach((el) => {
+      const img = el as HTMLImageElement;
+      if (img.dataset.svgBound) return;
+      const src = img.getAttribute("src") || "";
+      if (!isSvgSrc(src)) return;
+      img.dataset.svgBound = "true";
+      img.style.cursor = "zoom-in";
+      // SVG 无固有尺寸，需要先注入 width/height 再交给 Fancybox
+      img.addEventListener("click", async (e) => {
+        if (img.dataset.svgFixed) return;
+        e.preventDefault();
+        e.stopPropagation();
+        try {
+          const blobUrl = await getSvgBlobUrl(src);
+          img.dataset.svgFixed = "true";
+          // 预加载 blob URL，等解码完成后再触发 Fancybox
+          const loader = new Image();
+          loader.onload = () => {
+            img.src = blobUrl;
+            img.click();
+          };
+          loader.onerror = () => {
+            img.src = blobUrl;
+            img.click();
+          };
+          loader.src = blobUrl;
+        } catch { return; }
+      });
+    });
+  }
+
+  async function setup() {
+    const selectors = [
+      ".custom-md img, #post-cover img, .moment-images img",
+      ".moment-images a[data-fancybox]",
+      "[data-fancybox]:not(.moment-images a)"
+    ];
+
+    const hasElements = selectors.some(selector => document.querySelector(selector));
+
+    if (!hasElements) return;
+
+    if (!Fancybox) {
+      const mod = await import("@fancyapps/ui");
+      Fancybox = mod.Fancybox;
+    }
+
+    const commonOptions = getCommonOptions();
+    const imgSelector = ".custom-md img, #post-cover img, .moment-images img";
+
+    // SVG 需预处理尺寸（需在 Fancybox.bind 之前注册）
+    setupSvgClickHandlers(imgSelector);
+
+    Fancybox.bind(imgSelector, {
       ...commonOptions,
       groupAll: true,
       Carousel: {
@@ -79,13 +148,11 @@ import "@/styles/fancybox-custom.css";
       },
     });
 
-    // 绑定链接
     Fancybox.bind(".moment-images a[data-fancybox]", {
       ...commonOptions,
       source: (el: any) => el.getAttribute("data-src") || el.getAttribute("href"),
     });
 
-    // 绑定其他
     Fancybox.bind("[data-fancybox]:not(.moment-images a)", commonOptions);
   }
 
