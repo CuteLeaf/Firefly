@@ -3,7 +3,7 @@ title: Astro框架Firefly主题博客部署到Github Actions方法
 published: 2026-06-21
 pinned: false
 description: Astro框架Firefly主题部署到Github Actions的详细方法，记录自己踩过的坑。
-tags: [Astro, Firefly,Github Actions]
+tags: [Astro,Firefly,Github Actions]
 category: 网上那些事
 draft: false
 image: ./images/Astro-firefly-push.avif
@@ -155,4 +155,4 @@ git push
 ```
 推送之后GitHub Actions会自动构建并部署到GitHub Pages上，这里查看部署进度：
 ![Actions上查看进度](./images/Astro-firefly-push12.avif)
-Actions部署完成可以输入github送的二级域名（用户名.github.io）查看你的网站啦！
+Actions部署完成可以输入github送的二级域名（用户名.github.io）查看你的网站啦
