@@ -18,7 +18,7 @@ image: ./images/Astro-firefly-push.avif
 1.[nodejs](https://nodejs.org/zh-cn)<br>
 2.[Git](https://git-scm.com/)<br>
 *注意*：nodejs有三种安装方法，选择自己会的其中一种安装即可
-![nodejs选择其中一种方法](./images/Astro-firefly-push1.avif)
+![nodejs选其中一种方法](./images/Astro-firefly-push1.avif)
 git安装过程不再展示，一路下一步看到add path记得勾上就行
 
 ### 开始从Firefly的仓库部署到本地
