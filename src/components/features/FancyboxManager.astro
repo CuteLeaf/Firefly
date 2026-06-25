@@ -6,11 +6,15 @@ import "@/styles/fancybox-custom.css";
 
 <script>
   let Fancybox: any;
-  // SVG 缓存：原始 src → 包含 width/height 的 blob URL
   const svgBlobUrlCache = new Map<string, string>();
 
   function isSvgSrc(src: string): boolean {
     return !!src && (src.match(/\.svg($|\?)/i) !== null || src.match(/[?&]f=svg/i) !== null);
+  }
+
+  function revokeAllSvgBlobUrls() {
+    for (const url of svgBlobUrlCache.values()) URL.revokeObjectURL(url);
+    svgBlobUrlCache.clear();
   }
 
   async function getSvgBlobUrl(src: string): Promise<string> {
@@ -18,23 +22,22 @@ import "@/styles/fancybox-custom.css";
     if (cached) return cached;
     const resp = await fetch(src);
     if (!resp.ok) throw new Error(`fetch failed: ${resp.status}`);
-    let svgText = await resp.text();
-    const match = svgText.match(/<svg([^>]*)>/);
-    if (match) {
-      const attrs = match[1];
-      const hasWidth = /\bwidth\s*=/i.test(attrs);
-      const hasHeight = /\bheight\s*=/i.test(attrs);
-      if (!hasWidth || !hasHeight) {
-        const vbMatch = attrs.match(/viewBox\s*=\s*["']?\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)/i);
-        const w = vbMatch ? vbMatch[3] : "1100";
-        const h = vbMatch ? vbMatch[4] : "650";
-        let newAttrs = attrs;
-        if (!hasWidth) newAttrs += ` width="${w}"`;
-        if (!hasHeight) newAttrs += ` height="${h}"`;
-        svgText = svgText.replace(match[0], `<svg${newAttrs}>`);
+    const svgText = await resp.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svgText, "image/svg+xml");
+    const svgEl = doc.querySelector("svg");
+    if (!svgEl) throw new Error("invalid SVG");
+    if (!svgEl.getAttribute("width") || !svgEl.getAttribute("height")) {
+      const vb = svgEl.getAttribute("viewBox");
+      let w = "1100", h = "650";
+      if (vb) {
+        const parts = vb.split(/[\s,]+/);
+        if (parts.length >= 4) { w = parts[2]; h = parts[3]; }
       }
+      if (!svgEl.getAttribute("width")) svgEl.setAttribute("width", w);
+      if (!svgEl.getAttribute("height")) svgEl.setAttribute("height", h);
     }
-    const blob = new Blob([svgText], { type: "image/svg+xml" });
+    const blob = new Blob([new XMLSerializer().serializeToString(svgEl)], { type: "image/svg+xml" });
     const blobUrl = URL.createObjectURL(blob);
     svgBlobUrlCache.set(src, blobUrl);
     return blobUrl;
@@ -161,6 +164,7 @@ import "@/styles/fancybox-custom.css";
       Fancybox.close();
       Fancybox.unbind(document.body);
     }
+    revokeAllSvgBlobUrls();
   }
 
   // 初始化
