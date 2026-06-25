@@ -17,34 +17,35 @@ import "@/styles/fancybox-custom.css";
     svgBlobUrlCache.clear();
   }
 
-  async function getSvgBlobUrl(src: string, fallbackW: number, fallbackH: number): Promise<string> {
+  async function getSvgBlobUrl(src: string, fallbackW: number, fallbackH: number): Promise<string | null> {
     const cached = svgBlobUrlCache.get(src);
     if (cached) return cached;
-    const resp = await fetch(src);
-    if (!resp.ok) throw new Error(`SVG fetch failed (${resp.status}): ${src}`);
-    const svgText = await resp.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(svgText, "image/svg+xml");
-    const parseError = doc.querySelector("parsererror");
-    if (parseError) throw new Error(`SVG parse error: ${src}`);
-    const svgEl = doc.querySelector("svg");
-    if (!svgEl) throw new Error(`No <svg> element found: ${src}`);
-    if (!svgEl.getAttribute("width") || !svgEl.getAttribute("height")) {
-      const vb = svgEl.getAttribute("viewBox");
-      let w = String(fallbackW), h = String(fallbackH);
-      if (vb) {
-        const parts = vb.split(/[\s,]+/);
-        if (parts.length >= 4 && Number(parts[2]) > 0 && Number(parts[3]) > 0) {
-          w = parts[2]; h = parts[3];
+    try {
+      const resp = await fetch(src);
+      if (!resp.ok) return null;
+      const svgText = await resp.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(svgText, "image/svg+xml");
+      if (doc.querySelector("parsererror")) return null;
+      const svgEl = doc.querySelector("svg");
+      if (!svgEl) return null;
+      if (!svgEl.getAttribute("width") || !svgEl.getAttribute("height")) {
+        const vb = svgEl.getAttribute("viewBox");
+        let w = String(fallbackW), h = String(fallbackH);
+        if (vb) {
+          const parts = vb.split(/[\s,]+/);
+          if (parts.length >= 4 && Number(parts[2]) > 0 && Number(parts[3]) > 0) {
+            w = parts[2]; h = parts[3];
+          }
         }
+        if (!svgEl.getAttribute("width")) svgEl.setAttribute("width", w);
+        if (!svgEl.getAttribute("height")) svgEl.setAttribute("height", h);
       }
-      if (!svgEl.getAttribute("width")) svgEl.setAttribute("width", w);
-      if (!svgEl.getAttribute("height")) svgEl.setAttribute("height", h);
-    }
-    const blob = new Blob([new XMLSerializer().serializeToString(svgEl)], { type: "image/svg+xml" });
-    const blobUrl = URL.createObjectURL(blob);
-    svgBlobUrlCache.set(src, blobUrl);
-    return blobUrl;
+      const blob = new Blob([new XMLSerializer().serializeToString(svgEl)], { type: "image/svg+xml" });
+      const blobUrl = URL.createObjectURL(blob);
+      svgBlobUrlCache.set(src, blobUrl);
+      return blobUrl;
+    } catch { return null; }
   }
 
   function getCommonOptions() {
@@ -92,8 +93,6 @@ import "@/styles/fancybox-custom.css";
     };
   }
 
-  // 预处理页面上所有 SVG 图片：注入 width/height 并替换 src 为 blob URL
-  // 需在 Fancybox.bind 之前完成，否则通过缩略图导航时 SVG 无法正常显示
   async function preprocessSvgImages(imgSelector: string) {
     const promises: Promise<void>[] = [];
     document.querySelectorAll(imgSelector).forEach((el) => {
@@ -101,11 +100,15 @@ import "@/styles/fancybox-custom.css";
       if (img.dataset.svgFixed) return;
       const src = img.getAttribute("src") || "";
       if (!isSvgSrc(src)) return;
-      img.dataset.svgFixed = "true";
+      const fallbackW = img.naturalWidth || img.clientWidth || 1100;
+      const fallbackH = img.naturalHeight || img.clientHeight || 650;
       promises.push(
-        getSvgBlobUrl(src, img.clientWidth || 1100, img.clientHeight || 650)
-          .then((blobUrl) => { img.src = blobUrl; })
-          .catch((err) => { console.warn("[Fancybox] SVG preprocess failed:", err); })
+        getSvgBlobUrl(src, fallbackW, fallbackH).then((blobUrl) => {
+          if (blobUrl) {
+            img.src = blobUrl;
+            img.dataset.svgFixed = "true";
+          }
+        })
       );
     });
     await Promise.allSettled(promises);
