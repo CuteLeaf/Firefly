@@ -6,6 +6,12 @@ import "@/styles/fancybox-custom.css";
 
 <script>
   let Fancybox: any;
+  const IMG_SELECTOR = ".custom-md img, #post-cover img, .moment-images img";
+  const SVG_SELECTORS = [
+    IMG_SELECTOR,
+    ".moment-images a[data-fancybox]",
+    "[data-fancybox]:not(.moment-images a)",
+  ];
   const svgBlobUrlCache = new Map<string, string>();
 
   function isSvgSrc(src: string): boolean {
@@ -22,13 +28,13 @@ import "@/styles/fancybox-custom.css";
     if (cached) return cached;
     try {
       const resp = await fetch(src);
-      if (!resp.ok) return null;
+      if (!resp.ok) { console.debug("[Fancybox] SVG fetch failed:", resp.status, src); return null; }
       const svgText = await resp.text();
       const parser = new DOMParser();
       const doc = parser.parseFromString(svgText, "image/svg+xml");
-      if (doc.querySelector("parsererror")) return null;
+      if (doc.querySelector("parsererror")) { console.debug("[Fancybox] SVG parse error:", src); return null; }
       const svgEl = doc.querySelector("svg");
-      if (!svgEl) return null;
+      if (!svgEl) { console.debug("[Fancybox] No <svg> element:", src); return null; }
       if (!svgEl.getAttribute("width") || !svgEl.getAttribute("height")) {
         const vb = svgEl.getAttribute("viewBox");
         let w = String(fallbackW), h = String(fallbackH);
@@ -45,7 +51,7 @@ import "@/styles/fancybox-custom.css";
       const blobUrl = URL.createObjectURL(blob);
       svgBlobUrlCache.set(src, blobUrl);
       return blobUrl;
-    } catch { return null; }
+    } catch (err) { console.debug("[Fancybox] SVG preprocess error:", src, err); return null; }
   }
 
   function getCommonOptions() {
@@ -115,14 +121,7 @@ import "@/styles/fancybox-custom.css";
   }
 
   async function setup() {
-    const selectors = [
-      ".custom-md img, #post-cover img, .moment-images img",
-      ".moment-images a[data-fancybox]",
-      "[data-fancybox]:not(.moment-images a)"
-    ];
-
-    const hasElements = selectors.some(selector => document.querySelector(selector));
-
+    const hasElements = SVG_SELECTORS.some(selector => document.querySelector(selector));
     if (!hasElements) return;
 
     if (!Fancybox) {
@@ -131,12 +130,10 @@ import "@/styles/fancybox-custom.css";
     }
 
     const commonOptions = getCommonOptions();
-    const imgSelector = ".custom-md img, #post-cover img, .moment-images img";
 
-    // SVG 需预处理尺寸（需在 Fancybox.bind 之前完成）
-    await preprocessSvgImages(imgSelector);
+    await preprocessSvgImages(IMG_SELECTOR);
 
-    Fancybox.bind(imgSelector, {
+    Fancybox.bind(IMG_SELECTOR, {
       ...commonOptions,
       groupAll: true,
       Carousel: {
