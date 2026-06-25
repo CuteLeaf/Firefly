@@ -92,32 +92,23 @@ import "@/styles/fancybox-custom.css";
     };
   }
 
-  function setupSvgClickHandlers(imgSelector: string) {
+  // 预处理页面上所有 SVG 图片：注入 width/height 并替换 src 为 blob URL
+  // 需在 Fancybox.bind 之前完成，否则通过缩略图导航时 SVG 无法正常显示
+  async function preprocessSvgImages(imgSelector: string) {
+    const promises: Promise<void>[] = [];
     document.querySelectorAll(imgSelector).forEach((el) => {
       const img = el as HTMLImageElement;
-      if (img.dataset.svgBound) return;
+      if (img.dataset.svgFixed) return;
       const src = img.getAttribute("src") || "";
       if (!isSvgSrc(src)) return;
-      img.dataset.svgBound = "true";
-      img.style.cursor = "zoom-in";
-      img.addEventListener("click", async (e) => {
-        if (img.dataset.svgFixed) return;
-        e.preventDefault();
-        e.stopPropagation();
-        try {
-          const blobUrl = await getSvgBlobUrl(src, img.clientWidth || 1100, img.clientHeight || 650);
-          img.dataset.svgFixed = "true";
-          const loader = new Image();
-          loader.onload = () => { img.src = blobUrl; img.click(); };
-          loader.onerror = () => { img.dataset.svgFixed = ""; img.click(); };
-          loader.src = blobUrl;
-        } catch (err) {
-          console.warn("[Fancybox] SVG preprocessing failed, falling back to default:", err);
-          img.dataset.svgFixed = "";
-          img.click();
-        }
-      });
+      img.dataset.svgFixed = "true";
+      promises.push(
+        getSvgBlobUrl(src, img.clientWidth || 1100, img.clientHeight || 650)
+          .then((blobUrl) => { img.src = blobUrl; })
+          .catch((err) => { console.warn("[Fancybox] SVG preprocess failed:", err); })
+      );
     });
+    await Promise.allSettled(promises);
   }
 
   async function setup() {
@@ -139,8 +130,8 @@ import "@/styles/fancybox-custom.css";
     const commonOptions = getCommonOptions();
     const imgSelector = ".custom-md img, #post-cover img, .moment-images img";
 
-    // SVG 需预处理尺寸（需在 Fancybox.bind 之前注册）
-    setupSvgClickHandlers(imgSelector);
+    // SVG 需预处理尺寸（需在 Fancybox.bind 之前完成）
+    await preprocessSvgImages(imgSelector);
 
     Fancybox.bind(imgSelector, {
       ...commonOptions,
