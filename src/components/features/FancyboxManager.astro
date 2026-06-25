@@ -108,17 +108,13 @@ import "@/styles/fancybox-custom.css";
           const blobUrl = await getSvgBlobUrl(src, img.clientWidth || 1100, img.clientHeight || 650);
           img.dataset.svgFixed = "true";
           const loader = new Image();
-          const openFancybox = () => {
-            img.src = blobUrl;
-            Fancybox.fromNodes([img]);
-          };
-          loader.onload = openFancybox;
-          loader.onerror = openFancybox;
+          loader.onload = () => { img.src = blobUrl; img.click(); };
+          loader.onerror = () => { img.dataset.svgFixed = ""; img.click(); };
           loader.src = blobUrl;
         } catch (err) {
           console.warn("[Fancybox] SVG preprocessing failed, falling back to default:", err);
-          img.dataset.svgFixed = "true";
-          Fancybox.fromNodes([img]);
+          img.dataset.svgFixed = "";
+          img.click();
         }
       });
     });
