@@ -8,6 +8,7 @@ import { licenseConfig, siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import type { WidgetComponentConfig } from "@/types/config";
+import { detectBuildPlatform } from "@/utils/build-platform";
 import { formatDateI18nWithTime } from "@/utils/date-utils";
 
 interface Props {
@@ -56,11 +57,13 @@ const buildTime = formatDateI18nWithTime(new Date());
 // 构建平台检测（使用 ci-info 自动识别 CI 环境）
 const unknownBuildPlatform =
 	widgetConfig?.specificConfig?.siteInfo?.unknownBuildPlatform || "Unknown CI";
-const buildPlatform = ci.isCI
-	? ci.name || unknownBuildPlatform
-	: import.meta.env.DEV
-		? "Local Dev"
-		: "Local";
+const buildPlatform = detectBuildPlatform({
+	env: process.env,
+	isCI: ci.isCI,
+	ciName: ci.name,
+	isDev: import.meta.env.DEV,
+	unknownBuildPlatform,
+});
 
 // 系统信息（平台 + 架构）
 const platformMap: Record<string, string> = {
