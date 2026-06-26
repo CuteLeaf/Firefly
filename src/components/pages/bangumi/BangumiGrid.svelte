@@ -205,7 +205,7 @@ onMount(async () => {
     {/each}
   </div>
   <!-- 卡片网格骨架 -->
-  <div class="bangumi-masonry" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+  <div class="bangumi-masonry grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
     {#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as _}
       <div class="rounded-xl overflow-hidden">
         <div class="aspect-2/3 bg-(--btn-regular-bg) animate-pulse"></div>
@@ -234,7 +234,7 @@ onMount(async () => {
       sectionId={tab.id}
       items={bangumiData[tab.id] || []}
       isActive={tab.id === activeTab}
-      itemsPerPage={12}
+      itemsPerPage={24}
       {subjectBaseUrl}
     />
   {/each}

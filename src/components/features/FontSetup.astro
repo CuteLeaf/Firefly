@@ -1,0 +1,90 @@
+---
+/**
+ * FontSetup.astro
+ *
+ * 使用 Astro Font API（<Font /> 组件）统一管理字体加载。
+ * 字体定义在 fontConfig.ts 的 fonts 数组中配置，
+ * 本组件负责渲染 <Font /> 标签并设置 body 字体和区域覆盖 CSS 变量。
+ *
+ * 字体的 fallback 由各字体定义中的 fallbacks 字段控制（Astro Font API 处理），
+ */
+import { Font } from "astro:assets";
+import { fontConfig } from "@/config";
+import { collectUsedFontCssVars } from "@/utils/fontHelper";
+
+// 使用共享的工具函数收集所有需要加载的 CSS 变量名（selected + 各区域字体，去重）
+// enable=false 时返回空集，不会加载任何字体
+const allCssVars = fontConfig.enable
+	? collectUsedFontCssVars(fontConfig)
+	: new Set<string>();
+
+// 统一解析 selected 为数组（用于后续 body font-family 和 preload 判断）
+const selectedIds: string[] =
+	fontConfig.enable && fontConfig.selected
+		? Array.isArray(fontConfig.selected)
+			? fontConfig.selected
+			: [fontConfig.selected]
+		: [];
+
+// 生成 body 的 font-family 值
+// 每个字体的 fallback 由其在 fonts 中的 fallbacks 字段控制
+// 这里只拼接 CSS 变量引用，末尾加系统字体作为最终保底
+const SYSTEM_FONT_STACK =
+	"system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif";
+const selectedFontVars = selectedIds.filter((v) => v !== "system");
+const bodyFontFamily =
+	selectedFontVars.length > 0
+		? [...selectedFontVars.map((v) => `var(${v})`), SYSTEM_FONT_STACK].join(
+				", ",
+			)
+		: SYSTEM_FONT_STACK;
+
+// 各区域字体 CSS 变量值
+const bannerTitleFontVar = fontConfig.enable
+	? fontConfig.bannerTitleFont || ""
+	: "";
+const bannerSubtitleFontVar = fontConfig.enable
+	? fontConfig.bannerSubtitleFont || ""
+	: "";
+const navbarTitleFontVar = fontConfig.enable
+	? fontConfig.navbarTitleFont || ""
+	: "";
+---
+
+<!-- Astro Font API: 自动下载、缓存并生成优化的 @font-face -->
+{Array.from(allCssVars).map((cssVar) => (
+  <Font
+    cssVariable={cssVar as any}
+    preload={selectedFontVars.includes(cssVar)}
+  />
+))}
+
+<!-- 区域字体 CSS 变量 + body 字体 -->
+{fontConfig.enable && (bannerTitleFontVar || bannerSubtitleFontVar || navbarTitleFontVar || selectedFontVars.length > 0) && (
+  <style
+    set:html={`
+    ${bannerTitleFontVar || bannerSubtitleFontVar || navbarTitleFontVar ? `:root {
+      ${bannerTitleFontVar ? `--font-banner-title: var(${bannerTitleFontVar}, inherit);` : ""}
+      ${bannerSubtitleFontVar ? `--font-banner-subtitle: var(${bannerSubtitleFontVar}, inherit);` : ""}
+      ${navbarTitleFontVar ? `--font-navbar-title: var(${navbarTitleFontVar}, inherit);` : ""}
+    }` : ""}
+
+    body {
+      font-family: ${bodyFontFamily};
+    }
+  `}
+  />
+)}
+
+<script>
+  // 字体加载完成事件
+  if (document.fonts && typeof document.fonts.ready !== "undefined") {
+    document.fonts.ready
+      .then(() => {
+        document.dispatchEvent(new CustomEvent("fontsLoaded"));
+      })
+      .catch((error) => {
+        console.warn("Font loading failed:", error);
+      });
+  }
+</script>

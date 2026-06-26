@@ -96,7 +96,7 @@ const postUrlPrefix = url("/posts/");
     {showHeatmap && (
     <div id="heatmap-container" class="mb-2" style="display: none;">
       <div class="heatmap-months grid gap-0.5 mb-1" id="heatmap-months" style="grid-template-columns: repeat(12, 1fr);"></div>
-      <div class="heatmap-grid grid gap-0.5" id="heatmap-grid" style="grid-template-columns: repeat(12, 1fr); grid-template-rows: repeat(4, 1fr);"></div>
+      <div class="heatmap-grid grid" id="heatmap-grid" style="grid-template-columns: repeat(12, 1fr); grid-template-rows: repeat(4, 1fr); row-gap: 0.125rem;"></div>
       {/* <div class="border-b border-neutral-200 dark:border-neutral-700 mt-2"></div> */}
     </div>
     )}
@@ -205,7 +205,7 @@ const postUrlPrefix = url("/posts/");
           .replace('{month}', month + 1)
           .replace('{week}', week + 1)
           .replace('{count}', count);
-        cellsHtml += `<div class="heatmap-cell rounded-sm aspect-square" style="${bgStyle}" title="${tooltip}" data-month="${month}"></div>`;
+        cellsHtml += `<div class="heatmap-cell rounded-sm" style="${bgStyle}" data-tooltip="${tooltip}" data-month="${month}"></div>`;
       }
     }
     gridEl.innerHTML = cellsHtml;
@@ -217,6 +217,41 @@ const postUrlPrefix = url("/posts/");
         displayMonth = m;
         currentView = 'day';
         renderCalendar();
+      });
+    });
+
+    // 热力图提示框 (fixed 定位，不被父容器裁剪)
+    let tooltipEl = document.getElementById('heatmap-tooltip');
+    if (!tooltipEl) {
+      tooltipEl = document.createElement('div');
+      tooltipEl.id = 'heatmap-tooltip';
+      Object.assign(tooltipEl.style, {
+        position: 'fixed',
+        padding: '4px 8px',
+        borderRadius: '6px',
+        fontSize: '0.75rem',
+        lineHeight: '1.2',
+        background: 'rgba(0,0,0,0.8)',
+        color: '#fff',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+        pointerEvents: 'none',
+        opacity: '0',
+        transition: 'opacity 0.15s ease',
+        zIndex: '9999',
+        whiteSpace: 'nowrap',
+      });
+      document.body.appendChild(tooltipEl);
+    }
+    gridEl.querySelectorAll('.heatmap-cell[data-tooltip]').forEach(cell => {
+      cell.addEventListener('mouseenter', (e) => {
+        tooltipEl.textContent = cell.getAttribute('data-tooltip');
+        tooltipEl.style.opacity = '1';
+        const rect = cell.getBoundingClientRect();
+        tooltipEl.style.left = rect.left + rect.width / 2 - tooltipEl.offsetWidth / 2 + 'px';
+        tooltipEl.style.top = rect.top - tooltipEl.offsetHeight - 6 + 'px';
+      });
+      cell.addEventListener('mouseleave', () => {
+        tooltipEl.style.opacity = '0';
       });
     });
   }
@@ -598,5 +633,12 @@ const postUrlPrefix = url("/posts/");
   :global(.heatmap-cell) {
     cursor: pointer;
     min-width: 0;
+    width: 85%;
+    aspect-ratio: 1;
+    margin: auto;
+    transition: box-shadow 0.15s ease;
+  }
+  :global(.heatmap-cell:hover) {
+    box-shadow: 0 0 1px 1.5px var(--primary, oklch(0.55 0.15 250));
   }
 </style>

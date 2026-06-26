@@ -40,6 +40,7 @@
     @apply navbar-surface-transition;
 }
 
+
 /* 通用滚动阴影：用于提升导航栏与页面内容的分层感 */
 #navbar.navbar-sticky-shadow>div {
     box-shadow: var(--shadow-navbar) !important;
@@ -218,6 +219,25 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scro
     }
 }
 
+/* ============================================
+ * 移动端去掉底部圆角
+ * ============================================ */
+@media (max-width: 767px) {
+    #navbar>div {
+        border-radius: 0 !important;
+    }
+
+    /* 覆盖 banner 模式 semi / semifull 下的圆角 */
+    #wallpaper-wrapper~* #navbar[data-transparent-mode="semi"][data-is-home="true"]>div,
+    body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semi"][data-is-home="true"]>div,
+    #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"][data-is-home="true"]>div,
+    body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"]>div,
+    #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled>div,
+    body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled>div {
+        border-radius: 0 !important;
+    }
+}
+
 
 /* ============================================
  * 关闭毛玻璃模糊效果 - Banner模式
@@ -279,18 +299,15 @@ body.wallpaper-transparent .float-panel {
  * 确保在开启全宽模式时覆盖所有圆角和宽度限制
  * 针对所有模式（Banner模式、壁纸模式、透明模式）统一去除圆角
  * 使用高优先级选择器确保覆盖原主题样式
- * 仅在桌面端 (min-width: 1024px) 生效，移动端保留圆角
  * ============================================ */
-@media (min-width: 1024px) {
-    #navbar-wrapper #navbar[data-full-width="true"] > div,
-    body:has(#wallpaper-wrapper) #navbar-wrapper #navbar[data-full-width="true"] > div,
-    body.wallpaper-transparent #navbar-wrapper #navbar[data-full-width="true"] > div,
-    #navbar-wrapper #navbar[data-full-width="true"].scrolled > div {
-        border-radius: 0 !important;
-        width: 100% !important;
-        max-width: none !important;
-        margin: 0 !important;
-    }
+#navbar-wrapper #navbar[data-full-width="true"] > div,
+body:has(#wallpaper-wrapper) #navbar-wrapper #navbar[data-full-width="true"] > div,
+body.wallpaper-transparent #navbar-wrapper #navbar[data-full-width="true"] > div,
+#navbar-wrapper #navbar[data-full-width="true"].scrolled > div {
+    border-radius: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
 }
 
 /* ============================================

@@ -6,27 +6,58 @@ import "@/styles/fancybox-custom.css";
 
 <script>
   let Fancybox: any;
+  const IMG_SELECTOR = ".custom-md img, #post-cover img, .moment-images img";
+  const LINK_SELECTOR = ".moment-images a[data-fancybox], [data-fancybox]:not(.moment-images a)";
+  const svgBlobUrlCache = new Map<string, string>();
 
-  async function setup() {
-    const selectors = [
-      ".custom-md img, #post-cover img, .moment-images img",
-      ".moment-images a[data-fancybox]",
-      "[data-fancybox]:not(.moment-images a)"
-    ];
+  function isSvgSrc(src: string): boolean {
+    if (!src) return false;
+    try {
+      const url = new URL(src, location.href);
+      if (url.pathname.toLowerCase().endsWith(".svg")) return true;
+      if (url.searchParams.get("f")?.toLowerCase() === "svg") return true;
+    } catch { return false; }
+    return false;
+  }
 
-    // 检查页面是否存在需要 Fancybox 的元素
-    const hasElements = selectors.some(selector => document.querySelector(selector));
+  function revokeAllSvgBlobUrls() {
+    for (const url of svgBlobUrlCache.values()) URL.revokeObjectURL(url);
+    svgBlobUrlCache.clear();
+  }
 
-    if (!hasElements) return;
+  async function getSvgBlobUrl(src: string, fallbackW: number, fallbackH: number): Promise<string | null> {
+    const cached = svgBlobUrlCache.get(src);
+    if (cached) return cached;
+    try {
+      const resp = await fetch(src);
+      if (!resp.ok) { console.debug("[Fancybox] SVG fetch failed:", resp.status, src); return null; }
+      const svgText = await resp.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(svgText, "image/svg+xml");
+      if (doc.querySelector("parsererror")) { console.debug("[Fancybox] SVG parse error:", src); return null; }
+      const svgEl = doc.querySelector("svg");
+      if (!svgEl) { console.debug("[Fancybox] No <svg> element:", src); return null; }
+      if (!svgEl.getAttribute("width") || !svgEl.getAttribute("height")) {
+        const vb = svgEl.getAttribute("viewBox");
+        let w = String(fallbackW), h = String(fallbackH);
+        if (vb) {
+          const parts = vb.split(/[\s,]+/);
+          if (parts.length >= 4 && Number(parts[2]) > 0 && Number(parts[3]) > 0) {
+            w = parts[2]; h = parts[3];
+          }
+        }
+        if (!svgEl.getAttribute("width")) svgEl.setAttribute("width", w);
+        if (!svgEl.getAttribute("height")) svgEl.setAttribute("height", h);
+      }
+      const blob = new Blob([new XMLSerializer().serializeToString(svgEl)], { type: "image/svg+xml" });
+      const blobUrl = URL.createObjectURL(blob);
+      svgBlobUrlCache.set(src, blobUrl);
+      return blobUrl;
+    } catch (err) { console.debug("[Fancybox] SVG preprocess error:", src, err); return null; }
+  }
 
-    // 动态导入资源
-    if (!Fancybox) {
-      const mod = await import("@fancyapps/ui");
-      Fancybox = mod.Fancybox;
-    }
-
-    // 通用配置
-    const commonOptions = {
+  function getCommonOptions() {
+    return {
       Thumbs: {
         autoStart: true,
         showOnStart: "yes",
@@ -68,9 +99,60 @@ import "@/styles/fancybox-custom.css";
       },
       caption: false,
     };
+  }
 
-    // 绑定图片
-    Fancybox.bind(".custom-md img, #post-cover img, .moment-images img", {
+  async function preprocessSvgImages() {
+    const promises: Promise<void>[] = [];
+
+    document.querySelectorAll<HTMLImageElement>(IMG_SELECTOR).forEach((img) => {
+      if (img.dataset.svgFixed) return;
+      const src = img.getAttribute("src") || "";
+      if (!isSvgSrc(src)) return;
+      const fallbackW = img.naturalWidth || img.clientWidth || 1600;
+      const fallbackH = img.naturalHeight || img.clientHeight || 900;
+      promises.push(
+        getSvgBlobUrl(src, fallbackW, fallbackH).then((blobUrl) => {
+          if (blobUrl) {
+            img.dataset.originalSrc = src;
+            img.src = blobUrl;
+            img.dataset.svgFixed = "true";
+          }
+        })
+      );
+    });
+
+    document.querySelectorAll<HTMLElement>(LINK_SELECTOR).forEach((el) => {
+      if (el.dataset.svgFixed) return;
+      const attr = el.hasAttribute("data-src") ? "data-src" : "href";
+      const svgSrc = el.getAttribute(attr) || "";
+      if (!isSvgSrc(svgSrc)) return;
+      promises.push(
+        getSvgBlobUrl(svgSrc, 1600, 900).then((blobUrl) => {
+          if (blobUrl) {
+            el.dataset.originalSrc = svgSrc;
+            el.setAttribute(attr, blobUrl);
+            el.dataset.svgFixed = "true";
+          }
+        })
+      );
+    });
+
+    await Promise.allSettled(promises);
+  }
+
+  async function setup() {
+    if (!document.querySelector(IMG_SELECTOR) && !document.querySelector(LINK_SELECTOR)) return;
+
+    if (!Fancybox) {
+      const mod = await import("@fancyapps/ui");
+      Fancybox = mod.Fancybox;
+    }
+
+    const commonOptions = getCommonOptions();
+
+    await preprocessSvgImages();
+
+    Fancybox.bind(IMG_SELECTOR, {
       ...commonOptions,
       groupAll: true,
       Carousel: {
@@ -79,14 +161,10 @@ import "@/styles/fancybox-custom.css";
       },
     });
 
-    // 绑定链接
-    Fancybox.bind(".moment-images a[data-fancybox]", {
+    Fancybox.bind(LINK_SELECTOR, {
       ...commonOptions,
       source: (el: any) => el.getAttribute("data-src") || el.getAttribute("href"),
     });
-
-    // 绑定其他
-    Fancybox.bind("[data-fancybox]:not(.moment-images a)", commonOptions);
   }
 
   function cleanupFancybox() {
@@ -94,6 +172,17 @@ import "@/styles/fancybox-custom.css";
       Fancybox.close();
       Fancybox.unbind(document.body);
     }
+    // 恢复原始 URL 并清除标记，避免 blob URL 被 revoke 后图片损坏
+    document.querySelectorAll<HTMLElement>("[data-svg-fixed]").forEach((el) => {
+      const original = el.dataset.originalSrc;
+      if (!original) return;
+      if (el instanceof HTMLImageElement) el.src = original;
+      else if (el.hasAttribute("data-src")) el.setAttribute("data-src", original);
+      else if (el.hasAttribute("href")) el.setAttribute("href", original);
+      delete el.dataset.svgFixed;
+      delete el.dataset.originalSrc;
+    });
+    revokeAllSvgBlobUrls();
   }
 
   // 初始化

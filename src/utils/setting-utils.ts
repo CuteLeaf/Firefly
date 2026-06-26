@@ -704,7 +704,7 @@ function adjustMainContentPosition(
 		case "banner": {
 			// Banner模式：主内容在banner下方
 			const isHome = checkIsHomePage(window.location.pathname);
-			const bannerTargetTop = "calc(var(--banner-height) - 3rem)";
+			const bannerTargetTop = "calc(var(--banner-height) - 3.5rem)";
 
 			// 禁用 CSS transition，防止整个定位过程中的值变化触发过渡动画
 			mainContent.style.setProperty("transition", "none", "important");
@@ -1185,7 +1185,7 @@ export function getDefaultBannerTitleEnabled(): boolean {
 }
 
 export function getDefaultBannerCarouselEnabled(): boolean {
-	return backgroundWallpaper.banner?.carousel?.enable ?? false;
+	return backgroundWallpaper.common?.carousel?.enable ?? false;
 }
 
 export function getStoredBannerTitleEnabled(): boolean {
@@ -1204,7 +1204,7 @@ export function getStoredBannerTitleEnabled(): boolean {
 
 export function getStoredBannerCarouselEnabled(): boolean {
 	const isSwitchable =
-		backgroundWallpaper.banner?.carousel?.switchable ?? false;
+		backgroundWallpaper.common?.carousel?.switchable ?? false;
 	if (!isSwitchable) {
 		return getDefaultBannerCarouselEnabled();
 	}
@@ -1235,7 +1235,7 @@ export function setBannerTitleEnabled(enabled: boolean): void {
 export function setBannerCarouselEnabled(enabled: boolean): void {
 	const safeEnabled = !!enabled;
 	const isSwitchable =
-		backgroundWallpaper.banner?.carousel?.switchable ?? false;
+		backgroundWallpaper.common?.carousel?.switchable ?? false;
 	if (
 		isSwitchable &&
 		typeof localStorage !== "undefined" &&

@@ -38,27 +38,30 @@ if (footerConfig.enable) {
     <div class="mb-2">
       {customFooterHtml && <div set:html={customFooterHtml} />}
     </div>
-    <div class="m-0.5">
+    <div class="m-0.5 flex gap-2 justify-center flex-wrap">
       &copy; <span id="copyright-year">{currentYear}</span>
-      {profileConfig.name}. All Rights Reserved. /
+      {profileConfig.name}. All Rights Reserved.
+      <span aria-hidden="true">/</span>
       <a
         class="transition link text-(--primary) font-medium"
         target="_blank"
         href={url("rss.xml")}>RSS</a
-      > /
+      >
+      <span aria-hidden="true">/</span>
       <a
         class="transition link text-(--primary) font-medium"
         target="_blank"
         href={url("sitemap-index.xml")}>Sitemap</a
       >
     </div>
-    <div class="m-0.5">
-      Powered by
+    <div class="m-0.5 flex gap-2 justify-center flex-wrap">
+      <span>Powered by</span>
       <a
         class="transition link text-(--primary) font-medium"
         target="_blank"
         href="https://astro.build">Astro</a
-      > &
+      >
+      <span aria-hidden="true">&</span>
       <a
         class="transition link text-(--primary) font-medium"
         target="_blank"

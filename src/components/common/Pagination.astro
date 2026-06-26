@@ -53,43 +53,74 @@ const getPageUrl = (p: number) => {
 };
 ---
 
-<div class:list={[className, "flex flex-col gap-4 items-center"]} style={style}>
-  <!-- 分页信息 - 已禁用 -->
-  <!--
-  {
-    page.lastPage > 1 && (
-      <div class="text-sm text-(--text-secondary) text-center">
-        第 {page.currentPage} 页，共 {page.lastPage} 页
-      </div>
-    )
-  }
-  -->
-
+<div class:list={[className, "pagination-wrapper flex flex-col gap-4 items-center"]} style={style}>
   <!-- 分页控件 -->
   <div class="flex flex-row gap-3 justify-center" role="navigation" aria-label={i18n(I18nKey.postList)}>
-    <a
-      href={page.url.prev || "#"}
-      aria-label={i18n(I18nKey.paginationPrev)}
-      aria-disabled={page.url.prev === undefined ? "true" : "false"}
-      tabindex={page.url.prev === undefined ? "-1" : "0"}
-      class:list={[
-        "btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11",
-        { disabled: page.url.prev == undefined },
-      ]}
-    >
-      <Icon is:inline
-        name="material-symbols:chevron-left-rounded"
-        class="text-[1.75rem]"
-        aria-hidden="true"
-      />
-    </a>
-    <div
-      class="bg-(--card-bg) flex flex-row rounded-lg items-center text-neutral-700 dark:text-neutral-300 font-bold"
-    >
+    <!-- 移动端简化版分页 -->
+    <div class="mobile-pagination flex items-center gap-3">
+      <a
+        href={page.url.prev || "#"}
+        aria-label={i18n(I18nKey.paginationPrev)}
+        aria-disabled={page.url.prev === undefined ? "true" : "false"}
+        tabindex={page.url.prev === undefined ? "-1" : "0"}
+        class:list={[
+          "btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11",
+          { disabled: page.url.prev == undefined },
+        ]}
+      >
+        <Icon is:inline
+          name="material-symbols:chevron-left-rounded"
+          class="text-[1.75rem]"
+          aria-hidden="true"
+        />
+      </a>
+
+      <div class="btn-card flex items-center rounded-lg px-4 h-11 gap-1.5">
+        <span class="text-base font-bold text-(--primary)">{page.currentPage}</span>
+        <span class="text-sm text-neutral-500 dark:text-neutral-500">/</span>
+        <span class="text-base font-bold text-neutral-700 dark:text-neutral-300">{page.lastPage}</span>
+      </div>
+
+      <a
+        href={page.url.next || "#"}
+        aria-label={i18n(I18nKey.paginationNext)}
+        aria-disabled={page.url.next === undefined ? "true" : "false"}
+        tabindex={page.url.next === undefined ? "-1" : "0"}
+        class:list={[
+          "btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11",
+          { disabled: page.url.next == undefined },
+        ]}
+      >
+        <Icon is:inline
+          name="material-symbols:chevron-right-rounded"
+          class="text-[1.75rem]"
+          aria-hidden="true"
+        />
+      </a>
+    </div>
+
+    <!-- 桌面端完整版分页 -->
+    <div class="desktop-pagination flex items-center gap-3">
+      <a
+        href={page.url.prev || "#"}
+        aria-label={i18n(I18nKey.paginationPrev)}
+        aria-disabled={page.url.prev === undefined ? "true" : "false"}
+        tabindex={page.url.prev === undefined ? "-1" : "0"}
+        class:list={[
+          "btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11",
+          { disabled: page.url.prev == undefined },
+        ]}
+      >
+        <Icon is:inline
+          name="material-symbols:chevron-left-rounded"
+          class="text-[1.75rem]"
+          aria-hidden="true"
+        />
+      </a>
       {
         pages.map((p) => {
           if (p == HIDDEN)
-            return <Icon is:inline name="material-symbols:more-horiz" class="mx-1" aria-hidden="true" />;
+            return <Icon is:inline name="material-symbols:more-horiz" class="w-11 h-11 flex items-center justify-center text-neutral-700 dark:text-neutral-300" aria-hidden="true" />;
           if (p == page.currentPage)
             return (
               <div
@@ -104,29 +135,73 @@ const getPageUrl = (p: number) => {
             <a
               href={url(getPageUrl(p))}
               aria-label={`${i18n(I18nKey.paginationPage)} ${p}`}
-              class="btn-card w-11 h-11 rounded-lg overflow-hidden active:scale-[0.85]"
+              class="btn-card w-11 h-11 rounded-lg overflow-hidden active:scale-[0.85] text-neutral-700 dark:text-neutral-300"
             >
               {p}
             </a>
           );
         })
       }
+      <a
+        href={page.url.next || "#"}
+        aria-label={i18n(I18nKey.paginationNext)}
+        aria-disabled={page.url.next === undefined ? "true" : "false"}
+        tabindex={page.url.next === undefined ? "-1" : "0"}
+        class:list={[
+          "btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11",
+          { disabled: page.url.next == undefined },
+        ]}
+      >
+        <Icon is:inline
+          name="material-symbols:chevron-right-rounded"
+          class="text-[1.75rem]"
+          aria-hidden="true"
+        />
+      </a>
     </div>
-    <a
-      href={page.url.next || "#"}
-      aria-label={i18n(I18nKey.paginationNext)}
-      aria-disabled={page.url.next === undefined ? "true" : "false"}
-      tabindex={page.url.next === undefined ? "-1" : "0"}
-      class:list={[
-        "btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11",
-        { disabled: page.url.next == undefined },
-      ]}
-    >
-      <Icon is:inline
-        name="material-symbols:chevron-right-rounded"
-        class="text-[1.75rem]"
-        aria-hidden="true"
-      />
-    </a>
   </div>
 </div>
+
+<style>
+  .pagination-wrapper {
+    max-width: 100%;
+  }
+
+  .mobile-pagination {
+    display: flex;
+    padding: 0 1rem;
+  }
+
+  .desktop-pagination {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .mobile-pagination {
+      display: none;
+    }
+    .desktop-pagination {
+      display: flex;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .mobile-pagination {
+      padding: 0 0.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .mobile-pagination {
+      padding: 0 0.25rem;
+    }
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .mobile-pagination a,
+    .mobile-pagination div {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+</style>

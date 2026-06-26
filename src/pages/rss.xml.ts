@@ -1,6 +1,6 @@
 import { loadRenderers } from "astro:container";
 import { render } from "astro:content";
-import { getContainerRenderer as getMDXRenderer } from "@astrojs/mdx";
+import { getContainerRenderer as getMDXRenderer } from "@astrojs/mdx/container-renderer";
 import rss, { type RSSFeedItem } from "@astrojs/rss";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";

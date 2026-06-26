@@ -7,7 +7,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { glob } from "glob";
 import subsetFont from "subset-font";
-import { fontConfig } from "../src/config";
+import { fontConfig, fontsList } from "../src/config";
+import { collectUsedFontCssVars, toPublicPath } from "../src/utils/fontHelper";
 
 // ─── 配置 ───────────────────────────────────────────────
 
@@ -16,7 +17,7 @@ const OUTPUT_DIR = "dist/_astro/fonts";
 
 // ─── 字体配置解析 ────────────────────────────────────────
 
-interface LocalSubsetFont {
+type LocalSubsetFont = {
 	id: string;
 	family: string;
 	src: string;
@@ -24,26 +25,62 @@ interface LocalSubsetFont {
 	style?: string;
 	display?: string;
 	subsetExtraChars?: string;
-}
+};
 
 /**
- * 从 fontConfig 中过滤出需要子集化的本地字体
+ * 从 fontConfig.subsetFonts 获取需要子集化的本地字体，
+ * 交叉引用 fonts 数组获取字体文件路径。
+ * 仅处理实际被使用的字体（在 selected、bannerTitleFont 等区域字段中引用的）。
  */
 function getLocalSubsetFonts(): LocalSubsetFont[] {
-	if (!fontConfig.enable) return [];
+	if (!fontConfig.enable || !fontConfig.subsetFonts) return [];
 
-	return Object.values(fontConfig.fonts).filter((font) => {
-		if (!font.subset || !font.src) return false;
-		// 排除外部 URL
-		if (
-			font.src.startsWith("http://") ||
-			font.src.startsWith("https://") ||
-			font.src.startsWith("//")
-		) {
-			return false;
+	const subsetEntries = Object.entries(fontConfig.subsetFonts);
+	if (subsetEntries.length === 0) return [];
+
+	// 构建实际使用的字体 CSS 变量集合（与 astro.config.mjs 共享同一逻辑）
+	const used = collectUsedFontCssVars(fontConfig);
+
+	// 建立 cssVariable → fontsList 条目的映射
+	const fontByCssVar = new Map<string, typeof fontsList[number]>();
+	for (const f of fontsList) {
+		if (f.cssVariable) fontByCssVar.set(f.cssVariable, f);
+	}
+
+	const result: LocalSubsetFont[] = [];
+	for (const [cssVar, opts] of subsetEntries) {
+		// 跳过未被使用的字体，避免生成无用的子集文件
+		if (!used.has(cssVar)) {
+			console.log(`   ⏭ Skipping '${cssVar}' — not referenced in selected or any font region.`);
+			continue;
 		}
-		return true;
-	}) as LocalSubsetFont[];
+
+		const f = fontByCssVar.get(cssVar);
+		if (!f?.options?.variants) continue;
+
+		for (const v of f.options.variants) {
+			if (!v.src?.length) continue;
+			const rawSrc = v.src[0];
+			// 将本地路径（如 "./public/assets/fonts/MyFont.woff2"）转换为访问路径
+			const publicPath = toPublicPath(rawSrc);
+			if (publicPath === null) {
+				console.warn(
+					`   ⚠ Skipping variant with unexpected src path: "${rawSrc}".\n` +
+					`     Expected a path under public/ (e.g. "./public/assets/fonts/MyFont.woff2") or an absolute path (e.g. "/assets/fonts/MyFont.woff2").`
+				);
+				continue;
+			}
+			result.push({
+				id: `${f.name}-${v.weight || "default"}`.toLowerCase().replace(/\s+/g, "-"),
+				family: f.name,
+				src: publicPath,
+				weight: v.weight,
+				style: v.style,
+				subsetExtraChars: opts.extraChars,
+			});
+		}
+	}
+	return result;
 }
 
 // ─── 字符收集 ────────────────────────────────────────────

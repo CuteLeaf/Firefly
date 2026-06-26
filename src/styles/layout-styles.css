@@ -68,19 +68,19 @@ html.is-page-transitioning .banner-home-text-overlay {
 
 /* 移动端横幅优化 - 小屏手机 (320px - 480px) */
 @media (max-width: 480px) {
-    /* Banner wrapper 高度优化 - 优先保持banner显示 - 仅在首页应用 */
+    /* Banner wrapper 高度统一 65vh，让主内容区自然覆盖约 10% 横幅 */
     #wallpaper-wrapper:not(.mobile-hide-banner) {
-        height: 70vh !important;
+        height: 65vh !important;
         top: 0 !important;
         transform: none !important;
     }
 
-    /* 主内容区域位置调整 - 与桌面端使用相同的 calc 公式，确保 switchable 开关一致 */
+    /* 主内容区域位置调整 - 覆盖横幅约 10% */
     body.enable-banner .absolute.w-full.z-30:not(.no-banner-layout):not(.mobile-main-no-banner) {
         top: calc(var(--banner-height) - 3.5rem) !important;
         min-height: calc(100vh - (var(--banner-height) - 3.5rem)) !important;
     }
-    
+
     /* 横幅文本覆盖层优化 */
     .banner-home-text-overlay {
         align-items: center !important; /* 垂直居中 */
@@ -88,7 +88,7 @@ html.is-page-transitioning .banner-home-text-overlay {
         padding: 1rem !important;
         text-align: center !important; /* 文字居中对齐 */
     }
-    
+
     /* 文本容器优化 */
     .banner-home-text-overlay > div {
         margin-bottom: 0 !important; /* 移除底部边距，保持居中 */
@@ -115,19 +115,19 @@ html.is-page-transitioning .banner-home-text-overlay {
 
 /* 移动端横幅优化 - 大屏手机 (481px - 640px) */
 @media (min-width: 481px) and (max-width: 640px) {
-    /* Banner wrapper 高度优化 - 优先保持banner显示 - 仅在首页应用 */
+    /* Banner wrapper 高度统一 65vh，让主内容区自然覆盖约 10% 横幅 */
     #wallpaper-wrapper:not(.mobile-hide-banner) {
-        height: 75vh !important;
+        height: 65vh !important;
         top: 0 !important;
         transform: none !important;
     }
 
-    /* 主内容区域位置调整 - 与桌面端使用相同的 calc 公式，确保 switchable 开关一致 */
+    /* 主内容区域位置调整 - 覆盖横幅约 10% */
     body.enable-banner .absolute.w-full.z-30:not(.no-banner-layout):not(.mobile-main-no-banner) {
         top: calc(var(--banner-height) - 3.5rem) !important;
         min-height: calc(100vh - (var(--banner-height) - 3.5rem)) !important;
     }
-    
+
     /* 横幅文本覆盖层优化 */
     .banner-home-text-overlay {
         align-items: center !important; /* 垂直居中 */
@@ -135,7 +135,7 @@ html.is-page-transitioning .banner-home-text-overlay {
         padding: 1.5rem !important;
         text-align: center !important; /* 文字居中对齐 */
     }
-    
+
     /* 文本容器优化 */
     .banner-home-text-overlay > div {
         margin-bottom: 0 !important; /* 移除底部边距，保持居中 */
@@ -162,19 +162,19 @@ html.is-page-transitioning .banner-home-text-overlay {
 
 /* 移动端横幅优化 - 超大屏手机/小平板 (641px - 767px) */
 @media (min-width: 641px) and (max-width: 767px) {
-    /* Banner wrapper 高度优化 - 仅在首页应用 */
+    /* Banner wrapper 高度统一 65vh，让主内容区自然覆盖约 10% 横幅 */
     #wallpaper-wrapper:not(.mobile-hide-banner) {
-        height: 72vh !important;
+        height: 65vh !important;
         top: 0 !important;
         transform: none !important;
     }
 
-    /* 主内容区域位置调整 - 与桌面端使用相同的 calc 公式，确保 switchable 开关一致 */
+    /* 主内容区域位置调整 - 覆盖横幅约 10% */
     body.enable-banner .absolute.w-full.z-30:not(.no-banner-layout):not(.mobile-main-no-banner) {
         top: calc(var(--banner-height) - 3.5rem) !important;
         min-height: calc(100vh - (var(--banner-height) - 3.5rem)) !important;
     }
-    
+
     /* 横幅文本覆盖层优化 */
     .banner-home-text-overlay {
         align-items: center !important; /* 垂直居中 */
@@ -209,19 +209,19 @@ html.is-page-transitioning .banner-home-text-overlay {
 
 /* 平板设备横幅优化 (768px - 1023px) - Tailwind md 断点 */
 @media (min-width: 768px) and (max-width: 1023px) {
-    /* Banner wrapper 高度优化 - 仅在首页应用 */
+    /* Banner wrapper 高度统一 65vh，让主内容区自然覆盖约 10% 横幅 */
     #wallpaper-wrapper:not(.mobile-hide-banner) {
-        height: 70vh !important;
+        height: 65vh !important;
         top: 0 !important;
         transform: none !important;
     }
 
-    /* 主内容区域位置调整 - 与桌面端使用相同的 calc 公式，确保 switchable 开关一致 */
+    /* 主内容区域位置调整 - 与桌面端使用相同的 calc 公式 */
     body.enable-banner .absolute.w-full.z-30:not(.no-banner-layout):not(.mobile-main-no-banner) {
         top: calc(var(--banner-height) - 3.5rem) !important;
         min-height: calc(100vh - (var(--banner-height) - 3.5rem)) !important;
     }
-    
+
     /* 横幅文本覆盖层优化 */
     .banner-home-text-overlay {
         align-items: center !important; /* 垂直居中 */
@@ -229,7 +229,7 @@ html.is-page-transitioning .banner-home-text-overlay {
         padding: 2rem !important;
         text-align: center !important; /* 文字居中对齐 */
     }
-    
+
     /* 文本容器优化 */
     .banner-home-text-overlay > div {
         margin-bottom: 0 !important; /* 移除底部边距，保持居中 */
@@ -393,6 +393,60 @@ html.is-page-transitioning .banner-home-text-overlay {
     }
 }
 
+/* ===== 壁纸轮播样式（基于 CSS transition） ===== */
+.slide-item {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 2;
+    transition-property: opacity, transform;
+    transition-duration: 1000ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+.slide-item.active {
+    opacity: 1;
+    z-index: 10;
+    pointer-events: auto;
+}
+/* Fade 效果 */
+.effect-fade .slide-item {
+    transition-property: opacity;
+}
+/* Zoom 效果 */
+.effect-zoom .slide-item {
+    transition-property: opacity, transform;
+    transform: scale(1.08);
+}
+.effect-zoom .slide-item.active {
+    transform: scale(1);
+}
+/* Slide 效果 */
+.effect-slide .slide-item {
+    transition-property: opacity, transform;
+    transform: translateX(100%);
+}
+.effect-slide .slide-item.active {
+    transform: translateX(0);
+}
+.effect-slide .slide-item.prev-waiting {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+/* Ken Burns 旋转木马效果 — 纯放大，配合 LQIP 过渡切换 */
+@keyframes kenburns {
+    from { transform: scale(1); }
+    to { transform: scale(1.1) translate(-2%, -1%); }
+}
+.effect-kenburns .slide-item {
+    transition-property: opacity;
+}
+.effect-kenburns .slide-item.active {
+    animation: kenburns var(--carousel-interval, 5000ms) ease-out forwards;
+}
+
 /* 当banner被禁用时的布局样式 */
 .no-banner-layout {
     top: 5.5rem !important;
@@ -435,7 +489,7 @@ html[data-wallpaper-mode="fullscreen"] .absolute.w-full.z-30.no-banner-layout {
 @media (max-width: 1023px) and (orientation: landscape) {
     #wallpaper-wrapper:not(.mobile-hide-banner) {
         top: 0 !important; /* 横屏模式从顶部开始，避免被导航栏覆盖 */
-        height: 60vh !important;
+        height: 65vh !important;
         transform: none !important; /* 移除桌面端的translateY偏移 */
     }
     
@@ -706,7 +760,7 @@ html[data-wallpaper-mode="fullscreen"] body:not(.sticky-navbar) #top-row {
 #wallpaper-wrapper.wallpaper-fullscreen .waves {
     position: absolute !important;
     bottom: -1px !important;
-    z-index: 5 !important;
+    z-index: 15 !important;
 }
 
 /* Fullscreen 模式下滚动向下指示器 */

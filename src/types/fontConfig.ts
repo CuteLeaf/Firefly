@@ -1,33 +1,84 @@
-// 单个字体配置
-export type FontItem = {
-	id: string; // 字体唯一标识符
-	name: string; // 字体显示名称
-	src: string; // 字体文件路径或URL链接
-	family: string; // CSS font-family 名称
-	weight?: string | number; // 字体粗细，如 "normal", "bold", 400, 700 等
-	style?: "normal" | "italic" | "oblique"; // 字体样式
-	display?: "auto" | "block" | "swap" | "fallback" | "optional"; // font-display 属性
-	unicodeRange?: string; // Unicode 范围，用于字体子集化
-	format?:
-		| "woff"
-		| "woff2"
-		| "truetype"
-		| "opentype"
-		| "embedded-opentype"
-		| "svg"; // 字体格式，仅当 src 为本地文件时需要
-	subset?: boolean; // 是否对该字体进行子集化（仅本地字体有效，构建时自动扫描页面字符生成 woff2 子集）
-	subsetExtraChars?: string; // 子集化时额外包含的字符（用于覆盖评论、Bangumi等动态内容中可能出现的字符）
+/** 内置字体提供商名称 */
+export type BuiltinFontProvider =
+	| "google"
+	| "fontsource"
+	| "local"
+	| "bunny"
+	| "fontshare"
+	| "npm";
+
+/**
+ * 自定义字体提供商接口
+ *
+ * 当内置提供商无法满足需求时，可通过实现此接口来创建自定义 provider。
+ * @see https://docs.astro.build/en/reference/font-provider-reference/
+ */
+export interface CustomFontProvider {
+	/** 提供商标识名称 */
+	name: string;
+	/** 可序列化的配置对象，用于标识和缓存 */
+	config?: Record<string, unknown>;
+}
+
+/**
+ * 字体定义（Astro Font API 配置项）
+ *
+ * 适用于 Astro Font API 的字体配置，支持自动下载、缓存和优化加载。
+ * 支持的 provider：google, fontsource, local, bunny, fontshare, npm 或自定义 provider
+ */
+export type FontDefinition = {
+	/** 字体名称 */
+	name: string;
+	/** 对应的 CSS 变量名（如 "--font-inter"） */
+	cssVariable: string;
+	/** 字体提供商（内置名称或自定义 provider 对象） */
+	provider: BuiltinFontProvider | CustomFontProvider;
+	/** 字重列表 */
+	weights?: Array<string | number>;
+	/** 字体样式 */
+	styles?: Array<"normal" | "italic" | "oblique">;
+	/** 字符子集 */
+	subsets?: string[];
+	/** 回退字体列表 */
+	fallbacks?: string[];
+	/** 字体显示策略 */
+	display?: "auto" | "optional" | "fallback" | "block" | "swap";
+	/** 本地字体的额外选项（如 variants 定义） */
+	options?: {
+		variants?: Array<{
+			src: string[];
+			weight?: string | number;
+			style?: string;
+		}>;
+		[key: string]: unknown;
+	};
 };
 
-// 字体配置
-export type FontConfig = {
-	enable: boolean; // 是否启用自定义字体功能
-	selected: string | string[]; // 当前选择的字体ID，支持单个或多个字体组合
-	fonts: Record<string, FontItem>; // 字体库，以ID为键的对象
-	fallback?: string[]; // 全局字体回退列表
-	preload?: boolean; // 是否预加载字体文件以提高性能
-	// 各区域独立字体设置（填写 fonts 中的字体 ID，留空则使用全局 selected 字体）
-	bannerTitleFont?: string; // 横幅标题字体
-	bannerSubtitleFont?: string; // 横幅副标题字体
-	navbarTitleFont?: string; // 导航栏标题字体
+export type FontSelectionConfig = {
+	/** 是否启用自定义字体功能 */
+	enable: boolean;
+	/**
+	 * 当前选择的字体 CSS 变量名，支持多个字体组合。
+	 * 填写 fontConfig.ts fonts 中定义的 cssVariable 值。
+	 * 使用 "system" 表示系统字体（不加载任何自定义字体）。
+	 */
+	selected: string | string[];
+	/** 各区域独立字体 CSS 变量名（留空则使用全局 selected 字体） */
+	bannerTitleFont?: string;
+	bannerSubtitleFont?: string;
+	navbarTitleFont?: string;
+	/** 代码块字体 CSS 变量名（用于代码高亮和等宽字体场景） */
+	codeFont?: string;
+	/**
+	 * 本地字体子集化配置（构建时由 scripts/subset-fonts.ts 处理）
+	 * key 为 fonts 数组中对应的 cssVariable，value 为子集化选项。
+	 * 仅对 fontProviders.local() 的字体有效。
+	 */
+	subsetFonts?: Record<
+		string,
+		{
+			/** 额外包含的字符（覆盖评论、Bangumi 等动态内容） */
+			extraChars?: string;
+		}
+	>;
 };
