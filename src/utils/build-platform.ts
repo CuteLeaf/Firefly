@@ -58,7 +58,7 @@ export function detectBuildPlatform({
 	if (envUrlHostEquals(env, "er_address", "build-script.esa.ialicdn.com")) {
 		return "ESA Pages";
 	}
-	
+
 	if (isCI) {
 		return unknownBuildPlatform;
 	}
