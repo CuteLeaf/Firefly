@@ -5,7 +5,7 @@ type DetectBuildPlatformOptions = {
 	isDev?: boolean;
 	unknownBuildPlatform?: string;
 };
-
+//“FIREFLY_BUILD_PLATFORM”环境变量自定义命名构建平台
 const BUILD_PLATFORM_OVERRIDE_KEY = "FIREFLY_BUILD_PLATFORM";
 
 function hasNonEmptyEnv(
@@ -27,7 +27,7 @@ function envUrlHostEquals(
 	}
 
 	try {
-		// ESA 当前构建环境里没有平台专属键名，改为用稳定的内部脚本 host 做识别
+		// ESA 当前构建环境里没有平台专属键名，用稳定的内部er_address键值 host 做识别
 		return new URL(value).host.toLowerCase() === expectedHost.toLowerCase();
 	} catch {
 		return false;
@@ -43,14 +43,14 @@ export function detectBuildPlatform({
 }: DetectBuildPlatformOptions): string {
 	const overrideValue = env[BUILD_PLATFORM_OVERRIDE_KEY];
 	if (typeof overrideValue === "string" && overrideValue.trim() !== "") {
-		// 显式覆盖优先于所有自动识别结果，方便在部署平台直接指定展示名称
+		// 环境变量显式覆盖最优先，可以用“FIREFLY_BUILD_PLATFORM”环境变量自定义不同部署平台的名字（默认值为空，无定义，继续后续自动识别）
 		return overrideValue.trim();
 	}
-
+	// ciName 自动识别
 	if (ciName?.trim()) {
 		return ciName.trim();
 	}
-
+	//补充EdgeOne Pages 和 ESA Pages 识别逻辑
 	if (hasNonEmptyEnv(env, "EDGEONE_PROJECT_ID")) {
 		return "EdgeOne Pages";
 	}
@@ -58,9 +58,8 @@ export function detectBuildPlatform({
 	if (envUrlHostEquals(env, "er_address", "build-script.esa.ialicdn.com")) {
 		return "ESA Pages";
 	}
-
+	
 	if (isCI) {
-		// 仍然保留上游原有的未知平台回退文案能力
 		return unknownBuildPlatform;
 	}
 
