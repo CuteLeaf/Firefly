@@ -313,6 +313,7 @@ export const ru: Translation = {
 	// Статистика сайта
 	[Key.siteStats]: "Статистика сайта",
 	[Key.siteStatsPostCount]: "Статьи",
+	[Key.siteStatsShuoshuoCount]: "Шоушо",
 	[Key.siteStatsCategoryCount]: "Категории",
 	[Key.siteStatsTagCount]: "Теги",
 	[Key.siteStatsTotalWords]: "Всего слов",
