@@ -24,9 +24,12 @@ function getLocale(): string {
 
 export function countCjkAndEnglishWords(markdown: string): number {
 	const text = markdown.replace(/\s+/g, " ").trim();
-	const chineseChars = text.match(/[\u4e00-\u9fa5]/g) || [];
+	const cjkChars =
+		text.match(
+			/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/gu,
+		) || [];
 	const englishWords = text.match(/[a-zA-Z]+/g) || [];
-	return chineseChars.length + englishWords.length;
+	return cjkChars.length + englishWords.length;
 }
 
 export function markdownToPlainText(markdown: string): string {

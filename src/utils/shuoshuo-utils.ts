@@ -6,8 +6,8 @@ export async function getSortedShuoshuo() {
 	});
 
 	return all.sort((a, b) => {
-		const dateA = new Date(a.data.published);
-		const dateB = new Date(b.data.published);
-		return dateA > dateB ? -1 : 1;
+		const dateA = a.data.published.getTime();
+		const dateB = b.data.published.getTime();
+		return dateB - dateA;
 	});
 }

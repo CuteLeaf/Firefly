@@ -86,6 +86,8 @@ const items = await Promise.all(
     function initShuoshuoCards() {
       const cards = document.querySelectorAll<HTMLElement>("[data-shuoshuo-card]");
       for (const card of cards) {
+        if (card.hasAttribute("data-initialized")) continue;
+
         const maxHeight = Number(card.getAttribute("data-max-height") || "260");
         const collapsible = card.querySelector<HTMLElement>("[data-collapsible]");
         const content = card.querySelector<HTMLElement>("[data-collapsible-content]");
@@ -123,7 +125,6 @@ const items = await Promise.all(
         });
 
         refresh();
-        card.setAttribute("data-initialized", "true");
 
         if (typeof ResizeObserver !== "undefined") {
           const ro = new ResizeObserver(() => refresh());
@@ -131,6 +132,8 @@ const items = await Promise.all(
         } else {
           window.addEventListener("resize", refresh, { passive: true });
         }
+
+        card.setAttribute("data-initialized", "true");
       }
     }
 

@@ -39,7 +39,7 @@ const items = entries.map((entry) => {
     slot="title-icon"
     href={url("/shuoshuo/")}
     class="btn-plain rounded-lg h-7 px-2 text-xs flex items-center gap-1 text-[var(--primary)] hover:opacity-80 active:opacity-60"
-    aria-label="Go to shuoshuo page"
+    aria-label={isZh ? "前往说说页面" : "Go to shuoshuo page"}
   >
     <span>{isZh ? "更多" : "More"}</span>
     <Icon name="material-symbols:chevron-right-rounded" class="text-lg" />
