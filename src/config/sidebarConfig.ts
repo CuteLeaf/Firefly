@@ -112,7 +112,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			// 组件类型：站点信息组件
 			type: "siteInfo",
 			// 是否启用该组件
-			enable: true,
+			enable: false,
 			// 组件位置
 			position: "top",
 			// 是否在文章详情页显示
@@ -237,7 +237,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			// 组件类型：音乐播放器
 			type: "music",
 			// 是否启用该组件
-			enable: true,
+			enable: false,
 			// 是否在文章详情页显示
 			showOnPostPage: true,
 		},
@@ -279,7 +279,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			// 组件类型：站点信息组件
 			type: "siteInfo",
 			// 是否启用该组件
-			enable: true,
+			enable: false,
 			// 是否在文章详情页显示
 			showOnPostPage: true,
 			// 组件专属配置
