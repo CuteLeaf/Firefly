@@ -19,8 +19,9 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 	tabletSidebar: "left",
 
 	// 文章详情页隐藏侧边栏，设为 true 则只在首页等非文章页显示
-	hideSidebarOnPostPage: false,
+	hideSidebarOnPostPage: true,
 
+	// 文章详情页保持双侧栏
 	// 使用单侧栏(position为left或right)时，是否在文章详情页显示双侧边栏
 	// 当position为left时开启此项，文章详情页将额外显示右侧边栏
 	// 当position为right时开启此项，文章详情页将额外显示左侧边栏
