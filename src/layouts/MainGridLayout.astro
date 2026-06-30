@@ -185,22 +185,16 @@ const shouldAddRightSidebar: boolean =
 const shouldAddLeftSidebar: boolean =
 	shouldShowBothSidebarsOnPostPage && sidebarLayoutConfig.position === "right";
 
-// 文章详情页隐藏侧边栏时，所有侧边栏组件不参与布局
-const hideSidebarOnPost = isPostPage && hideSidebarOnPostPage;
-
 const effectiveIsBothSidebars: boolean =
-	!hideSidebarOnPost &&
-	(sidebarConfig.isBothSidebars || shouldShowBothSidebarsOnPostPage);
+	sidebarConfig.isBothSidebars || shouldShowBothSidebarsOnPostPage;
 const effectiveHasRightComponents: boolean =
-	!hideSidebarOnPost &&
-	(sidebarConfig.hasRightComponents ||
-		(shouldAddRightSidebar &&
-			sidebarLayoutConfig.rightComponents.some((comp) => comp.enable)));
+	sidebarConfig.hasRightComponents ||
+	(shouldAddRightSidebar &&
+		sidebarLayoutConfig.rightComponents.some((comp) => comp.enable));
 const effectiveHasLeftComponents: boolean =
-	!hideSidebarOnPost &&
-	(sidebarConfig.hasLeftComponents ||
-		(shouldAddLeftSidebar &&
-			sidebarLayoutConfig.leftComponents.some((comp) => comp.enable)));
+	sidebarConfig.hasLeftComponents ||
+	(shouldAddLeftSidebar &&
+		sidebarLayoutConfig.leftComponents.some((comp) => comp.enable));
 
 // 使用effective值重新生成网格类
 // 当position为right且文章页临时显示左侧栏时，tabletSidebar应为right（保持显示主侧栏）
