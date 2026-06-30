@@ -74,6 +74,7 @@ export type SidebarLayoutConfig = {
 	enable: boolean; // 是否启用侧边栏
 	position: "left" | "right" | "both"; // 侧边栏位置：左侧、右侧或双侧
 	tabletSidebar?: "left" | "right"; // 平板端(769-1279px)显示哪侧侧边栏，仅position为both时生效，默认left
+	hideSidebarOnPostPage?: boolean; // 文章详情页隐藏侧边栏，设为 true 则只在首页等非文章页显示，默认 false
 	showBothSidebarsOnPostPage?: boolean; // 当position为left或right时，是否在文章详情页显示双侧边栏
 	leftComponents: WidgetComponentConfig[]; // 左侧边栏组件配置列表
 	rightComponents: WidgetComponentConfig[]; // 右侧边栏组件配置列表
