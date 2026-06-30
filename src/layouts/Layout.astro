@@ -1491,6 +1491,38 @@ function disableAnimation() {
   const isCurrentPagePost = () =>
     window.location.pathname.includes("/posts/") || window.location.pathname.includes("/post/");
 
+  // Grid 列类常量
+  const GRID_COL_CLASSES = [
+    "grid-cols-1",
+    "md:grid-cols-[17.5rem_1fr]",
+    "md:grid-cols-[1fr_17.5rem]",
+    "xl:grid-cols-[17.5rem_1fr_17.5rem]",
+  ];
+
+  // 多列布局下的列定位类（需在切换单列时清除）
+  const MULTI_COL_POS_CLASSES = [
+    "md:col-start-1", "md:col-start-2",
+    "xl:col-start-1", "xl:col-start-2", "xl:col-start-3",
+    "xl:col-end-3",
+    "md:col-span-1", "xl:col-span-1",
+  ];
+
+  // 清除元素上的多列定位类
+  function clearColPositioning(...elements: (Element | null | undefined)[]) {
+    for (const el of elements) {
+      if (!el) continue;
+      for (const cls of MULTI_COL_POS_CLASSES) el.classList.remove(cls);
+    }
+  }
+
+  // 设置单列布局：grid 设为 grid-cols-1，清除子元素的多列定位类
+  function applySingleColLayout(mainGrid: Element) {
+    for (const cls of GRID_COL_CLASSES) mainGrid.classList.remove(cls);
+    mainGrid.classList.add("grid-cols-1");
+    const swupContainer = document.getElementById("swup-container");
+    clearColPositioning(swupContainer, swupContainer?.parentElement, mainGrid.querySelector('.footer'));
+  }
+
   // 更新主网格的网格列数
   function updateMainGridCols() {
     const mainGrid = document.getElementById("main-grid");
@@ -1505,20 +1537,7 @@ function disableAnimation() {
 
     // 侧边栏禁用 或 文章详情页隐藏侧边栏时，保持单列布局
     if (!sidebarEnabled || (isPostPage && sidebarHideOnPost)) {
-      ["grid-cols-1", "md:grid-cols-[17.5rem_1fr]", "md:grid-cols-[1fr_17.5rem]", "xl:grid-cols-[17.5rem_1fr_17.5rem]"].forEach(
-        cls => mainGrid.classList.remove(cls)
-      );
-      mainGrid.classList.add("grid-cols-1");
-      // 清除主内容 wrapper 和 footer 残留的多列定位类，避免隐式第二列
-      const swupContainer = document.getElementById("swup-container");
-      const swupWrapper = swupContainer?.parentElement;
-      const footer = mainGrid.querySelector('.footer');
-      const colStartClasses = ["md:col-start-2", "xl:col-start-2", "xl:col-end-3", "md:col-span-1", "xl:col-span-1"];
-      colStartClasses.forEach(cls => {
-        swupContainer?.classList.remove(cls);
-        swupWrapper?.classList.remove(cls);
-        footer?.classList.remove(cls);
-      });
+      applySingleColLayout(mainGrid);
       return;
     }
 
@@ -1527,61 +1546,40 @@ function disableAnimation() {
     let newGridClasses: string;
 
     if (sidebarPosition === "both" || shouldBothSidebars) {
-      // 双侧栏（含文章页临时双侧栏）
-      // 从right临时扩展为both时，平板端保持显示右侧栏
       const effectiveTabletSidebar = (shouldBothSidebars && sidebarPosition === "right") ? "right" : tabletSidebar;
-      if (effectiveTabletSidebar === "right") {
-        newGridClasses = "grid-cols-1 md:grid-cols-[1fr_17.5rem] xl:grid-cols-[17.5rem_1fr_17.5rem]";
-      } else {
-        newGridClasses = "grid-cols-1 md:grid-cols-[17.5rem_1fr] xl:grid-cols-[17.5rem_1fr_17.5rem]";
-      }
+      newGridClasses = effectiveTabletSidebar === "right"
+        ? "grid-cols-1 md:grid-cols-[1fr_17.5rem] xl:grid-cols-[17.5rem_1fr_17.5rem]"
+        : "grid-cols-1 md:grid-cols-[17.5rem_1fr] xl:grid-cols-[17.5rem_1fr_17.5rem]";
     } else if (sidebarPosition === "right") {
-      // 仅右侧栏
       newGridClasses = "grid-cols-1 md:grid-cols-[1fr_17.5rem]";
     } else {
-      // 仅左侧栏
       newGridClasses = "grid-cols-1 md:grid-cols-[17.5rem_1fr]";
     }
 
-    // 移除旧类并添加新类
-    ["grid-cols-1", "md:grid-cols-[17.5rem_1fr]", "md:grid-cols-[1fr_17.5rem]", "xl:grid-cols-[17.5rem_1fr_17.5rem]"].forEach(
-      cls => mainGrid.classList.remove(cls)
-    );
+    for (const cls of GRID_COL_CLASSES) mainGrid.classList.remove(cls);
+    for (const cls of newGridClasses.split(" ")) if (cls) mainGrid.classList.add(cls);
 
-    newGridClasses.split(" ").forEach(cls => cls && mainGrid.classList.add(cls));
-
-    // position为right时，swup导航不会替换静态元素(右侧栏、主内容容器、页脚)的class
-    // 需要在JS中手动更新这些元素的网格定位类，以匹配2列/3列布局的切换
+    // position为right时，swup导航不会替换静态元素的class，需手动更新列定位
     if (sidebarPosition === "right") {
       const rightSidebar = document.getElementById("right-sidebar");
       const swupContainer = document.getElementById("swup-container");
-      const footer = mainGrid.querySelector('.footer');
-
-      // swup container 的父元素(wrapper)也可能残留旧类，一起清理
       const swupWrapper = swupContainer?.parentElement;
+      const footer = mainGrid.querySelector('.footer');
 
       if (shouldBothSidebars) {
         // 文章页临时双侧栏：主内容移到第2列，右侧栏移到第3列，页脚居中
-        swupContainer?.classList.remove("md:col-start-1");
+        clearColPositioning(swupContainer, swupWrapper, footer);
         swupContainer?.classList.add("md:col-start-2", "xl:col-start-2", "xl:col-end-3");
-        swupWrapper?.classList.remove("md:col-start-1");
         swupWrapper?.classList.add("md:col-start-2");
         rightSidebar?.classList.add("xl:col-start-3");
-        if (footer) {
-          footer.classList.remove("md:col-start-1", "xl:col-start-1");
-          footer.classList.add("md:col-start-2", "xl:col-start-2");
-        }
+        footer?.classList.add("md:col-start-2", "xl:col-start-2");
       } else {
-        // 非文章页：恢复2列布局定位
-        swupContainer?.classList.remove("md:col-start-2", "xl:col-start-2", "xl:col-end-3");
-        swupContainer?.classList.add("md:col-start-1");
-        swupWrapper?.classList.remove("md:col-start-2");
-        swupWrapper?.classList.add("md:col-start-1");
+        // 非文章页：恢复2列布局定位（右侧栏保持 md:col-start-2 不变）
+        clearColPositioning(swupContainer, swupWrapper, footer);
         rightSidebar?.classList.remove("xl:col-start-3");
-        if (footer) {
-          footer.classList.remove("md:col-start-2", "xl:col-start-2");
-          footer.classList.add("md:col-start-1", "xl:col-start-1");
-        }
+        swupContainer?.classList.add("md:col-start-1");
+        swupWrapper?.classList.add("md:col-start-1");
+        footer?.classList.add("md:col-start-1", "xl:col-start-1");
       }
     }
   }

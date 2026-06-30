@@ -19,10 +19,11 @@ const sidebarTocComponent = sidebarLayoutConfig.rightComponents?.find(
 );
 const isSidebarTocEnabled = sidebarTocComponent?.enable ?? false;
 const sidebarPosition = sidebarLayoutConfig.position;
+const hideSidebarOnPostPage = sidebarLayoutConfig.hideSidebarOnPostPage === true;
 ---
 
 <!-- 悬浮TOC按钮 -->
-<div id="floating-toc-wrapper" class="floating-toc-wrapper" data-is-sidebar-toc-enabled={String(isSidebarTocEnabled)} data-sidebar-position={sidebarPosition} data-show-both-sidebars-on-post={String(sidebarLayoutConfig.showBothSidebarsOnPostPage ?? false)}>
+<div id="floating-toc-wrapper" class="floating-toc-wrapper" data-is-sidebar-toc-enabled={String(isSidebarTocEnabled)} data-sidebar-position={sidebarPosition} data-show-both-sidebars-on-post={String(sidebarLayoutConfig.showBothSidebarsOnPostPage ?? false)} data-hide-sidebar-on-post={String(hideSidebarOnPostPage)}>
   <FloatingButton
     id="floating-toc-btn"
     icon="material-symbols:format-list-bulleted"
@@ -236,6 +237,12 @@ const sidebarPosition = sidebarLayoutConfig.position;
     const wrapper = document.querySelector('.floating-toc-wrapper');
     const sidebarPosition = wrapper?.getAttribute('data-sidebar-position') || 'left';
     const showBothSidebarsOnPost = wrapper?.getAttribute('data-show-both-sidebars-on-post') === 'true';
+    const hideSidebarOnPost = wrapper?.getAttribute('data-hide-sidebar-on-post') === 'true';
+
+    // 侧边栏在文章页隐藏时，始终显示悬浮目录
+    if (hideSidebarOnPost) {
+      return true;
+    }
 
     // 双侧边栏模式（含文章页临时双侧栏）：小屏幕或侧边栏目录未启用时显示悬浮目录
     const effectiveIsBothSidebars = sidebarPosition === 'both' || showBothSidebarsOnPost;
