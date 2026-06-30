@@ -1512,8 +1512,11 @@ function disableAnimation() {
       // 清除主内容 wrapper 残留的多列定位类，避免隐式第二列
       const swupContainer = document.getElementById("swup-container");
       const swupWrapper = swupContainer?.parentElement;
-      swupContainer?.classList.remove("md:col-start-2", "xl:col-start-2", "xl:col-end-3");
-      swupWrapper?.classList.remove("md:col-start-2");
+      const colStartClasses = ["md:col-start-2", "xl:col-start-2", "xl:col-end-3", "md:col-span-1", "xl:col-span-1"];
+      colStartClasses.forEach(cls => {
+        swupContainer?.classList.remove(cls);
+        swupWrapper?.classList.remove(cls);
+      });
       return;
     }
 
