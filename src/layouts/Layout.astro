@@ -1529,7 +1529,7 @@ function disableAnimation() {
     if (!mainGrid) return;
 
     const sidebarEnabled = mainGrid.getAttribute("data-sidebar-enable") !== "false";
-    const sidebarHideOnPost = mainGrid.getAttribute("data-sidebar-hide-on-post") === "true";
+    const sidebarHideOnPost = mainGrid.getAttribute("data-hide-sidebar-on-post") === "true";
     const isPostPage = isCurrentPagePost();
     const sidebarPosition = mainGrid.getAttribute("data-sidebar-position") || "left";
     const tabletSidebar = mainGrid.getAttribute("data-tablet-sidebar") || "left";
@@ -1589,9 +1589,8 @@ function disableAnimation() {
     const isPostPage = isCurrentPagePost();
 
     // 处理侧边栏级别的 hideSidebarOnPostPage 配置
-    // 使用 data-hide-on-post 属性标记需要在文章页隐藏的侧边栏 wrapper
-    document.querySelectorAll<HTMLElement>("[data-hide-on-post]").forEach((wrapper) => {
-      const hideOnPost = wrapper.getAttribute("data-hide-on-post") === "true";
+    document.querySelectorAll<HTMLElement>("[data-hide-sidebar-on-post]").forEach((wrapper) => {
+      const hideOnPost = wrapper.getAttribute("data-hide-sidebar-on-post") === "true";
       if (isPostPage && hideOnPost) {
         wrapper.style.setProperty("display", "none", "important");
       } else {
