@@ -11,6 +11,7 @@ import {
 	applyThemeToDocument,
 	getStoredTheme,
 	setTheme,
+	setThemeWithAnimation,
 } from "@/utils/setting-utils";
 
 // Define Swup type for window object
@@ -27,9 +28,16 @@ type WindowWithSwup = Window & { swup?: SwupInstance };
 let mode: LIGHT_DARK_MODE = $state(LIGHT_MODE);
 let displayedMode: LIGHT_DARK_MODE = $state(LIGHT_MODE); // 显示的实际主题（在system模式下会随系统变化）
 
-function switchScheme(newMode: LIGHT_DARK_MODE) {
+// 切换主题模式；用户点击触发时传入鼠标坐标，用于圆形扩散动画的起点
+function switchScheme(newMode: LIGHT_DARK_MODE, event?: MouseEvent) {
 	mode = newMode;
-	setTheme(newMode);
+	if (event) {
+		// 菜单点击切换时使用 View Transitions 圆形扩散动画
+		setThemeWithAnimation(newMode, event.clientX, event.clientY);
+	} else {
+		// 程序化切换或无坐标来源时保持原来的直接切换逻辑
+		setTheme(newMode);
+	}
 	updateDisplayedMode();
 }
 
@@ -130,7 +138,7 @@ onMount(() => {
                 role="menuitem"
                 isActive={mode === LIGHT_MODE}
                 isLast={false}
-                onclick={() => switchScheme(LIGHT_MODE)}
+                onclick={(event) => switchScheme(LIGHT_MODE, event)}
             >
                 <Icon icon="material-symbols:wb-sunny-outline-rounded" class="text-[1.25rem] mr-3"></Icon>
                 {i18n(I18nKey.lightMode)}
@@ -139,7 +147,7 @@ onMount(() => {
                 role="menuitem"
                 isActive={mode === DARK_MODE}
                 isLast={false}
-                onclick={() => switchScheme(DARK_MODE)}
+                onclick={(event) => switchScheme(DARK_MODE, event)}
             >
                 <Icon icon="material-symbols:dark-mode-outline-rounded" class="text-[1.25rem] mr-3"></Icon>
                 {i18n(I18nKey.darkMode)}
@@ -148,7 +156,7 @@ onMount(() => {
                 role="menuitem"
                 isActive={mode === SYSTEM_MODE}
                 isLast={true}
-                onclick={() => switchScheme(SYSTEM_MODE)}
+                onclick={(event) => switchScheme(SYSTEM_MODE, event)}
             >
                 <Icon icon="material-symbols:brightness-auto-outline-rounded" class="text-[1.25rem] mr-3"></Icon>
                 {i18n(I18nKey.systemMode)}

@@ -71,52 +71,38 @@ html {
 
 @layer components {
     /* View Transitions API 主题切换动画 */
-    /* 为整个文档根元素设置视图过渡 */
+    /* 根视图快照保持正常混合，避免明暗主题叠加时出现异常反色 */
     ::view-transition-old(root),
     ::view-transition-new(root) {
-        animation-duration: 0.5s;
-        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-        /* 使用混合模式使颜色过渡更平滑 */
         mix-blend-mode: normal;
     }
     
-    /* 视图过渡组 - 使用交叉淡化效果 */
+    /* 统一控制根视图过渡时长和缓动曲线 */
     ::view-transition-group(root) {
         animation-duration: 0.5s;
         animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     }
     
-    /* 淡出旧视图 - 使用更平滑的曲线 */
+    /* 旧视图保持静止，作为底层等待新主题圆形扩散覆盖 */
     ::view-transition-old(root) {
-        animation-name: theme-fade-out;
-        /* 确保背景色同步切换 */
-        z-index: 2;
+        animation: none;
+        z-index: 0;
     }
     
-    /* 淡入新视图 - 使用更平滑的曲线 */
+    /* 新视图从点击坐标开始圆形扩散，坐标由主题切换逻辑写入 CSS 变量 */
     ::view-transition-new(root) {
-        animation-name: theme-fade-in;
-        /* 确保新视图在上层 */
+        animation: theme-circle-expand 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+        clip-path: circle(0% at var(--click-x, 50%) var(--click-y, 50%));
         z-index: 1;
     }
     
-    /* 定义淡出动画 - 使用更平滑的缓动函数 */
-    @keyframes theme-fade-out {
+    /* 圆形半径扩展到 150%，确保从任意点击位置都能覆盖完整视口 */
+    @keyframes theme-circle-expand {
         0% {
-            opacity: 1;
+            clip-path: circle(0% at var(--click-x, 50%) var(--click-y, 50%));
         }
         100% {
-            opacity: 0;
-        }
-    }
-    
-    /* 定义淡入动画 - 从下层淡入 */
-    @keyframes theme-fade-in {
-        0% {
-            opacity: 0;
-        }
-        100% {
-            opacity: 1;
+            clip-path: circle(150% at var(--click-x, 50%) var(--click-y, 50%));
         }
     }
     

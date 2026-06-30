@@ -152,7 +152,8 @@ let systemThemeListener:
 	| ((e: MediaQueryListEvent | MediaQueryList) => void)
 	| null = null;
 
-export function setTheme(theme: LIGHT_DARK_MODE): void {
+// 主题切换的核心逻辑，只负责应用主题、保存配置和维护系统主题监听
+function setThemeCore(theme: LIGHT_DARK_MODE): void {
 	// 检查是否在浏览器环境中
 	if (
 		typeof localStorage === "undefined" ||
@@ -174,6 +175,44 @@ export function setTheme(theme: LIGHT_DARK_MODE): void {
 		// 如果切换其他模式，移除系统主题监听
 		cleanupSystemThemeListener();
 	}
+}
+
+export function setTheme(theme: LIGHT_DARK_MODE): void {
+	// 默认入口保持无动画切换，供初始化、系统变化和程序化调用复用
+	setThemeCore(theme);
+}
+
+// 使用 View Transitions API 执行带点击坐标的圆形扩散主题切换
+export function setThemeWithAnimation(
+	theme: LIGHT_DARK_MODE,
+	clickX: number,
+	clickY: number,
+): void {
+	if (typeof document === "undefined") {
+		// 非浏览器环境没有可动画的文档，直接走核心切换逻辑
+		setThemeCore(theme);
+		return;
+	}
+
+	// 将点击位置传给 CSS，作为 clip-path: circle() 的圆心
+	document.documentElement.style.setProperty("--click-x", `${clickX}px`);
+	document.documentElement.style.setProperty("--click-y", `${clickY}px`);
+
+	// TypeScript 当前 DOM 类型可能缺少 startViewTransition，局部补齐即可
+	const viewTransitionDocument = document as Document & {
+		startViewTransition?: (callback: () => void) => void;
+	};
+
+	if (typeof viewTransitionDocument.startViewTransition === "function") {
+		// 浏览器会在回调前后截取旧/新视图，CSS 再控制新视图圆形扩散
+		viewTransitionDocument.startViewTransition(() => {
+			setThemeCore(theme);
+		});
+		return;
+	}
+
+	// 不支持 View Transitions 的浏览器直接切换，保证功能可用
+	setThemeCore(theme);
 }
 
 // 设置系统主题监听器
