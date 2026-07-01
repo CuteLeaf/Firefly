@@ -8,6 +8,7 @@ enum I18nKey {
 	searchLoading = "searchLoading",
 	searchSummary = "searchSummary",
 	searchContent = "searchContent",
+	aiSummary = "aiSummary",
 	searchViewMore = "searchViewMore",
 	other = "other",
 
