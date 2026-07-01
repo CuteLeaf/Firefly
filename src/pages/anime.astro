@@ -270,7 +270,7 @@ const isConfigured = !!(BILIBILI_UID || (TMDB_API_KEY && TMDB_LIST_ID));
         </div>
 
         {!isConfigured ? (
-          <!-- 未配置提示 -->
+          /* 未配置提示 */
           <div class="text-center py-16">
             <div class="inline-flex items-center justify-center w-16 h-16 bg-(--btn-regular-bg) rounded-full mb-6 border border-(--line-divider)">
               <Icon is:inline name="material-symbols:settings" class="text-[2rem] text-(--btn-content)" />
@@ -334,7 +334,7 @@ const isConfigured = !!(BILIBILI_UID || (TMDB_API_KEY && TMDB_LIST_ID));
               </div>
             </div>
 
-            <!-- 番剧网格（Svelte 交互组件） -->
+            {/* 番剧网格（Svelte 交互组件） */}
             <AnimeGrid
               client:load
               items={animeList}

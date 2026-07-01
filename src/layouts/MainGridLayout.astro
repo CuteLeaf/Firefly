@@ -325,7 +325,7 @@ const hasMultipleImages =
 }>
     <!-- 背景图片显示 -->
     {hasMultipleImages ? (
-    <!-- 轮播模式：渲染所有图片为 slide-item -->
+    /* 轮播模式：渲染所有图片为 slide-item */
     <div class:list={["relative h-full w-full bg-black", `effect-${bannerCarouselEffect}`]} id="banner-images-container"
          style={`z-index: 5; --carousel-interval: ${bannerCarouselInterval}ms`}
          data-carousel-enabled={bannerCarouselEnabledDefault}
@@ -365,7 +365,7 @@ const hasMultipleImages =
         ))}
     </div>
     ) : (
-    <!-- 单图模式 -->
+    /* 单图模式 */
     <div class="relative h-full w-full" id="banner-images-container">
         {backgroundImages.mobile.length > 0 && (
             <div class="banner-image-slot-mobile absolute inset-0 block lg:hidden">

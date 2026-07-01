@@ -13,7 +13,7 @@ const processedLinks = Astro.props.links;
     {processedLinks.map((link) => (
         <div class="mobile-menu-item">
             {link.children && link.children.length > 0 ? (
-                <!-- 有子菜单的项目 -->
+                /* 有子菜单的项目 */
                 <div class="mobile-dropdown" data-mobile-dropdown>
                     <button
                         class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-8 w-full text-left
@@ -48,7 +48,7 @@ const processedLinks = Astro.props.links;
                     </div>
                 </div>
             ) : (
-                <!-- 普通链接项目 -->
+                /* 普通链接项目 */
                 <a href={link.external ? link.url : url(link.url)} class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-8
                     hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition
                 "
