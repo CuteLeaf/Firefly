@@ -322,6 +322,16 @@ export const ru: Translation = {
 	[Key.siteStatsDays]: "{days} дней",
 	[Key.today]: "Сегодня",
 
+	// 51LA Статистика посещений
+	[Key.laStats]: "Статистика посещений",
+	[Key.laStatsOnline]: "Сейчас онлайн",
+	[Key.laStatsTodayUV]: "Посетители сегодня",
+	[Key.laStatsTodayPV]: "Просмотры сегодня",
+	[Key.laStatsYesterdayUV]: "Посетители вчера",
+	[Key.laStatsYesterdayPV]: "Просмотры вчера",
+	[Key.laStatsMonthPV]: "Просмотры за месяц",
+	[Key.laStatsTotalPV]: "Всего просмотров",
+
 	// Информация о сайте
 	[Key.siteInfo]: "Информация о сайте",
 	[Key.siteInfoBuildTime]: "Время сборки",

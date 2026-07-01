@@ -307,6 +307,16 @@ enum I18nKey {
 	siteStatsDays = "siteStatsDays",
 	today = "today",
 
+	// 51LA 访问统计
+	laStats = "laStats",
+	laStatsOnline = "laStatsOnline",
+	laStatsTodayUV = "laStatsTodayUV",
+	laStatsTodayPV = "laStatsTodayPV",
+	laStatsYesterdayUV = "laStatsYesterdayUV",
+	laStatsYesterdayPV = "laStatsYesterdayPV",
+	laStatsMonthPV = "laStatsMonthPV",
+	laStatsTotalPV = "laStatsTotalPV",
+
 	// 站点信息
 	siteInfo = "siteInfo",
 	siteInfoBuildTime = "siteInfoBuildTime",

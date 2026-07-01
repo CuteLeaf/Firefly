@@ -1,0 +1,133 @@
+---
+import { Icon } from "astro-icon/components";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import { analyticsConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { WidgetComponentConfig } from "@/types/config";
+
+interface Props {
+	class?: string;
+	style?: string;
+	widgetConfig?: WidgetComponentConfig;
+}
+
+const { class: className, style, widgetConfig } = Astro.props;
+
+const showTitle = widgetConfig?.showTitle !== false;
+
+const la51Id = analyticsConfig?.la51Analytics?.Id || "";
+
+// 51LA 统计指标定义
+const stats = [
+	{
+		icon: "material-symbols:person-outline",
+		label: i18n(I18nKey.laStatsOnline),
+		id: "la-online",
+	},
+	{
+		icon: "material-symbols:calendar-today-outline",
+		label: i18n(I18nKey.laStatsTodayUV),
+		id: "la-today-uv",
+	},
+	{
+		icon: "material-symbols:visibility-outline",
+		label: i18n(I18nKey.laStatsTodayPV),
+		id: "la-today-pv",
+	},
+	{
+		icon: "material-symbols:calendar-month-outline",
+		label: i18n(I18nKey.laStatsYesterdayUV),
+		id: "la-yesterday-uv",
+	},
+	{
+		icon: "material-symbols:visibility-outline",
+		label: i18n(I18nKey.laStatsYesterdayPV),
+		id: "la-yesterday-pv",
+	},
+	{
+		icon: "material-symbols:calendar-clock-outline",
+		label: i18n(I18nKey.laStatsMonthPV),
+		id: "la-month-pv",
+	},
+	{
+		icon: "mingcute:chart-line-line",
+		label: i18n(I18nKey.laStatsTotalPV),
+		id: "la-total-pv",
+	},
+];
+---
+
+{la51Id && (
+<WidgetLayout name={i18n(I18nKey.laStats)} showTitle={showTitle} id="la-stats" class={className} style={style}>
+  <div class="flex flex-col gap-2">
+    {stats.map((stat) => (
+      <div class="flex items-center justify-between px-3 py-1.5">
+        <div class="flex items-center gap-2.5">
+          <div class="text-(--primary) text-xl">
+            <Icon is:inline name={stat.icon} />
+          </div>
+          <span class="text-neutral-700 dark:text-neutral-300 font-medium text-sm">
+            {stat.label}
+          </span>
+        </div>
+        <span
+          class="text-base font-bold text-neutral-900 dark:text-neutral-100"
+          data-stat-id={stat.id}>
+          -
+        </span>
+      </div>
+    ))}
+  </div>
+</WidgetLayout>
+)}
+
+<script is:inline define:vars={{ la51Id }}>
+  (function() {
+    // 验证 ID 格式：仅允许字母数字字符，防止 URL 注入
+    if (!la51Id || !/^[A-Za-z0-9]+$/.test(la51Id)) return;
+
+    // 索引到键名的映射，与 51LA quote.js 接口返回的 <p><span>索引</span><span>值</span></p> 格式对应
+    var INDEX_MAP = ["la-online", "la-today-uv", "la-today-pv", "la-yesterday-uv", "la-yesterday-pv", "la-month-pv", "la-total-pv"];
+
+    function updateLaStats() {
+      var url = "https://v6-widget.51.la/v6/" + la51Id + "/quote.js";
+
+      fetch(url)
+        .then(function(res) {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.text();
+        })
+        .then(function(text) {
+          var match = text.match(/r\.innerHTML\s*=\s*"([^"]+)"/);
+          if (!match) return;
+
+          var html = match[1];
+          var pRegex = /<p><span>(\d+)<\/span><span>(\d+)<\/span><\/p>/g;
+          var m;
+
+          while ((m = pRegex.exec(html)) !== null) {
+            var idx = parseInt(m[1], 10);
+            var val = parseInt(m[2], 10);
+            if (idx >= 0 && idx < INDEX_MAP.length) {
+              var elements = document.querySelectorAll('[data-stat-id="' + INDEX_MAP[idx] + '"]');
+              elements.forEach(function(el) {
+                el.textContent = val.toLocaleString();
+              });
+            }
+          }
+        })
+        .catch(function(err) {
+          console.error("LA Stats load error:", err);
+        });
+    }
+
+    // 页面加载时更新
+    updateLaStats();
+
+    // 页面切换时重新更新
+    document.addEventListener("swup:contentReplaced", function() {
+      setTimeout(updateLaStats, 100);
+    });
+  })();
+</script>
