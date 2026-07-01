@@ -11,6 +11,7 @@ export const ru: Translation = {
 	[Key.searchLoading]: "Поиск...",
 	[Key.searchSummary]: "Резюме",
 	[Key.searchContent]: "Содержание",
+	[Key.aiSummary]: "AI Резюме",
 	[Key.searchViewMore]: "Показать еще ({count} шт)",
 	[Key.other]: "Прочее",
 	[Key.all]: "Все",

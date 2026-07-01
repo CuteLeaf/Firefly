@@ -11,6 +11,7 @@ export const zh_TW: Translation = {
 	[Key.searchLoading]: "搜尋中...",
 	[Key.searchSummary]: "摘要",
 	[Key.searchContent]: "內容",
+	[Key.aiSummary]: "AI 摘要",
 	[Key.searchViewMore]: "查看更多結果 ({count} 個更多)",
 	[Key.other]: "其他",
 	[Key.all]: "全部",

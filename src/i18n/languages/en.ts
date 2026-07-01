@@ -11,6 +11,7 @@ export const en: Translation = {
 	[Key.searchLoading]: "Searching...",
 	[Key.searchSummary]: "Summary",
 	[Key.searchContent]: "Content",
+	[Key.aiSummary]: "AI Summary",
 	[Key.searchViewMore]: "View more results ({count} more)",
 	[Key.other]: "Other",
 	[Key.all]: "All",
