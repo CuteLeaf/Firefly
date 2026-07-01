@@ -1,0 +1,118 @@
+---
+import ImageWrapper from "@/components/common/ImageWrapper.astro";
+
+export interface Props {
+	author: string;
+	avatar: string;
+	relativeTime: string;
+	wordCount: number;
+	wordUnit: string;
+	maxCollapsedHeight?: number;
+	anchorId?: string;
+}
+
+const {
+	author,
+	avatar,
+	relativeTime,
+	wordCount,
+	wordUnit,
+	maxCollapsedHeight = 260,
+	anchorId,
+} = Astro.props;
+---
+
+<article
+  id={anchorId}
+  class="shuoshuo-card card-base p-6 rounded-[var(--radius-large)] overflow-hidden"
+  data-shuoshuo-card
+  data-max-height={maxCollapsedHeight}
+>
+  <div class="flex gap-4">
+    <ImageWrapper
+      src={avatar}
+      alt={author}
+      loading="lazy"
+      class="h-11 w-11 rounded-full border border-[var(--line-divider)] bg-[var(--card-bg)] object-cover shrink-0"
+      usePicture={false}
+      widths={[88]}
+      sizes="44px"
+    />
+    <div class="min-w-0 flex-1">
+      <div class="flex items-start justify-between gap-4">
+        <div class="min-w-0">
+          <div class="font-bold text-[1.15rem] leading-tight text-black/75 dark:text-white/80 truncate">
+            {author}
+          </div>
+          <div class="mt-1 text-sm text-black/45 dark:text-white/45">
+            {relativeTime}
+          </div>
+        </div>
+        <div class="text-sm text-black/40 dark:text-white/40 shrink-0">
+          {wordCount}
+          {wordUnit}
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <div class="shuoshuo-collapsible" data-collapsible>
+          <div
+            class="prose dark:prose-invert prose-base !max-w-none custom-md shuoshuo-md"
+            data-collapsible-content
+          >
+            <slot />
+          </div>
+          <div class="shuoshuo-fade" data-fade></div>
+        </div>
+
+        <button
+          type="button"
+          class="shuoshuo-toggle mt-3 text-sm text-[var(--primary)] hover:opacity-80 active:opacity-60 hidden"
+          data-toggle
+          aria-expanded="false"
+        >
+          展开全文
+        </button>
+      </div>
+    </div>
+  </div>
+</article>
+
+<style>
+  .shuoshuo-collapsible {
+    position: relative;
+    max-height: var(--shuoshuo-max-height, 260px);
+    overflow: hidden;
+  }
+
+  .shuoshuo-card.is-open .shuoshuo-collapsible {
+    max-height: none;
+  }
+
+  .shuoshuo-fade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 5.5rem;
+    background: linear-gradient(to bottom, transparent, var(--card-bg));
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 180ms ease;
+  }
+
+  .shuoshuo-card.is-open .shuoshuo-fade {
+    opacity: 0;
+  }
+
+  .shuoshuo-md :global(p) {
+    margin-top: 0.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .shuoshuo-md :global(ul),
+  .shuoshuo-md :global(ol) {
+    margin-top: 0.4rem;
+    margin-bottom: 0.6rem;
+  }
+</style>

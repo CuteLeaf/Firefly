@@ -10,6 +10,7 @@ import {
 	getSortedPosts,
 	getTagList,
 } from "@/utils/content-utils";
+import { getSortedShuoshuo } from "@/utils/shuoshuo-utils";
 
 interface Props {
 	class?: string;
@@ -28,6 +29,7 @@ const siteStartDate = siteConfig.siteStartDate || "2025-01-01";
 const posts = await getSortedPosts();
 const categories = await getCategoryList();
 const tags = await getTagList();
+const shuoshuo = await getSortedShuoshuo();
 
 // 计算总字数
 let totalWords = 0;
@@ -66,7 +68,15 @@ const lastActivityDate = posts.reduce<Date | null>((latest, post) => {
 	return latest;
 }, null);
 
-const lastPostDate = lastActivityDate ? lastActivityDate.toISOString() : null;
+const lastShuoshuoDate = shuoshuo[0]?.data.published ?? null;
+const latestActivityDate =
+	lastActivityDate && lastShuoshuoDate
+		? new Date(Math.max(lastActivityDate.getTime(), lastShuoshuoDate.getTime()))
+		: (lastActivityDate ?? lastShuoshuoDate);
+
+const lastPostDate = latestActivityDate
+	? latestActivityDate.toISOString()
+	: null;
 
 const todayText = i18n(I18nKey.today);
 
@@ -75,6 +85,11 @@ const stats = [
 		icon: "material-symbols:article-outline",
 		label: i18n(I18nKey.siteStatsPostCount),
 		value: posts.length,
+	},
+	{
+		icon: "material-symbols:chat-bubble-outline",
+		label: i18n(I18nKey.siteStatsShuoshuoCount),
+		value: shuoshuo.length,
 	},
 	{
 		icon: "material-symbols:folder-outline",

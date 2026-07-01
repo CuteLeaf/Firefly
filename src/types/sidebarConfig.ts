@@ -2,6 +2,7 @@
 export type WidgetComponentType =
 	| "profile"
 	| "announcement"
+	| "latestShuoshuo"
 	| "categories"
 	| "tags"
 	| "sidebarToc"

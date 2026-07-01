@@ -14,6 +14,8 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 	const links: NavBarLink[] = [
 		// 主页
 		LinkPresets.Home,
+		// 说说
+		LinkPresets.Shuoshuo,
 	];
 
 	// 文章及其子菜单
@@ -134,6 +136,11 @@ export const LinkPresets: Record<string, NavBarLink> = {
 		name: "归档",
 		url: "/archive/",
 		icon: "material-symbols:archive",
+	},
+	Shuoshuo: {
+		name: "说说",
+		url: "/shuoshuo/",
+		icon: "material-symbols:chat-bubble-outline",
 	},
 	Categories: {
 		name: "分类",
