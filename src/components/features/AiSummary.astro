@@ -1,0 +1,43 @@
+---
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import { Icon } from "astro-icon/components";
+
+interface Props {
+	summary: string;
+}
+
+const { summary } = Astro.props;
+---
+
+<div class="ai-summary-card mb-6 onload-animation">
+	<div class="flex items-center gap-3 mb-3">
+		<div
+			class="transition h-8 w-8 rounded-lg bg-(--primary)/10 text-(--primary) flex items-center justify-center"
+		>
+			<Icon is:inline name="material-symbols:psychology-outline-rounded" class="text-xl" />
+		</div>
+		<h3 class="text-base font-semibold text-(--primary)">
+			{i18n(I18nKey.aiSummary)}
+		</h3>
+	</div>
+
+	<div class="pl-4 border-l-3 border-(--primary)/30">
+		<p class="text-sm leading-relaxed text-black/75 dark:text-white/75">
+			{summary}
+		</p>
+	</div>
+</div>
+
+<style>
+	.ai-summary-card {
+		background: color-mix(in srgb, var(--primary) 5%, transparent);
+		border-radius: var(--radius-large);
+		padding: 1rem 1.25rem;
+		transition: all 0.2s ease;
+	}
+
+	:global(.dark) .ai-summary-card {
+		background: color-mix(in srgb, var(--primary) 8%, transparent);
+	}
+</style>
