@@ -185,18 +185,27 @@ export function setTheme(theme: LIGHT_DARK_MODE): void {
 // 使用 View Transitions API 执行带点击坐标的圆形扩散主题切换
 export function setThemeWithAnimation(
 	theme: LIGHT_DARK_MODE,
-	clickX: number,
-	clickY: number,
+	clickX?: number,
+	clickY?: number,
 ): void {
-	if (typeof document === "undefined") {
+	if (typeof document === "undefined" || typeof window === "undefined") {
 		// 非浏览器环境没有可动画的文档，直接走核心切换逻辑
 		setThemeCore(theme);
 		return;
 	}
 
-	// 将点击位置传给 CSS，作为 clip-path: circle() 的圆心
-	document.documentElement.style.setProperty("--click-x", `${clickX}px`);
-	document.documentElement.style.setProperty("--click-y", `${clickY}px`);
+	const hasValidOrigin =
+		typeof clickX === "number" &&
+		typeof clickY === "number" &&
+		Number.isFinite(clickX) &&
+		Number.isFinite(clickY) &&
+		(clickX > 0 || clickY > 0);
+	const originX = hasValidOrigin ? clickX : window.innerWidth / 2;
+	const originY = hasValidOrigin ? clickY : window.innerHeight / 2;
+
+	// 将有效触发位置传给 CSS，作为 clip-path: circle() 的圆心
+	document.documentElement.style.setProperty("--click-x", `${originX}px`);
+	document.documentElement.style.setProperty("--click-y", `${originY}px`);
 
 	// TypeScript 当前 DOM 类型可能缺少 startViewTransition，局部补齐即可
 	const viewTransitionDocument = document as Document & {

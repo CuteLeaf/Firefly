@@ -28,12 +28,35 @@ type WindowWithSwup = Window & { swup?: SwupInstance };
 let mode: LIGHT_DARK_MODE = $state(LIGHT_MODE);
 let displayedMode: LIGHT_DARK_MODE = $state(LIGHT_MODE); // 显示的实际主题（在system模式下会随系统变化）
 
+// 获取动画起点：鼠标点击使用点击坐标，键盘触发使用当前菜单项中心点
+function getEventOrigin(event?: MouseEvent): { x: number; y: number } | undefined {
+	if (!event) {
+		return undefined;
+	}
+
+	if (event.detail > 0 && (event.clientX > 0 || event.clientY > 0)) {
+		return { x: event.clientX, y: event.clientY };
+	}
+
+	const target = event.currentTarget as HTMLElement | null;
+	if (!target) {
+		return undefined;
+	}
+
+	const rect = target.getBoundingClientRect();
+	return {
+		x: rect.left + rect.width / 2,
+		y: rect.top + rect.height / 2,
+	};
+}
+
 // 切换主题模式；用户点击触发时传入鼠标坐标，用于圆形扩散动画的起点
 function switchScheme(newMode: LIGHT_DARK_MODE, event?: MouseEvent) {
 	mode = newMode;
-	if (event) {
+	const origin = getEventOrigin(event);
+	if (origin) {
 		// 菜单点击切换时使用 View Transitions 圆形扩散动画
-		setThemeWithAnimation(newMode, event.clientX, event.clientY);
+		setThemeWithAnimation(newMode, origin.x, origin.y);
 	} else {
 		// 程序化切换或无坐标来源时保持原来的直接切换逻辑
 		setTheme(newMode);

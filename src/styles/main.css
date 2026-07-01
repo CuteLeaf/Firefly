@@ -92,17 +92,31 @@ html {
     /* 新视图从点击坐标开始圆形扩散，坐标由主题切换逻辑写入 CSS 变量 */
     ::view-transition-new(root) {
         animation: theme-circle-expand 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
-        clip-path: circle(0% at var(--click-x, 50%) var(--click-y, 50%));
+        clip-path: circle(0 at var(--click-x, 50%) var(--click-y, 50%));
         z-index: 1;
     }
     
-    /* 圆形半径扩展到 150%，确保从任意点击位置都能覆盖完整视口 */
+    /* 圆形半径扩展到 150vmax，确保极端视口比例和角落点击时也能覆盖完整屏幕 */
     @keyframes theme-circle-expand {
         0% {
-            clip-path: circle(0% at var(--click-x, 50%) var(--click-y, 50%));
+            clip-path: circle(0 at var(--click-x, 50%) var(--click-y, 50%));
         }
         100% {
-            clip-path: circle(150% at var(--click-x, 50%) var(--click-y, 50%));
+            clip-path: circle(150vmax at var(--click-x, 50%) var(--click-y, 50%));
+        }
+    }
+
+    /* 尊重减少动态效果偏好，避免播放完整圆形扩散动画 */
+    @media (prefers-reduced-motion: reduce) {
+        ::view-transition-group(root),
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+            animation-duration: 0.01ms;
+            animation-name: none;
+        }
+
+        ::view-transition-new(root) {
+            clip-path: none;
         }
     }
     
@@ -571,4 +585,3 @@ html {
 .pagination-info {
   @apply text-sm text-(--text-secondary) text-center mb-2;
 }
-
