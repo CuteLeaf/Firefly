@@ -13,6 +13,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { glob } from "glob";
 import matter from "gray-matter";
 
@@ -20,10 +21,13 @@ import matter from "gray-matter";
 // 加载 .env 文件
 // ============================================================
 
-const envPath = path.resolve(import.meta.dirname, "../.env");
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// 简单 .env 解析器（不支持引号包裹的值或值中的等号）
+const envPath = path.resolve(__dirname, "../.env");
 if (fs.existsSync(envPath)) {
 	const envContent = fs.readFileSync(envPath, "utf-8");
-	for (const line of envContent.split("\n")) {
+	for (const line of envContent.split(/\r?\n/)) {
 		const trimmed = line.trim();
 		if (!trimmed || trimmed.startsWith("#")) continue;
 		const eqIdx = trimmed.indexOf("=");
@@ -42,7 +46,7 @@ if (fs.existsSync(envPath)) {
 
 const CONFIG = {
 	// 文章目录
-	postsDir: path.resolve(import.meta.dirname, "../src/content/posts"),
+	postsDir: path.resolve(__dirname, "../src/content/posts"),
 
 	// Front-matter 字段名
 	aiField: "ai",
@@ -158,12 +162,11 @@ async function generateSummary(content) {
 
 /**
  * 从 Markdown 正文中提取纯文本（去除 Markdown 标记）
- * @param {string} raw - 原始 Markdown 内容
+ * @param {string} content - 已去除 front-matter 的 Markdown 正文
  * @returns {string} 纯文本
  */
-function extractPlainText(raw) {
-	return raw
-		.replace(/^---[\s\S]*?---\n*/m, "") // 移除 front-matter
+function extractPlainText(content) {
+	return content
 		.replace(/#{1,6}\s+/g, "") // 移除标题标记
 		.replace(/(\*|_){1,3}/g, "") // 移除加粗/斜体
 		.replace(/```[\s\S]*?```/g, "") // 移除代码块
@@ -195,8 +198,8 @@ async function processFile(filePath) {
 			return { file: relativePath, status: "skipped" };
 		}
 
-		// 提取正文纯文本
-		const plainText = extractPlainText(rawContent);
+		// 提取正文纯文本（基于已解析的正文内容）
+		const plainText = extractPlainText(parsed.content);
 
 		if (!plainText || plainText.length < 10) {
 			log.warn(`${relativePath} 正文内容过短，跳过`);
