@@ -17,17 +17,37 @@ export const friendsPageConfig: FriendsPageConfig = {
 	showComment: true,
 
 	// 是否开启随机排序配置，如果开启，就会忽略权重，构建时进行一次随机排序
-	randomizeSort: false,
+	randomizeSort: true,
 };
 
 // 友链配置
 export const friendsConfig: FriendLink[] = [
 	{
-		title: "夏夜流萤",
+		title: "萧小晓",
 		imgurl:
-			"https://weavatar.com/avatar/d252655d40d6874417a720bad0a6c5f77f8f6a1fd2f882f8f338402dc37e4190?s=640",
-		desc: "飞萤之火自无梦的长夜亮起，绽放在终竟的明天。",
-		siteurl: "https://blog.cuteleaf.cn",
+			"https://www.lxlovo.top/png.png",
+		desc: "飞一个爱写文的菜鸡。",
+		siteurl: "https://blog.lxlovo.top",
+		tags: ["Blog"],
+		weight: 10, // 权重，数字越大排序越靠前
+		enabled: false, // 是否启用true
+	},
+		{
+		title: "年华",
+		imgurl:
+			"https://blog.amamo.top/favicon/favicon2.png",
+		desc: "分享生活和技术。",
+		siteurl: "https://blog.520781.xyz",
+		tags: ["Blog"],
+		weight: 10, // 权重，数字越大排序越靠前
+		enabled: false, // 是否启用true
+	},
+		{
+		title: "董健颖的个人博客",
+		imgurl:
+			"https://dongjianying.xyz/_astro/2.g0rWXCmt_ZRPm2Q.webphttps://weavatar.com/api/avatar/e3e6c5e34c0111ab1a16acb37cec03f01907406e60b49477c089001f5ed083b8?s=50&t=1781771969751?s=640",
+		desc: "这是我的个人博客，记录我的学习和生活点滴，分享我的学习经验和见解。希望在这里能与志同道合的朋友们交流和成长！",
+		siteurl: "https://dongjianying.xyz",
 		tags: ["Blog"],
 		weight: 10, // 权重，数字越大排序越靠前
 		enabled: false, // 是否启用true
