@@ -30,7 +30,7 @@ export const friendsConfig: FriendLink[] = [
 		siteurl: "https://blog.lxlovo.top",
 		tags: ["Blog"],
 		weight: 10, // 权重，数字越大排序越靠前
-		enabled: false, // 是否启用true
+		enabled: true, // 是否启用true
 	},
 		{
 		title: "年华",
@@ -40,7 +40,7 @@ export const friendsConfig: FriendLink[] = [
 		siteurl: "https://blog.520781.xyz",
 		tags: ["Blog"],
 		weight: 10, // 权重，数字越大排序越靠前
-		enabled: false, // 是否启用true
+		enabled: true, // 是否启用true
 	},
 		{
 		title: "董健颖的个人博客",
@@ -50,7 +50,7 @@ export const friendsConfig: FriendLink[] = [
 		siteurl: "https://dongjianying.xyz",
 		tags: ["Blog"],
 		weight: 10, // 权重，数字越大排序越靠前
-		enabled: false, // 是否启用true
+		enabled: true, // 是否启用true
 	},
 ];
 
