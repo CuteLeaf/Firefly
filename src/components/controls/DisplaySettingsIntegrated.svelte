@@ -37,6 +37,8 @@ import {
 	setSakuraEnabled,
 	setWallpaperMode,
 	setWavesEnabled,
+	getStoredProgressiveLoadingEnabled,
+	setProgressiveLoadingEnabled,
 } from "@utils/setting-utils";
 import { onMount } from "svelte";
 import Icon from "@/components/common/Icon.svelte";
@@ -82,6 +84,7 @@ let bannerCarouselEnabled = $state(true);
 const defaultBannerCarouselEnabled = getDefaultBannerCarouselEnabled();
 let sakuraEnabled = $state(true);
 const defaultSakuraEnabled = getDefaultSakuraEnabled();
+let progressiveLoadingEnabled = $state(true);
 let overlayOpacity = $state(getDefaultOverlayOpacity());
 const defaultOverlayOpacity = getDefaultOverlayOpacity();
 let overlayBlur = $state(getDefaultOverlayBlur());
@@ -309,6 +312,11 @@ function toggleSakuraEnabled() {
 	setSakuraEnabled(sakuraEnabled);
 }
 
+function toggleProgressiveLoading() {
+	progressiveLoadingEnabled = !progressiveLoadingEnabled;
+	setProgressiveLoadingEnabled(progressiveLoadingEnabled);
+}
+
 function switchWallpaperMode(newMode: WALLPAPER_MODE) {
 	wallpaperMode = newMode;
 	setWallpaperMode(newMode);
@@ -396,6 +404,9 @@ onMount(() => {
 
 	// 从localStorage读取樱花特效状态
 	sakuraEnabled = getStoredSakuraEnabled();
+
+	// 从localStorage读取渐进式图片加载状态
+	progressiveLoadingEnabled = getStoredProgressiveLoadingEnabled();
 
 	// 从localStorage读取全屏透明设置状态
 	overlayOpacity = getStoredOverlayOpacity();
@@ -745,6 +756,39 @@ $effect(() => {
             </div>
         </div>
     {/if}
+
+    <!-- Image Settings Section -->
+    <div class="mt-2 mb-2">
+        <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3 mb-2
+            before:w-1 before:h-4 before:rounded-md before:bg-(--primary)
+            before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2"
+        >
+            {i18n(I18nKey.imageSettings)}
+            <button aria-label="Reset to Default" class="btn-regular w-7 h-7 rounded-md active:scale-90"
+                    class:opacity-0={progressiveLoadingEnabled === true} class:pointer-events-none={progressiveLoadingEnabled === true} onclick={() => { progressiveLoadingEnabled = true; setProgressiveLoadingEnabled(true); }}>
+                <div class="text-(--btn-content)">
+                    <Icon icon="fa7-solid:arrow-rotate-left" class="text-[0.875rem]"></Icon>
+                </div>
+            </button>
+        </div>
+        <div class="space-y-1">
+            <button
+                class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
+                class:bg-(--btn-regular-bg-hover)={progressiveLoadingEnabled}
+                onclick={toggleProgressiveLoading}
+            >
+                <Icon icon="material-symbols:image-outline" class="text-[1.25rem] shrink-0"></Icon>
+                <span class="text-sm flex-1">{i18n(I18nKey.progressiveLoading)}</span>
+                <div class="w-10 h-5 rounded-full transition-all duration-200 relative"
+                     class:bg-(--primary)={progressiveLoadingEnabled}
+                     class:bg-(--btn-regular-bg-active)={!progressiveLoadingEnabled}>
+                    <div class="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all duration-200"
+                         class:left-0.5={!progressiveLoadingEnabled}
+                         class:left-5={progressiveLoadingEnabled}></div>
+                </div>
+            </button>
+        </div>
+    </div>
 
     <!-- Layout Switch Section -->
     {#if allowLayoutSwitch}

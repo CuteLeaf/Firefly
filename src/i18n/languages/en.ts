@@ -280,6 +280,8 @@ export const en: Translation = {
 	[Key.overlayOpacity]: "Wallpaper Opacity",
 	[Key.overlayBlur]: "Background Blur",
 	[Key.overlayCardOpacity]: "Card Opacity",
+	[Key.progressiveLoading]: "Progressive Image Loading",
+	[Key.imageSettings]: "Image Settings",
 
 	// Post List Layout
 	[Key.postListLayout]: "Post List Layout",

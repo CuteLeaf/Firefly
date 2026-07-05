@@ -272,6 +272,8 @@ export const zh_CN: Translation = {
 	[Key.overlayOpacity]: "壁纸透明度",
 	[Key.overlayBlur]: "背景模糊度",
 	[Key.overlayCardOpacity]: "卡片透明度",
+	[Key.progressiveLoading]: "图片渐进式加载",
+	[Key.imageSettings]: "图片设置",
 
 	// 文章布局
 	[Key.postListLayout]: "文章布局",

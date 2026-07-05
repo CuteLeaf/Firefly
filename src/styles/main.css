@@ -212,10 +212,19 @@ html {
     /* LQIP 占位渐变 */
     .lqip-placeholder {
         z-index: 0;
-        transition: opacity 0.5s ease-out;
+        transition: opacity 0.5s ease-out, filter 0.5s ease-out, transform 0.5s ease-out;
     }
     .lqip-placeholder.loaded {
         opacity: 0;
+    }
+    html[data-progressive-loading="true"] .lqip-placeholder {
+        filter: blur(20px);
+        transform: scale(1.05); /* 缩放以避免边缘模糊产生白边 */
+    }
+    html[data-progressive-loading="true"] .lqip-placeholder[data-tiny-src="true"] {
+        background-image: var(--tiny-src) !important;
+        background-size: cover;
+        background-position: center;
     }
 
 
