@@ -126,6 +126,8 @@ export const siteConfig: SiteConfig = {
 		mobileDefaultMode: "list",
 		// 是否在文章列表中显示标签
 		showTags: true,
+		// 文章列表中最多显示的标签数量
+		tagCount: 1,
 		// 文章简介显示行数，设为 0 则不截断
 		descriptionLines: 2,
 		// 是否允许用户切换布局
