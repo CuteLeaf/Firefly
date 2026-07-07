@@ -213,6 +213,9 @@ html {
     .lqip-placeholder {
         z-index: 0;
         transition: opacity 0.5s ease-out, filter 0.5s ease-out, transform 0.5s ease-out;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
     }
     .lqip-placeholder.loaded {
         opacity: 0;
@@ -223,8 +226,6 @@ html {
     }
     html[data-progressive-loading="true"] .lqip-placeholder[data-tiny-src="true"] {
         background-image: var(--tiny-src) !important;
-        background-size: cover;
-        background-position: center;
     }
 
 
