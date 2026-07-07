@@ -130,6 +130,8 @@ export const siteConfig: SiteConfig = {
 		tagCount: 2,
 		// 文章简介显示行数，设为 0 则不截断
 		descriptionLines: 2,
+		// 文章卡片底部统计和发布日期是否显示图标
+		showStatsIcons: true,
 		// 是否允许用户切换布局
 		allowSwitch: true,
 		// 网格布局配置，仅在 defaultMode 为 "grid" 或允许切换布局时生效

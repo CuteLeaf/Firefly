@@ -16,16 +16,11 @@ export interface Props {
 	isHome?: boolean;
 	className?: string;
 	id?: string;
-	words?: number;
-	minutes?: number;
 	showPublished?: boolean;
 	showCategory?: boolean;
 	showTags?: boolean;
 	maxTags?: number;
 	showNoTags?: boolean;
-	showWords?: boolean;
-	showReadingTime?: boolean;
-	variant?: "default" | "stats";
 	customPath?: string;
 	pinned?: boolean;
 	password?: boolean;
@@ -41,16 +36,11 @@ const {
 	isHome,
 	className = "",
 	id,
-	words,
-	minutes,
 	showPublished = true,
 	showCategory = true,
 	showTags = true,
 	maxTags,
 	showNoTags = true,
-	showWords = false,
-	showReadingTime = false,
-	variant = "default",
 	customPath,
 	pinned,
 } = Astro.props;
@@ -58,28 +48,11 @@ const {
 const path = customPath || (id ? `/posts/${id}` : "");
 const visibleTags =
 	typeof maxTags === "number" ? tags?.slice(0, maxTags) : tags;
-const hasPublishedMeta = showPublished;
-const hasWordsMeta = showWords && typeof words === "number";
-const hasMinutesMeta = showReadingTime && typeof minutes === "number";
-const showStatsDivider = variant === "stats";
-const rootClass =
-	variant === "stats"
-		? "flex flex-wrap items-center gap-2 gap-x-2 gap-y-1.5"
-		: "post-meta-root flex flex-wrap text-neutral-500 dark:text-neutral-400 items-center gap-4 gap-x-4 gap-y-2";
-const iconWrapperClass =
-	variant === "stats"
-		? "transition h-5 w-5 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-1.5"
-		: "meta-icon";
-const iconClass = variant === "stats" ? "text-sm" : "text-xl";
-const textClass =
-	variant === "stats" ? "text-xs font-medium" : "text-50 text-sm font-medium";
-const statsDividerClass =
-	"text-xs font-medium text-black/20 dark:text-white/20";
 ---
 
 <div
   class:list={[
-    rootClass,
+    "post-meta-root flex flex-wrap text-neutral-500 dark:text-neutral-400 items-center gap-4 gap-x-4 gap-y-2",
     className,
   ]}
 >
@@ -95,57 +68,15 @@ const statsDividerClass =
   {
     showPublished && (
       <div class="flex items-center">
-        <div class={iconWrapperClass}>
+        <div class="meta-icon">
           <Icon
             is:inline
             name="material-symbols:calendar-today-outline-rounded"
-            class={iconClass}
+            class="text-xl"
           />
         </div>
-        <span class={textClass}>
+        <span class="text-50 text-sm font-medium">
           {formatDateToYYYYMMDD(published)}
-        </span>
-      </div>
-    )
-  }
-
-  {
-    showStatsDivider && hasPublishedMeta && hasWordsMeta && (
-      <span class={statsDividerClass}>|</span>
-    )
-  }
-
-  {
-    hasWordsMeta && (
-      <div class="flex items-center">
-        <div class={iconWrapperClass}>
-          <Icon is:inline name="material-symbols:notes-rounded" class={iconClass} />
-        </div>
-        <span class={textClass}>
-          {words} {i18n(words === 1 ? I18nKey.wordCount : I18nKey.wordsCount)}
-        </span>
-      </div>
-    )
-  }
-
-  {
-    showStatsDivider && hasMinutesMeta && (hasPublishedMeta || hasWordsMeta) && (
-      <span class={statsDividerClass}>|</span>
-    )
-  }
-
-  {
-    hasMinutesMeta && (
-      <div class="flex items-center">
-        <div class={iconWrapperClass}>
-          <Icon
-            is:inline
-            name="material-symbols:schedule-outline-rounded"
-            class={iconClass}
-          />
-        </div>
-        <span class={textClass}>
-          {minutes} {i18n(minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount)}
         </span>
       </div>
     )
@@ -157,14 +88,14 @@ const statsDividerClass =
       updated &&
       updated.getTime() !== published.getTime() && (
         <div class="flex items-center">
-          <div class={iconWrapperClass}>
+          <div class="meta-icon">
             <Icon
               is:inline
               name="material-symbols:edit-calendar-outline-rounded"
-              class={iconClass}
+              class="text-xl"
             />
           </div>
-          <span class={textClass}>
+          <span class="text-50 text-sm font-medium">
             {formatDateToYYYYMMDD(updated)}
           </span>
         </div>
@@ -174,8 +105,8 @@ const statsDividerClass =
   {
     showCategory && (
       <div class="flex items-center">
-        <div class={iconWrapperClass}>
-          <Icon is:inline name="material-symbols:book-2-outline-rounded" class={iconClass} />
+        <div class="meta-icon">
+          <Icon is:inline name="material-symbols:book-2-outline-rounded" class="text-xl" />
         </div>
         <div class="flex flex-row flex-nowrap items-center">
           <a
@@ -199,8 +130,8 @@ const statsDividerClass =
           { flex: !hideTagsForMobile, "hidden md:flex": hideTagsForMobile },
         ]}
       >
-        <div class={iconWrapperClass}>
-          <Icon is:inline name="material-symbols:tag-rounded" class={iconClass} />
+        <div class="meta-icon">
+          <Icon is:inline name="material-symbols:tag-rounded" class="text-xl" />
         </div>
         <div class="flex flex-row flex-nowrap items-center">
           {visibleTags &&
@@ -241,17 +172,17 @@ const statsDividerClass =
       commentConfig.twikoo?.visitorCount &&
       id && (
         <div class="flex items-center">
-          <div class={iconWrapperClass}>
+          <div class="meta-icon">
             <Icon
               is:inline
               name="material-symbols:visibility-outline-rounded"
-              class={iconClass}
+              class="text-xl"
             />
           </div>
-          <span class:list={[textClass, "mr-1"]}>
+          <span class="text-50 text-sm font-medium mr-1">
             {i18n(I18nKey.pageViews)}
           </span>
-          <span class={textClass} id="twikoo_visitors">
+          <span class="text-50 text-sm font-medium" id="twikoo_visitors">
             {i18n(I18nKey.pageViewsLoading)}
           </span>
         </div>
@@ -264,18 +195,18 @@ const statsDividerClass =
       commentConfig.waline?.visitorCount &&
       id && (
         <div class="flex items-center">
-          <div class={iconWrapperClass}>
+          <div class="meta-icon">
             <Icon
               is:inline
               name="material-symbols:visibility-outline-rounded"
-              class={iconClass}
+              class="text-xl"
             />
           </div>
-          <span class:list={[textClass, "mr-1"]}>
+          <span class="text-50 text-sm font-medium mr-1">
             {i18n(I18nKey.pageViews)}
           </span>
           <span
-            class:list={[textClass, "waline-pageview-count"]}
+            class="text-50 text-sm font-medium waline-pageview-count"
             data-path={path}
           >
             {i18n(I18nKey.pageViewsLoading)}
@@ -290,18 +221,18 @@ const statsDividerClass =
       commentConfig.waline?.visitorCount &&
       id && (
         <div class="flex items-center">
-          <div class={iconWrapperClass}>
+          <div class="meta-icon">
             <Icon
               is:inline
               name="material-symbols:visibility-outline-rounded"
-              class={iconClass}
+              class="text-xl"
             />
           </div>
-          <span class:list={[textClass, "mr-1"]}>
+          <span class="text-50 text-sm font-medium mr-1">
             {i18n(I18nKey.pageViews)}
           </span>
           <span
-            class:list={[textClass, "artalk-pv-count"]}
+            class="text-50 text-sm font-medium artalk-pv-count"
             data-path={path}
           >
             {i18n(I18nKey.pageViewsLoading)}

@@ -4,6 +4,7 @@ import { render } from "astro:content";
 import { Icon } from "astro-icon/components";
 import CoverImage from "@/components/common/CoverImage.astro";
 import PostMetadata from "@/components/layout/PostMeta.astro";
+import PostStats from "@/components/layout/PostStats.astro";
 import { siteConfig } from "@/config";
 import { getApiUrlList, processCoverImageSync } from "@/utils/image-utils";
 import { getFileDirFromPath } from "@/utils/url-utils";
@@ -138,16 +139,11 @@ const minutes = remarkPluginFrontmatter.minutes;
     </div>
 
     <!-- stats -->
-    <PostMetadata
+    <PostStats
       published={published}
       words={words}
       minutes={minutes}
-      showCategory={false}
-      showTags={false}
-      hideUpdateDate={true}
-      showWords={true}
-      showReadingTime={false}
-      variant="stats"
+      showIcons={siteConfig.postListLayout.showStatsIcons}
       className="stats mt-auto pt-3 text-black/30 dark:text-white/30 gap-x-2"
     />
   </div>
