@@ -11,6 +11,7 @@ import {
 } from "@/utils/image-utils";
 import { getLqipProps } from "@/utils/lqip-utils";
 import { url } from "@/utils/url-utils";
+import { siteConfig } from "@/config";
 
 interface Props {
 	id?: string;
@@ -106,19 +107,21 @@ const lqipProps = isLocal
 
 // Generate tiny image for local or public images if available
 let tinyImgUrl = "";
-if (isLocal && img) {
-	try {
-		const tinyImg = await getImage({ src: img, width: 32, quality: 30 });
-		tinyImgUrl = tinyImg.src;
-	} catch (e) {
-		console.error("Failed to generate tiny thumbnail:", e);
-	}
-} else if (isPublic && src) {
-	try {
-		const tinyImg = await getImage({ src: src, width: 32, quality: 30 });
-		tinyImgUrl = tinyImg.src;
-	} catch (e) {
-		console.error("Failed to generate tiny thumbnail for public image:", e);
+if (siteConfig.post.generateTinyThumbnails) {
+	if (isLocal && img) {
+		try {
+			const tinyImg = await getImage({ src: img, width: 32, quality: 30 });
+			tinyImgUrl = tinyImg.src;
+		} catch (e) {
+			console.error("Failed to generate tiny thumbnail:", e);
+		}
+	} else if (isPublic && src) {
+		try {
+			const tinyImg = await getImage({ src: src, width: 32, quality: 30 });
+			tinyImgUrl = tinyImg.src;
+		} catch (e) {
+			console.error("Failed to generate tiny thumbnail for public image:", e);
+		}
 	}
 }
 ---

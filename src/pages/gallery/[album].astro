@@ -39,7 +39,7 @@ const coverLqipProps = cover
 	: { style: "" };
 
 let tinyImgUrl = "";
-if (cover) {
+if (siteConfig.post.generateTinyThumbnails && cover) {
 	try {
 		const tinyImg = await getImage({ src: cover, width: 32, quality: 30 });
 		tinyImgUrl = tinyImg.src;

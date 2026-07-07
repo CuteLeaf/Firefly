@@ -161,6 +161,8 @@ export const siteConfig: SiteConfig = {
 		sharePoster: true,
 		// OpenGraph图片功能，注意开启后要渲染很长时间，不建议本地调试的时候开启
 		generateOgImages: false,
+		// 是否为图片生成渐进式加载所需的 32px 微缩图（构建时），开启后会增加构建时间，默认关闭
+		generateTinyThumbnails: false,
 	},
 
 	// bangumi配置

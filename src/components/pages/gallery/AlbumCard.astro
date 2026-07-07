@@ -4,6 +4,7 @@ import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { getLqipProps } from "@/utils/lqip-utils";
 import { url } from "@/utils/url-utils";
+import { siteConfig } from "@/config";
 
 interface Props {
 	id: string;
@@ -33,7 +34,7 @@ const {
 const lqipProps = cover ? getLqipProps(cover, undefined, true) : { style: "" };
 
 let tinyImgUrl = "";
-if (cover) {
+if (siteConfig.post.generateTinyThumbnails && cover) {
 	try {
 		const tinyImg = await getImage({ src: cover, width: 32, quality: 30 });
 		tinyImgUrl = tinyImg.src;

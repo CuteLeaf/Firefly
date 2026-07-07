@@ -34,20 +34,22 @@ function getQrLqipProps(qrCode: string) {
 
 // Generate tiny image for QR codes
 const tinyQrs: Record<string, string> = {};
-for (const method of enabledMethods) {
-	if (method.qrCode) {
-		try {
-			const tinyImg = await getImage({
-				src: method.qrCode,
-				width: 32,
-				quality: 30,
-			});
-			tinyQrs[method.qrCode] = tinyImg.src;
-		} catch (e) {
-			console.error(
-				`Failed to generate tiny QR thumbnail for ${method.name}:`,
-				e,
-			);
+if (siteConfig.post.generateTinyThumbnails) {
+	for (const method of enabledMethods) {
+		if (method.qrCode) {
+			try {
+				const tinyImg = await getImage({
+					src: method.qrCode,
+					width: 32,
+					quality: 30,
+				});
+				tinyQrs[method.qrCode] = tinyImg.src;
+			} catch (e) {
+				console.error(
+					`Failed to generate tiny QR thumbnail for ${method.name}:`,
+					e,
+				);
+			}
 		}
 	}
 }

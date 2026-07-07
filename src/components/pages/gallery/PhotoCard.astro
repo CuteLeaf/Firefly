@@ -1,6 +1,7 @@
 ---
 import { getImage } from "astro:assets";
 import { getLqipProps } from "@/utils/lqip-utils";
+import { siteConfig } from "@/config";
 
 interface Props {
 	src: string;
@@ -14,11 +15,13 @@ const { src, albumId, alt = "" } = Astro.props;
 const lqipProps = getLqipProps(src, undefined, true);
 
 let tinyImgUrl = "";
-try {
-	const tinyImg = await getImage({ src, width: 32, quality: 30 });
-	tinyImgUrl = tinyImg.src;
-} catch (e) {
-	console.error("Failed to generate tiny thumbnail:", e);
+if (siteConfig.post.generateTinyThumbnails) {
+	try {
+		const tinyImg = await getImage({ src, width: 32, quality: 30 });
+		tinyImgUrl = tinyImg.src;
+	} catch (e) {
+		console.error("Failed to generate tiny thumbnail:", e);
+	}
 }
 ---
 

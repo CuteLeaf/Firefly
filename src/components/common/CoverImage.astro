@@ -2,7 +2,7 @@
 import { getImage, Picture } from "astro:assets";
 import * as path from "node:path";
 import type { ImageMetadata } from "astro";
-import { coverImageConfig } from "@/config";
+import { coverImageConfig, siteConfig } from "@/config";
 import type { ImageFormat, ResponsiveImageLayout } from "@/types/config";
 import {
 	getFallbackFormat,
@@ -139,19 +139,21 @@ const remoteReferrerPolicy =
 
 // Generate tiny image for local or public images if available
 let tinyImgUrl = "";
-if (isLocal && img) {
-	try {
-		const tinyImg = await getImage({ src: img, width: 32, quality: 30 });
-		tinyImgUrl = tinyImg.src;
-	} catch (e) {
-		console.error("Failed to generate tiny thumbnail:", e);
-	}
-} else if (isPublic && src) {
-	try {
-		const tinyImg = await getImage({ src: src, width: 32, quality: 30 });
-		tinyImgUrl = tinyImg.src;
-	} catch (e) {
-		console.error("Failed to generate tiny thumbnail for public image:", e);
+if (siteConfig.post.generateTinyThumbnails) {
+	if (isLocal && img) {
+		try {
+			const tinyImg = await getImage({ src: img, width: 32, quality: 30 });
+			tinyImgUrl = tinyImg.src;
+		} catch (e) {
+			console.error("Failed to generate tiny thumbnail:", e);
+		}
+	} else if (isPublic && src) {
+		try {
+			const tinyImg = await getImage({ src: src, width: 32, quality: 30 });
+			tinyImgUrl = tinyImg.src;
+		} catch (e) {
+			console.error("Failed to generate tiny thumbnail for public image:", e);
+		}
 	}
 }
 ---
