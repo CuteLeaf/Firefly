@@ -98,7 +98,9 @@ export type SiteConfig = {
 		defaultMode: "list" | "grid"; // 默认布局模式：list=列表模式，grid=网格模式
 		mobileDefaultMode?: "list" | "grid"; // 移动端默认布局模式（视口宽度<780px时使用），不设置则跟随 defaultMode
 		showTags: boolean; // 是否在文章列表中显示标签
+		tagCount?: number; // 文章列表中最多显示的标签数量，默认 1
 		descriptionLines?: number; // 文章简介显示行数，设为 0 则不截断，默认 2
+		showStatsIcons?: boolean; // 文章卡片底部统计是否显示图标
 		allowSwitch: boolean; // 是否允许用户切换布局
 		grid: {
 			// 网格布局配置，仅在 defaultMode 为 "grid" 或允许切换布局时生效

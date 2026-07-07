@@ -4,11 +4,10 @@ import { render } from "astro:content";
 import { Icon } from "astro-icon/components";
 import CoverImage from "@/components/common/CoverImage.astro";
 import PostMetadata from "@/components/layout/PostMeta.astro";
+import PostStats from "@/components/layout/PostStats.astro";
 import { siteConfig } from "@/config";
-import I18nKey from "@/i18n/i18nKey";
-import { i18n } from "@/i18n/translation";
 import { getApiUrlList, processCoverImageSync } from "@/utils/image-utils";
-import { getFileDirFromPath, getTagUrl } from "@/utils/url-utils";
+import { getFileDirFromPath } from "@/utils/url-utils";
 
 interface Props {
 	class?: string;
@@ -54,6 +53,10 @@ const hasCover =
 const coverWidth = "30%";
 
 const showTags = siteConfig.postListLayout.showTags;
+const tagCount = Math.max(
+	0,
+	Math.trunc(siteConfig.postListLayout.tagCount ?? 1),
+);
 const descriptionLines = Math.max(
 	0,
 	Math.trunc(siteConfig.postListLayout.descriptionLines ?? 2),
@@ -63,6 +66,8 @@ const shouldClampDescription = descriptionLines > 0;
 
 const { remarkPluginFrontmatter } = await render(entry);
 const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
+const words = remarkPluginFrontmatter.words;
+const minutes = remarkPluginFrontmatter.minutes;
 ---
 
 <div
@@ -111,11 +116,15 @@ const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
     <PostMetadata
       published={published}
       tags={tags}
-      showTags={false}
+      showPublished={false}
+      showTags={showTags && tagCount > 0}
+      maxTags={tagCount}
+      showNoTags={false}
+      hideUpdateDate={true}
       category={category || undefined}
       pinned={pinned}
       password={password}
-      className="mb-4 post-meta"
+      className="mb-4 post-meta card-header-meta"
     />
 
     <!-- description -->
@@ -129,30 +138,14 @@ const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
       {descriptionText}
     </div>
 
-    <!-- tags -->
-    {
-      showTags && (
-        <div class="text-sm text-black/30 dark:text-white/30 flex flex-wrap gap-2 transition stats pt-3">
-          {tags &&
-            tags.length > 0 &&
-            tags.map((tag, _i) => (
-              <a
-                href={getTagUrl(tag)}
-                aria-label={`View all posts with the ${tag.trim()} tag`}
-                class="btn-regular h-6 text-xs px-2 py-1 rounded-md
-                         transition-all duration-200 hover:scale-105 active:scale-95"
-              >
-                #{tag.trim()}
-              </a>
-            ))}
-          {!(tags && tags.length > 0) && (
-            <span class="text-(--content-meta) text-xs">
-              #{i18n(I18nKey.noTags)}
-            </span>
-          )}
-        </div>
-      )
-    }
+    <!-- stats -->
+    <PostStats
+      published={published}
+      words={words}
+      minutes={minutes}
+      showIcons={siteConfig.postListLayout.showStatsIcons}
+      className="stats mt-auto pt-3 text-black/30 dark:text-white/30 gap-x-2"
+    />
   </div>
   {
     hasCover && (
