@@ -282,6 +282,8 @@ export const ru: Translation = {
 	[Key.overlayOpacity]: "Прозрачность обоев",
 	[Key.overlayBlur]: "Размытие фона",
 	[Key.overlayCardOpacity]: "Прозрачность карточек",
+	[Key.progressiveLoading]: "Прогрессивная загрузка изображений",
+	[Key.imageSettings]: "Настройки изображений",
 
 	// Макет списка сообщений
 	[Key.postListLayout]: "Макет списка сообщений",

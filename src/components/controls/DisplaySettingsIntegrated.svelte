@@ -24,6 +24,7 @@ import {
 	getStoredOverlayBlur,
 	getStoredOverlayCardOpacity,
 	getStoredOverlayOpacity,
+	getStoredProgressiveLoadingEnabled,
 	getStoredSakuraEnabled,
 	getStoredWallpaperMode,
 	getStoredWavesEnabled,
@@ -34,11 +35,10 @@ import {
 	setOverlayBlur,
 	setOverlayCardOpacity,
 	setOverlayOpacity,
+	setProgressiveLoadingEnabled,
 	setSakuraEnabled,
 	setWallpaperMode,
 	setWavesEnabled,
-	getStoredProgressiveLoadingEnabled,
-	setProgressiveLoadingEnabled,
 } from "@utils/setting-utils";
 import { onMount } from "svelte";
 import Icon from "@/components/common/Icon.svelte";

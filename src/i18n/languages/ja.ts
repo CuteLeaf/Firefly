@@ -279,6 +279,8 @@ export const ja: Translation = {
 	[Key.overlayOpacity]: "壁紙の透明度",
 	[Key.overlayBlur]: "背景ぼかし",
 	[Key.overlayCardOpacity]: "カード透明度",
+	[Key.progressiveLoading]: "画像プログレッシブ読み込み",
+	[Key.imageSettings]: "画像設定",
 
 	// 投稿リストレイアウト
 	[Key.postListLayout]: "投稿リストレイアウト",

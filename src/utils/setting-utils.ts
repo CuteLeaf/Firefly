@@ -1310,7 +1310,10 @@ export function setProgressiveLoadingEnabled(enabled: boolean): void {
 	}
 	localStorage.setItem("progressiveLoadingEnabled", String(enabled));
 	if (typeof document !== "undefined") {
-		document.documentElement.setAttribute("data-progressive-loading", String(enabled));
+		document.documentElement.setAttribute(
+			"data-progressive-loading",
+			String(enabled),
+		);
 	}
 	window.dispatchEvent(
 		new CustomEvent("progressiveLoadingToggle", { detail: { enabled } }),
@@ -1320,6 +1323,9 @@ export function setProgressiveLoadingEnabled(enabled: boolean): void {
 export function initProgressiveLoading(): void {
 	const enabled = getStoredProgressiveLoadingEnabled();
 	if (typeof document !== "undefined") {
-		document.documentElement.setAttribute("data-progressive-loading", String(enabled));
+		document.documentElement.setAttribute(
+			"data-progressive-loading",
+			String(enabled),
+		);
 	}
 }
