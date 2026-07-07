@@ -1,4 +1,5 @@
 ---
+import { getImage } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import EncryptedContent from "@/components/features/EncryptedContent.astro";
 import PhotoCard from "@/components/pages/gallery/PhotoCard.astro";
@@ -36,6 +37,16 @@ const columnWidth = galleryConfig.columnWidth || 240;
 const coverLqipProps = cover
 	? getLqipProps(cover, undefined, true)
 	: { style: "" };
+
+let tinyImgUrl = "";
+if (cover) {
+	try {
+		const tinyImg = await getImage({ src: cover, width: 32, quality: 30 });
+		tinyImgUrl = tinyImg.src;
+	} catch (e) {
+		console.error("Failed to generate tiny thumbnail:", e);
+	}
+}
 ---
 
 <MainGridLayout title={albumMeta.name} description={albumMeta.description || ""}>
@@ -43,7 +54,12 @@ const coverLqipProps = cover
   <div class="w-full rounded-(--radius-large) overflow-hidden relative">
     {cover ? (
       <div class="relative w-full aspect-[3/1] min-h-[200px] max-h-[360px] overflow-hidden">
-        <div class="lqip-placeholder absolute inset-0 pointer-events-none" style={coverLqipProps.style} aria-hidden="true"></div>
+        <div 
+          class="lqip-placeholder absolute inset-0 pointer-events-none" 
+          style={`${coverLqipProps.style};${tinyImgUrl ? `--tiny-src: url(${tinyImgUrl})` : ''}`} 
+          data-tiny-src={tinyImgUrl ? "true" : undefined}
+          aria-hidden="true"
+        ></div>
         <img
           src={cover}
           alt={albumMeta.name}

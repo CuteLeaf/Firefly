@@ -16,15 +16,41 @@ const IGNORE_DIRS = [
 	"public/assets/music/**",
 ];
 
+interface RgbColor {
+	r: number;
+	g: number;
+	b: number;
+}
+
 type LqipMap = Record<string, string>;
+
+function rgbToHex(color: RgbColor): string {
+	const hex = (n: number) => n.toString(16).padStart(2, "0");
+	return `#${hex(color.r)}${hex(color.g)}${hex(color.b)}`;
+}
 
 async function processImage(imagePath: string): Promise<string | null> {
 	try {
-		const buffer = await sharp(imagePath)
-			.resize(16, 16, { fit: "inside" })
-			.jpeg({ quality: 15, mozjpeg: true })
-			.toBuffer();
-		return `data:image/jpeg;base64,${buffer.toString("base64")}`;
+		const { data, info } = await sharp(imagePath)
+			.resize(2, 2, { fit: "fill" })
+			.raw()
+			.toBuffer({ resolveWithObject: true });
+
+		const channels = info.channels;
+		const colors: RgbColor[] = [];
+
+		for (let i = 0; i < 4; i++) {
+			const offset = i * channels;
+			colors.push({
+				r: data[offset],
+				g: data[offset + 1],
+				b: data[offset + 2],
+			});
+		}
+
+		// 使用 corners[0], [1], [3] 生成 135deg 斜向渐变
+		const compact = `${rgbToHex(colors[0]).slice(1)}${rgbToHex(colors[1]).slice(1)}${rgbToHex(colors[3]).slice(1)}`;
+		return compact;
 	} catch (error) {
 		console.error(`Error processing ${imagePath}:`, error);
 		return null;

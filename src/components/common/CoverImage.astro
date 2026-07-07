@@ -137,14 +137,21 @@ const remoteReferrerPolicy =
 		? "no-referrer"
 		: undefined;
 
-// Generate tiny image for local images if available
+// Generate tiny image for local or public images if available
 let tinyImgUrl = "";
 if (isLocal && img) {
 	try {
-		const tinyImg = await getImage({ src: img, width: 20, quality: 20 });
+		const tinyImg = await getImage({ src: img, width: 32, quality: 30 });
 		tinyImgUrl = tinyImg.src;
 	} catch (e) {
 		console.error("Failed to generate tiny thumbnail:", e);
+	}
+} else if (isPublic && src) {
+	try {
+		const tinyImg = await getImage({ src: src, width: 32, quality: 30 });
+		tinyImgUrl = tinyImg.src;
+	} catch (e) {
+		console.error("Failed to generate tiny thumbnail for public image:", e);
 	}
 }
 ---

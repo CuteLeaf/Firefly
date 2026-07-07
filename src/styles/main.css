@@ -221,8 +221,8 @@ html {
         opacity: 0;
     }
     html[data-progressive-loading="true"] .lqip-placeholder {
-        filter: blur(20px);
-        transform: scale(1.05); /* 缩放以避免边缘模糊产生白边 */
+        filter: blur(12px);
+        transform: scale(1.03); /* 缩放以避免边缘模糊产生白边 */
     }
     html[data-progressive-loading="true"] .lqip-placeholder[data-tiny-src="true"] {
         background-image: var(--tiny-src) !important;

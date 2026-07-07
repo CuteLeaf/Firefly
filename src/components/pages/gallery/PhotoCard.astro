@@ -1,4 +1,5 @@
 ---
+import { getImage } from "astro:assets";
 import { getLqipProps } from "@/utils/lqip-utils";
 
 interface Props {
@@ -11,6 +12,14 @@ const { src, albumId, alt = "" } = Astro.props;
 
 // LQIP 渐变占位
 const lqipProps = getLqipProps(src, undefined, true);
+
+let tinyImgUrl = "";
+try {
+	const tinyImg = await getImage({ src, width: 32, quality: 30 });
+	tinyImgUrl = tinyImg.src;
+} catch (e) {
+	console.error("Failed to generate tiny thumbnail:", e);
+}
 ---
 
 <div class="gallery-photo-card break-inside-avoid mb-3">
@@ -20,7 +29,12 @@ const lqipProps = getLqipProps(src, undefined, true);
     data-type="image"
     class="block rounded-xl overflow-hidden relative group cursor-pointer"
   >
-    <div class="lqip-placeholder absolute inset-0 pointer-events-none" style={lqipProps.style} aria-hidden="true"></div>
+    <div 
+      class="lqip-placeholder absolute inset-0 pointer-events-none" 
+      style={`${lqipProps.style};${tinyImgUrl ? `--tiny-src: url(${tinyImgUrl})` : ''}`} 
+      data-tiny-src={tinyImgUrl ? "true" : undefined}
+      aria-hidden="true"
+    ></div>
     <img
       src={src}
       alt={alt}
