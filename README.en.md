@@ -82,7 +82,7 @@
 - [x] **Astro + Tailwind CSS** - Ultra-fast static site generation based on modern tech stack
 - [x] **Smooth Animations** - Swup page transition animations for silky smooth browsing experience
 - [x] **Responsive Design** - Perfect adaptation for desktop, tablet and mobile devices
-- [x] **Multi-language Support** - i18n internationalization ui, supports Simplified Chinese, Traditional Chinese, English, Japanese, Russian
+- [x] **Multi-language Support** - i18n internationalization ui, supports Simplified Chinese, Traditional Chinese, English, Japanese, Russian, Korean
 - [x] **Full-text Search** - Client-side search based on Pagefind, supports article content indexing.
 
 ### Personalization
@@ -173,6 +173,7 @@ const SITE_LANG = "zh_CN";
 - `en` - English
 - `ja` - Japanese
 - `ru` - Russian
+- `ko` - Korean
 
 ### Configuration File Structure
 

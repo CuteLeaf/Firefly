@@ -1,7 +1,7 @@
 import type { SiteConfig } from "@/types/siteConfig";
 
 // 定义站点语言
-// 语言代码，例如：'zh_CN', 'zh_TW', 'en', 'ja', 'ru'。
+// 语言代码，例如：'zh_CN', 'zh_TW', 'en', 'ja', 'ru', 'ko'。
 const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
