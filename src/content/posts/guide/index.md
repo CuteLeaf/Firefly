@@ -1,13 +1,20 @@
 ---
 title: Firefly 简单使用指南
-published: 1970-01-02
+published: Fri Jan 02 1970 08:00:00 GMT+0800 (中国标准时间)
+draft: true
 pinned: true
-description: "如何使用 Firefly 博客模板。"
-image: "./cover.avif"
-tags: ["Firefly", "博客", "Markdown", "指南"]
+description: 如何使用 Firefly 博客模板。
+tags: [Firefly, 博客, Markdown, 指南]
+category: 博客指南
+image: ./cover.avif
+title: Firefly 简单使用指南
+description: 如何使用 Firefly 博客模板。
+image: ./cover.avif
+tags: ["Firefly","博客","Markdown","指南"]
 category: 博客指南
 draft: false
 ---
+
 
 
 
