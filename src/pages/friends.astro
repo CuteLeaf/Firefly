@@ -3,12 +3,8 @@ import { getEntry, render } from "astro:content";
 import Comment from "@components/comment/index.astro";
 import Markdown from "@components/common/Markdown.astro";
 import { Icon } from "astro-icon/components";
-import {
-	commentConfig,
-	friendsPageConfig,
-	getEnabledFriends,
-	siteConfig,
-} from "@/config";
+import { commentConfig, siteConfig } from "@/config";
+import { friendsPageConfig, getEnabledFriends } from "@/config/friendsConfig";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
