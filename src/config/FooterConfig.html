@@ -1,1 +1,117 @@
-这里是HTML注入示例，你可以在这个文件中添加自定义的HTML内容
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站运行时间</title>
+    <style>
+        #runtime-container {
+            text-align: center;
+            margin: 30px auto;
+            max-width: 800px;
+            padding: 0 10px;
+            font-family: 'Ma Shan Zheng', 'Noto Sans SC', sans-serif;
+        }
+        #runtime {
+            font-size: 14px;
+            color: #5c5c5c;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        #hitokoto-container {
+            font-size: 1.1rem;
+            color: #5c5c5c;
+            line-height: 1.6;
+            letter-spacing: 0.5px;
+        }
+        #hitokoto-text {
+            display: block;
+        }
+        #hitokoto-from {
+            display: block;
+            font-size: 0.9rem;
+            color: #999;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 底部信息区域 -->
+    <div id="runtime-container">
+        <div id="runtime">
+            ⏱️ 网站已稳定运行：<span style="font-weight: bold; color: #409EFF;">0天 00:00:00</span>
+        </div>
+        <div id="hitokoto-container">
+            <span id="hitokoto-text">🌱 加载一言中...</span>
+            <span id="hitokoto-from"></span>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ==================== 配置项 ====================
+            const CONFIG = {
+                startDate: '2025-12-01 00:00:00', // 修改为实际建站日期
+                hitokotoApi: 'https://v1.hitokoto.cn/?c=f&encode=json',
+                fallbackHitokotos: [
+                    '🌱 学而时习之，不亦说乎。',
+                    '🌱 静以修身，俭以养德。',
+                    '🌱 千里之行，始于足下。',
+                    '🌱 博观而约取，厚积而薄发。',
+                    '🌱 路漫漫其修远兮，吾将上下而求索。'
+                ]
+            };
+
+            // ==================== 运行时间 ====================
+            const startDate = new Date(CONFIG.startDate);
+            const runtimeSpan = document.querySelector('#runtime span');
+
+            function updateRuntime() {
+                const now = new Date();
+                let diff = Math.floor((now - startDate) / 1000);
+                if (diff < 0) diff = 0;
+                const days = Math.floor(diff / 86400);
+                diff %= 86400;
+                const hours = String(Math.floor(diff / 3600)).padStart(2, '0');
+                diff %= 3600;
+                const minutes = String(Math.floor(diff / 60)).padStart(2, '0');
+                const seconds = String(diff % 60).padStart(2, '0');
+                if (runtimeSpan) {
+                    runtimeSpan.textContent = `${days}天 ${hours}:${minutes}:${seconds}`;
+                }
+            }
+            updateRuntime();
+            setInterval(updateRuntime, 1000);
+
+            // ==================== 一言 ====================
+            const textEl = document.getElementById('hitokoto-text');
+            const fromEl = document.getElementById('hitokoto-from');
+
+            function fetchHitokoto() {
+                fetch(CONFIG.hitokotoApi)
+                    .then(res => {
+                        if (!res.ok) throw new Error('HTTP ' + res.status);
+                        return res.json();
+                    })
+                    .then(data => {
+                        if (data.hitokoto) {
+                            textEl.textContent = `「${data.hitokoto}」`;
+                            fromEl.textContent = data.from ? `—— ${data.from}` : '';
+                        } else {
+                            throw new Error('Empty hitokoto');
+                        }
+                    })
+                    .catch(() => {
+                        const fallback = CONFIG.fallbackHitokotos;
+                        textEl.textContent = fallback[Math.floor(Math.random() * fallback
+                            .length)];
+                        fromEl.textContent = '';
+                    });
+            }
+            fetchHitokoto();
+        })();
+    </script>
+
+</body>
+</html>

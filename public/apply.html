@@ -1,0 +1,122 @@
+<!-- public/apply.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>申请友链 - 临渊羡鱼</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .hero-bg {
+            background: transparent;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+        }
+        .loading-spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #4cd9b2;
+            border-radius: 50%;
+            width: 14px;
+            height: 14px;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <div class="hero-bg pt-20 pb-10 px-6 text-center text-white">
+        <h1 class="text-4xl font-bold drop-shadow-lg">📝 申请友链</h1>
+        <p class="text-gray-200 text-sm mt-2">提交后等待管理员审核</p>
+    </div>
+
+    <div class="flex-1 flex items-start justify-center px-4 pb-10">
+        <div class="bg-white/85 backdrop-blur-sm rounded-3xl p-8 shadow-2xl w-full max-w-xl">
+            <form id="apply-form" class="space-y-4">
+                <div>
+                    <label class="text-xs font-medium text-slate-500 block mb-1">网站标题 *</label>
+                    <input id="apply-title" type="text" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="text-xs font-medium text-slate-500 block mb-1">网站地址 *</label>
+                    <input id="apply-url" type="url" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm" placeholder="https://">
+                </div>
+                <div>
+                    <label class="text-xs font-medium text-slate-500 block mb-1">
+                        头像图片URL
+                        <span class="text-gray-400 font-normal">(留空则自动使用网站图标)</span>
+                    </label>
+                    <input id="apply-img" type="url" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm" placeholder="可选，手动输入图片链接">
+                </div>
+                <div>
+                    <label class="text-xs font-medium text-slate-500 block mb-1">描述 *</label>
+                    <textarea id="apply-desc" required rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm"></textarea>
+                </div>
+                <div>
+                    <label class="text-xs font-medium text-slate-500 block mb-1">标签（逗号分隔）</label>
+                    <input id="apply-tags" type="text" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm" placeholder="技术,博客,前端">
+                </div>
+                <button type="submit" class="w-full bg-[#4cd9b2] hover:bg-[#3ccba4] text-white py-2.5 rounded-xl text-sm font-medium transition">
+                    <i class="fas fa-paper-plane"></i> 提交申请
+                </button>
+                <p id="apply-msg" class="text-center text-sm"></p>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        document.getElementById('apply-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const msg = document.getElementById('apply-msg');
+            const title = document.getElementById('apply-title').value.trim();
+            const siteurl = document.getElementById('apply-url').value.trim();
+            let imgurl = document.getElementById('apply-img').value.trim();
+            const desc = document.getElementById('apply-desc').value.trim();
+            const tagsStr = document.getElementById('apply-tags').value.trim();
+            const tags = tagsStr ? tagsStr.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+            // 基础校验
+            if (!title || !siteurl || !desc) {
+                msg.innerHTML = '<span class="text-red-400">请填写所有必填项（网站标题、地址、描述）</span>';
+                return;
+            }
+
+            // 如果用户未手动填写头像图片，则默认使用 faviconsnap 接口生成
+            if (!imgurl && siteurl) {
+                imgurl = `https://faviconsnap.com/api/favicon?url=${encodeURIComponent(siteurl)}`;
+                // 此拼接地址仅用于提交，输入框中不会显示
+            }
+
+            msg.innerHTML = '<span class="loading-spinner mr-2"></span>提交中...';
+            try {
+                const res = await fetch('/submit-friend-request', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, siteurl, imgurl, desc, tags, weight: 0 })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    msg.innerHTML = '<span class="text-green-500">✅ 申请已提交，请等待审核</span>';
+                    document.getElementById('apply-form').reset();
+                } else {
+                    throw new Error(data.error || '请求失败');
+                }
+            } catch (err) {
+                msg.innerHTML = '<span class="text-red-400">❌ 提交失败，请稍后重试</span>';
+            }
+        });
+    </script>
+</body>
+</html>

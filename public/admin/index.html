@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>临渊羡鱼 · 后台管理</title>
+
+    <!-- 预连接 -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+          integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+
+    <!-- SimpleMDE (已移除 integrity 属性) -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.js"></script>
+
+    <!-- js-yaml (已移除 integrity 属性) -->
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .loading-spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #4cd9b2;
+            border-radius: 50%;
+            width: 14px;
+            height: 14px;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .post-item, .friend-item {
+            transition: all 0.2s ease;
+        }
+        .post-item:hover {
+            transform: translateX(2px);
+        }
+        .friend-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        #mobile-menu {
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        #mobile-menu.hidden {
+            display: none;
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        #mobile-menu:not(.hidden) {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div id="app">
+        <!-- 导航栏 -->
+        <nav class="glass-nav fixed top-0 w-full z-50 px-4 sm:px-6 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2 text-white font-bold text-lg shrink-0">
+                <i class="fas fa-leaf text-[#4cd9b2]"></i>
+                <span class="hidden sm:inline">临渊羡鱼</span>
+            </div>
+            <div id="admin-tabs" class="hidden md:flex items-center gap-6 text-sm text-white/80 font-medium">
+                <a href="#/" class="tab-link hover:text-white transition-colors">📝 文章管理</a>
+                <a href="#/friends" class="tab-link hover:text-white transition-colors">🔗 友链审核</a>
+            </div>
+            <div id="nav-actions" class="flex items-center gap-3">
+                <span id="user-info" class="text-sm text-gray-200 hidden sm:inline-block"></span>
+                <button id="login-btn"
+                        class="bg-[#4cd9b2]/80 hover:bg-[#4cd9b2] text-white px-4 py-1.5 rounded-full text-sm transition-colors">
+                    <i class="fas fa-sign-in-alt mr-1"></i> 登录 GitHub
+                </button>
+                <button id="mobile-menu-btn" class="md:hidden text-white text-xl focus:outline-none">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu"
+             class="hidden md:hidden absolute top-16 left-0 w-full bg-slate-800/95 backdrop-blur-md p-4 flex flex-col gap-3 z-40 shadow-lg">
+            <a href="#/" class="tab-link text-white hover:text-[#4cd9b2] py-2 px-3 rounded-lg">📝 文章管理</a>
+            <a href="#/friends" class="tab-link text-white hover:text-[#4cd9b2] py-2 px-3 rounded-lg">🔗 友链审核</a>
+        </div>
+        <!-- 主内容 -->
+        <div id="main-view" class="pt-20 px-4 sm:px-6 pb-10">
+            <div class="flex items-center justify-center py-20">
+                <span class="loading-spinner mr-3"></span>
+                <span class="text-slate-500">加载中...</span>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./links.js"></script>
+    <script type="module" src="./app.js"></script>
+
+    <script>
+        (function() {
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            if (btn && menu) {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    menu.classList.toggle('hidden');
+                });
+                menu.querySelectorAll('.tab-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        menu.classList.add('hidden');
+                    });
+                });
+                document.addEventListener('click', function(e) {
+                    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                        menu.classList.add('hidden');
+                    }
+                });
+            }
+        })();
+    </script>
+</body>
+</html>

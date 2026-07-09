@@ -41,7 +41,7 @@ if (footerConfig.enable) {
     <div class="mb-2">
       {customFooterHtml && <div set:html={customFooterHtml} />}
     </div>
-    <div class="m-0.5 flex gap-2 justify-center flex-wrap">
+        <div class="m-0.5 flex gap-2 justify-center flex-wrap">
       &copy; <span id="copyright-year">{currentYear}</span>
       {profileConfig.name}. All Rights Reserved.
       <span aria-hidden="true">/</span>
@@ -55,6 +55,11 @@ if (footerConfig.enable) {
         class="transition link text-(--primary) font-medium"
         target="_blank"
         href={url("sitemap-index.xml")}>Sitemap</a
+      >
+      <span aria-hidden="true">/</span>
+      <a
+        class="transition link text-(--primary) font-medium"
+        href="/admin/index.html">登录</a
       >
     </div>
     <div class="m-0.5 flex gap-2 justify-center flex-wrap">

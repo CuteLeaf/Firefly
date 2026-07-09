@@ -6,17 +6,17 @@ const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "Firefly",
+	title: "临渊羡鱼博客",
 
 	// 站点副标题
-	subtitle: "Demo site",
+	//subtitle: "博客",
 
 	// 站点 URL
-	site_url: "https://firefly.cuteleaf.cn",
+	site_url: "https://blog.994613.xyz",
 
 	// 站点描述
 	description:
-		"Firefly 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。",
+		"记录时间的形状。这里是我对抗信息碎片化的方式，写给自己，也写给偶然闯入的你。愿文字如光，照亮那些幽微的心事，也温暖每一个孤独的瞬息",
 
 	// 站点关键词
 	keywords: [
@@ -32,7 +32,7 @@ export const siteConfig: SiteConfig = {
 	// 主题色
 	themeColor: {
 		// 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
-		hue: 165,
+		hue: 350,
 		// 是否对访问者隐藏主题色选择器
 		fixed: false,
 		// 默认模式："light" 亮色，"dark" 暗色，"system" 跟随系统
@@ -78,7 +78,7 @@ export const siteConfig: SiteConfig = {
 			alt: "🍀",
 		},
 		// 导航栏标题
-		title: "Firefly",
+		title: "临渊羡鱼",
 		// 全宽导航栏，导航栏是否占满屏幕宽度
 		widthFull: false,
 		// 导航菜单对齐方式，left：左对齐，center：居中
@@ -90,7 +90,7 @@ export const siteConfig: SiteConfig = {
 	},
 
 	// 站点开始日期，用于统计运行天数
-	siteStartDate: "2025-01-01",
+	siteStartDate: "2025-12-01",
 
 	// 站点时区（IANA 时区字符串），用于格式化bangumi、rss里的构建日期时间等等..
 	// 示例："Asia/Shanghai", "UTC", 如果为空，则按照构建服务器的时区进行时区转换
@@ -123,42 +123,13 @@ export const siteConfig: SiteConfig = {
 		// 默认布局模式："list" 列表模式（单列布局），"grid" 网格模式（多列布局）
 		defaultMode: "list",
 		// 移动端默认布局模式，不设置则跟随 defaultMode
-		mobileDefaultMode: "grid",
-		// 是否允许用户切换布局
-		allowSwitch: true,
+		mobileDefaultMode: "list",
+		// 是否在文章列表中显示标签
+		showTags: true,
 		// 文章简介显示行数，设为 0 则不截断
 		descriptionLines: 2,
-		// 文章卡片底部统计和发布日期是否显示图标
-		showStatsIcons: true,
-		// 标签显示位置
-		// 设置为"meta"：显示在文章标题下的元数据
-		// 设置为"bottom"：顶替stats在底部显示
-		tagsPosition: "bottom",
-		// PostMeta 元数据显示控制
-		meta: {
-			// 是否显示发布日期
-			showPublished: true,
-			// 是否显示分类
-			showCategory: true,
-			// 是否显示标签
-			showTags: true,
-			// 标签数量，设为 0 则不限制
-			tagCount: 5,
-			// 是否显示字数
-			showWords: false,
-			// 是否显示阅读时间
-			showReadingTime: false,
-		},
-		// 底部 PostStats 统计信息显示控制
-		// 如果tagsPosition设置为"bottom"，则stats将不显示
-		stats: {
-			// 是否显示发布日期
-			showPublished: true,
-			// 是否显示字数
-			showWords: true,
-			// 是否显示阅读时间
-			showReadingTime: true,
-		},
+		// 是否允许用户切换布局
+		allowSwitch: true,
 		// 网格布局配置，仅在 defaultMode 为 "grid" 或允许切换布局时生效
 		grid: {
 			// 是否开启瀑布流布局，同时有封面图和无封面图的混合文章推荐开启
