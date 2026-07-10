@@ -183,8 +183,7 @@ async function loadPostList() {
             el.onclick = () => window.location.hash = `#/edit/${encodeURIComponent(el.dataset.path)}`;
         });
     } catch (err) {
-        listEl.innerHTML = `<div class="text-center text-red-400 py-8"><i class="fas fa-exclamation-triangle"></i> 加载失败: ${err.message}</div>`;
-    }
+listEl.innerHTML = `<div class="text-center text-red-400 py-8"><i class="fas fa-exclamation-triangle"></i> 加载失败: ${escapeHtml(err.message)}</div>`;    }
 }
 
 async function renderEditor(path = null) {
