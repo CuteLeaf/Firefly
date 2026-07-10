@@ -159,7 +159,7 @@ Cloudflare Workers 部署：[【不用服务器，无需备案，零成本搭建
 
 ## 📖 配置说明
 
-> 📚 **详细配置文档**: 查看 [Firefly使用文档](https://docs-firefly.cuteleaf.cn/) 获取完整的配置指南
+> 📚 **详细配置文档**: 查看 [Firefly 使用文档](https://docs-firefly.cuteleaf.cn/) 获取完整的配置指南
 
 ### 设置网站语言
 
