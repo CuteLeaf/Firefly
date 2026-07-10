@@ -1,5 +1,4 @@
-// 使用 js-yaml 替代自定义解析器
-import jsyaml from 'https://esm.sh/js-yaml@4.1.0';
+import yaml from 'js-yaml';
 
 export async function onRequest(context) {
   const { request, env } = context;
@@ -37,15 +36,17 @@ export async function onRequest(context) {
       const file = await getRes.json();
       sha = file.sha;
       const yamlText = base64DecodeUTF8(file.content);
-      currentData = jsyaml.load(yamlText) || [];
+      // 使用 yaml.load 解析
+      currentData = yaml.load(yamlText) || [];
     } else if (getRes.status !== 404) {
       const errorText = await getRes.text();
       throw new Error(`GitHub API error ${getRes.status}: ${errorText}`);
     }
 
-    // 2. 追加新申请（默认 enabled: false，需审核）
-    const newData = [...currentData, { ...friendData, enabled: false }];
-    const yamlStr = jsyaml.dump(newData);
+    // 2. 追加新申请
+    const newData = [...currentData, { ...friendData, enabled: true }];
+    // 使用 yaml.dump 序列化
+    const yamlStr = yaml.dump(newData);
     const base64Content = base64EncodeUTF8(yamlStr);
 
     // 3. 写回 GitHub
