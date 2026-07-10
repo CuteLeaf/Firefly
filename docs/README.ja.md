@@ -221,7 +221,7 @@ comment: true    # コメントを有効化
 ---
 ```
 
-## Markdown拡張
+## 🧩 Markdown拡張
 
 Astro がデフォルトで対応している[GitHub Flavored Markdown](https://github.github.com/gfm/)に加えて、いくつかの追加の Markdown 機能があります：
 
