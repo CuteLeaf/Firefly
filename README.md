@@ -113,7 +113,7 @@
    cd Firefly
    ```
    
-   **先 [Fork](https://github.com/CuteLeaf/Firefly/fork) 到自己仓库在克隆（推荐），记得先点 Star 在 Fork 哦！**
+   **先 [Fork](https://github.com/CuteLeaf/Firefly/fork) 到自己仓库在克隆（推荐），记得先点 Star 再 Fork 哦！**
 
    ```bash
    git clone https://github.com/you-github-name/Firefly.git
