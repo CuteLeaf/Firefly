@@ -86,6 +86,9 @@ importers:
       astro-icon:
         specifier: ^1.1.5
         version: 1.1.5
+      beautiful-mermaid:
+        specifier: ^1.1.3
+        version: 1.1.3
       ci-info:
         specifier: ^4.4.0
         version: 4.4.0
@@ -2674,6 +2677,9 @@ packages:
   bcp-47@2.1.0:
     resolution: {integrity: sha512-9IIS3UPrvIa1Ej+lVDdDwO7zLehjqsaByECw0bu2RRGP73jALm6FYbzI5gWbgHLvNdkvfXB5YrSbocZdOS0c0w==}
 
+  beautiful-mermaid@1.1.3:
+    resolution: {integrity: sha512-TItrtrAyHp1vwFfFVYauWGrquouk/6SS21Aq3RsxindSYZODcN4xYrPZD6BiZRU+o5mKJzDPz9MUSMvELdylyg==}
+
   blake3-wasm@2.1.5:
     resolution: {integrity: sha512-F1+K8EbfOZE49dtoPtmxUQrpXaBIl3ICvasLh+nJta0xkz+9kF/7uet9fLnwKqhDrmj6g+6K3Tw9yQPUg2ka5g==}
 
@@ -3094,6 +3100,9 @@ packages:
 
   electron-to-chromium@1.5.286:
     resolution: {integrity: sha512-9tfDXhJ4RKFNerfjdCcZfufu49vg620741MNs26a9+bhLThdB+plgMeou98CAaHu/WATj2iHOOHTp1hWtABj2A==}
+
+  elkjs@0.11.1:
+    resolution: {integrity: sha512-zxxR9k+rx5ktMwT/FwyLdPCrq7xN6e4VGGHH8hA01vVYKjTFik7nHOxBnAYtrgYUB1RpAiLvA1/U2YraWxyKKg==}
 
   emmet@2.4.11:
     resolution: {integrity: sha512-23QPJB3moh/U9sT4rQzGgeyyGIrcM+GH5uVYg2C6wZIxAIJq7Ng3QLT79tl8FUwDXhyq9SusfknOrofAKqvgyQ==}
@@ -8699,6 +8708,11 @@ snapshots:
       is-alphanumerical: 2.0.1
       is-decimal: 2.0.1
 
+  beautiful-mermaid@1.1.3:
+    dependencies:
+      elkjs: 0.11.1
+      entities: 7.0.1
+
   blake3-wasm@2.1.5: {}
 
   boolbase@1.0.0: {}
@@ -9145,6 +9159,8 @@ snapshots:
       jake: 10.9.4
 
   electron-to-chromium@1.5.286: {}
+
+  elkjs@0.11.1: {}
 
   emmet@2.4.11:
     dependencies:
