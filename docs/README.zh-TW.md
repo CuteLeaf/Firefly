@@ -268,7 +268,7 @@ comment: true    # 是否允許留言
 
 ### 其他參考
 - 部落客`霞葉`的 [Bangumi 收藏](https://kasuha.com/posts/fuwari-enhance-ep2/) 頁面元件
-- 嗶哩嗶哩up主 `公公的日常` 的Q版 [流螢看板娘Spine切片資料](https://www.bilibili.com/video/BV1fuVzzdE5y)
+- 嗶哩嗶哩up主 `公公的日常` 的Q版 [流螢看板娘 Spine 切片資料](https://www.bilibili.com/video/BV1fuVzzdE5y)
 
 ## 📝 許可協議
 

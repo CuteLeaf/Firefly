@@ -266,7 +266,7 @@ Astro がデフォルトで対応している[GitHub Flavored Markdown](https://
 
 ### その他の参考
 - ブロガー`霞葉`の [Bangumi コレクション](https://kasuha.com/posts/fuwari-enhance-ep2/) ページコンポーネント
-- Bilibili クリエイター `公公的日常` のQ版 [蛍看板娘Spineモデル](https://www.bilibili.com/video/BV1fuVzzdE5y)
+- Bilibili クリエイター `公公的日常` のQ版 [蛍看板娘 Spine モデル](https://www.bilibili.com/video/BV1fuVzzdE5y)
 
 ## 📝 ライセンス
 
