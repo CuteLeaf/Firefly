@@ -11,22 +11,25 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
 
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
 
     <!-- Font Awesome -->
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-          integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
-          crossorigin="anonymous"
-          referrerpolicy="no-referrer" />
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
 
-    <!-- SimpleMDE (已移除 integrity 属性) -->
+    <!-- SimpleMDE -->
     <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.js"></script>
+    href="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.js">
+    </script>
 
-    <!-- js-yaml (已移除 integrity 属性) -->
-    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+    <!-- js-yaml -->
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js">
+    </script>
 
     <style>
         body {
@@ -38,12 +41,14 @@
             background-position: center;
             background-attachment: fixed;
         }
+
         .glass-nav {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
+
         .loading-spinner {
             border: 2px solid #f3f3f3;
             border-top: 2px solid #4cd9b2;
@@ -54,32 +59,390 @@
             display: inline-block;
             vertical-align: middle;
         }
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
-        .post-item, .friend-item {
+
+        .post-item,
+        .friend-item {
             transition: all 0.2s ease;
         }
+
         .post-item:hover {
             transform: translateX(2px);
         }
+
         .friend-item:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
+
         #mobile-menu {
             transition: opacity 0.2s ease, transform 0.2s ease;
         }
+
         #mobile-menu.hidden {
             display: none;
             opacity: 0;
             transform: translateY(-10px);
         }
+
         #mobile-menu:not(.hidden) {
             display: block;
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* ========== Front-matter 面板样式 ========== */
+        .fm-panel {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .fm-panel-header {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .fm-panel-header h3 {
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .fm-panel-header h3 i {
+            color: #4cd9b2;
+            font-size: 16px;
+        }
+
+        .fm-toggle-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .fm-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: rotate(90deg);
+        }
+        .fm-toggle-btn.collapsed {
+            transform: rotate(-90deg);
+        }
+        .fm-toggle-btn.collapsed:hover {
+            transform: rotate(0deg);
+        }
+
+        .fm-panel-body {
+            padding: 20px 20px 16px;
+            transition: max-height 0.4s ease, padding 0.4s ease, opacity 0.3s ease;
+            max-height: 900px;
+            opacity: 1;
+            overflow: hidden;
+        }
+
+        .fm-panel-body.collapsed {
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            opacity: 0;
+            margin: 0;
+        }
+
+        .fm-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 640px) {
+            .fm-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+
+        .fm-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .fm-field.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .fm-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            letter-spacing: 0.2px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .fm-label .required-star {
+            color: #ef4444;
+            font-weight: 700;
+        }
+
+        .fm-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #1e293b;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            box-sizing: border-box;
+        }
+
+        .fm-input:focus {
+            outline: none;
+            border-color: #4cd9b2;
+            box-shadow: 0 0 0 3px rgba(76, 217, 178, 0.12);
+            background: #fff;
+        }
+
+        .fm-input::placeholder {
+            color: #a0aec0;
+        }
+
+        textarea.fm-input {
+            resize: vertical;
+            min-height: 70px;
+            line-height: 1.5;
+        }
+
+        .fm-tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 6px 10px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f8fafc;
+            min-height: 42px;
+            align-items: center;
+            cursor: text;
+            transition: all 0.2s ease;
+        }
+
+        .fm-tags-container:focus-within {
+            border-color: #4cd9b2;
+            box-shadow: 0 0 0 3px rgba(76, 217, 178, 0.12);
+            background: #fff;
+        }
+
+        .fm-tag {
+            background: #4cd9b2;
+            color: #0f172a;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            letter-spacing: 0.2px;
+        }
+
+        .fm-tag .fm-tag-remove {
+            cursor: pointer;
+            font-size: 11px;
+            opacity: 0.7;
+            transition: opacity 0.15s;
+            line-height: 1;
+        }
+
+        .fm-tag .fm-tag-remove:hover {
+            opacity: 1;
+        }
+
+        .fm-tags-input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 13px;
+            min-width: 100px;
+            flex: 1;
+            padding: 4px 2px;
+            color: #1e293b;
+        }
+
+        .fm-tags-input::placeholder {
+            color: #a0aec0;
+        }
+
+        /* 开关样式 */
+        .fm-switch-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .fm-switch-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .fm-switch-track {
+            width: 44px;
+            height: 26px;
+            background: #cbd5e1;
+            border-radius: 26px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.25s ease;
+            flex-shrink: 0;
+        }
+
+        .fm-switch-track.active {
+            background: #4cd9b2;
+        }
+
+        .fm-switch-thumb {
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: left 0.25s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .fm-switch-track.active .fm-switch-thumb {
+            left: 21px;
+        }
+
+        .fm-switch-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #475569;
+            letter-spacing: 0.2px;
+        }
+
+        /* YAML 预览区 */
+        .fm-yaml-preview-toggle {
+            font-size: 12px;
+            color: #64748b;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 12px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            transition: all 0.15s;
+            user-select: none;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+        }
+
+        .fm-yaml-preview-toggle:hover {
+            color: #1e293b;
+            background: #e2e8f0;
+        }
+
+        .fm-yaml-preview {
+            margin-top: 10px;
+            background: #1e293b;
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 12px;
+            color: #e2e8f0;
+            overflow-x: auto;
+            white-space: pre;
+            line-height: 1.6;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            border: 1px solid #334155;
+        }
+
+        .fm-yaml-preview.visible {
+            display: block;
+        }
+
+        .fm-yaml-preview code {
+            color: #94e2d5;
+        }
+
+        /* 编辑器容器 */
+        .editor-wrapper {
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .editor-wrapper .editor-toolbar {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+        .CodeMirror {
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+            min-height: 400px;
+        }
+
+        /* 图片预览 */
+        .fm-image-preview {
+            margin-top: 6px;
+            border-radius: 8px;
+            max-width: 200px;
+            max-height: 120px;
+            object-fit: cover;
+            display: none;
+            border: 1px solid #e2e8f0;
+        }
+
+        .fm-image-preview.visible {
+            display: block;
         }
     </style>
 </head>
@@ -98,52 +461,658 @@
             <div id="nav-actions" class="flex items-center gap-3">
                 <span id="user-info" class="text-sm text-gray-200 hidden sm:inline-block"></span>
                 <button id="login-btn"
-                        class="bg-[#4cd9b2]/80 hover:bg-[#4cd9b2] text-white px-4 py-1.5 rounded-full text-sm transition-colors">
-                    <i class="fas fa-sign-in-alt mr-1"></i> 登录 GitHub
-                </button>
-                <button id="mobile-menu-btn" class="md:hidden text-white text-xl focus:outline-none">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-        </nav>
-        <!-- 移动端菜单 -->
-        <div id="mobile-menu"
-             class="hidden md:hidden absolute top-16 left-0 w-full bg-slate-800/95 backdrop-blur-md p-4 flex flex-col gap-3 z-40 shadow-lg">
-            <a href="#/" class="tab-link text-white hover:text-[#4cd9b2] py-2 px-3 rounded-lg">📝 文章管理</a>
-            <a href="#/friends" class="tab-link text-white hover:text-[#4cd9b2] py-2 px-3 rounded-lg">🔗 友链审核</a>
+                class="bg-[#4cd9b2]/80 hover:bg-[#4cd9b2] text-white px-4 py-1.5 rounded-full text-sm transition-colors">
+                <i class="fas fa-sign-in-alt mr-1"></i> 登录 GitHub
+            </button>
+            <button id="mobile-menu-btn" class="md:hidden text-white text-xl focus:outline-none">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
-        <!-- 主内容 -->
-        <div id="main-view" class="pt-20 px-4 sm:px-6 pb-10">
-            <div class="flex items-center justify-center py-20">
-                <span class="loading-spinner mr-3"></span>
-                <span class="text-slate-500">加载中...</span>
+    </nav>
+
+    <!-- 移动端菜单 -->
+    <div id="mobile-menu"
+    class="hidden md:hidden absolute top-16 left-0 w-full bg-slate-800/95 backdrop-blur-md p-4 flex flex-col gap-3 z-40 shadow-lg">
+    <a href="#/" class="tab-link text-white hover:text-[#4cd9b2] py-2 px-3 rounded-lg">📝 文章管理</a>
+    <a href="#/friends" class="tab-link text-white hover:text-[#4cd9b2] py-2 px-3 rounded-lg">🔗 友链审核</a>
+</div>
+
+<!-- 主内容区域 -->
+<div id="main-view" class="pt-20 px-4 sm:px-6 pb-10">
+    <div class="flex items-center justify-center py-20">
+        <span class="loading-spinner mr-3"></span>
+        <span class="text-slate-500">加载中...</span>
+    </div>
+</div>
+</div>
+
+<!-- ========== Front-matter 面板模板 ========== -->
+<template id="fm-panel-template">
+    <div class="fm-panel">
+        <!-- 面板头部 -->
+        <div class="fm-panel-header" data-fm-toggle>
+            <h3>
+                <i class="fas fa-cog"></i>
+                <span>文章元数据 · Front-matter</span>
+                <span style="font-weight:400;font-size:11px;opacity:0.7;margin-left:4px;">(YAML)</span>
+            </h3>
+            <button class="fm-toggle-btn" data-fm-toggle-btn title="折叠/展开">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+        <!-- 面板主体 -->
+        <div class="fm-panel-body" data-fm-body>
+            <div class="fm-grid">
+                <!-- 标题 -->
+                <div class="fm-field full-width">
+                    <label class="fm-label">
+                        <i class="fas fa-heading text-[#4cd9b2]"></i> 文章标题 <span class="required-star">*</span>
+                    </label>
+                    <input type="text" class="fm-input" data-fm="title"
+                    placeholder="输入文章标题..." />
+                </div>
+                <!-- 发布日期 -->
+                <div class="fm-field">
+                    <label class="fm-label">
+                        <i class="fas fa-calendar-alt text-[#4cd9b2]"></i> 发布日期
+                    </label>
+                    <input type="date" class="fm-input" data-fm="published" />
+                </div>
+                <!-- 分类 -->
+                <div class="fm-field">
+                    <label class="fm-label">
+                        <i class="fas fa-folder text-[#4cd9b2]"></i> 分类
+                    </label>
+                    <input type="text" class="fm-input" data-fm="category"
+                    placeholder="例如：文章示例" />
+                </div>
+                <!-- 描述 -->
+                <div class="fm-field full-width">
+                    <label class="fm-label">
+                        <i class="fas fa-align-left text-[#4cd9b2]"></i> 文章描述
+                    </label>
+                    <textarea class="fm-input" data-fm="description"
+                placeholder="输入文章摘要或描述..." rows="2"></textarea>
             </div>
+            <!-- 标签 -->
+            <div class="fm-field full-width">
+                <label class="fm-label">
+                    <i class="fas fa-tags text-[#4cd9b2]"></i> 标签
+                </label>
+                <div class="fm-tags-container" data-fm-tags-container>
+                    <!-- 标签动态插入 -->
+                    <input type="text" class="fm-tags-input" data-fm-tags-input
+                    placeholder="输入标签后按回车添加..." />
+                </div>
+            </div>
+            <!-- 封面图片 -->
+            <div class="fm-field full-width">
+                <label class="fm-label">
+                    <i class="fas fa-image text-[#4cd9b2]"></i> 封面图片路径
+                </label>
+                <input type="text" class="fm-input" data-fm="image"
+                placeholder="例如：./images/firefly2.avif 或 https://..." />
+                <img src="" alt="封面预览" class="fm-image-preview" data-fm-image-preview />
+            </div>
+            <!-- 开关选项 -->
+            <div class="fm-field full-width">
+                <label class="fm-label">
+                    <i class="fas fa-sliders-h text-[#4cd9b2]"></i> 选项
+                </label>
+                <div class="fm-switch-row">
+                    <!-- 置顶 -->
+                    <label class="fm-switch-item" data-fm-switch="pinned">
+                        <span class="fm-switch-track" data-fm-switch-track="pinned">
+                            <span class="fm-switch-thumb"></span>
+                        </span>
+                        <span class="fm-switch-label">
+                            <i class="fas fa-thumbtack"></i> 置顶
+                        </span>
+                    </label>
+                    <!-- 草稿 -->
+                    <label class="fm-switch-item" data-fm-switch="draft">
+                        <span class="fm-switch-track" data-fm-switch-track="draft">
+                            <span class="fm-switch-thumb"></span>
+                        </span>
+                        <span class="fm-switch-label">
+                            <i class="fas fa-pencil-alt"></i> 草稿
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <!-- YAML 预览切换 -->
+        <button class="fm-yaml-preview-toggle" data-fm-yaml-toggle>
+            <i class="fas fa-code"></i> 查看生成的 YAML Front-matter
+        </button>
+        <div class="fm-yaml-preview" data-fm-yaml-preview>
+            <code data-fm-yaml-code></code>
         </div>
     </div>
+</div>
+</template>
 
-    <script type="module" src="./app.js"></script>
+<script>
+    (function() {
+        // ========== 移动端菜单逻辑 ==========
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        if (btn && menu) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                menu.classList.toggle('hidden');
+            });
+            menu.querySelectorAll('.tab-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    menu.classList.add('hidden');
+                });
+            });
+            document.addEventListener('click', function(e) {
+                if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                    menu.classList.add('hidden');
+                }
+            });
+        }
 
-    <script>
-        (function() {
-            const btn = document.getElementById('mobile-menu-btn');
-            const menu = document.getElementById('mobile-menu');
-            if (btn && menu) {
-                btn.addEventListener('click', function(e) {
+        // ========== Front-matter 管理器 ==========
+        class FrontMatterManager {
+            constructor(panelElement) {
+                this.panel = panelElement;
+                this.tags = [];
+                this.cacheElements();
+                this.bindEvents();
+                this.updateYAMLPreview();
+            }
+
+            cacheElements() {
+                this.bodyEl = this.panel.querySelector('[data-fm-body]');
+                this.toggleBtn = this.panel.querySelector('[data-fm-toggle-btn]');
+                this.toggleHeader = this.panel.querySelector('[data-fm-toggle]');
+                this.tagsContainer = this.panel.querySelector('[data-fm-tags-container]');
+                this.tagsInput = this.panel.querySelector('[data-fm-tags-input]');
+                this.yamlToggle = this.panel.querySelector('[data-fm-yaml-toggle]');
+                this.yamlPreview = this.panel.querySelector('[data-fm-yaml-preview]');
+                this.yamlCode = this.panel.querySelector('[data-fm-yaml-code]');
+                this.imagePreview = this.panel.querySelector('[data-fm-image-preview]');
+                this.imageInput = this.panel.querySelector('[data-fm="image"]');
+                this.switchTracks = {
+                    pinned: this.panel.querySelector('[data-fm-switch-track="pinned"]'),
+                    draft: this.panel.querySelector('[data-fm-switch-track="draft"]'),
+                };
+            }
+
+            bindEvents() {
+                // 折叠/展开
+                const toggleCollapse = () => {
+                    const isCollapsed = this.bodyEl.classList.toggle('collapsed');
+                    this.toggleBtn.classList.toggle('collapsed', isCollapsed);
+                    if (isCollapsed) {
+                        this.toggleBtn.querySelector('i').classList.replace('fa-chevron-down',
+                            'fa-chevron-up');
+                    } else {
+                        this.toggleBtn.querySelector('i').classList.replace('fa-chevron-up',
+                            'fa-chevron-down');
+                    }
+                };
+                this.toggleHeader.addEventListener('click', toggleCollapse);
+                this.toggleBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    menu.classList.toggle('hidden');
+                    toggleCollapse();
                 });
-                menu.querySelectorAll('.tab-link').forEach(link => {
-                    link.addEventListener('click', () => {
-                        menu.classList.add('hidden');
-                    });
-                });
-                document.addEventListener('click', function(e) {
-                    if (!menu.contains(e.target) && !btn.contains(e.target)) {
-                        menu.classList.add('hidden');
+
+                // 标签输入
+                this.tagsInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ',') {
+                        e.preventDefault();
+                        const value = this.tagsInput.value.trim().replace(/,+$/, '');
+                        if (value && !this.tags.includes(value)) {
+                            this.tags.push(value);
+                            this.renderTags();
+                            this.updateYAMLPreview();
+                        }
+                        this.tagsInput.value = '';
+                    }
+                    if (e.key === 'Backspace' && this.tagsInput.value === '' && this.tags.length > 0) {
+                        this.tags.pop();
+                        this.renderTags();
+                        this.updateYAMLPreview();
                     }
                 });
+                this.tagsContainer.addEventListener('click', () => {
+                    this.tagsInput.focus();
+                });
+
+                // YAML 预览切换
+                this.yamlToggle.addEventListener('click', () => {
+                    const isVisible = this.yamlPreview.classList.toggle('visible');
+                    this.yamlToggle.querySelector('i').classList.toggle('fa-code', !isVisible);
+                    this.yamlToggle.querySelector('i').classList.toggle('fa-code-slash', isVisible);
+                    if (isVisible) {
+                        this.yamlToggle.innerHTML =
+                            '<i class="fas fa-code-slash"></i> 隐藏 YAML 预览';
+                    } else {
+                        this.yamlToggle.innerHTML =
+                        '<i class="fas fa-code"></i> 查看生成的 YAML Front-matter';
+                    }
+                    this.updateYAMLPreview();
+                });
+
+                // 图片预览
+                if (this.imageInput) {
+                    this.imageInput.addEventListener('input', () => {
+                        this.updateImagePreview();
+                    });
+                    this.imageInput.addEventListener('blur', () => {
+                        this.updateImagePreview();
+                    });
+                }
+
+                // 开关
+                Object.keys(this.switchTracks).forEach((key) => {
+                    const track = this.switchTracks[key];
+                    if (!track) return;
+                    const switchItem = track.parentElement;
+                    switchItem.addEventListener('click', () => {
+                        track.classList.toggle('active');
+                        this.updateYAMLPreview();
+                    });
+                });
+
+                // 所有输入字段变化时更新YAML预览
+                this.panel.querySelectorAll('[data-fm]').forEach(input => {
+                    input.addEventListener('input', () => this.updateYAMLPreview());
+                    input.addEventListener('change', () => this.updateYAMLPreview());
+                });
             }
-        })();
-    </script>
+
+            renderTags() {
+                // 清除现有标签元素
+                const existingTags = this.tagsContainer.querySelectorAll('.fm-tag');
+                existingTags.forEach(t => t.remove());
+                // 重新渲染
+                this.tags.forEach((tag, index) => {
+                    const tagEl = document.createElement('span');
+                    tagEl.className = 'fm-tag';
+                    tagEl.innerHTML =
+                        `${this.escapeHTML(tag)} <span class="fm-tag-remove" data-index="${index}">&times;</span>`;
+                    this.tagsContainer.insertBefore(tagEl, this.tagsInput);
+                });
+                // 绑定删除事件
+                this.tagsContainer.querySelectorAll('.fm-tag-remove').forEach(removeBtn => {
+                    removeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const idx = parseInt(removeBtn.getAttribute('data-index'));
+                        if (!isNaN(idx) && idx >= 0 && idx < this.tags.length) {
+                            this.tags.splice(idx, 1);
+                            this.renderTags();
+                            this.updateYAMLPreview();
+                        }
+                    });
+                });
+            }
+
+            updateImagePreview() {
+                const url = this.imageInput ? this.imageInput.value.trim() : '';
+                if (url && this.imagePreview) {
+                    this.imagePreview.src = url;
+                    this.imagePreview.classList.add('visible');
+                    this.imagePreview.onerror = () => {
+                        this.imagePreview.classList.remove('visible');
+                    };
+                    this.imagePreview.onload = () => {
+                        this.imagePreview.classList.add('visible');
+                    };
+                } else if (this.imagePreview) {
+                    this.imagePreview.classList.remove('visible');
+                }
+            }
+
+            updateYAMLPreview() {
+                const yaml = this.toYAML();
+                if (this.yamlCode) {
+                    this.yamlCode.textContent = yaml;
+                }
+            }
+
+            // 从表单获取数据
+            getData() {
+                const data = {};
+                // 文本字段
+                const fields = ['title', 'published', 'category', 'description', 'image'];
+                fields.forEach(field => {
+                    const el = this.panel.querySelector(`[data-fm="${field}"]`);
+                    if (el) {
+                        const val = el.value.trim();
+                        if (val) data[field] = val;
+                    }
+                });
+                // 标签
+                if (this.tags.length > 0) {
+                    data.tags = [...this.tags];
+                }
+                // 开关
+                if (this.switchTracks.pinned && this.switchTracks.pinned.classList.contains('active')) {
+                    data.pinned = true;
+                }
+                if (this.switchTracks.draft && this.switchTracks.draft.classList.contains('active')) {
+                    data.draft = true;
+                }
+                return data;
+            }
+
+            // 设置表单数据
+            setData(data) {
+                if (!data) return;
+                // 文本字段
+                const fields = ['title', 'published', 'category', 'description', 'image'];
+                fields.forEach(field => {
+                    const el = this.panel.querySelector(`[data-fm="${field}"]`);
+                    if (el && data[field] !== undefined) {
+                        el.value = data[field];
+                    }
+                });
+                // 标签
+                if (Array.isArray(data.tags)) {
+                    this.tags = [...data.tags];
+                } else if (typeof data.tags === 'string') {
+                    this.tags = data.tags.split(',').map(t => t.trim()).filter(Boolean);
+                } else {
+                    this.tags = [];
+                }
+                this.renderTags();
+                // 开关
+                if (this.switchTracks.pinned) {
+                    if (data.pinned === true || data.pinned === 'true') {
+                        this.switchTracks.pinned.classList.add('active');
+                    } else {
+                        this.switchTracks.pinned.classList.remove('active');
+                    }
+                }
+                if (this.switchTracks.draft) {
+                    if (data.draft === true || data.draft === 'true') {
+                        this.switchTracks.draft.classList.add('active');
+                    } else {
+                        this.switchTracks.draft.classList.remove('active');
+                    }
+                }
+                // 图片预览
+                this.updateImagePreview();
+                // 更新YAML预览
+                this.updateYAMLPreview();
+            }
+
+            // 生成YAML字符串
+            toYAML() {
+                const data = this.getData();
+                if (Object.keys(data).length === 0) return '---\n---';
+                try {
+                    // 使用js-yaml生成，设置flowLevel使tags为行内格式
+                    const yaml = jsyaml.dump(data, {
+                        flowLevel: -1,
+                        lineWidth: -1,
+                        noRefs: true,
+                        sortKeys: false,
+                        quotingType: '"',
+                        forceQuotes: false,
+                    });
+                    return '---\n' + yaml.trim() + '\n---';
+                } catch (e) {
+                    // 降级：手动构建
+                    let yaml = '---\n';
+                    Object.keys(data).forEach(key => {
+                        const val = data[key];
+                        if (Array.isArray(val)) {
+                            yaml += `${key}: [${val.map(v => JSON.stringify(v)).join(', ')}]\n`;
+                        } else if (typeof val === 'boolean') {
+                            yaml += `${key}: ${val}\n`;
+                        } else if (typeof val === 'string') {
+                            if (val.includes(':') || val.includes('#') || val.includes('"') ||
+                                val.includes("'") || val.length > 60) {
+                                yaml += `${key}: "${val.replace(/"/g, '\\"')}"\n`;
+                            } else {
+                                yaml += `${key}: ${val}\n`;
+                            }
+                        } else {
+                            yaml += `${key}: ${val}\n`;
+                        }
+                    });
+                    yaml += '---';
+                    return yaml;
+                }
+            }
+
+            // 从YAML字符串解析并填充表单
+            fromYAML(yamlString) {
+                if (!yamlString || typeof yamlString !== 'string') return;
+                const trimmed = yamlString.trim();
+                // 匹配 --- ... --- 或整个字符串
+                let yamlContent = '';
+                const match = trimmed.match(/^---\s*\n([\s\S]*?)\n---/);
+                if (match) {
+                    yamlContent = match[1];
+                } else if (trimmed.startsWith('---')) {
+                    yamlContent = trimmed.replace(/^---\s*/, '').replace(/\s*---$/, '');
+                } else {
+                    // 尝试直接解析
+                    yamlContent = trimmed;
+                }
+                try {
+                    const data = jsyaml.load(yamlContent);
+                    if (data && typeof data === 'object' && !Array.isArray(data)) {
+                        this.setData(data);
+                        return true;
+                    }
+                } catch (e) {
+                    console.warn('Front-matter YAML 解析失败:', e.message);
+                }
+                return false;
+            }
+
+            // 获取完整内容（YAML Front-matter + Markdown正文）
+            getFullContent(markdownBody) {
+                const yaml = this.toYAML();
+                const body = markdownBody || '';
+                return yaml + '\n' + body;
+            }
+
+            // 解析完整内容，分离Front-matter和正文
+            parseFullContent(fullContent) {
+                if (!fullContent || typeof fullContent !== 'string') {
+                    return { frontMatter: null, body: '' };
+                }
+                const trimmed = fullContent.trim();
+                const match = trimmed.match(/^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
+                if (match) {
+                    const yamlContent = match[1];
+                    const body = match[2] || '';
+                    let frontMatter = null;
+                    try {
+                        frontMatter = jsyaml.load(yamlContent);
+                    } catch (e) {
+                        frontMatter = { _raw: yamlContent };
+                    }
+                    return { frontMatter, body: body.trimStart() };
+                }
+                return { frontMatter: null, body: trimmed };
+            }
+
+            escapeHTML(str) {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            // 展开面板
+            expand() {
+                if (this.bodyEl.classList.contains('collapsed')) {
+                    this.bodyEl.classList.remove('collapsed');
+                    this.toggleBtn.classList.remove('collapsed');
+                    this.toggleBtn.querySelector('i').classList.replace('fa-chevron-up', 'fa-chevron-down');
+                }
+            }
+
+            // 折叠面板
+            collapse() {
+                if (!this.bodyEl.classList.contains('collapsed')) {
+                    this.bodyEl.classList.add('collapsed');
+                    this.toggleBtn.classList.add('collapsed');
+                    this.toggleBtn.querySelector('i').classList.replace('fa-chevron-down', 'fa-chevron-up');
+                }
+            }
+        }
+
+        // ========== 创建 Front-matter 面板实例 ==========
+        function createFMPanel() {
+            const template = document.getElementById('fm-panel-template');
+            if (!template) return null;
+            const clone = template.content.cloneNode(true);
+            const panel = clone.querySelector('.fm-panel');
+            return new FrontMatterManager(panel);
+        }
+
+        // ========== 监听 DOM 变化，自动增强编辑器 ==========
+        function enhanceEditorWithFM(editorContainer) {
+            if (!editorContainer) return;
+            // 检查是否已经有FM面板
+            if (editorContainer.parentElement &&
+                editorContainer.parentElement.querySelector('.fm-panel')) {
+                return;
+            }
+            const fmManager = createFMPanel();
+            if (!fmManager) return;
+            // 将面板插入编辑器上方
+            editorContainer.parentElement.insertBefore(fmManager.panel, editorContainer);
+            // 存储引用
+            editorContainer._fmManager = fmManager;
+            return fmManager;
+        }
+
+        // ========== 监听 main-view 变化 ==========
+        const mainView = document.getElementById('main-view');
+        if (mainView) {
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType === 1) {
+                            // 查找SimpleMDE编辑器或CodeMirror实例
+                            const editorToolbar = node.querySelector ?
+                                node.querySelector('.editor-toolbar') : null;
+                            const codeMirror = node.querySelector ?
+                                node.querySelector('.CodeMirror') : null;
+                            if ((editorToolbar || codeMirror) && node.querySelector) {
+                                const editorWrapper = node.closest ?
+                                    node.closest('.editor-wrapper') || node : node;
+                                // 延迟以确保SimpleMDE完全初始化
+                                setTimeout(() => {
+                                    enhanceEditorWithFM(editorWrapper);
+                                }, 300);
+                            }
+                            // 也检查node本身是否是编辑器
+                            if (node.classList &&
+                                (node.classList.contains('editor-wrapper') ||
+                                    node.querySelector('.editor-toolbar') ||
+                                    node.querySelector('.CodeMirror'))) {
+                                setTimeout(() => {
+                                    enhanceEditorWithFM(node);
+                                }, 300);
+                            }
+                        }
+                    });
+                });
+            });
+            observer.observe(mainView, { childList: true, subtree: true });
+        }
+
+        // ========== 暴露全局 API ==========
+        window.FrontMatterManager = FrontMatterManager;
+        window.createFMPanel = createFMPanel;
+        window.enhanceEditorWithFM = enhanceEditorWithFM;
+
+        // ========== 辅助：为已有的SimpleMDE实例附加FM面板 ==========
+        window.attachFMToSimpleMDE = function(simpleMDEInstance, initialData) {
+            if (!simpleMDEInstance || !simpleMDEInstance.codemirror) return null;
+            const cm = simpleMDEInstance.codemirror;
+            const wrapper = cm.getWrapperElement();
+            // 查找或创建编辑器容器
+            let editorContainer = wrapper.closest('.editor-wrapper');
+            if (!editorContainer) {
+                editorContainer = wrapper.parentElement;
+            }
+            const fmManager = enhanceEditorWithFM(editorContainer || wrapper);
+            if (fmManager && initialData) {
+                fmManager.setData(initialData);
+            }
+            // 重写getValue/setValue以自动处理Front-matter
+            if (fmManager && !simpleMDEInstance._fmEnhanced) {
+                simpleMDEInstance._fmEnhanced = true;
+                simpleMDEInstance._fmManager = fmManager;
+                const originalGetValue = simpleMDEInstance.value.bind ?
+                    simpleMDEInstance.value : null;
+                const originalSetValue = simpleMDEInstance.value ?
+                    null : null;
+                // 提供获取完整内容的方法
+                simpleMDEInstance.getFullContent = function() {
+                    const body = this.value();
+                    return fmManager.getFullContent(body);
+                };
+                // 提供设置完整内容的方法
+                simpleMDEInstance.setFullContent = function(fullContent) {
+                    const parsed = fmManager.parseFullContent(fullContent);
+                    if (parsed.frontMatter) {
+                        fmManager.setData(parsed.frontMatter);
+                    }
+                    if (typeof this.value === 'function') {
+                        this.value(parsed.body);
+                    } else if (this.codemirror) {
+                        this.codemirror.setValue(parsed.body);
+                    }
+                };
+                // 加载时解析已有内容
+                const currentContent = simpleMDEInstance.value();
+                if (currentContent && currentContent.trim().startsWith('---')) {
+                    const parsed = fmManager.parseFullContent(currentContent);
+                    if (parsed.frontMatter && Object.keys(parsed.frontMatter).length > 0) {
+                        fmManager.setData(parsed.frontMatter);
+                        simpleMDEInstance.value(parsed.body);
+                    }
+                }
+            }
+            return fmManager;
+        };
+
+        // ========== 默认日期设置 ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            // 为日期字段设置默认值（今天的日期）
+            const today = new Date().toISOString().split('T')[0];
+            // 使用MutationObserver在FM面板创建后设置默认日期
+            const fmObserver = new MutationObserver(() => {
+                const dateInputs = document.querySelectorAll('[data-fm="published"]');
+                dateInputs.forEach(input => {
+                    if (!input.value) {
+                        input.value = today;
+                        // 触发更新
+                        input.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                });
+            });
+            if (mainView) {
+                fmObserver.observe(mainView, { childList: true, subtree: true });
+            }
+            // 也检查已有的
+            const existingDateInputs = document.querySelectorAll('[data-fm="published"]');
+            existingDateInputs.forEach(input => {
+                if (!input.value) {
+                    input.value = today;
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            });
+        });
+
+        console.log('✅ Front-matter 编辑器增强已就绪');
+        console.log('   📝 面板将自动附加到文章编辑器上方');
+        console.log('   🔧 全局 API: window.attachFMToSimpleMDE(simpleMDEInstance, initialData)');
+        console.log('   📦 支持 YAML 格式的 Front-matter 元数据编辑');
+    })();
+</script>
 </body>
 </html>
