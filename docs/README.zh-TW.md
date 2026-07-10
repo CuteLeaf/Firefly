@@ -35,7 +35,7 @@
 [**📝使用文檔**](https://docs-firefly.cuteleaf.cn/) /
 [**🍀我的部落格**](https://blog.cuteleaf.cn) 
 
-⚡ 靜態站點生成: 基於Astro的超快載入速度和SEO優化
+⚡ 靜態站點生成: 基於 Astro 的超快載入速度和 SEO 優化
 
 🎨 現代化設計: 簡潔美觀的介面，支援自訂主題色
 
@@ -139,7 +139,7 @@
    部落格將在 `http://localhost:4321` 可用
 
 ### 社區教程
-Cloudflare Workers部署：[【不用服务器，无需备案，零成本搭建一个自己的个人博客】](https://www.bilibili.com/video/BV1hX9XBKEhm)
+Cloudflare Workers 部署：[【不用服务器，无需备案，零成本搭建一个自己的个人博客】](https://www.bilibili.com/video/BV1hX9XBKEhm)
 
 ### 平台託管部署
 - **參考[官方指南](https://docs.astro.build/zh-cn/guides/deploy/)將部落格部署至 Vercel, Netlify, Cloudflare Pages, EdgeOne Pages 等。**

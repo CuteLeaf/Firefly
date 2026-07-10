@@ -35,7 +35,7 @@
 [**📝使用文档**](https://docs-firefly.cuteleaf.cn/) /
 [**🍀我的博客**](https://blog.cuteleaf.cn) 
 
-⚡ 静态站点生成: 基于Astro的超快加载速度和SEO优化
+⚡ 静态站点生成: 基于 Astro 的超快加载速度和 SEO 优化
 
 🎨 现代化设计: 简洁美观的界面，支持自定义主题色
 
@@ -74,7 +74,7 @@
 >
 >**更多布局配置及演示请查看：[Firefly 布局系统详解](https://firefly.cuteleaf.cn/posts/firefly-layout-system/)**
 >
->Firefly 支持i18n多语言UI，但除了简体中文，其他语言均为AI翻译转换，如有错误，欢迎提交 [Pull Request](https://github.com/CuteLeaf/Firefly/pulls) 修正。
+>Firefly 支持 i18n 多语言UI，但除了简体中文，其他语言均为 AI 翻译转换，如有错误，欢迎提交 [Pull Request](https://github.com/CuteLeaf/Firefly/pulls) 修正。
 
 ## ✨ 功能特性
 
@@ -83,7 +83,7 @@
 - [x] **Astro + Tailwind CSS** - 基于现代技术栈的超快静态站点生成
 - [x] **流畅动画** - Swup 页面过渡动画，提供丝滑的浏览体验
 - [x] **响应式设计** - 完美适配桌面端、平板和移动设备
-- [x] **多语言支持** - i18n 国际化，UI支持简体中文、繁体中文、英文、日文、俄语、韩文
+- [x] **多语言支持** - i18n 国际化，UI 支持简体中文、繁体中文、英文、日文、俄语、韩文
 - [x] **全文搜索** - 基于 Pagefind 的客户端搜索，支持文章内容索引
 
 ### 个性化
@@ -138,7 +138,7 @@
    博客将在 `http://localhost:4321` 可用
    
 ### 社区教程
-Cloudflare Workers部署：[【不用服务器，无需备案，零成本搭建一个自己的个人博客】](https://www.bilibili.com/video/BV1hX9XBKEhm)
+Cloudflare Workers 部署：[【不用服务器，无需备案，零成本搭建一个自己的个人博客】](https://www.bilibili.com/video/BV1hX9XBKEhm)
 
 ### 平台托管部署
 - **参考[官方指南](https://docs.astro.build/zh-cn/guides/deploy/)将博客部署至 Vercel, Netlify, Cloudflare Pages, EdgeOne Pages 等。**
@@ -242,7 +242,7 @@ comment: true    # 是否允许评论
 | `pnpm build`               | 构建网站至 `./dist/`            |
 | `pnpm preview`             | 本地预览已构建的网站        |
 | `pnpm check`               | 检查代码中的错误                 |
-| `pnpm format`              | 使用Biome格式化您的代码                        |
+| `pnpm format`              | 使用 Biome 格式化您的代码                        |
 | `pnpm new-post <filename>` | 创建新文章                                   |
 | `pnpm astro ...`           | 执行 `astro add`, `astro check` 等指令    |
 | `pnpm astro --help`        | 显示 Astro CLI 帮助                        |
