@@ -44,8 +44,8 @@
 		}
 		if (targets.length === 0) return;
 
-		// 使用当前可见目标计算缩放基准
-		var target = selectTarget(container) || targets[0];
+		// 动态获取当前可见目标（主题切换后自动跟随）
+		const getActiveTarget = () => selectTarget(container) || targets[0];
 
 		const state = { scale: 1, tx: 0, ty: 0 };
 		const apply = () => {
@@ -66,7 +66,7 @@
 			const next = clamp(prev * f);
 			if (next === prev) return;
 			if (typeof ox === "number" && typeof oy === "number") {
-				const r = target.getBoundingClientRect();
+				const r = getActiveTarget().getBoundingClientRect();
 				const dx = ox - (r.left + r.width / 2);
 				const dy = oy - (r.top + r.height / 2);
 				const ratio = next / prev;
@@ -279,6 +279,12 @@
 			initInteraction(c);
 		});
 	}
+
+	// 暴露 re-init 入口，供 PlantUML 重试等场景调用
+	window._diagramPanZoomReinit = (container) => {
+		container.dataset.pzInit = "false";
+		initInteraction(container);
+	};
 
 	document.addEventListener("astro:before-preparation", closeAll);
 	document.addEventListener("astro:page-load", () => {

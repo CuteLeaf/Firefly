@@ -57,13 +57,18 @@ export function rehypeMermaid(options = {}) {
 			try {
 				({ lightSvg, darkSvg } = buildMermaidSvgs(mermaidCode, themeConfig));
 			} catch (e) {
-				// 渲染失败时显示错误提示 + 原始代码
+				console.error(
+					"[rehype-mermaid] 渲染失败:",
+					e.message,
+					"\n源码:",
+					mermaidCode,
+				);
 				node.properties = {
 					class: "diagram-container mermaid-diagram-container",
 				};
 				node.children = [
 					h("div", { class: "mermaid-error" }, [
-						h("p", {}, `Mermaid 渲染失败: ${e.message || "不支持的图表类型"}`),
+						h("p", {}, "Mermaid 图表渲染失败，请检查图表语法是否正确"),
 						h("pre", { class: "mermaid-fallback-code" }, mermaidCode),
 					]),
 				];

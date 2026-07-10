@@ -61,6 +61,10 @@
 				wrapper.appendChild(newImg);
 				bindErrorHandler(newImg, container);
 				applyTheme();
+				// 重新初始化 pan-zoom 交互
+				if (window._diagramPanZoomReinit) {
+					window._diagramPanZoomReinit(container);
+				}
 			});
 			errorBox.appendChild(msg);
 			errorBox.appendChild(retry);
