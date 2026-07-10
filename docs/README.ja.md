@@ -221,7 +221,7 @@ comment: true    # コメントを有効化
 ---
 ```
 
-## � Markdown拡張
+## Markdown拡張
 
 Astro がデフォルトで対応している[GitHub Flavored Markdown](https://github.github.com/gfm/)に加えて、いくつかの追加の Markdown 機能があります：
 
@@ -229,7 +229,7 @@ Astro がデフォルトで対応している[GitHub Flavored Markdown](https://
 - GitHub リポジトリカード ([プレビューと使用方法](https://firefly.cuteleaf.cn/posts/markdown-extended/))
 - Expressive Code ベースの強化コードブロック ([プレビュー](http://firefly.cuteleaf.cn/posts/code-examples/) / [ドキュメント](https://expressive-code.com/))
 
-## �🧞 コマンド
+## 🧞 コマンド
 
 すべてのコマンドはプロジェクトルートディレクトリで実行する必要があります：
 
