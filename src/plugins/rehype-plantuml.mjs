@@ -1,6 +1,13 @@
 import { h } from "hastscript";
 import { visit } from "unist-util-visit";
 import plantumlThemeScript from "./plantuml-theme-switch.js?raw";
+import {
+	DIAGRAM_CONTAINER,
+	DIAGRAM_WRAPPER,
+	PLANTUML_CONTAINER,
+	PLANTUML_IMAGE,
+	PLANTUML_WRAPPER,
+} from "./utils/diagramConstants.js";
 import { extractText } from "./utils/extractText.js";
 
 /**
@@ -64,7 +71,7 @@ export function rehypePlantuml() {
 			const diagramId = generateId();
 
 			const img = h("img", {
-				class: "plantuml-image",
+				class: PLANTUML_IMAGE,
 				alt: altText || "PlantUML diagram",
 				src: lightSrc,
 				"data-light-src": lightSrc,
@@ -76,15 +83,14 @@ export function rehypePlantuml() {
 			const wrapper = h(
 				"div",
 				{
-					class: "diagram-wrapper plantuml-wrapper",
+					class: `${DIAGRAM_WRAPPER} ${PLANTUML_WRAPPER}`,
 					id: diagramId,
 				},
 				[img],
 			);
 
-			node.tagName = "div";
 			node.properties = {
-				class: "diagram-container plantuml-diagram-container",
+				class: `${DIAGRAM_CONTAINER} ${PLANTUML_CONTAINER}`,
 			};
 			node.children = [wrapper];
 

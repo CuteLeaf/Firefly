@@ -282,6 +282,9 @@
 
 	// 暴露 re-init 入口，供 PlantUML 重试等场景调用
 	window._diagramPanZoomReinit = (container) => {
+		// 清理旧的控制栏，避免重复（类名与 utils/diagramConstants.js 保持同步）
+		const oldControls = container.querySelector(".diagram-controls");
+		if (oldControls) oldControls.remove();
 		container.dataset.pzInit = "false";
 		initInteraction(container);
 	};

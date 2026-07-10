@@ -1,6 +1,16 @@
 import { renderMermaidSVG, THEMES } from "beautiful-mermaid";
 import { h } from "hastscript";
 import { visit } from "unist-util-visit";
+import {
+	DIAGRAM_CONTAINER,
+	DIAGRAM_WRAPPER,
+	MERMAID_CONTAINER,
+	MERMAID_ERROR,
+	MERMAID_FALLBACK_CODE,
+	MERMAID_SVG_DARK,
+	MERMAID_SVG_LIGHT,
+	MERMAID_WRAPPER,
+} from "./utils/diagramConstants.js";
 import { extractText } from "./utils/extractText.js";
 
 /**
@@ -57,34 +67,35 @@ export function rehypeMermaid(options = {}) {
 			try {
 				({ lightSvg, darkSvg } = buildMermaidSvgs(mermaidCode, themeConfig));
 			} catch (e) {
-				console.error(
-					"[rehype-mermaid] 渲染失败:",
-					e.message,
-					"\n源码:",
-					mermaidCode,
-				);
+				const preview =
+					mermaidCode.length > 200
+						? `${mermaidCode.slice(0, 200)}…[truncated]`
+						: mermaidCode;
+				if (process.env.NODE_ENV === "development") {
+					console.error("[rehype-mermaid] 渲染失败:", e, preview);
+				} else {
+					console.error("[rehype-mermaid] 渲染失败:", e.message);
+				}
 				node.properties = {
-					class: "diagram-container mermaid-diagram-container",
+					class: `${DIAGRAM_CONTAINER} ${MERMAID_CONTAINER}`,
 				};
 				node.children = [
-					h("div", { class: "mermaid-error" }, [
+					h("div", { class: MERMAID_ERROR }, [
 						h("p", {}, "Mermaid 图表渲染失败，请检查图表语法是否正确"),
-						h("pre", { class: "mermaid-fallback-code" }, mermaidCode),
+						h("pre", { class: MERMAID_FALLBACK_CODE }, mermaidCode),
 					]),
 				];
 				return;
 			}
 
 			// 替换为静态 SVG（浅色 + 深色双版本，CSS 控制显示）
-			node.properties = {
-				class: "diagram-container mermaid-diagram-container",
-			};
+			node.properties = { class: `${DIAGRAM_CONTAINER} ${MERMAID_CONTAINER}` };
 			node.children = [
-				h("div", { class: "diagram-wrapper mermaid-wrapper" }, [
-					h("div", { class: "mermaid-svg mermaid-svg-light" }, [
+				h("div", { class: `${DIAGRAM_WRAPPER} ${MERMAID_WRAPPER}` }, [
+					h("div", { class: MERMAID_SVG_LIGHT }, [
 						{ type: "raw", value: lightSvg },
 					]),
-					h("div", { class: "mermaid-svg mermaid-svg-dark" }, [
+					h("div", { class: MERMAID_SVG_DARK }, [
 						{ type: "raw", value: darkSvg },
 					]),
 				]),
