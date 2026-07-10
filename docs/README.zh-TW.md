@@ -235,17 +235,17 @@ comment: true    # 是否允許留言
 
 下列指令均需要在專案根目錄執行：
 
-| Command                    | Action                                              |
-|:---------------------------|:----------------------------------------------------|
-| `pnpm install`             | 安裝依賴                                            |
-| `pnpm dev`                 | 在 `localhost:4321` 啟動本地開發伺服器              |
-| `pnpm build`               | 建置網站至 `./dist/`                                |
-| `pnpm preview`             | 本地預覽已建置的網站                                |
-| `pnpm check`               | 檢查程式碼中的錯誤                                  |
-| `pnpm format`              | 使用 Biome 格式化您的程式碼                         |
-| `pnpm new-post <filename>` | 建立新文章                                          |
-| `pnpm astro ...`           | 執行 `astro add`, `astro check` 等指令              |
-| `pnpm astro --help`        | 顯示 Astro CLI 說明                                 |
+| Command                    | Action                                 |
+| :------------------------- | :------------------------------------- |
+| `pnpm install`             | 安裝依賴                               |
+| `pnpm dev`                 | 在 `localhost:4321` 啟動本地開發伺服器 |
+| `pnpm build`               | 建置網站至 `./dist/`                   |
+| `pnpm preview`             | 本地預覽已建置的網站                   |
+| `pnpm check`               | 檢查程式碼中的錯誤                     |
+| `pnpm format`              | 使用 Biome 格式化您的程式碼            |
+| `pnpm new-post <filename>` | 建立新文章                             |
+| `pnpm astro ...`           | 執行 `astro add`, `astro check` 等指令 |
+| `pnpm astro --help`        | 顯示 Astro CLI 說明                    |
 
 ## 🙏 致謝
 

@@ -233,17 +233,17 @@ Astro がデフォルトで対応している[GitHub Flavored Markdown](https://
 
 すべてのコマンドはプロジェクトルートディレクトリで実行する必要があります：
 
-| Command                    | Action                                              |
-|:---------------------------|:----------------------------------------------------|
-| `pnpm install`             | 依存関係をインストール                               |
-| `pnpm dev`                 | `localhost:4321`でローカル開発サーバーを起動        |
-| `pnpm build`               | `./dist/`にサイトをビルド                           |
-| `pnpm preview`             | ビルドされたサイトをローカルでプレビュー            |
-| `pnpm check`               | コード内のエラーをチェック                          |
-| `pnpm format`              | Biome を使用してコードをフォーマット                 |
-| `pnpm new-post <filename>` | 新しい記事を作成                                    |
-| `pnpm astro ...`           | `astro add`、`astro check` などのコマンドを実行      |
-| `pnpm astro --help`        | Astro CLI ヘルプを表示                               |
+| Command                    | Action                                          |
+| :------------------------- | :---------------------------------------------- |
+| `pnpm install`             | 依存関係をインストール                          |
+| `pnpm dev`                 | `localhost:4321`でローカル開発サーバーを起動    |
+| `pnpm build`               | `./dist/`にサイトをビルド                       |
+| `pnpm preview`             | ビルドされたサイトをローカルでプレビュー        |
+| `pnpm check`               | コード内のエラーをチェック                      |
+| `pnpm format`              | Biome を使用してコードをフォーマット            |
+| `pnpm new-post <filename>` | 新しい記事を作成                                |
+| `pnpm astro ...`           | `astro add`、`astro check` などのコマンドを実行 |
+| `pnpm astro --help`        | Astro CLI ヘルプを表示                          |
 
 ## 🙏 謝辞
 
