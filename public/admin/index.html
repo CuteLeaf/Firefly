@@ -184,6 +184,7 @@
 
         /**
          * 构建新的 frontmatter + 正文（支持 published、pinned）
+         * 修改：将 published 字符串转换为 Date 对象，避免被引号包裹
          */
         function buildFrontmatter(content, title, draft, description, tagsStr, category, image, published, pinned, existing = {}) {
             const fm = { ...existing };
@@ -197,7 +198,13 @@
             }
             if (category) fm.category = category; else delete fm.category;
             if (image) fm.image = image; else delete fm.image;
-            if (published) fm.published = published; else delete fm.published;
+            // 关键修改：将 published 字符串转为 Date 对象，防止 YAML 序列化时添加引号
+            if (published) {
+                const dateObj = new Date(published + 'T00:00:00Z');
+                fm.published = isNaN(dateObj.getTime()) ? published : dateObj;
+            } else {
+                delete fm.published;
+            }
             if (pinned) fm.pinned = true; else delete fm.pinned;
 
             const yamlStr = jsyaml.dump(fm, { lineWidth: -1, quotingType: '"', forceQuotes: false });
