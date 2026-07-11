@@ -1,29 +1,27 @@
-# 关于我 / About Me
+# About
 
-你好！我是 **夏叶** ，一个在数字世界中默默无闻的一片叶子。
+## 风绘
 
-## 🛠️ 关于本站
+你好，我是风绘。
 
-这个网站使用 **Astro** 框架构建，采用了 [Firefly](https://github.com/CuteLeaf/Firefly) 模板，Firefly 是基于 [Fuwari](https://github.com/saicaca/fuwari) 的二次开发。
+计算机应用专业在读，会一点平面设计，正在学前端的路上慢慢爬，下半年计划开始学 Python。这个站就是我折腾这些东西时留下的痕迹。
 
-**Firefly** 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。
+## 关于这个站
 
+huidev.com —— hui 来自「风绘」，dev 就是 developer。「绘」是画画、是记录、是把脑子里模糊的东西落到纸上，dev 是动手、是构建、是把想法变成能用的东西。这两个字放在一起，大致就是我想做的事情。
 
-**🖥️在线预览： [Firefly - Demo site](https://firefly.cuteleaf.cn/)**
+这里的笔记什么都有。有时候是学到一个新知识点随手记下来，有时候是生活里的一些想法觉得值得写两句，偶尔也会有完整一些的教程。我不太想把笔记站限定在某个主题框里，学什么就写什么，想写什么就写什么。
 
-**🏠我的博客： [https://blog.cuteleaf.cn](https://blog.cuteleaf.cn/)**
+## 关于笔记
 
-**📝Firefly使用文档： [https://docs-firefly.cuteleaf.cn](https://docs-firefly.cuteleaf.cn/)**
+这些文章首先是写给我自己看的 —— 为了理解、记忆，以及未来的自己回来翻。但既然公开出来了，如果能顺便帮到路过的你，那就更好了。
 
-**⭐Firefly开源地址：[https://github.com/CuteLeaf/Firefly](https://github.com/CuteLeaf/Firefly)** 
+内容可能比较杂，质量也不太稳定，有的笔记反复改了好几遍，有的可能就是刚刚学完趁热记的。我会尽量让它们清晰、有用，但请带着批判的眼光去看 —— 如果发现哪里有问题，欢迎指正。
 
-**⭐Fuwari开源地址：[https://github.com/saicaca/fuwari](https://github.com/saicaca/fuwari)**
+## 联系方式
 
-::github{repo="CuteLeaf/Firefly"}
-
-::github{repo="saicaca/fuwari"}
+如果你有什么想说的，可以通过 GitHub Issues 或邮件找到我。
 
 ---
 
-*感谢你的来访！希望在这里能找到对你有用的内容！*
-
+*最后更新于 2026 年 7 月 12 日* · *ICP 备案审核通过日期：2026-06-15*
