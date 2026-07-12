@@ -1,7 +1,7 @@
 
 <div align="center">
 
-<img src="public/favicon.png" alt="风绘笔记" />
+<img src="public/favicon.png" width="80" alt="风绘笔记" />
 
 # 风绘笔记 / HuiDev Notes
 
