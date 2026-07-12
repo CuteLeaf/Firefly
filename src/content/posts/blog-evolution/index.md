@@ -1,7 +1,8 @@
 ---
 title: 一个小破站的进化史
 published: 2026-07-12
-pinned: false
+image: "./cover.png"
+pinned: true
 description: 从 Gmeek 到 WordPress，从 Fuwari 到 Firefly——一个博客两年来的折腾与进化。
 tags: [Blog, 折腾, Astro]
 category: 随笔
