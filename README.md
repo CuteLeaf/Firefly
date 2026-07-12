@@ -86,7 +86,7 @@ pnpm preview
 
 ## 部署
 
-支持部署至 Vercel、Netlify、Cloudflare Pages 等平台，构建输出目录为 `dist`，构建命令为 `pnpm run build`。
+支持部署至 Vercel、Netlify、Cloudflare Pages、EdgeOne Pages 等平台，构建输出目录为 `dist`，构建命令为 `pnpm run build`。
 
 ## 许可协议
 
