@@ -43,7 +43,7 @@ draft: false
 
 ## 5.0 Firefly：功能党的胜利（2026.04-05）
 
-今年四月了解到 [Firefly](https://github.com/CuteLeaf/Firefly)，还是 Fuwari 系列。相比 Mizuki，Firefly 功能更多，优化也不错。那会儿还在犹豫要不要换，直到决定重新买个域名——`huidev.com`，第三个备案域名了。第二天提交备案申请，等了快两个月，6 月 15 日终于通过，连忙配好 Firefly 上线，6 月 20 日正式见人。备案折腾一次是新鲜，折腾三次就是耐力赛了。
+今年四月了解到 [Firefly](https://github.com/CuteLeaf/Firefly)，还是 Fuwari 系列。相比 Mizuki，Firefly 功能更多，优化也不错。那会儿还在犹豫要不要换，直到决定重新买个域名——`huidev.com`，第三个备案域名了。第二天提交备案申请，6 月 15 日通过，连忙配好 Firefly 上线，6 月 20 日正式见人。备案折腾一次是新鲜，折腾三次就是耐力赛了。
 
 ## 6.0 自己写主题：一坨屎的浪漫（2026.06）
 
