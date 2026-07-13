@@ -10,99 +10,50 @@ import {
 // NavBar Configuration - Dynamically generate navigation bar links based on order
 // ============================================================================
 const getDynamicNavBarConfig = (): NavBarConfig => {
-	// 基础导航栏链接
 	const links: NavBarLink[] = [
-		// 主页
 		LinkPresets.Home,
 	];
 
-	// 文章及其子菜单（父级补充pageKey）
+	// 文章下拉父菜单 补充pageKey
 	links.push({
 		name: "文章",
 		url: "#",
 		icon: "material-symbols:article",
 		pageKey: "menu-article",
 		children: [
-			// 归档
 			LinkPresets.Archive,
-			// 分类
 			LinkPresets.Categories,
-			// 标签
 			LinkPresets.Tags,
 		],
 	});
 
-	// 友链
 	links.push(LinkPresets.Friends);
-
-	// 留言板
 	links.push(LinkPresets.Guestbook);
 
-	// 我的及其子菜单（父级补充pageKey）
+	// 我的下拉父菜单 补充pageKey
 	links.push({
 		name: "我的",
 		url: "#",
 		icon: "material-symbols:person",
 		pageKey: "menu-mine",
 		children: [
-			// 相册
 			LinkPresets.Gallery,
-			// 追番（已注释，不启用）
 			// LinkPresets.Anime,
-			// 番组计划（已注释，不启用）
 			// LinkPresets.Bangumi,
 		],
 	});
 
-	// 关于及其子菜单（父级补充pageKey）
+	// 关于下拉父菜单 补充pageKey
 	links.push({
 		name: "关于",
 		url: "#",
 		icon: "material-symbols:info",
 		pageKey: "menu-about",
 		children: [
-			// 打赏（已注释，不启用）
 			// LinkPresets.Sponsor,
-			// 关于页面
 			LinkPresets.About,
 		],
 	});
-
-	// 自定义导航栏链接
-	//links.push({
-	//	name: "链接",
-	//	url: "#",
-	//	icon: "material-symbols:link",
-		// 子菜单
-	//	children: [
-	//		{
-	//			name: "GitHub",
-	//			url: "https://github.com/xyxnb123",
-	//			external: true,
-	//			icon: "fa7-brands:github",
-	//		},
-	//		{
-	//			name: "QQ交流群",
-	//			url: "https://qm.qq.com/q/ZGsFa8qX2G",
-	//			external: true,
-	//			icon: "fa7-brands:qq",
-	//		},
-	//		{
-	//			name: "Firefly文档",
-	//			url: "https://docs-firefly.cuteleaf.cn",
-	//			external: true,
-	//			icon: "material-symbols:docs",
-	//		},
-	//	],
-	//});
-
-	// 文档链接
-	// links.push({
-	// 	name: "文档",
-	// 	url: "https://docs-firefly.cuteleaf.cn",
-	// 	external: true,
-	// 	icon: "material-symbols:docs",
-	// });
 
 	return { links } as NavBarConfig;
 };
@@ -113,9 +64,7 @@ export const navBarSearchConfig: NavBarSearchConfig = {
 };
 
 // ============================================================================
-// 链接预设 - 可自由自定义导航栏链接的名称、图标和URL
-// Link Presets - Allows free customization of the name, icon, and URL of navigation bar links
-// 全部项已补充 pageKey，无缺失
+// 所有链接预设 全部强制补齐 pageKey
 // ============================================================================
 export const LinkPresets: Record<string, NavBarLink> = {
 	Home: {
@@ -167,7 +116,7 @@ export const LinkPresets: Record<string, NavBarLink> = {
 		pageKey: "gallery",
 	},
 
-	// 下方为注释停用项，保留定义方便后续开启
+	// 注释停用项，保留定义方便后续开启
 	// Anime: {
 	// 	name: "追番",
 	// 	url: "/anime/",
