@@ -6,7 +6,7 @@ description: "与优秀的朋友们一起成长"
 {/* MDX 文件可以根据自己的喜好完全重写，默认提供的布局仅作为参考模板，也可以使用常规的markdown语法。 */}
 
 {/* ========== 站点信息 ========= */}
-
+{/*
 export const site = {
   name: "夏夜流萤",
   desc: "飞萤之火自无梦的长夜亮起，绽放在终竟的明天。",
@@ -14,6 +14,7 @@ export const site = {
   avatar: "https://weavatar.com/avatar/d252655d40d6874417a720bad0a6c5f77f8f6a1fd2f882f8f338402dc37e4190?s=640",
   email: "xiaye@msn.com",
 };
+*/}
 
 {/* ========= 注意事项 ========== */}
 
@@ -36,8 +37,8 @@ export const notes = [
           <div class="relative shrink-0">
             <div class="w-16 h-16 rounded-xl overflow-hidden ring-2 ring-(--primary)/20">
               <img
-                src={site.avatar}
-                alt={site.name}
+                {/* src={site.avatar} */}
+                alt=""
                 class="w-full h-full object-cover"
               />
             </div>
@@ -46,18 +47,18 @@ export const notes = [
             </div>
           </div>
           <div>
-            <h3 class="text-lg font-bold">{site.name}</h3>
-            <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">{site.desc}</p>
+            <h3 class="text-lg font-bold">{/* {site.name} */}</h3>
+            <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">{/* {site.desc} */}</p>
           </div>
         </div>
 
         {/* 站点信息列表（可复制） */}
         <div class="space-y-2.5 flex-1">
           {[
-            { label: "站点名称", value: site.name },
-            { label: "站点描述", value: site.desc },
-            { label: "站点链接", value: site.url },
-            { label: "头像链接", value: site.avatar },
+            { label: "站点名称", value: ""/* site.name */ },
+            { label: "站点描述", value: ""/* site.desc */ },
+            { label: "站点链接", value: ""/* site.url */ },
+            { label: "头像链接", value: ""/* site.avatar */ },
           ].map((item) => (
             <div class="flex items-center justify-between gap-2 rounded-lg bg-black/5 dark:bg-white/5 px-3 py-2">
               <div class="min-w-0">
@@ -105,7 +106,7 @@ export const notes = [
               <div class="w-0.5 flex-1 bg-(--line-divider) my-1.5"></div>
             </div>
             <div class="pb-4">
-              <p class="font-semibold text-sm mb-1">评论区留言/发送申请邮件至：<code class="px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/10 text-[0.7rem]">{site.email}</code></p>
+              <p class="font-semibold text-sm mb-1">评论区留言/发送申请邮件至：<code class="px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/10 text-[0.7rem]">{/* {site.email} */}</code></p>
               <p class="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">申请模板，把内容复制修改后到评论区或邮件中发送</p>
               <div class="relative rounded-lg bg-black/5 dark:bg-white/5 p-4 pr-10 text-[0.7rem] leading-relaxed overflow-x-auto whitespace-pre">
                 <button onclick="navigator.clipboard.writeText('站点名称：您的站点名称\n站点描述：您的站点描述\n站点链接：您的站点链接\n头像链接：您的站点头像');this.querySelectorAll('svg')[0].classList.add('hidden');this.querySelectorAll('svg')[1].classList.remove('hidden');setTimeout(()=>{this.querySelectorAll('svg')[0].classList.remove('hidden');this.querySelectorAll('svg')[1].classList.add('hidden')},1500)" class="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-md bg-black/10 dark:bg-white/10 text-(--btn-content) hover:opacity-80 transition-opacity cursor-pointer">
