@@ -90,6 +90,11 @@ const stats = [
     // 验证 ID 格式：仅允许字母数字字符，防止 URL 注入
     if (!la51Id || !/^[A-Za-z0-9]+$/.test(la51Id)) return;
 
+    // 全局去重：多侧边栏实例共享同一份逻辑，只初始化一次
+    var ns = window.__laStats || (window.__laStats = { inited: false });
+    if (ns.inited) return;
+    ns.inited = true;
+
     var STAT_IDS = ["la-online", "la-today-uv", "la-today-pv", "la-yesterday-uv", "la-yesterday-pv", "la-month-pv", "la-total-pv"];
 
     function setStatValues(values) {
@@ -100,8 +105,7 @@ const stats = [
     }
 
     function updateViaQuoteJs() {
-      var url = "https://v6-widget.51.la/v6/" + la51Id + "/quote.js";
-      fetch(url)
+      fetch("https://v6-widget.51.la/v6/" + la51Id + "/quote.js")
         .then(function(res) { if (!res.ok) throw new Error("HTTP " + res.status); return res.text(); })
         .then(function(text) {
           var match = text.match(/r\.innerHTML\s*=\s*"([^"]+)"/);
