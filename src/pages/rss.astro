@@ -116,25 +116,26 @@ const recentPosts = posts.slice(0, 6);
             copyBtn.parentNode?.replaceChild(newBtn, copyBtn);
             
             // 绑定新的事件监听器
-            newBtn.addEventListener('click', async function() {
-                const url = this.getAttribute('data-url');
+            newBtn.addEventListener('click', async function (event) {
+                const btn = event.currentTarget as HTMLElement;
+                const url = btn.getAttribute('data-url');
                 if (!url) return;
                 try {
                     await navigator.clipboard.writeText(url);
-                    const originalText = this.textContent;
-                    this.textContent = this.getAttribute('data-copied-text') || '';
-                    this.style.backgroundColor = 'var(--success-color, #10b981)';
-                    
+                    const originalText = btn.textContent;
+                    btn.textContent = btn.getAttribute('data-copied-text') || '';
+                    btn.style.backgroundColor = 'var(--success-color, #10b981)';
+
                     setTimeout(() => {
-                        this.textContent = originalText;
-                        this.style.backgroundColor = '';
+                        btn.textContent = originalText;
+                        btn.style.backgroundColor = '';
                     }, 2000);
                 } catch (err) {
                     console.error('复制失败:', err);
-                    const originalText = this.textContent;
-                    this.textContent = this.getAttribute('data-failed-text') || '';
+                    const originalText = btn.textContent;
+                    btn.textContent = btn.getAttribute('data-failed-text') || '';
                     setTimeout(() => {
-                        this.textContent = originalText;
+                        btn.textContent = originalText;
                     }, 2000);
                 }
             });

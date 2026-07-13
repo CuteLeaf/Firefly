@@ -30,9 +30,9 @@ Firefly 项目中所有可复用组件的集中管理。组件按照功能和职
 - `FloatingControls.astro` - 右下角悬浮控件容器
 - `FloatingTOC.astro` - 浮动目录组件
 - `ScrollDownIndicator.astro` - 向下滚动指示器
+- `ArchivePanel.astro` - 归档面板组件（服务端渲染 + 客户端筛选/折叠）
 
 **交互组件**
-- `ArchivePanel.svelte` - 归档面板组件
 - `DisplaySettings.svelte` - 显示设置组件
 - `DisplaySettingsIntegrated.svelte` - 集成显示设置组件
 - `LayoutSwitchButton.svelte` - 布局切换按钮

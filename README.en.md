@@ -8,7 +8,7 @@
 > 
 > ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen) 
 ![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
-![Astro](https://img.shields.io/badge/Astro-7.0.2-orange)
+![Astro](https://img.shields.io/badge/Astro-7.0.7-orange)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)
 >
 > [![Stars](https://img.shields.io/github/stars/CuteLeaf/Firefly?style=social)](https://github.com/CuteLeaf/Firefly/stargazers)
@@ -82,7 +82,7 @@
 - [x] **Astro + Tailwind CSS** - Ultra-fast static site generation based on modern tech stack
 - [x] **Smooth Animations** - Swup page transition animations for silky smooth browsing experience
 - [x] **Responsive Design** - Perfect adaptation for desktop, tablet and mobile devices
-- [x] **Multi-language Support** - i18n internationalization ui, supports Simplified Chinese, Traditional Chinese, English, Japanese, Russian
+- [x] **Multi-language Support** - i18n internationalization ui, supports Simplified Chinese, Traditional Chinese, English, Japanese, Russian, Korean
 - [x] **Full-text Search** - Client-side search based on Pagefind, supports article content indexing.
 
 ### Personalization
@@ -173,6 +173,7 @@ const SITE_LANG = "zh_CN";
 - `en` - English
 - `ja` - Japanese
 - `ru` - Russian
+- `ko` - Korean
 
 ### Configuration File Structure
 
@@ -196,6 +197,7 @@ src/
 │   ├── musicConfig.ts            # Music player configuration
 │   ├── navBarConfig.ts           # Navbar configuration
 │   ├── pioConfig.ts              # Mascot configuration
+│   ├── mermaidConfig.ts          # Mermaid diagram configuration
 │   ├── plantumlConfig.ts         # PlantUML diagram configuration
 │   ├── profileConfig.ts          # User profile configuration
 │   ├── sidebarConfig.ts          # Sidebar layout configuration

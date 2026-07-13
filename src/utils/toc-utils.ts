@@ -5,6 +5,11 @@
 
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
+import {
+	computeTocItems,
+	renderTocItemHTML,
+	type TocInput,
+} from "@/utils/toc-shared";
 
 export interface TOCConfig {
 	contentId: string;
@@ -16,7 +21,6 @@ export interface TOCConfig {
 export class TOCManager {
 	private tocItems: HTMLElement[] = [];
 	private observer: IntersectionObserver | null = null;
-	private minDepth = 10;
 	private maxLevel: number;
 	private scrollTimeout: number | null = null;
 	private contentId: string;
@@ -55,28 +59,6 @@ export class TOCManager {
 	}
 
 	/**
-	 * 计算最小深度
-	 */
-	private calculateMinDepth(headings: HTMLElement[]): number {
-		let minDepth = 10;
-		headings.forEach((heading) => {
-			const depth = Number.parseInt(heading.tagName.charAt(1), 10);
-			minDepth = Math.min(minDepth, depth);
-		});
-		return minDepth;
-	}
-
-	/**
-	 * 过滤标题
-	 */
-	private filterHeadings(headings: HTMLElement[]): HTMLElement[] {
-		return Array.from(headings).filter((heading) => {
-			const depth = Number.parseInt(heading.tagName.charAt(1), 10);
-			return depth < this.minDepth + this.maxLevel;
-		});
-	}
-
-	/**
 	 * 获取标题的纯文本内容（排除 script/style 标签的文本）
 	 */
 	private getCleanTextContent(element: HTMLElement): string {
@@ -88,31 +70,6 @@ export class TOCManager {
 	}
 
 	/**
-	 * 转义 HTML 属性值，避免标题中的引号破坏属性
-	 */
-	private escapeHtmlAttr(value: string): string {
-		return value
-			.replace(/&/g, "&amp;")
-			.replace(/"/g, "&quot;")
-			.replace(/'/g, "&#39;")
-			.replace(/</g, "&lt;")
-			.replace(/>/g, "&gt;");
-	}
-
-	/**
-	 * 生成徽章内容
-	 */
-	private generateBadgeContent(depth: number, heading1Count: number): string {
-		if (depth === this.minDepth) {
-			return heading1Count.toString();
-		}
-		if (depth === this.minDepth + 1) {
-			return '<span class="toc-badge-dot"></span>';
-		}
-		return '<span class="toc-badge-dot toc-badge-dot-sm"></span>';
-	}
-
-	/**
 	 * 空状态文案
 	 */
 	private getEmptyStateHTML(): string {
@@ -120,7 +77,34 @@ export class TOCManager {
 	}
 
 	/**
-	 * 生成TOC HTML
+	 * 将 DOM 标题转换为与服务端一致的 TocInput
+	 */
+	private domHeadingsToInputs(headings: HTMLElement[]): TocInput[] {
+		return headings.map((heading) => {
+			const depth = Number.parseInt(heading.tagName.charAt(1), 10);
+			let text = this.getCleanTextContent(heading)
+				.replace(/#+\s*$/, "")
+				.trim();
+
+			// 空文本回退（例如动态副标题）
+			if (!text) {
+				const dataSubtitles = heading.getAttribute("data-subtitles");
+				if (dataSubtitles) {
+					try {
+						const subtitles = JSON.parse(dataSubtitles);
+						text = Array.isArray(subtitles) ? subtitles[0] : subtitles;
+					} catch {
+						// ignore
+					}
+				}
+			}
+
+			return { depth, slug: heading.id, text };
+		});
+	}
+
+	/**
+	 * 生成TOC HTML（客户端 fallback 路径，与服务端 SSR 输出保持一致）
 	 */
 	public generateTOCHTML(): string {
 		const headings = this.getAllHeadings();
@@ -129,71 +113,18 @@ export class TOCManager {
 			return this.getEmptyStateHTML();
 		}
 
-		this.minDepth = this.calculateMinDepth(headings);
-		const filteredHeadings = this.filterHeadings(headings);
+		const items = computeTocItems(this.domHeadingsToInputs(headings), {
+			maxLevel: this.maxLevel,
+		});
 
-		if (filteredHeadings.length === 0) {
+		if (items.length === 0) {
 			return this.getEmptyStateHTML();
 		}
 
 		let tocHTML = "";
-		let heading1Count = 1;
-
-		filteredHeadings.forEach((heading) => {
-			const depth = Number.parseInt(heading.tagName.charAt(1), 10);
-			const depthLevel =
-				depth === this.minDepth ? 0 : depth === this.minDepth + 1 ? 1 : 2;
-
-			if (!heading.id) {
-				return;
-			}
-
-			const badgeContent = this.generateBadgeContent(depth, heading1Count);
-			if (depth === this.minDepth) {
-				heading1Count++;
-			}
-
-			let headingText = this.getCleanTextContent(heading)
-				.replace(/#+\s*$/, "")
-				.trim();
-
-			// Fallback for empty text (e.g. dynamic subtitle)
-			if (!headingText) {
-				const dataSubtitles = heading.getAttribute("data-subtitles");
-				if (dataSubtitles) {
-					try {
-						const subtitles = JSON.parse(dataSubtitles);
-						headingText = Array.isArray(subtitles) ? subtitles[0] : subtitles;
-					} catch {
-						// ignore
-					}
-				}
-			}
-
-			if (!headingText) {
-				headingText =
-					heading.id === "banner-subtitle"
-						? "Banner Subtitle"
-						: heading.id || "Heading";
-			}
-
-			const escapedHeadingText = this.escapeHtmlAttr(headingText);
-
-			tocHTML += `
-        <a 
-          href="#${heading.id}" 
-			  class="toc-item toc-level-${depthLevel}"
-          data-heading-id="${heading.id}"
-		  aria-label="${escapedHeadingText}"
-		  title="${escapedHeadingText}"
-        >
-			  <div class="toc-badge ${depth === this.minDepth ? "toc-badge-index" : ""}">
-            ${badgeContent}
-          </div>
-			  <div class="toc-label ${depth <= this.minDepth + 1 ? "toc-label-primary" : "toc-label-secondary"}">${headingText}</div>
-        </a>
-      `;
-		});
+		for (const item of items) {
+			tocHTML += renderTocItemHTML(item);
+		}
 
 		tocHTML += `<div id="${this.indicatorId}" style="opacity: 0;" class="toc-active-indicator"></div>`;
 
@@ -201,7 +132,7 @@ export class TOCManager {
 	}
 
 	/**
-	 * 更新TOC内容
+	 * 更新TOC内容（重建，DOM 遍历路径）
 	 */
 	public updateTOCContent(): void {
 		const tocContent = document.getElementById(this.contentId);
@@ -437,13 +368,59 @@ export class TOCManager {
 	}
 
 	/**
-	 * 初始化
+	 * 重建目录（DOM 遍历生成列表）+ 绑定交互。
+	 * 用于 fallback：加密文章解密后、空 SSR、或站内导航后侧栏 DOM 变旧时。
 	 */
-	public init(): void {
+	public render(): void {
 		this.updateTOCContent();
 		this.bindClickEvents();
 		this.setupObserver();
 		this.updateActiveState();
+	}
+
+	/**
+	 * 判断现有锚点是否与当前正文的目录完全一致（避免站内导航后侧栏 DOM 未被
+	 * swup 替换、仍显示上一篇目录的情况）。用与 SSR 相同的算法从当前正文算出
+	 * 期望 id 序列并逐一比对——不同文章即使共用个别标题名也不会误判。
+	 */
+	private anchorsMatchCurrentContent(anchors: HTMLElement[]): boolean {
+		const expected = computeTocItems(
+			this.domHeadingsToInputs(this.getAllHeadings()),
+			{ maxLevel: this.maxLevel },
+		);
+		if (expected.length !== anchors.length) return false;
+		return expected.every(
+			(item, i) => anchors[i].dataset.headingId === item.headingId,
+		);
+	}
+
+	/**
+	 * 附着到已有的服务端渲染锚点上（不重新生成列表），只绑定滚动高亮/点击。
+	 * 若没有 SSR 锚点、或锚点属于上一篇文章（侧栏未被 swup 替换），回退到 render()。
+	 */
+	public attach(): void {
+		const tocContent = document.getElementById(this.contentId);
+		if (!tocContent) return;
+
+		const anchors = Array.from(tocContent.querySelectorAll<HTMLElement>("a"));
+
+		// 没有锚点（加密未解密/空）或锚点是上一篇的 → 重建
+		if (anchors.length === 0 || !this.anchorsMatchCurrentContent(anchors)) {
+			this.render();
+			return;
+		}
+
+		this.tocItems = anchors;
+		this.bindClickEvents();
+		this.setupObserver();
+		this.updateActiveState();
+	}
+
+	/**
+	 * 初始化（向后兼容别名，等价于 render()）
+	 */
+	public init(): void {
+		this.render();
 	}
 }
 

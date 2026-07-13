@@ -6,7 +6,8 @@
 	overflow-x: hidden;
 	-webkit-overflow-scrolling: touch;
 	scroll-behavior: smooth;
-	padding-right: 0.125rem;
+	/* 滚到顶/底后不再把滚动传导给页面 */
+	overscroll-behavior: contain;
 }
 
 /* TOC 内容容器 */

@@ -255,7 +255,7 @@ const isConfigured = !!(BILIBILI_UID || (TMDB_API_KEY && TMDB_LIST_ID));
         <div class="mb-6">
           <div class="flex items-center gap-3 mb-3">
             <div class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70">
-              <Icon name="material-symbols:live-tv" class="text-[1.5rem]"></Icon>
+              <Icon is:inline name="material-symbols:live-tv" class="text-[1.5rem]"></Icon>
             </div>
             <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
               {i18n(I18nKey.anime)}
@@ -270,10 +270,10 @@ const isConfigured = !!(BILIBILI_UID || (TMDB_API_KEY && TMDB_LIST_ID));
         </div>
 
         {!isConfigured ? (
-          <!-- 未配置提示 -->
+          /* 未配置提示 */
           <div class="text-center py-16">
             <div class="inline-flex items-center justify-center w-16 h-16 bg-(--btn-regular-bg) rounded-full mb-6 border border-(--line-divider)">
-              <Icon name="material-symbols:settings" class="text-[2rem] text-(--btn-content)" />
+              <Icon is:inline name="material-symbols:settings" class="text-[2rem] text-(--btn-content)" />
             </div>
             <h2 class="text-xl font-semibold text-black/80 dark:text-white/80 mb-3">
               {i18n(I18nKey.animeNotConfigured)}
@@ -289,7 +289,7 @@ const isConfigured = !!(BILIBILI_UID || (TMDB_API_KEY && TMDB_LIST_ID));
               <div class="bg-(--card-bg) rounded-xl p-3 sm:p-4 border border-(--line-divider)">
                 <div class="flex items-center gap-2 sm:gap-3">
                   <div class="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-(--primary)/10 flex items-center justify-center shrink-0">
-                    <Icon name="material-symbols:movie-filter" class="text-[1rem] sm:text-[1.25rem] text-(--primary)" />
+                    <Icon is:inline name="material-symbols:movie-filter" class="text-[1rem] sm:text-[1.25rem] text-(--primary)" />
                   </div>
                   <div class="min-w-0">
                     <div class="text-[10px] sm:text-xs text-neutral-500 dark:text-neutral-400">{i18n(I18nKey.animeTotal)}</div>
@@ -300,7 +300,7 @@ const isConfigured = !!(BILIBILI_UID || (TMDB_API_KEY && TMDB_LIST_ID));
               <div class="bg-(--card-bg) rounded-xl p-3 sm:p-4 border border-(--line-divider)">
                 <div class="flex items-center gap-2 sm:gap-3">
                   <div class="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-pink-500/10 flex items-center justify-center shrink-0">
-                    <Icon name="material-symbols:favorite" class="text-[1rem] sm:text-[1.25rem] text-pink-500" />
+                    <Icon is:inline name="material-symbols:favorite" class="text-[1rem] sm:text-[1.25rem] text-pink-500" />
                   </div>
                   <div class="min-w-0">
                     <div class="text-[10px] sm:text-xs text-neutral-500 dark:text-neutral-400">{i18n(I18nKey.animeBilibiliAvg)}</div>
@@ -311,7 +311,7 @@ const isConfigured = !!(BILIBILI_UID || (TMDB_API_KEY && TMDB_LIST_ID));
               <div class="bg-(--card-bg) rounded-xl p-3 sm:p-4 border border-(--line-divider)">
                 <div class="flex items-center gap-2 sm:gap-3">
                   <div class="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-yellow-500/10 flex items-center justify-center shrink-0">
-                    <Icon name="material-symbols:star" class="text-[1rem] sm:text-[1.25rem] text-yellow-500" />
+                    <Icon is:inline name="material-symbols:star" class="text-[1rem] sm:text-[1.25rem] text-yellow-500" />
                   </div>
                   <div class="min-w-0">
                     <div class="text-[10px] sm:text-xs text-neutral-500 dark:text-neutral-400">{i18n(I18nKey.animeTmdbAvg)}</div>
@@ -322,7 +322,7 @@ const isConfigured = !!(BILIBILI_UID || (TMDB_API_KEY && TMDB_LIST_ID));
               <div class="bg-(--card-bg) rounded-xl p-3 sm:p-4 border border-(--line-divider)">
                 <div class="flex items-center gap-2 sm:gap-3">
                   <div class="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
-                    <Icon name="material-symbols:database" class="text-[1rem] sm:text-[1.25rem] text-emerald-500" />
+                    <Icon is:inline name="material-symbols:database" class="text-[1rem] sm:text-[1.25rem] text-emerald-500" />
                   </div>
                   <div class="min-w-0">
                     <div class="text-[10px] sm:text-xs text-neutral-500 dark:text-neutral-400">{i18n(I18nKey.animeSource)}</div>
@@ -334,7 +334,7 @@ const isConfigured = !!(BILIBILI_UID || (TMDB_API_KEY && TMDB_LIST_ID));
               </div>
             </div>
 
-            <!-- 番剧网格（Svelte 交互组件） -->
+            {/* 番剧网格（Svelte 交互组件） */}
             <AnimeGrid
               client:load
               items={animeList}

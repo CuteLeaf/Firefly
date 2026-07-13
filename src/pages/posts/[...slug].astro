@@ -140,6 +140,7 @@ const relatedPosts = await getRelatedPosts(entry, 5);
   postSlug={entry.id}
   postCategory={entry.data.category || undefined}
   headings={headings}
+  encrypted={!!entry.data.password}
   bannerPostMeta={bannerPostMeta}
 >
   <!-- KaTeX 按需加载 - 仅在文章页面 -->
@@ -477,14 +478,15 @@ const relatedPosts = await getRelatedPosts(entry, 5);
   }
 
   <script>
-    import dayjs from "dayjs";
-
     const card = document.getElementById('outdated-card');
-    
-    if (card) {
-      // 讀取伺服器給的日期，並用 dayjs 直接算出差異天數
-      const lastModified = dayjs(card.dataset.date);
-      const daysDiff = dayjs().diff(lastModified, "day");
+    const dateStr = card?.dataset.date;
+
+    if (card && dateStr) {
+      // 讀取伺服器給的日期，用原生 Date 算出差異天數（避免向客戶端打包整個 dayjs）
+      const lastModified = new Date(dateStr);
+      const daysDiff = Math.floor(
+        (Date.now() - lastModified.getTime()) / 86400000,
+      );
       const threshold = Number(card.dataset.threshold);
 
       // 如果超過閾值，就顯示卡片與提示文字
@@ -496,7 +498,7 @@ const relatedPosts = await getRelatedPosts(entry, 5);
           if (textEl && textEl.dataset.template) {
             textEl.textContent = `，${textEl.dataset.template.replace("{days}", daysDiff.toString())}`;
           }
-          
+
           const warningEl = document.getElementById('outdated-warning');
           if (warningEl) {
             warningEl.classList.remove('hidden');

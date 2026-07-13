@@ -1,4 +1,4 @@
-import pako from "pako";
+import * as pako from "pako";
 
 /**
  * PlantUML 编码字母表：`0-9A-Za-z-_`。

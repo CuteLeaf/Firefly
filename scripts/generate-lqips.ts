@@ -10,7 +10,6 @@ const PUBLIC_DIR = "public";
 const OUTPUT_FILE = "src/constants/lqips.json";
 // 需要忽略的目录（相对于项目根目录）
 const IGNORE_DIRS = [
-	"src/content/**",
 	"public/favicon/**",
 	"public/pio/**",
 	"public/assets/images/effects/**",

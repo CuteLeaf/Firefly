@@ -51,6 +51,7 @@ interface Props {
 	postSlug?: string;
 	postCategory?: string;
 	headings?: MarkdownHeading[];
+	encrypted?: boolean;
 	bannerPostMeta?: {
 		title: string;
 		published: Date;
@@ -71,6 +72,7 @@ const {
 	postSlug,
 	postCategory,
 	headings = [],
+	encrypted = false,
 	bannerPostMeta,
 } = Astro.props;
 
@@ -167,8 +169,14 @@ const finalMainPanelTop =
 // 获取响应式侧边栏配置
 const sidebarConfig = getResponsiveSidebarConfig();
 
+// 侧边栏是否在文章详情页显示（默认 true）
+const hideSidebarOnPostPage =
+	sidebarLayoutConfig.hideSidebarOnPostPage === true;
+
 // 在文章页面且启用了showBothSidebarsOnPostPage时，确保对侧组件参与网格计算
 const shouldShowBothSidebarsOnPostPage: boolean =
+	sidebarLayoutConfig.enable &&
+	!hideSidebarOnPostPage &&
 	isPostPage &&
 	sidebarLayoutConfig.position !== "both" &&
 	!!sidebarLayoutConfig.showBothSidebarsOnPostPage;
@@ -319,7 +327,7 @@ const hasMultipleImages =
 }>
     <!-- 背景图片显示 -->
     {hasMultipleImages ? (
-    <!-- 轮播模式：渲染所有图片为 slide-item -->
+    /* 轮播模式：渲染所有图片为 slide-item */
     <div class:list={["relative h-full w-full bg-black", `effect-${bannerCarouselEffect}`]} id="banner-images-container"
          style={`z-index: 5; --carousel-interval: ${bannerCarouselInterval}ms`}
          data-carousel-enabled={bannerCarouselEnabledDefault}
@@ -359,7 +367,7 @@ const hasMultipleImages =
         ))}
     </div>
     ) : (
-    <!-- 单图模式 -->
+    /* 单图模式 */
     <div class="relative h-full w-full" id="banner-images-container">
         {backgroundImages.mobile.length > 0 && (
             <div class="banner-image-slot-mobile absolute inset-0 block lg:hidden">
@@ -802,6 +810,8 @@ const hasMultipleImages =
     <div class="relative w-full xl:w-[92vw] max-w-(--page-width) mx-auto pointer-events-auto">
         <div id="main-grid"
           class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-[auto_1fr_auto] lg:grid-rows-[auto] mx-auto gap-4 px-2 md:px-4 ${!sidebarConfig.mobileShowSidebar ? 'mobile-no-sidebar' : ''}`}
+          data-sidebar-enable={sidebarLayoutConfig.enable ? "true" : "false"}
+          data-grid-hide-sidebar-on-post={hideSidebarOnPostPage ? "true" : "false"}
           data-sidebar-position={sidebarLayoutConfig.position}
           data-tablet-sidebar={sidebarLayoutConfig.tabletSidebar ?? "left"}
           data-show-both-sidebars-on-post={sidebarLayoutConfig.showBothSidebarsOnPostPage ? "true" : "false"}
@@ -815,21 +825,26 @@ const hasMultipleImages =
             */}
             {sidebarLayoutConfig.position !== "right" ? (
                 <>
-                    <div id="left-sidebar-wrapper" class="contents" style="contain: layout style paint;">
-                        {effectiveHasLeftComponents && (
-                            <SideBar
-                                side={effectiveIsBothSidebars ? "left" : undefined}
-                                class={sidebarClass}
-                                headings={headings}
-                            />
-                        )}
-                    </div>
+                    {sidebarLayoutConfig.enable ? (
+                        <div id="left-sidebar-wrapper" class="contents" data-hide-sidebar-on-post={hideSidebarOnPostPage ? "true" : "false"} style="contain: layout style paint;">
+                            {effectiveHasLeftComponents && (
+                                <SideBar
+                                    side={effectiveIsBothSidebars ? "left" : undefined}
+                                    class={sidebarClass}
+                                    headings={headings}
+                                    encrypted={encrypted}
+                                />
+                            )}
+                        </div>
+                    ) : (
+                        <div id="left-sidebar-wrapper" class="hidden"></div>
+                    )}
                     <div id="left-sidebar-dynamic" class="hidden transition-swup-fade"></div>
                 </>
             ) : (
                 <div id="left-sidebar-dynamic" class="contents transition-swup-fade">
                     {effectiveIsBothSidebars && effectiveHasLeftComponents && (
-						<SideBar side="left" class={sidebarClass} headings={headings}></SideBar>
+						<SideBar side="left" class={sidebarClass} headings={headings} encrypted={encrypted}></SideBar>
                     )}
                 </div>
             )}
@@ -863,17 +878,21 @@ const hasMultipleImages =
             */}
             {(sidebarLayoutConfig.position === "both" || sidebarLayoutConfig.position === "right") ? (
                 <>
-                    <div id="right-sidebar-static" class="contents">
-                        {(effectiveIsBothSidebars || sidebarLayoutConfig.position === "right") && effectiveHasRightComponents && (
-							<SideBar side="right" class={rightSidebarClass} headings={headings}></SideBar>
-                        )}
-                    </div>
+                    {sidebarLayoutConfig.enable ? (
+                        <div id="right-sidebar-static" class="contents" data-hide-sidebar-on-post={hideSidebarOnPostPage ? "true" : "false"}>
+                            {(effectiveIsBothSidebars || sidebarLayoutConfig.position === "right") && effectiveHasRightComponents && (
+								<SideBar side="right" class={rightSidebarClass} headings={headings} encrypted={encrypted}></SideBar>
+                            )}
+                        </div>
+                    ) : (
+                        <div id="right-sidebar-static" class="hidden"></div>
+                    )}
                     <div id="right-sidebar-dynamic" class="hidden transition-swup-fade"></div>
                 </>
             ) : (
                 <div id="right-sidebar-dynamic" class="contents transition-swup-fade">
                     {effectiveIsBothSidebars && effectiveHasRightComponents && (
-						<SideBar side="right" class={rightSidebarClass} headings={headings}></SideBar>
+						<SideBar side="right" class={rightSidebarClass} headings={headings} encrypted={encrypted}></SideBar>
                     )}
                 </div>
             )}
@@ -881,7 +900,7 @@ const hasMultipleImages =
             {/* 移动端底部组件 - 768px及以下显示 */}
             {sidebarLayoutConfig.mobileBottomComponents && sidebarLayoutConfig.mobileBottomComponents.length > 0 && (
                 <div id="mobile-bottom-sidebar" class="col-span-1 block md:hidden mt-4">
-					<SideBar side="bottom" headings={headings}></SideBar>
+					<SideBar side="bottom" headings={headings} encrypted={encrypted}></SideBar>
                 </div>
             )}
 
@@ -895,7 +914,7 @@ const hasMultipleImages =
     </div>
 </div>
 
-<FloatingControls headings={headings} />
+<FloatingControls headings={headings} encrypted={encrypted} />
 
 
 </Layout>

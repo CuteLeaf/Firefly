@@ -4,9 +4,8 @@ import { render } from "astro:content";
 import { Icon } from "astro-icon/components";
 import CoverImage from "@/components/common/CoverImage.astro";
 import PostMetadata from "@/components/layout/PostMeta.astro";
+import PostStats from "@/components/layout/PostStats.astro";
 import { siteConfig } from "@/config";
-import I18nKey from "@/i18n/i18nKey";
-import { i18n } from "@/i18n/translation";
 import { getApiUrlList, processCoverImageSync } from "@/utils/image-utils";
 import { getFileDirFromPath, getTagUrl } from "@/utils/url-utils";
 
@@ -53,16 +52,40 @@ const hasCover =
 
 const coverWidth = "30%";
 
-const showTags = siteConfig.postListLayout.showTags;
 const descriptionLines = Math.max(
 	0,
 	Math.trunc(siteConfig.postListLayout.descriptionLines ?? 2),
 );
+
+// PostMeta 配置
+const metaConfig = siteConfig.postListLayout.meta ?? {};
+const showCategory = metaConfig.showCategory ?? true;
+const metaShowTags = metaConfig.showTags ?? true;
+const metaTagCount =
+	metaConfig.tagCount !== undefined
+		? Math.max(0, Math.trunc(metaConfig.tagCount))
+		: 1;
+const metaShowWords = metaConfig.showWords ?? true;
+const metaShowReadingTime = metaConfig.showReadingTime ?? true;
+const metaShowPublished = metaConfig.showPublished ?? true;
+
+// PostStats 配置
+const statsConfig = siteConfig.postListLayout.stats ?? {};
+const statsShowPublished = statsConfig.showPublished ?? true;
+const statsShowWords = statsConfig.showWords ?? true;
+const statsShowReadingTime = statsConfig.showReadingTime ?? true;
+
+// 标签显示位置
+const tagsPosition = siteConfig.postListLayout.tagsPosition ?? "meta";
+const showTagsInMeta = metaShowTags && tagsPosition === "meta";
+const showTagsAtBottom = metaShowTags && tagsPosition === "bottom";
 const descriptionClampLines = String(descriptionLines);
 const shouldClampDescription = descriptionLines > 0;
 
 const { remarkPluginFrontmatter } = await render(entry);
 const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
+const words = remarkPluginFrontmatter.words;
+const minutes = remarkPluginFrontmatter.minutes;
 ---
 
 <div
@@ -99,6 +122,7 @@ const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
       {
         password && (
           <Icon
+            is:inline
             name="material-symbols:lock-outline"
             class="inline text-2xl align-middle -translate-y-px"
           />
@@ -110,11 +134,20 @@ const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
     <PostMetadata
       published={published}
       tags={tags}
-      showTags={false}
+      showPublished={metaShowPublished}
+      showCategory={showCategory}
+      showTags={showTagsInMeta}
+      maxTags={metaTagCount > 0 ? metaTagCount : undefined}
+      showNoTags={true}
+      hideUpdateDate={true}
       category={category || undefined}
       pinned={pinned}
       password={password}
-      className="mb-4 post-meta"
+      words={words}
+      minutes={minutes}
+      showWords={metaShowWords}
+      showReadingTime={metaShowReadingTime}
+      className="mb-4 post-meta card-header-meta"
     />
 
     <!-- description -->
@@ -128,30 +161,36 @@ const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
       {descriptionText}
     </div>
 
-    <!-- tags -->
-    {
-      showTags && (
-        <div class="text-sm text-black/30 dark:text-white/30 flex flex-wrap gap-2 transition stats pt-3">
-          {tags &&
-            tags.length > 0 &&
-            tags.map((tag, _i) => (
-              <a
-                href={getTagUrl(tag)}
-                aria-label={`View all posts with the ${tag.trim()} tag`}
-                class="btn-regular h-6 text-xs px-2 py-1 rounded-md
-                         transition-all duration-200 hover:scale-105 active:scale-95"
-              >
-                #{tag.trim()}
-              </a>
-            ))}
-          {!(tags && tags.length > 0) && (
-            <span class="text-(--content-meta) text-xs">
-              #{i18n(I18nKey.noTags)}
-            </span>
-          )}
-        </div>
-      )
-    }
+    <!-- bottom tags（与 stats 二选一） -->
+    {showTagsAtBottom && tags && tags.length > 0 && (
+      <div class="post-card-bottom-tags flex flex-wrap items-center gap-1.5 mt-auto pt-3">
+        {(metaTagCount > 0 ? tags.slice(0, metaTagCount) : tags).map((tag) => (
+          <a
+            href={getTagUrl(tag)}
+            aria-label={`View all posts with the ${tag.trim()} tag`}
+            class="transition text-xs font-medium px-2.5 py-1 rounded-full
+              bg-black/5 dark:bg-white/10 text-neutral-500 dark:text-neutral-400
+              hover:bg-(--btn-regular-bg) hover:text-(--btn-content)"
+          >
+            #{tag.trim()}
+          </a>
+        ))}
+      </div>
+    )}
+
+    <!-- stats（与底部标签二选一） -->
+    {!showTagsAtBottom && (
+      <PostStats
+        published={published}
+        words={words}
+        minutes={minutes}
+        showPublished={statsShowPublished}
+        showWords={statsShowWords}
+        showReadingTime={statsShowReadingTime}
+        showIcons={siteConfig.postListLayout.showStatsIcons}
+        className="stats mt-auto pt-3 text-black/30 dark:text-white/30 gap-x-2"
+      />
+    )}
   </div>
   {
     hasCover && (
@@ -170,6 +209,7 @@ const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
         <div class="absolute pointer-events-none z-10 w-full h-full group-hover:bg-black/30 group-active:bg-black/50 transition" />
         <div class="absolute pointer-events-none z-20 w-full h-full flex items-center justify-center ">
           <Icon
+            is:inline
             name="material-symbols:chevron-right-rounded"
             class="transition opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 text-white text-5xl"
           />
@@ -200,6 +240,7 @@ const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
         ]}
       >
         <Icon
+          is:inline
           name="material-symbols:chevron-right-rounded"
           class="transition text-(--primary) text-4xl mx-auto"
         />

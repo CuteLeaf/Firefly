@@ -1,14 +1,25 @@
+/* 标签按钮基础样式 - MD3 Filter Chip 风格（中性灰底描边） */
 .tag-item {
-    /* 浅色背景 + 主题色文字 */
-    background: color-mix(in oklch, var(--primary) calc(var(--tag-depth) * 12% + 5%), transparent);
-    color: var(--primary);
+    background: rgba(0, 0, 0, 0.05);
+    color: rgb(115, 115, 115);
 }
 .tag-item:hover {
-    /* 悬浮时加深背景 */
-    background: color-mix(in oklch, var(--primary) calc(var(--tag-depth) * 20% + 10%), transparent);
+    background: var(--btn-regular-bg);
+    color: var(--btn-content);
+}
+:global(.dark) .tag-item {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgb(163, 163, 163);
+}
+:global(.dark) .tag-item:hover {
+    background: var(--btn-regular-bg);
+    color: var(--btn-content);
 }
 .tag-item .tag-count-badge {
-    /* 徽章用更深的主题色 */
-    background: color-mix(in oklch, var(--primary) calc(var(--tag-depth) * 30% + 15%), transparent);
-    color: white;
+    background: rgba(0, 0, 0, 0.08);
+    color: rgb(115, 115, 115);
+}
+:global(.dark) .tag-item .tag-count-badge {
+    background: rgba(255, 255, 255, 0.15);
+    color: rgb(163, 163, 163);
 }

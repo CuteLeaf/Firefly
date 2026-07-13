@@ -1,7 +1,7 @@
 import type { SiteConfig } from "@/types/siteConfig";
 
 // 定义站点语言
-// 语言代码，例如：'zh_CN', 'zh_TW', 'en', 'ja', 'ru'。
+// 语言代码，例如：'zh_CN', 'zh_TW', 'en', 'ja', 'ru', 'ko'。
 const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
@@ -123,13 +123,42 @@ export const siteConfig: SiteConfig = {
 		// 默认布局模式："list" 列表模式（单列布局），"grid" 网格模式（多列布局）
 		defaultMode: "list",
 		// 移动端默认布局模式，不设置则跟随 defaultMode
-		mobileDefaultMode: "list",
-		// 是否在文章列表中显示标签
-		showTags: true,
-		// 文章简介显示行数，设为 0 则不截断
-		descriptionLines: 2,
+		mobileDefaultMode: "grid",
 		// 是否允许用户切换布局
 		allowSwitch: true,
+		// 文章简介显示行数，设为 0 则不截断
+		descriptionLines: 2,
+		// 文章卡片底部统计和发布日期是否显示图标
+		showStatsIcons: true,
+		// 标签显示位置
+		// 设置为"meta"：显示在文章标题下的元数据
+		// 设置为"bottom"：顶替stats在底部显示
+		tagsPosition: "bottom",
+		// PostMeta 元数据显示控制
+		meta: {
+			// 是否显示发布日期
+			showPublished: true,
+			// 是否显示分类
+			showCategory: true,
+			// 是否显示标签
+			showTags: true,
+			// 标签数量，设为 0 则不限制
+			tagCount: 5,
+			// 是否显示字数
+			showWords: false,
+			// 是否显示阅读时间
+			showReadingTime: false,
+		},
+		// 底部 PostStats 统计信息显示控制
+		// 如果tagsPosition设置为"bottom"，则stats将不显示
+		stats: {
+			// 是否显示发布日期
+			showPublished: true,
+			// 是否显示字数
+			showWords: true,
+			// 是否显示阅读时间
+			showReadingTime: true,
+		},
 		// 网格布局配置，仅在 defaultMode 为 "grid" 或允许切换布局时生效
 		grid: {
 			// 是否开启瀑布流布局，同时有封面图和无封面图的混合文章推荐开启

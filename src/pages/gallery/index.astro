@@ -69,14 +69,15 @@ const allTags = [...new Set(albums.flatMap((a) => a.tags || []))].sort();
             <div class="flex flex-wrap gap-2">
               <button
                 data-tag="all"
-                class="btn-regular px-3 py-1.5 rounded-lg bg-(--primary) text-white hover:bg-(--primary) transition-colors duration-200 text-sm font-medium"
+                class="category-pill px-3 py-1.5 rounded-full text-sm font-medium transition-colors duration-200"
+                data-active
               >
                 {i18n(I18nKey.all)}
               </button>
               {allTags.map((tag) => (
                 <button
                   data-tag={tag}
-                  class="btn-regular px-3 py-1.5 rounded-lg bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) transition-colors duration-200 text-sm font-medium"
+                  class="category-pill px-3 py-1.5 rounded-full text-sm font-medium transition-colors duration-200"
                 >
                   {tag}
                 </button>
@@ -149,18 +150,9 @@ const allTags = [...new Set(albums.flatMap((a) => a.tags || []))].sort();
           const filters = this.querySelectorAll("button");
 
           filters.forEach((f) => {
-            f.classList.remove("bg-(--primary)", "text-white");
-            f.classList.remove("hover:bg-(--primary)");
-            f.classList.add("bg-(--btn-regular-bg)", "text-(--btn-content)");
-            f.classList.add("hover:bg-(--btn-regular-bg-hover)");
-
-            if (f === button) {
-              f.classList.remove("bg-(--btn-regular-bg)", "text-(--btn-content)");
-              f.classList.remove("hover:bg-(--btn-regular-bg-hover)");
-              f.classList.add("bg-(--primary)", "text-white");
-              f.classList.add("hover:bg-(--primary)");
-            }
+            f.removeAttribute("data-active");
           });
+          button.setAttribute("data-active", "");
 
           this.applyFilters();
         }

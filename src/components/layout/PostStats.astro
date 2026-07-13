@@ -1,0 +1,82 @@
+---
+import { Icon } from "astro-icon/components";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import { formatDateToYYYYMMDD } from "@/utils/date-utils";
+
+export interface Props {
+	published: Date;
+	words?: number;
+	minutes?: number;
+	showPublished?: boolean;
+	showWords?: boolean;
+	showReadingTime?: boolean;
+	showIcons?: boolean;
+	className?: string;
+}
+
+const {
+	published,
+	words,
+	minutes,
+	showPublished = true,
+	showWords = true,
+	showReadingTime = true,
+	showIcons = false,
+	className = "",
+} = Astro.props;
+
+const hasPublished = showPublished;
+const hasWords = showWords && typeof words === "number";
+const hasMinutes = showReadingTime && typeof minutes === "number";
+const textClass = "text-xs font-medium";
+const dividerClass = "text-xs font-medium text-black/20 dark:text-white/20";
+const iconWrapperClass =
+	"transition h-5 w-5 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-1.5";
+const iconClass = "text-sm";
+---
+
+<div class:list={["flex flex-wrap items-center gap-2", className]}>
+  {hasPublished && (
+    <div class="flex items-center">
+      {showIcons && (
+        <div class={iconWrapperClass}>
+          <Icon is:inline name="material-symbols:calendar-today-outline-rounded" class={iconClass} />
+        </div>
+      )}
+      <span class={textClass}>
+        {!showIcons && `${i18n(I18nKey.publishedAt)} `}{formatDateToYYYYMMDD(published)}
+      </span>
+    </div>
+  )}
+
+  {hasPublished && hasWords && <span class={dividerClass}>|</span>}
+
+  {hasWords && (
+    <div class="flex items-center">
+      {showIcons && (
+        <div class={iconWrapperClass}>
+          <Icon is:inline name="material-symbols:notes-rounded" class={iconClass} />
+        </div>
+      )}
+      <span class={textClass}>
+        {words} {i18n(words === 1 ? I18nKey.wordCount : I18nKey.wordsCount)}
+      </span>
+    </div>
+  )}
+
+  {(hasPublished || hasWords) && hasMinutes && <span class={dividerClass}>|</span>}
+
+  {hasMinutes && (
+    <div class="flex items-center">
+      {showIcons && (
+        <div class={iconWrapperClass}>
+          <Icon is:inline name="material-symbols:schedule-outline-rounded" class={iconClass} />
+        </div>
+      )}
+      <span class={textClass}>
+        {minutes} {i18n(minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount)}
+      </span>
+    </div>
+  )}
+</div>

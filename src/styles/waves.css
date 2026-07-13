@@ -142,18 +142,20 @@ html.is-page-transitioning #header-waves {
 }
 
 /* --------------------------------------------------------------------------
-   7. Overlay 模式隐藏波浪
+   7. Overlay 模式隐藏波浪和暗层
    -------------------------------------------------------------------------- */
 #wallpaper-wrapper.wallpaper-overlay .waves,
-#wallpaper-wrapper.wallpaper-overlay #header-waves {
+#wallpaper-wrapper.wallpaper-overlay #header-waves,
+#wallpaper-wrapper.wallpaper-overlay #banner-dim-container {
     display: none !important;
 }
 
 /* --------------------------------------------------------------------------
-   8. None 模式隐藏波浪
+   8. None 模式隐藏波浪和暗层
    -------------------------------------------------------------------------- */
 html[data-wallpaper-mode="none"] .waves,
-html[data-wallpaper-mode="none"] #header-waves {
+html[data-wallpaper-mode="none"] #header-waves,
+html[data-wallpaper-mode="none"] #banner-dim-container {
     display: none !important;
 }
 

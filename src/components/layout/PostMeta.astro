@@ -16,12 +16,18 @@ export interface Props {
 	isHome?: boolean;
 	className?: string;
 	id?: string;
-	words?: number;
-	minutes?: number;
+	showPublished?: boolean;
+	showCategory?: boolean;
 	showTags?: boolean;
+	maxTags?: number;
+	showNoTags?: boolean;
 	customPath?: string;
 	pinned?: boolean;
 	password?: boolean;
+	words?: number;
+	minutes?: number;
+	showWords?: boolean;
+	showReadingTime?: boolean;
 }
 
 const {
@@ -34,12 +40,22 @@ const {
 	isHome,
 	className = "",
 	id,
+	showPublished = true,
+	showCategory = true,
 	showTags = true,
+	maxTags,
+	showNoTags = true,
 	customPath,
 	pinned,
+	words,
+	minutes,
+	showWords = false,
+	showReadingTime = false,
 } = Astro.props;
 
 const path = customPath || (id ? `/posts/${id}` : "");
+const visibleTags =
+	typeof maxTags === "number" ? tags?.slice(0, maxTags) : tags;
 ---
 
 <div
@@ -48,7 +64,6 @@ const path = customPath || (id ? `/posts/${id}` : "");
     className,
   ]}
 >
-  <!-- pinned -->
   {
     pinned && (
       <div class="pinned-btn flex items-center gap-1 bg-(--btn-regular-bg) text-(--btn-content) rounded-md px-2 py-1.5 font-bold">
@@ -58,84 +73,116 @@ const path = customPath || (id ? `/posts/${id}` : "");
     )
   }
 
-  <!-- publish date -->
-  <div class="flex items-center">
-    <div class="meta-icon">
-      <Icon is:inline
-        name="material-symbols:calendar-today-outline-rounded"
-        class="text-xl"
-      />
-    </div>
-    <span class="text-50 text-sm font-medium"
-      >{formatDateToYYYYMMDD(published)}</span
-    >
-  </div>
-
-  <!-- update date -->
   {
-    !hideUpdateDate && updated && updated.getTime() !== published.getTime() && (
+    showPublished && (
       <div class="flex items-center">
         <div class="meta-icon">
-          <Icon is:inline
-            name="material-symbols:edit-calendar-outline-rounded"
+          <Icon
+            is:inline
+            name="material-symbols:calendar-today-outline-rounded"
             class="text-xl"
           />
         </div>
         <span class="text-50 text-sm font-medium">
-          {formatDateToYYYYMMDD(updated)}
+          {formatDateToYYYYMMDD(published)}
         </span>
       </div>
     )
   }
 
-  <!-- categories -->
-  <div class="flex items-center">
-    <div class="meta-icon">
-      <Icon is:inline name="material-symbols:book-2-outline-rounded" class="text-xl" />
-    </div>
-    <div class="flex flex-row flex-nowrap items-center">
-      <a
-        href={getCategoryUrl(category || "")}
-        aria-label={`View all posts in the ${category} category`}
-        class="link-lg transition text-50 text-sm font-medium
-                            hover:text-(--primary) dark:hover:text-(--primary) whitespace-nowrap"
+  {
+    showPublished &&
+      !hideUpdateDate &&
+      updated &&
+      updated.getTime() !== published.getTime() && (
+        <div class="flex items-center">
+          <div class="meta-icon">
+            <Icon
+              is:inline
+              name="material-symbols:edit-calendar-outline-rounded"
+              class="text-xl"
+            />
+          </div>
+          <span class="text-50 text-sm font-medium">
+            {formatDateToYYYYMMDD(updated)}
+          </span>
+        </div>
+      )
+  }
+
+  {
+    showCategory && (
+      <div class="flex items-center">
+        <div class="meta-icon">
+          <Icon is:inline name="material-symbols:book-2-outline-rounded" class="text-xl" />
+        </div>
+        <div class="flex flex-row flex-nowrap items-center">
+          <a
+            href={getCategoryUrl(category || "")}
+            aria-label={`View all posts in the ${category} category`}
+            class="link-lg transition text-50 text-sm font-medium
+              hover:text-(--primary) dark:hover:text-(--primary) whitespace-nowrap"
+          >
+            {category || i18n(I18nKey.uncategorized)}
+          </a>
+        </div>
+      </div>
+    )
+  }
+
+  {
+    showTags && (
+      <div
+        class:list={[
+          "items-center",
+          { flex: !hideTagsForMobile, "hidden md:flex": hideTagsForMobile },
+        ]}
       >
-        {category || i18n(I18nKey.uncategorized)}
-      </a>
-    </div>
-  </div>
+        <div class="meta-icon">
+          <Icon is:inline name="material-symbols:tag-rounded" class="text-xl" />
+        </div>
+        <div class="flex flex-row flex-nowrap items-center">
+          {visibleTags &&
+            visibleTags.length > 0 &&
+            visibleTags.map((tag, i) => (
+              <>
+                <div
+                  class:list={[
+                    { hidden: i === 0 },
+                    "mx-1.5 text-(--meta-divider) text-sm",
+                  ]}
+                >
+                  /
+                </div>
+                <a
+                  href={getTagUrl(tag)}
+                  aria-label={`View all posts with the ${tag.trim()} tag`}
+                  class="link-lg transition text-50 text-sm font-medium
+                    hover:text-(--primary) dark:hover:text-(--primary) whitespace-nowrap"
+                >
+                  {tag.trim()}
+                </a>
+              </>
+            ))}
+          {showNoTags && !(visibleTags && visibleTags.length > 0) && (
+            <div class="transition text-50 text-sm font-medium">
+              {i18n(I18nKey.noTags)}
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
 
-   <!-- tags -->
-   {
-     showTags && (
-       <div class:list={["items-center", {"flex": !hideTagsForMobile, "hidden md:flex": hideTagsForMobile}]}>
-         <div class="meta-icon">
-           <Icon is:inline name="material-symbols:tag-rounded" class="text-xl" />
-         </div>
-         <div class="flex flex-row flex-nowrap items-center">
-           {(tags && tags.length > 0) && tags.map((tag, i) => (
-             <div class:list={[{"hidden": i == 0}, "mx-1.5 text-(--meta-divider) text-sm"]}>/</div>
-             <a href={getTagUrl(tag)} aria-label={`View all posts with the ${tag.trim()} tag`}
-                class="link-lg transition text-50 text-sm font-medium
-                             hover:text-(--primary) dark:hover:text-(--primary) whitespace-nowrap">
-               {tag.trim()}
-             </a>
-           ))}
-           {!(tags && tags.length > 0) && <div class="transition text-50 text-sm font-medium">{i18n(I18nKey.noTags)}</div>}
-         </div>
-       </div>
-     )
-   }
-
-  <!-- Twikoo访问量统计（首页不显示，且文章访问量统计启用时显示） -->
   {
     !isHome &&
-      commentConfig.type === 'twikoo' &&
+      commentConfig.type === "twikoo" &&
       commentConfig.twikoo?.visitorCount &&
       id && (
         <div class="flex items-center">
           <div class="meta-icon">
-            <Icon is:inline
+            <Icon
+              is:inline
               name="material-symbols:visibility-outline-rounded"
               class="text-xl"
             />
@@ -149,38 +196,82 @@ const path = customPath || (id ? `/posts/${id}` : "");
         </div>
       )
   }
-  <!-- Waline访问量统计（首页不显示、仅type为waline时显示） -->
+
   {
     !isHome &&
-      commentConfig.type === 'waline' &&
+      commentConfig.type === "waline" &&
       commentConfig.waline?.visitorCount &&
       id && (
         <div class="flex items-center">
           <div class="meta-icon">
-            <Icon is:inline name="material-symbols:visibility-outline-rounded" class="text-xl" />
+            <Icon
+              is:inline
+              name="material-symbols:visibility-outline-rounded"
+              class="text-xl"
+            />
           </div>
           <span class="text-50 text-sm font-medium mr-1">
             {i18n(I18nKey.pageViews)}
           </span>
-          <span class="text-50 text-sm font-medium waline-pageview-count" data-path={path}>{i18n(I18nKey.pageViewsLoading)}</span>
+          <span
+            class="text-50 text-sm font-medium waline-pageview-count"
+            data-path={path}
+          >
+            {i18n(I18nKey.pageViewsLoading)}
+          </span>
         </div>
       )
   }
-    <!-- artalk访问量统计（首页不显示、仅type为artalk时显示） -->
-    {
-        !isHome &&
-        commentConfig.type === 'artalk' &&
-        commentConfig.waline?.visitorCount &&
-        id && (
-                    <div class="flex items-center">
-                        <div class="meta-icon">
-                            <Icon is:inline name="material-symbols:visibility-outline-rounded" class="text-xl" />
-                        </div>
-                        <span class="text-50 text-sm font-medium mr-1">
-                            {i18n(I18nKey.pageViews)}
-                        </span>
-                        <span class="text-50 text-sm font-medium artalk-pv-count" data-path={path}>{i18n(I18nKey.pageViewsLoading)}</span>
-                    </div>
-        )
-    }
+
+  {
+    !isHome &&
+      commentConfig.type === "artalk" &&
+      commentConfig.artalk?.visitorCount &&
+      id && (
+        <div class="flex items-center">
+          <div class="meta-icon">
+            <Icon
+              is:inline
+              name="material-symbols:visibility-outline-rounded"
+              class="text-xl"
+            />
+          </div>
+          <span class="text-50 text-sm font-medium mr-1">
+            {i18n(I18nKey.pageViews)}
+          </span>
+          <span
+            class="text-50 text-sm font-medium artalk-pv-count"
+            data-path={path}
+          >
+            {i18n(I18nKey.pageViewsLoading)}
+          </span>
+        </div>
+      )
+  }
+
+  {
+    showWords && typeof words === "number" && (
+      <div class="flex items-center">
+        <div class="meta-icon">
+          <Icon is:inline name="material-symbols:notes-rounded" class="text-xl" />
+        </div>
+        <span class="text-50 text-sm font-medium">
+          {words} {i18n(words === 1 ? I18nKey.wordCount : I18nKey.wordsCount)}
+        </span>
+      </div>
+    )
+  }
+
+  {
+    showReadingTime && typeof minutes === "number" && (
+      <div class="flex items-center">
+        <div class="meta-icon">
+          <Icon is:inline name="material-symbols:schedule-outline-rounded" class="text-xl" />
+        </div>
+        <span class="text-50 text-sm font-medium">
+          {minutes} {i18n(minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount)}
+        </span>
+      </div>
+    )
+  }
 </div>

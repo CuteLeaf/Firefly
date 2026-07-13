@@ -8,14 +8,6 @@ import { getTagUrl } from "@/utils/url-utils";
 
 const tags = await getTagList();
 
-// 计算标签颜色深度 0~1：数量越多颜色越深
-const maxCount = Math.max(...tags.map((t) => t.count), 1);
-const minCount = Math.min(...tags.map((t) => t.count), 1);
-const getDepth = (count: number) => {
-	if (maxCount === minCount) return 0.5;
-	return (count - minCount) / (maxCount - minCount);
-};
-
 // Top 10 标签排行
 const topTags = [...tags].sort((a, b) => b.count - a.count).slice(0, 10);
 const topMaxCount = topTags.length > 0 ? topTags[0].count : 1;
@@ -37,15 +29,13 @@ const topMaxCount = topTags.length > 0 ? topTags[0].count : 1;
             <div class="flex flex-wrap gap-2.5">
                 {tags.map((t) => (
                     <a href={getTagUrl(t.name)}
-                       class="tag-item group inline-flex items-center gap-1.5 rounded-lg
-                              h-8 text-sm px-3 transition-all duration-200
-                              hover:scale-105 hover:shadow-md"
-                       style={`--tag-depth: ${getDepth(t.count)}`}
+                       class="tag-item group inline-flex items-center gap-1.5 rounded-full
+                              text-sm font-medium px-3 py-1.5 transition-all duration-200"
                     >
-                        <span class="font-medium">
-                            <span class="opacity-50">#</span>{t.name.trim()}
+                        <span>
+                            {t.name.trim()}
                         </span>
-                        <span class="tag-count-badge text-xs font-bold px-1.5 rounded-md
+                        <span class="tag-count-badge text-xs font-bold px-1.5 rounded-full
                                      min-w-[1.5rem] text-center">
                             {t.count}
                         </span>
