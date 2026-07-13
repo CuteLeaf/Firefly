@@ -1,29 +1,25 @@
 # 关于我 / About Me
 
-你好！我是 **夏叶** ，一个在数字世界中默默无闻的一片叶子。
+你好！欢迎来到我的个人博客✨
+
+我是**XYX**，一名专注深耕编程领域的技术学习者，热衷于记录Python编程、算法学习的干货知识与实战经验。这里没有繁杂冗余的内容，只专注分享**Python实战案例、算法刷题笔记、编程学习思路**，持续输出优质学习内容，记录自己的成长轨迹。
+
+始终保持自律深耕、稳步精进的学习态度，坚持复盘总结、持续迭代，希望通过文字沉淀所学、分享所得，和每一位热爱编程的小伙伴共同进步、一起成长！
+
 
 ## 🛠️ 关于本站
 
-这个网站使用 **Astro** 框架构建，采用了 [Firefly](https://github.com/CuteLeaf/Firefly) 模板，Firefly 是基于 [Fuwari](https://github.com/saicaca/fuwari) 的二次开发。
+本站是我的个人技术学习博客，整体基于轻量化、高性能的 Astro 静态框架搭建，采用了 [Firefly](https://github.com/CuteLeaf/Firefly) 模板，Firefly 是基于 [Fuwari](https://github.com/saicaca/fuwari) 的二次开发。本站主要用于记录和分享个人编程学习全过程，专注承载 Python 编程、算法学习相关笔记、刷题心得与实战干货。我会在这里持续更新基础知识点、经典代码案例、算法解题思路、踩坑经验与学习复盘，系统化沉淀个人技术学习轨迹。
+站点所有内容均为本人日常学习积累，坚持原创、务实、干货为主，无冗余水文，持续更新、稳步沉淀。旨在通过写作复盘巩固自身编程能力，同时为同样深耕 Python、刷题学算法的学习者提供可参考、可复用的学习资料，专注做实用、纯粹的技术学习分享。依托 Firefly 清新简洁的主题风格，搭配代码高亮、公式渲染、图表绘制等技术博客适配功能，非常适合系统化整理与展示编程学习内容，为个人知识积累与技术交流提供干净舒适的载体。
 
-**Firefly** 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。
 
 
-**🖥️在线预览： [Firefly - Demo site](https://firefly.cuteleaf.cn/)**
 
-**🏠我的博客： [https://blog.cuteleaf.cn](https://blog.cuteleaf.cn/)**
+**🏠我的博客： [https://xyxstudy.kdns.fr](https://xyxstudy.kdns.fr/)**
 
-**📝Firefly使用文档： [https://docs-firefly.cuteleaf.cn](https://docs-firefly.cuteleaf.cn/)**
 
-**⭐Firefly开源地址：[https://github.com/CuteLeaf/Firefly](https://github.com/CuteLeaf/Firefly)** 
-
-**⭐Fuwari开源地址：[https://github.com/saicaca/fuwari](https://github.com/saicaca/fuwari)**
-
-::github{repo="CuteLeaf/Firefly"}
-
-::github{repo="saicaca/fuwari"}
 
 ---
 
-*感谢你的来访！希望在这里能找到对你有用的内容！*
+*感谢每一位小伙伴的来访！希望这里的 Python 编程、算法学习干货，能够为你的学习之路提供助力，我们一起自律深耕、稳步前行！💻*
 
