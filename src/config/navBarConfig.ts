@@ -123,21 +123,25 @@ export const LinkPresets: Record<string, NavBarLink> = {
 		name: "主页",
 		url: "/",
 		icon: "material-symbols:home",
+		pageKey: "home",
 	},
 	Archive: {
 		name: "归档",
 		url: "/archive/",
 		icon: "material-symbols:archive",
+		pageKey: "archive",
 	},
 	Categories: {
 		name: "分类",
 		url: "/categories/",
 		icon: "material-symbols:folder-open-rounded",
+		pageKey: "categories",
 	},
 	Tags: {
 		name: "标签",
 		url: "/tags/",
 		icon: "material-symbols:tag-rounded",
+		pageKey: "tags",
 	},
 	Friends: {
 		name: "友链",
@@ -145,12 +149,6 @@ export const LinkPresets: Record<string, NavBarLink> = {
 		icon: "material-symbols:group",
 		pageKey: "friends",
 	},
-	//Sponsor: {
-	//	name: "打赏",
-	//	url: "/sponsor/",
-	//	icon: "material-symbols:favorite",
-	//	pageKey: "sponsor",
-	//},
 	Guestbook: {
 		name: "留言",
 		url: "/guestbook/",
@@ -161,25 +159,13 @@ export const LinkPresets: Record<string, NavBarLink> = {
 		name: "关于我",
 		url: "/about/",
 		icon: "material-symbols:person",
+		pageKey: "about",
 	},
-	//Bangumi: {
-	//	name: "番组计划",
-	//	url: "/bangumi/",
-	//	icon: "material-symbols:movie",
-	//	pageKey: "bangumi",
-	//},
 	Gallery: {
 		name: "相册",
 		url: "/gallery/",
 		icon: "material-symbols:photo-library",
 		pageKey: "gallery",
 	},
-	//Anime: {
-	//	name: "追番",
-	//	url: "/anime/",
-	//	icon: "material-symbols:live-tv",
-	//	pageKey: "anime",
-	//},
 };
-
 export const navBarConfig: NavBarConfig = getDynamicNavBarConfig();
