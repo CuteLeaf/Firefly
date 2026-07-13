@@ -9,12 +9,21 @@ import { Icon } from "astro-icon/components";
 interface Props {
 	id: string;
 	icon: string;
+	/** 可选的第二图标：提供后，按钮加上 .toggled 类时显示此图标、隐藏默认图标 */
+	toggleIcon?: string;
 	ariaLabel?: string;
 	onclick?: string;
 	class?: string;
 }
 
-const { id, icon, ariaLabel, onclick, class: className = "" } = Astro.props;
+const {
+	id,
+	icon,
+	toggleIcon,
+	ariaLabel,
+	onclick,
+	class: className = "",
+} = Astro.props;
 ---
 
 <div
@@ -24,9 +33,10 @@ const { id, icon, ariaLabel, onclick, class: className = "" } = Astro.props;
 >
   <button
     aria-label={ariaLabel}
-    class="h-full w-full rounded-2xl"
+    class:list={["h-full w-full rounded-2xl", toggleIcon && "has-toggle-icon"]}
   >
-    <Icon is:inline name={icon} class="mx-auto" />
+    <Icon is:inline name={icon} class:list={["mx-auto", toggleIcon && "icon-default"]} />
+    {toggleIcon && <Icon is:inline name={toggleIcon} class="icon-toggled" />}
   </button>
 </div>
 
@@ -55,6 +65,29 @@ const { id, icon, ariaLabel, onclick, class: className = "" } = Astro.props;
         font-size: 1.6rem
         opacity: 1
         transition: opacity 0.2s ease 0.1s /* 显示时：延迟出现，通过 delay 避免"先出现icon" */
+
+    /* 双图标切换：两个图标叠放在按钮正中（grid 同格），靠 .toggled 切换显隐 */
+    button.has-toggle-icon
+        display: grid
+        place-items: center
+
+        :global(svg)
+            grid-area: 1 / 1
+
+    :global(svg.icon-toggled)
+        display: none
+
+    &.toggled
+        /* 面板展开时的选中态背景 */
+        background-color: var(--btn-regular-bg)
+
+        :global(svg.icon-default)
+            display: none
+        :global(svg.icon-toggled)
+            display: block
+
+        &:hover
+            background-color: var(--btn-regular-bg-hover)
 
     &.hide
         /* 隐藏状态：缩小并收起布局 */
@@ -89,11 +122,17 @@ const { id, icon, ariaLabel, onclick, class: className = "" } = Astro.props;
     background-color: var(--card-bg)
     border: 1px solid rgba(255, 255, 255, 0.15)
     color: var(--primary, #60a5fa)
-    
+
     &:hover
         background-color: var(--btn-card-bg-hover)
         color: var(--primary)
         box-shadow: var(--shadow-button-dark)
+
+    &.toggled
+        background-color: var(--btn-regular-bg)
+
+        &:hover
+            background-color: var(--btn-regular-bg-hover)
 
 /* 响应式调整 */
 @media (max-width: 768px)

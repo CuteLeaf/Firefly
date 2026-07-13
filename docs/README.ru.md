@@ -8,7 +8,7 @@
 > 
 > ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen) 
 ![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
-![Astro](https://img.shields.io/badge/Astro-7.0.2-orange)
+![Astro](https://img.shields.io/badge/Astro-7.0.7-orange)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)
 >
 > [![Stars](https://img.shields.io/github/stars/CuteLeaf/Firefly?style=social)](https://github.com/CuteLeaf/Firefly/stargazers)
@@ -199,6 +199,7 @@ src/
 │   ├── musicConfig.ts            # Конфигурация музыкального плеера
 │   ├── navBarConfig.ts           # Конфигурация навигационной панели
 │   ├── pioConfig.ts              # Конфигурация маскота
+│   ├── mermaidConfig.ts          # Конфигурация диаграмм Mermaid
 │   ├── plantumlConfig.ts         # Конфигурация диаграмм PlantUML
 │   ├── profileConfig.ts          # Конфигурация профиля пользователя
 │   ├── sidebarConfig.ts          # Конфигурация макета боковой панели
@@ -235,17 +236,17 @@ comment: true    # Включить комментарии
 
 Все команды должны выполняться в корневом каталоге проекта:
 
-| Команда                    | Действие                                            |
-|:---------------------------|:----------------------------------------------------|
-| `pnpm install`             | Установить зависимости                              |
+| Команда                    | Действие                                                  |
+| :------------------------- | :-------------------------------------------------------- |
+| `pnpm install`             | Установить зависимости                                    |
 | `pnpm dev`                 | Запустить локальный сервер разработки на `localhost:4321` |
-| `pnpm build`               | Собрать сайт в `./dist/`                            |
-| `pnpm preview`             | Локальный предварительный просмотр собранного сайта |
-| `pnpm check`               | Проверить код на наличие ошибок                     |
-| `pnpm format`              | Отформатировать код с помощью Biome                 |
-| `pnpm new-post <filename>` | Создать новую статью                                |
-| `pnpm astro ...`           | Выполнить `astro add`, `astro check` и другие команды |
-| `pnpm astro --help`        | Показать справку Astro CLI                          |
+| `pnpm build`               | Собрать сайт в `./dist/`                                  |
+| `pnpm preview`             | Локальный предварительный просмотр собранного сайта       |
+| `pnpm check`               | Проверить код на наличие ошибок                           |
+| `pnpm format`              | Отформатировать код с помощью Biome                       |
+| `pnpm new-post <filename>` | Создать новую статью                                      |
+| `pnpm astro ...`           | Выполнить `astro add`, `astro check` и другие команды     |
+| `pnpm astro --help`        | Показать справку Astro CLI                                |
 
 ## 🙏 Благодарности
 

@@ -300,7 +300,7 @@ const widgetId =
     function updateModeUI(playMode) {
         var primaryColor = 'text-(--primary)';
         if (playMode === 0) {
-            ui.btnRepeat.className = 'p-2 active:scale-95 transition-colors text-neutral-300 dark:text-neutral-600 hover:text-[var(--primary)]';
+            ui.btnRepeat.className = 'p-2 active:scale-95 transition-colors text-neutral-300 dark:text-neutral-600 hover:text-(--primary)';
             ui.iconRepeat.classList.remove('hidden');
             ui.iconRepeatOne.classList.add('hidden');
             ui.iconShuffle.classList.add('hidden');

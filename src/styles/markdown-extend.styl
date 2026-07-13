@@ -244,8 +244,10 @@ a.card-github.fetch-error
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)
   transition-duration: 0.15s
 
-// Mermaid 图表样式
-.mermaid-diagram-container
+// ─── 共享图表容器样式 ───────────────────────────────────────────────────────
+// pan-zoom 控制栏、全屏 overlay 等交互样式由 rehype-diagram-panzoom 插件注入
+
+.diagram-container
   position: relative
   margin: 1rem 0
   border-radius: 0.75rem
@@ -257,49 +259,49 @@ a.card-github.fetch-error
   &:hover
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)
 
-    .mermaid-controls
-      opacity: 1
-
-.mermaid-wrapper
+.diagram-wrapper
   padding: 1.5rem
-  text-align: center
-
-.mermaid
   display: flex
   justify-content: center
   align-items: center
   min-height: 100px
-  max-height: 420px
-  font-family: inherit
+
+// 响应式设计
+@media (max-width: 768px)
+  .diagram-wrapper
+    padding: 1rem
+
+// ─── Mermaid 图表特定样式 ───────────────────────────────────────────────────
+
+.mermaid-wrapper
+  text-align: center
+
+.mermaid-svg-light,
+.mermaid-svg-dark
+  display: flex
+  justify-content: center
+  align-items: center
+  overflow: hidden
 
   svg
+    display: block
     max-width: 100%
     max-height: 420px
+    height: auto
     border-radius: 0.5rem
+    user-select: none
+    transition: transform 0.12s ease-out
+    will-change: transform
 
-.mermaid-loading
+// 深色/浅色 SVG 主题切换
+.mermaid-svg-dark
+  display: none
+
+.dark .mermaid-svg-light
+  display: none
+
+.dark .mermaid-svg-dark
   display: flex
-  align-items: center
-  justify-content: center
-  padding: 2rem
-  color: var(--text-color-secondary)
-  font-style: italic
-  
-  &::before
-    content: ""
-    width: 20px
-    height: 20px
-    border: 2px solid var(--primary)
-    border-top: 2px solid transparent
-    border-radius: 50%
-    animation: spin 1s linear infinite
-    margin-right: 0.5rem
-
-@keyframes spin
-  0%
-    transform: rotate(0deg)
-  100%
-    transform: rotate(360deg)
 
 .mermaid-error
   color: var(--admonitions-color-warning)
@@ -310,163 +312,22 @@ a.card-github.fetch-error
   margin: 1rem 0
   text-align: center
   font-weight: 500
-  
+
   p
     margin: 0 0 0.5rem 0
-    
-  button
-    transition: all 0.2s ease
-    
-    &:hover
-      background: var(--primary-hover) !important
-      transform: translateY(-1px)
 
-// 深色模式下的 Mermaid 样式
-.dark .mermaid-diagram-container
-  background: var(--card-bg)
+.mermaid-fallback-code
+  text-align: left
+  font-family: monospace
+  font-size: 0.85rem
+  white-space: pre-wrap
+  overflow-x: auto
+  padding: 1rem
+  border-radius: 0.5rem
+  background: var(--code-block-bg)
+  margin-top: 0.5rem
 
-  svg
-    filter: brightness(0.9) contrast(1.1)
-
-// 响应式设计
-@media (max-width: 768px)
-  .mermaid-wrapper
-    padding: 1rem
-
-  .mermaid svg
-    max-height: 400px
-
-// Mermaid pan-zoom 控制栏
-.mermaid-controls
-  position: absolute
-  top: 8px
-  right: 8px
-  display: flex
-  gap: 4px
-  opacity: 0.5
-  transition: opacity 0.2s ease
-  z-index: 10
-
-  &:hover
-    opacity: 1
-
-.mermaid-ctrl-btn
-  width: 28px
-  height: 28px
-  border: none
-  border-radius: 6px
-  background: var(--btn-regular-bg)
-  color: var(--btn-content)
-  font-size: 14px
-  line-height: 28px
-  text-align: center
-  cursor: pointer
-  padding: 0
-  display: flex
-  align-items: center
-  justify-content: center
-  transition: all 0.15s ease
-  backdrop-filter: blur(8px)
-
-  &:hover
-    background: var(--btn-regular-bg-hover)
-    transform: translateY(-1px)
-
-  &:active
-    background: var(--btn-regular-bg-active)
-    transform: translateY(0)
-
-// Mermaid 全屏遮罩
-.mermaid-fullscreen-overlay
-  position: fixed
-  top: 0
-  left: 0
-  width: 100vw
-  height: 100vh
-  background: rgba(0, 0, 0, 0.85)
-  z-index: 9999
-  display: flex
-  align-items: center
-  justify-content: center
-
-.mermaid-fs-content
-  width: 90vw
-  height: 85vh
-  cursor: grab
-  display: flex
-  align-items: center
-  justify-content: center
-  touch-action: none
-  background: rgba(255, 255, 255, 0.95)
-
-  &:active
-    cursor: grabbing
-
-  svg
-    max-width: 100%
-    max-height: 100%
-    filter: brightness(1) !important
-
-.mermaid-fs-controls
-  position: fixed
-  top: 16px
-  right: 16px
-  display: flex
-  gap: 6px
-  z-index: 10000
-  background: rgba(255, 255, 255, 0.1)
-  backdrop-filter: blur(12px)
-  padding: 6px
-  border-radius: 10px
-
-  .mermaid-ctrl-btn
-    width: 36px
-    height: 36px
-    font-size: 18px
-    border-radius: 8px
-    background: rgba(255, 255, 255, 0.15)
-    color: #fff
-
-    &:hover
-      background: rgba(255, 255, 255, 0.3)
-
-    &:active
-      background: rgba(255, 255, 255, 0.2)
-
-// 移动端 mermaid 控制栏优化
-@media (max-width: 768px)
-  .mermaid-controls
-    opacity: 0.8
-
-  .mermaid-ctrl-btn
-    width: 32px
-    height: 32px
-    font-size: 16px
-
-// PlantUML 图表样式（与 mermaid 视觉对齐，使用 CSS transform 实现 pan-zoom）
-.plantuml-diagram-container
-  position: relative
-  margin: 1rem 0
-  border-radius: 0.75rem
-  overflow: hidden
-  background: var(--card-bg)
-  transition: all 0.3s ease
-  touch-action: pan-y pinch-zoom
-
-  &:hover
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)
-
-    .plantuml-controls
-      opacity: 1
-
-.plantuml-wrapper
-  padding: 1.5rem
-  display: flex
-  justify-content: center
-  align-items: center
-  min-height: 100px
-  max-height: 420px
-  overflow: hidden
+// ─── PlantUML 图表特定样式 ─────────────────────────────────────────────────
 
 .plantuml-image
   max-width: 100%
@@ -477,24 +338,6 @@ a.card-github.fetch-error
   -webkit-user-drag: none
   transition: transform 0.12s ease-out
   will-change: transform
-
-.plantuml-loading
-  display: flex
-  align-items: center
-  justify-content: center
-  padding: 2rem
-  color: var(--text-color-secondary)
-  font-style: italic
-
-  &::before
-    content: ""
-    width: 20px
-    height: 20px
-    border: 2px solid var(--primary)
-    border-top: 2px solid transparent
-    border-radius: 50%
-    animation: spin 1s linear infinite
-    margin-right: 0.5rem
 
 .plantuml-error
   color: var(--admonitions-color-warning)
@@ -529,8 +372,17 @@ a.card-github.fetch-error
   .plantuml-image
     filter: brightness(0.95)
 
-// PlantUML pan-zoom 控制栏
-.plantuml-controls
+@media (max-width: 768px)
+  .mermaid-svg svg
+    max-height: 400px
+
+  .plantuml-image
+    max-height: 400px
+
+// ─── 图表 pan-zoom / 全屏交互样式（共享） ───────────────────────────────────
+// 由 rehype-diagram-panzoom 注入的客户端脚本驱动
+
+.diagram-controls
   position: absolute
   top: 8px
   right: 8px
@@ -543,7 +395,7 @@ a.card-github.fetch-error
   &:hover
     opacity: 1
 
-.plantuml-ctrl-btn
+.diagram-ctrl-btn
   width: 28px
   height: 28px
   border: none
@@ -569,8 +421,7 @@ a.card-github.fetch-error
     background: var(--btn-regular-bg-active)
     transform: translateY(0)
 
-// PlantUML 全屏遮罩
-.plantuml-fullscreen-overlay
+.diagram-fullscreen-overlay
   position: fixed
   top: 0
   left: 0
@@ -582,28 +433,27 @@ a.card-github.fetch-error
   align-items: center
   justify-content: center
 
-.plantuml-fs-content
+.diagram-fs-content
   width: 90vw
   height: 85vh
   cursor: grab
   display: flex
   align-items: center
   justify-content: center
-  background: rgba(255, 255, 255, 0.95)
   overflow: hidden
   touch-action: none
 
   &:active
     cursor: grabbing
 
-  img
+  svg, img
     max-width: 100%
     max-height: 100%
     user-select: none
     -webkit-user-drag: none
     will-change: transform
 
-.plantuml-fs-controls
+.diagram-fs-controls
   position: fixed
   top: 16px
   right: 16px
@@ -615,7 +465,7 @@ a.card-github.fetch-error
   padding: 6px
   border-radius: 10px
 
-  .plantuml-ctrl-btn
+  .diagram-ctrl-btn
     width: 36px
     height: 36px
     font-size: 18px
@@ -629,18 +479,11 @@ a.card-github.fetch-error
     &:active
       background: rgba(255, 255, 255, 0.2)
 
-// 移动端 plantuml 控制栏与容器优化
 @media (max-width: 768px)
-  .plantuml-wrapper
-    padding: 1rem
-
-  .plantuml-image
-    max-height: 400px
-
-  .plantuml-controls
+  .diagram-controls
     opacity: 0.8
 
-  .plantuml-ctrl-btn
+  .diagram-ctrl-btn
     width: 32px
     height: 32px
     font-size: 16px

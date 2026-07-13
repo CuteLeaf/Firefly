@@ -15,6 +15,30 @@ const categories = await getCategoryList();
 const totalPosts = (await getSortedPostsList()).length;
 const homeUrl = url("/");
 const archiveUrl = url("/archive/");
+
+// 服务端计算初始高亮 pill（首屏无需等 JS）。
+// 查询串筛选（?category=/?tag=/?uncategorized）在静态页构建期不可知，
+// 交由客户端脚本在加载/导航时同步；此处只处理路径可确定的情况。
+const pathname = Astro.url.pathname.replace(/\/$/, "");
+const homePath = homeUrl.replace(/\/$/, "");
+const archivePath = archiveUrl.replace(/\/$/, "");
+const isHome = pathname === homePath || pathname === "" || pathname === "/";
+const isCategories = pathname === "/categories";
+const isArchive = pathname === archivePath;
+const postCategory = (currentPostCategory || "").trim();
+
+// 返回某个 pill 的初始高亮属性：active（强）或 soft-active（弱，文章页所属分类）
+function initialActive(categoryName: string): {
+	active?: boolean;
+	soft?: boolean;
+} {
+	if (isHome) return categoryName === "" ? { active: true } : {};
+	if (isCategories)
+		return categoryName === "__categories__" ? { active: true } : {};
+	if (isArchive) return categoryName === "__archive__" ? { active: true } : {};
+	if (postCategory && categoryName === postCategory) return { soft: true };
+	return {};
+}
 ---
 
 <div
@@ -30,6 +54,7 @@ const archiveUrl = url("/archive/");
       class="category-pill text-sm px-3 py-1.5 rounded-full shrink-0
              transition-colors duration-150 ease-out flex items-center justify-center"
       data-category-name=""
+      data-active={initialActive("").active ? "" : undefined}
       aria-label={i18n(I18nKey.home)}
     >
       <Icon is:inline name="material-symbols:home" class="text-lg" />
@@ -39,6 +64,7 @@ const archiveUrl = url("/archive/");
       class="category-pill text-sm px-4 py-1.5 rounded-full whitespace-nowrap shrink-0
              transition-colors duration-150 ease-out flex items-center justify-center"
       data-category-name="__archive__"
+      data-active={initialActive("__archive__").active ? "" : undefined}
     >
       {i18n(I18nKey.archive)}
       <span class="pill-count">{totalPosts}</span>
@@ -48,17 +74,22 @@ const archiveUrl = url("/archive/");
       <div class="scroll-fade scroll-fade-left" aria-hidden="true"></div>
       <div class="category-scroll flex gap-2 overflow-x-auto">
         {
-          categories.map((cat) => (
+          categories.map((cat) => {
+            const active = initialActive(cat.name);
+            return (
             <a
               href={cat.url}
               class="category-pill text-sm px-4 py-1.5 rounded-full whitespace-nowrap
                      transition-colors duration-150 ease-out flex items-center justify-center"
               data-category-name={cat.name}
+              data-active={active.active ? "" : undefined}
+              data-soft-active={active.soft ? "" : undefined}
             >
               {cat.name}
               <span class="pill-count">{cat.count}</span>
             </a>
-          ))
+            );
+          })
         }
       </div>
       <div class="scroll-fade scroll-fade-right" aria-hidden="true"></div>
@@ -69,6 +100,7 @@ const archiveUrl = url("/archive/");
       class="category-pill text-sm px-3 py-1.5 rounded-full shrink-0
              transition-colors duration-150 ease-out flex items-center justify-center gap-1"
       data-category-name="__categories__"
+      data-active={initialActive("__categories__").active ? "" : undefined}
       aria-label={i18n(I18nKey.more)}
     >
       <span>{i18n(I18nKey.more)}</span>

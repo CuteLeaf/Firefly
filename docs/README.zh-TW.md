@@ -8,7 +8,7 @@
 > 
 > ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen) 
 ![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
-![Astro](https://img.shields.io/badge/Astro-7.0.2-orange)
+![Astro](https://img.shields.io/badge/Astro-7.0.7-orange)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)
 >
 > [![Stars](https://img.shields.io/github/stars/CuteLeaf/Firefly?style=social)](https://github.com/CuteLeaf/Firefly/stargazers)
@@ -35,7 +35,7 @@
 [**📝使用文檔**](https://docs-firefly.cuteleaf.cn/) /
 [**🍀我的部落格**](https://blog.cuteleaf.cn) 
 
-⚡ 靜態站點生成: 基於Astro的超快載入速度和SEO優化
+⚡ 靜態站點生成: 基於 Astro 的超快載入速度和 SEO 優化
 
 🎨 現代化設計: 簡潔美觀的介面，支援自訂主題色
 
@@ -139,7 +139,7 @@
    部落格將在 `http://localhost:4321` 可用
 
 ### 社區教程
-Cloudflare Workers部署：[【不用服务器，无需备案，零成本搭建一个自己的个人博客】](https://www.bilibili.com/video/BV1hX9XBKEhm)
+Cloudflare Workers 部署：[【不用服务器，无需备案，零成本搭建一个自己的个人博客】](https://www.bilibili.com/video/BV1hX9XBKEhm)
 
 ### 平台託管部署
 - **參考[官方指南](https://docs.astro.build/zh-cn/guides/deploy/)將部落格部署至 Vercel, Netlify, Cloudflare Pages, EdgeOne Pages 等。**
@@ -201,6 +201,7 @@ src/
 │   ├── musicConfig.ts            # 音樂播放器配置
 │   ├── navBarConfig.ts           # 導覽列配置
 │   ├── pioConfig.ts              # 看板娘配置
+│   ├── mermaidConfig.ts          # Mermaid 圖表配置
 │   ├── plantumlConfig.ts         # PlantUML 圖表配置
 │   ├── profileConfig.ts          # 使用者資料配置
 │   ├── sidebarConfig.ts          # 側邊欄版面配置
@@ -235,17 +236,17 @@ comment: true    # 是否允許留言
 
 下列指令均需要在專案根目錄執行：
 
-| Command                    | Action                                              |
-|:---------------------------|:----------------------------------------------------|
-| `pnpm install`             | 安裝依賴                                            |
-| `pnpm dev`                 | 在 `localhost:4321` 啟動本地開發伺服器              |
-| `pnpm build`               | 建置網站至 `./dist/`                                |
-| `pnpm preview`             | 本地預覽已建置的網站                                |
-| `pnpm check`               | 檢查程式碼中的錯誤                                  |
-| `pnpm format`              | 使用 Biome 格式化您的程式碼                         |
-| `pnpm new-post <filename>` | 建立新文章                                          |
-| `pnpm astro ...`           | 執行 `astro add`, `astro check` 等指令              |
-| `pnpm astro --help`        | 顯示 Astro CLI 說明                                 |
+| Command                    | Action                                 |
+| :------------------------- | :------------------------------------- |
+| `pnpm install`             | 安裝依賴                               |
+| `pnpm dev`                 | 在 `localhost:4321` 啟動本地開發伺服器 |
+| `pnpm build`               | 建置網站至 `./dist/`                   |
+| `pnpm preview`             | 本地預覽已建置的網站                   |
+| `pnpm check`               | 檢查程式碼中的錯誤                     |
+| `pnpm format`              | 使用 Biome 格式化您的程式碼            |
+| `pnpm new-post <filename>` | 建立新文章                             |
+| `pnpm astro ...`           | 執行 `astro add`, `astro check` 等指令 |
+| `pnpm astro --help`        | 顯示 Astro CLI 說明                    |
 
 ## 🙏 致謝
 
@@ -268,7 +269,7 @@ comment: true    # 是否允許留言
 
 ### 其他參考
 - 部落客`霞葉`的 [Bangumi 收藏](https://kasuha.com/posts/fuwari-enhance-ep2/) 頁面元件
-- 嗶哩嗶哩up主 `公公的日常` 的Q版 [流螢看板娘Spine切片資料](https://www.bilibili.com/video/BV1fuVzzdE5y)
+- 嗶哩嗶哩up主 `公公的日常` 的Q版 [流螢看板娘 Spine 切片資料](https://www.bilibili.com/video/BV1fuVzzdE5y)
 
 ## 📝 許可協議
 

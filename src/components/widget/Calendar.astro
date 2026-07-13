@@ -354,7 +354,7 @@ const postUrlPrefix = url("/posts/");
     calendarGrid.innerHTML = calendarDays.map(({day, hasPost, count, dateKey}) => {
       const isToday = day === currentDate && isCurrentMonth;
       const classes = [
-        "calendar-day aspect-square flex items-center justify-center rounded text-sm relative cursor-pointer"
+        "calendar-day aspect-square flex items-center justify-center rounded-sm text-sm relative cursor-pointer"
       ];
       
       if (!day) {
@@ -412,7 +412,7 @@ const postUrlPrefix = url("/posts/");
       const isCurrent = index === displayMonth;
       const hasPost = monthsWithPosts.has(index);
       const classes = [
-        "p-2 text-center text-sm rounded cursor-pointer hover:bg-(--btn-plain-bg-hover) transition-colors relative"
+        "p-2 text-center text-sm rounded-sm cursor-pointer hover:bg-(--btn-plain-bg-hover) transition-colors relative"
       ];
       if (isCurrent) {
         classes.push("text-(--primary) font-bold bg-(--btn-plain-bg-hover)");
@@ -441,7 +441,7 @@ const postUrlPrefix = url("/posts/");
     container.innerHTML = availableYears.map(year => {
       const isCurrent = year === displayYear;
       const classes = [
-        "p-2 text-center text-sm rounded cursor-pointer hover:bg-(--btn-plain-bg-hover) transition-colors relative"
+        "p-2 text-center text-sm rounded-sm cursor-pointer hover:bg-(--btn-plain-bg-hover) transition-colors relative"
       ];
       if (isCurrent) {
         classes.push("text-(--primary) font-bold bg-(--btn-plain-bg-hover)");
@@ -475,7 +475,7 @@ const postUrlPrefix = url("/posts/");
         const date = new Date(post.published);
         const dateStr = `${date.getMonth() + 1}-${date.getDate()}`;
         return `
-        <a href="${postUrlPrefix}${post.id}/" class="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-(--primary) dark:hover:text-(--primary) transition-colors px-2 py-1 rounded hover:bg-(--btn-plain-bg-hover)">
+        <a href="${postUrlPrefix}${post.id}/" class="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-(--primary) dark:hover:text-(--primary) transition-colors px-2 py-1 rounded-sm hover:bg-(--btn-plain-bg-hover)">
           <span class="truncate">${post.title}</span>
           <span class="text-xs text-neutral-500 dark:text-neutral-400 ml-2 whitespace-nowrap">${dateStr}</span>
         </a>
@@ -535,7 +535,7 @@ const postUrlPrefix = url("/posts/");
             const date = new Date(post.published);
             const dateStr = `${date.getMonth() + 1}-${date.getDate()}`;
             return `
-            <a href="${postUrlPrefix}${post.id}/" class="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-(--primary) dark:hover:text-(--primary) transition-colors px-2 py-1 rounded hover:bg-(--btn-plain-bg-hover)">
+            <a href="${postUrlPrefix}${post.id}/" class="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-(--primary) dark:hover:text-(--primary) transition-colors px-2 py-1 rounded-sm hover:bg-(--btn-plain-bg-hover)">
               <span class="truncate">${post.title}</span>
               <span class="text-xs text-neutral-500 dark:text-neutral-400 ml-2 whitespace-nowrap">${dateStr}</span>
             </a>

@@ -1,18 +1,22 @@
 ---
 import type { MarkdownHeading } from "astro";
-import { Icon } from "astro-icon/components";
 import FloatingButton from "@/components/common/FloatingButton.astro";
 import { sidebarLayoutConfig } from "@/config/sidebarConfig";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import "@/styles/toc.css";
+import { computeTocItems } from "@/utils/toc-shared";
 
 interface Props {
 	headings: MarkdownHeading[];
+	encrypted?: boolean;
 }
 
-let { headings: _ = [] } = Astro.props;
-// ... (保留之前的逻辑)
+const { headings = [], encrypted = false } = Astro.props;
+
+// 加密文章不在服务端渲染目录（避免标题泄露），交由客户端解密后生成
+const items = encrypted ? [] : computeTocItems(headings, { maxLevel: 3 });
+
 // 检查侧边栏目录组件是否启用
 const sidebarTocComponent = sidebarLayoutConfig.rightComponents?.find(
 	(c) => c.type === "sidebarToc",
@@ -28,44 +32,57 @@ const hideSidebarOnPostPage =
   <FloatingButton
     id="floating-toc-btn"
     icon="material-symbols:format-list-bulleted"
+    toggleIcon="material-symbols:close"
     ariaLabel="Table of Contents"
     onclick="window.toggleFloatingTOC()"
     class="hide"
   />
-  
+
   <!-- 悬浮TOC面板 - 移到 Wrapper 内部以便相对定位 -->
   <div
     id="floating-toc-panel"
-    class="floating-toc-panel hide w-80 max-h-96 overflow-hidden rounded-2xl shadow-2xl backdrop-blur-lg border border-white/20 dark:border-white/10 md:w-80 w-[calc(100vw-2rem)] md:max-h-96 max-h-[calc(100vh-8rem)]"
+    class="floating-toc-panel hide overflow-hidden rounded-2xl shadow-2xl backdrop-blur-lg border border-white/20 dark:border-white/10 md:w-80 w-[calc(100vw-2rem)] md:max-h-96 max-h-[calc(100vh-8rem)] py-3"
     style="background-color: var(--card-bg-transparent);"
     >
-    <div
-        class="py-2 px-4 border-b border-white/20 dark:border-white/10 sticky top-0 backdrop-blur-xs z-10"
-        style="background-color: var(--card-bg-transparent);"
-    >
-        <div class="flex items-center justify-between">
-        <h3
-            class="text-lg font-bold text-(--primary) flex items-center gap-2"
-        >
-            {i18n(I18nKey.tableOfContents)}
-        </h3>
-        <button
-            onclick="window.toggleFloatingTOC()"
-            aria-label="Close TOC"
-            class="btn-plain rounded-lg h-8 w-8 active:scale-90"
-        >
-            <Icon is:inline name="material-symbols:close" class="text-lg" />
-        </button>
-        </div>
-    </div>
-
-    <div class="toc-scroll-container p-4">
+    <div class="toc-scroll-container px-3">
         <div
         class="toc-content"
         id="floating-toc-content"
         style="width: 100%; max-width: 100%;"
         >
-        <!-- TOC内容将由JavaScript动态生成 -->
+        {!encrypted && items.length > 0 && (
+          <>
+            {items.map((item) => (
+              <a
+                href={item.href}
+                class={`toc-item toc-level-${item.depthLevel}`}
+                data-heading-id={item.headingId}
+                aria-label={item.text}
+                title={item.text}
+              >
+                <div class={`toc-badge ${item.badgeKind === "index" ? "toc-badge-index" : ""}`}>
+                  {item.badgeKind === "index" ? (
+                    item.badgeIndex
+                  ) : item.badgeKind === "dot" ? (
+                    <span class="toc-badge-dot"></span>
+                  ) : (
+                    <span class="toc-badge-dot toc-badge-dot-sm"></span>
+                  )}
+                </div>
+                <div class={`toc-label ${item.labelPrimary ? "toc-label-primary" : "toc-label-secondary"}`}>
+                  {item.text}
+                </div>
+              </a>
+            ))}
+            <div id="floating-active-indicator" class="toc-active-indicator" style="opacity: 0;"></div>
+          </>
+        )}
+        {!encrypted && items.length === 0 && (
+          <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+            <p>{i18n(I18nKey.tocEmpty)}</p>
+          </div>
+        )}
+        {/* 加密文章：留空，客户端解密后由 TOCManager 填充 */}
         </div>
     </div>
   </div>
@@ -103,15 +120,11 @@ const hideSidebarOnPostPage =
 		visibility: hidden
 		
 .toc-scroll-container
-	max-height: calc(24rem - 5rem)
-	
-	@media (max-width: 768px)
-		max-height: calc(24rem - 5rem)
+	/* 面板 max-height 24rem 减去面板自身 py-3 上下共 1.5rem */
+	max-height: calc(24rem - 1.5rem)
 
-/* 移动端隐藏活动指示器 */
-@media (max-width: 768px)
-	#floating-active-indicator
-		display: none
+	@media (max-width: 768px)
+		max-height: calc(24rem - 1.5rem)
 
 /* 响应式调整 - 仅保留 Panel 尺寸调整 */
 @media (max-width: 1024px)
@@ -149,28 +162,33 @@ const hideSidebarOnPostPage =
     };
   }
 
-  // 切换 TOC 面板
+  // 切换 TOC 面板（按钮图标随开关在 列表/X 之间切换）
   window.toggleFloatingTOC = function () {
     const panel = window.FloatingTOC.panel;
+    const btn = window.FloatingTOC.btn;
     if (!panel) return;
 
     const isHidden = panel.classList.contains("hide");
     if (isHidden) {
       panel.classList.remove("hide");
       panel.classList.add("show");
+      btn?.classList.add("toggled");
     } else {
       panel.classList.remove("show");
       panel.classList.add("hide");
+      btn?.classList.remove("toggled");
     }
   };
 
   // 关闭 TOC 面板
   function closeTOC() {
     const panel = window.FloatingTOC.panel;
+    const btn = window.FloatingTOC.btn;
     if (panel && !panel.classList.contains("hide")) {
       panel.classList.add("hide");
       panel.classList.remove("show");
     }
+    btn?.classList.remove("toggled");
   }
 
   // 设置自动关闭功能
@@ -296,8 +314,9 @@ const hideSidebarOnPostPage =
         scrollOffset: 80,
       });
 
-      // 初始化
-      window.FloatingTOC.manager.init();
+      // attach() 自校正：SSR 锚点与当前正文一致则直接附着；
+      // 缺失或过时（加密未解密/异常情况）则自动回退 DOM 遍历重建。
+      window.FloatingTOC.manager.attach();
 
       // 设置点击事件 - 标记为 TOC 内部导航
       const tocContent = document.getElementById("floating-toc-content");
