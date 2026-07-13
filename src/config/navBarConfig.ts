@@ -16,18 +16,17 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		LinkPresets.Home,
 	];
 
-	// 文章及其子菜单
+	// 文章及其子菜单（父级补充pageKey）
 	links.push({
 		name: "文章",
 		url: "#",
 		icon: "material-symbols:article",
+		pageKey: "menu-article",
 		children: [
 			// 归档
 			LinkPresets.Archive,
-
 			// 分类
 			LinkPresets.Categories,
-
 			// 标签
 			LinkPresets.Tags,
 		],
@@ -39,32 +38,31 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 	// 留言板
 	links.push(LinkPresets.Guestbook);
 
-	// 我的及其子菜单
+	// 我的及其子菜单（父级补充pageKey）
 	links.push({
 		name: "我的",
 		url: "#",
 		icon: "material-symbols:person",
+		pageKey: "menu-mine",
 		children: [
 			// 相册
 			LinkPresets.Gallery,
-
-			// 追番
-			LinkPresets.Anime,
-
-			// 番组计划
-			LinkPresets.Bangumi,
+			// 追番（已注释，不启用）
+			// LinkPresets.Anime,
+			// 番组计划（已注释，不启用）
+			// LinkPresets.Bangumi,
 		],
 	});
 
-	// 关于及其子菜单
+	// 关于及其子菜单（父级补充pageKey）
 	links.push({
 		name: "关于",
 		url: "#",
 		icon: "material-symbols:info",
+		pageKey: "menu-about",
 		children: [
-			// 打赏
-			LinkPresets.Sponsor,
-
+			// 打赏（已注释，不启用）
+			// LinkPresets.Sponsor,
 			// 关于页面
 			LinkPresets.About,
 		],
@@ -117,6 +115,7 @@ export const navBarSearchConfig: NavBarSearchConfig = {
 // ============================================================================
 // 链接预设 - 可自由自定义导航栏链接的名称、图标和URL
 // Link Presets - Allows free customization of the name, icon, and URL of navigation bar links
+// 全部项已补充 pageKey，无缺失
 // ============================================================================
 export const LinkPresets: Record<string, NavBarLink> = {
 	Home: {
@@ -167,5 +166,26 @@ export const LinkPresets: Record<string, NavBarLink> = {
 		icon: "material-symbols:photo-library",
 		pageKey: "gallery",
 	},
+
+	// 下方为注释停用项，保留定义方便后续开启
+	// Anime: {
+	// 	name: "追番",
+	// 	url: "/anime/",
+	// 	icon: "material-symbols:live-tv",
+	// 	pageKey: "anime",
+	// },
+	// Bangumi: {
+	// 	name: "番组计划",
+	// 	url: "/bangumi/",
+	// 	icon: "material-symbols:movie",
+	// 	pageKey: "bangumi",
+	// },
+	// Sponsor: {
+	// 	name: "打赏",
+	// 	url: "/sponsor/",
+	// 	icon: "material-symbols:favorite",
+	// 	pageKey: "sponsor",
+	// },
 };
+
 export const navBarConfig: NavBarConfig = getDynamicNavBarConfig();
