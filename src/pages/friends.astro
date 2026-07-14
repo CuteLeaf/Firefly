@@ -127,8 +127,14 @@ const description =
                 <img
                   src={item.imgurl}
                   alt={item.title}
-                  class="w-full h-full object-cover"
+                  class="w-full h-full object-cover friend-avatar"
+                  loading="lazy"
+                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
                 />
+                {/* 加载失败占位 */}
+                <div class="absolute inset-0 hidden items-center justify-center text-neutral-400 dark:text-neutral-500 text-2xl">
+                  <Icon is:inline name="material-symbols:person-outline" class="text-[1.5rem]" />
+                </div>
               </div>
 
               {/* 内容 */}
@@ -156,8 +162,8 @@ const description =
                   {item.tags && item.tags.length > 0
                     ? item.tags
                         .slice(0, 3)
-                        .map((tag: string) => (
-                          <span class="text-[0.65rem] px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 transition-colors duration-300">
+.map((tag: string) => (
+                          <span class="tag-badge text-[0.65rem] px-1.5 py-0.5 rounded transition-colors duration-300">
                             {tag}
                           </span>
                         ))
@@ -280,6 +286,103 @@ const description =
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 0.75rem;
+    }
+
+    .friend-card {
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .friend-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 0.75rem;
+      background: linear-gradient(135deg, var(--primary), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .friend-card:hover::after {
+      opacity: 0.06;
+    }
+
+    .friend-card .friend-avatar {
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .friend-card:hover .friend-avatar {
+      transform: scale(1.1);
+    }
+
+    /* 分类标签按钮样式 */
+    .category-pill {
+      background: transparent;
+      color: var(--btn-content, #666);
+      border: 1px solid var(--line-divider, rgba(128,128,128,0.2));
+      cursor: pointer;
+      user-select: none;
+    }
+    .category-pill:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: color-mix(in srgb, var(--primary) 8%, transparent);
+    }
+    .category-pill[data-active] {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* 标签圆角样式 */
+    .friend-card .tag-badge {
+      background: color-mix(in srgb, var(--primary) 8%, transparent);
+      color: var(--primary);
+      border: 1px solid color-mix(in srgb, var(--primary) 15%, transparent);
+    }
+
+    /* 搜索无结果动画 */
+    .animate-fade-in-up {
+      animation: fadeInUp 0.35s ease forwards;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 卡片入场动画 */
+    .friend-card {
+      animation: cardIn 0.4s ease backwards;
+    }
+    .friend-card:nth-child(1) { animation-delay: 0.02s; }
+    .friend-card:nth-child(2) { animation-delay: 0.06s; }
+    .friend-card:nth-child(3) { animation-delay: 0.10s; }
+    .friend-card:nth-child(4) { animation-delay: 0.14s; }
+    .friend-card:nth-child(5) { animation-delay: 0.18s; }
+    .friend-card:nth-child(6) { animation-delay: 0.22s; }
+    .friend-card:nth-child(7) { animation-delay: 0.26s; }
+    .friend-card:nth-child(8) { animation-delay: 0.30s; }
+    .friend-card:nth-child(9) { animation-delay: 0.34s; }
+    .friend-card:nth-child(10) { animation-delay: 0.38s; }
+    .friend-card:nth-child(11) { animation-delay: 0.42s; }
+    .friend-card:nth-child(12) { animation-delay: 0.46s; }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
   </style>
 </MainGridLayout>
