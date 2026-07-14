@@ -18,6 +18,11 @@ const shortname = commentConfig.disqus.shortname;
 <div id="disqus_thread"></div>
 
 <script is:inline define:vars={{ shortname, identifier, url, title }}>
+  const requestedPath = new URLSearchParams(window.location.search).get("path")
+  if (requestedPath) {
+    identifier = requestedPath.replace(/^\/+|\/+$/g, "")
+    url = new URL(requestedPath, window.location.origin).href
+  }
   // @ts-ignore
   window.disqus_config = function () {
     this.page.url = url

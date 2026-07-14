@@ -20,6 +20,8 @@ const config = {
   <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css" />
   <script type="module" is:inline define:vars={{ config }}>
     import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+    const requestedPath = new URLSearchParams(window.location.search).get("path");
+    if (requestedPath) config.path = requestedPath;
     init(config);
   </script>
 </div>

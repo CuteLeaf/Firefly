@@ -1,0 +1,74 @@
+---
+import { Icon } from "astro-icon/components";
+import DynamicFeed from "@/components/pages/dynamic/DynamicFeed.svelte";
+import DynamicItemTemplate from "@/components/pages/dynamic/DynamicItemTemplate.astro";
+import { commentConfig, dynamicConfig, siteConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import "@/styles/dynamic.css";
+import { url } from "@/utils/url-utils";
+
+if (!siteConfig.pages.dynamic) {
+	return Astro.redirect("/404/");
+}
+
+const title = dynamicConfig.title || i18n(I18nKey.dynamic);
+const description =
+	dynamicConfig.description || i18n(I18nKey.dynamicDescription);
+const itemsPerPage = Math.max(1, dynamicConfig.itemsPerPage ?? 10);
+const showInlineComments = Boolean(
+	dynamicConfig.showComment !== false &&
+		commentConfig.type &&
+		commentConfig.type !== "none",
+);
+const dataUrl = url("/api/dynamic.json");
+---
+
+<MainGridLayout title={title} description={description}>
+	<section class="dynamic-page" aria-labelledby="dynamic-page-title">
+		<div>
+			<header class="dynamic-page-header card-base">
+				<div class="dynamic-page-heading">
+					<div class="dynamic-page-icon" aria-hidden="true">
+						<Icon is:inline name="material-symbols:forum-rounded" />
+					</div>
+					<div>
+						<h2 id="dynamic-page-title">{title}</h2>
+						{description && <p>{description}</p>}
+					</div>
+				</div>
+				<div class="dynamic-filter">
+					<label class="dynamic-search">
+						<Icon is:inline name="material-symbols:search-rounded" />
+						<input
+							type="search"
+							data-dynamic-search
+							placeholder={i18n(I18nKey.dynamicSearch)}
+						/>
+					</label>
+					<label class="dynamic-year-select">
+						<Icon is:inline name="material-symbols:calendar-month-rounded" />
+						<select data-year-select aria-label={i18n(I18nKey.year)}>
+							<option value="all">{i18n(I18nKey.dynamicAllYears)}</option>
+						</select>
+						<Icon is:inline name="material-symbols:arrow-drop-down-rounded" />
+					</label>
+				</div>
+			</header>
+
+			<DynamicFeed
+				client:load
+				source={dataUrl}
+				{itemsPerPage}
+				showComments={showInlineComments}
+				emptyText={i18n(I18nKey.dynamicEmpty)}
+				noResultsText={i18n(I18nKey.dynamicNoResults)}
+				loadingText={i18n(I18nKey.dynamicLoading)}
+				allYearsText={i18n(I18nKey.dynamicAllYears)}
+			/>
+
+			<DynamicItemTemplate />
+		</div>
+	</section>
+</MainGridLayout>

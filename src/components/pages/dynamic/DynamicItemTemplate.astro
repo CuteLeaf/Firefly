@@ -1,0 +1,47 @@
+---
+import { Icon } from "astro-icon/components";
+import ImageWrapper from "@/components/common/ImageWrapper.astro";
+import DynamicGallery from "@/components/pages/dynamic/DynamicGallery.astro";
+import DynamicInlineComments from "@/components/pages/dynamic/DynamicInlineComments.astro";
+import { profileConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import { url } from "@/utils/url-utils";
+
+const profileLabel = i18n(I18nKey.dynamicProfile).replace(
+	"{name}",
+	profileConfig.name,
+);
+---
+
+<template data-dynamic-item-template>
+	<dynamic-entry class="dynamic-entry card-base" data-dynamic-entry>
+		<article>
+			<header class="dynamic-entry-header">
+				<a href={url("/about/")} class="dynamic-avatar" aria-label={profileLabel}>
+					<ImageWrapper
+						src={profileConfig.avatar || ""}
+						alt={profileConfig.name}
+						widths={[96]}
+						sizes="48px"
+						loading="lazy"
+						fadeIn={false}
+					/>
+				</a>
+				<div class="dynamic-identity">
+					<strong data-dynamic-author>{profileConfig.name}</strong>
+					<a class="dynamic-time" data-dynamic-permalink>
+						<time data-dynamic-time></time>
+					</a>
+				</div>
+				<span class="dynamic-entry-decoration" aria-hidden="true">
+					<Icon is:inline name="material-symbols:format-quote-rounded" />
+				</span>
+			</header>
+
+			<div class="dynamic-content custom-md" data-dynamic-content></div>
+			<DynamicGallery sourceId="dynamic-template-content" />
+			<DynamicInlineComments src="" />
+		</article>
+	</dynamic-entry>
+</template>

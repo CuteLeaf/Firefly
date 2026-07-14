@@ -1,0 +1,84 @@
+---
+import { type CollectionEntry, render } from "astro:content";
+import { Icon } from "astro-icon/components";
+import ImageWrapper from "@/components/common/ImageWrapper.astro";
+import DynamicGallery from "@/components/pages/dynamic/DynamicGallery.astro";
+import DynamicInlineComments from "@/components/pages/dynamic/DynamicInlineComments.astro";
+import { profileConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import { formatDateI18nWithTime } from "@/utils/date-utils";
+import { dynamicAnchor } from "@/utils/dynamic-utils";
+import { url } from "@/utils/url-utils";
+
+interface Props {
+	entry: CollectionEntry<"dynamic">;
+	detailUrl?: string;
+	showInlineComments?: boolean;
+	commentPath?: string;
+}
+
+const {
+	entry,
+	detailUrl,
+	showInlineComments = false,
+	commentPath,
+} = Astro.props;
+const { Content } = await render(entry);
+const anchorId = dynamicAnchor(entry.id);
+const published = formatDateI18nWithTime(entry.data.published);
+const permalink = detailUrl || `#${anchorId}`;
+const profileLabel = i18n(I18nKey.dynamicProfile).replace(
+	"{name}",
+	profileConfig.name,
+);
+---
+
+<dynamic-entry
+	id={anchorId}
+	class="dynamic-entry card-base"
+	data-dynamic-entry
+	data-year={entry.data.published.getFullYear()}
+>
+	<article aria-labelledby={`${anchorId}-author`}>
+		<header class="dynamic-entry-header">
+			<a
+				href={url("/about/")}
+				class="dynamic-avatar"
+				aria-label={profileLabel}
+			>
+				<ImageWrapper
+					src={profileConfig.avatar || ""}
+					alt={profileConfig.name}
+					widths={[96]}
+					sizes="48px"
+					loading="lazy"
+				/>
+			</a>
+			<div class="dynamic-identity">
+				<strong id={`${anchorId}-author`}>{profileConfig.name}</strong>
+				<a class="dynamic-time" href={permalink}>
+					<time datetime={entry.data.published.toISOString()}>{published}</time>
+				</a>
+			</div>
+			<a
+				class="dynamic-permalink btn-plain"
+				href={permalink}
+				aria-label={i18n(I18nKey.dynamicPermalink)}
+				title={i18n(I18nKey.dynamicPermalink)}
+			>
+				<Icon is:inline name="material-symbols:link-rounded" />
+			</a>
+		</header>
+
+		<div id={`${anchorId}-content`} class="dynamic-content custom-md">
+			<Content />
+		</div>
+		<DynamicGallery sourceId={`${anchorId}-content`} />
+		{showInlineComments && commentPath && (
+			<DynamicInlineComments
+				src={`/dynamic/comments/?path=${encodeURIComponent(commentPath)}`}
+			/>
+		)}
+	</article>
+</dynamic-entry>

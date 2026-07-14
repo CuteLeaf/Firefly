@@ -10,8 +10,6 @@ const lightTheme = "light";
 const darkTheme = "dark";
 ---
 
-<script is:inline type="module" src="https://esm.sh/giscus"></script>
-
 <!-- 
   Giscus 官方Web Component用法，兼容Astro静态输出，无需import包，无需NPM依赖！
   参考：https://giscus.app/ 详情配置说明
@@ -33,10 +31,18 @@ const darkTheme = "dark";
 />
 
 <script is:inline define:vars={{ lightTheme, darkTheme }}>
+  const requestedPath = new URLSearchParams(window.location.search).get("path");
+  const widget = document.querySelector("giscus-widget");
+  if (requestedPath && widget) {
+    widget.setAttribute("mapping", "specific");
+    widget.setAttribute("term", requestedPath);
+  }
+
+  import("https://esm.sh/giscus");
+
   function updateGiscusTheme() {
     const isDark = document.documentElement.classList.contains('dark');
     const theme = isDark ? darkTheme : lightTheme;
-    const widget = document.querySelector('giscus-widget');
     if (widget) {
       widget.setAttribute('theme', theme);
     }

@@ -21,6 +21,25 @@ enum I18nKey {
 	tocEmpty = "tocEmpty",
 	music = "music",
 
+	// 动态
+	dynamic = "dynamic",
+	dynamicDescription = "dynamicDescription",
+	dynamicEmpty = "dynamicEmpty",
+	dynamicSearch = "dynamicSearch",
+	dynamicNoResults = "dynamicNoResults",
+	dynamicLoading = "dynamicLoading",
+	dynamicAllYears = "dynamicAllYears",
+	dynamicLoadMore = "dynamicLoadMore",
+	dynamicBackToList = "dynamicBackToList",
+	dynamicProfile = "dynamicProfile",
+	dynamicPermalink = "dynamicPermalink",
+	dynamicCollapseGallery = "dynamicCollapseGallery",
+	dynamicViewOriginal = "dynamicViewOriginal",
+	dynamicPreviousImage = "dynamicPreviousImage",
+	dynamicNextImage = "dynamicNextImage",
+	dynamicViewImage = "dynamicViewImage",
+	dynamicSelectImage = "dynamicSelectImage",
+
 	// 公告栏
 	announcement = "announcement",
 	announcementClose = "announcementClose",
