@@ -8,7 +8,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	// 推荐只选择自己喜欢的模式并关闭切换功能
 	switchable: true,
 	// 是否启用背景视频播放，配置后将在导航栏显示视频播放按钮
-	playerEnable: true,
+	playerEnable: false,
 	/**
 	 * 背景图片配置
 	 * 图片路径支持三种格式：
