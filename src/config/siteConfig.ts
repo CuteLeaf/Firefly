@@ -9,7 +9,7 @@ export const siteConfig: SiteConfig = {
 	title: "临渊羡鱼博客",
 
 	// 站点副标题
-	//subtitle: "博客",
+	subtitle: "博客",
 
 	// 站点 URL
 	site_url: "https://blog.994613.xyz",
@@ -124,8 +124,11 @@ export const siteConfig: SiteConfig = {
 		defaultMode: "list",
 		// 移动端默认布局模式，不设置则跟随 defaultMode
 		mobileDefaultMode: "list",
-		// 是否在文章列表中显示标签
-		showTags: true,
+		// 元数据行显示控制
+		meta: {
+			// 是否在文章列表中显示标签
+			showTags: true,
+		},
 		// 文章简介显示行数，设为 0 则不截断
 		descriptionLines: 2,
 		// 是否允许用户切换布局

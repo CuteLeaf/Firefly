@@ -54,7 +54,7 @@ const navbarTitleFontVar = fontConfig.enable
 <!-- Astro Font API: 自动下载、缓存并生成优化的 @font-face -->
 {Array.from(allCssVars).map((cssVar) => (
   <Font
-    cssVariable={cssVar as any}
+    cssVariable={cssVar as unknown as import('astro:assets').CssVariable}
     preload={selectedFontVars.includes(cssVar)}
   />
 ))}

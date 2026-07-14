@@ -173,6 +173,13 @@ if (isLocalSrcLogo) {
                             <Icon is:inline name="material-symbols:palette-outline" class="text-[1.25rem]"></Icon>
                         </button>
                 )}
+                <a
+                    aria-label="Admin"
+                    href="/admin/index.html"
+                    class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90 flex items-center justify-center"
+                >
+                    <Icon is:inline name="material-symbols:admin-panel-settings" class="text-[1.25rem]" />
+                </a>
                 {/* @ts-ignore */}
                 <LightDarkSwitch client:load></LightDarkSwitch>
                 <button aria-label="Menu" name="Nav Menu" class="btn-plain scale-animation rounded-lg w-11 h-11 active:scale-90 lg:hidden!" id="nav-menu-switch">

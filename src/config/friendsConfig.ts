@@ -2,7 +2,7 @@
 import * as yaml from 'js-yaml';
 import fs from 'fs';
 import path from 'path';
-import type { FriendLink, FriendsPageConfig } from "@/types/friend";
+import type { FriendLink, FriendsPageConfig } from "@/types/friendsConfig";
 
 // 标记此文件仅在服务端运行
 export const prerender = true;
