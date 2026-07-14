@@ -1,0 +1,138 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+	class?: string;
+	style?: string;
+}
+
+const { class: className, style } = Astro.props;
+---
+
+<div id="time-greeting" class:list={["card-base flex flex-col relative overflow-hidden", className]} style={style}>
+    <div class="px-5 pt-5 pb-3 flex justify-between items-start">
+        <div class="flex flex-col gap-1">
+            <span class="text-base font-bold text-neutral-700 dark:text-neutral-300 greeting-text">正在获取时间...</span>
+            <div class="flex items-end gap-3 text-neutral-800 dark:text-neutral-200">
+                <div class="flex items-baseline">
+                    <span class="text-4xl font-bold font-mono time-display">--:--</span>
+                </div>
+                <div class="flex flex-col mb-[0.15rem]">
+                    <span class="text-xs font-bold opacity-60 uppercase tracking-wider date-week">---</span>
+                    <div class="flex items-baseline text-sm font-bold opacity-80">
+                        <span class="date-day">--</span>
+                        <span class="opacity-80 ml-0.5 date-month">/--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-2xl text-(--primary) greeting-icons mt-1 opacity-80">
+            <Icon name="material-symbols:mode-night-outline-rounded" class="hidden icon-night" />
+            <Icon name="material-symbols:wb-twilight-rounded" class="hidden icon-morning" />
+            <Icon name="material-symbols:wb-sunny-outline-rounded" class="hidden icon-noon" />
+            <Icon name="material-symbols:nightlight-outline-rounded" class="hidden icon-evening" />
+        </div>
+    </div>
+
+    <div class="w-full h-36 relative overflow-hidden time-image-container">
+        <div class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000 opacity-0 time-image"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-(--card-bg) via-transparent to-transparent opacity-60"></div>
+    </div>
+</div>
+
+<script is:inline>
+  // IIFE 包裹：避免 const/let 暴露到全局脚本作用域，
+  // 防止 Swup 在 SPA 切换时重新执行脚本触发 "Identifier has already been declared"。
+  (() => {
+  const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  if (!window.timeGreetingImage) {
+      window.timeGreetingImage = `https://random-api.czl.net/pic/fj?t=${new Date().getTime()}`;
+  }
+
+  function updateTimeGreeting() {
+    const dayDisplays = document.querySelectorAll('.date-day');
+    const monthDisplays = document.querySelectorAll('.date-month');
+    const weekDisplays = document.querySelectorAll('.date-week');
+    const timeDisplays = document.querySelectorAll('.time-display');
+    const greetingTexts = document.querySelectorAll('.greeting-text');
+    const greetingIcons = document.querySelectorAll('.greeting-icons');
+    const imageContainers = document.querySelectorAll('.time-image');
+
+    if (dayDisplays.length === 0) return;
+
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+    const weekDay = weekDays[now.getDay()];
+
+    const hoursStr = hours.toString().padStart(2, '0');
+    const minutesStr = minutes.toString().padStart(2, '0');
+
+    let greeting = '';
+    let period = '';
+
+    if (hours >= 0 && hours < 6) {
+        greeting = '夜深了，早点休息！';
+        period = 'night';
+    } else if (hours >= 6 && hours < 9) {
+        greeting = '早上好，新的一天！';
+        period = 'morning';
+    } else if (hours >= 9 && hours < 12) {
+        greeting = '上午好，充满活力！';
+        period = 'noon';
+    } else if (hours >= 12 && hours < 14) {
+        greeting = '中午好，记得午休！';
+        period = 'noon';
+    } else if (hours >= 14 && hours < 18) {
+        greeting = '下午好，继续加油！';
+        period = 'noon';
+    } else if (hours >= 18 && hours < 24) {
+        greeting = '晚上好，放松一下！';
+        period = 'evening';
+    }
+
+    dayDisplays.forEach(el => el.textContent = day);
+    monthDisplays.forEach(el => el.textContent = `/${month}`);
+    weekDisplays.forEach(el => el.textContent = weekDay);
+    timeDisplays.forEach(el => el.textContent = `${hoursStr}:${minutesStr}`);
+    greetingTexts.forEach(el => el.textContent = greeting);
+
+    greetingIcons.forEach(container => {
+        const icons = container.querySelectorAll('svg');
+        icons.forEach(icon => {
+            if (icon.classList.contains(`icon-${period}`)) {
+                icon.classList.remove('hidden');
+            } else {
+                icon.classList.add('hidden');
+            }
+        });
+    });
+
+    imageContainers.forEach(el => {
+        if (el.getAttribute('data-image-set') !== 'true') {
+            el.style.backgroundImage = `url('${window.timeGreetingImage}')`;
+            el.setAttribute('data-image-set', 'true');
+            setTimeout(() => {
+                el.classList.remove('opacity-0');
+                el.classList.add('opacity-100');
+            }, 50);
+        }
+    });
+  }
+
+  if (window.timeGreetingInterval) {
+    clearInterval(window.timeGreetingInterval);
+  }
+  window.timeGreetingInterval = setInterval(updateTimeGreeting, 60000);
+
+  updateTimeGreeting();
+
+  document.addEventListener("swup:contentReplaced", () => {
+    updateTimeGreeting();
+  });
+  })();
+</script>
