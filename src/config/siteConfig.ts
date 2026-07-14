@@ -12,7 +12,7 @@ export const siteConfig: SiteConfig = {
 	subtitle: "study",
 
 	// 站点 URL
-	site_url: "https://firefly.cuteleaf.cn",
+	site_url: "https://xyxstudy.kdns.fr",
 
 	// 站点描述
 	description:
