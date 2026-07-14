@@ -313,6 +313,16 @@ export const zh_TW: Translation = {
 	[Key.siteStatsDays]: "{days} 天",
 	[Key.today]: "今天",
 
+	// 51LA 訪問統計
+	[Key.laStats]: "訪問統計",
+	[Key.laStatsOnline]: "當前在線",
+	[Key.laStatsTodayUV]: "今日訪客",
+	[Key.laStatsTodayPV]: "今日瀏覽",
+	[Key.laStatsYesterdayUV]: "昨日訪客",
+	[Key.laStatsYesterdayPV]: "昨日瀏覽",
+	[Key.laStatsMonthPV]: "本月瀏覽",
+	[Key.laStatsTotalPV]: "累計瀏覽",
+
 	// 站點資訊
 	[Key.siteInfo]: "站點資訊",
 	[Key.siteInfoBuildTime]: "構建時間",

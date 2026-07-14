@@ -22,5 +22,7 @@ export type AnalyticsConfig = {
 		autoTrack?: boolean; // 开启事件分析功能，默认 true
 		hashMode?: boolean; // 单页面应用统计（Vue/React 等），默认 false
 		screenRecord?: boolean; // 开启网站录屏功能，默认 true
+		statsDataSource?: "quotejs" | "api"; // 数据挂件数据源："quotejs" 从官方 quote.js 解析，"api" 从第三方 API 获取 JSON
+		statsApiUrl?: string; // 第三方 API 地址模板，仅 statsDataSource 为 "api" 时生效，使用 {id} 占位符代表 Id
 	};
 };

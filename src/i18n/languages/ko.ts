@@ -318,6 +318,16 @@ export const ko: Translation = {
 	[Key.siteStatsDays]: "{days}일",
 	[Key.today]: "오늘",
 
+	// 51LA Visitor Statistics
+	[Key.laStats]: "방문자 통계",
+	[Key.laStatsOnline]: "현재 온라인",
+	[Key.laStatsTodayUV]: "오늘 방문자",
+	[Key.laStatsTodayPV]: "오늘 조회수",
+	[Key.laStatsYesterdayUV]: "어제 방문자",
+	[Key.laStatsYesterdayPV]: "어제 조회수",
+	[Key.laStatsMonthPV]: "이번 달 조회수",
+	[Key.laStatsTotalPV]: "총 조회수",
+
 	// Site Info
 	[Key.siteInfo]: "사이트 정보",
 	[Key.siteInfoBuildTime]: "빌드 시각",
