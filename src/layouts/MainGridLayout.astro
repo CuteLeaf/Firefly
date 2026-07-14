@@ -133,42 +133,8 @@ const randomSubtitle = getRandomSubtitle();
 
 // 主页横幅文本只在首页且全局开关为 true 时显示，不区分设备
 const homeTextEnable = backgroundWallpaper.common?.homeText?.enable;
-// 读取当前页面路由
-const currPath = Astro.url.pathname;
-const textCfg = backgroundWallpaper.common.homeText;
-
-// 按路由切换页面标题、副标题
-switch(currPath) {
-  case "/":
-    // 首页保留原有英文标题，不修改
-    break;
-  case "/posts":
-    textCfg.title = "文章";
-    textCfg.subtitle = ["代码实践 · 学习笔记 · 日常思考"];
-    break;
-  case "/friends":
-    textCfg.title = "友链";
-    textCfg.subtitle = ["同频知己，互访交流"];
-    break;
-  case "/message":
-    textCfg.title = "留言板";
-    textCfg.subtitle = ["欢迎留下你的想法"];
-    break;
-  case "/gallery":
-    textCfg.title = "相册";
-    textCfg.subtitle = ["生活碎片与沿途风景"];
-    break;
-  case "/about":
-    textCfg.title = "关于我";
-    textCfg.subtitle = ["数学与算法爱好者，持续学习"];
-    break;
-  default:
-    // 其余页面关闭标题显示
-    textCfg.enable = false;
-}
-
-// 所有壁纸模式(banner/fullscreen/overlay)都允许渲染顶部文字
-const showHomeText = (isBannerMode || isFullscreenMode || isOverlayMode) && !!textCfg.enable;
+const showHomeText =
+	(isBannerMode || isFullscreenMode) && !!homeTextEnable && isHomePageCheck;
 
 const showBannerPostMeta =
 	(isBannerMode || isFullscreenMode) &&
