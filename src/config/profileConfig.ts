@@ -1,7 +1,7 @@
 import type { ProfileConfig } from "../types/profileConfig";
 
 export const profileConfig: ProfileConfig = {
-	avatar: "/assets/images/touxiang.jpg", // 移到public目录，构建更快
+	avatar: "assets/images/touxiang.jpg", // 移到public目录，构建更快
 	name: "XYX",
 	bio: "自律学习｜干货整理｜经验分享", // 微调更贴合你的技术博客定位
 
