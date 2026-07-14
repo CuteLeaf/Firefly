@@ -41,14 +41,31 @@ const { class: className, style } = Astro.props;
 </div>
 
 <script is:inline>
-  // IIFE 包裹：避免 const/let 暴露到全局脚本作用域，
-  // 防止 Swup 在 SPA 切换时重新执行脚本触发 "Identifier has already been declared"。
-  (() => {
+(() => {
   const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-  if (!window.timeGreetingImage) {
-      window.timeGreetingImage = `https://random-api.czl.net/pic/fj?t=${new Date().getTime()}`;
+  // 这里改成你 time-bg 里所有图片文件名
+  const localBgList = [
+    "/time-bg/bg1.png",
+    "/time-bg/bg2.png",
+    "/time-bg/bg3.png",
+    "/time-bg/bg4.png",
+    "/time-bg/bg5.png",
+    "/time-bg/bg6.png",
+    "/time-bg/bg7.png",
+    "/time-bg/bg8.png",
+    "/time-bg/bg9.png",
+    "/time-bg/bg10.png",
+  ];
+
+  // 随机选取一张本地图
+  function getRandomLocalBg() {
+    const randomIdx = Math.floor(Math.random() * localBgList.length);
+    return localBgList[randomIdx];
   }
+
+  // 页面加载时随机一张
+  window.timeGreetingImage = getRandomLocalBg();
 
   function updateTimeGreeting() {
     const dayDisplays = document.querySelectorAll('.date-day');
@@ -76,23 +93,23 @@ const { class: className, style } = Astro.props;
     let period = '';
 
     if (hours >= 0 && hours < 6) {
-        greeting = '夜深了，早点休息！';
-        period = 'night';
+      greeting = '夜深了，早点休息！';
+      period = 'night';
     } else if (hours >= 6 && hours < 9) {
-        greeting = '早上好，新的一天！';
-        period = 'morning';
+      greeting = '早上好，新的一天！';
+      period = 'morning';
     } else if (hours >= 9 && hours < 12) {
-        greeting = '上午好，充满活力！';
-        period = 'noon';
+      greeting = '上午好，充满活力！';
+      period = 'noon';
     } else if (hours >= 12 && hours < 14) {
-        greeting = '中午好，记得午休！';
-        period = 'noon';
+      greeting = '中午好，记得午休！';
+      period = 'noon';
     } else if (hours >= 14 && hours < 18) {
-        greeting = '下午好，继续加油！';
-        period = 'noon';
+      greeting = '下午好，继续加油！';
+      period = 'noon';
     } else if (hours >= 18 && hours < 24) {
-        greeting = '晚上好，放松一下！';
-        period = 'evening';
+      greeting = '晚上好，放松一下！';
+      period = 'evening';
     }
 
     dayDisplays.forEach(el => el.textContent = day);
@@ -102,25 +119,26 @@ const { class: className, style } = Astro.props;
     greetingTexts.forEach(el => el.textContent = greeting);
 
     greetingIcons.forEach(container => {
-        const icons = container.querySelectorAll('svg');
-        icons.forEach(icon => {
-            if (icon.classList.contains(`icon-${period}`)) {
-                icon.classList.remove('hidden');
-            } else {
-                icon.classList.add('hidden');
-            }
-        });
+      const icons = container.querySelectorAll('svg');
+      icons.forEach(icon => {
+        if (icon.classList.contains(`icon-${period}`)) {
+          icon.classList.remove('hidden');
+        } else {
+          icon.classList.add('hidden');
+        }
+      });
     });
 
     imageContainers.forEach(el => {
-        if (el.getAttribute('data-image-set') !== 'true') {
-            el.style.backgroundImage = `url('${window.timeGreetingImage}')`;
-            el.setAttribute('data-image-set', 'true');
-            setTimeout(() => {
-                el.classList.remove('opacity-0');
-                el.classList.add('opacity-100');
-            }, 50);
-        }
+      el.removeAttribute('data-image-set');
+      if (el.getAttribute('data-image-set') !== 'true') {
+        el.style.backgroundImage = `url('${window.timeGreetingImage}')`;
+        el.setAttribute('data-image-set', 'true');
+        setTimeout(() => {
+          el.classList.remove('opacity-0');
+          el.classList.add('opacity-100');
+        }, 50);
+      }
     });
   }
 
@@ -131,8 +149,10 @@ const { class: className, style } = Astro.props;
 
   updateTimeGreeting();
 
+  // SPA切换页面重新随机图片
   document.addEventListener("swup:contentReplaced", () => {
+    window.timeGreetingImage = getRandomLocalBg();
     updateTimeGreeting();
   });
-  })();
+})();
 </script>
