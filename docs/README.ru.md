@@ -189,6 +189,7 @@ src/
 │   ├── backgroundWallpaper.ts    # Конфигурация фоновых обоев
 │   ├── commentConfig.ts          # Конфигурация системы комментариев
 │   ├── coverImageConfig.ts       # Конфигурация обложек статей
+│   ├── dynamicConfig.ts          # Конфигурация страницы публикаций
 │   ├── effectsConfig.ts          # Конфигурация анимационных эффектов (сакура и др.)
 │   ├── expressiveCodeConfig.ts   # Конфигурация подсветки кода
 │   ├── fontConfig.ts             # Конфигурация шрифтов
@@ -224,6 +225,24 @@ comment: true    # Включить комментарии
 ---
 ```
 
+## Публикации
+
+Публикации хранятся в `src/content/dynamic/`: один Markdown-файл соответствует одной публикации. Создать публикацию можно командой:
+
+```bash
+pnpm new-d Сегодня прекрасная погода
+```
+
+`pnpm new-dynamic <content>` — эквивалентная полная команда. Имя файла и значение `published` используют часовой пояс из `src/config/siteConfig.ts`:
+
+```yaml
+---
+published: 2026-07-15 16:15:29
+---
+
+В содержимом можно использовать Markdown.
+```
+
 ## 📖 Расширения Markdown
 
 Помимо поддержки [GitHub Flavored Markdown](https://github.github.com/gfm/) по умолчанию в Astro, есть несколько дополнительных функций Markdown:
@@ -245,6 +264,8 @@ comment: true    # Включить комментарии
 | `pnpm check`               | Проверить код на наличие ошибок                           |
 | `pnpm format`              | Отформатировать код с помощью Biome                       |
 | `pnpm new-post <filename>` | Создать новую статью                                      |
+| `pnpm new-d <content>`     | Создать новую публикацию                                  |
+| `pnpm new-dynamic <content>` | Создать новую публикацию (полная команда)               |
 | `pnpm astro ...`           | Выполнить `astro add`, `astro check` и другие команды     |
 | `pnpm astro --help`        | Показать справку Astro CLI                                |
 

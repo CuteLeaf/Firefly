@@ -191,6 +191,7 @@ src/
 │   ├── backgroundWallpaper.ts    # 背景桌布配置
 │   ├── commentConfig.ts          # 留言系統配置
 │   ├── coverImageConfig.ts       # 封面圖配置
+│   ├── dynamicConfig.ts          # 動態頁面配置
 │   ├── effectsConfig.ts          # 動畫特效配置（櫻花等）
 │   ├── expressiveCodeConfig.ts   # 程式碼高亮配置
 │   ├── fontConfig.ts             # 字型配置
@@ -225,6 +226,24 @@ pinned: false    # 置頂
 comment: true    # 是否允許留言
 ---
 ```
+## 動態
+
+動態檔案存放於 `src/content/dynamic/`，每個 Markdown 檔案代表一則動態。可使用快捷命令建立：
+
+```bash
+pnpm new-d 今天天氣真不錯
+```
+
+`pnpm new-dynamic <content>` 是功能相同的完整命令。檔名與 `published` 時間會使用 `src/config/siteConfig.ts` 中設定的時區：
+
+```yaml
+---
+published: 2026-07-15 16:15:29
+---
+
+動態內容支援 Markdown 語法。
+```
+
 ## 🧩 Markdown 擴充語法
 
 除了 Astro 預設支援的 [GitHub Flavored Markdown](https://github.github.com/gfm/) 之外，還包含了一些額外的 Markdown 功能：
@@ -245,6 +264,8 @@ comment: true    # 是否允許留言
 | `pnpm check`               | 檢查程式碼中的錯誤                     |
 | `pnpm format`              | 使用 Biome 格式化您的程式碼            |
 | `pnpm new-post <filename>` | 建立新文章                             |
+| `pnpm new-d <content>`     | 建立一則動態                           |
+| `pnpm new-dynamic <content>` | 建立一則動態（完整命令）             |
 | `pnpm astro ...`           | 執行 `astro add`, `astro check` 等指令 |
 | `pnpm astro --help`        | 顯示 Astro CLI 說明                    |
 

@@ -188,6 +188,7 @@ src/
 │   ├── backgroundWallpaper.ts    # 背景壁紙設定
 │   ├── commentConfig.ts          # コメントシステム設定
 │   ├── coverImageConfig.ts       # カバー画像設定
+│   ├── dynamicConfig.ts          # モーメントページ設定
 │   ├── effectsConfig.ts          # アニメーションエフェクト設定（桜など）
 │   ├── expressiveCodeConfig.ts   # コードハイライト設定
 │   ├── fontConfig.ts             # フォント設定
@@ -222,6 +223,24 @@ comment: true    # コメントを有効化
 ---
 ```
 
+## モーメント
+
+モーメントは `src/content/dynamic/` に保存され、1つの Markdown ファイルが1件のモーメントに対応します。次のコマンドで作成できます：
+
+```bash
+pnpm new-d 今日はとても良い天気です
+```
+
+`pnpm new-dynamic <content>` も同じ機能の完全なコマンドです。ファイル名と `published` は `src/config/siteConfig.ts` で設定したタイムゾーンを使用します：
+
+```yaml
+---
+published: 2026-07-15 16:15:29
+---
+
+本文では Markdown を使用できます。
+```
+
 ## 🧩 Markdown拡張
 
 Astro がデフォルトで対応している[GitHub Flavored Markdown](https://github.github.com/gfm/)に加えて、いくつかの追加の Markdown 機能があります：
@@ -243,6 +262,8 @@ Astro がデフォルトで対応している[GitHub Flavored Markdown](https://
 | `pnpm check`               | コード内のエラーをチェック                      |
 | `pnpm format`              | Biome を使用してコードをフォーマット            |
 | `pnpm new-post <filename>` | 新しい記事を作成                                |
+| `pnpm new-d <content>`     | 新しいモーメントを作成                          |
+| `pnpm new-dynamic <content>` | 新しいモーメントを作成（完全なコマンド）      |
 | `pnpm astro ...`           | `astro add`、`astro check` などのコマンドを実行 |
 | `pnpm astro --help`        | Astro CLI ヘルプを表示                          |
 
