@@ -8,6 +8,7 @@ import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
 import "@/styles/dynamic.css";
 import { url } from "@/utils/url-utils";
+import { getCollection } from "astro:content";
 
 if (!siteConfig.pages.dynamic) {
 	return Astro.redirect("/404/");
@@ -23,6 +24,7 @@ const showInlineComments = Boolean(
 		commentConfig.type !== "none",
 );
 const dataUrl = url("/api/dynamic.json");
+const dynamicCount = (await getCollection("dynamic")).length;
 ---
 
 <MainGridLayout title={title} description={description}>
@@ -37,6 +39,14 @@ const dataUrl = url("/api/dynamic.json");
 						<h2 id="dynamic-page-title">{title}</h2>
 						{description && <p>{description}</p>}
 					</div>
+				</div>
+				<div
+					class="dynamic-count"
+					aria-label={`${dynamicCount} ${i18n(I18nKey.dynamic)}`}
+				>
+					<Icon is:inline name="material-symbols:dynamic-feed-rounded" />
+					<strong>{dynamicCount}</strong>
+					<span>{i18n(I18nKey.dynamic)}</span>
 				</div>
 				<div class="dynamic-filter">
 					<label class="dynamic-search">

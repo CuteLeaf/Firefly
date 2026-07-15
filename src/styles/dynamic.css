@@ -4,6 +4,7 @@
 
 .dynamic-page-header {
 	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
 	gap: 1rem;
 	margin-bottom: 1rem;
 	padding: 1.5rem 2rem;
@@ -13,6 +14,32 @@
 	display: flex;
 	align-items: center;
 	gap: 0.875rem;
+}
+
+.dynamic-count {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 0.3rem;
+	align-self: center;
+	color: var(--primary);
+	white-space: nowrap;
+}
+
+.dynamic-count svg {
+	align-self: center;
+	font-size: 1.35rem;
+}
+
+.dynamic-count strong {
+	font-size: 1.3rem;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.dynamic-count span {
+	color: var(--content-meta);
+	font-size: 0.8rem;
+	font-weight: 500;
 }
 
 .dynamic-page-icon {
@@ -46,6 +73,7 @@ dynamic-feed {
 }
 
 .dynamic-filter {
+	grid-column: 1 / -1;
 	display: flex;
 	align-items: center;
 	gap: 0.75rem;
@@ -623,6 +651,10 @@ dynamic-feed {
 @media (max-width: 640px) {
 	.dynamic-page-header {
 		padding: 1.25rem;
+	}
+
+	.dynamic-count {
+		align-self: center;
 	}
 
 	.dynamic-filter {
