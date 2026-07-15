@@ -1,6 +1,7 @@
 ---
 import WidgetLayout from "@/components/common/WidgetLayout.astro";
 import MusicPlayer from "@/components/features/MusicPlayer.astro";
+import { musicPlayerConfig } from "@/config/musicConfig";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import type { WidgetComponentConfig } from "@/types/config";
@@ -17,6 +18,8 @@ const widgetId = `music-widget-${Math.random().toString(36).substring(2, 9)}`;
 const showTitle = widgetConfig?.showTitle !== false;
 ---
 
-<WidgetLayout id={`${widgetId}-layout`} class={className} style={style} name={i18n(I18nKey.music)} showTitle={showTitle}>
-    <MusicPlayer id={widgetId} />
-</WidgetLayout>
+{musicPlayerConfig.showInSidebar !== false && (
+	<WidgetLayout id={`${widgetId}-layout`} class={className} style={style} name={i18n(I18nKey.music)} showTitle={showTitle}>
+		<MusicPlayer id={widgetId} />
+	</WidgetLayout>
+)}
