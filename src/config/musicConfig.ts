@@ -2,7 +2,6 @@ import type { MusicPlayerConfig } from "../types/musicConfig";
 
 // 音乐播放器配置
 export const musicPlayerConfig: MusicPlayerConfig = {
-
 	// 是否在导航栏显示音乐播放器入口
 	showInNavbar: true,
 

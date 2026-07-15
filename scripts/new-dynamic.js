@@ -14,17 +14,35 @@ if (!content) {
 
 const now = new Date();
 const pad = (value) => String(value).padStart(2, "0");
-const year = now.getFullYear();
-const month = pad(now.getMonth() + 1);
-const day = pad(now.getDate());
-const hours = pad(now.getHours());
-const minutes = pad(now.getMinutes());
-const seconds = pad(now.getSeconds());
-const timezoneOffset = -now.getTimezoneOffset();
-const timezoneSign = timezoneOffset >= 0 ? "+" : "-";
-const timezoneHours = pad(Math.floor(Math.abs(timezoneOffset) / 60));
-const timezoneMinutes = pad(Math.abs(timezoneOffset) % 60);
-const timestamp = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${timezoneSign}${timezoneHours}:${timezoneMinutes}`;
+const siteConfigSource = fs.readFileSync(
+	path.resolve("src/config/siteConfig.ts"),
+	"utf8",
+);
+const timezone =
+	siteConfigSource.match(/^\s*timezone:\s*"([^"]+)"/m)?.[1] ||
+	"Asia/Shanghai";
+const dateParts = new Intl.DateTimeFormat("en-CA", {
+	timeZone: timezone,
+	year: "numeric",
+	month: "2-digit",
+	day: "2-digit",
+	hour: "2-digit",
+	minute: "2-digit",
+	second: "2-digit",
+	hourCycle: "h23",
+})
+	.formatToParts(now)
+	.reduce((parts, part) => {
+		if (part.type !== "literal") parts[part.type] = part.value;
+		return parts;
+	}, {});
+const year = dateParts.year;
+const month = dateParts.month;
+const day = dateParts.day;
+const hours = dateParts.hour;
+const minutes = dateParts.minute;
+const seconds = dateParts.second;
+const timestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 const fileName = `${year}-${month}-${day}-${hours}${minutes}${seconds}.md`;
 const targetDir = path.resolve("src/content/dynamic");
 const fullPath = path.join(targetDir, fileName);

@@ -6,7 +6,10 @@ import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import type { WidgetComponentConfig } from "@/types/config";
-import { formatDateTimeToYYYYMMDDHHmm } from "@/utils/date-utils";
+import {
+	formatDateTimeToYYYYMMDDHHmm,
+	formatTimezoneOffset,
+} from "@/utils/date-utils";
 import {
 	dynamicAnchor,
 	dynamicPlainText,
@@ -35,6 +38,10 @@ const dynamics = siteConfig.pages.dynamic
 					id: dynamicAnchor(entry.id),
 					text: dynamicPlainText(entry),
 					published: entry.data.published,
+					timezone: formatTimezoneOffset(
+						siteConfig.timezone || "UTC",
+						entry.data.published,
+					),
 					image: image ? { alt: image[1], src: image[2] } : null,
 				};
 			})
@@ -70,7 +77,8 @@ const dynamics = siteConfig.pages.dynamic
 										aria-hidden="true"
 									/>
 									<time datetime={entry.published.toISOString()}>
-										{formatDateTimeToYYYYMMDDHHmm(entry.published)}
+										{formatDateTimeToYYYYMMDDHHmm(entry.published)}{" "}
+										{entry.timezone}
 									</time>
 								</div>
 								<p class="m-0 line-clamp-3 text-sm leading-[1.35rem]">

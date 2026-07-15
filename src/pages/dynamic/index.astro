@@ -66,6 +66,7 @@ const dataUrl = url("/api/dynamic.json");
 				noResultsText={i18n(I18nKey.dynamicNoResults)}
 				loadingText={i18n(I18nKey.dynamicLoading)}
 				allYearsText={i18n(I18nKey.dynamicAllYears)}
+				timezone={siteConfig.timezone || "UTC"}
 			/>
 
 			<DynamicItemTemplate />

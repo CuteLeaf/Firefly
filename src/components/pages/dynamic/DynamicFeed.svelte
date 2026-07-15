@@ -26,6 +26,7 @@ interface Props {
 	noResultsText: string;
 	loadingText: string;
 	allYearsText: string;
+	timezone: string;
 }
 
 const {
@@ -36,6 +37,7 @@ const {
 	noResultsText,
 	loadingText,
 	allYearsText,
+	timezone,
 }: Props = $props();
 
 let entries = $state<DynamicData[]>([]);
@@ -153,6 +155,20 @@ function createItem(entry: DynamicData) {
 				second: "2-digit",
 			},
 		).format(date);
+		const timezoneName = new Intl.DateTimeFormat("en-US", {
+			timeZone: timezone,
+			timeZoneName: "longOffset",
+		})
+			.formatToParts(date)
+			.find((part) => part.type === "timeZoneName")?.value;
+		const timezoneLabel =
+			!timezoneName || timezoneName === "GMT"
+				? "UTC"
+				: timezoneName
+						.replace("GMT", "UTC")
+						.replace(/([+-])0(\d)/, "$1$2")
+						.replace(":00", "");
+		time.textContent += ` ${timezoneLabel}`;
 	}
 
 	const content = root.querySelector<HTMLElement>("[data-dynamic-content]");
