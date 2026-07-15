@@ -49,6 +49,14 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			showOnPostPage: true,
 		},
 		{
+			// 组件类型：最新说说组件
+			type: "latestShuoshuo",
+			// 是否启用该组件
+			enable: true,
+			// 组件位置
+			position: "sticky",
+		},
+		{
 			// 组件类型：公告组件
 			type: "announcement",
 			// 是否启用该组件

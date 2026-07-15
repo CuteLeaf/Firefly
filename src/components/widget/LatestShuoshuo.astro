@@ -1,0 +1,77 @@
+---
+import { Icon } from "astro-icon/components";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import { profileConfig, siteConfig } from "@/config";
+import { getSortedShuoshuo } from "@/utils/shuoshuo-utils";
+import {
+	formatRelativeTime,
+	markdownToPlainText,
+	toDomId,
+} from "@/utils/text-utils";
+import { url } from "@/utils/url-utils";
+
+interface Props {
+	class?: string;
+	style?: string;
+	limit?: number;
+}
+
+const className = Astro.props.class;
+const style = Astro.props.style;
+const limit = Astro.props.limit ?? 3;
+
+const isZh = (siteConfig.lang || "").startsWith("zh");
+const title = isZh ? "最新说说" : "Latest Shuoshuo";
+
+const entries = (await getSortedShuoshuo()).slice(0, limit);
+const items = entries.map((entry) => {
+	const author = entry.data.author || profileConfig.name;
+	const relativeTime = formatRelativeTime(entry.data.published);
+	const excerpt = entry.body ? markdownToPlainText(entry.body) : "";
+	const anchorId = toDomId("shuoshuo", entry.id);
+	const href = url(`/shuoshuo/#${anchorId}`);
+	return { author, relativeTime, excerpt, href };
+});
+---
+
+<WidgetLayout name={title} id="latest-shuoshuo" class={className} style={style}>
+  <a
+    slot="title-icon"
+    href={url("/shuoshuo/")}
+    class="btn-plain rounded-lg h-7 px-2 text-xs flex items-center gap-1 text-[var(--primary)] hover:opacity-80 active:opacity-60"
+    aria-label={isZh ? "前往说说页面" : "Go to shuoshuo page"}
+  >
+    <span>{isZh ? "更多" : "More"}</span>
+    <Icon name="material-symbols:chevron-right-rounded" class="text-lg" />
+  </a>
+
+  {items.length > 0 ? (
+    <div class="flex flex-col gap-3">
+      {items.map((item) => (
+        <a
+          href={item.href}
+          class="group rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)]/40 hover:bg-[var(--card-bg)] transition-colors p-3"
+        >
+          <div class="flex items-center justify-between gap-3 mb-1">
+            <div class="font-semibold text-sm text-black/70 dark:text-white/70 truncate">
+              {item.author}
+            </div>
+            <div class="text-xs text-black/40 dark:text-white/40 shrink-0">
+              {item.relativeTime}
+            </div>
+          </div>
+          <div class="text-sm text-black/60 dark:text-white/60 line-clamp-2">
+            {item.excerpt}
+          </div>
+          <div class="mt-2 text-xs text-[var(--primary)] opacity-0 group-hover:opacity-100 transition-opacity">
+            {isZh ? "查看全文" : "Read more"}
+          </div>
+        </a>
+      ))}
+    </div>
+  ) : (
+    <div class="text-sm text-[var(--content-meta)] px-1 py-2">
+      {isZh ? "暂无说说" : "No shuoshuo yet"}
+    </div>
+  )}
+</WidgetLayout>

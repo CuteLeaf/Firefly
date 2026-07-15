@@ -1,0 +1,144 @@
+---
+import { render } from "astro:content";
+import { Icon } from "astro-icon/components";
+import ShuoshuoCard from "@/components/pages/shuoshuo/ShuoshuoCard.astro";
+import { profileConfig, siteConfig } from "@/config";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { getSortedShuoshuo } from "@/utils/shuoshuo-utils";
+import {
+	countCjkAndEnglishWords,
+	formatRelativeTime,
+	toDomId,
+} from "@/utils/text-utils";
+
+const title = "说说";
+const description = "随便写点简短的口水话。";
+
+const entries = await getSortedShuoshuo();
+const isZh = (siteConfig.lang || "").startsWith("zh");
+const wordUnit = isZh ? "字" : " words";
+
+const items = await Promise.all(
+	entries.map(async (entry) => {
+		const { Content } = await render(entry);
+
+		return {
+			author: entry.data.author || profileConfig.name,
+			avatar:
+				entry.data.avatar ||
+				profileConfig.avatar ||
+				"/assets/images/avatar.webp",
+			anchorId: toDomId("shuoshuo", entry.id),
+			relativeTime: formatRelativeTime(entry.data.published),
+			wordCount: entry.body ? countCjkAndEnglishWords(entry.body) : 0,
+			Content,
+		};
+	}),
+);
+---
+
+<MainGridLayout title={title} description={description}>
+  <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative">
+    <div class="card-base z-10 px-9 py-6 relative w-full">
+      <div class="mb-8">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="h-8 w-8 rounded-lg bg-[var(--primary)] flex items-center justify-center text-white dark:text-black/70">
+            <Icon name="material-symbols:chat-bubble-outline" class="text-[1.5rem]" />
+          </div>
+          <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+            {title}
+          </h1>
+        </div>
+        {description && (
+          <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
+            {description}
+          </p>
+        )}
+      </div>
+
+      {
+        items.length > 0 ? (
+          <div class="flex flex-col gap-4">
+            {items.map(({ author, avatar, anchorId, relativeTime, wordCount, Content }) => (
+              <ShuoshuoCard
+                author={author}
+                avatar={avatar}
+                anchorId={anchorId}
+                relativeTime={relativeTime}
+                wordCount={wordCount}
+                wordUnit={wordUnit}
+                maxCollapsedHeight={260}
+              >
+                <Content />
+              </ShuoshuoCard>
+            ))}
+          </div>
+        ) : (
+          <div class="card-base p-8 text-center text-[var(--content-meta)]">
+            暂无说说
+          </div>
+        )
+      }
+    </div>
+  </div>
+
+  <script>
+    function initShuoshuoCards() {
+      const cards = document.querySelectorAll<HTMLElement>("[data-shuoshuo-card]");
+      for (const card of cards) {
+        if (card.hasAttribute("data-initialized")) continue;
+
+        const maxHeight = Number(card.getAttribute("data-max-height") || "260");
+        const collapsible = card.querySelector<HTMLElement>("[data-collapsible]");
+        const content = card.querySelector<HTMLElement>("[data-collapsible-content]");
+        const fade = card.querySelector<HTMLElement>("[data-fade]");
+        const toggle = card.querySelector<HTMLButtonElement>("[data-toggle]");
+
+        if (!collapsible || !content || !toggle) continue;
+
+        collapsible.style.setProperty("--shuoshuo-max-height", `${maxHeight}px`);
+
+        const refresh = () => {
+          const needsCollapse = content.scrollHeight > maxHeight + 8;
+          card.toggleAttribute("data-collapsible", needsCollapse);
+          toggle.classList.toggle("hidden", !needsCollapse);
+          if (fade) fade.toggleAttribute("hidden", !needsCollapse);
+
+          if (!needsCollapse) {
+            card.classList.add("is-open");
+            toggle.setAttribute("aria-expanded", "true");
+            toggle.textContent = "收起";
+            return;
+          }
+
+          if (!card.hasAttribute("data-initialized")) {
+            card.classList.remove("is-open");
+            toggle.setAttribute("aria-expanded", "false");
+            toggle.textContent = "展开全文";
+          }
+        };
+
+        toggle.addEventListener("click", () => {
+          const isOpen = card.classList.toggle("is-open");
+          toggle.setAttribute("aria-expanded", String(isOpen));
+          toggle.textContent = isOpen ? "收起" : "展开全文";
+        });
+
+        refresh();
+
+        if (typeof ResizeObserver !== "undefined") {
+          const ro = new ResizeObserver(() => refresh());
+          ro.observe(content);
+        } else {
+          window.addEventListener("resize", refresh, { passive: true });
+        }
+
+        card.setAttribute("data-initialized", "true");
+      }
+    }
+
+    initShuoshuoCards();
+    document.addEventListener("astro:page-load", initShuoshuoCards);
+    document.addEventListener("swup:contentReplaced", initShuoshuoCards);
+  </script>
+</MainGridLayout>
