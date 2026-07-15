@@ -25,6 +25,8 @@ export const zh_TW: Translation = {
 	[Key.tocEmpty]: "目前頁面沒有目錄",
 	[Key.music]: "音樂",
 	[Key.dynamic]: "動態",
+	[Key.latestDynamics]: "最新動態",
+	[Key.moreDynamics]: "更多動態",
 	[Key.dynamicDescription]: "隨手記下此刻的想法與日常。",
 	[Key.dynamicEmpty]: "還沒有發佈動態",
 	[Key.dynamicSearch]: "搜尋動態...",

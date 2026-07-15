@@ -25,6 +25,8 @@ export const zh_CN: Translation = {
 	[Key.tocEmpty]: "当前页面没有目录",
 	[Key.music]: "音乐",
 	[Key.dynamic]: "动态",
+	[Key.latestDynamics]: "最新动态",
+	[Key.moreDynamics]: "更多动态",
 	[Key.dynamicDescription]: "随手记下此刻的想法与日常。",
 	[Key.dynamicEmpty]: "还没有发布动态",
 	[Key.dynamicSearch]: "搜索动态...",

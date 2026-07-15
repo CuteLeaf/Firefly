@@ -25,6 +25,8 @@ export const en: Translation = {
 	[Key.tocEmpty]: "No table of contents on this page",
 	[Key.music]: "Music",
 	[Key.dynamic]: "Moments",
+	[Key.latestDynamics]: "Latest Moments",
+	[Key.moreDynamics]: "More moments",
 	[Key.dynamicDescription]: "Short thoughts and everyday moments.",
 	[Key.dynamicEmpty]: "No moments have been posted yet",
 	[Key.dynamicSearch]: "Search moments...",

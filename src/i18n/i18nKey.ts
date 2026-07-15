@@ -23,6 +23,8 @@ enum I18nKey {
 
 	// 动态
 	dynamic = "dynamic",
+	latestDynamics = "latestDynamics",
+	moreDynamics = "moreDynamics",
 	dynamicDescription = "dynamicDescription",
 	dynamicEmpty = "dynamicEmpty",
 	dynamicSearch = "dynamicSearch",

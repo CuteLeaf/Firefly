@@ -25,6 +25,8 @@ export const ja: Translation = {
 	[Key.tocEmpty]: "このページには目次がありません",
 	[Key.music]: "音楽",
 	[Key.dynamic]: "つぶやき",
+	[Key.latestDynamics]: "最新の投稿",
+	[Key.moreDynamics]: "もっと見る",
 	[Key.dynamicDescription]: "日々の短い思いや出来事を記録します。",
 	[Key.dynamicEmpty]: "まだ投稿がありません",
 	[Key.dynamicSearch]: "投稿を検索...",

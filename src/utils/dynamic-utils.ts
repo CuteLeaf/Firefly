@@ -13,11 +13,14 @@ export const dynamicSlug = (id: string): string =>
 export const dynamicAnchor = (id: string): string =>
 	`dynamic-${id.replace(/[^a-zA-Z0-9_-]/g, "-")}`;
 
-export const dynamicSearchText = (entry: CollectionEntry<"dynamic">): string =>
+export const dynamicPlainText = (entry: CollectionEntry<"dynamic">): string =>
 	(entry.body || "")
 		.replace(/!\[[^\]]*\]\([^)]+\)/g, " ")
+		.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
 		.replace(/<[^>]+>/g, " ")
-		.replace(/[#>*_`~[\]()!-]/g, " ")
+		.replace(/[#>*_`~[\]()-]/g, " ")
 		.replace(/\s+/g, " ")
-		.trim()
-		.toLocaleLowerCase();
+		.trim();
+
+export const dynamicSearchText = (entry: CollectionEntry<"dynamic">): string =>
+	dynamicPlainText(entry).toLocaleLowerCase();

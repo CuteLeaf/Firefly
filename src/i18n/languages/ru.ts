@@ -25,6 +25,8 @@ export const ru: Translation = {
 	[Key.tocEmpty]: "На этой странице нет оглавления",
 	[Key.music]: "Музыка",
 	[Key.dynamic]: "Моменты",
+	[Key.latestDynamics]: "Последние публикации",
+	[Key.moreDynamics]: "Больше публикаций",
 	[Key.dynamicDescription]: "Короткие мысли и моменты повседневной жизни.",
 	[Key.dynamicEmpty]: "Пока нет публикаций",
 	[Key.dynamicSearch]: "Поиск публикаций...",

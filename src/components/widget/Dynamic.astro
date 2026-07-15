@@ -1,0 +1,112 @@
+---
+import { getCollection } from "astro:content";
+import { Icon } from "astro-icon/components";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import { siteConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { WidgetComponentConfig } from "@/types/config";
+import { formatDateTimeToYYYYMMDDHHmm } from "@/utils/date-utils";
+import {
+	dynamicAnchor,
+	dynamicPlainText,
+	sortDynamics,
+} from "@/utils/dynamic-utils";
+import { url } from "@/utils/url-utils";
+
+interface Props {
+	class?: string;
+	style?: string;
+	widgetConfig?: WidgetComponentConfig;
+}
+
+const { class: className, style, widgetConfig } = Astro.props;
+const showTitle = widgetConfig?.showTitle !== false;
+const configuredLimit = widgetConfig?.specificConfig?.dynamic?.limit ?? 3;
+const limit = Math.max(1, Math.floor(configuredLimit));
+const imagePattern = /!\[([^\]]*)\]\((\S+?)(?:\s+["'][^"']*["'])?\)/;
+
+const dynamics = siteConfig.pages.dynamic
+	? sortDynamics(await getCollection("dynamic"))
+			.slice(0, limit)
+			.map((entry) => {
+				const image = (entry.body || "").match(imagePattern);
+				return {
+					id: dynamicAnchor(entry.id),
+					text: dynamicPlainText(entry),
+					published: entry.data.published,
+					image: image ? { alt: image[1], src: image[2] } : null,
+				};
+			})
+	: [];
+---
+
+{
+	siteConfig.pages.dynamic && (
+		<WidgetLayout
+			name={i18n(I18nKey.latestDynamics)}
+			showTitle={showTitle}
+			id="latest-dynamics"
+			class={className}
+			style={style}
+		>
+			<div class="flex flex-col gap-1.5">
+				{dynamics.length > 0 ? (
+					dynamics.map((entry) => (
+						<a
+							href={url(`/dynamic/#${entry.id}`)}
+							class="group flex min-w-0 min-h-16 items-center gap-3 rounded-lg p-2
+								text-neutral-700/75 dark:text-neutral-300/75
+								hover:bg-(--btn-plain-bg-hover) hover:text-(--primary)
+								active:bg-(--btn-plain-bg-active) transition-colors duration-150"
+							aria-label={`${i18n(I18nKey.dynamic)}: ${entry.text}`}
+						>
+							<div class="min-w-0 flex-1">
+								<div class="mb-1 flex items-center gap-1 text-xs leading-4 text-(--primary)">
+									<Icon
+										is:inline
+										name="material-symbols:schedule-rounded"
+										class="size-4 shrink-0"
+										aria-hidden="true"
+									/>
+									<time datetime={entry.published.toISOString()}>
+										{formatDateTimeToYYYYMMDDHHmm(entry.published)}
+									</time>
+								</div>
+								<p class="m-0 line-clamp-3 text-sm leading-[1.35rem]">
+									{entry.text}
+								</p>
+							</div>
+							{entry.image && (
+								<img
+									src={entry.image.src}
+									alt={entry.image.alt}
+									class="size-14 shrink-0 rounded-lg bg-(--btn-plain-bg-hover) object-cover"
+									loading="lazy"
+									decoding="async"
+								/>
+							)}
+						</a>
+					))
+				) : (
+					<p class="m-0 p-3 text-center text-sm text-neutral-500">
+						{i18n(I18nKey.dynamicEmpty)}
+					</p>
+				)}
+			</div>
+			<a
+				class="btn-plain mt-2 flex items-center justify-center gap-1 rounded-lg p-1.5
+					text-sm text-(--primary)"
+				href={url("/dynamic/")}
+			>
+				<Icon
+					is:inline
+					name="material-symbols:dynamic-feed-rounded"
+					class="size-4.5"
+					aria-hidden="true"
+				/>
+				<span>{i18n(I18nKey.moreDynamics)}</span>
+			</a>
+		</WidgetLayout>
+	)
+}

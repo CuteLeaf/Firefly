@@ -25,6 +25,8 @@ export const ko: Translation = {
 	[Key.tocEmpty]: "이 페이지에는 목차가 없습니다",
 	[Key.music]: "음악",
 	[Key.dynamic]: "일상",
+	[Key.latestDynamics]: "최신 일상",
+	[Key.moreDynamics]: "더 많은 일상",
 	[Key.dynamicDescription]: "짧은 생각과 일상을 기록합니다.",
 	[Key.dynamicEmpty]: "아직 게시된 일상이 없습니다",
 	[Key.dynamicSearch]: "일상 검색...",
