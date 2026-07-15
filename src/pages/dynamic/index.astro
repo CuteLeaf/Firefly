@@ -7,8 +7,8 @@ import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
 import "@/styles/dynamic.css";
-import { url } from "@/utils/url-utils";
 import { getCollection } from "astro:content";
+import { url } from "@/utils/url-utils";
 
 if (!siteConfig.pages.dynamic) {
 	return Astro.redirect("/404/");
