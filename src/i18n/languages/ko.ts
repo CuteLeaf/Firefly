@@ -328,6 +328,7 @@ export const ko: Translation = {
 	// Site Statistics
 	[Key.siteStats]: "사이트 통계",
 	[Key.siteStatsPostCount]: "게시글",
+	[Key.siteStatsDynamicCount]: "일상",
 	[Key.siteStatsCategoryCount]: "카테고리",
 	[Key.siteStatsTagCount]: "태그",
 	[Key.siteStatsTotalWords]: "총 단어 수",
