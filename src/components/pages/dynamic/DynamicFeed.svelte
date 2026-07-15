@@ -1,6 +1,7 @@
 <script lang="ts">
 import { onMount, tick } from "svelte";
 import ClientPagination from "@/components/common/ClientPagination.svelte";
+import { formatTimezoneOffset } from "@/utils/date-utils";
 import { registerDynamicGallery } from "./dynamic-gallery";
 import { registerDynamicInlineComments } from "./dynamic-inline-comments";
 
@@ -155,20 +156,7 @@ function createItem(entry: DynamicData) {
 				second: "2-digit",
 			},
 		).format(date);
-		const timezoneName = new Intl.DateTimeFormat("en-US", {
-			timeZone: timezone,
-			timeZoneName: "longOffset",
-		})
-			.formatToParts(date)
-			.find((part) => part.type === "timeZoneName")?.value;
-		const timezoneLabel =
-			!timezoneName || timezoneName === "GMT"
-				? "UTC"
-				: timezoneName
-						.replace("GMT", "UTC")
-						.replace(/([+-])0(\d)/, "$1$2")
-						.replace(":00", "");
-		time.textContent += ` ${timezoneLabel}`;
+		time.textContent += ` ${formatTimezoneOffset(timezone, date)}`;
 	}
 
 	const content = root.querySelector<HTMLElement>("[data-dynamic-content]");

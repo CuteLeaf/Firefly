@@ -2,6 +2,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { siteConfig } from "../src/config/siteConfig.ts";
 
 const content = process.argv.slice(2).join(" ").trim();
 
@@ -14,13 +15,7 @@ if (!content) {
 
 const now = new Date();
 const pad = (value) => String(value).padStart(2, "0");
-const siteConfigSource = fs.readFileSync(
-	path.resolve("src/config/siteConfig.ts"),
-	"utf8",
-);
-const timezone =
-	siteConfigSource.match(/^\s*timezone:\s*"([^"]+)"/m)?.[1] ||
-	"Asia/Shanghai";
+const timezone = siteConfig.timezone || "Asia/Shanghai";
 const dateParts = new Intl.DateTimeFormat("en-CA", {
 	timeZone: timezone,
 	year: "numeric",
