@@ -63,7 +63,7 @@ export function getLqipStyle(
 ): string | undefined {
 	if (isExternalImage(src)) return undefined;
 	const gradient = getLqipGradient(src, basePath, isPublic);
-	return gradient ? `background: ${gradient}` : undefined;
+	return gradient ? `background-image: ${gradient}` : undefined;
 }
 
 /** 获取 LQIP props（用于 Astro 组件），外部图片自动降级 */
@@ -72,7 +72,7 @@ export function getLqipProps(
 	basePath?: string,
 	isPublic?: boolean,
 ): { style: string } {
-	if (isExternalImage(src)) return { style: "background: var(--muted)" };
+	if (isExternalImage(src)) return { style: "background-color: var(--muted)" };
 	const style = getLqipStyle(src, basePath, isPublic);
-	return { style: style || `background: ${DEFAULT_GRADIENT}` };
+	return { style: style || `background-image: ${DEFAULT_GRADIENT}` };
 }

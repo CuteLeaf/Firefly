@@ -309,6 +309,8 @@ function toggleSakuraEnabled() {
 	setSakuraEnabled(sakuraEnabled);
 }
 
+
+
 function switchWallpaperMode(newMode: WALLPAPER_MODE) {
 	wallpaperMode = newMode;
 	setWallpaperMode(newMode);
@@ -745,6 +747,8 @@ $effect(() => {
             </div>
         </div>
     {/if}
+
+
 
     <!-- Layout Switch Section -->
     {#if allowLayoutSwitch}

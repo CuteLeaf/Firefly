@@ -1,4 +1,5 @@
 ---
+import { getImage } from "astro:assets";
 import Comment from "@components/comment/index.astro";
 import { Icon } from "astro-icon/components";
 import { commentConfig, siteConfig, sponsorConfig } from "@/config";
@@ -29,6 +30,28 @@ const showSponsorsList = sponsorConfig.showSponsorsList !== false;
 // LQIP 渐变占位
 function getQrLqipProps(qrCode: string) {
 	return getLqipProps(qrCode, undefined, true);
+}
+
+// Generate tiny image for QR codes
+const tinyQrs: Record<string, string> = {};
+if (siteConfig.post.generateTinyThumbnails) {
+	for (const method of enabledMethods) {
+		if (method.qrCode) {
+			try {
+				const tinyImg = await getImage({
+					src: method.qrCode,
+					width: 32,
+					quality: 30,
+				});
+				tinyQrs[method.qrCode] = tinyImg.src;
+			} catch (e) {
+				console.error(
+					`Failed to generate tiny QR thumbnail for ${method.name}:`,
+					e,
+				);
+			}
+		}
+	}
 }
 ---
 
@@ -88,7 +111,12 @@ function getQrLqipProps(qrCode: string) {
                         <!-- 二维码或链接 -->
                         {method.qrCode && (
                           <div class="relative w-full max-w-[200px] aspect-square bg-white rounded-lg p-4 shadow-md mb-4 overflow-hidden">
-                            <div class="lqip-placeholder absolute inset-0 rounded-lg pointer-events-none" style={getQrLqipProps(method.qrCode).style} aria-hidden="true"></div>
+                            <div 
+                              class="lqip-placeholder absolute inset-0 rounded-lg pointer-events-none" 
+                              style={`${getQrLqipProps(method.qrCode).style};${tinyQrs[method.qrCode] ? `--tiny-src: url(${tinyQrs[method.qrCode]})` : ''}`} 
+                              data-tiny-src={tinyQrs[method.qrCode] ? "true" : undefined}
+                              aria-hidden="true"
+                            ></div>
                             <img
                               src={url(method.qrCode)}
                               alt={`${method.name} ${i18n(I18nKey.scanToSponsor)}`}

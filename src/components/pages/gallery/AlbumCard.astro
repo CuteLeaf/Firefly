@@ -1,8 +1,10 @@
 ---
+import { getImage } from "astro:assets";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { getLqipProps } from "@/utils/lqip-utils";
 import { url } from "@/utils/url-utils";
+import { siteConfig } from "@/config";
 
 interface Props {
 	id: string;
@@ -30,6 +32,16 @@ const {
 
 // LQIP 渐变占位
 const lqipProps = cover ? getLqipProps(cover, undefined, true) : { style: "" };
+
+let tinyImgUrl = "";
+if (siteConfig.post.generateTinyThumbnails && cover) {
+	try {
+		const tinyImg = await getImage({ src: cover, width: 32, quality: 30 });
+		tinyImgUrl = tinyImg.src;
+	} catch (e) {
+		console.error("Failed to generate tiny thumbnail:", e);
+	}
+}
 ---
 
 <a
@@ -41,7 +53,12 @@ const lqipProps = cover ? getLqipProps(cover, undefined, true) : { style: "" };
   <div class="aspect-4/3 relative overflow-hidden">
     {cover ? (
       <>
-        <div class="lqip-placeholder absolute inset-0 pointer-events-none" style={lqipProps.style} aria-hidden="true"></div>
+        <div 
+          class="lqip-placeholder absolute inset-0 pointer-events-none" 
+          style={`${lqipProps.style};${tinyImgUrl ? `--tiny-src: url(${tinyImgUrl})` : ''}`} 
+          data-tiny-src={tinyImgUrl ? "true" : undefined}
+          aria-hidden="true"
+        ></div>
         <img
           src={cover}
           alt={name}

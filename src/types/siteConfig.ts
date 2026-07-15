@@ -141,6 +141,8 @@ export type SiteConfig = {
 		sharePoster?: boolean;
 		// OpenGraph图片功能
 		generateOgImages: boolean;
+		// 是否为图片生成渐进式加载所需的 32px 微缩图
+		generateTinyThumbnails?: boolean;
 	};
 
 	// bangumi配置

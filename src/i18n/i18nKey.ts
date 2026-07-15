@@ -270,6 +270,8 @@ enum I18nKey {
 	overlayOpacity = "overlayOpacity",
 	overlayBlur = "overlayBlur",
 	overlayCardOpacity = "overlayCardOpacity",
+	progressiveLoading = "progressiveLoading",
+	imageSettings = "imageSettings",
 
 	// 文章布局
 	postListLayout = "postListLayout",

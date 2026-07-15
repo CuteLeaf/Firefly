@@ -352,6 +352,14 @@ const siteLang = lang.replace("_", "-");
         wallpaperMode
       );
 
+      // 初始化渐进式图片加载设置 - 在页面渲染前应用以避免闪烁
+      const progressiveStored = localStorage.getItem("progressiveLoadingEnabled");
+      const progressiveEnabled = progressiveStored === null ? "true" : progressiveStored;
+      document.documentElement.setAttribute(
+        "data-progressive-loading",
+        progressiveEnabled
+      );
+
       // 立即执行函数来处理DOM
       (function applyWallpaperMode() {
         // 使用 requestAnimationFrame 确保在下一帧之前执行
@@ -1653,7 +1661,7 @@ function disableAnimation() {
   }
 
   // Initialize wallpaper mode
-  import { initWallpaperMode, initThemeListener } from "@/utils/setting-utils";
+  import { initWallpaperMode, initThemeListener, initProgressiveLoading } from "@/utils/setting-utils";
   import { initIconLoader } from "@/utils/icon-loader";
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
@@ -1661,6 +1669,7 @@ function disableAnimation() {
       updateSidebarComponentsVisibility();
       initWallpaperMode();
       initThemeListener();
+      initProgressiveLoading();
       initIconLoader();
     });
   } else {
@@ -1668,6 +1677,7 @@ function disableAnimation() {
     updateSidebarComponentsVisibility();
     initWallpaperMode();
     initThemeListener();
+    initProgressiveLoading();
     initIconLoader();
   }
 

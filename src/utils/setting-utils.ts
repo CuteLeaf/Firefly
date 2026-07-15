@@ -1284,3 +1284,48 @@ export function applyBannerCarouselEnabledToDocument(enabled: boolean): void {
 		String(enabled),
 	);
 }
+
+// Progressive image loading functions
+export function getDefaultProgressiveLoadingEnabled(): boolean {
+	return true;
+}
+
+export function getStoredProgressiveLoadingEnabled(): boolean {
+	if (typeof localStorage === "undefined") {
+		return getDefaultProgressiveLoadingEnabled();
+	}
+	const stored = localStorage.getItem("progressiveLoadingEnabled");
+	if (stored === null) {
+		return getDefaultProgressiveLoadingEnabled();
+	}
+	return stored === "true";
+}
+
+export function setProgressiveLoadingEnabled(enabled: boolean): void {
+	if (
+		typeof localStorage === "undefined" ||
+		typeof localStorage.setItem !== "function"
+	) {
+		return;
+	}
+	localStorage.setItem("progressiveLoadingEnabled", String(enabled));
+	if (typeof document !== "undefined") {
+		document.documentElement.setAttribute(
+			"data-progressive-loading",
+			String(enabled),
+		);
+	}
+	window.dispatchEvent(
+		new CustomEvent("progressiveLoadingToggle", { detail: { enabled } }),
+	);
+}
+
+export function initProgressiveLoading(): void {
+	const enabled = getStoredProgressiveLoadingEnabled();
+	if (typeof document !== "undefined") {
+		document.documentElement.setAttribute(
+			"data-progressive-loading",
+			String(enabled),
+		);
+	}
+}
