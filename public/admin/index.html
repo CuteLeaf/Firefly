@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台管理 · 临渊羡鱼</title>
+
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+
+    <script>
+        // 暗色模式初始化（在页面渲染前执行，防止闪烁）
+        (function() {
+            try {
+                var theme = localStorage.getItem('theme');
+                if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                } else if (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.classList.add('dark');
+                }
+            } catch(e) {}
+        })();
+    </script>
+    <style>
+        /* ========== Firefly 设计系统 CSS 变量 ========== */
+        :root {
+            --hue: 250;
+            --primary: oklch(0.55 0.15 var(--hue));
+            --primary-soft: oklch(0.55 0.15 var(--hue) / 10%);
+            --primary-hover: oklch(0.50 0.16 var(--hue));
+            --card-bg: #fff;
+            --card-bg-transparent: oklch(1 0 0 / 0.72);
+            --bg-secondary: oklch(0.96 0.01 var(--hue));
+            --text-primary: #1a1a2e;
+            --text-secondary: oklch(0.45 0.02 var(--hue));
+            --text-tertiary: oklch(0.70 0.02 var(--hue));
+            --line-divider: oklch(0.88 0.01 var(--hue));
+            --line-color: oklch(0.85 0.02 var(--hue));
+            --btn-content: oklch(0.35 0.02 var(--hue));
+            --btn-plain-bg-hover: oklch(0.90 0.03 var(--hue));
+            --btn-plain-bg-active: oklch(0.85 0.04 var(--hue));
+            --btn-regular-bg: oklch(0.94 0.02 var(--hue));
+            --btn-regular-bg-hover: oklch(0.90 0.03 var(--hue));
+            --btn-regular-bg-active: oklch(0.85 0.04 var(--hue));
+            --radius-large: 1rem;
+            --selection-bg: oklch(0.55 0.15 var(--hue) / 30%);
+            --danger: #ef4444;
+            --success: #22c55e;
+        }
+
+        .dark {
+            --primary: oklch(0.65 0.14 var(--hue));
+            --primary-soft: oklch(0.65 0.14 var(--hue) / 12%);
+            --primary-hover: oklch(0.70 0.13 var(--hue));
+            --card-bg: oklch(0.22 0.01 var(--hue));
+            --card-bg-transparent: oklch(0.22 0.01 var(--hue) / 0.85);
+            --bg-secondary: oklch(0.18 0.01 var(--hue));
+            --text-primary: oklch(0.92 0.01 var(--hue));
+            --text-secondary: oklch(0.65 0.02 var(--hue));
+            --text-tertiary: oklch(0.45 0.02 var(--hue));
+            --line-divider: oklch(0.28 0.01 var(--hue));
+            --line-color: oklch(0.30 0.02 var(--hue));
+            --btn-content: oklch(0.75 0.02 var(--hue));
+            --btn-plain-bg-hover: oklch(0.28 0.02 var(--hue));
+            --btn-plain-bg-active: oklch(0.32 0.03 var(--hue));
+            --btn-regular-bg: oklch(0.26 0.02 var(--hue));
+            --btn-regular-bg-hover: oklch(0.30 0.02 var(--hue));
+            --btn-regular-bg-active: oklch(0.34 0.03 var(--hue));
+            --danger: #f87171;
+            --success: #4ade80;
+        }
+
+        /* ========== 全局样式 ========== */
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            color: var(--text-primary);
+            transition: background 0.15s, color 0.15s;
+            position: relative;
+        }
+        /* 背景图 + 遮罩 */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url('https://t.alcy.cc/ycy');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            z-index: -2;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: var(--bg-secondary);
+            opacity: 0.78;
+            z-index: -1;
+            transition: background 0.15s;
+        }
+        .dark body::after {
+            opacity: 0.88;
+        }
+        ::selection { background: var(--selection-bg); }
+
+        /* ========== 导航栏 ========== */
+        .admin-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background: var(--card-bg);
+            
+            -webkit-
+            border-bottom: 1px solid var(--line-divider);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.15s, border-color 0.15s, backdrop-filter 0.15s;
+        }
+        
+        .admin-nav .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.125rem;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        .admin-nav .brand i { color: var(--primary); }
+        .admin-nav .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .admin-nav .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.15s;
+            padding: 0.25rem 0;
+        }
+        .admin-nav .nav-links a:hover,
+        .admin-nav .nav-links a.active { color: var(--primary); }
+
+        /* ========== 卡片 ========== */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius-large);
+            overflow: hidden;
+            transition: background 0.15s;
+        }
+        .card-border {
+            border: 1px solid var(--line-divider);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--line-divider);
+        }
+        .card-body { padding: 1.5rem; }
+
+        /* ========== 按钮 ========== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s;
+            line-height: 1.4;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-regular {
+            background: var(--btn-regular-bg);
+            color: var(--btn-content);
+        }
+        .btn-regular:hover { background: var(--btn-regular-bg-hover); }
+        .btn-regular:active { background: var(--btn-regular-bg-active); }
+        .btn-danger {
+            background: oklch(0.90 0.05 30);
+            color: var(--danger);
+        }
+        .btn-danger:hover { background: oklch(0.85 0.08 30); }
+        .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* ========== 输入框 ========== */
+        .input {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--line-divider);
+            border-radius: 0.625rem;
+            padding: 0.625rem 0.875rem;
+            font-size: 0.8125rem;
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 0.15s, background 0.15s, color 0.15s;
+        }
+        .input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+        .input::placeholder { color: var(--text-tertiary); }
+        label { font-size: 0.75rem; font-weight: 500; color: var(--text-secondary); display: block; margin-bottom: 0.25rem; }
+
+        /* ========== 文章列表 ========== */
+        .post-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1px solid transparent;
+        }
+        .post-item:hover {
+            background: var(--btn-plain-bg-hover);
+            border-color: color-mix(in oklch, var(--primary) 25%, transparent);
+        }
+        .badge-draft {
+            font-size: 0.6875rem;
+            background: oklch(0.90 0.02 var(--hue));
+            color: var(--text-secondary);
+            padding: 0.125rem 0.5rem;
+            border-radius: 999px;
+        }
+        .badge-published {
+            font-size: 0.6875rem;
+            background: oklch(0.90 0.08 150);
+            color: #16a34a;
+            padding: 0.125rem 0.5rem;
+            border-radius: 999px;
+        }
+
+        /* ========== 加载动画 ========== */
+        .spinner {
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid var(--line-color);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ========== 页面头部 ========== */
+        .page-heading {
+            padding: 5rem 1.5rem 2rem;
+            text-align: center;
+        }
+        .page-heading h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-primary);
+        }
+        .page-heading p {
+            margin: 0.25rem 0 0;
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+
+        /* ========== 移动端菜单 ========== */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 3.75rem;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--line-divider);
+            padding: 0.75rem 1.5rem;
+            z-index: 49;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .mobile-menu.open { display: flex; }
+        .mobile-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.15s;
+        }
+        .mobile-menu a:hover { color: var(--primary); background: var(--btn-plain-bg-hover); }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 768px) {
+            .admin-nav .nav-links { display: none; }
+            .page-heading h1 { font-size: 1.5rem; }
+            .card-body { padding: 1rem; }
+        }
+        @media (min-width: 769px) {
+            .mobile-menu-btn { display: none; }
+        }
+
+        /* ========== SimpleMDE 主题覆盖 ========== */
+        .editor-toolbar {
+            border-color: var(--line-divider) !important;
+            background: var(--card-bg) !important;
+            border-radius: 0.625rem 0.625rem 0 0 !important;
+        }
+        .editor-toolbar a {
+            color: var(--text-secondary) !important;
+        }
+        .editor-toolbar a:hover {
+            background: var(--btn-plain-bg-hover) !important;
+            color: var(--primary) !important;
+        }
+        .CodeMirror {
+            background: var(--bg-secondary) !important;
+            color: var(--text-primary) !important;
+            border-color: var(--line-divider) !important;
+            border-radius: 0 0 0.625rem 0.625rem !important;
+        }
+        .CodeMirror-cursor { border-color: var(--primary) !important; }
+        .CodeMirror-selected { background: var(--primary-soft) !important; }
+        .editor-preview {
+            background: var(--card-bg) !important;
+        }
+        .editor-preview-side {
+            background: var(--card-bg) !important;
+            border-color: var(--line-divider) !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- 导航栏 -->
+        <nav class="admin-nav" id="admin-nav">
+            <a href="#/" class="brand">
+                <i class="fas fa-leaf"></i>
+                <span>临渊羡鱼</span>
+            </a>
+            <div class="nav-links" id="nav-links-desktop">
+                <a href="#/" class="tab-link" data-tab="posts"><i class="fas fa-file-lines"></i> 文章管理</a>
+                <a href="#/friends" class="tab-link" data-tab="friends"><i class="fas fa-link"></i> 友链审核</a>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+                <span id="user-info" style="font-size:0.8125rem;color:var(--text-secondary);"></span>
+                <button id="theme-toggle" title="切换亮暗模式" style="background:none;border:none;color:var(--text-secondary);font-size:1.125rem;cursor:pointer;padding:0.25rem;transition:color 0.15s;">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="login-btn" class="btn btn-primary btn-sm"><i class="fas fa-sign-in-alt"></i> 登录</button>
+                <button class="mobile-menu-btn" id="mobile-menu-btn" style="background:none;border:none;color:var(--text-primary);font-size:1.25rem;cursor:pointer;padding:0.25rem;">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- 移动端菜单 -->
+        <div class="mobile-menu" id="mobile-menu">
+            <a href="#/" class="tab-link"><i class="fas fa-file-lines"></i> 文章管理</a>
+            <a href="#/friends" class="tab-link"><i class="fas fa-link"></i> 友链审核</a>
+        </div>
+
+        <!-- 主内容 -->
+        <div id="main-view">
+            <div class="page-heading">
+                <h1>管理控制台</h1>
+                <p>请登录 GitHub 以管理文章和友链</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 移动端菜单
+        (function() {
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            if (btn && menu) {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    menu.classList.toggle('open');
+                });
+                menu.querySelectorAll('a').forEach(a => {
+                    a.addEventListener('click', () => menu.classList.remove('open'));
+                });
+                document.addEventListener('click', function(e) {
+                    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                        menu.classList.remove('open');
+                    }
+                });
+            }
+        })();
+    </script>
+
+    <script type="module">
+        import { getAllPostFiles, getFileContent, savePost, deletePost } from './api.js';
+        import { renderReviewList, renderFriendsList } from './links.js';
+
+        // ===== 全局状态 =====
+        const AUTH_ENDPOINT = '/auth';
+        const CONFIG_ENDPOINT = '/admin/config.yml';
+        let GITHUB_OWNER = '', GITHUB_REPO = '', GITHUB_BRANCH = 'master', POSTS_BASE_PATH = 'src/content/posts';
+        let accessToken = localStorage.getItem('github_token') || '';
+        const mainView = document.getElementById('main-view');
+
+        // ===== 工具函数 =====
+        function b64(str) { return btoa(unescape(encodeURIComponent(str))); }
+
+        function escapeHtml(t) {
+            const d = document.createElement('div');
+            d.textContent = t;
+            return d.innerHTML;
+        }
+
+        function parseFrontmatter(content) {
+            const m = content.match(/^---\n([\s\S]*?)\n---\n?/);
+            if (!m) return { data: {}, body: content };
+            try { return { data: jsyaml.load(m[1]), body: content.slice(m[0].length) }; }
+            catch { return { data: {}, body: content }; }
+        }
+
+        function buildFrontmatter(content, title, draft, description, tagsStr, category, image, published, updated, pinned, comment, author, sourceLink, password) {
+            const fm = {};
+            fm.title = title;
+            fm.draft = draft;
+            if (author) fm.author = author;
+            if (description) fm.description = description;
+            if (tagsStr) fm.tags = tagsStr.split(',').map(t => t.trim()).filter(Boolean);
+            if (category) fm.category = category;
+            if (image) fm.image = image;
+            if (sourceLink) fm.sourceLink = sourceLink;
+            if (password) fm.password = password;
+            if (published) fm.published = published;
+            if (updated) fm.updated = updated;
+            if (pinned) fm.pinned = true;
+            fm.comment = comment !== false;
+            var y = jsyaml.dump(fm, { lineWidth: -1, quotingType: "'", forceQuotes: false });
+            // 修复日期格式: 将 "2025-01-15" 去掉引号变成纯日期
+            y = y.replace(/'(\d{4}-\d{2}-\d{2})'/g, '$1');
+            y = y.replace(/(\d{4}-\d{2}-\d{2})T00:00:00\.000Z/g, '$1');
+            var body = content.replace(/^---\n[\s\S]*?\n---\n?/, '');
+            return '---\n' + y + '---\n' + body;
+        }
+        function formatDate(str) {
+            if (!str) return '';
+            // 保留 YYYY-MM-DD 格式，让 YAML 解析为日期
+            return str;
+        }
+
+        // ===== 导航 =====
+        function setActiveTab(tab) {
+            document.querySelectorAll('.tab-link').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll(`.tab-link[data-tab="${tab}"], .tab-link[href="#/${tab}"]`).forEach(el => el.classList.add('active'));
+        }
+
+        function updateNav() {
+            const btn = document.getElementById('login-btn');
+            const info = document.getElementById('user-info');
+            if (accessToken) {
+                if (btn) btn.style.display = 'none';
+                if (info) info.innerHTML = '✅ <button id="logout-link" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:0.75rem;text-decoration:underline;padding:0;">退出</button>';
+                const lo = document.getElementById('logout-link');
+                if (lo) lo.addEventListener('click', () => { localStorage.removeItem('github_token'); accessToken = ''; window.location.hash = '#/login'; updateNav(); renderLogin(); });
+            } else {
+                if (btn) btn.style.display = '';
+                if (info) info.textContent = '';
+            }
+        }
+
+        function renderLogin() {
+            mainView.innerHTML = `
+            <div class="page-heading">
+                <h1>管理控制台</h1>
+                <p>请登录 GitHub 以管理文章和友链</p>
+            </div>
+            <div style="max-width:28rem;margin:2rem auto;padding:0 1rem;">
+                <div class="card card-border" style="text-align:center;padding:3rem 2rem;">
+                    <i class="fas fa-lock" style="font-size:2.5rem;color:var(--primary);margin-bottom:1rem;"></i>
+                    <h2 style="font-size:1.125rem;font-weight:600;margin:0 0 0.5rem;">需要认证</h2>
+                    <p style="font-size:0.8125rem;color:var(--text-secondary);margin:0 0 1.5rem;">点击上方「登录」按钮授权 GitHub 账号</p>
+                </div>
+            </div>`;
+        }
+
+        // ===== 文章列表 =====
+        async function renderPostList() {
+            mainView.innerHTML = `
+            <div class="page-heading">
+                <h1>📝 文章管理</h1>
+            </div>
+            <div style="max-width:72rem;margin:-1rem auto 2rem;padding:0 1rem;">
+                <div class="card card-border">
+                    <div class="card-header">
+                        <span style="font-size:0.8125rem;font-weight:500;color:var(--text-secondary);" id="post-count">全部 (0)</span>
+                        <div style="display:flex;gap:0.5rem;">
+                            <button id="new-post-btn" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> 新建</button>
+                            <button id="refresh-btn" class="btn btn-regular btn-sm"><i class="fas fa-sync-alt"></i> 刷新</button>
+                        </div>
+                    </div>
+                    <div class="card-body" id="post-list">
+                        <div style="text-align:center;padding:3rem 0;color:var(--text-tertiary);font-size:0.875rem;">
+                            <span class="spinner" style="margin-right:0.5rem;"></span>加载中...
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+            document.getElementById('new-post-btn').onclick = () => window.location.hash = '#/new';
+            document.getElementById('refresh-btn').onclick = loadPostList;
+            await loadPostList();
+        }
+
+        async function loadPostList() {
+            const listEl = document.getElementById('post-list');
+            const countEl = document.getElementById('post-count');
+            if (!listEl) return;
+            try {
+                const files = await getAllPostFiles(GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, POSTS_BASE_PATH, accessToken);
+                if (countEl) countEl.textContent = `全部 (${files.length})`;
+                if (files.length === 0) {
+                    listEl.innerHTML = '<div style="text-align:center;padding:3rem 0;color:var(--text-tertiary);">暂无文章，点击「新建」开始</div>';
+                    return;
+                }
+                const items = await Promise.allSettled(files.map(f =>
+                    getFileContent(GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, f.path, accessToken)
+                ));
+                const posts = [];
+                items.forEach((res, i) => {
+                    if (res.status === 'fulfilled' && res.value) posts.push(res.value);
+                    else posts.push({ path: files[i].path, title: files[i].name.replace(/\.(md|mdx)$/i, ''), draft: false });
+                });
+                posts.sort((a, b) => a.title.localeCompare(b.title, 'zh-CN'));
+                let html = '';
+                posts.forEach((post, idx) => {
+                    const badge = post.draft
+                        ? '<span class="badge-draft">草稿</span>'
+                        : '<span class="badge-published">已发布</span>';
+                    html += `
+                    <div class="post-item" data-path="${escapeHtml(post.path)}">
+                        <span style="font-size:0.75rem;color:var(--text-tertiary);font-family:monospace;">#${idx+1}</span>
+                        ${badge}
+                        <span style="font-weight:600;flex:1;font-size:0.875rem;">${escapeHtml(post.title)}</span>
+                        <span style="font-size:0.75rem;color:var(--text-tertiary);display:none;">${escapeHtml(post.path.split('/').pop())}</span>
+                    </div>`;
+                });
+                listEl.innerHTML = html;
+                listEl.querySelectorAll('.post-item').forEach(el => {
+                    el.onclick = () => window.location.hash = `#/edit/${encodeURIComponent(el.dataset.path)}`;
+                });
+            } catch (err) {
+                listEl.innerHTML = `<div style="text-align:center;padding:3rem 0;color:var(--danger);font-size:0.875rem;"><i class="fas fa-exclamation-triangle"></i> 加载失败: ${escapeHtml(err.message)}</div>`;
+            }
+        }
+
+        // ===== 文章编辑器 =====
+        async function renderEditor(path = null) {
+            const isNew = !path;
+            mainView.innerHTML = `
+            <div class="page-heading">
+                <h1>${isNew ? '新建文章' : '编辑文章'}</h1>
+            </div>
+            <div style="max-width:72rem;margin:-1rem auto 2rem;padding:0 1rem;">
+                <div class="card card-border">
+                    <div class="card-header">
+                        <button id="back-btn" class="btn btn-regular btn-sm"><i class="fas fa-arrow-left"></i> 返回</button>
+                        <span style="font-weight:600;font-size:0.875rem;"><i class="fas fa-pen-fancy" style="color:var(--primary);"></i> ${isNew ? '新建' : '编辑'}</span>
+                        <div></div>
+                    </div>
+                    <div class="card-body" style="padding:1.5rem 2rem;">
+                        <form id="editor-form" style="display:flex;flex-direction:column;gap:1rem;">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                                <div>
+                                    <label>标题 <span style="color:var(--danger);">*</span></label>
+                                    <input id="input-title" type="text" class="input" autofocus placeholder="输入文章标题">
+                                </div>
+                                <div>
+                                    <label>作者</label>
+                                    <input id="input-author" type="text" class="input" placeholder="可选">
+                                </div>
+                            </div>
+                            <div>
+                                <label>文件路径 <span style="color:var(--danger);">*</span></label>
+                                <div style="display:flex;gap:0.75rem;align-items:center;">
+                                    <input id="input-path" type="text" class="input" style="font-family:monospace;flex:1;">
+                                    <input id="input-sha" type="hidden">
+                                    <span style="white-space:nowrap;font-size:0.8125rem;color:var(--text-secondary);">状态</span>
+                                    <label style="display:flex;align-items:center;gap:0.25rem;cursor:pointer;font-size:0.8125rem;white-space:nowrap;">
+                                        <input type="radio" name="draft" value="false" checked style="accent-color:var(--primary);"> 发布
+                                    </label>
+                                    <label style="display:flex;align-items:center;gap:0.25rem;cursor:pointer;font-size:0.8125rem;white-space:nowrap;">
+                                        <input type="radio" name="draft" value="true" style="accent-color:var(--primary);"> 草稿
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <label>描述</label>
+                                <input id="input-desc" type="text" class="input" placeholder="显示在首页文章卡片上的简短描述">
+                            </div>
+                            <div style="border-top:1px solid var(--line-divider);padding-top:0.75rem;margin-top:0.25rem;">
+                                <span style="font-size:0.6875rem;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em;">元数据</span>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;">
+                                <div><label>发布日期</label><input id="input-published" type="date" class="input"></div>
+                                <div><label>更新日期</label><input id="input-updated" type="date" class="input"></div>
+                                <div><label>标签</label><input id="input-tags" type="text" class="input" placeholder="逗号分隔"></div>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;">
+                                <div><label>分类</label><input id="input-category" type="text" class="input"></div>
+                                <div><label>封面图片</label><input id="input-image" type="text" class="input" style="font-family:monospace;" placeholder="https:// 或 /path/to/img"></div>
+                                <div><label>文章来源</label><input id="input-source" type="url" class="input" placeholder="https://"></div>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;padding:0.5rem 0.75rem;background:var(--bg-secondary);border-radius:0.625rem;">
+                                <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;font-size:0.8125rem;"><input type="checkbox" id="input-pinned" style="accent-color:var(--primary);"> 置顶</label>
+                                <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;font-size:0.8125rem;"><input type="checkbox" id="input-comment" checked style="accent-color:var(--primary);"> 评论</label>
+                                <div style="flex:1;min-width:140px;max-width:220px;margin-left:auto;">
+                                    <input id="input-password" type="text" class="input" placeholder="密码保护(可选)" style="font-size:0.75rem;padding:0.4rem 0.6rem;">
+                                </div>
+                            </div>
+                            <div>
+                                <label>正文 (Markdown)</label>
+                                <textarea id="input-content" rows="15" style="display:none;"></textarea>
+                            </div>
+                            <div style="display:flex;gap:0.75rem;border-top:1px solid var(--line-divider);padding-top:0.75rem;">
+                                <button type="button" id="save-btn" class="btn btn-primary" style="flex:1;padding:0.625rem 1rem;"><i class="fas fa-save"></i> 保存</button>
+                                <button type="button" id="delete-btn" class="btn" style="flex:0.35;background:oklch(0.90 0.05 30);color:var(--danger);padding:0.625rem 1rem;${isNew?'opacity:0.5;cursor:not-allowed;':''}" ${isNew?'disabled':''}><i class="fas fa-trash-alt"></i> 删除</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>`;
+
+            const ta = document.getElementById('input-content');
+            if (!ta) return;
+            const simplemde = new SimpleMDE({
+                element: ta,
+                spellChecker: false,
+                status: ['lines', 'words'],
+                toolbar: ['bold', 'italic', 'heading', '|', 'quote', 'unordered-list', 'ordered-list', '|', 'link', 'image', 'code', 'table', '|', 'preview', 'side-by-side', 'fullscreen', '|', 'guide'],
+            });
+
+            document.getElementById('back-btn').onclick = () => window.location.hash = '#/posts';
+
+            if (!isNew) {
+                const post = await getFileContent(GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, decodeURIComponent(path), accessToken);
+                if (!post) { alert('加载失败'); window.location.hash = '#/posts'; return; }
+                document.getElementById('input-title').value = post.title || '';
+                document.getElementById('input-path').value = post.path;
+                document.getElementById('input-sha').value = post.sha;
+                document.getElementById('input-desc').value = post.description || '';
+                document.getElementById('input-tags').value = Array.isArray(post.tags) ? post.tags.join(', ') : (post.tags || '');
+                document.getElementById('input-category').value = post.category || '';
+                document.getElementById('input-image').value = post.image || '';
+                document.getElementById('input-source').value = post.sourceLink || '';
+                document.getElementById('input-password').value = post.password || '';
+                document.getElementById('input-author').value = post.author || '';
+                document.getElementById('input-published').value = post.published ? new Date(post.published).toISOString().slice(0, 10) : '';
+                document.getElementById('input-updated').value = post.updated ? new Date(post.updated).toISOString().slice(0, 10) : '';
+                document.getElementById('input-pinned').checked = !!post.pinned;
+                document.getElementById('input-comment').checked = post.comment !== false;
+                const dr = document.querySelector(`input[name="draft"][value="${post.draft}"]`);
+                if (dr) dr.checked = true;
+                simplemde.value(post.content);
+            } else {
+                const today = new Date().toISOString().slice(0, 10);
+                document.getElementById('input-path').value = `${POSTS_BASE_PATH}/${today}-new-post.md`;
+                document.getElementById('input-title').value = '';
+                document.getElementById('input-published').value = today;
+                document.getElementById('input-updated').value = today;
+                simplemde.value('');
+            }
+
+            document.getElementById('save-btn').onclick = async () => {
+                const title = document.getElementById('input-title').value.trim();
+                const filePath = document.getElementById('input-path').value.trim();
+                const sha = document.getElementById('input-sha').value;
+                const author = document.getElementById('input-author').value.trim();
+                const desc = document.getElementById('input-desc').value.trim();
+                const tags = document.getElementById('input-tags').value.trim();
+                const category = document.getElementById('input-category').value.trim();
+                const image = document.getElementById('input-image').value.trim();
+                const sourceLink = document.getElementById('input-source').value.trim();
+                const password = document.getElementById('input-password').value.trim();
+                const published = document.getElementById('input-published').value;
+                const updated = document.getElementById('input-updated').value;
+                const pinned = document.getElementById('input-pinned').checked;
+                const comment = document.getElementById('input-comment').checked;
+                const dr = document.querySelector('input[name="draft"]:checked');
+                const isDraft = dr ? dr.value === 'true' : false;
+                const content = simplemde.value();
+                if (!filePath) { alert('请填写文件路径'); return; }
+                if (!filePath.startsWith(POSTS_BASE_PATH)) { alert(`路径必须在 ${POSTS_BASE_PATH} 下`); return; }
+                if (!/\.(md|mdx)$/i.test(filePath)) { alert('扩展名必须是 .md 或 .mdx'); return; }
+                const final = buildFrontmatter(content, title, isDraft, desc, tags, category, image, published, updated, pinned, comment, author, sourceLink, password);
+                const res = await savePost(GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, filePath, b64(final), sha, accessToken);
+                if (res.ok) { alert('保存成功'); window.location.hash = '#/posts'; }
+                else { const e = await res.json().catch(()=>({})); alert('保存失败: ' + e.message); }
+            };
+
+            document.getElementById('delete-btn').onclick = async () => {
+                const fp = document.getElementById('input-path').value.trim();
+                const s = document.getElementById('input-sha').value;
+                if (!fp || !s) return;
+                if (!confirm(`确定要删除 ${fp} 吗？`)) return;
+                const res = await deletePost(GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, fp, s, accessToken);
+                if (res.ok) { alert('已删除'); window.location.hash = '#/posts'; }
+                else { const e = await res.json().catch(()=>({})); alert('删除失败: ' + e.message); }
+            };
+        }
+
+        // ===== 友链管理 =====
+        function renderFriendsView() {
+            mainView.innerHTML = `
+            <div class="page-heading">
+                <h1>🔗 友链审核</h1>
+                <p>管理待处理的申请和已通过的友链</p>
+            </div>
+            <div style="max-width:72rem;margin:-1rem auto 2rem;padding:0 1rem;">
+                <div class="card card-border">
+                    <div class="card-body" style="padding:1.5rem;">
+                        <section>
+                            <h2 style="font-size:1rem;font-weight:600;margin:0 0 1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--line-divider);">待审核申请</h2>
+                            <div id="friends-review-container"></div>
+                        </section>
+                        <section style="margin-top:2rem;">
+                            <h2 style="font-size:1rem;font-weight:600;margin:0 0 1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--line-divider);">已通过友链</h2>
+                            <div id="friends-approved-container"></div>
+                        </section>
+                    </div>
+                </div>
+            </div>`;
+            const rc = document.getElementById('friends-review-container');
+            const ac = document.getElementById('friends-approved-container');
+            if (rc) renderReviewList(rc, { owner: GITHUB_OWNER, repo: GITHUB_REPO, branch: GITHUB_BRANCH, token: accessToken });
+            if (ac) renderFriendsList(ac, { owner: GITHUB_OWNER, repo: GITHUB_REPO, branch: GITHUB_BRANCH, token: accessToken });
+        }
+
+        // ===== 路由 =====
+        function handleRoute() {
+            if (!accessToken) { updateNav(); renderLogin(); return; }
+            updateNav();
+            const hash = window.location.hash.slice(1) || '/';
+            if (hash === '/friends') { setActiveTab('friends'); renderFriendsView(); }
+            else if (hash.startsWith('/edit/')) { setActiveTab('posts'); renderEditor(hash.replace('/edit/', '')); }
+            else if (hash === '/new') { setActiveTab('posts'); renderEditor(); }
+            else { setActiveTab('posts'); renderPostList(); }
+        }
+
+        // ===== 初始化 =====
+        async function initApp() {
+            if (!accessToken) { handleRoute(); return; }
+            try {
+                const res = await fetch(CONFIG_ENDPOINT);
+                if (!res.ok) throw new Error('无法获取配置');
+                const cfg = jsyaml.load(await res.text());
+                const repoFull = cfg.backend?.repo || cfg.repo;
+                if (!repoFull) throw new Error('缺少 repo');
+                const [owner, repo] = repoFull.split('/');
+                GITHUB_OWNER = owner; GITHUB_REPO = repo;
+                GITHUB_BRANCH = cfg.backend?.branch || cfg.branch || 'master';
+                if (cfg.collections?.length) { const c = cfg.collections.find(c => c.folder); if (c) POSTS_BASE_PATH = c.folder; }
+                handleRoute();
+            } catch (e) {
+                console.error(e);
+                alert('配置加载失败，请检查 admin/config.yml');
+                logout();
+            }
+        }
+
+        // ===== 登录 =====
+        async function loginWithGithub() {
+            const popup = window.open(AUTH_ENDPOINT, '_blank', 'width=800,height=600');
+            if (!popup || popup.closed) { window.location.href = AUTH_ENDPOINT; return; }
+            let resolved = false;
+            const cleanup = () => { window.removeEventListener('message', handler); window.removeEventListener('storage', storageHandler); clearInterval(timer); };
+            const handler = (e) => {
+                if (e.origin !== window.location.origin) return;
+                if (typeof e.data === 'string' && e.data.startsWith('authorization:github:success:')) {
+                    try { const d = JSON.parse(e.data.replace('authorization:github:success:', '')); accessToken = d.token; localStorage.setItem('github_token', accessToken); resolved = true; cleanup(); initApp(); } catch {}
+                }
+            };
+            const storageHandler = (e) => {
+                if (e.key === 'oauth_token_received' && e.newValue) { accessToken = e.newValue; localStorage.setItem('github_token', accessToken); resolved = true; cleanup(); initApp(); }
+            };
+            const timer = setInterval(() => { if (popup.closed && !resolved) cleanup(); }, 500);
+            window.addEventListener('message', handler);
+            window.addEventListener('storage', storageHandler);
+            setTimeout(() => { if (!resolved) cleanup(); }, 60000);
+        }
+
+        function logout() {
+            localStorage.removeItem('github_token');
+            accessToken = '';
+            window.location.hash = '#/login';
+            updateNav();
+            renderLogin();
+        }
+
+        
+        function updateThemeIcon() {
+            var btn = document.getElementById('theme-toggle');
+            if (!btn) return;
+            btn.innerHTML = document.documentElement.classList.contains('dark')
+                ? '<i class="fas fa-sun"></i>'
+                : '<i class="fas fa-moon"></i>';
+        }
+        function toggleTheme() {
+            var isDark = document.documentElement.classList.contains('dark');
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            updateThemeIcon();
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('login-btn').addEventListener('click', loginWithGithub);
+            var themeBtn = document.getElementById('theme-toggle');
+            if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+            window.addEventListener('theme-change', function() {
+                var t = localStorage.getItem('theme');
+                if (t === 'dark') document.documentElement.classList.add('dark');
+                else if (t === 'light') document.documentElement.classList.remove('dark');
+                updateThemeIcon();
+            });
+            updateThemeIcon();
+            window.addEventListener('hashchange', handleRoute);
+            const params = new URLSearchParams(window.location.search);
+            const tokenFromUrl = params.get('token');
+            if (tokenFromUrl) {
+                accessToken = tokenFromUrl;
+                localStorage.setItem('github_token', tokenFromUrl);
+                history.replaceState({}, document.title, location.pathname);
+            }
+            initApp();
+        });
+    </script>
+</body>
+</html>
