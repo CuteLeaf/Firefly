@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>申请友链 · 临渊羡鱼</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        (function() {
+            try {
+                var t = localStorage.getItem("theme");
+                if (t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+                    document.documentElement.classList.add("dark");
+                }
+            } catch(e) {}
+        })();
+    </script>
+    <style>
+        /* ========== Firefly 设计系统 CSS 变量 ========== */
+        :root {
+            --hue: 250;
+            --primary: oklch(0.55 0.15 var(--hue));
+            --primary-soft: oklch(0.55 0.15 var(--hue) / 10%);
+            --primary-hover: oklch(0.50 0.16 var(--hue));
+            --card-bg: #fff;
+            --bg-secondary: oklch(0.96 0.01 var(--hue));
+            --text-primary: #1a1a2e;
+            --text-secondary: oklch(0.45 0.02 var(--hue));
+            --text-tertiary: oklch(0.70 0.02 var(--hue));
+            --line-divider: oklch(0.88 0.01 var(--hue));
+            --radius-large: 1rem;
+            --selection-bg: oklch(0.55 0.15 var(--hue) / 30%);
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+
+        .dark {
+            --primary: oklch(0.65 0.14 var(--hue));
+            --primary-soft: oklch(0.65 0.14 var(--hue) / 12%);
+            --primary-hover: oklch(0.70 0.13 var(--hue));
+            --card-bg: oklch(0.22 0.01 var(--hue));
+            --bg-secondary: oklch(0.18 0.01 var(--hue));
+            --text-primary: oklch(0.92 0.01 var(--hue));
+            --text-secondary: oklch(0.65 0.02 var(--hue));
+            --text-tertiary: oklch(0.45 0.02 var(--hue));
+            --line-divider: oklch(0.28 0.01 var(--hue));
+            --success: #4ade80;
+            --danger: #f87171;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            color: var(--text-primary);
+            transition: background 0.15s, color 0.15s;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url('https://t.alcy.cc/ycy');
+            background-size: cover;
+            background-position: center;
+            
+            z-index: -2;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: var(--bg-secondary);
+            opacity: 0.78;
+            z-index: -1;
+            transition: background 0.15s;
+        }
+        .dark body::after {
+            opacity: 0.92;
+        }
+        ::selection { background: var(--selection-bg); }
+
+        /* ===== 页面头部 ===== */
+        .page-heading {
+            padding: 5rem 1.5rem 2rem;
+            text-align: center;
+        }
+        .page-heading h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-primary);
+        }
+        .page-heading p {
+            margin: 0.25rem 0 0;
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== 卡片 ===== */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius-large);
+            overflow: hidden;
+            transition: background 0.15s;
+            border: 1px solid var(--line-divider);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .card-body { padding: 2rem; }
+
+        /* ===== 输入框 ===== */
+        .input {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--line-divider);
+            border-radius: 0.625rem;
+            padding: 0.625rem 0.875rem;
+            font-size: 0.8125rem;
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 0.15s, background 0.15s, color 0.15s;
+        }
+        .input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+        .input::placeholder { color: var(--text-tertiary); }
+        textarea.input { resize: vertical; min-height: 5rem; }
+        label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        /* ===== 按钮 ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.375rem;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s;
+            line-height: 1.4;
+            background: var(--primary);
+            color: #fff;
+        }
+        .btn:hover { background: var(--primary-hover); }
+
+        /* ===== 加载动画 ===== */
+        .spinner {
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid var(--line-divider);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ===== 消息提示 ===== */
+        #apply-msg { text-align: center; font-size: 0.8125rem; margin-top: 0.75rem; }
+        .msg-success { color: var(--success); }
+        .msg-error { color: var(--danger); }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            .page-heading h1 { font-size: 1.5rem; }
+            .page-heading { padding: 4rem 1rem 1.5rem; }
+            .card-body { padding: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+    <div style="position:fixed;top:1rem;right:1rem;z-index:100;">
+        <button id="theme-btn" onclick="toggleTheme()" title="切换亮暗模式" style="background:var(--card-bg);border:1px solid var(--line-divider);color:var(--text-secondary);border-radius:0.625rem;width:2.25rem;height:2.25rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all 0.15s;">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+    <div class="page-heading">
+        <h1>🔗 申请友链</h1>
+        <p>提交后等待管理员审核</p>
+    </div>
+
+    <div style="flex:1;display:flex;align-items:flex-start;justify-content:center;padding:0 1rem 2rem;">
+        <div class="card" style="width:100%;max-width:36rem;">
+            <div class="card-body">
+                <form id="apply-form" style="display:flex;flex-direction:column;gap:1.25rem;">
+                    <div>
+                        <label>网站标题 <span style="color:var(--danger);">*</span></label>
+                        <input id="apply-title" type="text" required class="input" placeholder="输入你的网站名称">
+                    </div>
+                    <div>
+                        <label>网站地址 <span style="color:var(--danger);">*</span></label>
+                        <input id="apply-url" type="url" required class="input" placeholder="https://example.com">
+                    </div>
+                    <div>
+                        <label>头像图片 URL <span style="color:var(--text-tertiary);font-weight:400;">(留空则自动使用网站图标)</span></label>
+                        <input id="apply-img" type="url" class="input" placeholder="可选，手动输入图片链接">
+                    </div>
+                    <div>
+                        <label>描述 <span style="color:var(--danger);">*</span></label>
+                        <textarea id="apply-desc" required rows="3" class="input" placeholder="写一句关于你网站的话..."></textarea>
+                    </div>
+                    <div>
+                        <label>标签 <span style="color:var(--text-tertiary);font-weight:400;">(逗号分隔)</span></label>
+                        <input id="apply-tags" type="text" class="input" placeholder="技术, 博客, 前端">
+                    </div>
+                    <button type="submit" class="btn">
+                        <i class="fas fa-paper-plane"></i> 提交申请
+                    </button>
+                    <p id="apply-msg"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            var isDark = document.documentElement.classList.contains('dark');
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            updateThemeBtn();
+        }
+        function updateThemeBtn() {
+            var btn = document.getElementById('theme-btn');
+            if (btn) btn.innerHTML = document.documentElement.classList.contains('dark')
+                ? '<i class="fas fa-sun"></i>'
+                : '<i class="fas fa-moon"></i>';
+        }
+        window.addEventListener('theme-change', function() {
+            var t = localStorage.getItem('theme');
+            if (t === 'dark') document.documentElement.classList.add('dark');
+            else if (t === 'light') document.documentElement.classList.remove('dark');
+            updateThemeBtn();
+        });
+    <\/script>
+    <script type="module">
+        document.getElementById('apply-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const msg = document.getElementById('apply-msg');
+            const title = document.getElementById('apply-title').value.trim();
+            const siteurl = document.getElementById('apply-url').value.trim();
+            let imgurl = document.getElementById('apply-img').value.trim();
+            const desc = document.getElementById('apply-desc').value.trim();
+            const tagsStr = document.getElementById('apply-tags').value.trim();
+            const tags = tagsStr ? tagsStr.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+            if (!title || !siteurl || !desc) {
+                msg.innerHTML = '<span style="color:var(--danger);">请填写所有必填项</span>';
+                return;
+            }
+
+            if (!imgurl && siteurl) {
+                imgurl = `https://faviconsnap.com/api/favicon?url=${encodeURIComponent(siteurl)}`;
+            }
+
+            msg.innerHTML = '<span class="spinner" style="margin-right:0.375rem;"></span>提交中...';
+            try {
+                const res = await fetch('/submit-friend-request', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, siteurl, imgurl, desc, tags, weight: 0 })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    msg.innerHTML = '<span style="color:var(--success);">✅ 申请已提交，请等待审核</span>';
+                    document.getElementById('apply-form').reset();
+                } else {
+                    throw new Error(data.error || '请求失败');
+                }
+            } catch (err) {
+                msg.innerHTML = '<span style="color:var(--danger);">❌ 提交失败，请稍后重试</span>';
+            }
+        });
+    </script>
+</body>
+</html>
