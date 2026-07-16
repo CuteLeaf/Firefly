@@ -94,6 +94,83 @@ async function fetchNotoSansSCFonts() {
 	}
 }
 
+// 缓存 sharp 模块，避免在每次 GET 调用中重复动态导入
+let sharpPromise: Promise<typeof import("sharp")["default"]> | null = null;
+function getSharp() {
+	if (!sharpPromise) {
+		sharpPromise = import("sharp").then((m) => m.default);
+	}
+	return sharpPromise;
+}
+
+/**
+ * 获取 1×1 透明 PNG 的 base64 Data URL（兜底图片）。
+ *
+ * 当图片处理失败（如格式不被 sharp 支持）时，使用此透明占位图替代。
+ * 通过 sharp 的 `create` API 生成，懒加载且仅生成一次，结果被缓存。
+ *
+ * @returns `data:image/png;base64,...` 格式的透明 PNG Data URL
+ */
+let transparentPngPromise: Promise<string> | null = null;
+function getTransparentPngBase64(): Promise<string> {
+	if (!transparentPngPromise) {
+		transparentPngPromise = getSharp().then((sharp) =>
+			sharp({
+				create: {
+					width: 1,
+					height: 1,
+					channels: 4,
+					background: { r: 0, g: 0, b: 0, alpha: 0 },
+				},
+			})
+				.png()
+				.toBuffer()
+				.then((buf) => `data:image/png;base64,${buf.toString("base64")}`),
+		);
+	}
+	return transparentPngPromise;
+}
+
+// 已转换图片的缓存（按源路径），避免对同一文件（如头像、站点图标）重复进行 sharp 处理
+const convertedImageCache = new Map<string, string>();
+
+/**
+ * 将图片 Buffer 转换为 PNG base64 Data URL，并缓存结果。
+ *
+ * 以源文件路径作为缓存键，避免对同一图片文件（如头像、站点图标）
+ * 在多次 OG 图片生成中重复进行 sharp 处理。
+ * 若 sharp 无法处理该图片格式，会输出警告并使用透明占位图代替。
+ *
+ * @param imageBuffer - 图片文件的原始 Buffer
+ * @param sourcePath - 图片文件的磁盘路径，用作缓存键
+ * @returns `data:image/png;base64,...` 格式的 PNG Data URL；处理失败时返回透明图
+ */
+async function imageToPngBase64(
+	imageBuffer: Buffer,
+	sourcePath: string,
+): Promise<string> {
+	const cached = convertedImageCache.get(sourcePath);
+	if (cached) return cached;
+
+	const sharp = await getSharp();
+	try {
+		const pngBuffer = await sharp(imageBuffer).png().toBuffer();
+		const result = `data:image/png;base64,${pngBuffer.toString("base64")}`;
+		convertedImageCache.set(sourcePath, result);
+		return result;
+	} catch (err) {
+		console.warn(
+			"\n \x1b[33m[OG Image] Warning \n" +
+				`  无法处理图片 "${sourcePath}"，可能是不被 sharp 支持的图片格式。\n` +
+				"  已使用透明图片替代，请将图片转换为 sharp 支持的格式（PNG/JPEG/WebP/AVIF/TIFF/SVG）。\n" +
+				`  Failed to process image "${sourcePath}", possibly an unsupported image format for sharp.\n` +
+				"  A transparent image was used instead. Please convert it to a sharp-supported format.\n" +
+				`  Error: ${err instanceof Error ? err.message : String(err)}\x1b[0m`,
+		);
+		return getTransparentPngBase64();
+	}
+}
+
 export async function GET({
 	props,
 }: APIContext<{ post: CollectionEntry<"posts"> }>) {
@@ -102,28 +179,32 @@ export async function GET({
 	// Try to fetch fonts from Google Fonts (woff2) at runtime.
 	const { regular: fontRegular, bold: fontBold } = await fetchNotoSansSCFonts();
 
-	// Avatar + icon: still read from disk (small assets)
+	// 头像处理
 	let avatarBase64: string;
-
-	// 检查头像是否为 URL
 	if (profileConfig.avatar?.startsWith("http")) {
-		// 如果是 URL，直接使用
 		avatarBase64 = profileConfig.avatar;
 	} else {
-		// 如果是本地路径，从 public 目录读取
 		const avatarPath = profileConfig.avatar?.startsWith("/")
 			? `./public${profileConfig.avatar}`
 			: `./src/${profileConfig.avatar}`;
-		const avatarBuffer = fs.readFileSync(avatarPath);
-		avatarBase64 = `data:image/png;base64,${avatarBuffer.toString("base64")}`;
+		avatarBase64 = await imageToPngBase64(
+			fs.readFileSync(avatarPath),
+			avatarPath,
+		);
 	}
 
+	// 站点图标处理：优先选择 png 格式的图标，回退到第一个 favicon
 	let iconPath = "./public/favicon/favicon-dark-192.png";
 	if (siteConfig.favicon.length > 0) {
-		iconPath = `./public${siteConfig.favicon[0].src}`;
+		const pngFavicon = siteConfig.favicon.find((f) =>
+			f.src.toLowerCase().endsWith(".png"),
+		);
+		iconPath = `./public${(pngFavicon ?? siteConfig.favicon[0]).src}`;
 	}
-	const iconBuffer = fs.readFileSync(iconPath);
-	const iconBase64 = `data:image/png;base64,${iconBuffer.toString("base64")}`;
+	const iconBase64 = await imageToPngBase64(
+		fs.readFileSync(iconPath),
+		iconPath,
+	);
 
 	const hue = siteConfig.themeColor.hue;
 	const primaryColor = `hsl(${hue}, 90%, 65%)`;
@@ -342,7 +423,7 @@ export async function GET({
 		fonts,
 	});
 
-	const sharp = (await import("sharp")).default;
+	const sharp = await getSharp();
 	const png = await sharp(Buffer.from(svg)).png().toBuffer();
 
 	return new Response(new Uint8Array(png), {

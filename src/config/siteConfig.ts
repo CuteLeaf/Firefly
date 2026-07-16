@@ -53,6 +53,7 @@ export const siteConfig: SiteConfig = {
 	},
 
 	// Favicon 配置
+	// 如果启用了OpenGraph图片功能，数组中需要包含png格式的favicon图标
 	favicon: [
 		{
 			// 图标文件路径
