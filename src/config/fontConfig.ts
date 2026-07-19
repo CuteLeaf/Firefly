@@ -27,15 +27,15 @@ import type { FontDefinition, FontSelectionConfig } from "@/types/fontConfig";
 // 适用于 Astro Font API 的字体配置，支持自动下载、缓存和优化加载
 // 本地开发调试的情况下，修改后需要每次重启开发服务器才能生效
 export const fontsList: FontDefinition[] = [
-	{
-		name: "Zen Maru Gothic",
-		cssVariable: "--font-zen-maru-gothic",
-		provider: "fontsource",
-		weights: ["300", "400", "500", "600", "700"],
-		styles: ["normal"],
-		subsets: ["latin", "cyrillic"],
-		fallbacks: ["sans-serif"],
-	},
+	//{
+	//	name: "Zen Maru Gothic",
+	//	cssVariable: "--font-zen-maru-gothic",
+	//	provider: "fontsource",
+	//	weights: ["300", "400", "500", "600", "700"],
+	//	styles: ["normal"],
+	//	subsets: ["latin", "cyrillic"],
+	//	fallbacks: ["sans-serif"],
+	//},
 	{
 		name: "Inter",
 		cssVariable: "--font-inter",
@@ -81,6 +81,21 @@ export const fontsList: FontDefinition[] = [
 		},
 		fallbacks: ["sans-serif"],
 	},
+    {
+        name: "KeinannMaruPOP",
+        cssVariable: "--font-zen-maru-gothic", // 自定义 CSS 变量名，后续会用到
+        provider: "local",
+        options: {
+            variants: [
+                {
+                    src: ["./public/assets/fonts/KeinannMaruPOP.ttf"], // 对应你放置的字体文件路径
+                    weight: "normal", // 按字体实际字重填写，常规字重也可写 400
+                    style: "normal",
+                },
+            ],
+        },
+        fallbacks: ["sans-serif"], // 字体加载失败时的回退字体
+    },
 ];
 
 // ─── 字体选择与区域覆盖 ─────────────────────────────────────

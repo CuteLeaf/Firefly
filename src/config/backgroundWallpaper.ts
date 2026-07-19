@@ -42,24 +42,24 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	src: {
 		// 桌面背景图片（支持单张或多张随机）
 		// desktop: "assets/images/DesktopWallpaper/d1.avif",
-		desktop: [
-			"assets/images/DesktopWallpaper/d1.avif",
-			"assets/images/DesktopWallpaper/d2.avif",
-			"assets/images/DesktopWallpaper/d3.avif",
-			"assets/images/DesktopWallpaper/d4.avif",
-			"assets/images/DesktopWallpaper/d5.avif",
-			"assets/images/DesktopWallpaper/d6.avif",
-		],
+		desktop: "https://t.alcy.cc/pc",// [
+			//"assets/images/DesktopWallpaper/d1.avif",
+			//"assets/images/DesktopWallpaper/d2.avif",
+			//"assets/images/DesktopWallpaper/d3.avif",
+			//"assets/images/DesktopWallpaper/d4.avif",
+			//"assets/images/DesktopWallpaper/d5.avif",
+			//"assets/images/DesktopWallpaper/d6.avif",
+		//],
 		// 移动背景图片（支持单张或多张随机）
 		// mobile: "assets/images/MobileWallpaper/m1.avif",
-		mobile: [
-			"assets/images/MobileWallpaper/m1.avif",
-			"assets/images/MobileWallpaper/m2.avif",
-			"assets/images/MobileWallpaper/m3.avif",
-			"assets/images/MobileWallpaper/m4.avif",
-			"assets/images/MobileWallpaper/m5.avif",
-			"assets/images/MobileWallpaper/m6.avif",
-		],
+		mobile: "https://t.alcy.cc/mp",// [
+			//"assets/images/MobileWallpaper/m1.avif",
+			//"assets/images/MobileWallpaper/m2.avif",
+			//"assets/images/MobileWallpaper/m3.avif",
+			//"assets/images/MobileWallpaper/m4.avif",
+			//"assets/images/MobileWallpaper/m5.avif",
+			//"assets/images/MobileWallpaper/m6.avif",
+		//],
 		// 背景视频播放地址
 		// 支持单个视频路径（字符串）或多个视频循环（数组）
 		// 支持远程视频URL，本地视频请放在 public/assets/videos/ 目录下
@@ -81,7 +81,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 			// 是否允许用户通过控制面板切换横幅标题显示
 			switchable: true,
 			// 主页横幅主标题
-			title: "Lovely firefly!",
+			title: "TXvlog の blog",
 			// 主页横幅主标题字体大小
 			titleSize: "3.8rem",
 			// 主页横幅副标题
@@ -92,6 +92,56 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 				"Upon Lighted Fyrefly, I Soon Gaze",
 				"From Undreamt Night, I Thence Shine",
 				"In Finalized Morrow, I Full Bloom",
+				"鲜衣怒马少年时，不负韶华行且知",
+	            "且将新火试新茶，诗酒趁年华",
+	            "追风赶月莫停留，平芜尽处是春山",
+	            "纵有疾风起，人生不言弃",
+	            "心有丘壑，眼存山河",
+	            "道阻且长，行则将至",
+	            "凡是过往，皆为序章",
+	            "凡心所向，素履所往",
+	            "生如逆旅，一苇以航",
+	            "关关难过关关过，前路漫漫亦灿灿",
+	            "不必追光，你我皆是星辰",
+	            "沉心蓄力，静待花开",
+	            "风雨自有归期，万事皆有转机",
+	            "不负心中热爱，奔赴山海未来",
+	            "半山腰总是挤的，你得去山顶看看",
+	            "前路浩浩荡荡，万事尽可期待",
+	            "以渺小启程，以伟大结束",
+	            "心有山海，静而不争",
+	            "行而不辍，未来可期",
+	            "日拱一卒，功不唐捐",
+	            "守得云开，终见月明",
+	            "温一壶月光，渡半生慌张",
+	            "山水万程，皆有好运",
+	            "得失随缘，心无增减",
+	            "平安喜乐，万事顺意",
+	            "以梦为马，不负韶华",
+	            "乘风破浪，直挂云帆",
+	            "静守己心，淡看浮华",
+	            "岁岁常欢愉，年年皆胜意",
+	            "纵览星河，自在随心",
+	            "但行好事，莫问前程",
+	            "山河无恙，人间皆安",
+	            "浅喜似苍狗，深爱如长风",
+	            "时光知味，岁月沉香",
+	            "万般熙攘化清风朗月",
+	            "人间烟火，岁岁温柔",
+	            "沉淀自我，厚积薄发",
+	            "不忘初心，方得始终",
+	            "所见皆美好，所行皆坦途",
+	            "看淡世事沧桑，内心安然无恙",
+	            "前路自有繁花，不必忧虑当下",
+	            "修己以清心为要，涉世以慎言为先",
+	            "人间值得，未来可期",
+	            "不惧岁月颠簸，自有繁花相送",
+	            "持一份热爱，抵岁月漫长",
+	            "清风渡山海，温柔赴人间",
+	            "万般努力，只为抬头有星光",
+	            "自在随风，万事从容",
+            	"人间朝暮，叶落惊秋，万事向好",
+	            "怀赤诚之心，赴万丈理想"
 			],
 			// 主页横幅副标题字体大小
 			subtitleSize: "1.5rem",
@@ -111,7 +161,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		// 导航栏配置
 		navbar: {
 			// 导航栏透明模式："semi" 半透明，"full" 完全透明，"semifull" 动态透明
-			transparentMode: "semi",
+			transparentMode: "semifull",
 			// 是否开启毛玻璃模糊效果，开启可能会影响页面性能，如果不开启则是半透明，请根据自己的喜好开启
 			enableBlur: true,
 			// 毛玻璃模糊度
