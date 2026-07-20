@@ -296,7 +296,6 @@ a.card-github.fetch-error
     border-radius: 0.5rem
     user-select: none
     transition: transform 0.12s ease-out
-    will-change: transform
 
 // 深色/浅色 SVG 主题切换
 .mermaid-svg-dark
@@ -355,7 +354,6 @@ a.card-github.fetch-error
   user-select: none
   -webkit-user-drag: none
   transition: transform 0.12s ease-out
-  will-change: transform
 
 .plantuml-error
   color: var(--admonitions-color-warning)
@@ -391,7 +389,8 @@ a.card-github.fetch-error
     filter: brightness(0.95)
 
 @media (max-width: 768px)
-  .mermaid-svg svg
+  .mermaid-svg-light svg,
+  .mermaid-svg-dark svg
     max-height: 400px
 
   .plantuml-image
@@ -469,7 +468,6 @@ a.card-github.fetch-error
     max-height: 100%
     user-select: none
     -webkit-user-drag: none
-    will-change: transform
 
 .diagram-fs-controls
   position: fixed
