@@ -35,7 +35,7 @@ await initMerman({
  * 移除 SVG 内联 style 中的 max-width 限制，
  * 使图表能根据容器宽度自适应缩放
  */
-function removeSvgMaxWidth(svg) {
+function optimizeSvg(svg) {
 	return svg.replace(/(<svg[^>]*style="[^"]*?)max-width:\s*[^;]+;?/, "$1");
 }
 
@@ -44,14 +44,14 @@ function buildMermaidSvgs(mermaidCode, themeConfig, diagramIndex) {
 		host_theme: { preset: themeConfig.lightTheme },
 		svg: {
 			diagram_id: `mermaid-${diagramIndex}-light`,
-			pipeline: "parity",
+			pipeline: "resvg-safe",
 		},
 	});
 	const darkSvg = renderSvg(mermaidCode, {
 		host_theme: { preset: themeConfig.darkTheme },
 		svg: {
 			diagram_id: `mermaid-${diagramIndex}-dark`,
-			pipeline: "parity",
+			pipeline: "resvg-safe",
 		},
 	});
 
@@ -59,8 +59,8 @@ function buildMermaidSvgs(mermaidCode, themeConfig, diagramIndex) {
 	assertSafeSvgForDom(darkSvg);
 
 	return {
-		lightSvg: removeSvgMaxWidth(lightSvg),
-		darkSvg: removeSvgMaxWidth(darkSvg),
+		lightSvg: optimizeSvg(lightSvg),
+		darkSvg: optimizeSvg(darkSvg),
 	};
 }
 

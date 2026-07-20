@@ -48,10 +48,31 @@
 		const getActiveTarget = () => selectTarget(container) || targets[0];
 
 		const state = { scale: 1, tx: 0, ty: 0 };
+		// 保存每个 SVG 的原始 viewBox
+		const origViewBoxes = targets.map((t) => {
+			if (t.tagName === "svg" && t.hasAttribute("viewBox")) {
+				const parts = t.getAttribute("viewBox").split(/\s+/).map(Number);
+				return { x: parts[0], y: parts[1], w: parts[2], h: parts[3] };
+			}
+			return null;
+		});
 		const apply = () => {
-			targets.forEach((t) => {
-				t.style.transformOrigin = "center center";
-				t.style.transform = `translate(${state.tx}px,${state.ty}px) scale(${state.scale})`;
+			targets.forEach((t, i) => {
+				const vb = origViewBoxes[i];
+				if (vb && t.tagName === "svg") {
+					// 通过 viewBox 缩放，保持文字清晰
+					const cx = vb.x + vb.w / 2;
+					const cy = vb.y + vb.h / 2;
+					const newW = vb.w / state.scale;
+					const newH = vb.h / state.scale;
+					const newX = cx - newW / 2 - state.tx / state.scale;
+					const newY = cy - newH / 2 - state.ty / state.scale;
+					t.setAttribute("viewBox", `${newX} ${newY} ${newW} ${newH}`);
+					t.style.transform = "";
+				} else {
+					t.style.transformOrigin = "center center";
+					t.style.transform = `translate(${state.tx}px,${state.ty}px) scale(${state.scale})`;
+				}
 			});
 		};
 		const clamp = (s) => Math.min(MAX_SCALE, Math.max(MIN_SCALE, s));
@@ -162,9 +183,28 @@
 		fsControls.className = "diagram-fs-controls";
 
 		const st = { scale: 1, tx: 0, ty: 0 };
+		// 全屏 clone 的原始 viewBox
+		const cloneVb = (() => {
+			if (clone.tagName === "svg" && clone.hasAttribute("viewBox")) {
+				const parts = clone.getAttribute("viewBox").split(/\s+/).map(Number);
+				return { x: parts[0], y: parts[1], w: parts[2], h: parts[3] };
+			}
+			return null;
+		})();
 		const apply = () => {
-			clone.style.transformOrigin = "center center";
-			clone.style.transform = `translate(${st.tx}px,${st.ty}px) scale(${st.scale})`;
+			if (cloneVb && clone.tagName === "svg") {
+				const cx = cloneVb.x + cloneVb.w / 2;
+				const cy = cloneVb.y + cloneVb.h / 2;
+				const newW = cloneVb.w / st.scale;
+				const newH = cloneVb.h / st.scale;
+				const newX = cx - newW / 2 - st.tx / st.scale;
+				const newY = cy - newH / 2 - st.ty / st.scale;
+				clone.setAttribute("viewBox", `${newX} ${newY} ${newW} ${newH}`);
+				clone.style.transform = "";
+			} else {
+				clone.style.transformOrigin = "center center";
+				clone.style.transform = `translate(${st.tx}px,${st.ty}px) scale(${st.scale})`;
+			}
 		};
 		const zoom = (f, ox, oy) => {
 			const prev = st.scale;
