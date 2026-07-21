@@ -151,6 +151,14 @@ export type SiteConfig = {
 		apiUrl?: string; // Bangumi API 地址
 		subjectBaseUrl?: string; // 条目详情页地址
 		categoryOrder?: ("anime" | "game" | "book" | "music" | "real")[]; // 条目类型排序顺序
+		// 各分类的显示启用状态，未设置时默认启用
+		categories?: {
+			book?: boolean;
+			anime?: boolean;
+			music?: boolean;
+			game?: boolean;
+			real?: boolean;
+		};
 	};
 
 	// 追番配置（Bilibili + TMDB）

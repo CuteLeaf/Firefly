@@ -28,12 +28,13 @@ const bangumiConfig = {
 	apiUrl: siteConfig.bangumi?.apiUrl || "https://api.bangumi.one",
 	subjectBaseUrl:
 		siteConfig.bangumi?.subjectBaseUrl || "https://bangumi.one/subject/",
+	// 从配置文件中读取各分类是否启用，若未配置则使用默认值
 	categories: {
-		book: true,
-		anime: true,
-		music: true,
-		game: true,
-		real: false,
+		book: siteConfig.bangumi?.categories?.book ?? true,
+		anime: siteConfig.bangumi?.categories?.anime ?? true,
+		music: siteConfig.bangumi?.categories?.music ?? true,
+		game: siteConfig.bangumi?.categories?.game ?? true,
+		real: siteConfig.bangumi?.categories?.real ?? false,
 	},
 	// 数据获取设置
 	pagination: {
