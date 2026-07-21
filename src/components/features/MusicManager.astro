@@ -200,23 +200,20 @@ const managerConfigStr = JSON.stringify({
         }
     }
 
-    // ── Track loading ────────────────────────────────────────
-    function loadTrack(index, autoPlay) {
-        if (index < 0 || index >= state.playlist.length) return;
-        state.currentIndex = index;
-        var track = state.playlist[index];
-        var ver = ++loadVersion;
+    var currentTrackUrls = [];
+    var currentTrackUrlIndex = 0;
+    var errorSkipTimeout = null;
 
-        audio.src = track.url;
-
-        loadLyrics(track);
-
-        emit('fm:track', { index: index, track: track, autoPlay: !!autoPlay });
+    function tryPlayCurrentTrackUrl(autoPlay, ver) {
+        if (ver !== loadVersion) return;
+        var playUrl = currentTrackUrls[currentTrackUrlIndex];
+        audio.src = playUrl;
 
         if (autoPlay) {
             audio.play().then(function () {
                 if (ver !== loadVersion) return; // stale, discard
                 state.isPlaying = true;
+                state.error = null;
                 emit('fm:play-state', { isPlaying: true });
             }).catch(function (e) {
                 if (ver !== loadVersion) return; // stale, discard
@@ -229,12 +226,51 @@ const managerConfigStr = JSON.stringify({
         }
     }
 
+    // ── Track loading ────────────────────────────────────────
+    function loadTrack(index, autoPlay) {
+        if (index < 0 || index >= state.playlist.length) return;
+        state.currentIndex = index;
+        var track = state.playlist[index];
+        var ver = ++loadVersion;
+
+        if (errorSkipTimeout) {
+            clearTimeout(errorSkipTimeout);
+            errorSkipTimeout = null;
+        }
+
+        currentTrackUrls = [track.url];
+        currentTrackUrlIndex = 0;
+
+        var matchId = track.url.match(/[?&]id=([^&]+)/);
+        var matchServer = track.url.match(/[?&]server=([^&]+)/);
+        if (matchId && matchServer && config.meting && config.meting.fallbackApis) {
+            config.meting.fallbackApis.forEach(function (fallback) {
+                var fallbackUrl = fallback
+                    .replace(':server', matchServer[1])
+                    .replace(':type', 'url')
+                    .replace(':id', matchId[1]);
+                if (currentTrackUrls.indexOf(fallbackUrl) === -1) {
+                    currentTrackUrls.push(fallbackUrl);
+                }
+            });
+        }
+
+        loadLyrics(track);
+
+        emit('fm:track', { index: index, track: track, autoPlay: !!autoPlay });
+
+        tryPlayCurrentTrackUrl(autoPlay, ver);
+    }
+
     // ── Playback controls ────────────────────────────────────
     function togglePlay() {
         if (audio.paused) {
             audio.play().then(function () {
                 state.isPlaying = true;
                 emit('fm:play-state', { isPlaying: true });
+            }).catch(function (e) {
+                if (e.name === 'AbortError') return;
+                console.warn('Playback failed:', e);
             });
         } else {
             audio.pause();
@@ -345,8 +381,22 @@ const managerConfigStr = JSON.stringify({
     });
 
     audio.addEventListener('error', function () {
-        state.error = 'Audio playback error';
-        emit('fm:error', { message: state.error });
+        var ver = loadVersion;
+        if (currentTrackUrlIndex < currentTrackUrls.length - 1) {
+            currentTrackUrlIndex++;
+            console.warn('Playback failed, trying fallback URL: ' + currentTrackUrls[currentTrackUrlIndex]);
+            tryPlayCurrentTrackUrl(true, ver);
+        } else {
+            state.error = 'Audio playback error';
+            emit('fm:error', { message: '播放失败，即将自动跳过...' });
+
+            if (errorSkipTimeout) clearTimeout(errorSkipTimeout);
+            errorSkipTimeout = setTimeout(function () {
+                if (ver === loadVersion) {
+                    playNext(true);
+                }
+            }, 2000);
+        }
     });
 
     // ── Init (idempotent) ────────────────────────────────────
