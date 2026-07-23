@@ -146,6 +146,7 @@ If you have useful features and optimizations, please submit a [Pull Request](ht
    Install Command: `pnpm install`
 
    [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/CuteLeaf/Firefly&project-name=Firefly&repository-name=Firefly)
+[![Deploy to PandaStack](https://dashboard.pandastack.io/deploy-button.svg)](https://dashboard.pandastack.io/deploy?repo=CuteLeaf/Firefly&type=static&buildCmd=npm+run+build&outputDir=dist)
    [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/CuteLeaf/Firefly)
 
 ## 📖 Configuration
