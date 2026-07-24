@@ -61,6 +61,8 @@ const bannerPostMeta = {
 const processedImage = processCoverImageSync(entry.data.image, entry.id);
 const apiUrls = getApiUrlList(entry.data.image, entry.id);
 const showPostCover = Boolean(processedImage && coverImageConfig.enableInPost);
+const usePostCoverOverlay =
+	showPostCover && (coverImageConfig.enableInPostOverlay ?? true);
 
 let posterCoverUrl = processedImage;
 if (processedImage) {
@@ -165,7 +167,7 @@ const relatedPosts = await getRelatedPosts(entry, 5);
       ]}
     >
       {
-        showPostCover && processedImage && (
+        usePostCoverOverlay && processedImage && (
           <div class="-mx-6 md:-mx-9 -mt-6 mb-6 h-48 md:h-64 relative onload-animation">
             <CoverImage
               id="post-cover"
@@ -222,7 +224,7 @@ const relatedPosts = await getRelatedPosts(entry, 5);
 
       <!-- word count and reading time -->
       {
-        !showPostCover && (
+        !usePostCoverOverlay && (
           <div
             class="flex flex-row text-black/30 dark:text-white/30 gap-5 mb-3 transition onload-animation"
           >
@@ -273,7 +275,7 @@ const relatedPosts = await getRelatedPosts(entry, 5);
 
       <!-- title -->
       {
-        !showPostCover && (
+        !usePostCoverOverlay && (
           <div class="relative onload-animation">
             <div
               data-pagefind-body
@@ -293,7 +295,7 @@ const relatedPosts = await getRelatedPosts(entry, 5);
 
       <!-- metadata -->
       {
-        !showPostCover && (
+        !usePostCoverOverlay && (
           <div class="onload-animation">
             <PostMetadata
               className="mb-5"
@@ -303,7 +305,26 @@ const relatedPosts = await getRelatedPosts(entry, 5);
               category={entry.data.category || undefined}
               id={entry.id}
             />
-            <div class="border-(--line-divider) border-dashed border-b mt-3 mb-5" />
+            {
+              !showPostCover && (
+                <div class="border-(--line-divider) border-dashed border-b mt-3 mb-5" />
+              )
+            }
+          </div>
+        )
+      }
+
+      {
+        showPostCover && !usePostCoverOverlay && processedImage && (
+          <div class="mt-4">
+            <CoverImage
+              id="post-cover"
+              src={processedImage}
+              basePath={getFileDirFromPath(entry.filePath || "")}
+              class="mb-8 rounded-xl banner-container onload-animation"
+              preview={false}
+              apiUrls={apiUrls}
+            />
           </div>
         )
       }
