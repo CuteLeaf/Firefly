@@ -20,6 +20,12 @@ export const profileConfig: ProfileConfig = {
 	// 如果想使用尚未包含相应的图标集，则需要安装它
 	// `pnpm add @iconify-json/<icon-set-name>`
 	// showName: true 时显示图标和名称，false 时只显示图标
+	// interaction 可配置悬停/点击交互选项：
+	// - qrCode: 悬停/聚焦时弹出的二维码图片路径 (如 "/assets/qr-code/wechat.png")
+	// - qrCodeAlt: 二维码图片的 Alt 描述文本
+	// - copyText: 点击时自动复制到剪贴板的文本 (如微信号/QQ号)
+	// - openDelayMs: 点击后延迟打开外链的时间（毫秒，默认 0）
+
 	links: [
 		{
 			name: "qq",
