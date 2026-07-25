@@ -26,7 +26,6 @@ export const profileConfig: ProfileConfig = {
 			icon: "fa7-brands:qq",
 			url: "/",
 			showName: false,
-			tooltip: "2952847743"
 		},
 		{
 			name: "GitHub",
@@ -39,7 +38,6 @@ export const profileConfig: ProfileConfig = {
 			icon: "fa7-solid:envelope",
 			url: "mailto:2952847743@qq.com",
 			showName: false,
-			tooltip: "2952847743@qq.com"
 		},
 	],
 };
