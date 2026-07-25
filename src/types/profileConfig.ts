@@ -7,5 +7,10 @@ export type ProfileConfig = {
 		url: string;
 		icon: string;
 		showName?: boolean;
+		tooltip?: string;
+	}[];
+	techStack?: {
+		icon: string;
+		name: string;
 	}[];
 };

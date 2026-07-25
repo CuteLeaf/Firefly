@@ -14,6 +14,17 @@ export const profileConfig: ProfileConfig = {
 	// 个人签名
 	bio: "自强、自律、自学，奋发向上",
 
+	// 技术栈
+	// 纯展示图标，不可点击
+	// 格式同 links 的 icon/name，已预装图标集见上方注释
+	techStack: [
+		{ icon: "simple-icons:vuedotjs", name: "Vue" },
+		{ icon: "simple-icons:react", name: "React" },
+		{ icon: "simple-icons:typescript", name: "TypeScript" },
+		{ icon: "simple-icons:nodedotjs", name: "Node.js" },
+		{ icon: "simple-icons:python", name: "Python" },
+	],
+
 	// 链接配置
 	// 已经预装的图标集：fa7-brands，fa7-regular，fa7-solid，material-symbols，simple-icons
 	// 访问https://icones.js.org/ 获取图标代码，
@@ -26,6 +37,7 @@ export const profileConfig: ProfileConfig = {
 			icon: "fa7-brands:qq",
 			url: "/",
 			showName: false,
+			tooltip: "2952847743",
 		},
 		{
 			name: "GitHub",
@@ -38,6 +50,7 @@ export const profileConfig: ProfileConfig = {
 			icon: "fa7-solid:envelope",
 			url: "mailto:2952847743@qq.com",
 			showName: false,
+			tooltip: "2952847743@qq.com",
 		},
 	],
 };

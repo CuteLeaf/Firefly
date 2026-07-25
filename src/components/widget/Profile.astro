@@ -59,7 +59,12 @@ const className = Astro.props.class;
                         ? "btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95" 
                         : "btn-regular rounded-lg h-10 w-10 active:scale-90";
 
-                    if (item.url.startsWith("mailto:")) {
+                    if (item.tooltip) {
+                        return <span class={`${className} tooltip-btn relative cursor-default`} data-tooltip={item.tooltip}>
+                            <Icon is:inline name={item.icon} class="text-[1.5rem]"></Icon>
+                            {showName && item.name}
+                        </span>
+                    } else if (item.url.startsWith("mailto:")) {
                         const encodedEmail = Buffer.from(item.url.replace("mailto:", "")).toString("base64");
                         return <a rel="me" aria-label={item.name} href="#" data-encoded-email={encodedEmail} onclick={`
                                             (function() {
@@ -86,7 +91,12 @@ const className = Astro.props.class;
                     }
             )}
             {profileConfig.links.length == 1 && (function(item){
-                if (item.url.startsWith("mailto:")) {
+                if (item.tooltip) {
+                        return <span class="btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95 tooltip-btn relative cursor-default" data-tooltip={item.tooltip}>
+                            <Icon is:inline name={item.icon} class="text-[1.5rem]"></Icon>
+                            {item.name}
+                        </span>
+                } else if (item.url.startsWith("mailto:")) {
                         const encodedEmail = Buffer.from(item.url.replace("mailto:", "")).toString("base64");
                         return <a rel="me" aria-label={item.name} href="#" data-encoded-email={encodedEmail} onclick={`
                                             (function() {
@@ -113,5 +123,40 @@ const className = Astro.props.class;
                     }
             })(profileConfig.links[0])}
         </div>
+            {profileConfig.techStack && profileConfig.techStack.length > 0 && (
+                <>
+                    <div class="text-center text-xs font-bold mt-3 mb-1.5 dark:text-neutral-50 transition">技术栈</div>
+                    <div class="flex flex-wrap gap-2 justify-center mb-1">
+                        {profileConfig.techStack.map(item =>
+                            <span class="btn-regular rounded-lg h-10 w-10" title={item.name}>
+                                <Icon is:inline name={item.icon} class="text-[1.5rem]"></Icon>
+                            </span>
+                        )}
+                    </div>
+                </>
+            )}
   </div>
 </div>
+
+<style>
+  .tooltip-btn::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 100;
+  }
+  .tooltip-btn:hover::after {
+    opacity: 1;
+  }
+</style>
