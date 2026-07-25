@@ -7,5 +7,6 @@ export type ProfileConfig = {
 		url: string;
 		icon: string;
 		showName?: boolean;
+		tooltip?: string;
 	}[];
 };
