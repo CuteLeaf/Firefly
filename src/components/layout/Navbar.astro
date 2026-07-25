@@ -22,6 +22,8 @@ import { isHomePage } from "@/utils/layout-utils";
 import { url } from "@/utils/url-utils";
 import DropdownMenu from "./DropdownMenu.astro";
 import NavMenuPanel from "./NavMenuPanel.astro";
+import NavbarSocialInteraction from "./NavbarSocialInteraction.astro";
+
 
 const className = Astro.props.class;
 
@@ -193,8 +195,10 @@ if (isLocalSrcLogo) {
         )}
         <NavMenuPanel links={links}></NavMenuPanel>
         <DisplaySettings client:load></DisplaySettings>
+        <NavbarSocialInteraction />
     </div>
 </div>
+
 
 <script>
 function loadButtonScript() {
