@@ -22,10 +22,10 @@ export const profileConfig: ProfileConfig = {
 	// showName: true 时显示图标和名称，false 时只显示图标
 	links: [
 		{
-			name: "qq",
+			name: "2952847743",
 			icon: "fa7-brands:qq",
-			url: "https://qm.qq.com/q/ZGsFa8qX2G",
-			showName: false,
+			url: "",
+			showName: true,
 		},
 		{
 			name: "GitHub",
@@ -34,7 +34,7 @@ export const profileConfig: ProfileConfig = {
 			showName: false,
 		},
 		{
-			name: "Email",
+			name: "Email: 2952847743@qq.com",
 			icon: "fa7-solid:envelope",
 			url: "mailto:2952847743@qq.com",
 			showName: true,
