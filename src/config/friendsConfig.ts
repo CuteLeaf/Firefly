@@ -24,13 +24,12 @@ export const friendsPageConfig: FriendsPageConfig = {
 export const friendsConfig: FriendLink[] = [
 	{
 		title: "夏夜流萤",
-		imgurl:
-			"https://weavatar.com/avatar/d252655d40d6874417a720bad0a6c5f77f8f6a1fd2f882f8f338402dc37e4190?s=640",
+		imgurl: "https://weavatar.com/avatar/d252655d40d6874417a720bad0a6c5f77f8f6a1fd2f882f8f338402dc37e4190?s=640",
 		desc: "飞萤之火自无梦的长夜亮起，绽放在终竟的明天。",
 		siteurl: "https://blog.cuteleaf.cn",
 		tags: ["Blog"],
-		weight: 10, // 权重，数字越大排序越靠前
-		enabled: true, // 是否启用
+		weight: 10,
+		enabled: false,
 	},
 	{
 		title: "Firefly Docs",
@@ -39,7 +38,7 @@ export const friendsConfig: FriendLink[] = [
 		siteurl: "https://docs-firefly.cuteleaf.cn",
 		tags: ["Docs"],
 		weight: 9,
-		enabled: true,
+		enabled: false,
 	},
 	{
 		title: "Astro",
@@ -48,9 +47,10 @@ export const friendsConfig: FriendLink[] = [
 		siteurl: "https://github.com/withastro/astro",
 		tags: ["Framework"],
 		weight: 8,
-		enabled: true,
+		enabled: false,
 	},
 ];
+
 
 // 获取启用的友链并进行排序
 export const getEnabledFriends = (): FriendLink[] => {

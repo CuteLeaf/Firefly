@@ -1,0 +1,65 @@
+---
+import AdminApp from "@components/admin/AdminApp.svelte";
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Firefly 管理面板</title>
+		<meta name="robots" content="noindex, nofollow" />
+		<style>
+			/* 管理面板基础样式 — 不依赖 Tailwind，保持独立 */
+			:root {
+				--admin-bg: #f8f9fa;
+				--admin-surface: #ffffff;
+				--admin-text: #1f2937;
+				--admin-text-secondary: #6b7280;
+				--admin-border: #e5e7eb;
+				--admin-primary: #3b82f6;
+				--admin-primary-hover: #2563eb;
+				--admin-danger: #ef4444;
+				--admin-success: #22c55e;
+				--admin-warning: #f59e0b;
+				--admin-sidebar-bg: #1e293b;
+				--admin-sidebar-text: #e2e8f0;
+				--admin-sidebar-hover: #334155;
+				--admin-sidebar-active: #3b82f6;
+			}
+
+			*, *::before, *::after {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+
+			html, body {
+				height: 100%;
+				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+				font-size: 14px;
+				line-height: 1.5;
+				background: var(--admin-bg);
+				color: var(--admin-text);
+			}
+
+			#admin-root {
+				height: 100vh;
+				display: flex;
+			}
+		</style>
+	</head>
+	<body>
+		{
+			import.meta.env.PROD ? (
+				<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-size:18px;color:#6b7280;">
+					<p>管理面板仅限开发环境使用 (localhost)</p>
+				</div>
+			) : (
+				<div id="admin-root">
+					<AdminApp client:only="svelte" />
+				</div>
+			)
+		}
+	</body>
+</html>
