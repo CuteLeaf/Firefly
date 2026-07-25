@@ -26,4 +26,7 @@ export const dynamicPlainText = (entry: CollectionEntry<"dynamic">): string =>
 		.trim();
 
 export const dynamicSearchText = (entry: CollectionEntry<"dynamic">): string =>
-	dynamicPlainText(entry).toLocaleLowerCase();
+	[dynamicPlainText(entry), entry.data.location]
+		.filter(Boolean)
+		.join(" ")
+		.toLocaleLowerCase();

@@ -25,10 +25,15 @@ interface Props {
 	layout?: ResponsiveImageLayout;
 	usePicture?: boolean;
 	formats?: ImageFormat[];
+	width?: number;
+	height?: number;
 	widths?: number[];
 	sizes?: string;
 	quality?: number;
 	fadeIn?: boolean;
+	dataCoverImg?: boolean;
+	showLqip?: boolean;
+	showOverlay?: boolean;
 }
 
 const {
@@ -42,10 +47,15 @@ const {
 	layout = "constrained",
 	usePicture = true,
 	formats = getImageFormats(),
+	width,
+	height,
 	widths,
 	sizes,
 	quality = getImageQuality(),
 	fadeIn = true,
+	dataCoverImg = false,
+	showLqip = true,
+	showOverlay = true,
 } = Astro.props;
 
 const fallbackFormat = getFallbackFormat();
@@ -95,6 +105,8 @@ const referrerPolicy =
 // 构建响应式图像属性
 const responsiveProps = {
 	...(layout && { layout }),
+	...(width && { width }),
+	...(height && { height }),
 	...(widths && { widths }),
 	...(sizes && { sizes }),
 	...(quality && { quality }),
@@ -108,8 +120,8 @@ const lqipProps = isLocal
 		: getLqipProps(src);
 ---
 <div id={id} class:list={[className, 'overflow-hidden relative']}>
-    {fadeIn && <div class="lqip-placeholder absolute inset-0 pointer-events-none" style={lqipProps.style} aria-hidden="true"></div>}
-    <div class="transition absolute inset-0 dark:bg-black/10 pointer-events-none"></div>
+    {fadeIn && showLqip && <div class="lqip-placeholder absolute inset-0 pointer-events-none" style={lqipProps.style} aria-hidden="true"></div>}
+    {showOverlay && <div class="transition absolute inset-0 dark:bg-black/10 pointer-events-none"></div>}
     {isLocal && img && usePicture && (
         <Picture
             src={img}
@@ -118,6 +130,7 @@ const lqipProps = isLocal
             style={imageStyle}
             loading={loading}
             fetchpriority={fetchpriority}
+            data-cover-img={dataCoverImg ? true : undefined}
             formats={formats}
             fallbackFormat={fallbackFormat}
             {...responsiveProps}
@@ -131,8 +144,9 @@ const lqipProps = isLocal
             style={imageStyle}
             loading={loading}
             fetchpriority={fetchpriority}
+            data-cover-img={dataCoverImg ? true : undefined}
             {...responsiveProps}
         />
     )}
-    {!isLocal && <img src={isPublic ? url(src) : src} alt={alt || ""} class={imageClass} style={imageStyle} loading={loading} fetchpriority={fetchpriority} referrerpolicy={referrerPolicy} />}
+    {!isLocal && <img src={isPublic ? url(src) : src} alt={alt || ""} class={imageClass} style={imageStyle} loading={loading} fetchpriority={fetchpriority} data-cover-img={dataCoverImg ? true : undefined} referrerpolicy={referrerPolicy} />}
 </div>

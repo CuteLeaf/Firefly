@@ -19,6 +19,7 @@ type DynamicData = {
 	images: DynamicImage[];
 	searchText: string;
 	pinned?: boolean;
+	location?: string;
 };
 
 interface MemosConfig {
@@ -180,6 +181,20 @@ function createItem(entry: DynamicData) {
 				},
 			).format(date);
 			time.textContent += ` ${formatTimezoneOffset(timezone, date)}`;
+		}
+	}
+	const location = root.querySelector<HTMLElement>("[data-dynamic-location]");
+	if (location) {
+		const locationText = entry.location?.trim();
+		if (locationText) {
+			const text = location.querySelector<HTMLElement>(
+				"[data-dynamic-location-text]",
+			);
+			if (text) text.textContent = locationText;
+			location.title = locationText;
+			location.removeAttribute("hidden");
+		} else {
+			location.setAttribute("hidden", "");
 		}
 	}
 

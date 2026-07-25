@@ -235,12 +235,13 @@ pnpm new-d 今天天氣真不錯
 ---
 published: 2026-07-15 16:15:29
 pinned: true  # 置頂
+location: China # 位置
 ---
 
 動態內容支援 Markdown 語法。
 ```
 
-也支援對接 [Memos](https://www.usememos.com/) 作為資料來源，在 `src/config/dynamicConfig.ts` 中設定 `memos` 選項即可即時取得 Memos 動態，支援置頂同步和圖片附件展示。詳見[動態檔案](https://firefly.cuteleaf.cn/guide/dynamic/)。
+也支援對接 [Memos](https://www.usememos.com/) 作為資料來源，在 `src/config/dynamicConfig.ts` 中設定 `memos` 選項即可即時取得 Memos 動態，支援置頂同步和圖片附件展示。詳見[動態檔案](https://docs-firefly.cuteleaf.cn/zh/guide/dynamic/)。
 
 ## 🧩 Markdown 擴充語法
 

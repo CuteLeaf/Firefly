@@ -1,6 +1,5 @@
 ---
 import { render } from "astro:content";
-import * as path from "node:path";
 import Comment from "@components/comment/index.astro";
 import Markdown from "@components/common/Markdown.astro";
 import EncryptedPost from "@components/features/EncryptedPost.astro";
@@ -50,6 +49,7 @@ const { remarkPluginFrontmatter } = await render(entry);
 
 const bannerPostMeta = {
 	title: entry.data.title,
+	description: entry.data.description,
 	published: entry.data.published,
 	updated: entry.data.updated,
 	words: remarkPluginFrontmatter.words,
@@ -59,54 +59,30 @@ const bannerPostMeta = {
 // 处理随机图：如果image为"api"，则从配置的API获取随机图
 const processedImage = processCoverImageSync(entry.data.image, entry.id);
 const apiUrls = getApiUrlList(entry.data.image, entry.id);
+const showPostCover = Boolean(processedImage && coverImageConfig.enableInPost);
+const usePostCoverOverlay =
+	showPostCover && (coverImageConfig.enableInPostOverlay ?? true);
 
-let posterCoverUrl = processedImage;
-if (processedImage) {
-	const isLocal = !(
-		processedImage.startsWith("/") ||
-		processedImage.startsWith("http") ||
-		processedImage.startsWith("https") ||
-		processedImage.startsWith("data:")
-	);
-	if (isLocal) {
-		const basePath = getFileDirFromPath(entry.filePath || "");
-		const files = import.meta.glob<ImageMetadata>("../../**", {
-			import: "default",
-		});
-		let normalizedPath = path
-			.normalize(path.join("../../", basePath, processedImage))
-			.replace(/\\/g, "/");
-		const file = files[normalizedPath];
-		if (file) {
-			const img = await file();
-			posterCoverUrl = img.src;
-		}
+const getDirectImageUrl = (src: string | undefined): string | null => {
+	if (!src) return null;
+	if (
+		src.startsWith("http://") ||
+		src.startsWith("https://") ||
+		src.startsWith("//") ||
+		src.startsWith("data:")
+	) {
+		return src;
 	}
-}
+	return src.startsWith("/") ? url(src) : null;
+};
 
-// 处理头像URL
-let posterAvatarUrl: string | null = profileConfig.avatar || null;
-if (posterAvatarUrl) {
-	const isLocalAvatar = !(
-		posterAvatarUrl.startsWith("/") ||
-		posterAvatarUrl.startsWith("http") ||
-		posterAvatarUrl.startsWith("https") ||
-		posterAvatarUrl.startsWith("data:")
-	);
-	if (isLocalAvatar) {
-		const files = import.meta.glob<ImageMetadata>("../../**", {
-			import: "default",
-		});
-		const normalizedPath = path
-			.normalize(path.join("../../", posterAvatarUrl))
-			.replace(/\\/g, "/");
-		const file = files[normalizedPath];
-		if (file) {
-			const img = await file();
-			posterAvatarUrl = img.src;
-		}
-	}
-}
+// 海报优先复用页面上已经优化过的图片，本地源路径不再单独导入。
+const posterCoverUrl = showPostCover ? null : getDirectImageUrl(processedImage);
+const posterCoverSelector = showPostCover ? "#post-cover img" : null;
+const posterAvatarUrl = getDirectImageUrl(profileConfig.avatar);
+const posterAvatarSelector = profileConfig.avatar
+	? ".profile-avatar-image img"
+	: null;
 
 dayjs.extend(utc);
 
@@ -162,95 +138,161 @@ const relatedPosts = await getRelatedPosts(entry, 5);
         {},
       ]}
     >
-      <!-- word count and reading time -->
-      <div
-        class="flex flex-row text-black/30 dark:text-white/30 gap-5 mb-3 transition onload-animation"
-      >
-        <div class="flex flex-row items-center">
-          <div
-            class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2"
-          >
-            <Icon is:inline name="material-symbols:notes-rounded" />
-          </div>
-          <div class="text-sm">
-            {remarkPluginFrontmatter.words}
-            {" " + i18n(I18nKey.wordsCount)}
-          </div>
-        </div>
-        <div class="flex flex-row items-center">
-          <div
-            class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2"
-          >
-            <Icon is:inline name="material-symbols:schedule-outline-rounded" />
-          </div>
-          <div class="text-sm">
-            {remarkPluginFrontmatter.minutes}
-            {
-              " " +
-                i18n(
-                  remarkPluginFrontmatter.minutes === 1
-                    ? I18nKey.minuteCount
-                    : I18nKey.minutesCount
-                )
-            }
-          </div>
-        </div>
-        {entry.data.password && (
-          <div class="flex flex-row items-center">
-            <div
-              class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2"
-            >
-              <Icon is:inline name="material-symbols:lock-outline" />
-            </div>
-            <div class="text-sm">
-              {i18n(I18nKey.postEncrypted)}
-            </div>
-          </div>
-        )}
-      </div>
-
-      <!-- title -->
-      <div class="relative onload-animation">
-        <div
-          data-pagefind-body
-          data-pagefind-weight="10"
-          data-pagefind-meta="title"
-          class="transition w-full block font-bold mb-3
-                    text-3xl md:text-[2.25rem]/[2.75rem]
-                    text-black/90 dark:text-white/90
-                    md:before:w-1 before:h-5 before:rounded-md before:bg-(--primary)
-                    before:absolute before:top-3 before:-left-4.5"
-        >
-          {entry.data.title}
-        </div>
-      </div>
-
-      <!-- metadata -->
-      <div class="onload-animation">
-        <PostMetadata
-          className="mb-5"
-          published={entry.data.published}
-          updated={entry.data.updated}
-          tags={entry.data.tags}
-          category={entry.data.category || undefined}
-          id={entry.id}
-        />
-        {
-          !processedImage && (
-            <div class="border-(--line-divider) border-dashed border-b mt-3 mb-5" />
-          )
-        }
-      </div>
-
-      <!-- always show cover as long as it has one -->
-
       {
-        processedImage && coverImageConfig.enableInPost && (
-          <div style="margin-top:1rem;">
+        usePostCoverOverlay && processedImage && (
+          <div class="-mx-6 md:-mx-9 -mt-6 mb-6 h-48 md:h-64 relative onload-animation">
             <CoverImage
               id="post-cover"
               src={processedImage}
-              basePath={getFileDirFromPath(entry.filePath || '')}
+              basePath={getFileDirFromPath(entry.filePath || "")}
+              class="h-full"
+              preview={false}
+              apiUrls={apiUrls}
+            />
+            <div class="absolute inset-x-4 top-3 z-10 flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-xs font-medium text-white drop-shadow-[0_1px_2px_rgb(0_0_0/0.9)]">
+              <div class="flex items-center gap-1 whitespace-nowrap">
+                <Icon is:inline name="material-symbols:notes-rounded" class="text-base" />
+                <span>
+                  {remarkPluginFrontmatter.words}
+                  {" " + i18n(remarkPluginFrontmatter.words === 1 ? I18nKey.wordCount : I18nKey.wordsCount)}
+                </span>
+              </div>
+              <div class="flex items-center gap-1 whitespace-nowrap">
+                <Icon is:inline name="material-symbols:schedule-outline-rounded" class="text-base" />
+                <span>
+                  {remarkPluginFrontmatter.minutes}
+                  {" " + i18n(remarkPluginFrontmatter.minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount)}
+                </span>
+              </div>
+              {entry.data.password && (
+                <div class="flex items-center gap-1 whitespace-nowrap">
+                  <Icon is:inline name="material-symbols:lock-outline" class="text-base" />
+                  <span>{i18n(I18nKey.postEncrypted)}</span>
+                </div>
+              )}
+            </div>
+            <div class="absolute inset-x-0 bottom-0 px-6 md:px-9 pt-10 pb-3 bg-gradient-to-t from-black/80 via-black/45 to-transparent">
+              <div
+                data-pagefind-body
+                data-pagefind-weight="10"
+                data-pagefind-meta="title"
+                class="mb-2 text-xl md:text-2xl font-bold leading-tight text-white"
+              >
+                {entry.data.title}
+              </div>
+              <PostMetadata
+                variant="cover"
+                className="gap-x-4 gap-y-1"
+                published={entry.data.published}
+                updated={entry.data.updated}
+                category={entry.data.category || undefined}
+                tags={entry.data.tags}
+                id={entry.id}
+              />
+            </div>
+          </div>
+        )
+      }
+
+      <!-- word count and reading time -->
+      {
+        !usePostCoverOverlay && (
+          <div
+            class="flex flex-row text-black/30 dark:text-white/30 gap-5 mb-3 transition onload-animation"
+          >
+            <div class="flex flex-row items-center">
+              <div
+                class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2"
+              >
+                <Icon is:inline name="material-symbols:notes-rounded" />
+              </div>
+              <div class="text-sm">
+                {remarkPluginFrontmatter.words}
+                {" " + i18n(I18nKey.wordsCount)}
+              </div>
+            </div>
+            <div class="flex flex-row items-center">
+              <div
+                class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2"
+              >
+                <Icon is:inline name="material-symbols:schedule-outline-rounded" />
+              </div>
+              <div class="text-sm">
+                {remarkPluginFrontmatter.minutes}
+                {
+                  " " +
+                    i18n(
+                      remarkPluginFrontmatter.minutes === 1
+                        ? I18nKey.minuteCount
+                        : I18nKey.minutesCount
+                    )
+                }
+              </div>
+            </div>
+            {entry.data.password && (
+              <div class="flex flex-row items-center">
+                <div
+                  class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2"
+                >
+                  <Icon is:inline name="material-symbols:lock-outline" />
+                </div>
+                <div class="text-sm">
+                  {i18n(I18nKey.postEncrypted)}
+                </div>
+              </div>
+            )}
+          </div>
+        )
+      }
+
+      <!-- title -->
+      {
+        !usePostCoverOverlay && (
+          <div class="relative onload-animation">
+            <div
+              data-pagefind-body
+              data-pagefind-weight="10"
+              data-pagefind-meta="title"
+              class="transition w-full block font-bold mb-3
+                        text-3xl md:text-[2.25rem]/[2.75rem]
+                        text-black/90 dark:text-white/90
+                        md:before:w-1 before:h-5 before:rounded-md before:bg-(--primary)
+                        before:absolute before:top-3 before:-left-4.5"
+            >
+              {entry.data.title}
+            </div>
+          </div>
+        )
+      }
+
+      <!-- metadata -->
+      {
+        !usePostCoverOverlay && (
+          <div class="onload-animation">
+            <PostMetadata
+              className="mb-5"
+              published={entry.data.published}
+              updated={entry.data.updated}
+              tags={entry.data.tags}
+              category={entry.data.category || undefined}
+              id={entry.id}
+            />
+            {
+              !showPostCover && (
+                <div class="border-(--line-divider) border-dashed border-b mt-3 mb-5" />
+              )
+            }
+          </div>
+        )
+      }
+
+      {
+        showPostCover && !usePostCoverOverlay && processedImage && (
+          <div class="mt-4">
+            <CoverImage
+              id="post-cover"
+              src={processedImage}
+              basePath={getFileDirFromPath(entry.filePath || "")}
               class="mb-8 rounded-xl banner-container onload-animation"
               preview={false}
               apiUrls={apiUrls}
@@ -308,9 +350,11 @@ const relatedPosts = await getRelatedPosts(entry, 5);
                             description={entry.data.description || entry.data.title}
                             pubDate={formatDateToYYYYMMDD(entry.data.published)}
                             coverImage={posterCoverUrl}
+                            coverImageSelector={posterCoverSelector}
                             url={Astro.url.href}
                             siteTitle={siteConfig.title}
                             avatar={posterAvatarUrl}
+                            avatarSelector={posterAvatarSelector}
                           />
                         )
                       }
@@ -396,9 +440,11 @@ const relatedPosts = await getRelatedPosts(entry, 5);
                             description={entry.data.description || entry.data.title}
                             pubDate={formatDateToYYYYMMDD(entry.data.published)}
                             coverImage={posterCoverUrl}
+                            coverImageSelector={posterCoverSelector}
                             url={Astro.url.href}
                             siteTitle={siteConfig.title}
                             avatar={posterAvatarUrl}
+                            avatarSelector={posterAvatarSelector}
                           />
                         )
                       }

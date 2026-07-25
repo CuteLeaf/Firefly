@@ -232,12 +232,13 @@ pnpm new-d The weather is lovely today
 ---
 published: 2026-07-15 16:15:29
 pinned: true  # Pin article
+location: China # Location
 ---
 
 Moment content supports Markdown.
 ```
 
-Also supports [Memos](https://www.usememos.com/) as a data source. Configure the `memos` option in `src/config/dynamicConfig.ts` to fetch Memos moments in real-time, with pinned sync and image attachment support. See [Moments documentation](https://firefly.cuteleaf.cn/en/guide/dynamic/).
+Also supports [Memos](https://www.usememos.com/) as a data source. Configure the `memos` option in `src/config/dynamicConfig.ts` to fetch Memos moments in real-time, with pinned sync and image attachment support. See [Moments documentation](https://docs-firefly.cuteleaf.cn/en/guide/dynamic/).
 
 ## 📖 Markdown Extensions
 

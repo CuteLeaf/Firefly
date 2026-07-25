@@ -11,6 +11,10 @@ interface MemoAttachment {
 	externalLink: string;
 }
 
+interface MemoLocation {
+	placeholder?: string;
+}
+
 interface Memo {
 	name: string;
 	state: string;
@@ -21,6 +25,7 @@ interface Memo {
 	visibility: string;
 	pinned: boolean;
 	attachments: MemoAttachment[];
+	location?: MemoLocation;
 }
 
 interface MemosApiResponse {
@@ -41,6 +46,7 @@ export interface DynamicEntry {
 	images: DynamicImage[];
 	searchText: string;
 	pinned?: boolean;
+	location?: string;
 }
 
 /**
@@ -218,10 +224,22 @@ async function fetchMemosInternal(
 			const published = new Date(memo.createTime).getTime();
 			const html = markdownToHtml(memo.content);
 			const images = extractImages(memo, memosApiUrl);
-			const searchText = extractPlainText(memo.content).toLocaleLowerCase();
+			const location = memo.location?.placeholder?.trim() || "";
+			const searchText = [extractPlainText(memo.content), location]
+				.filter(Boolean)
+				.join(" ")
+				.toLocaleLowerCase();
 			const pinned = memo.pinned || false;
 
-			return { id, published, html, images, searchText, pinned };
+			return {
+				id,
+				published,
+				html,
+				images,
+				searchText,
+				pinned,
+				location,
+			};
 		})
 		.sort((a, b) => {
 			// 置顶优先，然后按发布时间降序

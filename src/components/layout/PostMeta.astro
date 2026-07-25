@@ -28,6 +28,7 @@ export interface Props {
 	minutes?: number;
 	showWords?: boolean;
 	showReadingTime?: boolean;
+	variant?: "default" | "cover";
 }
 
 const {
@@ -51,6 +52,8 @@ const {
 	minutes,
 	showWords = false,
 	showReadingTime = false,
+	password,
+	variant = "default",
 } = Astro.props;
 
 const path = customPath || (id ? `/posts/${id}` : "");
@@ -60,7 +63,11 @@ const visibleTags =
 
 <div
   class:list={[
-    "post-meta-root flex flex-wrap text-neutral-500 dark:text-neutral-400 items-center gap-4 gap-x-4 gap-y-2",
+    "post-meta-root flex flex-wrap items-center gap-4 gap-x-4 gap-y-2",
+    {
+      "text-neutral-500 dark:text-neutral-400": variant === "default",
+      "post-meta-cover text-white/90": variant === "cover",
+    },
     className,
   ]}
 >
@@ -134,7 +141,7 @@ const visibleTags =
     showTags && (
       <div
         class:list={[
-          "items-center",
+          "post-meta-tags items-center",
           { flex: !hideTagsForMobile, "hidden md:flex": hideTagsForMobile },
         ]}
       >
@@ -149,7 +156,7 @@ const visibleTags =
                 <div
                   class:list={[
                     { hidden: i === 0 },
-                    "mx-1.5 text-(--meta-divider) text-sm",
+                    "meta-divider mx-1.5 text-(--meta-divider) text-sm",
                   ]}
                 >
                   /
@@ -274,4 +281,67 @@ const visibleTags =
       </div>
     )
   }
+
+  {
+    password && (
+      <div class="flex items-center">
+        <div class="meta-icon">
+          <Icon is:inline name="material-symbols:lock-outline" class="text-xl" />
+        </div>
+        <span class="text-50 text-sm font-medium">
+          {i18n(I18nKey.postEncrypted)}
+        </span>
+      </div>
+    )
+  }
 </div>
+
+<style>
+  .post-meta-cover .text-50,
+  .post-meta-cover .meta-divider {
+    color: rgb(255 255 255 / 0.9) !important;
+  }
+
+  .post-meta-cover .meta-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    margin-right: 0.375rem;
+    background: transparent;
+    color: rgb(255 255 255 / 0.9);
+  }
+
+  .post-meta-cover .text-sm {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+
+  .post-meta-cover .text-xl {
+    font-size: 1rem;
+  }
+
+  .post-meta-cover .post-meta-tags {
+    min-width: 0;
+  }
+
+  .post-meta-cover .post-meta-tags .flex-nowrap {
+    flex-wrap: wrap !important;
+  }
+
+  .post-meta-cover a:hover {
+    color: white !important;
+  }
+
+  .post-meta-cover a:hover::before {
+    background-color: rgb(255 255 255 / 0.18) !important;
+  }
+
+  .post-meta-cover a:active::before {
+    background-color: rgb(255 255 255 / 0.26) !important;
+  }
+
+  @media (max-width: 767px) {
+    .post-meta-cover .post-meta-tags {
+      width: 100%;
+    }
+  }
+</style>

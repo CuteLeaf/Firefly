@@ -1706,7 +1706,9 @@ function disableAnimation() {
           placeholder.classList.add('loaded');
         }, { once: true });
         img.addEventListener('error', () => {
-          placeholder.classList.add('loaded');
+          if (!container.classList.contains('cover-image-container')) {
+            placeholder.classList.add('loaded');
+          }
         }, { once: true });
       }
     });

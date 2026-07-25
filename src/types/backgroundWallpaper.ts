@@ -26,6 +26,9 @@ export type BackgroundWallpaperConfig = {
 				pauseTime: number; // 完整显示后的暂停时间（毫秒）
 			};
 		};
+		postInfo?: {
+			mode: "description" | "meta";
+		};
 		navbar?: {
 			transparentMode?: "semi" | "full" | "semifull"; // 导航栏透明模式
 			enableBlur?: boolean; // 是否开启毛玻璃模糊效果
