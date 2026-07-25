@@ -30,7 +30,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 		// 类型：song=单曲, playlist=歌单, album=专辑, search=搜索, artist=艺术家
 		type: "playlist",
 		// 歌单/专辑/单曲 ID 或搜索关键词
-		id: "10046455237",
+		id: "2745275485",  // https://music.163.com/playlist?id=2745275485&uct2=U2FsdGVkX18Z/eWL/zpVcAfYlgzwLS4hH6F1sb2sh5A=
 		// 认证 token（可选）
 		auth: "",
 		// 备用 API 配置（当主 API 失败时使用）

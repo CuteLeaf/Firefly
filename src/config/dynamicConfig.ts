@@ -27,12 +27,12 @@ export const dynamicConfig: DynamicConfig = {
 	// Memos 记得配置 CORS，否则可能会出现跨域问题
 	memos: {
 		// 是否启用 Memos 数据源
-		enable: false,
+		enable: true,
 
 		// Memos 实例地址
-		apiUrl: "https://memos.example.com",
+		apiUrl: "https://memo.khbit.cn",
 
 		// Memos 用户标识，如 "users/你的memos用户名"，用于过滤指定用户的动态
-		parent: "users/xiaye",
+		parent: "users/kuohu",
 	},
 };

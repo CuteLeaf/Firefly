@@ -1,29 +1,21 @@
 # 关于我 / About Me
 
-你好！我是 **夏叶** ，一个在数字世界中默默无闻的一片叶子。
-
+你好！我是 **括弧** ，现在高一。
 ## 🛠️ 关于本站
 
 这个网站使用 **Astro** 框架构建，采用了 [Firefly](https://github.com/CuteLeaf/Firefly) 模板，Firefly 是基于 [Fuwari](https://github.com/saicaca/fuwari) 的二次开发。
 
-**Firefly** 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。
+平时用 Python 和 Golang，会点前端和运维。
 
+这个博客以随笔为主，基本就是当一个长篇 QQ 空间发，所以可能技术性内容占比不多。随笔内容也大多是梦到啥说啥，可以当个乐看。~~鄙人比较擅长一本正经的胡说八道~~
 
-**🖥️在线预览： [Firefly - Demo site](https://firefly.cuteleaf.cn/)**
+哦对了，这是我初中三年一直在独立开发的一个项目，是一个能在 Windows 7 上运行，支持集控和远程配置，并且能够自动计算并应用调休安排，适用于班级大屏的电子课表。也许可能帮到你：
 
-**🏠我的博客： [https://blog.cuteleaf.cn](https://blog.cuteleaf.cn/)**
+::github{repo="AstraSchedule/desktop"}
 
-**📝Firefly使用文档： [https://docs-firefly.cuteleaf.cn](https://docs-firefly.cuteleaf.cn/)**
-
-**⭐Firefly开源地址：[https://github.com/CuteLeaf/Firefly](https://github.com/CuteLeaf/Firefly)** 
-
-**⭐Fuwari开源地址：[https://github.com/saicaca/fuwari](https://github.com/saicaca/fuwari)**
-
-::github{repo="CuteLeaf/Firefly"}
-
-::github{repo="saicaca/fuwari"}
+不过他不只由一个 repo 构成，篇幅原因这里只给出客户端 repo 链接，具体可以去看看 [AstraSchedule 文档](https://getastra.cn)。此外，如果嫌部署麻烦的话也提供公益的 SaaS 版本！
 
 ---
 
-*感谢你的来访！希望在这里能找到对你有用的内容！*
+*总之，感谢你的来访！希望在这里能找到对你有用的内容！*
 

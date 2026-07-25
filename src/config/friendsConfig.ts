@@ -23,33 +23,42 @@ export const friendsPageConfig: FriendsPageConfig = {
 // 友链配置
 export const friendsConfig: FriendLink[] = [
 	{
-		title: "夏夜流萤",
+		title: "烟墨的屑站点",
 		imgurl:
-			"https://weavatar.com/avatar/d252655d40d6874417a720bad0a6c5f77f8f6a1fd2f882f8f338402dc37e4190?s=640",
-		desc: "飞萤之火自无梦的长夜亮起，绽放在终竟的明天。",
-		siteurl: "https://blog.cuteleaf.cn",
+			"https://avatar.ymbit.cn",
+		desc: "林花谢了春红，太匆匆。无奈朝来寒雨，晚来风。",
+		siteurl: "https://www.ymbit.cn",
 		tags: ["Blog"],
 		weight: 10, // 权重，数字越大排序越靠前
 		enabled: true, // 是否启用
 	},
 	{
-		title: "Firefly Docs",
-		imgurl: "https://docs-firefly.cuteleaf.cn/logo.png",
-		desc: "Firefly主题模板文档",
-		siteurl: "https://docs-firefly.cuteleaf.cn",
-		tags: ["Docs"],
+		title: "夏沫花火zzz🌙 (Muska_Ami)のLife",
+		imgurl: "https://blog.amaicat.work/images/avatar.jpg",
+		desc: "Keep doing, keep loving",
+		siteurl: "https://blog.amaicat.work",
+		tags: ["Blog"],
 		weight: 9,
 		enabled: true,
 	},
 	{
-		title: "Astro",
-		imgurl: "https://avatars.githubusercontent.com/u/44914786?v=4&s=640",
-		desc: "The web framework for content-driven websites. ⭐️ Star to support our work!",
-		siteurl: "https://github.com/withastro/astro",
-		tags: ["Framework"],
+		title: "win2k的小站",
+		imgurl: "https://www.abjust.fun/upload/b_e04b0924f8e749918b3553c0f04cc099.jpg",
+		desc: "生活本无意义，但人类选择追寻",
+		siteurl: "https://www.abjust.fun",
+		tags: ["Blog"],
 		weight: 8,
 		enabled: true,
 	},
+	{
+		title: "星程课表 AstraSchedule",
+		imgurl: "https://image-hk-1.oss-accelerate.aliyuncs.com/icon.png",
+		desc: "灵活部署 · 智能调休 · 集中管控 · 兼容 Windows 7",
+		siteurl: "https://getastra.cn",
+		tags: ["Docs"],
+		weight: 7,
+		enabled: true
+	}
 ];
 
 // 获取启用的友链并进行排序
