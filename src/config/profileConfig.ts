@@ -46,7 +46,7 @@ export const profileConfig: ProfileConfig = {
 			showName: false,
 			interaction: {
 				copyText: "微信:xxx 网站:xxxx 欢迎扩列~",
-				openDelayMs: 1500,
+				openDelayMs: 3000,
 				qrCode: "https://example.com/assets/wechat_qrcode.png",
 				qrCodeAlt: "微信二维码",
 			},

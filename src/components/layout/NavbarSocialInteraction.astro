@@ -72,14 +72,18 @@ import { Icon } from "astro-icon/components";
 
 		const announcementKey = `${notification.kind}:${notification.copyText}`;
 		if (notification.kind === "success") {
-			message.textContent = `微信号 ${notification.copyText} 已复制，${notification.secondsRemaining} 秒后将尝试打开微信（${notification.secondsRemaining}）`;
+			const delaySeconds = (notification.openDelayMs / 1000).toFixed(1);
+			message.textContent = `已复制 "${notification.copyText}"，${delaySeconds} 秒后尝试打开应用`;
 			if (live && live.dataset.announcement !== announcementKey) {
-				live.textContent = `微信号 ${notification.copyText} 已复制，3 秒后将尝试打开微信`;
+				live.textContent = message.textContent;
 				live.dataset.announcement = announcementKey;
 			}
 			setToastVisible(true);
 		} else if (notification.kind === "complete") {
-			message.textContent = `微信号 ${notification.copyText} 已复制，正在尝试打开微信...`;
+			message.textContent =
+				notification.openDelayMs > 0
+					? `已复制 "${notification.copyText}"，正在尝试打开应用...`
+					: `已复制 "${notification.copyText}" 并正在跳转...`;
 			if (live) {
 				live.textContent = message.textContent;
 				live.dataset.announcement = announcementKey;
@@ -88,7 +92,7 @@ import { Icon } from "astro-icon/components";
 			if (toastAutoHideTimer !== undefined) {
 				window.clearTimeout(toastAutoHideTimer);
 			}
-			toastAutoHideTimer = window.setTimeout(() => setToastVisible(false), 1200);
+			toastAutoHideTimer = window.setTimeout(() => setToastVisible(false), 1500);
 		} else {
 			message.textContent = `无法自动复制，请手动复制：${notification.copyText}`;
 			if (live) {
@@ -138,7 +142,11 @@ import { Icon } from "astro-icon/components";
 		copy: copyText,
 		notify: showNotification,
 		open: (href) => {
-			window.location.href = href;
+			if (href.startsWith("http://") || href.startsWith("https://")) {
+				window.open(href, "_blank", "noopener,noreferrer");
+			} else {
+				window.location.href = href;
+			}
 		},
 		setTimeout: (callback, delay) => window.setTimeout(callback, delay),
 		clearTimeout: (id) => window.clearTimeout(id),

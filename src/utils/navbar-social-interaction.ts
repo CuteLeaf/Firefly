@@ -25,9 +25,9 @@ export type DelayedLinkOptions = {
 };
 
 export type DelayedLinkNotification =
-	| { kind: "success"; copyText: string; secondsRemaining: number }
+	| { kind: "success"; copyText: string; openDelayMs: number; secondsRemaining: number }
 	| { kind: "failure"; copyText: string }
-	| { kind: "complete"; copyText: string };
+	| { kind: "complete"; copyText: string; openDelayMs: number };
 
 export type DelayedLinkDependencies = {
 	copy: (text: string) => Promise<boolean>;
@@ -124,10 +124,21 @@ export function createDelayedLinkController(
 			return;
 		}
 
+		if (options.openDelayMs <= 0) {
+			dependencies.notify({
+				kind: "complete",
+				copyText: options.copyText,
+				openDelayMs: 0,
+			});
+			dependencies.open(options.href);
+			return;
+		}
+
 		let secondsRemaining = Math.max(1, Math.ceil(options.openDelayMs / 1000));
 		dependencies.notify({
 			kind: "success",
 			copyText: options.copyText,
+			openDelayMs: options.openDelayMs,
 			secondsRemaining,
 		});
 
@@ -138,12 +149,8 @@ export function createDelayedLinkController(
 				dependencies.notify({
 					kind: "success",
 					copyText: options.copyText,
+					openDelayMs: options.openDelayMs,
 					secondsRemaining,
-				});
-			} else {
-				dependencies.notify({
-					kind: "complete",
-					copyText: options.copyText,
 				});
 			}
 		}, 1000);
@@ -153,6 +160,7 @@ export function createDelayedLinkController(
 			dependencies.notify({
 				kind: "complete",
 				copyText: options.copyText,
+				openDelayMs: options.openDelayMs,
 			});
 			dependencies.open(options.href);
 		}, options.openDelayMs);
