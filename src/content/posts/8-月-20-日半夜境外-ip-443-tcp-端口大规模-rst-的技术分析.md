@@ -2,7 +2,7 @@
 title: 8 月 20 日半夜境外 IP 443/tcp 端口大规模 RST 的技术分析
 description: 我觉得你知道我要说什么（？）
 published: 2025-08-20
-category: 研究
+category: 技术
 tags:
   - 计算机
 slug: gfw-820
