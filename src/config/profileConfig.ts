@@ -32,7 +32,25 @@ export const profileConfig: ProfileConfig = {
 			icon: "fa7-brands:qq",
 			url: "https://qm.qq.com/q/ZGsFa8qX2G",
 			showName: false,
+/* 			interaction: {
+				copyText: "qq群:xxxx 网站:xxxx 欢迎扩列~",
+				openDelayMs: 0,
+				qrCode: "https://example.com/assets/qq_qrcode.png",
+				qrCodeAlt: "QQ 二维码",
+			}, */
 		},
+/* 		{
+			name: "微信",
+			icon: "fa7-brands:weixin",
+			url: "weixin://",
+			showName: false,
+			interaction: {
+				copyText: "微信:xxx 网站:xxxx 欢迎扩列~",
+				openDelayMs: 1500,
+				qrCode: "https://example.com/assets/wechat_qrcode.png",
+				qrCodeAlt: "微信二维码",
+			},
+		}, */
 		{
 			name: "GitHub",
 			icon: "fa7-brands:github",
