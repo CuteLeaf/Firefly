@@ -46,7 +46,7 @@ function goToPage(page: number) {
     <div class="mobile-pagination items-center gap-3">
       <button
         type="button"
-        class="btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="btn-card overflow-hidden rounded-(--radius-large) text-(--primary) w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
         onclick={() => goToPage(currentPage - 1)}
         disabled={currentPage === 1}
         aria-label="上一页"
@@ -54,7 +54,7 @@ function goToPage(page: number) {
         <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
 
-      <div class="btn-card flex items-center rounded-lg px-4 h-11 gap-1.5">
+      <div class="btn-card flex items-center rounded-(--radius-large) px-4 h-11 gap-1.5">
         <span class="text-base font-bold text-(--primary)">{currentPage}</span>
         <span class="text-sm text-neutral-500 dark:text-neutral-500">/</span>
         <span class="text-base font-bold text-neutral-700 dark:text-neutral-300">{totalPages}</span>
@@ -62,7 +62,7 @@ function goToPage(page: number) {
 
       <button
         type="button"
-        class="btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="btn-card overflow-hidden rounded-(--radius-large) text-(--primary) w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
         onclick={() => goToPage(currentPage + 1)}
         disabled={currentPage === totalPages}
         aria-label="下一页"
@@ -75,7 +75,7 @@ function goToPage(page: number) {
     <div class="desktop-pagination items-center gap-3">
       <button
         type="button"
-        class="btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="btn-card overflow-hidden rounded-(--radius-large) text-(--primary) w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
         onclick={() => goToPage(currentPage - 1)}
         disabled={currentPage === 1}
         aria-label="上一页"
@@ -89,7 +89,7 @@ function goToPage(page: number) {
         {:else}
           <button
             type="button"
-            class="rounded-lg overflow-hidden w-11 h-11 flex items-center justify-center font-bold {pageItem === currentPage
+            class="rounded-(--radius-large) overflow-hidden w-11 h-11 flex items-center justify-center font-bold {pageItem === currentPage
               ? 'bg-(--primary) text-white dark:text-black/70'
               : 'btn-card active:scale-[0.85] text-neutral-700 dark:text-neutral-300'}"
             onclick={() => goToPage(pageItem as number)}
@@ -103,7 +103,7 @@ function goToPage(page: number) {
 
       <button
         type="button"
-        class="btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="btn-card overflow-hidden rounded-(--radius-large) text-(--primary) w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
         onclick={() => goToPage(currentPage + 1)}
         disabled={currentPage === totalPages}
         aria-label="下一页"

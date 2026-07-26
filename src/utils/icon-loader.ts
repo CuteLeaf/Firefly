@@ -3,7 +3,7 @@
  * 负责处理图标的加载状态显示
  */
 
-export function initIconLoader() {
+export function initIconLoader(): void {
 	// 初始化单个图标容器
 	function initContainer(container: Element) {
 		if (container.hasAttribute("data-icon-initialized")) return;

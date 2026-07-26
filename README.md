@@ -28,7 +28,7 @@
 
 ---
 📖 README：
-**[简体中文](README.md)** | **[繁體中文](docs/README.zh-TW.md)** | **[English](README.en.md)** | **[日本語](docs/README.ja.md)** | **[Русский](docs/README.ru.md)**
+**[简体中文](README.md)** | **[繁體中文](docs/README.zh-TW.md)** | **[English](README.en.md)** | **[日本語](docs/README.ja.md)** 
 
 🚀 快速指南：
 [**🖥️在线预览**](https://firefly.cuteleaf.cn/) /
@@ -61,14 +61,8 @@
 >[!TIP]
 >
 >Firefly 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。
-> 
->在重要的布局上，Firefly 创新性地增加了左右双侧边栏、文章网格(多列)布局、瀑布流布局。
 >
->增加了站点统计、日历、文章目录、音乐播放器、快捷分类导航等小组件，让侧边栏和整体页面布局更加丰富。
->
->同时也增加了分享海报、相关文章推荐、随机文章等组件，让文章页面内容更丰富。
->
->**如果你参考或使用了 Firefly 以上组件设计和相关代码，请注明来自 Firefly。**
+>**如果你参考或使用了 Firefly 的组件设计和相关代码，请注明来自 Firefly。**
 >
 >Firefly 也保留了原版 fuwari 的布局，可根据自己的喜好在配置文件中自由切换。
 >
@@ -190,6 +184,8 @@ src/
 │   ├── backgroundWallpaper.ts    # 背景壁纸配置
 │   ├── commentConfig.ts          # 评论系统配置
 │   ├── coverImageConfig.ts       # 封面图配置
+│   ├── displaySettingsConfig.ts  # 设置面板配置
+│   ├── dynamicConfig.ts          # 动态页面配置
 │   ├── effectsConfig.ts          # 动画特效配置（樱花等）
 │   ├── expressiveCodeConfig.ts   # 代码高亮配置
 │   ├── fontConfig.ts             # 字体配置
@@ -224,6 +220,28 @@ comment: true    # 是否允许评论
 ---
 ```
 
+## 动态
+
+动态文件保存在 `src/content/dynamic/` 中，一个 Markdown 文件对应一条动态。可以使用快捷命令创建：
+
+```bash
+pnpm new-d 今天心情不错，出去吃了一顿火锅
+```
+
+`pnpm new-dynamic <content>` 也可以使用，和 `new-d` 完全等价。
+
+```yaml
+---
+published: 2026-07-15 16:15:29
+pinned: true  # 置顶
+location: China # 位置
+---
+
+动态内容可以使用 Markdown 语法。
+```
+
+也支持对接 [Memos](https://www.usememos.com/) 作为数据源，在 `src/config/dynamicConfig.ts` 中配置 `memos` 选项即可实时获取 Memos 动态，支持置顶同步和图片附件展示。详见[动态文档](https://docs-firefly.cuteleaf.cn/zh/guide/dynamic/)。
+
 ## 🧩 Markdown 扩展语法
 
 除了 Astro 默认支持的 [GitHub Flavored Markdown](https://github.github.com/gfm/) 之外，还包含了一些额外的 Markdown 功能：
@@ -245,6 +263,8 @@ comment: true    # 是否允许评论
 | `pnpm check`               | 检查代码中的错误                       |
 | `pnpm format`              | 使用 Biome 格式化您的代码              |
 | `pnpm new-post <filename>` | 创建新文章                             |
+| `pnpm new-d <content>`     | 创建一条动态                           |
+| `pnpm new-dynamic <content>` | 创建一条动态（完整命令）              |
 | `pnpm astro ...`           | 执行 `astro add`, `astro check` 等指令 |
 | `pnpm astro --help`        | 显示 Astro CLI 帮助                    |
 

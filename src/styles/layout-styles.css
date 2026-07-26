@@ -435,16 +435,20 @@ html.is-page-transitioning .banner-home-text-overlay {
     transform: translateX(-100%);
     opacity: 0;
 }
-/* Ken Burns 旋转木马效果 — 纯放大，配合 LQIP 过渡切换 */
+/* Ken Burns 旋转木马效果 - 交叉淡入淡出 */
 @keyframes kenburns {
     from { transform: scale(1); }
     to { transform: scale(1.1) translate(-2%, -1%); }
 }
 .effect-kenburns .slide-item {
-    transition-property: opacity;
+    opacity: 0;
+    transition: opacity 800ms ease-in-out;
+    animation: kenburns var(--carousel-interval, 5000ms) ease-out infinite;
+    animation-play-state: paused;
 }
 .effect-kenburns .slide-item.active {
-    animation: kenburns var(--carousel-interval, 5000ms) ease-out forwards;
+    opacity: 1;
+    animation-play-state: running;
 }
 
 /* 当banner被禁用时的布局样式 */

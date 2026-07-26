@@ -20,6 +20,14 @@ const config = {
   <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css" />
   <script type="module" is:inline define:vars={{ config }}>
     import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
-    init(config);
+    const requestedPath = new URLSearchParams(window.location.search).get("path");
+    const effectiveConfig = requestedPath
+      ? { ...config, path: requestedPath }
+      : config;
+    try {
+      init(effectiveConfig);
+    } catch (error) {
+      console.error("[Waline] Failed to initialize:", error);
+    }
   </script>
 </div>

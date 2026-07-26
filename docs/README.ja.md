@@ -28,7 +28,7 @@
 
 ---
 📖 README：
-**[简体中文](../README.md)** | **[繁體中文](README.zh-TW.md)** | **[English](../README.en.md)** | **[日本語](README.ja.md)** | **[Русский](README.ru.md)** 
+**[简体中文](../README.md)** | **[繁體中文](README.zh-TW.md)** | **[English](../README.en.md)** | **[日本語](README.ja.md)**
 
 🚀 クイックガイド：
 [**🖥️ライブデモ**](https://firefly.cuteleaf.cn/) /
@@ -62,13 +62,7 @@
 >
 >Firefly は、Astro フレームワークと Fuwari テンプレートをベースに開発された、清新で美しくモダンな個人ブログテーマテンプレートです。技術愛好家やコンテンツクリエイター向けに設計されており、モダンな Web 技術スタックを統合し、豊富な機能モジュールと高いカスタマイズ性を備えたインターフェースで、プロフェッショナルで美しい個人ブログを手軽に構築できます。
 >
->主要なレイアウト面では、Firefly は左右のデュアルサイドバー、記事グリッド（多カラム）レイアウト、メイソンリーレイアウトを革新的に追加しています。
->
->さらに、サイト統計、カレンダー、目次、音楽プレーヤー、クイックカテゴリーナビゲーションなどのウィジェットを追加し、サイドバーとページ全体のレイアウトをより豊かにしています。
->
->同時に、共有ポスター、関連記事のおすすめ、ランダム記事などのコンポーネントも追加し、記事ページの内容をさらに充実させています。
->
->**Firefly の上記コンポーネント設計や関連コードを参考または利用する場合は、出典として Firefly を明記してください。**
+>**Firefly コンポーネント設計や関連コードを参考または利用する場合は、出典として Firefly を明記してください。**
 >
 >Firefly はオリジナルの fuwari レイアウトも保持しており、設定ファイルで好みに応じて自由に切り替えられます。
 >
@@ -188,6 +182,8 @@ src/
 │   ├── backgroundWallpaper.ts    # 背景壁紙設定
 │   ├── commentConfig.ts          # コメントシステム設定
 │   ├── coverImageConfig.ts       # カバー画像設定
+│   ├── displaySettingsConfig.ts  # パネル構成の設定
+│   ├── dynamicConfig.ts          # モーメントページ設定
 │   ├── effectsConfig.ts          # アニメーションエフェクト設定（桜など）
 │   ├── expressiveCodeConfig.ts   # コードハイライト設定
 │   ├── fontConfig.ts             # フォント設定
@@ -222,6 +218,28 @@ comment: true    # コメントを有効化
 ---
 ```
 
+## モーメント
+
+モーメントは `src/content/dynamic/` に保存され、1つの Markdown ファイルが1件のモーメントに対応します。次のコマンドで作成できます：
+
+```bash
+pnpm new-d 今日はとても良い天気です
+```
+
+`pnpm new-dynamic <content>` も同じ機能の完全なコマンドです。
+
+```yaml
+---
+published: 2026-07-15 16:15:29
+pinned: true  # 記事を固定
+location: China # 場所
+---
+
+本文では Markdown を使用できます。
+```
+
+[Memos](https://www.usememos.com/) をデータソースとして接続することもできます。`src/config/dynamicConfig.ts` の `memos` オプションを設定すると、ピン留めの同期や画像添付ファイルの表示に対応したリアルタイムデータ取得が可能です。詳細は[モーメントドキュメント](https://docs-firefly.cuteleaf.cn/en/guide/dynamic/)をご参照ください。
+
 ## 🧩 Markdown拡張
 
 Astro がデフォルトで対応している[GitHub Flavored Markdown](https://github.github.com/gfm/)に加えて、いくつかの追加の Markdown 機能があります：
@@ -243,6 +261,8 @@ Astro がデフォルトで対応している[GitHub Flavored Markdown](https://
 | `pnpm check`               | コード内のエラーをチェック                      |
 | `pnpm format`              | Biome を使用してコードをフォーマット            |
 | `pnpm new-post <filename>` | 新しい記事を作成                                |
+| `pnpm new-d <content>`     | 新しいモーメントを作成                          |
+| `pnpm new-dynamic <content>` | 新しいモーメントを作成（完全なコマンド）      |
 | `pnpm astro ...`           | `astro add`、`astro check` などのコマンドを実行 |
 | `pnpm astro --help`        | Astro CLI ヘルプを表示                          |
 

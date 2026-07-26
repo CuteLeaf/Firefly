@@ -24,6 +24,25 @@ export const ru: Translation = {
 	[Key.tableOfContents]: "Содержание",
 	[Key.tocEmpty]: "На этой странице нет оглавления",
 	[Key.music]: "Музыка",
+	[Key.dynamic]: "Моменты",
+	[Key.latestDynamics]: "Последние публикации",
+	[Key.moreDynamics]: "Больше публикаций",
+	[Key.dynamicDescription]: "Короткие мысли и моменты повседневной жизни.",
+	[Key.dynamicEmpty]: "Пока нет публикаций",
+	[Key.dynamicSearch]: "Поиск публикаций...",
+	[Key.dynamicNoResults]: "Подходящие публикации не найдены",
+	[Key.dynamicLoading]: "Загрузка публикаций",
+	[Key.dynamicAllYears]: "Все годы",
+	[Key.dynamicLoadMore]: "Загрузить ещё",
+	[Key.dynamicBackToList]: "Назад к публикациям",
+	[Key.dynamicProfile]: "Открыть профиль {name}",
+	[Key.dynamicPermalink]: "Постоянная ссылка на публикацию",
+	[Key.dynamicCollapseGallery]: "Свернуть",
+	[Key.dynamicViewOriginal]: "Открыть оригинал",
+	[Key.dynamicPreviousImage]: "Предыдущее изображение",
+	[Key.dynamicNextImage]: "Следующее изображение",
+	[Key.dynamicViewImage]: "Открыть изображение {index}",
+	[Key.dynamicSelectImage]: "Выбрать изображение {index}",
 	[Key.musicNoPlaying]: "Ничего не воспроизводится",
 	[Key.musicLyrics]: "Текст песни",
 	[Key.musicVolume]: "Громкость",
@@ -283,6 +302,16 @@ export const ru: Translation = {
 	[Key.overlayBlur]: "Размытие фона",
 	[Key.overlayCardOpacity]: "Прозрачность карточек",
 
+	// Вкладки панели настроек
+	[Key.settingsTabAppearance]: "Оформление",
+	[Key.settingsTabWallpaper]: "Обои",
+	[Key.settingsTabEffects]: "Эффекты",
+
+	// Стиль карточек
+	[Key.cardSettings]: "Стиль карточек",
+	[Key.cardBorder]: "Рамка и тень карточек",
+	[Key.cardFollowTheme]: "Карточки跟随主题色",
+
 	// Макет списка сообщений
 	[Key.postListLayout]: "Макет списка сообщений",
 	[Key.postListLayoutList]: "Список",
@@ -313,6 +342,7 @@ export const ru: Translation = {
 	// Статистика сайта
 	[Key.siteStats]: "Статистика сайта",
 	[Key.siteStatsPostCount]: "Статьи",
+	[Key.siteStatsDynamicCount]: "Публикации",
 	[Key.siteStatsCategoryCount]: "Категории",
 	[Key.siteStatsTagCount]: "Теги",
 	[Key.siteStatsTotalWords]: "Всего слов",

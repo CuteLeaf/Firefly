@@ -24,6 +24,25 @@ export const zh_TW: Translation = {
 	[Key.tableOfContents]: "文章目錄",
 	[Key.tocEmpty]: "目前頁面沒有目錄",
 	[Key.music]: "音樂",
+	[Key.dynamic]: "動態",
+	[Key.latestDynamics]: "最新動態",
+	[Key.moreDynamics]: "更多動態",
+	[Key.dynamicDescription]: "隨手記下此刻的想法與日常。",
+	[Key.dynamicEmpty]: "還沒有發佈動態",
+	[Key.dynamicSearch]: "搜尋動態...",
+	[Key.dynamicNoResults]: "沒有找到符合的動態",
+	[Key.dynamicLoading]: "正在載入動態",
+	[Key.dynamicAllYears]: "全部年份",
+	[Key.dynamicLoadMore]: "載入更多",
+	[Key.dynamicBackToList]: "返回動態列表",
+	[Key.dynamicProfile]: "查看 {name} 的資料",
+	[Key.dynamicPermalink]: "此動態的固定連結",
+	[Key.dynamicCollapseGallery]: "收起",
+	[Key.dynamicViewOriginal]: "查看大圖",
+	[Key.dynamicPreviousImage]: "上一張圖片",
+	[Key.dynamicNextImage]: "下一張圖片",
+	[Key.dynamicViewImage]: "查看圖片 {index}",
+	[Key.dynamicSelectImage]: "切換到圖片 {index}",
 	[Key.musicNoPlaying]: "暫未播放",
 	[Key.musicLyrics]: "歌詞",
 	[Key.musicVolume]: "音量",
@@ -275,6 +294,16 @@ export const zh_TW: Translation = {
 	[Key.overlayBlur]: "背景模糊度",
 	[Key.overlayCardOpacity]: "卡片透明度",
 
+	// 設定面板標籤
+	[Key.settingsTabAppearance]: "外觀",
+	[Key.settingsTabWallpaper]: "壁紙",
+	[Key.settingsTabEffects]: "特效",
+
+	// 卡片樣式
+	[Key.cardSettings]: "卡片樣式",
+	[Key.cardBorder]: "卡片邊框和陰影",
+	[Key.cardFollowTheme]: "卡片跟隨主題色",
+
 	// 文章佈局
 	[Key.postListLayout]: "文章佈局",
 	[Key.postListLayoutList]: "清單",
@@ -304,6 +333,7 @@ export const zh_TW: Translation = {
 	// 站點統計
 	[Key.siteStats]: "站點統計",
 	[Key.siteStatsPostCount]: "文章",
+	[Key.siteStatsDynamicCount]: "動態",
 	[Key.siteStatsCategoryCount]: "分類",
 	[Key.siteStatsTagCount]: "標籤",
 	[Key.siteStatsTotalWords]: "總字數",

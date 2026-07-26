@@ -124,14 +124,14 @@ const stats = [
           </span>
         </div>
         <div class="flex items-center">
-          <span 
+          <span
             class="text-base font-bold text-neutral-900 dark:text-neutral-100"
             data-stat-id={stat.id}
           >
             {stat.formatted ? formatNumber(stat.value) : stat.value}
           </span>
           {stat.suffix && (
-            <span class="text-sm text-neutral-500 dark:text-neutral-400 ml-1">
+            <span class="ml-1 text-sm text-neutral-500 dark:text-neutral-400">
               {stat.suffix}
             </span>
           )}

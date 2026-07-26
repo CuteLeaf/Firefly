@@ -253,7 +253,9 @@ a.card-github.fetch-error
   border-radius: 0.75rem
   overflow: hidden
   background: var(--card-bg)
-  transition: all 0.3s ease
+  transition-property: background-color, box-shadow
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)
+  transition-duration: 0.15s
   touch-action: pan-y pinch-zoom
 
   &:hover
@@ -265,6 +267,7 @@ a.card-github.fetch-error
   justify-content: center
   align-items: center
   min-height: 100px
+  width: 100%
 
 // 响应式设计
 @media (max-width: 768px)
@@ -282,16 +285,17 @@ a.card-github.fetch-error
   justify-content: center
   align-items: center
   overflow: hidden
+  width: 100%
 
   svg
     display: block
+    width: 100%
     max-width: 100%
     max-height: 420px
     height: auto
     border-radius: 0.5rem
     user-select: none
     transition: transform 0.12s ease-out
-    will-change: transform
 
 // 深色/浅色 SVG 主题切换
 .mermaid-svg-dark
@@ -304,9 +308,9 @@ a.card-github.fetch-error
   display: flex
 
 .mermaid-error
-  color: var(--admonitions-color-warning)
-  background: rgba(239, 68, 68, 0.1)
-  border: 1px solid var(--admonitions-color-warning)
+  color: #991b1b
+  background: #fef2f2
+  border: 1px solid #fca5a5
   border-radius: 0.5rem
   padding: 1rem
   margin: 1rem 0
@@ -324,8 +328,21 @@ a.card-github.fetch-error
   overflow-x: auto
   padding: 1rem
   border-radius: 0.5rem
-  background: var(--code-block-bg)
+  color: #1f2937
+  background: #ffffff
+  border: 1px solid #fecaca
+  font-weight: 400
   margin-top: 0.5rem
+
+.dark .mermaid-error
+  color: #fecaca
+  background: rgba(127, 29, 29, 0.24)
+  border-color: rgba(252, 165, 165, 0.55)
+
+  .mermaid-fallback-code
+    color: #f3f4f6
+    background: var(--codeblock-bg)
+    border-color: rgba(255, 255, 255, 0.14)
 
 // ─── PlantUML 图表特定样式 ─────────────────────────────────────────────────
 
@@ -337,7 +354,6 @@ a.card-github.fetch-error
   user-select: none
   -webkit-user-drag: none
   transition: transform 0.12s ease-out
-  will-change: transform
 
 .plantuml-error
   color: var(--admonitions-color-warning)
@@ -373,7 +389,8 @@ a.card-github.fetch-error
     filter: brightness(0.95)
 
 @media (max-width: 768px)
-  .mermaid-svg svg
+  .mermaid-svg-light svg,
+  .mermaid-svg-dark svg
     max-height: 400px
 
   .plantuml-image
@@ -451,7 +468,6 @@ a.card-github.fetch-error
     max-height: 100%
     user-select: none
     -webkit-user-drag: none
-    will-change: transform
 
 .diagram-fs-controls
   position: fixed

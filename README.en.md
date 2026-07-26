@@ -27,7 +27,7 @@
 
 ---
 📖 README:
-**[简体中文](README.md)** | **[繁體中文](docs/README.zh-TW.md)** | **[English](README.en.md)** | **[日本語](docs/README.ja.md)** | **[Русский](docs/README.ru.md)** 
+**[简体中文](README.md)** | **[繁體中文](docs/README.zh-TW.md)** | **[English](README.en.md)** | **[日本語](docs/README.ja.md)**
 
 🚀 Quick Guide:
 [**🖥️Live Demo**](https://firefly.cuteleaf.cn/) /
@@ -61,13 +61,7 @@
 >
 >Firefly is a fresh, beautiful, and modern personal blog theme template based on the Astro framework and the Fuwari template, designed for tech enthusiasts and content creators. It integrates a modern web tech stack, offering rich feature modules and a highly customizable interface so you can easily build a professional and visually appealing personal blog.
 >
->In terms of key layouts, Firefly innovatively adds dual sidebars, an article grid (multi-column) layout, and a masonry layout.
->
->It also adds widgets such as site statistics, calendar, table of contents, music player, and quick category navigation, making both the sidebar and the overall page layout richer.
->
->At the same time, it also adds components such as share posters, related post recommendations, and random posts, making article pages more content-rich.
->
->**If you reference or use the component designs and related code above from Firefly, please credit Firefly.**
+>**If you refer to or use Firefly component design and related code, please credit Firefly.**
 >
 >Firefly also preserves the original fuwari layout, which can be freely switched in the configuration file according to your preferences.
 >
@@ -187,6 +181,8 @@ src/
 │   ├── backgroundWallpaper.ts    # Background wallpaper configuration
 │   ├── commentConfig.ts          # Comment system configuration
 │   ├── coverImageConfig.ts       # Cover image configuration
+│   ├── displaySettingsConfig.ts  # Settings panel configuration
+│   ├── dynamicConfig.ts          # Moments page configuration
 │   ├── effectsConfig.ts          # Animation effects config (sakura, etc.)
 │   ├── expressiveCodeConfig.ts   # Code highlighting configuration
 │   ├── fontConfig.ts             # Font configuration
@@ -222,6 +218,28 @@ comment: true    # Enable comments
 ---
 ```
 
+## Moments
+
+Moment files are stored in `src/content/dynamic/`, with one Markdown file per moment. Create one with:
+
+```bash
+pnpm new-d The weather is lovely today
+```
+
+`pnpm new-dynamic <content>` is the equivalent full command.
+
+```yaml
+---
+published: 2026-07-15 16:15:29
+pinned: true  # Pin article
+location: China # Location
+---
+
+Moment content supports Markdown.
+```
+
+Also supports [Memos](https://www.usememos.com/) as a data source. Configure the `memos` option in `src/config/dynamicConfig.ts` to fetch Memos moments in real-time, with pinned sync and image attachment support. See [Moments documentation](https://docs-firefly.cuteleaf.cn/en/guide/dynamic/).
+
 ## 📖 Markdown Extensions
 
 In addition to the default [GitHub Flavored Markdown](https://github.github.com/gfm/) support in Astro, there are some additional Markdown features:
@@ -243,6 +261,8 @@ All commands need to be executed in the project root directory:
 | `pnpm check`               | Check for errors in code                            |
 | `pnpm format`              | Format your code using Biome                        |
 | `pnpm new-post <filename>` | Create new article                                  |
+| `pnpm new-d <content>`     | Create a new moment                                 |
+| `pnpm new-dynamic <content>` | Create a new moment (full command)                |
 | `pnpm astro ...`           | Execute `astro add`, `astro check` and other commands |
 | `pnpm astro --help`        | Display Astro CLI help                              |
 

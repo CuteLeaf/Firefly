@@ -152,6 +152,11 @@ import "@/styles/fancybox-custom.css";
 
     await preprocessSvgImages();
 
+    // Dynamic galleries expose their images through the toolbar button. Remove
+    // previous bindings before re-binding after client-rendered content appears.
+    Fancybox.unbind(IMG_SELECTOR);
+    Fancybox.unbind(LINK_SELECTOR);
+
     Fancybox.bind(IMG_SELECTOR, {
       ...commonOptions,
       groupAll: true,
@@ -161,10 +166,11 @@ import "@/styles/fancybox-custom.css";
       },
     });
 
-    Fancybox.bind(LINK_SELECTOR, {
+    Fancybox.bind(`${LINK_SELECTOR}:not(dynamic-gallery [data-gallery-lightbox])`, {
       ...commonOptions,
       source: (el: any) => el.getAttribute("data-src") || el.getAttribute("href"),
     });
+
   }
 
   function cleanupFancybox() {
@@ -190,6 +196,7 @@ import "@/styles/fancybox-custom.css";
 
   // Swup 生命周期整合
   document.addEventListener("swup:content:replace", setup);
+  document.addEventListener("dynamic-gallery:ready", setup);
   document.addEventListener("swup:visit:start", cleanupFancybox);
 
   // 加密文章解密后重新绑定灯箱

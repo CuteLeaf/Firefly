@@ -1,4 +1,5 @@
-import { renderMermaidSVG, THEMES } from "beautiful-mermaid";
+import { readFile } from "node:fs/promises";
+import { assertSafeSvgForDom, initMerman, renderSvg } from "@mermanjs/web";
 import { h } from "hastscript";
 import { visit } from "unist-util-visit";
 import {
@@ -13,27 +14,54 @@ import {
 } from "./utils/diagramConstants.js";
 import { extractText } from "./utils/extractText.js";
 
+const mermanWasmUrl = import.meta.resolve(
+	"@mermanjs/web/pkg/merman_wasm_bg.wasm",
+);
+await initMerman({
+	wasm: {
+		module_or_path: await readFile(new URL(mermanWasmUrl)),
+	},
+});
+
 /**
  * 在构建时将 Mermaid 源码渲染为浅色和深色两套静态 SVG
  *
  * @param {string} mermaidCode - Mermaid 图表源码
  * @param {object} themeConfig - { lightTheme, darkTheme } 主题名
+ * @param {number} diagramIndex - 当前文档中的图表序号
  * @returns {{ lightSvg: string, darkSvg: string }}
  */
-function buildMermaidSvgs(mermaidCode, themeConfig) {
-	const lightTheme = THEMES[themeConfig.lightTheme] || THEMES["github-light"];
-	const darkTheme = THEMES[themeConfig.darkTheme] || THEMES["github-dark"];
+/**
+ * 移除 SVG 内联 style 中的 max-width 限制，
+ * 使图表能根据容器宽度自适应缩放
+ */
+function removeSvgMaxWidth(svg) {
+	return svg.replace(/(<svg[^>]*style="[^"]*?)max-width:\s*[^;]+;?/, "$1");
+}
 
-	const lightSvg = renderMermaidSVG(mermaidCode, {
-		...lightTheme,
-		padding: 20,
+function buildMermaidSvgs(mermaidCode, themeConfig, diagramIndex) {
+	const lightSvg = renderSvg(mermaidCode, {
+		host_theme: { preset: themeConfig.lightTheme },
+		svg: {
+			diagram_id: `mermaid-${diagramIndex}-light`,
+			pipeline: "parity",
+		},
 	});
-	const darkSvg = renderMermaidSVG(mermaidCode, {
-		...darkTheme,
-		padding: 20,
+	const darkSvg = renderSvg(mermaidCode, {
+		host_theme: { preset: themeConfig.darkTheme },
+		svg: {
+			diagram_id: `mermaid-${diagramIndex}-dark`,
+			pipeline: "parity",
+		},
 	});
 
-	return { lightSvg, darkSvg };
+	assertSafeSvgForDom(lightSvg);
+	assertSafeSvgForDom(darkSvg);
+
+	return {
+		lightSvg: removeSvgMaxWidth(lightSvg),
+		darkSvg: removeSvgMaxWidth(darkSvg),
+	};
 }
 
 /**
@@ -43,11 +71,13 @@ function buildMermaidSvgs(mermaidCode, themeConfig) {
  */
 export function rehypeMermaid(options = {}) {
 	const themeConfig = {
-		lightTheme: options.lightTheme || "github-light",
-		darkTheme: options.darkTheme || "github-dark",
+		lightTheme: options.lightTheme || "editor-light",
+		darkTheme: options.darkTheme || "editor-dark",
 	};
 
 	return (tree) => {
+		let diagramIndex = 0;
+
 		visit(tree, "element", (node) => {
 			if (
 				node.tagName !== "div" ||
@@ -65,7 +95,12 @@ export function rehypeMermaid(options = {}) {
 			let lightSvg;
 			let darkSvg;
 			try {
-				({ lightSvg, darkSvg } = buildMermaidSvgs(mermaidCode, themeConfig));
+				({ lightSvg, darkSvg } = buildMermaidSvgs(
+					mermaidCode,
+					themeConfig,
+					diagramIndex,
+				));
+				diagramIndex += 1;
 			} catch (e) {
 				const preview =
 					mermaidCode.length > 200
@@ -74,7 +109,10 @@ export function rehypeMermaid(options = {}) {
 				if (process.env.NODE_ENV === "development") {
 					console.error("[rehype-mermaid] 渲染失败:", e, preview);
 				} else {
-					console.error("[rehype-mermaid] 渲染失败:", e.message);
+					console.error(
+						"[rehype-mermaid] 渲染失败:",
+						e instanceof Error ? e.message : String(e),
+					);
 				}
 				node.properties = {
 					class: `${DIAGRAM_CONTAINER} ${MERMAID_CONTAINER}`,

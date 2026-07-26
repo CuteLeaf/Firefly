@@ -34,6 +34,15 @@
   }
 }
 
+/* ec-lang-logo 亮暗色适配 - 覆盖插件默认的 data-theme=light/dark 选择器 */
+/* 项目使用 data-theme='one-dark-pro' / data-theme='one-light' 作为主题标识 */
+html[data-theme='one-light'] {
+  --ec-lang-logo: #111;
+}
+html[data-theme='one-dark-pro'] {
+  --ec-lang-logo: #fff;
+}
+
 /* 透明模式下的代码块样式 */
 /*
  * 仅处理外层容器背景，避免清空 ANSI token 的背景色。

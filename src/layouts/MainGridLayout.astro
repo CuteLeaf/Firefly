@@ -15,6 +15,7 @@ import TypewriterText from "@/components/features/TypewriterText.astro";
 import CategoryBar from "@/components/layout/CategoryBar.astro";
 import {
 	backgroundWallpaper,
+	displaySettingsConfig,
 	live2dWidgetConfig,
 	sidebarLayoutConfig,
 	siteConfig,
@@ -54,6 +55,7 @@ interface Props {
 	encrypted?: boolean;
 	bannerPostMeta?: {
 		title: string;
+		description?: string;
 		published: Date;
 		updated?: Date;
 		words?: number;
@@ -81,11 +83,11 @@ const isBannerMode = backgroundWallpaper.mode === "banner";
 const isFullscreenMode = backgroundWallpaper.mode === "fullscreen";
 const isOverlayMode = backgroundWallpaper.mode === "overlay";
 const isBackgroundEnabled = backgroundWallpaper.mode !== "none";
-const isWallpaperSwitchable = backgroundWallpaper.switchable ?? true;
+const isWallpaperSwitchable = displaySettingsConfig.wallpaperModeSwitchable;
 
 // 检查是否启用水波纹动画效果
 const wavesConfig = backgroundWallpaper.common?.waves?.enable;
-const wavesSwitchable = backgroundWallpaper.common?.waves?.switchable ?? false;
+const wavesSwitchable = displaySettingsConfig.wavesSwitchable;
 // 处理分设备控制的水波纹动画
 const wavesEnabledOnDesktop =
 	typeof wavesConfig === "object" ? wavesConfig.desktop : wavesConfig;
@@ -97,8 +99,7 @@ const shouldRenderWaves =
 
 // 渐变过渡配置
 const gradientConfig = backgroundWallpaper.common?.gradient?.enable;
-const gradientSwitchable =
-	backgroundWallpaper.common?.gradient?.switchable ?? false;
+const gradientSwitchable = displaySettingsConfig.gradientSwitchable;
 const gradientEnabledOnDesktop =
 	typeof gradientConfig === "object"
 		? gradientConfig.desktop
@@ -142,6 +143,30 @@ const showBannerPostMeta =
 	!isHomePageCheck &&
 	isPostPage &&
 	!!bannerPostMeta;
+
+const bannerPostInfoMode =
+	backgroundWallpaper.common?.postInfo?.mode ?? "description";
+
+const getBannerDescriptionWidth = (description?: string) => {
+	if (!description) return undefined;
+
+	const textUnits = Array.from(description).reduce((total, character) => {
+		if (/\s/u.test(character)) return total + 0.35;
+		const codePoint = character.codePointAt(0) ?? 0;
+		return total + (codePoint <= 0xff ? 0.55 : 1);
+	}, 0);
+	const maxLineUnits = 52;
+	const lineCount = Math.max(1, Math.ceil(textUnits / maxLineUnits));
+
+	if (lineCount === 1) return undefined;
+
+	const targetLineUnits = Math.min(maxLineUnits, textUnits / (lineCount - 0.5));
+	return `${Math.max(28, targetLineUnits).toFixed(1)}em`;
+};
+
+const bannerDescriptionWidth = getBannerDescriptionWidth(
+	bannerPostMeta?.description,
+);
 
 const showBannerDim = (isBannerMode || isFullscreenMode) && isBackgroundEnabled;
 const dimOpacity = backgroundWallpaper.common?.dimOpacity ?? 0.15;
@@ -267,8 +292,7 @@ const configQuality = getImageQuality();
 const mobileQuality = Math.round(configQuality * 0.9);
 const bannerCarouselEnabledDefault =
 	backgroundWallpaper.common?.carousel?.enable ?? false;
-const bannerCarouselSwitchable =
-	backgroundWallpaper.common?.carousel?.switchable ?? false;
+const bannerCarouselSwitchable = displaySettingsConfig.bannerCarouselSwitchable;
 const bannerCarouselInterval = Math.max(
 	backgroundWallpaper.common?.carousel?.interval ?? 5000,
 	3000,
@@ -341,7 +365,7 @@ const hasMultipleImages =
                     class="object-cover h-full w-full"
                     src={src}
                     position={backgroundWallpaper.banner?.position}
-                    widths={[640, 750, 1080]}
+                    widths={[640, 1080]}
                     sizes="100vw"
                     loading={index === 0 ? "eager" : "lazy"}
                     fetchpriority={index === 0 ? "high" : undefined}
@@ -357,7 +381,7 @@ const hasMultipleImages =
                     class="object-cover h-full"
                     src={src}
                     position={backgroundWallpaper.banner?.position}
-                    widths={[1280, 1920, 2560]}
+                    widths={[1280, 1920]}
                     sizes="100vw"
                     loading={index === 0 ? "eager" : "lazy"}
                     fetchpriority={index === 0 ? "high" : undefined}
@@ -376,7 +400,7 @@ const hasMultipleImages =
                     class="object-cover h-full w-full"
                     src={backgroundImages.mobile[0]}
                     position={backgroundWallpaper.banner?.position}
-                    widths={[640, 750, 1080]}
+                    widths={[640, 1080]}
                     sizes="100vw"
                     loading="eager"
                     fetchpriority="high"
@@ -392,7 +416,7 @@ const hasMultipleImages =
                     class="object-cover h-full"
                     src={backgroundImages.desktop[0]}
                     position={backgroundWallpaper.banner?.position}
-                    widths={[1280, 1920, 2560]}
+                    widths={[1280, 1920]}
                     sizes="100vw"
                     loading="eager"
                     fetchpriority="high"
@@ -415,26 +439,7 @@ const hasMultipleImages =
             var switchable = container.dataset.carouselSwitchable === 'true';
             var defaultEnabled = container.dataset.carouselEnabled === 'true';
             var effect = container.dataset.carouselEffect || 'fade';
-            var FADE_MS = 800;
             var transitioning = false;
-
-            // 创建过渡遮罩（用于 kenburns 效果的 LQIP 桥接）
-            var overlay = null;
-            if (effect === 'kenburns') {
-                overlay = document.createElement('div');
-                overlay.style.cssText = 'position:absolute;inset:0;z-index:20;opacity:0;pointer-events:none;transition:opacity ' + (FADE_MS / 2) + 'ms ease-in-out;background-size:cover;background-position:center;';
-                container.appendChild(overlay);
-            }
-
-            // 从 slide-item 中提取 LQIP 渐变样式
-            function getSlideLqipStyle(slide) {
-                var ph = slide.querySelector('.lqip-placeholder');
-                if (ph) {
-                    var bg = ph.style.background || ph.style.backgroundImage;
-                    if (bg) return bg;
-                }
-                return '#000';
-            }
 
             function isCarouselEnabled() {
                 if (!switchable) return defaultEnabled;
@@ -480,9 +485,19 @@ const hasMultipleImages =
                         if (i < nextIndex) slides[i].classList.add('prev-waiting');
                     }
                 }
-                for (var j = 0; j < slides.length; j++) {
-                    if (j === nextIndex) slides[j].classList.add('active');
-                    else slides[j].classList.remove('active');
+                if (effect === 'kenburns') {
+                    // Ken Burns: 交叉淡入淡出，先激活新图再隐藏旧图
+                    slides[nextIndex].classList.add('active');
+                    requestAnimationFrame(function() {
+                        for (var j = 0; j < slides.length; j++) {
+                            if (j !== nextIndex) slides[j].classList.remove('active');
+                        }
+                    });
+                } else {
+                    for (var j = 0; j < slides.length; j++) {
+                        if (j === nextIndex) slides[j].classList.add('active');
+                        else slides[j].classList.remove('active');
+                    }
                 }
             }
 
@@ -498,23 +513,8 @@ const hasMultipleImages =
                 var currentIndex = getCurrentIndex(slides);
                 if (nextIndex === currentIndex) return;
 
-                if (effect === 'kenburns' && overlay) {
-                    // Ken Burns: 用下一张图的 LQIP 做桥接过渡
-                    transitioning = true;
-                    overlay.style.background = getSlideLqipStyle(slides[nextIndex]);
-                    overlay.style.opacity = '1';
-                    setTimeout(function() {
-                        applySlideChange(slides, nextIndex);
-                        // 等新图 Ken Burns 动画开始后再移除遮罩
-                        setTimeout(function() {
-                            overlay.style.opacity = '0';
-                            transitioning = false;
-                        }, 150);
-                    }, FADE_MS / 2);
-                } else {
-                    // 其他效果：直接切换（CSS transition 处理）
-                    applySlideChange(slides, nextIndex);
-                }
+                // 直接切换（CSS 处理过渡动画）
+                applySlideChange(slides, nextIndex);
 
                 if (resetProgress !== false && appState.isPlaying) {
                     startAutoPlay();
@@ -696,35 +696,62 @@ const hasMultipleImages =
                     <div class="banner-post-title font-bold text-white leading-tight">
                         {bannerPostMeta.title}
                     </div>
-                    <div class="banner-post-meta-list flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-white/90 text-sm md:text-base">
-                        <span class="inline-flex items-center gap-1.5">
-                            <Icon is:inline name="material-symbols:calendar-month-outline-rounded" class="text-[1.05em]" />
-                            <span>{i18n(I18nKey.publishedAt)} {formatDateToYYYYMMDD(bannerPostMeta.published)}</span>
-                        </span>
-                        {bannerPostMeta.updated &&
-                            bannerPostMeta.updated.getTime() !== bannerPostMeta.published.getTime() && (
+                    {bannerPostInfoMode === "description" && bannerPostMeta.description && (
+                        <div class="flex flex-col items-center gap-3">
+                            <div class="banner-post-description-divider h-px w-12 bg-white/60"></div>
+                            <div
+                                class="banner-post-description text-left text-white/85"
+                                style={bannerDescriptionWidth
+                                    ? `--banner-post-description-width: ${bannerDescriptionWidth}`
+                                    : undefined}
+                            >
+                                <Icon
+                                    is:inline
+                                    name="material-symbols:format-quote-rounded"
+                                    class="banner-post-description-quote banner-post-description-quote-start"
+                                    aria-hidden="true"
+                                />
+                                {bannerPostMeta.description}
+                                <Icon
+                                    is:inline
+                                    name="material-symbols:format-quote-rounded"
+                                    class="banner-post-description-quote banner-post-description-quote-end"
+                                    aria-hidden="true"
+                                />
+                            </div>
+                        </div>
+                    )}
+                    {bannerPostInfoMode === "meta" && (
+                        <div class="banner-post-meta-list flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-white/90 text-sm md:text-base">
+                            <span class="inline-flex items-center gap-1.5">
+                                <Icon is:inline name="material-symbols:calendar-month-outline-rounded" class="text-[1.05em]" />
+                                <span>{i18n(I18nKey.publishedAt)} {formatDateToYYYYMMDD(bannerPostMeta.published)}</span>
+                            </span>
+                            {bannerPostMeta.updated &&
+                                bannerPostMeta.updated.getTime() !== bannerPostMeta.published.getTime() && (
+                                    <span class="inline-flex items-center gap-1.5">
+                                        <Icon is:inline name="material-symbols:update-rounded" class="text-[1.05em]" />
+                                        <span>{i18n(I18nKey.updatedAt)} {formatDateToYYYYMMDD(bannerPostMeta.updated)}</span>
+                                    </span>
+                                )}
+                            {typeof bannerPostMeta.words === "number" && (
                                 <span class="inline-flex items-center gap-1.5">
-                                    <Icon is:inline name="material-symbols:update-rounded" class="text-[1.05em]" />
-                                    <span>{i18n(I18nKey.updatedAt)} {formatDateToYYYYMMDD(bannerPostMeta.updated)}</span>
+                                    <Icon is:inline name="material-symbols:ink-pen-outline-rounded" class="text-[1.05em]" />
+                                    <span>
+                                        {bannerPostMeta.words} {i18n(bannerPostMeta.words === 1 ? I18nKey.wordCount : I18nKey.wordsCount)}
+                                    </span>
                                 </span>
                             )}
-                        {typeof bannerPostMeta.words === "number" && (
-                            <span class="inline-flex items-center gap-1.5">
-                                <Icon is:inline name="material-symbols:ink-pen-outline-rounded" class="text-[1.05em]" />
-                                <span>
-                                    {bannerPostMeta.words} {i18n(bannerPostMeta.words === 1 ? I18nKey.wordCount : I18nKey.wordsCount)}
+                            {typeof bannerPostMeta.minutes === "number" && (
+                                <span class="inline-flex items-center gap-1.5">
+                                    <Icon is:inline name="material-symbols:schedule-outline-rounded" class="text-[1.05em]" />
+                                    <span>
+                                        {bannerPostMeta.minutes} {i18n(bannerPostMeta.minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount)} · {i18n(I18nKey.readTime)}
+                                    </span>
                                 </span>
-                            </span>
-                        )}
-                        {typeof bannerPostMeta.minutes === "number" && (
-                            <span class="inline-flex items-center gap-1.5">
-                                <Icon is:inline name="material-symbols:schedule-outline-rounded" class="text-[1.05em]" />
-                                <span>
-                                    {bannerPostMeta.minutes} {i18n(bannerPostMeta.minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount)} · {i18n(I18nKey.readTime)}
-                                </span>
-                            </span>
-                        )}
-                    </div>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
@@ -936,4 +963,3 @@ const hasMultipleImages =
   }
 
 </style>
-

@@ -8,6 +8,7 @@
 @import './gallery.css';
 @import './anime-bangumi.css';
 @import './tags.css';
+@import './display-settings.css';
 @import './categories.css';
 
 @plugin '@tailwindcss/typography';
@@ -484,9 +485,9 @@ html {
   background-color: var(--_spoiler-mask);
   box-decoration-break: clone;
   &:not(:hover) {
-    color: var(--_spoiler-mask);
+   color: transparent;
     * {
-        color: var(--_spoiler-mask);
+       opacity: 0;
     }
   }
 }

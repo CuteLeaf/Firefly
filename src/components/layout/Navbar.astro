@@ -7,7 +7,12 @@ import DisplaySettings from "@/components/controls/DisplaySettingsIntegrated.sve
 import LightDarkSwitch from "@/components/controls/LightDarkSwitch.svelte";
 import Search from "@/components/controls/Search.svelte";
 import MusicPlayer from "@/components/features/MusicPlayer.astro";
-import { backgroundWallpaper, navBarConfig, siteConfig } from "@/config";
+import {
+	backgroundWallpaper,
+	displaySettingsConfig,
+	navBarConfig,
+	siteConfig,
+} from "@/config";
 import { musicPlayerConfig } from "@/config/musicConfig";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
@@ -50,9 +55,9 @@ const isNavbarMenuCentered = navbarMenuAlign === "center";
 const isHomePageCheck = isHomePage(Astro.url.pathname);
 
 // 检查是否有任何显示设置可用
-const showThemeColor = !siteConfig.themeColor.fixed;
-const isWallpaperSwitchable = backgroundWallpaper.switchable ?? true;
-const allowLayoutSwitch = siteConfig.postListLayout.allowSwitch;
+const showThemeColor = displaySettingsConfig.themeColorSwitchable;
+const isWallpaperSwitchable = displaySettingsConfig.wallpaperModeSwitchable;
+const allowLayoutSwitch = displaySettingsConfig.layoutSwitchable;
 const hasDisplaySettings =
 	showThemeColor || isWallpaperSwitchable || allowLayoutSwitch;
 
@@ -109,7 +114,7 @@ if (isLocalSrcLogo) {
         "overflow-visible! h-18 px-4"
     ]}>
         <div class="mx-auto h-full w-full max-w-(--page-width) grid grid-cols-[auto_minmax(0,1fr)_auto] items-center">
-            <a href={url('/')} class="btn-plain scale-animation rounded-lg h-13 px-5 font-bold active:scale-95">
+            <a href={url('/')} class="btn-plain scale-animation rounded-lg h-13 px-3 md:px-5 font-bold active:scale-95">
                 <div class:list={[
                     "flex flex-row items-center text-md",
                     siteConfig.navbar.followTheme ? "text-(--primary)" : "dark:text-white text-black"
@@ -153,29 +158,30 @@ if (isLocalSrcLogo) {
                     client:load
                 />
                 {musicPlayerConfig.showInNavbar && (
-                    <button aria-label={i18n(I18nKey.music)} class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="music-player-switch">
+                    <button aria-label={i18n(I18nKey.music)} class="btn-plain scale-animation rounded-lg h-9 w-9 md:h-11 md:w-11 active:scale-90" id="music-player-switch">
                         <Icon is:inline name="material-symbols:music-note-rounded" class="text-[1.25rem]"></Icon>
                     </button>
                 )}
                 {backgroundWallpaper.playerEnable && backgroundWallpaper.mode !== "none" && (
                     <button
                         aria-label={i18n(I18nKey.videoPlay)}
-                        class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90"
+                        class="btn-plain scale-animation rounded-lg h-9 w-9 md:h-11 md:w-11 active:scale-90"
                         id="bg-player-toggle"
                         data-i18n-play={i18n(I18nKey.videoPlay)}
                         data-i18n-pause={i18n(I18nKey.videoPause)}
                     >
-                        <Icon is:inline name="material-symbols:play-arrow-rounded" class="text-[1.5rem]" />
+                        <span class="bg-player-icon-play"><Icon is:inline name="material-symbols:play-arrow-rounded" class="text-[1.5rem]" /></span>
+                        <span class="bg-player-icon-pause hidden"><Icon is:inline name="material-symbols:pause-rounded" class="text-[1.5rem]" /></span>
                     </button>
                 )}
                 {hasDisplaySettings && (
-                        <button aria-label="Display Settings" class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="display-settings-switch">
+                        <button aria-label="Display Settings" class="btn-plain scale-animation rounded-lg h-9 w-9 md:h-11 md:w-11 active:scale-90" id="display-settings-switch">
                             <Icon is:inline name="material-symbols:palette-outline" class="text-[1.25rem]"></Icon>
                         </button>
                 )}
                 {/* @ts-ignore */}
                 <LightDarkSwitch client:load></LightDarkSwitch>
-                <button aria-label="Menu" name="Nav Menu" class="btn-plain scale-animation rounded-lg w-11 h-11 active:scale-90 lg:hidden!" id="nav-menu-switch">
+                <button aria-label="Menu" name="Nav Menu" class="btn-plain scale-animation rounded-lg w-9 h-9 md:w-11 md:h-11 active:scale-90 lg:hidden!" id="nav-menu-switch">
                     <Icon is:inline name="material-symbols:menu-rounded" class="text-[1.25rem]"></Icon>
                 </button>
             </div>
@@ -228,17 +234,23 @@ function loadButtonScript() {
         bgPlayerBtn.onclick = function () {
             window.dispatchEvent(new CustomEvent("bg-player-toggle"));
         };
-        window.addEventListener("bg-player-state-change", function (e) {
-            var ce = e as CustomEvent;
-            var playing = ce.detail && ce.detail.playing;
+        function toggleBgPlayerIcon(playing: boolean) {
+            var playIcon = bgPlayerBtn!.querySelector(".bg-player-icon-play");
+            var pauseIcon = bgPlayerBtn!.querySelector(".bg-player-icon-pause");
+            if (playIcon && pauseIcon) {
+                playIcon.classList.toggle("hidden", playing);
+                pauseIcon.classList.toggle("hidden", !playing);
+            }
             var i18nPlay = bgPlayerBtn!.getAttribute("data-i18n-play") ?? "";
             var i18nPause = bgPlayerBtn!.getAttribute("data-i18n-pause") ?? "";
             var label = playing ? i18nPause : i18nPlay;
-            bgPlayerBtn!.innerHTML = playing
-                ? '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M16 19q-.825 0-1.412-.587T14 17V7q0-.825.588-1.412T16 5t1.413.588T18 7v10q0 .825-.587 1.413T16 19m-8 0q-.825 0-1.412-.587T6 17V7q0-.825.588-1.412T8 5t1.413.588T10 7v10q0 .825-.587 1.413T8 19"/></svg>'
-                : '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M8 17.175V6.825q0-.425.3-.713t.7-.287q.125 0 .263.037t.262.113l8.15 5.175q.225.15.338.375t.112.475t-.112.475t-.338.375l-8.15 5.175q-.125.075-.262.113T9 18.175q-.4 0-.7-.288t-.3-.712"/></svg>';
             bgPlayerBtn!.setAttribute("title", label);
             bgPlayerBtn!.setAttribute("aria-label", label);
+        }
+        window.addEventListener("bg-player-state-change", function (e) {
+            var ce = e as CustomEvent;
+            var playing = ce.detail && ce.detail.playing;
+            toggleBgPlayerIcon(playing);
         });
         // 切换壁纸模式时隐藏/显示播放按钮
         window.addEventListener("wallpaperModeChange", function (e) {
@@ -249,14 +261,7 @@ function loadButtonScript() {
         // Swup 导航时同步播放按钮状态（BackgroundPlayer 可能被重建，也可能持久存在）
         function syncBgPlayerBtn() {
             var playing = document.documentElement.hasAttribute("data-bg-video-playing");
-            var i18nPlay = bgPlayerBtn!.getAttribute("data-i18n-play") ?? "";
-            var i18nPause = bgPlayerBtn!.getAttribute("data-i18n-pause") ?? "";
-            var label = playing ? i18nPause : i18nPlay;
-            bgPlayerBtn!.innerHTML = playing
-                ? '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M16 19q-.825 0-1.412-.587T14 17V7q0-.825.588-1.412T16 5t1.413.588T18 7v10q0 .825-.587 1.413T16 19m-8 0q-.825 0-1.412-.587T6 17V7q0-.825.588-1.412T8 5t1.413.588T10 7v10q0 .825-.587 1.413T8 19"/></svg>'
-                : '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M8 17.175V6.825q0-.425.3-.713t.7-.287q.125 0 .263.037t.262.113l8.15 5.175q.225.15.338.375t.112.475t-.112.475t-.338.375l-8.15 5.175q-.125.075-.262.113T9 18.175q-.4 0-.7-.288t-.3-.712"/></svg>';
-            bgPlayerBtn!.setAttribute("title", label);
-            bgPlayerBtn!.setAttribute("aria-label", label);
+            toggleBgPlayerIcon(playing);
         }
         if (window.swup && window.swup.hooks) {
             window.swup.hooks.on("content:replace", syncBgPlayerBtn);

@@ -10,9 +10,11 @@ export let author: string;
 export let description = "";
 export let pubDate: string;
 export let coverImage: string | null = null;
+export let coverImageSelector: string | null = null;
 export let url: string;
 export let siteTitle: string;
 export let avatar: string | null = null;
+export let avatarSelector: string | null = null;
 
 let showModal = false;
 let posterImage: string | null = null;
@@ -54,6 +56,15 @@ function loadImage(src: string): Promise<HTMLImageElement | null> {
 		};
 		img.src = src;
 	});
+}
+
+function resolveImageSource(
+	src: string | null,
+	selector: string | null,
+): string | null {
+	if (!selector) return src;
+	const image = document.querySelector<HTMLImageElement>(selector);
+	return image?.currentSrc || image?.src || src;
 }
 
 function getLines(
@@ -118,10 +129,17 @@ async function generatePoster() {
 			width: 100 * scale,
 			color: { dark: "#000000", light: "#ffffff" },
 		});
+		const resolvedCoverImage = resolveImageSource(
+			coverImage,
+			coverImageSelector,
+		);
+		const resolvedAvatar = resolveImageSource(avatar, avatarSelector);
 		const [qrImg, coverImg, avatarImg] = await Promise.all([
 			loadImage(qrCodeUrl),
-			coverImage ? loadImage(coverImage) : Promise.resolve(null),
-			avatar ? loadImage(avatar) : Promise.resolve(null),
+			resolvedCoverImage
+				? loadImage(resolvedCoverImage)
+				: Promise.resolve(null),
+			resolvedAvatar ? loadImage(resolvedAvatar) : Promise.resolve(null),
 		]);
 
 		// 2. Setup Canvas for measuring
@@ -138,7 +156,7 @@ async function generatePoster() {
 		let currentY = 0;
 
 		// Cover
-		const coverHeight = (coverImage ? 200 : 120) * scale;
+		const coverHeight = (resolvedCoverImage ? 200 : 120) * scale;
 		currentY += coverHeight;
 		currentY += padding; // Gap after cover
 
@@ -385,7 +403,8 @@ async function generatePoster() {
 			ctx.stroke();
 		}
 
-		const authorTextX = padding + (avatar ? 64 * scale + 16 * scale : 0);
+		const authorTextX =
+			padding + (resolvedAvatar ? 64 * scale + 16 * scale : 0);
 		const textCenterY = footerY + 32 * scale;
 
 		ctx.fillStyle = "#9ca3af";

@@ -1,0 +1,24 @@
+---
+import { Icon } from "astro-icon/components";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+
+interface Props {
+	src: string;
+}
+
+const { src } = Astro.props;
+---
+
+<dynamic-inline-comments class="dynamic-inline-comments" data-src={src}>
+	<button type="button" class="dynamic-comment-toggle btn-plain" data-comment-toggle>
+		<Icon is:inline name="material-symbols:chat-bubble-outline-rounded" />
+		<span>{i18n(I18nKey.comments)}</span>
+		<Icon
+			is:inline
+			name="material-symbols:expand-more-rounded"
+			class="dynamic-comment-chevron"
+		/>
+	</button>
+	<div class="dynamic-comment-panel" data-comment-panel hidden></div>
+</dynamic-inline-comments>

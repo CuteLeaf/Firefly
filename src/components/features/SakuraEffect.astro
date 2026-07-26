@@ -1,378 +1,569 @@
 ---
-import { sakuraConfig } from "@/config";
-
-const config = sakuraConfig;
+// 樱花特效:优先使用 OffscreenCanvas + Web Worker 绘制(脱离主线程,
+// 避免页面切换时主线程阻塞导致樱花掉帧);不支持时回退到主线程 Canvas 2D 实现。
+// 配置见 src/config/effectsConfig.ts,通信协议见 src/types/sakura-worker.ts
 ---
 
-<script is:inline define:vars={{ sakuraConfig: config }}>
-		let windowWidth = window.innerWidth;
-		let windowHeight = window.innerHeight;
+<script>
+	import { sakuraConfig } from "@/config";
+	import type { SakuraConfig } from "@/types/effectsConfig";
+	import type {
+		SakuraManagerLike,
+		SakuraWorkerOutboundMessage,
+	} from "@/types/sakura-worker";
 
-		// 樱花对象类
-		class Sakura {
-			constructor(x, y, s, r, a, fn, idx, img, limitArray, config) {
-				this.x = x;
-				this.y = y;
-				this.s = s;
-				this.r = r;
-				this.a = a;
-				this.fn = fn;
-				this.idx = idx;
-				this.img = img;
-				this.limitArray = limitArray;
-				this.config = config;
+	// ===========================================================================
+	// 主线程回退实现(不支持 OffscreenCanvas 时使用)
+	// 逻辑与原 is:inline 版本完全一致,仅改为 TS + 实现 SakuraManagerLike 接口
+	// ===========================================================================
+	let windowWidth = window.innerWidth;
+	let windowHeight = window.innerHeight;
+
+	function getRandomMainThread(
+		option: "x" | "y" | "s" | "r" | "a",
+		cfg: SakuraConfig,
+	): number;
+	function getRandomMainThread(
+		option: "fnx" | "fny",
+		cfg: SakuraConfig,
+	): (x: number, y: number) => number;
+	function getRandomMainThread(
+		option: "fnr",
+		cfg: SakuraConfig,
+	): (r: number) => number;
+	function getRandomMainThread(
+		option: "fna",
+		cfg: SakuraConfig,
+	): (a: number) => number;
+	function getRandomMainThread(option: string, cfg: SakuraConfig): unknown {
+		switch (option) {
+			case "x":
+				return Math.random() * windowWidth;
+			case "y":
+				return Math.random() * windowHeight;
+			case "s":
+				return cfg.size.min + Math.random() * (cfg.size.max - cfg.size.min);
+			case "r":
+				return Math.random() * 6;
+			case "a":
+				return (
+					cfg.opacity.min +
+					Math.random() * (cfg.opacity.max - cfg.opacity.min)
+				);
+			case "fnx": {
+				const random =
+					cfg.speed.horizontal.min +
+					Math.random() *
+						(cfg.speed.horizontal.max - cfg.speed.horizontal.min);
+				return (x: number, _y: number) => x + random;
 			}
-
-			draw(cxt) {
-				cxt.save();
-				cxt.translate(this.x, this.y);
-				cxt.rotate(this.r);
-				cxt.globalAlpha = this.a;
-				cxt.drawImage(this.img, 0, 0, 40 * this.s, 40 * this.s);
-				cxt.restore();
+			case "fny": {
+				const random =
+					cfg.speed.vertical.min +
+					Math.random() *
+						(cfg.speed.vertical.max - cfg.speed.vertical.min);
+				return (_x: number, y: number) => y + random;
 			}
+			case "fnr":
+				return (r: number) => r + cfg.speed.rotation;
+			case "fna":
+				return (alpha: number) => alpha - cfg.speed.fadeSpeed * 0.01;
+			default:
+				return undefined;
+		}
+	}
 
-			update() {
-				this.x = this.fn.x(this.x, this.y);
-				this.y = this.fn.y(this.y, this.y);
-				this.r = this.fn.r(this.r);
-				this.a = this.fn.a(this.a);
-				// 如果樱花越界，重新调整位置
-				if (
-					this.x > windowWidth ||
-					this.x < 0 ||
-					this.y > windowHeight ||
-					this.y < 0 ||
-					this.a <= 0
-				) {
-					// 如果樱花不做限制
-					if (this.limitArray[this.idx] === -1) {
-						this.resetPosition();
-					}
-					// 否则樱花有限制
-					else {
-						if (this.limitArray[this.idx] > 0) {
-							this.resetPosition();
-							this.limitArray[this.idx]--;
-						}
-					}
-				}
-			}
+	interface MainThreadSakuraFns {
+		x: (x: number, y: number) => number;
+		y: (x: number, y: number) => number;
+		r: (r: number) => number;
+		a: (a: number) => number;
+	}
 
-			resetPosition() {
-				this.r = getRandom('fnr', this.config);
-				if (Math.random() > 0.4) {
-					this.x = getRandom('x', this.config);
-					this.y = 0;
-					this.s = getRandom('s', this.config);
-					this.r = getRandom('r', this.config);
-					this.a = getRandom('a', this.config);
-				} else {
-					this.x = windowWidth;
-					this.y = getRandom('y', this.config);
-					this.s = getRandom('s', this.config);
-					this.r = getRandom('r', this.config);
-					this.a = getRandom('a', this.config);
+	class MainThreadSakura {
+		x: number;
+		y: number;
+		s: number;
+		r: number;
+		a: number;
+		fn: MainThreadSakuraFns;
+		idx: number;
+		img: HTMLImageElement;
+		limitArray: number[];
+		config: SakuraConfig;
+
+		constructor(
+			x: number,
+			y: number,
+			s: number,
+			r: number,
+			a: number,
+			fn: MainThreadSakuraFns,
+			idx: number,
+			img: HTMLImageElement,
+			limitArray: number[],
+			config: SakuraConfig,
+		) {
+			this.x = x;
+			this.y = y;
+			this.s = s;
+			this.r = r;
+			this.a = a;
+			this.fn = fn;
+			this.idx = idx;
+			this.img = img;
+			this.limitArray = limitArray;
+			this.config = config;
+		}
+
+		draw(cxt: CanvasRenderingContext2D) {
+			cxt.save();
+			cxt.translate(this.x, this.y);
+			cxt.rotate(this.r);
+			cxt.globalAlpha = this.a;
+			cxt.drawImage(this.img, 0, 0, 40 * this.s, 40 * this.s);
+			cxt.restore();
+		}
+
+		update() {
+			this.x = this.fn.x(this.x, this.y);
+			this.y = this.fn.y(this.x, this.y);
+			this.r = this.fn.r(this.r);
+			this.a = this.fn.a(this.a);
+			if (
+				this.x > windowWidth ||
+				this.x < 0 ||
+				this.y > windowHeight ||
+				this.y < 0 ||
+				this.a <= 0
+			) {
+				if (this.limitArray[this.idx] === -1) {
+					this.resetPosition();
+				} else if (this.limitArray[this.idx] > 0) {
+					this.resetPosition();
+					this.limitArray[this.idx]--;
 				}
 			}
 		}
 
-		// 樱花列表类
-		class SakuraList {
-			constructor() {
-				this.list = [];
+		resetPosition() {
+			if (Math.random() > 0.4) {
+				this.x = getRandomMainThread("x", this.config);
+				this.y = 0;
+				this.s = getRandomMainThread("s", this.config);
+				this.r = getRandomMainThread("r", this.config);
+				this.a = getRandomMainThread("a", this.config);
+			} else {
+				this.x = windowWidth;
+				this.y = getRandomMainThread("y", this.config);
+				this.s = getRandomMainThread("s", this.config);
+				this.r = getRandomMainThread("r", this.config);
+				this.a = getRandomMainThread("a", this.config);
 			}
+		}
+	}
 
-			push(sakura) {
-				this.list.push(sakura);
-			}
+	class MainThreadSakuraList {
+		list: MainThreadSakura[] = [];
 
-			update() {
-				for (let i = 0, len = this.list.length; i < len; i++) {
-					this.list[i].update();
-				}
-			}
+		push(sakura: MainThreadSakura) {
+			this.list.push(sakura);
+		}
 
-			draw(cxt) {
-				for (let i = 0, len = this.list.length; i < len; i++) {
-					this.list[i].draw(cxt);
-				}
-			}
-
-			get(i) {
-				return this.list[i];
-			}
-
-			size() {
-				return this.list.length;
+		update() {
+			for (let i = 0, len = this.list.length; i < len; i++) {
+				this.list[i].update();
 			}
 		}
 
-		// 获取随机值的函数
-		function getRandom(option, config) {
-			let ret;
-			let random;
-
-			switch (option) {
-				case 'x':
-					ret = Math.random() * windowWidth;
-					break;
-				case 'y':
-					ret = Math.random() * windowHeight;
-					break;
-				case 's':
-					ret = config.size.min + Math.random() * (config.size.max - config.size.min);
-					break;
-				case 'r':
-					ret = Math.random() * 6;
-					break;
-				case 'a':
-					ret = config.opacity.min + Math.random() * (config.opacity.max - config.opacity.min);
-					break;
-				case 'fnx':
-					random = config.speed.horizontal.min + Math.random() * (config.speed.horizontal.max - config.speed.horizontal.min);
-					ret = function (x, _y) {
-						return x + random;
-					};
-					break;
-				case 'fny':
-					random = config.speed.vertical.min + Math.random() * (config.speed.vertical.max - config.speed.vertical.min);
-					ret = function (_x, y) {
-						return y + random;
-					};
-					break;
-				case 'fnr':
-					ret = function (r) {
-						return r + config.speed.rotation;
-					};
-					break;
-				case 'fna':
-					ret = function (alpha) {
-						return alpha - config.speed.fadeSpeed * 0.01;
-					};
-					break;
+		draw(cxt: CanvasRenderingContext2D) {
+			for (let i = 0, len = this.list.length; i < len; i++) {
+				this.list[i].draw(cxt);
 			}
-			return ret;
+		}
+	}
+
+	class MainThreadSakuraManager implements SakuraManagerLike {
+		config: SakuraConfig;
+		canvas: HTMLCanvasElement | null = null;
+		ctx: CanvasRenderingContext2D | null = null;
+		sakuraList: MainThreadSakuraList | null = null;
+		animationId: number | null = null;
+		img: HTMLImageElement | null = null;
+		isRunning = false;
+		private boundHandleResize: (() => void) | null = null;
+		private resizeRafId: number | null = null;
+		/**
+		 * init/stop 周期代际标记。每次 stop 自增,使 await 期间被取消的 init 失效,
+		 * 避免图片加载期间用户切换导致重复创建 canvas(DOM 泄漏)。
+		 */
+		private initGeneration = 0;
+
+		constructor(config: SakuraConfig) {
+			this.config = config;
 		}
 
-		// 樱花管理器类
-		class SakuraManager {
-			constructor(config) {
-				this.config = config;
-				this.canvas = null;
-				this.ctx = null;
-				this.sakuraList = null;
-				this.animationId = null;
-				this.img = null;
-				this.isRunning = false;
+		async init() {
+			if (!this.config.enable || this.isRunning) {
+				return;
 			}
+			// 提前标记运行,防止 await 图片加载期间重入导致重复创建 canvas
+			this.isRunning = true;
+			const gen = ++this.initGeneration;
 
-			// 初始化樱花特效
-			async init() {
-				if (!this.config.enable || this.isRunning) {
-					return;
-				}
-
-				// 创建图片对象
+			try {
 				this.img = new Image();
-				this.img.src = '/assets/images/effects/sakura.png'; // 使用樱花图片
+				this.img.src = "/assets/images/effects/sakura.png";
 
-				// 等待图片加载完成
-				await new Promise((resolve, reject) => {
-					if (this.img) {
-						this.img.onload = () => resolve();
-						this.img.onerror = () => reject(new Error('Failed to load sakura image'));
+				await new Promise<void>((resolve, reject) => {
+					if (!this.img) {
+						reject(new Error("Failed to create sakura image"));
+						return;
 					}
+					this.img.onload = () => resolve();
+					this.img.onerror = () =>
+						reject(new Error("Failed to load sakura image"));
 				});
 
+				// await 期间若被 stop 或被更新的 init 取代,则中止本次初始化
+				if (gen !== this.initGeneration) {
+					return;
+				}
 				this.createCanvas();
 				this.createSakuraList();
 				this.startAnimation();
-				this.isRunning = true;
-			}
-
-			// 创建画布
-			createCanvas() {
-				this.canvas = document.createElement('canvas');
-				this.canvas.height = windowHeight;
-				this.canvas.width = windowWidth;
-				this.canvas.setAttribute('style', `position: fixed; left: 0; top: 0; pointer-events: none; z-index: ${this.config.zIndex}; transform: translateZ(0);`);
-				this.canvas.setAttribute('id', 'canvas_sakura');
-				document.body.appendChild(this.canvas);
-				this.ctx = this.canvas.getContext('2d');
-
-				// 监听窗口大小变化
-				this._boundHandleResize = this.handleResize.bind(this);
-				window.addEventListener('resize', this._boundHandleResize);
-			}
-
-			// 创建樱花列表
-			createSakuraList() {
-				if (!this.img || !this.ctx) return;
-
-				this.sakuraList = new SakuraList();
-				const limitArray = new Array(this.config.sakuraNum).fill(this.config.limitTimes);
-
-				for (let i = 0; i < this.config.sakuraNum; i++) {
-					const randomX = getRandom('x', this.config);
-					const randomY = getRandom('y', this.config);
-					const randomS = getRandom('s', this.config);
-					const randomR = getRandom('r', this.config);
-					const randomA = getRandom('a', this.config);
-					const randomFnx = getRandom('fnx', this.config);
-					const randomFny = getRandom('fny', this.config);
-					const randomFnR = getRandom('fnr', this.config);
-					const randomFnA = getRandom('fna', this.config);
-
-					const sakura = new Sakura(
-						randomX,
-						randomY,
-						randomS,
-						randomR,
-						randomA,
-						{
-							x: randomFnx,
-							y: randomFny,
-							r: randomFnR,
-							a: randomFnA,
-						},
-						i,
-						this.img,
-						limitArray,
-						this.config
-					);
-
-					sakura.draw(this.ctx);
-					this.sakuraList.push(sakura);
+			} catch (err) {
+				console.warn("[Sakura] main-thread init failed:", err);
+				if (gen === this.initGeneration) {
+					this.stop();
 				}
 			}
+		}
 
-			// 开始动画
-			startAnimation() {
-				if (!this.ctx || !this.canvas || !this.sakuraList) return;
+		createCanvas() {
+			this.canvas = document.createElement("canvas");
+			this.canvas.height = windowHeight;
+			this.canvas.width = windowWidth;
+			this.canvas.setAttribute(
+				"style",
+				`position: fixed; left: 0; top: 0; pointer-events: none; z-index: ${this.config.zIndex}; transform: translateZ(0);`,
+			);
+			this.canvas.setAttribute("id", "canvas_sakura");
+			document.body.appendChild(this.canvas);
+			this.ctx = this.canvas.getContext("2d");
 
-				const animate = () => {
-					if (!this.ctx || !this.canvas || !this.sakuraList) return;
+			this.boundHandleResize = this.handleResize.bind(this);
+			window.addEventListener("resize", this.boundHandleResize);
+		}
 
-					this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-					this.sakuraList.update();
-					this.sakuraList.draw(this.ctx);
-					this.animationId = requestAnimationFrame(animate);
-				};
+		createSakuraList() {
+			if (!this.img || !this.ctx) return;
 
-				this.animationId = requestAnimationFrame(animate);
+			this.sakuraList = new MainThreadSakuraList();
+			const limitArray = new Array(this.config.sakuraNum).fill(
+				this.config.limitTimes,
+			);
+
+			for (let i = 0; i < this.config.sakuraNum; i++) {
+				const sakura = new MainThreadSakura(
+					getRandomMainThread("x", this.config),
+					getRandomMainThread("y", this.config),
+					getRandomMainThread("s", this.config),
+					getRandomMainThread("r", this.config),
+					getRandomMainThread("a", this.config),
+					{
+						x: getRandomMainThread("fnx", this.config),
+						y: getRandomMainThread("fny", this.config),
+						r: getRandomMainThread("fnr", this.config),
+						a: getRandomMainThread("fna", this.config),
+					},
+					i,
+					this.img,
+					limitArray,
+					this.config,
+				);
+
+				sakura.draw(this.ctx);
+				this.sakuraList.push(sakura);
 			}
+		}
 
-			// 处理窗口大小变化
-			handleResize() {
+		startAnimation() {
+			if (!this.ctx || !this.canvas || !this.sakuraList) return;
+
+			const animate = () => {
+				if (!this.ctx || !this.canvas || !this.sakuraList) return;
+				this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+				this.sakuraList.update();
+				this.sakuraList.draw(this.ctx);
+				this.animationId = requestAnimationFrame(animate);
+			};
+
+			this.animationId = requestAnimationFrame(animate);
+		}
+
+		handleResize() {
+			// 用 rAF 节流,避免 resize 事件高频触发频繁重置 canvas(重置会清空内容)
+			if (this.resizeRafId !== null) return;
+			this.resizeRafId = requestAnimationFrame(() => {
+				this.resizeRafId = null;
 				windowWidth = window.innerWidth;
 				windowHeight = window.innerHeight;
 				if (this.canvas) {
 					this.canvas.width = windowWidth;
 					this.canvas.height = windowHeight;
 				}
-			}
-
-			// 停止樱花特效
-			stop() {
-				if (this.animationId) {
-					cancelAnimationFrame(this.animationId);
-					this.animationId = null;
-				}
-
-				if (this.canvas) {
-					document.body.removeChild(this.canvas);
-					this.canvas = null;
-				}
-
-				if (this._boundHandleResize) {
-					window.removeEventListener('resize', this._boundHandleResize);
-					this._boundHandleResize = null;
-				}
-				this.isRunning = false;
-			}
-
-			// 切换樱花特效
-			toggle() {
-				if (this.isRunning) {
-					this.stop();
-				} else {
-					this.init();
-				}
-			}
-
-			// 更新配置
-			updateConfig(newConfig) {
-				const wasRunning = this.isRunning;
-				if (wasRunning) {
-					this.stop();
-				}
-				this.config = newConfig;
-				if (wasRunning && newConfig.enable) {
-					this.init();
-				}
-			}
-
-			// 获取运行状态
-			getIsRunning() {
-				return this.isRunning;
-			}
+			});
 		}
 
-		// 创建全局樱花管理器实例
-		let globalSakuraManager = null;
-		window.sakuraManager = null;
-
-		// 初始化樱花特效
-		function initSakura(config) {
-			if (globalSakuraManager) {
-				globalSakuraManager.updateConfig(config);
-			} else {
-				globalSakuraManager = new SakuraManager(config);
-				window.sakuraManager = globalSakuraManager;
-				if (config.enable) {
-					globalSakuraManager.init();
-				}
+		stop() {
+			// 使进行中的 init 失效,避免其在 await 完成后继续创建资源
+			this.initGeneration++;
+			if (this.resizeRafId !== null) {
+				cancelAnimationFrame(this.resizeRafId);
+				this.resizeRafId = null;
 			}
+			if (this.animationId) {
+				cancelAnimationFrame(this.animationId);
+				this.animationId = null;
+			}
+			if (this.canvas) {
+				document.body.removeChild(this.canvas);
+				this.canvas = null;
+			}
+			if (this.boundHandleResize) {
+				window.removeEventListener("resize", this.boundHandleResize);
+				this.boundHandleResize = null;
+			}
+			this.img = null;
+			this.sakuraList = null;
+			this.ctx = null;
+			this.isRunning = false;
 		}
 
-		// 樱花特效初始化
-		(function() {
-			// 全局标记，确保樱花特效只初始化一次
-			if (window.sakuraInitialized) {
+		getIsRunning() {
+			return this.isRunning;
+		}
+	}
+
+	// ===========================================================================
+	// Worker + OffscreenCanvas 实现(优先使用,绘制循环脱离主线程)
+	// ===========================================================================
+	class WorkerSakuraManager implements SakuraManagerLike {
+		config: SakuraConfig;
+		canvas: HTMLCanvasElement | null = null;
+		worker: Worker | null = null;
+		isRunning = false;
+		private boundHandleResize: (() => void) | null = null;
+		private boundHandleVisibility: (() => void) | null = null;
+		private resizeRafId: number | null = null;
+		/** Worker 是否已完成 init(收到 ready)。用于区分 init 阶段失败与运行期错误。 */
+		private workerReady = false;
+
+		constructor(config: SakuraConfig) {
+			this.config = config;
+		}
+
+		async init() {
+			if (!this.config.enable || this.isRunning) {
 				return;
 			}
-			
-			// 初始化樱花特效的函数
-			const setupSakura = () => {
-				if (window.sakuraInitialized) return;
-				// 检查用户是否在设置中关闭了樱花特效
-				var storedEnabled = localStorage.getItem("sakuraEnabled");
-				var isEnabled = storedEnabled !== null ? storedEnabled === "true" : sakuraConfig.enable;
-				// 创建管理器并根据用户偏好决定是否启动
-				var cfg = Object.assign({}, sakuraConfig, { enable: isEnabled });
-				initSakura(cfg);
-				window.sakuraInitialized = true;
-			};
-			
-			// 页面加载完成后初始化樱花特效
-			if (document.readyState === 'loading') {
-				document.addEventListener('DOMContentLoaded', setupSakura);
-			} else {
-				setupSakura();
-			}
-		})();
+			this.isRunning = true;
+			this.workerReady = false;
 
-		// 监听设置面板的樱花特效切换事件
-		window.addEventListener('sakuraToggle', function(e) {
-			var enabled = e.detail.enabled;
-			var mgr = window.sakuraManager;
+			try {
+				// 创建 canvas 并转移到 Worker(转移后主线程不能再获取其 context)
+				this.canvas = document.createElement("canvas");
+				this.canvas.setAttribute(
+					"style",
+					`position: fixed; left: 0; top: 0; pointer-events: none; z-index: ${this.config.zIndex}; transform: translateZ(0);`,
+				);
+				this.canvas.setAttribute("id", "canvas_sakura");
+				document.body.appendChild(this.canvas);
+
+				const offscreen = this.canvas.transferControlToOffscreen();
+
+				// 创建 Worker(Vite 自动打包 src/workers/sakura.worker.ts)
+				this.worker = new Worker(
+					new URL("../../workers/sakura.worker.ts", import.meta.url),
+					{ type: "module" },
+				);
+
+				this.worker.onerror = (e) => {
+					console.warn(
+						`[SakuraWorker] error: ${e.message} (${e.filename}:${e.lineno}:${e.colno})`,
+					);
+					// init 阶段(尚未 ready)的 worker 级错误说明初始化失败,清理保持状态一致
+					if (!this.workerReady) {
+						this.stop();
+					}
+				};
+
+				this.worker.onmessage = (
+					e: MessageEvent<SakuraWorkerOutboundMessage>,
+				) => {
+					const data = e.data;
+					if (data.type === "ready") {
+						this.workerReady = true;
+					} else if (data.type === "error") {
+						console.warn("[SakuraWorker]", data.message, data.stack ?? "");
+						// init 阶段(尚未 ready)的 error 说明初始化失败:
+						// worker 内部已清理,主线程也需清理残留 canvas 与 worker,
+						// 否则会留下空白 canvas + idle worker(资源泄漏),且 isRunning 状态不一致
+						if (!this.workerReady) {
+							this.stop();
+						}
+					} else if (data.type === "messageError") {
+						console.warn("[SakuraWorker]", data.message);
+					}
+				};
+
+				// 发送 init 消息,转移 OffscreenCanvas 所有权给 Worker
+				this.worker.postMessage(
+					{
+						type: "init",
+						config: this.config,
+						canvas: offscreen,
+						width: window.innerWidth,
+						height: window.innerHeight,
+					},
+					[offscreen],
+				);
+
+				// 转发 resize / visibilitychange 到 Worker
+				this.boundHandleResize = () => {
+					// rAF 节流,避免高频 resize 向 worker 发送大量跨线程消息
+					if (this.resizeRafId !== null) return;
+					this.resizeRafId = requestAnimationFrame(() => {
+						this.resizeRafId = null;
+						this.worker?.postMessage({
+							type: "resize",
+							width: window.innerWidth,
+							height: window.innerHeight,
+						});
+					});
+				};
+				window.addEventListener("resize", this.boundHandleResize);
+
+				this.boundHandleVisibility = () => {
+					this.worker?.postMessage({
+						type: "visibilitychange",
+						hidden: document.hidden,
+					});
+				};
+				document.addEventListener("visibilitychange", this.boundHandleVisibility);
+			} catch (err) {
+				console.warn("[SakuraWorker] init failed:", err);
+				this.stop();
+			}
+		}
+
+		stop() {
+			if (this.resizeRafId !== null) {
+				cancelAnimationFrame(this.resizeRafId);
+				this.resizeRafId = null;
+			}
+			if (this.worker) {
+				// terminate 会立即回收 worker 整个 JS 堆(含 ImageBitmap),
+				// postMessage({type:"stop"}) 可能因 terminate 抢先而无法处理,但无害
+				this.worker.postMessage({ type: "stop" });
+				this.worker.terminate();
+				this.worker = null;
+			}
+			if (this.boundHandleResize) {
+				window.removeEventListener("resize", this.boundHandleResize);
+				this.boundHandleResize = null;
+			}
+			if (this.boundHandleVisibility) {
+				document.removeEventListener(
+					"visibilitychange",
+					this.boundHandleVisibility,
+				);
+				this.boundHandleVisibility = null;
+			}
+			if (this.canvas) {
+				document.body.removeChild(this.canvas);
+				this.canvas = null;
+			}
+			this.workerReady = false;
+			this.isRunning = false;
+		}
+
+		getIsRunning() {
+			return this.isRunning;
+		}
+	}
+
+	// ===========================================================================
+	// 特性检测 + 初始化
+	// ===========================================================================
+	function supportsWorkerSakura(): boolean {
+		return (
+			typeof OffscreenCanvas !== "undefined" &&
+			typeof Worker !== "undefined" &&
+			typeof HTMLCanvasElement !== "undefined" &&
+			"transferControlToOffscreen" in HTMLCanvasElement.prototype
+		);
+	}
+
+	let globalSakuraManager: SakuraManagerLike | null = null;
+
+	function initSakura(cfg: SakuraConfig) {
+		if (globalSakuraManager) {
+			// 已存在管理器,更新配置(先停再启)
+			const wasRunning = globalSakuraManager.isRunning;
+			if (wasRunning) {
+				globalSakuraManager.stop();
+			}
+			globalSakuraManager.config = cfg;
+			if (cfg.enable) {
+				void globalSakuraManager.init();
+			}
+		} else {
+			// 首次创建:根据特性检测选择实现
+			if (supportsWorkerSakura()) {
+				globalSakuraManager = new WorkerSakuraManager(cfg);
+			} else {
+				globalSakuraManager = new MainThreadSakuraManager(cfg);
+			}
+			window.sakuraManager = globalSakuraManager;
+			if (cfg.enable) {
+				void globalSakuraManager.init();
+			}
+		}
+	}
+
+	// ===========================================================================
+	// 入口:幂等初始化 + 监听设置面板切换
+	// 守卫确保 Swup 切页重跑模块化脚本时不会重复初始化或重复注册监听器
+	// ===========================================================================
+	(function setupSakura() {
+		if (window.sakuraInitialized) {
+			return;
+		}
+		window.sakuraInitialized = true;
+
+		// 读取用户设置(localStorage 优先,缺省回退到配置默认值)
+		const storedEnabled = localStorage.getItem("sakuraEnabled");
+		const isEnabled =
+			storedEnabled !== null ? storedEnabled === "true" : sakuraConfig.enable;
+		const cfg: SakuraConfig = Object.assign({}, sakuraConfig, {
+			enable: isEnabled,
+		});
+		initSakura(cfg);
+
+		// 监听设置面板的樱花特效切换事件(放在守卫内,避免重复注册)
+		window.addEventListener("sakuraToggle", (e: Event) => {
+			const detail = (e as CustomEvent<{ enabled: boolean }>).detail;
+			if (!detail) return;
+			const mgr = window.sakuraManager;
 			if (!mgr) return;
-			if (enabled && !mgr.getIsRunning()) {
+			if (detail.enabled && !mgr.getIsRunning()) {
 				mgr.config.enable = true;
-				mgr.init();
-			} else if (!enabled && mgr.getIsRunning()) {
+				void mgr.init();
+			} else if (!detail.enabled && mgr.getIsRunning()) {
 				mgr.stop();
 			}
 		});
-	</script>
+	})();
+</script>

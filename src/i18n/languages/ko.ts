@@ -24,6 +24,25 @@ export const ko: Translation = {
 	[Key.tableOfContents]: "목차",
 	[Key.tocEmpty]: "이 페이지에는 목차가 없습니다",
 	[Key.music]: "음악",
+	[Key.dynamic]: "일상",
+	[Key.latestDynamics]: "최신 일상",
+	[Key.moreDynamics]: "더 많은 일상",
+	[Key.dynamicDescription]: "짧은 생각과 일상을 기록합니다.",
+	[Key.dynamicEmpty]: "아직 게시된 일상이 없습니다",
+	[Key.dynamicSearch]: "일상 검색...",
+	[Key.dynamicNoResults]: "일치하는 일상이 없습니다",
+	[Key.dynamicLoading]: "일상을 불러오는 중",
+	[Key.dynamicAllYears]: "모든 연도",
+	[Key.dynamicLoadMore]: "더 보기",
+	[Key.dynamicBackToList]: "일상 목록으로",
+	[Key.dynamicProfile]: "{name}님의 프로필 보기",
+	[Key.dynamicPermalink]: "이 일상의 고유 링크",
+	[Key.dynamicCollapseGallery]: "접기",
+	[Key.dynamicViewOriginal]: "크게 보기",
+	[Key.dynamicPreviousImage]: "이전 이미지",
+	[Key.dynamicNextImage]: "다음 이미지",
+	[Key.dynamicViewImage]: "이미지 {index} 보기",
+	[Key.dynamicSelectImage]: "이미지 {index} 선택",
 	[Key.musicNoPlaying]: "재생 중인 곡 없음",
 	[Key.musicLyrics]: "가사",
 	[Key.musicVolume]: "볼륨",
@@ -280,6 +299,16 @@ export const ko: Translation = {
 	[Key.overlayBlur]: "배경 흐림",
 	[Key.overlayCardOpacity]: "카드 불투명도",
 
+	// Settings Panel Tabs
+	[Key.settingsTabAppearance]: "외형",
+	[Key.settingsTabWallpaper]: "배경화면",
+	[Key.settingsTabEffects]: "효과",
+
+	// 카드 스타일
+	[Key.cardSettings]: "카드 스타일",
+	[Key.cardBorder]: "카드 테두리와 그림자",
+	[Key.cardFollowTheme]: "카드 테마 색상 따르기",
+
 	// Post List Layout
 	[Key.postListLayout]: "게시글 목록 레이아웃",
 	[Key.postListLayoutList]: "목록형",
@@ -309,6 +338,7 @@ export const ko: Translation = {
 	// Site Statistics
 	[Key.siteStats]: "사이트 통계",
 	[Key.siteStatsPostCount]: "게시글",
+	[Key.siteStatsDynamicCount]: "일상",
 	[Key.siteStatsCategoryCount]: "카테고리",
 	[Key.siteStatsTagCount]: "태그",
 	[Key.siteStatsTotalWords]: "총 단어 수",

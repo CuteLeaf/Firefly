@@ -23,6 +23,29 @@ const className = Astro.props.class;
 const profileConf = profileConfig;
 const licenseConf = licenseConfig;
 const postUrl = sourceLink || decodeURIComponent(Astro.url.toString());
+
+// 根据许可证名称匹配对应图标
+function getLicenseIcon(name: string): string {
+	const n = name.toLowerCase();
+	if (/cc0|creative commons zero/.test(n)) {
+		return "fa7-brands:creative-commons-zero";
+	}
+	if (/public domain|公共领域/.test(n)) {
+		return "fa7-brands:creative-commons-pd";
+	}
+	if (/^cc($|[\s-])|creative commons|知识共享/.test(n)) {
+		return "fa7-brands:creative-commons";
+	}
+	if (/\b(mit|apache|bsd|isc|mulan|unlicense)\b|gpl|mpl\b/.test(n)) {
+		return "fa7-brands:osi";
+	}
+	return "fa7-regular:copyright";
+}
+
+// 文章单独指定的许可证按名称自动匹配；站点默认许可证优先使用配置中的自定义图标
+const licenseIcon = licenseName
+	? getLicenseIcon(licenseName)
+	: licenseConf.icon || getLicenseIcon(licenseConf.name);
 ---
 
 <div
@@ -64,7 +87,7 @@ const postUrl = sourceLink || decodeURIComponent(Astro.url.toString());
     </div>
   </div>
   <Icon is:inline
-    name="fa7-brands:creative-commons"
+    name={licenseIcon}
     class="transition text-[15rem] absolute pointer-events-none right-6 top-1/2 -translate-y-1/2 text-black/5 dark:text-white/5"
   />
 </div>
