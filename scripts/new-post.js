@@ -2,6 +2,7 @@
 
 import fs from "fs"
 import path from "path"
+import { pinyin } from "pinyin-pro"
 
 function getDate() {
   const today = new Date()
@@ -31,6 +32,39 @@ if (!fileExtensionRegex.test(fileName)) {
 const targetDir = "./src/content/posts/"
 const fullPath = path.join(targetDir, fileName)
 
+// Generate slug from filename: strip extension, strip trailing /index
+let slug = fileName.replace(fileExtensionRegex, "")
+if (slug.endsWith("/index")) {
+  slug = slug.slice(0, -"/index".length)
+}
+
+// Convert Chinese characters to pinyin, keep other chars as-is
+slug = slug
+  .split("/")
+  .map((segment) => {
+    if (!/[一-鿿]/.test(segment)) return segment
+    // Process character by character: Chinese → pinyin, others → keep
+    const chars = [...segment]
+    const parts = []
+    let buf = ""
+    for (const ch of chars) {
+      if (/[一-鿿]/.test(ch)) {
+        if (buf) { parts.push(buf); buf = "" }
+        parts.push(pinyin(ch, { toneType: "none", type: "array" })[0])
+      } else {
+        buf += ch
+      }
+    }
+    if (buf) parts.push(buf)
+    return parts
+      .join("-")
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, "")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "")
+  })
+  .join("/")
+
 if (fs.existsSync(fullPath)) {
   console.error(`Error: File ${fullPath} already exists `)
   process.exit(1)
@@ -49,8 +83,9 @@ description: ''
 image: ''
 tags: []
 category: ''
-draft: false 
+draft: false
 lang: ''
+slug: ${slug}
 ---
 `
 
