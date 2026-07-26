@@ -19,4 +19,3 @@ export type ProfileConfig = {
 	bio?: string;
 	links: ProfileLink[];
 };
-

@@ -32,14 +32,14 @@ export const profileConfig: ProfileConfig = {
 			icon: "fa7-brands:qq",
 			url: "https://qm.qq.com/q/ZGsFa8qX2G",
 			showName: false,
-/* 			interaction: {
+			/* 			interaction: {
 				copyText: "qq群:xxxx 网站:xxxx 欢迎扩列~",
 				openDelayMs: 0,
 				qrCode: "https://example.com/assets/qq_qrcode.png",
 				qrCodeAlt: "QQ 二维码",
 			}, */
 		},
-/* 		{
+		/* 		{
 			name: "微信",
 			icon: "fa7-brands:weixin",
 			url: "weixin://",

@@ -25,7 +25,12 @@ export type DelayedLinkOptions = {
 };
 
 export type DelayedLinkNotification =
-	| { kind: "success"; copyText: string; openDelayMs: number; secondsRemaining: number }
+	| {
+			kind: "success";
+			copyText: string;
+			openDelayMs: number;
+			secondsRemaining: number;
+	  }
 	| { kind: "failure"; copyText: string }
 	| { kind: "complete"; copyText: string; openDelayMs: number };
 
