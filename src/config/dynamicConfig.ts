@@ -5,10 +5,10 @@ export const dynamicConfig: DynamicConfig = {
 	title: "",
 
 	// 页面描述文本，如果留空则使用 i18n 中的翻译
-	description: "",
+	description: "前往 memo.khbit.cn 体验完整功能",
 
 	// 动态头像和名称的跳转地址，支持站内路径或完整 URL
-	profileUrl: "/about/",
+	profileUrl: "https://memo.khbit.cn/",
 
 	// 是否为每条动态启用评论，需要先在 commentConfig.ts 启用评论系统
 	showComment: true,

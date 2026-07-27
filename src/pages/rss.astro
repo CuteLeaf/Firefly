@@ -5,9 +5,11 @@ import { formatDateToYYYYMMDD } from "@utils/date-utils";
 import { Icon } from "astro-icon/components";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
+import { dynamicConfig } from "@/config"
 
 const posts = await getSortedPosts();
 const recentPosts = posts.slice(0, 6);
+const memosUsername = dynamicConfig.memos?.parent?.split("/")[1]
 ---
 
 <MainGridLayout title={i18n(I18nKey.rss)} description={i18n(I18nKey.rssDescription)}>
@@ -33,13 +35,41 @@ const recentPosts = posts.slice(0, 6);
                         <Icon is:inline name="material-symbols:link" class="text-white text-xl" />
                     </div>
                     <div>
-                        <h3 class="font-semibold text-90 mb-1">{i18n(I18nKey.rssLink)}</h3>
+                        <h3 class="font-semibold text-90 mb-1">订阅文章</h3>
                         <p class="text-sm text-75">{i18n(I18nKey.rssCopyToReader)}</p>
                     </div>
                 </div>
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                     <code class="bg-(--card-bg) px-3 py-2 rounded-lg text-sm font-mono text-75 border border-(--line-divider) break-all">
                         {Astro.site}rss.xml
+                    </code>
+                    <button 
+                        id="copy-rss-btn"
+                        class="px-4 py-2 bg-(--primary) text-white rounded-lg hover:opacity-80 transition-all duration-200 font-medium text-sm whitespace-nowrap"
+                        data-url={`${Astro.site}rss.xml`}
+                        data-copied-text={i18n(I18nKey.rssCopied)}
+                        data-failed-text={i18n(I18nKey.rssCopyFailed)}
+                    >
+                        {i18n(I18nKey.rssCopyLink)}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-base rounded-(--radius-large) p-6 mb-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-(--primary) rounded-xl flex items-center justify-center mr-4">
+                        <Icon is:inline name="material-symbols:link" class="text-white text-xl" />
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-90 mb-1">订阅动态</h3>
+                        <p class="text-sm text-75">{i18n(I18nKey.rssCopyToReader)}</p>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                    <code class="bg-(--card-bg) px-3 py-2 rounded-lg text-sm font-mono text-75 border border-(--line-divider) break-all">
+                        {dynamicConfig.memos?.apiUrl}/u/{memosUsername}/rss.xml
                     </code>
                     <button 
                         id="copy-rss-btn"
