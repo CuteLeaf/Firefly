@@ -53,7 +53,7 @@ export const siteConfig: SiteConfig = {
 	favicon: [
 		{
 			// 图标文件路径
-			src: "assets/images/avatar.jpg",
+			src: "https://cravatar.cn/avatar/c0c67928420f1ca7567ad555aeb50ed6",
 			// 可选，指定主题 'light' | 'dark'
 			// theme: "light",
 			// 可选，图标大小
