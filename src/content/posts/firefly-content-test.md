@@ -26,13 +26,13 @@ slug: firefly-content-test
 
 下面这张 PNG 图片使用相对路径插入：
 
-![樱花光影下相聚的人们](./my-images/test2.png)
+![《鼓手余命十日谭》的Good End](./my-images/test2.png)
 
 暖色的光、飘落的花瓣，以及画面里聚在一起的人，让人想到那些看似普通、后来却格外值得怀念的时刻。
 
 下面再测试一张 JPG 竖图：
 
-![青绿色长发少女与散落的文字](./my-images/test3.jpg)
+![被生命所厌恶](./my-images/test3.jpg)
 
 同一个文件夹里可以混合存放 AVIF、PNG 和 JPG。Markdown 只需要写对相对路径，浏览器就能找到它们。
 
