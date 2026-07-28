@@ -31,7 +31,6 @@ export type {
 	WidgetComponentType,
 	WidgetSpecificConfig,
 } from "../types/config";
-export type { WaterIntroConfig } from "../types/waterIntroConfig";
 export type {
 	BuiltinFontProvider,
 	CustomFontProvider,
@@ -66,4 +65,3 @@ export { sidebarLayoutConfig } from "./sidebarConfig"; // 侧边栏布局配置
 // 核心配置
 export { siteConfig } from "./siteConfig"; // 站点基础配置
 export { sponsorConfig } from "./sponsorConfig"; // 打赏配置
-export { waterIntroConfig } from "./waterIntroConfig"; // 首页水幕开场动画配置
