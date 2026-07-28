@@ -74,6 +74,17 @@ export type AdConfig = {
 	closable?: boolean; // 是否可关闭
 	displayCount?: number; // 显示次数限制，-1为无限制
 	expireDate?: string; // 过期时间 (ISO 8601 格式)
+	/** Google AdSense 广告配置，设置此项则忽略 image/content/link */
+	googleAdsense?: {
+		/** AdSense 发布商 ID，如 "ca-pub-6121475499127775" */
+		client: string;
+		/** 广告位 ID，如 "3400767498" */
+		slot: string;
+		/** 广告格式，默认 "auto" */
+		format?: string;
+		/** 是否自适应宽度，默认 true */
+		fullWidthResponsive?: boolean;
+	};
 };
 
 export type SidebarLayoutConfig = {

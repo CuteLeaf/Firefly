@@ -233,6 +233,32 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 				},
 			},
 		},
+		{
+			// 组件类型：Google AdSense 广告栏
+			type: "advertisement",
+			// 如需启用，将 enable 改为 true
+			enable: true,
+			// 是否显示组件标题
+			showTitle: false,
+			// 组件位置
+			position: "sticky",
+			// 是否在文章详情页显示
+			showOnPostPage: true,
+			// 组件专属配置（广告内容直接在此配置）
+			specificConfig: {
+				ad: {
+					// Google AdSense 配置
+					googleAdsense: {
+						client: "ca-pub-6121475499127775",
+						slot: "3400767498",
+						format: "auto",
+						fullWidthResponsive: true,
+					},
+					closable: false,
+					displayCount: -1,
+				},
+			},
+		},
 	],
 
 	// 移动端底部组件配置列表

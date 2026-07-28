@@ -51,6 +51,11 @@ const getPaddingStyle = (): string => {
 };
 
 const paddingStyle = getPaddingStyle();
+// Google AdSense 模式
+const isAdSense = !!adConfig.googleAdsense;
+const adsense = adConfig.googleAdsense;
+// AdSense 模式下覆盖 padding 为 0（Google 推荐）
+const contentPaddingStyle = isAdSense ? "padding: 0" : paddingStyle;
 // 使用随机 ID 避免多个广告实例冲突
 const widgetId = `advertisement-${Math.random().toString(36).slice(2, 8)}`;
 // 当配置了自定义 padding 时，禁用 WidgetLayout 默认的 px-4
@@ -80,9 +85,22 @@ const useContentPadding = !adConfig.padding;
     </button>
   )}
 
-  <div style={paddingStyle}>
-    <!-- 图片 -->
-    {adConfig.image && (
+  <div style={contentPaddingStyle}>
+    <!-- Google AdSense 广告 -->
+    {isAdSense && adsense && (
+      <div class="adsense-wrapper">
+        <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client={adsense.client}
+          data-ad-slot={adsense.slot}
+          data-ad-format={adsense.format || "auto"}
+          data-full-width-responsive={adsense.fullWidthResponsive !== false ? "true" : "false"}
+        ></ins>
+      </div>
+    )}
+
+    <!-- 静态广告内容（非 AdSense 模式） -->
+    {!isAdSense && adConfig.image && (
       <div class:list={[{ "mb-3": adConfig.content || adConfig.link }]}>
         {adConfig.image.link ? (
           <a
@@ -109,15 +127,13 @@ const useContentPadding = !adConfig.padding;
       </div>
     )}
 
-    <!-- 文本内容 -->
-    {adConfig.content && (
+    {!isAdSense && adConfig.content && (
       <p class="text-sm text-center mb-3 leading-relaxed text-neutral-600 dark:text-neutral-300 transition">
         {adConfig.content}
       </p>
     )}
 
-    <!-- 链接按钮 -->
-    {adConfig.link && (
+    {!isAdSense && adConfig.link && (
       <div class="text-center">
         <a
           href={adConfig.link.url}
@@ -181,6 +197,26 @@ const useContentPadding = !adConfig.padding;
   document.addEventListener("swup:contentReplaced", function () {
     setTimeout(initAd, 100);
   });
+</script>
+
+<script is:inline define:vars={{ isAdSense: !!adConfig.googleAdsense, clientId: adConfig.googleAdsense?.client }}>
+  // Google AdSense 初始化
+  if (isAdSense && clientId) {
+    (function () {
+      // 只加载一次 AdSense 脚本
+      if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
+        var script = document.createElement("script");
+        script.src =
+          "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" +
+          clientId;
+        script.async = true;
+        script.crossOrigin = "anonymous";
+        document.head.appendChild(script);
+      }
+      // 推送当前广告单元
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    })();
+  }
 </script>
 
 <style>
