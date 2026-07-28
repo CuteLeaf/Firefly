@@ -8,6 +8,7 @@ import FontSetup from "@components/features/FontSetup.astro";
 import MusicManager from "@components/features/MusicManager.astro";
 import SakuraEffect from "@components/features/SakuraEffect.astro";
 import ConfigCarrier from "@components/layout/ConfigCarrier.astro";
+import WaterIntro from "@components/WaterIntro.astro";
 
 import {
 	analyticsConfig,
@@ -566,6 +567,7 @@ const siteLang = lang.replace("_", "-");
     ]}
   >
 
+    <WaterIntro />
     <div id="progress-bar"></div>
 
     {/* 卡片样式：根据 localStorage 覆盖默认配置 */}
