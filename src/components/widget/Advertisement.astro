@@ -199,23 +199,10 @@ const useContentPadding = !adConfig.padding;
   });
 </script>
 
-<script is:inline define:vars={{ isAdSense: !!adConfig.googleAdsense, clientId: adConfig.googleAdsense?.client }}>
-  // Google AdSense 初始化
-  if (isAdSense && clientId) {
-    (function () {
-      // 只加载一次 AdSense 脚本
-      if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
-        var script = document.createElement("script");
-        script.src =
-          "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" +
-          clientId;
-        script.async = true;
-        script.crossOrigin = "anonymous";
-        document.head.appendChild(script);
-      }
-      // 推送当前广告单元
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    })();
+<script is:inline define:vars={{ isAdSense: !!adConfig.googleAdsense }}>
+  // Google AdSense：SDK 已在 Layout.astro <head> 中加载，此处只推送广告单元
+  if (isAdSense) {
+    (adsbygoogle = window.adsbygoogle || []).push({});
   }
 </script>
 

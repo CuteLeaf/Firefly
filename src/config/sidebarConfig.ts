@@ -239,7 +239,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			// 如需启用，将 enable 改为 true
 			enable: true,
 			// 是否显示组件标题
-			showTitle: false,
+			showTitle: true,
 			// 组件位置
 			position: "sticky",
 			// 是否在文章详情页显示
@@ -254,7 +254,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 						format: "auto",
 						fullWidthResponsive: true,
 					},
-					closable: false,
+					closable: true,
 					displayCount: -1,
 				},
 			},

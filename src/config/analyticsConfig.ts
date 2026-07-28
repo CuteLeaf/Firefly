@@ -3,6 +3,8 @@ import type { AnalyticsConfig } from "../types/analyticsConfig";
 export const analyticsConfig: AnalyticsConfig = {
 	// Google Analytics ID
 	googleAnalyticsId: "",
+	// Google AdSense 发布商 ID
+	googleAdsenseClientId: "ca-pub-6121475499127775",
 	// Microsoft Clarity ID
 	microsoftClarityId: "",
 	// Umami 统计配置
