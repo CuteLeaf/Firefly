@@ -12,7 +12,7 @@ export const profileConfig: ProfileConfig = {
 	name: "AEsir-Official",
 
 	// 个人签名
-	bio: "Hello, I'm AEsir-Official.",
+	bio: "不要温和地走进那个良夜",
 
 	// 链接配置
 	// 已经预装的图标集：fa7-brands，fa7-regular，fa7-solid，material-symbols，simple-icons
@@ -30,8 +30,8 @@ export const profileConfig: ProfileConfig = {
 		{
 			name: "GitHub",
 			icon: "fa7-brands:github",
-			url: "https://github.com/CuteLeaf",
-			showName: false,
+			url: "https://github.com/AEsir-Official",
+			showName: true,
 		},
 		{
 			name: "Email",
