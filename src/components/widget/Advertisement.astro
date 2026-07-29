@@ -199,10 +199,23 @@ const useContentPadding = !adConfig.padding;
   });
 </script>
 
-<script is:inline define:vars={{ isAdSense: !!adConfig.googleAdsense }}>
+<script is:inline define:vars={{ isAdSense: !!adConfig.googleAdsense, widgetId }}>
   // Google AdSense：SDK 已在 Layout.astro <head> 中加载，此处只推送广告单元
+  // 必须等待容器有实际宽度才能 push，否则报 "No slot size for availableWidth=0"
   if (isAdSense) {
-    (adsbygoogle = window.adsbygoogle || []).push({});
+    function pushAdsense() {
+      var widget = document.getElementById(widgetId);
+      var el = widget && widget.querySelector(".adsbygoogle");
+      if (el && el.offsetWidth > 0) {
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      } else {
+        setTimeout(pushAdsense, 200);
+      }
+    }
+    pushAdsense();
+    document.addEventListener("swup:contentReplaced", function () {
+      setTimeout(pushAdsense, 100);
+    });
   }
 </script>
 
