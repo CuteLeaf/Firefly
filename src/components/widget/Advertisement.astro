@@ -220,6 +220,14 @@ const useContentPadding = !adConfig.padding;
 </script>
 
 <style>
+  /* AdSense 模式下禁用两层 overflow-hidden，否则广告 iframe 被裁剪成空白 */
+  .advertisement-widget:has(.adsense-wrapper) {
+    overflow: visible !important;
+  }
+  .advertisement-widget:has(.adsense-wrapper) .collapse-wrapper {
+    overflow: visible !important;
+  }
+
   .advertisement-widget {
     transition: all 0.3s ease;
   }
