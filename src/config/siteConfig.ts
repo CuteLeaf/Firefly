@@ -21,10 +21,13 @@ export const siteConfig: SiteConfig = {
 	// 站点关键词
 	keywords: [
 		"KuoHu",
+		"KuoHuBlog",
 		"括弧",
 		"博客",
 		"个人博客",
-		"生活博客"
+		"生活博客",
+		"技术博客",
+		"梦到啥说啥的博客"
 	],
 
 	// 主题色
