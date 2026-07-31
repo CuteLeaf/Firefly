@@ -5,7 +5,7 @@ pinned: true
 description: IPTV
 tags: [Markdown, 博客, 主题, 模板]
 category: 文章示例
-password: "806518"
+password: "iptv"
 image: ./images/iptv.png
 ---
 
