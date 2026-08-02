@@ -3,7 +3,7 @@ const PANEL_SELECTOR = "[data-floating-panel]";
 const FOCUS_RETURN_ATTRIBUTE = "data-floating-panel-focus-return";
 export const FLOATING_PANEL_CLOSE_EVENT = "floating-panel:close";
 
-const observedPanels = new WeakSet<HTMLElement>();
+const panelObservers = new Map<HTMLElement, MutationObserver>();
 const panelOpenStates = new WeakMap<HTMLElement, boolean>();
 let escapeListenerAttached = false;
 
@@ -86,7 +86,19 @@ function handleEscape(event: KeyboardEvent): void {
 	}
 }
 
+function disconnectRemovedPanelObservers(): void {
+	for (const [panel, observer] of panelObservers) {
+		if (panel.isConnected) continue;
+
+		observer.disconnect();
+		panelObservers.delete(panel);
+		panelOpenStates.delete(panel);
+	}
+}
+
 export function initializeFloatingPanels(root: ParentNode = document): void {
+	disconnectRemovedPanelObservers();
+
 	const panels = Array.from(root.querySelectorAll<HTMLElement>(PANEL_SELECTOR));
 
 	if (root instanceof HTMLElement && root.matches(PANEL_SELECTOR)) {
@@ -96,7 +108,7 @@ export function initializeFloatingPanels(root: ParentNode = document): void {
 	for (const panel of panels) {
 		syncFloatingPanelState(panel);
 
-		if (observedPanels.has(panel)) continue;
+		if (panelObservers.has(panel)) continue;
 
 		const observer = new MutationObserver(() => {
 			syncFloatingPanelState(panel);
@@ -105,7 +117,7 @@ export function initializeFloatingPanels(root: ParentNode = document): void {
 			attributes: true,
 			attributeFilter: ["class"],
 		});
-		observedPanels.add(panel);
+		panelObservers.set(panel, observer);
 	}
 
 	if (!escapeListenerAttached) {

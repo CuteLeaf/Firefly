@@ -51,7 +51,7 @@ function initialActive(categoryName: string): {
   <div class="category-bar-inner flex gap-2">
     <a
       href={homeUrl}
-      class="category-pill text-sm px-3 py-1.5 rounded-full shrink-0
+      class="category-pill focus-ring-inset text-sm px-3 py-1.5 rounded-full shrink-0
              transition-colors duration-150 ease-out flex items-center justify-center"
       data-category-name=""
       data-active={initialActive("").active ? "" : undefined}
@@ -61,7 +61,7 @@ function initialActive(categoryName: string): {
     </a>
     <a
       href={archiveUrl}
-      class="category-pill text-sm px-4 py-1.5 rounded-full whitespace-nowrap shrink-0
+      class="category-pill focus-ring-inset text-sm px-4 py-1.5 rounded-full whitespace-nowrap shrink-0
              transition-colors duration-150 ease-out flex items-center justify-center"
       data-category-name="__archive__"
       data-active={initialActive("__archive__").active ? "" : undefined}
@@ -79,7 +79,7 @@ function initialActive(categoryName: string): {
             return (
             <a
               href={cat.url}
-              class="category-pill text-sm px-4 py-1.5 rounded-full whitespace-nowrap
+              class="category-pill focus-ring-inset text-sm px-4 py-1.5 rounded-full whitespace-nowrap
                      transition-colors duration-150 ease-out flex items-center justify-center"
               data-category-name={cat.name}
               data-active={active.active ? "" : undefined}
@@ -97,7 +97,7 @@ function initialActive(categoryName: string): {
     <div class="category-divider shrink-0 more-divider" aria-hidden="true"></div>
     <a
       href={url("/categories/")}
-      class="category-pill text-sm px-3 py-1.5 rounded-full shrink-0
+      class="category-pill focus-ring-inset text-sm px-3 py-1.5 rounded-full shrink-0
              transition-colors duration-150 ease-out flex items-center justify-center gap-1"
       data-category-name="__categories__"
       data-active={initialActive("__categories__").active ? "" : undefined}
@@ -112,9 +112,6 @@ function initialActive(categoryName: string): {
 <style>
   .category-bar .category-pill {
     border: none;
-  }
-  .category-bar .category-pill:focus-visible {
-    outline-offset: -2px;
   }
   .category-bar {
     margin-bottom: 1rem;

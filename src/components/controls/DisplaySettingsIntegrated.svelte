@@ -605,7 +605,7 @@ $effect(() => {
 	<div class="flex border-b border-black/5 dark:border-white/10 -mx-1 mb-2">
 		{#each visibleTabs as tab (tab.key)}
 			<button
-				class="settings-tab flex-1 flex items-center justify-center gap-1 py-2 text-xs font-medium transition-colors relative min-w-0 rounded-md
+				class="focus-ring-inset flex-1 flex items-center justify-center gap-1 py-2 text-xs font-medium transition-colors relative min-w-0 rounded-md
 					{activeTab === tab.key ? 'text-(--primary)' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'}"
 				onclick={() => activeTab = tab.key}
 			>

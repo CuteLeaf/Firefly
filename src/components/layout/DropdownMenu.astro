@@ -43,7 +43,7 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 						href={child.external ? child.url : url(child.url)}
 						target={child.external ? "_blank" : undefined}
 						isLast={index === (processedLink.children?.length || 0) - 1}
-						class="dropdown-item h-10"
+						class="dropdown-item focus-ring-inset h-10"
 					>
 						{child.icon && <Icon is:inline name={child.icon} class="text-[1.25rem] mr-3 navbar-icon" />}
 						<span>{child.name}</span>

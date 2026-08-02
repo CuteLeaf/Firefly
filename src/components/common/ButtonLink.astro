@@ -12,6 +12,7 @@ const { badge, url, label } = Astro.props;
     class:list={`
             flex
             items-center
+            focus-ring-inset
             w-full
             h-10
             rounded-lg
@@ -43,9 +44,3 @@ const { badge, url, label } = Astro.props;
         }
     </div>
 </a>
-
-<style>
-	a:focus-visible {
-		outline-offset: -2px;
-	}
-</style>

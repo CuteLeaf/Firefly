@@ -69,6 +69,11 @@ html {
         outline: 2px solid var(--primary);
         outline-offset: 2px;
     }
+
+    /* 用于外侧焦点环会被溢出隐藏容器裁切的交互元素。 */
+    .focus-ring-inset:focus-visible {
+        outline-offset: -2px;
+    }
 }
 
 /* 页面顶部渐变高光效果 */
@@ -460,11 +465,6 @@ html {
     /* 无障碍支持 */
     .dropdown-container:focus-within .dropdown-menu {
         @apply pointer-events-auto;
-    }
-
-    .dropdown-item:focus-visible {
-        outline: 2px solid var(--primary);
-        outline-offset: -2px;
     }
 
     .meta-icon {
