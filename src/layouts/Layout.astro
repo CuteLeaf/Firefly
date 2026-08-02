@@ -768,6 +768,7 @@ const siteLang = lang.replace("_", "-");
     // MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
   } from "@/constants/constants";
   import { backgroundWallpaper, expressiveCodeConfig, siteConfig } from "@/config";
+  import { initializeFloatingPanels } from "@/utils/floating-panel-utils";
 
   /* Preload fonts */
   // (async function() {
@@ -815,6 +816,8 @@ function disableAnimation() {
 
   const bannerEnabled = !!document.getElementById("wallpaper-wrapper");
   const stickyNavbar = siteConfig.navbar.stickyNavbar ?? false;
+
+  initializeFloatingPanels();
 
   function setClickOutsideToClose(panel: string, ignores: string[]) {
       document.addEventListener("click", (event) => {
@@ -995,6 +998,7 @@ function disableAnimation() {
       }
     });
     window.swup.hooks.on("content:replace", () => {
+      initializeFloatingPanels();
       const isHome = pathsEqual(window.location.pathname, url("/"));
       const currentMode = document.documentElement.getAttribute("data-wallpaper-mode");
       const isMobileForBanner = window.innerWidth < 1024;

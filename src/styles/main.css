@@ -36,7 +36,8 @@
     z-index: -10;
     transition: all 0.15s ease-out;
   }
-  &:hover::before {
+  &:hover::before,
+  &:focus-visible::before {
     background-color: var(--btn-plain-bg-hover);
     scale: 1;
   }
@@ -51,6 +52,23 @@
 /* 确保平滑滚动 */
 html {
     scroll-behavior: smooth;
+}
+
+/* 全站键盘焦点基线；组件可以在更高的层中覆盖间距或形态。 */
+@layer components {
+    :where(
+        a[href],
+        button,
+        input,
+        select,
+        textarea,
+        summary,
+        [contenteditable="true"],
+        [tabindex]:not([tabindex="-1"])
+    ):focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
 }
 
 /* 页面顶部渐变高光效果 */
@@ -319,8 +337,14 @@ html {
     .btn-plain {
         @apply transition-colors duration-150 relative flex items-center justify-center bg-none
         text-black/75 hover:text-(--primary) dark:text-white/75 dark:hover:text-(--primary);
+        &:focus-visible {
+            color: var(--primary);
+        }
         &:not(.scale-animation) {
             @apply hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active)
+        }
+        &:not(.scale-animation):focus-visible {
+            background-color: var(--btn-plain-bg-hover);
         }
         &.scale-animation {
             @apply expand-animation;
@@ -438,12 +462,9 @@ html {
         @apply pointer-events-auto;
     }
 
-    .dropdown-item:focus {
-        @apply outline-hidden;
-    }
-
-    .mobile-dropdown button:focus {
-        @apply outline-hidden;
+    .dropdown-item:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: -2px;
     }
 
     .meta-icon {
@@ -599,4 +620,3 @@ html {
 .pagination-info {
   @apply text-sm text-(--text-secondary) text-center mb-2;
 }
-

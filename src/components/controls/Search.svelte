@@ -5,6 +5,7 @@ import { navigateToPage } from "@utils/navigation-utils";
 import { onMount } from "svelte";
 import Icon from "@/components/common/Icon.svelte";
 import type { SearchResult } from "@/global";
+import { FLOATING_PANEL_CLOSE_EVENT } from "@/utils/floating-panel-utils";
 import { url as formatUrl, getSearchUrl } from "@/utils/url-utils";
 
 // --- State ---
@@ -14,6 +15,7 @@ let result: SearchResult[] = [];
 let isSearching = false;
 let initialized = false;
 let debounceTimer: NodeJS.Timeout;
+let searchRequestId = 0;
 
 // --- Mocks for Dev Mode ---
 const fakeResult: SearchResult[] = [
@@ -37,6 +39,17 @@ const togglePanel = () => {
 		?.classList.toggle("float-panel-closed");
 };
 
+const handleDesktopFocus = (event: FocusEvent): void => {
+	const input = event.currentTarget;
+	if (
+		input instanceof HTMLElement &&
+		input.hasAttribute("data-floating-panel-focus-return")
+	)
+		return;
+
+	search(keywordDesktop, true);
+};
+
 const setPanelVisibility = (show: boolean, isDesktop: boolean): void => {
 	const panel = document.getElementById("search-panel");
 	if (
@@ -57,6 +70,12 @@ const closeSearchPanel = (): void => {
 	result = [];
 };
 
+const cancelPendingSearch = (): void => {
+	clearTimeout(debounceTimer);
+	searchRequestId += 1;
+	isSearching = false;
+};
+
 const handleResultClick = (event: Event, url: string): void => {
 	event.preventDefault();
 	closeSearchPanel();
@@ -66,15 +85,17 @@ const handleResultClick = (event: Event, url: string): void => {
 // --- Core Search Logic ---
 const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
 	if (!keyword) {
+		cancelPendingSearch();
 		setPanelVisibility(false, isDesktop);
 		result = [];
 		return;
 	}
 	if (!initialized) return;
 
+	clearTimeout(debounceTimer);
+	const requestId = ++searchRequestId;
 	isSearching = true;
 
-	clearTimeout(debounceTimer);
 	debounceTimer = setTimeout(async () => {
 		try {
 			let searchResults: SearchResult[] = [];
@@ -88,14 +109,20 @@ const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
 				searchResults = fakeResult;
 			}
 
+			if (requestId !== searchRequestId) return;
+
 			result = searchResults;
 			setPanelVisibility(true, isDesktop);
 		} catch (error) {
+			if (requestId !== searchRequestId) return;
+
 			console.error("Search error:", error);
 			result = [];
 			setPanelVisibility(false, isDesktop);
 		} finally {
-			isSearching = false;
+			if (requestId === searchRequestId) {
+				isSearching = false;
+			}
 		}
 	}, 300); // 300ms debounce
 };
@@ -125,6 +152,16 @@ onMount(() => {
 			});
 		}
 	}
+
+	const panel = document.getElementById("search-panel");
+	panel?.addEventListener(FLOATING_PANEL_CLOSE_EVENT, cancelPendingSearch);
+
+	return () => {
+		panel?.removeEventListener(FLOATING_PANEL_CLOSE_EVENT, cancelPendingSearch);
+		document.removeEventListener("pagefindready", initializePagefind);
+		document.removeEventListener("pagefindloaderror", initializePagefind);
+		cancelPendingSearch();
+	};
 });
 
 // --- Reactive Statements ---
@@ -143,22 +180,24 @@ $: if (initialized && (keywordMobile || keywordMobile === "")) {
 ">
     <Icon icon="material-symbols:search"
           class="absolute text-[1.25rem] pointer-events-none ml-3 transition my-auto text-black/30 dark:text-white/30"></Icon>
-    <input placeholder="{i18n(I18nKey.search)}" bind:value={keywordDesktop}
-           on:focus={() => search(keywordDesktop, true)}
+    <input id="search-input-desktop" placeholder="{i18n(I18nKey.search)}" bind:value={keywordDesktop}
+           aria-controls="search-panel" data-floating-panel-no-expanded
+           on:focus={handleDesktopFocus}
            class="transition-all pl-10 text-sm bg-transparent outline-0
          h-full w-40 active:w-60 focus:w-60 text-black/50 dark:text-white/50"
     >
 </div>
 
 <!-- toggle btn for phone/tablet view -->
-<button on:click={togglePanel} aria-label="Search Panel" id="search-switch"
-        class="btn-plain scale-animation lg:hidden! rounded-lg w-9 h-9 md:w-11 md:h-11 active:scale-90">
+<button on:click={togglePanel} aria-label="Search Panel" aria-controls="search-panel" aria-expanded="false" id="search-switch"
+		class="btn-plain scale-animation lg:hidden! rounded-lg w-9 h-9 md:w-11 md:h-11 active:scale-90">
     <Icon icon="material-symbols:search" class="text-[1.25rem]"></Icon>
 </button>
 
 <!-- search panel -->
 <div id="search-panel" class="float-panel float-panel-closed search-panel absolute md:w-120
-top-20 left-4 md:left-[unset] right-4 shadow-2xl rounded-2xl p-2">
+top-20 left-4 md:left-[unset] right-4 shadow-2xl rounded-2xl p-2"
+     data-floating-panel data-floating-panel-trigger="search-switch search-input-desktop" inert aria-hidden="true">
 
     <!-- search bar inside panel for phone/tablet -->
     <div id="search-bar-inside" class="flex relative lg:hidden transition-all items-center h-11 rounded-xl
@@ -240,4 +279,3 @@ top-20 left-4 md:left-[unset] right-4 shadow-2xl rounded-2xl p-2">
         overflow-y: auto;
     }
 </style>
-

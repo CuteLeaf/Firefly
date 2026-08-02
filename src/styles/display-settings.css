@@ -67,8 +67,22 @@
 }
 
 #display-setting #colorSlider {
+	border-radius: inherit;
 	background-image: var(--color-selection-bar);
 	transition: background-image 0.15s ease-in-out;
+}
+
+#display-setting .settings-tab:focus-visible {
+	outline-offset: -2px;
+}
+
+#display-setting .hue-slider-shell > input:focus-visible {
+	outline: none;
+}
+
+#display-setting .hue-slider-shell:has(> input:focus-visible) {
+	outline: 2px solid var(--primary);
+	outline-offset: 2px;
 }
 
 #display-setting #colorSlider::-webkit-slider-thumb {

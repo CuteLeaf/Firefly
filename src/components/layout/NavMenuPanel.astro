@@ -9,8 +9,8 @@ interface Props {
 
 const processedLinks = Astro.props.links;
 ---
-<div id="nav-menu-panel" class:list={["float-panel float-panel-closed transition-all fixed right-4 px-2 py-2 max-h-[80vh] overflow-y-auto"]}>
-    {processedLinks.map((link) => (
+<div id="nav-menu-panel" class:list={["float-panel float-panel-closed transition-all fixed right-4 px-2 py-2 max-h-[80vh] overflow-y-auto"]} data-floating-panel data-floating-panel-trigger="nav-menu-switch" inert aria-hidden="true">
+    {processedLinks.map((link, index) => (
         <div class="mobile-menu-item">
             {link.children && link.children.length > 0 ? (
                 /* 有子菜单的项目 */
@@ -20,6 +20,7 @@ const processedLinks = Astro.props.links;
                             hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
                         data-mobile-dropdown-trigger
                         aria-expanded="false"
+                        aria-controls={`mobile-submenu-${index}`}
                     >
                         <div class="flex items-center transition text-black/75 dark:text-white/75 font-bold group-hover:text-(--primary) group-active:text-(--primary)">
 							{link.icon && <Icon is:inline name={link.icon} class="text-[1.1rem] mr-2" />}
@@ -29,7 +30,7 @@ const processedLinks = Astro.props.links;
                               class="transition text-[1.25rem] text-(--primary) mobile-dropdown-arrow duration-200"
                         />
                     </button>
-                    <div class="mobile-submenu" data-mobile-submenu>
+                    <div id={`mobile-submenu-${index}`} class="mobile-submenu" data-mobile-submenu inert aria-hidden="true">
                         {link.children.map((child) => (
                             <a href={child.external ? child.url : url(child.url)}
                                class="group flex justify-between items-center py-2 pl-6 pr-1 rounded-lg gap-8
@@ -103,19 +104,27 @@ const processedLinks = Astro.props.links;
                 // 关闭其他打开的下拉菜单
                 mobileDropdowns.forEach(otherDropdown => {
                     if (otherDropdown !== dropdown) {
-                        otherDropdown.setAttribute('data-expanded', 'false');
-                        const otherTrigger = otherDropdown.querySelector('[data-mobile-dropdown-trigger]');
-                        if (otherTrigger) {
-                            otherTrigger.setAttribute('aria-expanded', 'false');
-                        }
+                        setDropdownExpanded(otherDropdown, false);
                     }
                 });
 
                 // 切换当前下拉菜单
                 const newState = !isExpanded;
-                dropdown.setAttribute('data-expanded', newState.toString());
-                trigger.setAttribute('aria-expanded', newState.toString());
+                setDropdownExpanded(dropdown, newState);
             });
         });
     });
+
+    function setDropdownExpanded(dropdown: Element, isExpanded: boolean) {
+        dropdown.setAttribute('data-expanded', isExpanded.toString());
+
+        const trigger = dropdown.querySelector('[data-mobile-dropdown-trigger]');
+        trigger?.setAttribute('aria-expanded', isExpanded.toString());
+
+        const submenu = dropdown.querySelector('[data-mobile-submenu]');
+        if (submenu instanceof HTMLElement) {
+            submenu.inert = !isExpanded;
+            submenu.setAttribute('aria-hidden', (!isExpanded).toString());
+        }
+    }
 </script>
