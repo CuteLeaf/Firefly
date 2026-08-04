@@ -177,6 +177,35 @@ export const ru: Translation = {
 	[Key.bangumiUpdatedAt]: "Время сборки",
 	[Key.bangumiDataStatic]: "Статические данные",
 
+	// VNDB
+	[Key.vndb]: "VNDB",
+	[Key.vndbSubtitle]: "Мой список визуальных новелл VNDB",
+	[Key.vndbFilterAll]: "Все",
+	[Key.vndbFilterVoted]: "Оценено",
+	[Key.vndbFilterUnvoted]: "Без оценки",
+	[Key.vndbFilterNotes]: "С заметками",
+	[Key.vndbStatusWishlist]: "Хочу сыграть",
+	[Key.vndbStatusPlaying]: "Играю",
+	[Key.vndbStatusFinished]: "Пройдено",
+	[Key.vndbStatusStalled]: "Отложено",
+	[Key.vndbStatusDropped]: "Брошено",
+	[Key.vndbStatusUnknown]: "Неизвестно",
+	[Key.vndbNoData]: "Нет данных",
+	[Key.vndbNoDataDescription]: "В этой категории нет элементов",
+	[Key.vndbEmpty]: "Нет данных",
+	[Key.vndbEmptyReason]:
+		"Возможные причины: ID пользователя не существует, список закрыт, проблемы с сетью или ограничение API",
+	[Key.vndbFetchError]: "Ошибка загрузки данных VNDB",
+	[Key.vndbFetchErrorDesc]:
+		"Не удалось загрузить данные из VNDB API при сборке. Эта страница временно недоступна.",
+	[Key.vndbLastUpdated]: "Данные обновлены",
+	[Key.vndbVotes]: "голосов",
+	[Key.vndbLengthVeryShort]: "Очень короткая",
+	[Key.vndbLengthShort]: "Короткая",
+	[Key.vndbLengthMedium]: "Средняя",
+	[Key.vndbLengthLong]: "Длинная",
+	[Key.vndbLengthVeryLong]: "Очень длинная",
+
 	// Отслеживание аниме
 	[Key.anime]: "Аниме",
 	[Key.animeSubtitle]:

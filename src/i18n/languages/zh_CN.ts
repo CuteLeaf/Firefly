@@ -172,6 +172,35 @@ export const zh_CN: Translation = {
 	[Key.bangumiUpdatedAt]: "构建时间",
 	[Key.bangumiDataStatic]: "静态数据",
 
+	// VNDB
+	[Key.vndb]: "VNDB",
+	[Key.vndbSubtitle]: "我的 VNDB 视觉小说列表",
+	[Key.vndbFilterAll]: "全部",
+	[Key.vndbFilterVoted]: "已评分",
+	[Key.vndbFilterUnvoted]: "未评分",
+	[Key.vndbFilterNotes]: "有笔记",
+	[Key.vndbStatusWishlist]: "想玩",
+	[Key.vndbStatusPlaying]: "在玩",
+	[Key.vndbStatusFinished]: "已玩",
+	[Key.vndbStatusStalled]: "搁置",
+	[Key.vndbStatusDropped]: "抛弃",
+	[Key.vndbStatusUnknown]: "未知",
+	[Key.vndbNoData]: "暂无数据",
+	[Key.vndbNoDataDescription]: "该分类下还没有任何条目",
+	[Key.vndbEmpty]: "暂无数据",
+	[Key.vndbEmptyReason]:
+		"可能的原因：用户 ID 不存在、列表为私密、网络连接问题或 API 限制",
+	[Key.vndbFetchError]: "VNDB 数据拉取失败",
+	[Key.vndbFetchErrorDesc]:
+		"构建时从 VNDB API 获取数据失败，该页面内容暂不可用。",
+	[Key.vndbLastUpdated]: "数据更新于",
+	[Key.vndbVotes]: "票",
+	[Key.vndbLengthVeryShort]: "极短",
+	[Key.vndbLengthShort]: "短",
+	[Key.vndbLengthMedium]: "中等",
+	[Key.vndbLengthLong]: "长",
+	[Key.vndbLengthVeryLong]: "极长",
+
 	// 追番
 	[Key.anime]: "追番",
 	[Key.animeSubtitle]: "我的追番列表，数据来自 Bilibili 和 TMDB",

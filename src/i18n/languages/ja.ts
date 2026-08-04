@@ -176,6 +176,35 @@ export const ja: Translation = {
 	[Key.bangumiUpdatedAt]: "ビルド時間",
 	[Key.bangumiDataStatic]: "静的データ",
 
+	// VNDB
+	[Key.vndb]: "VNDB",
+	[Key.vndbSubtitle]: "私のビジュアルノベルリスト",
+	[Key.vndbFilterAll]: "すべて",
+	[Key.vndbFilterVoted]: "評価済み",
+	[Key.vndbFilterUnvoted]: "未評価",
+	[Key.vndbFilterNotes]: "ノートあり",
+	[Key.vndbStatusWishlist]: "プレイしたい",
+	[Key.vndbStatusPlaying]: "プレイ中",
+	[Key.vndbStatusFinished]: "プレイ済み",
+	[Key.vndbStatusStalled]: "保留",
+	[Key.vndbStatusDropped]: "中断",
+	[Key.vndbStatusUnknown]: "不明",
+	[Key.vndbNoData]: "データなし",
+	[Key.vndbNoDataDescription]: "このカテゴリに項目がありません",
+	[Key.vndbEmpty]: "データなし",
+	[Key.vndbEmptyReason]:
+		"考えられる理由：ユーザーIDが存在しない、リストが非公開、ネットワーク接続の問題、またはAPI制限",
+	[Key.vndbFetchError]: "VNDB データ取得失敗",
+	[Key.vndbFetchErrorDesc]:
+		"ビルド時に VNDB API からのデータ取得に失敗しました。このページは一時的に利用できません。",
+	[Key.vndbLastUpdated]: "データ更新",
+	[Key.vndbVotes]: "票",
+	[Key.vndbLengthVeryShort]: "非常に短い",
+	[Key.vndbLengthShort]: "短い",
+	[Key.vndbLengthMedium]: "中程度",
+	[Key.vndbLengthLong]: "長い",
+	[Key.vndbLengthVeryLong]: "非常に長い",
+
 	// 追番（アニメ追跡）
 	[Key.anime]: "追番",
 	[Key.animeSubtitle]: "私のアニメ追跡リスト、Bilibili と TMDB からデータ取得",

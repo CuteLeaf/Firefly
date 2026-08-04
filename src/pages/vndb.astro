@@ -1,0 +1,199 @@
+---
+import { existsSync } from "node:fs";
+import path from "node:path";
+import { Icon } from "astro-icon/components";
+import VndbGrid from "@/components/pages/vndb/VndbGrid.svelte";
+import { siteConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import type { VndbUlistEntry } from "@/types/vndb";
+import { formatDateI18nWithTime } from "@/utils/date-utils";
+import {
+	buildVndbTabs,
+	fetchVndbUlist,
+	type VndbTab,
+} from "@/utils/vndb-utils";
+
+// 检查页面是否启用
+if (!siteConfig.pages.vndb) {
+	return Astro.redirect("/404/");
+}
+
+const buildTime = formatDateI18nWithTime(new Date());
+
+////////////// VNDB 配置 ////////////////////////
+const vndbConfig = {
+	userId: siteConfig.vndb?.userId || "",
+	mode: (siteConfig.vndb?.mode || "static") as "static" | "dynamic",
+	downloadCovers: siteConfig.vndb?.downloadCovers ?? false,
+	apiUrl: siteConfig.vndb?.apiUrl || "https://api.vndb.org/kana",
+	vnBaseUrl: siteConfig.vndb?.vnBaseUrl || "https://vndb.org/",
+	apiToken: siteConfig.vndb?.apiToken || "",
+	pagination: {
+		limit: 100,
+		delay: 100,
+		maxTotal: 1000,
+	},
+};
+//////////////////////////////////////////////////
+
+const isDynamic = vndbConfig.mode === "dynamic";
+const isUserIdConfigured =
+	vndbConfig.userId.trim() !== "" && vndbConfig.userId !== "you-user-id";
+
+const vndbData: Record<string, VndbUlistEntry[]> = {};
+const tabs: VndbTab[] = [];
+let fetchFailed = false;
+
+if (!isDynamic && isUserIdConfigured) {
+	const { limit, delay, maxTotal } = vndbConfig.pagination;
+	const allItems: VndbUlistEntry[] = [];
+	let page = 1;
+	const isDev = import.meta.env.DEV;
+	const maxPages = isDev ? 1 : 0;
+
+	try {
+		while (true) {
+			if (maxTotal > 0 && allItems.length >= maxTotal) break;
+			if (isDev && maxPages > 0 && allItems.length >= limit * maxPages) break;
+
+			const data = await fetchVndbUlist({
+				apiUrl: vndbConfig.apiUrl,
+				userId: vndbConfig.userId,
+				apiToken: vndbConfig.apiToken,
+				results: limit,
+				page,
+			});
+			const batch = data.results || [];
+			allItems.push(...batch);
+
+			if (!data.more || batch.length < limit) break;
+			page += 1;
+			await new Promise((resolve) => setTimeout(resolve, delay));
+		}
+
+		if (vndbConfig.downloadCovers) {
+			for (const item of allItems) {
+				const localCover = path.join(
+					process.cwd(),
+					"public",
+					"vndb-covers",
+					`${item.id}.webp`,
+				);
+				if (existsSync(localCover) && item.vn?.image) {
+					item.vn.image.url = `/vndb-covers/${item.id}.webp`;
+				}
+			}
+		}
+
+		vndbData.all = allItems;
+		tabs.push(...buildVndbTabs(allItems));
+	} catch (error) {
+		console.error("[VNDB] 获取数据失败:", error);
+		fetchFailed = true;
+	}
+}
+
+const activeTab = tabs[0]?.id || "all";
+---
+
+<MainGridLayout title={i18n(I18nKey.vndb)} description={i18n(I18nKey.vndbSubtitle)}>
+  <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+    <div class="card-base z-10 px-9 py-6 relative w-full">
+      <div class="relative w-full mb-8">
+        <div class="mb-6">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70">
+              <Icon is:inline name="material-symbols:movie" class="text-[1.5rem]"></Icon>
+            </div>
+            <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+              {i18n(I18nKey.vndb)}
+            </div>
+          </div>
+          <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            {i18n(I18nKey.vndbSubtitle)}
+          </p>
+          {!isDynamic && (
+            <p class="text-xs text-neutral-500 dark:text-neutral-500 mt-2">
+              {i18n(I18nKey.vndbLastUpdated)} {buildTime}
+            </p>
+          )}
+        </div>
+
+        {isDynamic ? (
+          <>
+            {!isUserIdConfigured ? (
+              <div class="text-center py-16">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-(--btn-regular-bg) rounded-full mb-6 border border-(--line-divider)">
+                  <Icon is:inline name="material-symbols:settings" class="text-[2rem] text-(--btn-content)" />
+                </div>
+                <h2 class="text-xl font-semibold text-black/80 dark:text-white/80 mb-3">
+                  未配置 VNDB 用户ID
+                </h2>
+                <p class="text-black/60 dark:text-white/60 mb-4 max-w-md mx-auto">
+                  请在 src/config/siteConfig.ts 中配置你的 VNDB 用户ID
+                </p>
+              </div>
+            ) : (
+              <VndbGrid
+                client:load
+                fetchConfig={{
+                  userId: vndbConfig.userId,
+                  apiUrl: vndbConfig.apiUrl,
+                  vnBaseUrl: vndbConfig.vnBaseUrl,
+                  pagination: vndbConfig.pagination,
+                }}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            {fetchFailed ? (
+              <div class="text-center py-16">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-(--btn-regular-bg) rounded-full mb-6 border border-(--line-divider)">
+                  <Icon is:inline name="material-symbols:error-outline" class="text-[2rem] text-red-500" />
+                </div>
+                <h2 class="text-xl font-semibold text-black/80 dark:text-white/80 mb-3">
+                  {i18n(I18nKey.vndbFetchError)}
+                </h2>
+                <p class="text-black/60 dark:text-white/60 mb-4 max-w-md mx-auto">
+                  {i18n(I18nKey.vndbFetchErrorDesc)}
+                </p>
+              </div>
+            ) : tabs.length > 0 ? (
+              <VndbGrid
+                client:load
+                tabs={tabs}
+                initialActiveTab={activeTab}
+                vndbData={vndbData}
+                vnBaseUrl={vndbConfig.vnBaseUrl}
+              />
+            ) : (
+              <div class="text-center py-16">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-(--btn-regular-bg) rounded-full mb-6 border border-(--line-divider)">
+                  <Icon is:inline name="material-symbols:settings" class="text-[2rem] text-(--btn-content)" />
+                </div>
+                <h2 class="text-xl font-semibold text-black/80 dark:text-white/80 mb-3">
+                  {isUserIdConfigured ? i18n(I18nKey.vndbEmpty) : "未配置 VNDB 用户ID"}
+                </h2>
+                <p class="text-black/60 dark:text-white/60 mb-4 max-w-md mx-auto">
+                  {isUserIdConfigured ? i18n(I18nKey.vndbEmptyReason) : "请在 src/config/siteConfig.ts 中配置你的 VNDB 用户ID"}
+                </p>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+</MainGridLayout>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
