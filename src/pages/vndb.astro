@@ -35,6 +35,7 @@ const vndbConfig = {
 		delay: 100,
 		maxTotal: 1000,
 	},
+  blurNsfw: siteConfig.vndb?.blurNsfw ?? true
 };
 //////////////////////////////////////////////////
 
@@ -143,6 +144,7 @@ const activeTab = tabs[0]?.id || "all";
                   apiUrl: vndbConfig.apiUrl,
                   vnBaseUrl: vndbConfig.vnBaseUrl,
                   pagination: vndbConfig.pagination,
+                  blurNsfw: vndbConfig.blurNsfw
                 }}
               />
             )}
@@ -168,6 +170,7 @@ const activeTab = tabs[0]?.id || "all";
                 initialActiveTab={activeTab}
                 vndbData={vndbData}
                 vnBaseUrl={vndbConfig.vnBaseUrl}
+                blurNsfw={vndbConfig.blurNsfw}
               />
             ) : (
               <div class="text-center py-16">

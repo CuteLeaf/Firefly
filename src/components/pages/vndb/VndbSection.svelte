@@ -12,6 +12,7 @@ interface Props {
 	isActive: boolean;
 	itemsPerPage?: number;
 	vnBaseUrl?: string;
+	blurNsfw: boolean;
 }
 
 const {
@@ -20,6 +21,7 @@ const {
 	isActive,
 	itemsPerPage = 24,
 	vnBaseUrl,
+	blurNsfw
 }: Props = $props();
 
 const filterCounts = $derived(() => {
@@ -111,7 +113,7 @@ function goToPage(page: number) {
           data-item-section={sectionId}
           data-item-id={item.id}
         >
-          <Card item={item} loadImage={isActive} {vnBaseUrl} />
+          <Card item={item} loadImage={isActive} {vnBaseUrl} blurNsfw={blurNsfw}/>
         </div>
       {/each}
     </div>

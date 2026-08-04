@@ -172,6 +172,7 @@ export type SiteConfig = {
 		apiUrl?: string; // VNDB API 地址
 		vnBaseUrl?: string; // VNDB 条目详情页地址，末尾需要带 /
 		apiToken?: string; // 私密列表访问令牌，仅 static 模式下使用
+		blurNsfw?: boolean; // 对Nsfw的游戏封面模糊化，默认为true
 	};
 
 	// 追番配置（Bilibili + TMDB）

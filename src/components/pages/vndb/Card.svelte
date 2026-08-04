@@ -12,12 +12,14 @@ interface Props {
 	item: VndbUlistEntry;
 	loadImage?: boolean;
 	vnBaseUrl?: string;
+  blurNsfw: boolean;
 }
 
 const {
 	item,
 	loadImage = false,
 	vnBaseUrl = "https://vndb.org/",
+  blurNsfw
 }: Props = $props();
 
 const STATUS_COLORS: Record<string, string> = {
@@ -57,7 +59,7 @@ const imageUrl = $derived(
 	item.vn?.image?.url || item.vn?.image?.thumbnail || "",
 );
 const imageNsfw = $derived(
-  (item.vn?.image?.sexual??0) > 1 || (item.vn?.image?.violence??0) > 1
+  ((item.vn?.image?.sexual??0) > 1 || (item.vn?.image?.violence??0) > 1) && blurNsfw
 )
 const userVote = $derived(item.vote);
 const rating = $derived(item.vn?.rating);

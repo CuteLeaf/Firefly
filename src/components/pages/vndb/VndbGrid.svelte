@@ -17,12 +17,14 @@ interface Props {
 	initialActiveTab?: string;
 	vndbData?: Record<string, VndbUlistEntry[]>;
 	vnBaseUrl?: string;
+	blurNsfw?: boolean;
 	fetchConfig?: {
 		userId: string;
 		apiUrl: string;
 		apiToken?: string;
 		vnBaseUrl: string;
 		pagination: { limit: number; delay: number; maxTotal: number };
+		blurNsfw: boolean;
 	};
 }
 
@@ -32,6 +34,7 @@ const {
 	vndbData: staticData,
 	vnBaseUrl,
 	fetchConfig,
+	blurNsfw
 }: Props = $props();
 
 const isDynamic = $derived(!!fetchConfig);
@@ -158,6 +161,7 @@ onMount(async () => {
       isActive={tab.id === activeTab}
       itemsPerPage={24}
       {vnBaseUrl}
+	  blurNsfw={blurNsfw ?? fetchConfig?.blurNsfw ?? true}
     />
   {/each}
 {/if}
