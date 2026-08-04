@@ -198,6 +198,9 @@ export const ru: Translation = {
 	[Key.vndbFetchError]: "Ошибка загрузки данных VNDB",
 	[Key.vndbFetchErrorDesc]:
 		"Не удалось загрузить данные из VNDB API при сборке. Эта страница временно недоступна.",
+	[Key.vndbNotConfigured]: "ID пользователя VNDB не настроен",
+	[Key.vndbNotConfiguredDesc]:
+		"Укажите ID пользователя VNDB в src/config/siteConfig.ts",
 	[Key.vndbLastUpdated]: "Данные обновлены",
 	[Key.vndbVotes]: "голосов",
 	[Key.vndbLengthVeryShort]: "Очень короткая",

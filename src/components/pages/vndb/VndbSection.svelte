@@ -24,7 +24,7 @@ const {
 	blurNsfw,
 }: Props = $props();
 
-const filterCounts = $derived(() => {
+const filterCounts = $derived.by(() => {
 	let voted = 0;
 	let unvoted = 0;
 	let notes = 0;
@@ -36,8 +36,8 @@ const filterCounts = $derived(() => {
 	return { voted, unvoted, notes };
 });
 
-const filters = $derived(() => {
-	const counts = filterCounts();
+const filters = $derived.by(() => {
+	const counts = filterCounts;
 	return [
 		{
 			value: "all",
@@ -65,7 +65,7 @@ const filters = $derived(() => {
 let activeFilter = $state("all");
 let currentPage = $state(1);
 
-const filteredItems = $derived(() => {
+const filteredItems = $derived.by(() => {
 	if (activeFilter === "all") return items;
 	if (activeFilter === "voted")
 		return items.filter((item) => item.vote != null);
@@ -75,12 +75,12 @@ const filteredItems = $derived(() => {
 	return items;
 });
 
-const totalPages = $derived(() =>
-	Math.max(1, Math.ceil(filteredItems().length / itemsPerPage)),
+const totalPages = $derived(
+	Math.max(1, Math.ceil(filteredItems.length / itemsPerPage)),
 );
 
-const pagedItems = $derived(() =>
-	filteredItems().slice(
+const pagedItems = $derived(
+	filteredItems.slice(
 		(currentPage - 1) * itemsPerPage,
 		currentPage * itemsPerPage,
 	),
@@ -92,7 +92,7 @@ function handleFilterChange(filter: string) {
 }
 
 function goToPage(page: number) {
-	if (page >= 1 && page <= totalPages()) {
+	if (page >= 1 && page <= totalPages) {
 		currentPage = page;
 	}
 }
@@ -101,13 +101,13 @@ function goToPage(page: number) {
 <div class="vndb-section" class:hidden={!isActive} data-section={sectionId}>
   {#if items.length > 0}
     <FilterControls
-      filters={filters()}
+      filters={filters}
       activeFilter={activeFilter}
       onFilterChange={handleFilterChange}
     />
 
     <div class="bangumi-masonry grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-      {#each pagedItems() as item (item.id)}
+      {#each pagedItems as item (item.id)}
         <div
           class="vndb-item"
           data-item-section={sectionId}
@@ -119,7 +119,7 @@ function goToPage(page: number) {
     </div>
 
     <ClientPagination
-      totalItems={filteredItems().length}
+      totalItems={filteredItems.length}
       itemsPerPage={itemsPerPage}
       currentPage={currentPage}
       onPageChange={goToPage}

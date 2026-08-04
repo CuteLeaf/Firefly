@@ -1,4 +1,6 @@
 <script lang="ts">
+import { onMount } from "svelte";
+
 interface Tab {
 	id: string;
 	name: string;
@@ -25,7 +27,7 @@ function handleHashChange() {
 	}
 }
 
-$effect(() => {
+onMount(() => {
 	window.addEventListener("hashchange", handleHashChange);
 	return () => window.removeEventListener("hashchange", handleHashChange);
 });

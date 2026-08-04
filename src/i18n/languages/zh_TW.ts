@@ -195,6 +195,9 @@ export const zh_TW: Translation = {
 	[Key.vndbFetchError]: "VNDB 資料拉取失敗",
 	[Key.vndbFetchErrorDesc]:
 		"構建時從 VNDB API 獲取資料失敗，該頁面內容暫不可用。",
+	[Key.vndbNotConfigured]: "未配置 VNDB 用戶ID",
+	[Key.vndbNotConfiguredDesc]:
+		"請在 src/config/siteConfig.ts 中配置你的 VNDB 用戶ID",
 	[Key.vndbLastUpdated]: "數據更新於",
 	[Key.vndbVotes]: "票",
 	[Key.vndbLengthVeryShort]: "極短",

@@ -130,10 +130,10 @@ const activeTab = tabs[0]?.id || "all";
                   <Icon is:inline name="material-symbols:settings" class="text-[2rem] text-(--btn-content)" />
                 </div>
                 <h2 class="text-xl font-semibold text-black/80 dark:text-white/80 mb-3">
-                  未配置 VNDB 用户ID
+                  {i18n(I18nKey.vndbNotConfigured)}
                 </h2>
                 <p class="text-black/60 dark:text-white/60 mb-4 max-w-md mx-auto">
-                  请在 src/config/siteConfig.ts 中配置你的 VNDB 用户ID
+                  {i18n(I18nKey.vndbNotConfiguredDesc)}
                 </p>
               </div>
             ) : (
@@ -178,10 +178,10 @@ const activeTab = tabs[0]?.id || "all";
                   <Icon is:inline name="material-symbols:settings" class="text-[2rem] text-(--btn-content)" />
                 </div>
                 <h2 class="text-xl font-semibold text-black/80 dark:text-white/80 mb-3">
-                  {isUserIdConfigured ? i18n(I18nKey.vndbEmpty) : "未配置 VNDB 用户ID"}
+                  {isUserIdConfigured ? i18n(I18nKey.vndbEmpty) : i18n(I18nKey.vndbNotConfigured)}
                 </h2>
                 <p class="text-black/60 dark:text-white/60 mb-4 max-w-md mx-auto">
-                  {isUserIdConfigured ? i18n(I18nKey.vndbEmptyReason) : "请在 src/config/siteConfig.ts 中配置你的 VNDB 用户ID"}
+                  {isUserIdConfigured ? i18n(I18nKey.vndbEmptyReason) : i18n(I18nKey.vndbNotConfiguredDesc)}
                 </p>
               </div>
             )}
@@ -191,12 +191,3 @@ const activeTab = tabs[0]?.id || "all";
     </div>
   </div>
 </MainGridLayout>
-
-<style>
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-</style>

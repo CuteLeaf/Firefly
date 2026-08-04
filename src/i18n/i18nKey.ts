@@ -195,6 +195,8 @@ enum I18nKey {
 	vndbEmptyReason = "vndbEmptyReason",
 	vndbFetchError = "vndbFetchError",
 	vndbFetchErrorDesc = "vndbFetchErrorDesc",
+	vndbNotConfigured = "vndbNotConfigured",
+	vndbNotConfiguredDesc = "vndbNotConfiguredDesc",
 	vndbLastUpdated = "vndbLastUpdated",
 	vndbVotes = "vndbVotes",
 	vndbLengthVeryShort = "vndbLengthVeryShort",

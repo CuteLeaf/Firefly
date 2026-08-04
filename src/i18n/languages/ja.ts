@@ -197,6 +197,9 @@ export const ja: Translation = {
 	[Key.vndbFetchError]: "VNDB データ取得失敗",
 	[Key.vndbFetchErrorDesc]:
 		"ビルド時に VNDB API からのデータ取得に失敗しました。このページは一時的に利用できません。",
+	[Key.vndbNotConfigured]: "VNDB ユーザーIDが未設定です",
+	[Key.vndbNotConfiguredDesc]:
+		"src/config/siteConfig.ts で VNDB ユーザーIDを設定してください",
 	[Key.vndbLastUpdated]: "データ更新",
 	[Key.vndbVotes]: "票",
 	[Key.vndbLengthVeryShort]: "非常に短い",

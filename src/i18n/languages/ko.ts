@@ -197,6 +197,9 @@ export const ko: Translation = {
 	[Key.vndbFetchError]: "VNDB 데이터 가져오기 실패",
 	[Key.vndbFetchErrorDesc]:
 		"빌드 중 VNDB API에서 데이터를 가져오지 못했습니다. 이 페이지는 일시적으로 사용할 수 없습니다.",
+	[Key.vndbNotConfigured]: "VNDB 사용자 ID가 설정되지 않았습니다",
+	[Key.vndbNotConfiguredDesc]:
+		"src/config/siteConfig.ts에서 VNDB 사용자 ID를 설정하세요",
 	[Key.vndbLastUpdated]: "데이터 업데이트 시각",
 	[Key.vndbVotes]: "표",
 	[Key.vndbLengthVeryShort]: "매우 짧음",

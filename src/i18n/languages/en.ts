@@ -198,6 +198,9 @@ export const en: Translation = {
 	[Key.vndbFetchError]: "VNDB Data Fetch Failed",
 	[Key.vndbFetchErrorDesc]:
 		"Failed to fetch data from VNDB API during build. This page is temporarily unavailable.",
+	[Key.vndbNotConfigured]: "VNDB User ID Not Configured",
+	[Key.vndbNotConfiguredDesc]:
+		"Please configure your VNDB user ID in src/config/siteConfig.ts",
 	[Key.vndbLastUpdated]: "Data updated at",
 	[Key.vndbVotes]: "votes",
 	[Key.vndbLengthVeryShort]: "Very short",
