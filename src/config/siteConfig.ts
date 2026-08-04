@@ -237,7 +237,7 @@ export const siteConfig: SiteConfig = {
 		// 私密列表访问令牌，仅 static 模式下使用；不要把真实令牌提交到公开仓库！
 		apiToken: "",
 		// 对Nsfw的游戏封面模糊化
-		blurNsfw: true
+		blurNsfw: true,
 	},
 
 	// 追番配置（Bilibili + TMDB）

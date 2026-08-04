@@ -21,7 +21,7 @@ const {
 	isActive,
 	itemsPerPage = 24,
 	vnBaseUrl,
-	blurNsfw
+	blurNsfw,
 }: Props = $props();
 
 const filterCounts = $derived(() => {

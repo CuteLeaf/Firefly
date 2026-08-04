@@ -34,7 +34,7 @@ const {
 	vndbData: staticData,
 	vnBaseUrl,
 	fetchConfig,
-	blurNsfw
+	blurNsfw,
 }: Props = $props();
 
 const isDynamic = $derived(!!fetchConfig);
