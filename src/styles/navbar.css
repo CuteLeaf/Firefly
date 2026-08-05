@@ -10,21 +10,30 @@
  * 
  * 2. 导航栏配置 (banner.navbar):
  *    - transparentMode: "semi" | "full" | "semifull" (仅在 Banner 模式下生效)
- *    - enableBlur: true/false (仅在 Banner 模式下生效)
- * 
+ *    - blur: 毛玻璃模糊度，0 即关闭 (仅在 Banner 模式下生效)
+ *
  * 注意：Overlay 模式下的导航栏始终跟随卡片样式 (var(--card-bg-transparent) + blur)，
- * 不受 Banner 配置 (transparentMode, enableBlur) 的影响。
+ * 不受 Banner 配置 (transparentMode, blur) 的影响。
  * ============================================
  */
 
 @reference "tailwindcss";
+
+/*
+ * 导航栏条状背景的模糊半径。
+ */
+@property --navbar-surface-blur {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
 
 @utility navbar-surface-transition {
   transition:
     background-color 0.36s cubic-bezier(0.22, 1, 0.36, 1),
     border-color 0.36s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.36s cubic-bezier(0.22, 1, 0.36, 1),
-    backdrop-filter 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+    --navbar-surface-blur 0.36s cubic-bezier(0.22, 1, 0.36, 1),
     border-radius 0.36s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -36,8 +45,27 @@
     background-color: var(--card-bg);
     border: 1px solid transparent;
     border-radius: 0 0 0.75rem 0.75rem;
-    backdrop-filter: blur(0);
+    --navbar-surface-blur: 0px;
+    /* 给下面的 ::before 当定位包含块与层叠上下文 */
+    position: relative;
+    z-index: 0;
     @apply navbar-surface-transition;
+}
+
+/*
+ * 导航栏自身的毛玻璃层。
+ * z-index: -1 让它落在导航栏底色之上、内容之下；底色是匀色，
+ * blur(底色 over 壁纸) == 底色 over blur(壁纸)，观感与把滤镜写在父元素上一致。
+ * inset: 0 只盖到 padding box，是为了不遮住 .enable-card-border 下的可见边框。
+ */
+#navbar>div::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    backdrop-filter: blur(var(--navbar-surface-blur, 0px));
 }
 
 
@@ -59,14 +87,14 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scro
 /* ============================================
  * 桌面端 - 亮色主题 - Banner模式
  * 适用: 桌面端(≥1024px) + Banner模式 + 亮色主题
- * 遵循: transparentMode, enableBlur 配置
+ * 遵循: transparentMode, blur 配置
  * ============================================ */
 @media (min-width: 1024px) {
 
     /* "semi" */
     #wallpaper-wrapper~* #navbar[data-transparent-mode="semi"]>div,
     body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semi"]>div {
-        backdrop-filter: blur(var(--navbar-glass-blur, 20px)) !important;
+        --navbar-surface-blur: var(--navbar-glass-blur, 20px) !important;
         background: color-mix(in oklch, var(--card-bg) calc(var(--opacity-55) * 100%), transparent) !important;
         border-radius: 0 0 0.75rem 0.75rem !important;
         box-shadow: var(--shadow-navbar) !important;
@@ -75,7 +103,7 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scro
     /* "full" */
     #wallpaper-wrapper~* #navbar[data-transparent-mode="full"]>div,
     body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="full"]>div {
-        backdrop-filter: blur(0) !important;
+        --navbar-surface-blur: 0px !important;
         background: transparent !important;
         border: none !important;
         border-radius: 0 !important;
@@ -85,7 +113,7 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scro
     /* "semifull" (static) */
     #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"]>div,
     body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]>div {
-        backdrop-filter: blur(0) !important;
+        --navbar-surface-blur: 0px !important;
         background: transparent !important;
         border: none !important;
         border-radius: 0 0 0.75rem 0.75rem !important;
@@ -95,7 +123,7 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scro
     /* "semifull" (scrolled) */
     #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"].scrolled>div,
     body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"].scrolled>div {
-        backdrop-filter: blur(var(--navbar-glass-blur, 20px)) !important;
+        --navbar-surface-blur: var(--navbar-glass-blur, 20px) !important;
         background: color-mix(in oklch, var(--card-bg) calc(var(--opacity-55) * 100%), transparent) !important;
         border-radius: 0 0 0.75rem 0.75rem !important;
         box-shadow: var(--shadow-navbar) !important;
@@ -111,7 +139,7 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scro
     /* "semi" */
     #wallpaper-wrapper~* #navbar[data-transparent-mode="semi"][data-is-home="true"]>div,
     body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semi"][data-is-home="true"]>div {
-        backdrop-filter: blur(var(--navbar-glass-blur, 20px)) !important;
+        --navbar-surface-blur: var(--navbar-glass-blur, 20px) !important;
         background: color-mix(in oklch, var(--card-bg) calc(var(--opacity-55) * 100%), transparent) !important;
         border-radius: 0 0 0.75rem 0.75rem !important;
         box-shadow: var(--shadow-navbar) !important;
@@ -120,7 +148,7 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scro
     /* "full" */
     #wallpaper-wrapper~* #navbar[data-transparent-mode="full"][data-is-home="true"]>div,
     body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="full"][data-is-home="true"]>div {
-        backdrop-filter: blur(0) !important;
+        --navbar-surface-blur: 0px !important;
         background: transparent !important;
         border: none !important;
         border-radius: 0 !important;
@@ -130,7 +158,7 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scro
     /* "semifull" (static) */
     #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"][data-is-home="true"]>div,
     body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"]>div {
-        backdrop-filter: blur(0) !important;
+        --navbar-surface-blur: 0px !important;
         background: transparent !important;
         border: none !important;
         border-radius: 0 0 0.75rem 0.75rem !important;
@@ -140,7 +168,7 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scro
     /* "semifull" (scrolled) */
     #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled>div,
     body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled>div {
-        backdrop-filter: blur(var(--navbar-glass-blur, 20px)) !important;
+        --navbar-surface-blur: var(--navbar-glass-blur, 20px) !important;
         background: color-mix(in oklch, var(--card-bg) calc(var(--opacity-55) * 100%), transparent) !important;
         border-radius: 0 0 0.75rem 0.75rem !important;
         box-shadow: var(--shadow-navbar) !important;
@@ -239,28 +267,10 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scro
 }
 
 
-/* ============================================
- * 关闭毛玻璃模糊效果 - Banner模式
- * ============================================ */
-body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semi"][data-enable-blur="false"]>div,
-body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semi"][data-enable-blur="false"].scrolled>div {
-    backdrop-filter: blur(0) !important;
-}
-
-body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="full"][data-enable-blur="false"]>div,
-body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="full"][data-enable-blur="false"].scrolled>div {
-    backdrop-filter: blur(0) !important;
-}
-
-body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-enable-blur="false"]>div,
-body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-enable-blur="false"].scrolled>div {
-    backdrop-filter: blur(0) !important;
-}
-
 /* 页面切换期间强制 semifull 保持透明，避免自动回顶时出现背景闪烁 */
 .is-page-transitioning #wallpaper-wrapper~* #navbar[data-transparent-mode="semifull"]:not(.scrolled)>div,
 .is-page-transitioning body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scrolled)>div {
-    backdrop-filter: blur(0) !important;
+    --navbar-surface-blur: 0px !important;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
@@ -269,27 +279,35 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"][data-enab
 
 
 
-/* 调整下拉菜单和浮动面板的背景透明度 */
+/* ============================================
+ * 下拉菜单与浮动面板：始终毛玻璃
+ * ============================================
+ * 模糊半径跟随 navbar.blur（Layout.astro 注入到 :root 的 --navbar-panel-blur），
+ * 但带一个最小值 —— 导航栏可以用 blur: 0 关掉毛玻璃，面板则始终保留毛玻璃。
+ *
+ * 能生效的前提是导航栏自身的滤镜已经下移到 #navbar>div::before（见文件顶部），
+ * 面板不再被祖先的 backdrop root 截断。
+ *
+ * 纯色背景模式（data-wallpaper-mode="none"）底下没有可模糊的对象，
+ * 排除掉，落回 main.css 里 .float-panel 原本的不透明卡片样式。
+ */
+
 /* 亮色主题 */
-#wallpaper-wrapper~* .dropdown-content,
-#wallpaper-wrapper~* .float-panel,
-body:has(#wallpaper-wrapper) .dropdown-content,
-body:has(#wallpaper-wrapper) .float-panel,
-body.wallpaper-transparent .dropdown-content,
-body.wallpaper-transparent .float-panel {
-    background: rgba(255, 255, 255, 0.95) !important;
+html:not([data-wallpaper-mode="none"])
+    :is(#wallpaper-wrapper~*, body:has(#wallpaper-wrapper), body.wallpaper-transparent)
+    :is(.dropdown-content, .float-panel) {
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(var(--navbar-panel-blur, 20px)) !important;
     box-shadow: var(--shadow-md) !important;
     border: 1px solid rgba(0, 0, 0, 0.05) !important;
 }
 
 /* 暗色主题 */
-:root.dark #wallpaper-wrapper~* .dropdown-content,
-:root.dark #wallpaper-wrapper~* .float-panel,
-:root.dark body:has(#wallpaper-wrapper) .dropdown-content,
-:root.dark body:has(#wallpaper-wrapper) .float-panel,
-:root.dark body.wallpaper-transparent .dropdown-content,
-:root.dark body.wallpaper-transparent .float-panel {
-    background: rgba(23, 23, 23, 0.95) !important;
+:root.dark:not([data-wallpaper-mode="none"])
+    :is(#wallpaper-wrapper~*, body:has(#wallpaper-wrapper), body.wallpaper-transparent)
+    :is(.dropdown-content, .float-panel) {
+    background: rgba(23, 23, 23, 0.8) !important;
+    backdrop-filter: blur(var(--navbar-panel-blur, 20px)) !important;
     box-shadow: var(--shadow-md) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
@@ -308,6 +326,29 @@ body.wallpaper-transparent #navbar-wrapper #navbar[data-full-width="true"] > div
     width: 100% !important;
     max-width: none !important;
     margin: 0 !important;
+}
+
+/* ============================================
+ * 导航栏面板位置适配
+ * ============================================ */
+#navbar > div {
+    --navbar-panel-inset: calc(1rem + max(0px, (100% - 2rem - var(--page-width)) / 2));
+}
+
+#navbar > div #search-panel,
+#navbar > div #display-setting {
+    right: var(--navbar-panel-inset);
+}
+
+/* 音乐面板原本比其它面板再往里 3rem（right-16 对 right-4），保持这个相对关系 */
+#navbar > div #music-nav-panel {
+    right: calc(var(--navbar-panel-inset) + 3rem);
+}
+
+@media (max-width: 767px) {
+    #navbar > div #search-panel {
+        left: var(--navbar-panel-inset);
+    }
 }
 
 /* ============================================

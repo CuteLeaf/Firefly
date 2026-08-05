@@ -943,6 +943,38 @@ const hasMultipleImages =
 
 <FloatingControls headings={headings} encrypted={encrypted} />
 
+<!--
+    触屏设备上让代码块的复制按钮默认隐藏，点一下代码块才显形。
+    expressive-code 没给 <pre> 加 tabindex，点击代码区不会产生焦点，
+    所以纯 CSS 的 :focus-within 拿不到这个状态，只能在这里补一个类。
+    显隐规则见 src/styles/expressive-code.css 的 @media (hover: none) 段。
+-->
+<script is:inline data-swup-ignore-script>
+    (function initTouchCodeCopyReveal() {
+        var CLASS = 'ff-copy-revealed';
+
+        // 委托到 document，swup 换页后无需重新绑定
+        document.addEventListener('click', function (event) {
+            // 有 hover 能力的设备走 CSS 的悬停显形逻辑，不需要打标记。
+            // 放在处理函数里判断，混合输入设备切换输入方式后也能跟上
+            if (window.matchMedia('(hover: hover)').matches) return;
+
+            var target = event.target;
+            if (!target || !target.closest) return;
+
+            var frame = target.closest('.expressive-code .frame');
+
+            // 点到别处就收起之前展开的按钮
+            document.querySelectorAll('.' + CLASS).forEach(function (revealed) {
+                if (revealed !== frame) revealed.classList.remove(CLASS);
+            });
+
+            // 点在复制按钮上时说明它已经显形，交给原生逻辑处理即可
+            if (frame && !target.closest('.copy')) frame.classList.add(CLASS);
+        });
+    })();
+</script>
+
 
 </Layout>
 

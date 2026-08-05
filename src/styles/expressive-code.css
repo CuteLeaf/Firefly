@@ -16,6 +16,28 @@
     background: var(--btn-regular-bg) !important;
   }
 
+  /* 折叠渐变遮罩跟随站点亮暗色，而不是系统配色 */
+  /*
+   * expressive-code-collapsible 判断亮色的方式是 html.light / [data-theme='light'] /
+   * @media (prefers-color-scheme: light)，本站用的是 :root.dark 加
+   * data-theme='one-light' | 'one-dark-pro'，三种都命中不了；于是系统暗色 + 站点亮色时
+   * 只剩插件的暗色兜底值，遮罩就成了暗色。
+   *
+   * 插件所有渐变规则都优先读 --ec-collapse-bg-color，而遮罩层本身位于 .expressive-code
+   * 内部（div.expressive-code > .ec-collapse > .ec-collapse__content >
+   * figure.frame + div.ec-collapse__gradient），能继承到 expressive-code 按当前主题下发的
+   * --ec-frm-edBg，所以把这个变量指过去即可：颜色永远等于代码块自身背景，
+   * 既不用 !important，也不必硬编码主题色值。
+   */
+  .ec-collapse__gradient {
+    --ec-collapse-bg-color: var(--ec-frm-edBg);
+  }
+
+  /* 终端风格代码块的背景走另一个变量 */
+  .ec-collapse__content:has(> .frame.is-terminal) .ec-collapse__gradient {
+    --ec-collapse-bg-color: var(--ec-frm-trmBg);
+  }
+
   /* 折叠按钮样式适配主题色和亮暗色 */
   /* 只针对底部的toggle按钮，不改header-toggle */
   .ec-collapse__toggle {
@@ -67,3 +89,209 @@ body.wallpaper-transparent .expressive-code .frame {
   background: var(--card-bg-transparent) !important;
 }
 
+/* 透明模式下折叠遮罩改淡入半透明卡片背景，避免底部糊出一条不透明色块 */
+body.wallpaper-transparent .expressive-code .ec-collapse__gradient {
+  --ec-collapse-bg-color: var(--card-bg-transparent);
+}
+
+/* ===== Tab 代码块（rehype-code-group） ===== */
+/*
+ * 沿用插件自带的原生样式（下划线式标签），
+ * 只把颜色换成主题变量，并处理横向滚动与外边距。
+ */
+
+.rehype-code-group {
+  margin: 1rem 0;
+}
+
+.rehype-code-group .rcg-tab-container {
+  /* 标签多时可换行，避免溢出 */
+  flex-wrap: wrap;
+  border-bottom-color: var(--line-divider);
+}
+
+.rehype-code-group .rcg-tab {
+  color: var(--btn-content);
+  opacity: var(--opacity-80);
+  transition:
+    color var(--duration-normal) var(--ease-standard),
+    opacity var(--duration-normal) var(--ease-standard);
+}
+
+.rehype-code-group .rcg-tab:hover {
+  color: var(--primary);
+  opacity: var(--opacity-100);
+}
+
+.rehype-code-group .rcg-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  opacity: var(--opacity-100);
+}
+
+.rehype-code-group .rcg-tab:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+  border-radius: 0.25rem;
+}
+
+/* 面板内的代码块贴合标签栏，去掉 markdown 默认的上下外边距 */
+.rehype-code-group .rcg-block > .expressive-code {
+  margin: 0 !important;
+}
+
+
+/* ===== 代码块复制按钮 ===== */
+/*
+ * 沿用 expressive-code 原生的复制按钮（@expressive-code/plugin-frames），
+ * 只覆盖外观，让它适配主题色与亮暗色；复制逻辑、定位、无障碍属性全部走原生实现。
+ *
+ * 原生结构：
+ *   figure.frame > div.copy > div[aria-live] (成功后插入 div.feedback) + button > div
+ *   button 用 ::before 画边框、::after 用 mask-image 画图标、内层 div 做背景叠加层。
+ *
+ * 覆盖手段：
+ *   - 用 `.expressive-code .frame .copy …` 提高一级特异性压过原生规则，避免堆 !important；
+ *   - 图标直接改 ::after 的 mask-image，而不是覆盖 --ec-frm-copyIcon：
+ *     后者由 expressive-code 声明在 `[data-theme=…] .expressive-code[data-theme=…]` 这类
+ *     高特异性选择器上，普通 `.expressive-code` 压不过去；
+ *   - 不碰 opacity，保留原生「默认隐藏 / 悬停代码块显形 / 触屏常驻」的显隐逻辑。
+ */
+
+.expressive-code .frame .copy {
+  /* 主题色底上的前景色，沿用站点其他 bg-(--primary) 组件的约定 */
+  --ff-copy-on-accent: white;
+  /* 待复制状态的图标，线条比原生更粗、圆角更贴合主题 */
+  --ff-copy-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='13' height='13' rx='2.5'/%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'/%3E%3C/svg%3E");
+  /* 复制成功后替换的对勾图标 */
+  --ff-copy-done-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  gap: var(--spacing-sm);
+}
+
+:root.dark .expressive-code .frame .copy {
+  --ff-copy-on-accent: rgba(0, 0, 0, 0.7);
+}
+
+/* ── 按钮本体 ── */
+
+.expressive-code .frame .copy button {
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-lg);
+  background: var(--btn-regular-bg);
+  backdrop-filter: blur(var(--blur-md));
+  transition-property: opacity, background-color, border-color, transform;
+  transition-duration: var(--duration-medium);
+  transition-timing-function: var(--ease-standard);
+}
+
+/* 原生用内层 div 做背景叠加、::before 做边框，这里都由 button 自身承担 */
+.expressive-code .frame .copy button > div,
+.expressive-code .frame .copy button::before {
+  display: none;
+}
+
+.expressive-code .frame .copy button::after {
+  background-color: var(--btn-content);
+  -webkit-mask-image: var(--ff-copy-icon);
+  mask-image: var(--ff-copy-icon);
+}
+
+.expressive-code .frame .copy button:hover {
+  background: var(--btn-regular-bg-hover);
+  transform: translateY(-1px);
+}
+
+.expressive-code .frame .copy button:active {
+  background: var(--btn-regular-bg-active);
+  transform: translateY(0) scale(var(--scale-98));
+}
+
+.expressive-code .frame .copy button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ── 复制成功：按钮切到主题色并换成对勾 ── */
+/*
+ * 原生只有 `.feedback.show ~ button` 这条兄弟选择器，而 .feedback 实际被插进
+ * div[aria-live] 内部、并不是 button 的兄弟节点，所以那条规则不会命中；
+ * 这里用 :has() 从 .copy 容器上判断，成功态才能稳定生效。
+ */
+
+.expressive-code .frame .copy:has(.feedback.show) button {
+  opacity: 1;
+  border-color: transparent;
+  background: var(--primary);
+}
+
+.expressive-code .frame .copy:has(.feedback.show) button::after {
+  background-color: var(--ff-copy-on-accent);
+  -webkit-mask-image: var(--ff-copy-done-icon);
+  mask-image: var(--ff-copy-done-icon);
+}
+
+/* ── 成功提示气泡 ── */
+
+.expressive-code .frame .copy .feedback {
+  /* --tooltip-bg 同时供气泡背景和小三角使用，只改这一个变量即可 */
+  --tooltip-bg: var(--primary);
+  color: var(--ff-copy-on-accent);
+  border-radius: var(--radius-md);
+  font-size: 0.75rem;
+}
+
+/* ── 触屏设备：默认隐藏，点一下代码块才显形 ── */
+/*
+ * 原生的 mobile-first 样式在无 hover 的设备上让按钮常驻显示，这里改成
+ * 「点一次代码块才显形，再点一次才复制」，并让语言徽章的让位/淡出行为
+ * 与桌面端一致。
+ *
+ * 之所以要靠 .ff-copy-revealed 这个类而不是 :focus-within：
+ * expressive-code 没有给 <pre> 加 tabindex，点击代码区不会产生焦点，
+ * 纯 CSS 拿不到「代码块被点过」这个状态。加类的委托脚本在
+ * src/layouts/MainGridLayout.astro 里。
+ *
+ * 隐藏期间一并关掉 pointer-events，避免误触到看不见的按钮。
+ */
+@media (hover: none) {
+  .expressive-code .frame .copy button {
+    opacity: var(--opacity-0);
+    pointer-events: none;
+  }
+
+  .expressive-code .frame.ff-copy-revealed .copy button,
+  .expressive-code .frame .copy:has(.feedback.show) button {
+    opacity: var(--opacity-100);
+    pointer-events: auto;
+  }
+
+  /*
+   * 语言徽章与复制按钮同处右上角，行为对齐桌面端：徽章不为按钮预留位置，
+   * 按钮显形时徽章淡出。
+   *
+   * expressive-code-language-badge 在触屏下给徽章加了 margin-right: 3rem
+   * 来给常驻的复制按钮让位，按钮改成点击显形后这段留白就没有意义了。
+   * 这里用 `figure.frame` 多带一个元素选择器压过插件的 `.frame`，
+   * 不必堆 !important。
+   */
+  .expressive-code figure.frame [data-language]::before {
+    margin-right: 0;
+  }
+
+  .expressive-code figure.frame.ff-copy-revealed [data-language]::before {
+    opacity: var(--opacity-0);
+  }
+}
+
+/* ── 尊重系统的减少动效偏好 ── */
+@media (prefers-reduced-motion: reduce) {
+  .expressive-code .frame .copy button,
+  .expressive-code .frame .copy .feedback {
+    transition-duration: 1ms;
+  }
+
+  .expressive-code .frame .copy button:hover,
+  .expressive-code .frame .copy button:active {
+    transform: none;
+  }
+}

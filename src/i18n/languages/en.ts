@@ -77,6 +77,11 @@ export const en: Translation = {
 		"Here are my friends, welcome to visit and communicate with each other",
 	[Key.searchFriends]: "Search friends...",
 	[Key.friendsEmpty]: "No friends yet.",
+	[Key.booknav]: "Bookmark Directory",
+	[Key.booknavDescription]:
+		"A curated collection of useful sites, organized by category.",
+	[Key.searchBooknav]: "Search bookmarks...",
+	[Key.booknavEmpty]: "No bookmarks yet.",
 	[Key.guestbook]: "Guestbook",
 	[Key.guestbookDescription]:
 		"Welcome to leave your mark here, share your thoughts and suggestions",

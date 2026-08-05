@@ -36,7 +36,8 @@
     z-index: -10;
     transition: all 0.15s ease-out;
   }
-  &:hover::before {
+  &:hover::before,
+  &:focus-visible::before {
     background-color: var(--btn-plain-bg-hover);
     scale: 1;
   }
@@ -51,6 +52,28 @@
 /* 确保平滑滚动 */
 html {
     scroll-behavior: smooth;
+}
+
+/* 全站键盘焦点基线；组件可以在更高的层中覆盖间距或形态。 */
+@layer components {
+    :where(
+        a[href],
+        button,
+        input,
+        select,
+        textarea,
+        summary,
+        [contenteditable="true"],
+        [tabindex]:not([tabindex="-1"])
+    ):focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    /* 用于外侧焦点环会被溢出隐藏容器裁切的交互元素。 */
+    .focus-ring-inset:focus-visible {
+        outline-offset: -2px;
+    }
 }
 
 /* 页面顶部渐变高光效果 */
@@ -191,6 +214,12 @@ html {
         transition: none !important;
         backdrop-filter: none !important;
     }
+
+    /* 导航栏的毛玻璃层现在挂在 ::before 上（见 navbar.css），要单独关掉 */
+    .is-theme-transitioning:not(.use-view-transition) #navbar > div::before {
+        transition: none !important;
+        backdrop-filter: none !important;
+    }
     
     /* 导航栏相关浮动面板的过渡禁用 */
     .is-theme-transitioning .dropdown-content,
@@ -262,12 +291,12 @@ html {
 
     /* Overlay 模式下，滚动后提高导航栏背景模糊度，增强与正文区分 */
     .wallpaper-transparent #navbar.navbar-sticky-shadow > div {
-        backdrop-filter: blur(20px) !important;
-     
+        --navbar-surface-blur: 20px !important;
+
     }
 
     :root.dark .wallpaper-transparent #navbar.navbar-sticky-shadow > div {
-        backdrop-filter: blur(20px) !important;
+        --navbar-surface-blur: 20px !important;
     }
     
     .wallpaper-transparent .btn-card {
@@ -313,8 +342,14 @@ html {
     .btn-plain {
         @apply transition-colors duration-150 relative flex items-center justify-center bg-none
         text-black/75 hover:text-(--primary) dark:text-white/75 dark:hover:text-(--primary);
+        &:focus-visible {
+            color: var(--primary);
+        }
         &:not(.scale-animation) {
             @apply hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active)
+        }
+        &:not(.scale-animation):focus-visible {
+            background-color: var(--btn-plain-bg-hover);
         }
         &.scale-animation {
             @apply expand-animation;
@@ -372,12 +407,12 @@ html {
     }
 
     .dropdown-menu {
-        @apply absolute top-full left-0 pt-2 opacity-0 invisible pointer-events-none transition-all duration-200 ease-out transform translate-y-[-8px] z-50;
+        @apply absolute top-full left-0 pt-2 pointer-events-none z-50;
     }
 
     .dropdown-container:hover .dropdown-menu,
     .dropdown-container:focus-within .dropdown-menu {
-        @apply opacity-100 visible pointer-events-auto translate-y-0;
+        @apply pointer-events-auto;
     }
 
     .dropdown-container:hover .dropdown-arrow,
@@ -386,7 +421,13 @@ html {
     }
 
     .dropdown-content {
-        @apply bg-(--card-bg) rounded-(--radius-large) shadow-xl border border-black/5 dark:border-white/10 py-2 min-w-48;
+        @apply bg-(--card-bg) rounded-(--radius-large) shadow-xl border border-black/5 dark:border-white/10 py-2 min-w-48
+        opacity-0 translate-y-[-8px] transition-[opacity,translate,background-color,border-color] duration-200 ease-out;
+    }
+
+    .dropdown-container:hover .dropdown-content,
+    .dropdown-container:focus-within .dropdown-content {
+        @apply opacity-100 translate-y-0;
     }
 
     .dropdown-item {
@@ -423,15 +464,7 @@ html {
 
     /* 无障碍支持 */
     .dropdown-container:focus-within .dropdown-menu {
-        @apply opacity-100 visible pointer-events-auto translate-y-0;
-    }
-
-    .dropdown-item:focus {
-        @apply outline-hidden;
-    }
-
-    .mobile-dropdown button:focus {
-        @apply outline-hidden;
+        @apply pointer-events-auto;
     }
 
     .meta-icon {
@@ -587,4 +620,3 @@ html {
 .pagination-info {
   @apply text-sm text-(--text-secondary) text-center mb-2;
 }
-

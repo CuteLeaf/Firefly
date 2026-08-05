@@ -599,13 +599,13 @@ $effect(() => {
 </script>
 
 {#if hasAnyContent}
-<div id="display-setting" class="float-panel float-panel-closed absolute transition-all w-80 right-4 px-3 pt-0 pb-3 max-h-[80vh] overflow-y-auto">
+<div id="display-setting" class="float-panel float-panel-closed absolute transition-all w-80 right-4 px-3 pt-0 pb-3 max-h-[80vh] overflow-y-auto" data-floating-panel data-floating-panel-trigger="display-settings-switch" inert aria-hidden="true">
 	<!-- Tab Bar -->
 	{#if showTabBar}
 	<div class="flex border-b border-black/5 dark:border-white/10 -mx-1 mb-2">
 		{#each visibleTabs as tab (tab.key)}
 			<button
-				class="flex-1 flex items-center justify-center gap-1 py-2 text-xs font-medium transition-colors relative min-w-0
+				class="focus-ring-inset flex-1 flex items-center justify-center gap-1 py-2 text-xs font-medium transition-colors relative min-w-0 rounded-md
 					{activeTab === tab.key ? 'text-(--primary)' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'}"
 				onclick={() => activeTab = tab.key}
 			>
@@ -627,7 +627,8 @@ $effect(() => {
 			<div class="section-title">
 				{i18n(I18nKey.themeColor)}
 				<button aria-label="Reset to Default" class="btn-regular rounded-md active:scale-90"
-						class:opacity-0={hue === defaultHue} class:pointer-events-none={hue === defaultHue} onclick={resetHue}>
+						class:opacity-0={hue === defaultHue} class:pointer-events-none={hue === defaultHue}
+						disabled={hue === defaultHue} aria-hidden={hue === defaultHue ? "true" : undefined} onclick={resetHue}>
 					<div class="text-(--btn-content)">
 						<Icon icon="fa7-solid:arrow-rotate-left" class="text-[0.75rem]"></Icon>
 					</div>
@@ -637,7 +638,7 @@ $effect(() => {
 					{hue}
 				</div>
 			</div>
-			<div class="w-full h-6 px-1 bg-[oklch(0.80_0.10_0)] dark:bg-[oklch(0.70_0.10_0)] rounded-sm select-none">
+			<div class="hue-slider-shell w-full h-6 px-1 bg-[oklch(0.80_0.10_0)] dark:bg-[oklch(0.70_0.10_0)] rounded-md select-none">
 				<input aria-label={i18n(I18nKey.themeColor)} type="range" min="0" max="360" bind:value={hue}
 					   class="slider" id="colorSlider" step="5" style="width: 100%">
 			</div>
@@ -650,7 +651,8 @@ $effect(() => {
 			<div class="section-title">
 				{i18n(I18nKey.postListLayout)}
 				<button aria-label="Reset to Default" class="btn-regular rounded-md active:scale-90"
-						class:opacity-0={currentLayout === effectiveDefaultLayout} class:pointer-events-none={currentLayout === effectiveDefaultLayout} onclick={resetLayout}>
+						class:opacity-0={currentLayout === effectiveDefaultLayout} class:pointer-events-none={currentLayout === effectiveDefaultLayout}
+						disabled={currentLayout === effectiveDefaultLayout} aria-hidden={currentLayout === effectiveDefaultLayout ? "true" : undefined} onclick={resetLayout}>
 					<div class="text-(--btn-content)">
 						<Icon icon="fa7-solid:arrow-rotate-left" class="text-[0.75rem]"></Icon>
 					</div>
@@ -695,7 +697,8 @@ $effect(() => {
 			<div class="section-title">
 				{i18n(I18nKey.cardSettings)}
 				<button aria-label="Reset to Default" class="btn-regular rounded-md active:scale-90"
-						class:opacity-0={cardSettingsIsDefault} class:pointer-events-none={cardSettingsIsDefault} onclick={resetCardSettings}>
+						class:opacity-0={cardSettingsIsDefault} class:pointer-events-none={cardSettingsIsDefault}
+						disabled={cardSettingsIsDefault} aria-hidden={cardSettingsIsDefault ? "true" : undefined} onclick={resetCardSettings}>
 					<div class="text-(--btn-content)">
 						<Icon icon="fa7-solid:arrow-rotate-left" class="text-[0.75rem]"></Icon>
 					</div>
@@ -749,7 +752,8 @@ $effect(() => {
 			<div class="section-title">
 				{i18n(I18nKey.wallpaperMode)}
 				<button aria-label="Reset to Default" class="btn-regular rounded-md active:scale-90"
-						class:opacity-0={wallpaperMode === defaultWallpaperMode} class:pointer-events-none={wallpaperMode === defaultWallpaperMode} onclick={resetWallpaperMode}>
+						class:opacity-0={wallpaperMode === defaultWallpaperMode} class:pointer-events-none={wallpaperMode === defaultWallpaperMode}
+						disabled={wallpaperMode === defaultWallpaperMode} aria-hidden={wallpaperMode === defaultWallpaperMode ? "true" : undefined} onclick={resetWallpaperMode}>
 					<div class="text-(--btn-content)">
 						<Icon icon="fa7-solid:arrow-rotate-left" class="text-[0.75rem]"></Icon>
 					</div>
@@ -802,7 +806,8 @@ $effect(() => {
 			<div class="section-title">
 				{i18n(I18nKey.overlaySettings)}
 				<button aria-label="Reset to Default" class="btn-regular rounded-md active:scale-90"
-						class:opacity-0={overlaySettingsIsDefault} class:pointer-events-none={overlaySettingsIsDefault} onclick={resetOverlaySettings}>
+						class:opacity-0={overlaySettingsIsDefault} class:pointer-events-none={overlaySettingsIsDefault}
+						disabled={overlaySettingsIsDefault} aria-hidden={overlaySettingsIsDefault ? "true" : undefined} onclick={resetOverlaySettings}>
 					<div class="text-(--btn-content)">
 						<Icon icon="fa7-solid:arrow-rotate-left" class="text-[0.75rem]"></Icon>
 					</div>
@@ -839,7 +844,8 @@ $effect(() => {
 			<div class="section-title">
 				{i18n(I18nKey.wallpaperSettings)}
 				<button aria-label="Reset to Default" class="btn-regular rounded-md active:scale-90"
-						class:opacity-0={bannerSettingsIsDefault} class:pointer-events-none={bannerSettingsIsDefault} onclick={resetBannerSettings}>
+						class:opacity-0={bannerSettingsIsDefault} class:pointer-events-none={bannerSettingsIsDefault}
+						disabled={bannerSettingsIsDefault} aria-hidden={bannerSettingsIsDefault ? "true" : undefined} onclick={resetBannerSettings}>
 					<div class="text-(--btn-content)">
 						<Icon icon="fa7-solid:arrow-rotate-left" class="text-[0.75rem]"></Icon>
 					</div>
@@ -930,7 +936,9 @@ $effect(() => {
 			<div class="section-title">
 				{i18n(I18nKey.effectsSettings)}
 				<button aria-label="Reset to Default" class="btn-regular rounded-md active:scale-90"
-						class:opacity-0={sakuraEnabled === defaultSakuraEnabled} class:pointer-events-none={sakuraEnabled === defaultSakuraEnabled} onclick={() => { sakuraEnabled = defaultSakuraEnabled; setSakuraEnabled(defaultSakuraEnabled); }}>
+						class:opacity-0={sakuraEnabled === defaultSakuraEnabled} class:pointer-events-none={sakuraEnabled === defaultSakuraEnabled}
+						disabled={sakuraEnabled === defaultSakuraEnabled} aria-hidden={sakuraEnabled === defaultSakuraEnabled ? "true" : undefined}
+						onclick={() => { sakuraEnabled = defaultSakuraEnabled; setSakuraEnabled(defaultSakuraEnabled); }}>
 					<div class="text-(--btn-content)">
 						<Icon icon="fa7-solid:arrow-rotate-left" class="text-[0.75rem]"></Icon>
 					</div>

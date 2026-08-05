@@ -2,6 +2,9 @@
 import QRCode from "qrcode";
 import { onMount } from "svelte";
 import Icon from "@/components/common/Icon.svelte";
+import { siteConfig } from "@/config";
+import iconsData from "@/constants/icons-data.json";
+import { url as withBase } from "@/utils/url-utils";
 import I18nKey from "../../i18n/i18nKey";
 import { i18n } from "../../i18n/translation";
 
@@ -20,6 +23,7 @@ let showModal = false;
 let posterImage: string | null = null;
 let generating = false;
 let themeColor = "#558e88"; // Default blue
+const headerTextColor = "#1f2937"; // 站点名称与 Logo 颜色
 
 onMount(() => {
 	// Get theme color from CSS variable
@@ -67,6 +71,75 @@ function resolveImageSource(
 	return image?.currentSrc || image?.src || src;
 }
 
+// 站点 Logo：图标优先复用导航栏已渲染的 SVG（astro-icon 覆盖完整图标库），图片复用导航栏已优化的地址
+function serializeNavbarIcon(color: string, size: number): string | null {
+	const svg = document.querySelector<SVGSVGElement>("#navbar svg.navbar-logo");
+	if (!svg) return null;
+
+	const clone = svg.cloneNode(true) as SVGSVGElement;
+	clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+	// 导航栏图标宽高是 1em，脱离文档后需要显式尺寸才能被 canvas 光栅化
+	clone.setAttribute("width", String(size));
+	clone.setAttribute("height", String(size));
+	clone.removeAttribute("class");
+	// 让图标内部的 currentColor 解析成海报里的颜色
+	clone.setAttribute("style", `color:${color}`);
+
+	const markup = new XMLSerializer().serializeToString(clone);
+	return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(markup)}`;
+}
+
+function buildIconDataUrl(icon: string, color: string): string | null {
+	const [prefix, name] = icon.split(":");
+	if (!prefix || !name) return null;
+
+	const collection = (
+		iconsData as Record<
+			string,
+			{
+				icons?: Record<string, { body: string }>;
+				width?: number;
+				height?: number;
+			}
+		>
+	)[prefix];
+	const body = collection?.icons?.[name]?.body;
+	if (!body) return null;
+
+	const iconWidth = collection.width ?? 24;
+	const iconHeight = collection.height ?? 24;
+	const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${iconWidth}" height="${iconHeight}" viewBox="0 0 ${iconWidth} ${iconHeight}">${body.replaceAll("currentColor", color)}</svg>`;
+
+	return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+
+function resolveSiteLogoSource(color: string, size: number): string | null {
+	const logo = siteConfig.navbar.logo;
+	if (!logo?.value) return null;
+
+	if (logo.type === "icon") {
+		// icons-data.json 只含 Svelte 组件用到的图标子集，因此优先取导航栏的 SVG
+		return (
+			serializeNavbarIcon(color, size) ?? buildIconDataUrl(logo.value, color)
+		);
+	}
+
+	// src 目录下的图片经 Astro 优化后只有导航栏能拿到最终地址
+	// 海报背景是白色，因此固定取亮色版本的 Logo
+	const navbarLogo =
+		document.querySelector<HTMLImageElement>(
+			'#navbar img.navbar-logo[data-logo-theme="light"]',
+		) ?? document.querySelector<HTMLImageElement>("#navbar img.navbar-logo");
+	const navbarLogoSrc = navbarLogo?.currentSrc || navbarLogo?.src;
+	if (navbarLogoSrc) return navbarLogoSrc;
+
+	if (logo.type === "url") return logo.value;
+	// public 目录下的图片可直接拼接 base 路径，src 目录下的则无法在客户端还原
+	return logo.value.startsWith("/") || logo.value.startsWith("http")
+		? withBase(logo.value)
+		: null;
+}
+
 function getLines(
 	ctx: CanvasRenderingContext2D,
 	text: string,
@@ -90,6 +163,27 @@ function getLines(
 		lines.push(currentLine);
 	}
 	return lines;
+}
+
+function fitText(
+	ctx: CanvasRenderingContext2D,
+	text: string,
+	maxWidth: number,
+): string {
+	if (ctx.measureText(text).width <= maxWidth) return text;
+
+	const ellipsis = "...";
+	const fittedChars = Array.from(text);
+	while (
+		fittedChars.length > 0 &&
+		ctx.measureText(`${fittedChars.join("")}${ellipsis}`).width > maxWidth
+	) {
+		fittedChars.pop();
+	}
+
+	return fittedChars.length > 0
+		? `${fittedChars.join("")}${ellipsis}`
+		: ellipsis;
 }
 
 function drawRoundedRect(
@@ -122,6 +216,7 @@ async function generatePoster() {
 		const scale = 2;
 		const width = 425 * scale;
 		const padding = 24 * scale;
+		const logoBox = 22 * scale; // 站点 Logo 尺寸
 
 		// 1. Prepare resources
 		const qrCodeUrl = await QRCode.toDataURL(url, {
@@ -134,12 +229,14 @@ async function generatePoster() {
 			coverImageSelector,
 		);
 		const resolvedAvatar = resolveImageSource(avatar, avatarSelector);
-		const [qrImg, coverImg, avatarImg] = await Promise.all([
+		const resolvedSiteLogo = resolveSiteLogoSource(headerTextColor, logoBox);
+		const [qrImg, coverImg, avatarImg, logoImg] = await Promise.all([
 			loadImage(qrCodeUrl),
 			resolvedCoverImage
 				? loadImage(resolvedCoverImage)
 				: Promise.resolve(null),
 			resolvedAvatar ? loadImage(resolvedAvatar) : Promise.resolve(null),
+			resolvedSiteLogo ? loadImage(resolvedSiteLogo) : Promise.resolve(null),
 		]);
 
 		// 2. Setup Canvas for measuring
@@ -156,11 +253,9 @@ async function generatePoster() {
 		let currentY = 0;
 
 		// Cover
-		const coverHeight = (resolvedCoverImage ? 200 : 120) * scale;
+		const coverHeight = (coverImg ? 200 : 64) * scale;
 		currentY += coverHeight;
 		currentY += padding; // Gap after cover
-
-		// Meta (Date on Cover) - No extra height needed
 
 		// Title
 		ctx.font = `700 ${24 * scale}px 'Roboto', sans-serif`;
@@ -187,11 +282,11 @@ async function generatePoster() {
 		}
 
 		// Footer (Author + QR)
-		// Footer top border + padding
-		currentY += 24 * scale;
-		const footerHeight = 64 * scale; // Avatar/QR height
+		// Divider spacing before and after the line
+		currentY += 16 * scale;
+		const footerHeight = 80 * scale; // Avatar/QR plus QR caption
 		currentY += footerHeight;
-		currentY += padding; // Bottom padding
+		currentY += 12 * scale; // Bottom padding
 
 		// 4. Resize Canvas to fit content
 		canvas.height = currentY;
@@ -275,41 +370,62 @@ async function generatePoster() {
 			ctx.restore();
 		}
 
-		// Draw Date Overlay
-		if (dateObj) {
-			const dateBoxW = 60 * scale;
-			const dateBoxH = 60 * scale;
-			const dateBoxX = padding;
-			const dateBoxY = coverHeight - dateBoxH;
+		// Draw Header Overlay
+		const headerHeight = (coverImg ? 44 : 64) * scale;
+		const headerCenterY = headerHeight / 2;
+		const dateText = dateObj
+			? `${dateObj.year}.${dateObj.month}.${dateObj.day}`
+			: "";
 
-			// Background (Semi-transparent black)
-			ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
-			drawRoundedRect(ctx, dateBoxX, dateBoxY, dateBoxW, dateBoxH, 4 * scale);
-			ctx.fill();
+		ctx.fillStyle = "rgba(255, 255, 255, 0.76)";
+		ctx.fillRect(0, 0, width, headerHeight);
 
-			// Day
-			ctx.fillStyle = "#ffffff";
-			ctx.textAlign = "center";
-			ctx.textBaseline = "middle";
-			ctx.font = `700 ${30 * scale}px 'Roboto', sans-serif`;
-			ctx.fillText(dateObj.day, dateBoxX + dateBoxW / 2, dateBoxY + 24 * scale);
-
-			// Line
-			ctx.beginPath();
-			ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
-			ctx.lineWidth = 1 * scale;
-			ctx.moveTo(dateBoxX + 10 * scale, dateBoxY + 42 * scale);
-			ctx.lineTo(dateBoxX + dateBoxW - 10 * scale, dateBoxY + 42 * scale);
-			ctx.stroke();
-
-			// Year Month
-			ctx.font = `${10 * scale}px 'Roboto', sans-serif`;
-			ctx.fillText(
-				`${dateObj.year} ${dateObj.month}`,
-				dateBoxX + dateBoxW / 2,
-				dateBoxY + 51 * scale,
-			);
+		ctx.textAlign = "right";
+		ctx.textBaseline = "middle";
+		ctx.fillStyle = "rgba(31, 41, 55, 0.68)";
+		ctx.font = `${11 * scale}px 'Roboto', sans-serif`;
+		const dateWidth = dateText ? ctx.measureText(dateText).width : 0;
+		if (dateText) {
+			ctx.fillText(dateText, width - padding, headerCenterY);
 		}
+
+		ctx.textAlign = "left";
+		ctx.fillStyle = headerTextColor;
+		ctx.font = `700 ${16 * scale}px 'Roboto', sans-serif`;
+
+		// 站点 Logo，效果对齐导航栏：Logo 在前，标题紧随其后
+		const logoGap = 8 * scale;
+		let logoW = 0;
+		let logoH = 0;
+		if (logoImg) {
+			const ratio =
+				logoImg.width && logoImg.height ? logoImg.width / logoImg.height : 1;
+			logoW = ratio >= 1 ? logoBox : logoBox * ratio;
+			logoH = ratio >= 1 ? logoBox / ratio : logoBox;
+		}
+		const siteTitleX = logoImg ? padding + logoW + logoGap : padding;
+
+		const siteTitleText = fitText(
+			ctx,
+			siteTitle,
+			contentWidth -
+				(siteTitleX - padding) -
+				(dateWidth > 0 ? dateWidth + 16 * scale : 0),
+		);
+
+		if (logoImg) {
+			// 以标题文字的实际字形高度作为居中基准，避免字体行高导致的视觉错位
+			const metrics = ctx.measureText(siteTitleText);
+			const ascent = metrics.actualBoundingBoxAscent;
+			const descent = metrics.actualBoundingBoxDescent;
+			const titleCenterY =
+				Number.isFinite(ascent) && Number.isFinite(descent)
+					? headerCenterY + (descent - ascent) / 2
+					: headerCenterY;
+			ctx.drawImage(logoImg, padding, titleCenterY - logoH / 2, logoW, logoH);
+		}
+
+		ctx.fillText(siteTitleText, siteTitleX, headerCenterY);
 
 		// Reset Y for drawing
 		let drawY = coverHeight + padding;
@@ -356,17 +472,20 @@ async function generatePoster() {
 		}
 
 		// Draw Footer Divider
-		drawY += 24 * scale; // Spacing before line
+		drawY += 8 * scale; // Spacing before line
 		ctx.beginPath();
 		ctx.strokeStyle = "#f3f4f6";
 		ctx.lineWidth = 1 * scale;
 		ctx.moveTo(padding, drawY);
 		ctx.lineTo(width - padding, drawY);
 		ctx.stroke();
-		drawY += 24 * scale; // Spacing after line
+		drawY += 8 * scale; // Spacing after line
 
 		// Draw Footer Content
 		const footerY = drawY;
+		const qrSize = 64 * scale;
+		const qrX = width - padding - qrSize;
+		const authorY = footerY + 8 * scale;
 
 		// Left: Author
 		if (avatarImg) {
@@ -378,7 +497,7 @@ async function generatePoster() {
 			ctx.beginPath();
 			ctx.arc(
 				avatarX + avatarSize / 2,
-				footerY + avatarSize / 2,
+				authorY + avatarSize / 2,
 				avatarSize / 2,
 				0,
 				Math.PI * 2,
@@ -386,14 +505,14 @@ async function generatePoster() {
 			ctx.closePath();
 			ctx.clip();
 
-			ctx.drawImage(avatarImg, avatarX, footerY, avatarSize, avatarSize);
+			ctx.drawImage(avatarImg, avatarX, authorY, avatarSize, avatarSize);
 			ctx.restore();
 
 			// Border for avatar
 			ctx.beginPath();
 			ctx.arc(
 				avatarX + (64 * scale) / 2,
-				footerY + (64 * scale) / 2,
+				authorY + (64 * scale) / 2,
 				(64 * scale) / 2,
 				0,
 				Math.PI * 2,
@@ -405,20 +524,24 @@ async function generatePoster() {
 
 		const authorTextX =
 			padding + (resolvedAvatar ? 64 * scale + 16 * scale : 0);
-		const textCenterY = footerY + 32 * scale;
+		const authorMaxWidth = qrX - 24 * scale - authorTextX;
+		const textCenterY = authorY + 32 * scale;
 
+		ctx.textAlign = "left";
+		ctx.textBaseline = "top";
 		ctx.fillStyle = "#9ca3af";
 		ctx.font = `${12 * scale}px 'Roboto', sans-serif`;
 		ctx.fillText(i18n(I18nKey.author), authorTextX, textCenterY - 20 * scale);
 
 		ctx.fillStyle = "#1f2937";
 		ctx.font = `700 ${20 * scale}px 'Roboto', sans-serif`;
-		ctx.fillText(author, authorTextX, textCenterY + 4 * scale);
+		ctx.fillText(
+			fitText(ctx, author, authorMaxWidth),
+			authorTextX,
+			textCenterY + 4 * scale,
+		);
 
 		// Right: QR Code
-		const qrSize = 64 * scale;
-		const qrX = width - padding - qrSize;
-
 		// QR Background/Shadow effect (simplified as border)
 		ctx.fillStyle = "#ffffff";
 		// Shadow simulation
@@ -442,17 +565,16 @@ async function generatePoster() {
 			);
 		}
 
-		// Site Info (Left of QR)
-		const siteInfoX = qrX - 16 * scale;
-		ctx.textAlign = "right";
-
+		// QR caption
+		ctx.textAlign = "center";
+		ctx.textBaseline = "top";
 		ctx.fillStyle = "#9ca3af";
-		ctx.font = `${12 * scale}px 'Roboto', sans-serif`;
-		ctx.fillText(i18n(I18nKey.scanToRead), siteInfoX, textCenterY - 20 * scale);
-
-		ctx.fillStyle = "#1f2937";
-		ctx.font = `700 ${20 * scale}px 'Roboto', sans-serif`;
-		ctx.fillText(siteTitle, siteInfoX, textCenterY + 4 * scale);
+		ctx.font = `${10 * scale}px 'Roboto', sans-serif`;
+		ctx.fillText(
+			fitText(ctx, i18n(I18nKey.scanToRead), qrSize),
+			qrX + qrSize / 2,
+			footerY + qrSize + 6 * scale,
+		);
 
 		// Finalize
 		posterImage = canvas.toDataURL("image/png");
@@ -503,7 +625,7 @@ function portal(node: HTMLElement) {
   on:click={generatePoster}
   aria-label="Generate Share Poster"
 >
-  <Icon icon="material-symbols:share" size="md" />
+  <Icon icon="material-symbols:share" />
   <span>{i18n(I18nKey.shareArticle)}</span>
 </button>
 
@@ -533,10 +655,10 @@ function portal(node: HTMLElement) {
           on:click={copyLink}
         >
           {#if copied}
-            <Icon icon="material-symbols:check" size="md" />
+            <Icon icon="material-symbols:check" />
             <span>{i18n(I18nKey.copied)}</span>
           {:else}
-            <Icon icon="material-symbols:link" size="md" />
+            <Icon icon="material-symbols:link" />
             <span>{i18n(I18nKey.copyLink)}</span>
           {/if}
         </button>
@@ -546,7 +668,7 @@ function portal(node: HTMLElement) {
           on:click={downloadPoster}
           disabled={!posterImage}
         >
-          <Icon icon="material-symbols:download" size="md" />
+          <Icon icon="material-symbols:download" />
           {i18n(I18nKey.savePoster)}
         </button>
       </div>

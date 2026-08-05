@@ -4,20 +4,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Firefly is a feature-rich static blog theme built on **Astro 6** with **Svelte 5** for interactive components. It's a fork of [Fuwari](https://github.com/saicaca/fuwari) extended with extensive features. Primary language is Chinese (Simplified) with i18n for en, zh_TW, ja, ru.
+Firefly is a feature-rich static blog theme built on **Astro 7** with **Svelte 5** for interactive components. It's a fork of [Fuwari](https://github.com/saicaca/fuwari) extended with extensive features. Primary language is Chinese (Simplified) with i18n for en, zh_TW, ja, ko, ru.
 
 ## Commands
 
 | Command | Purpose |
 |---|---|
 | `pnpm dev` | Dev server at `localhost:4321` |
-| `pnpm build` | Production build (icons → LQIPs → Astro build → Pagefind indexing) |
+| `pnpm build` | Production build (LQIPs → Astro build → font subsetting → Pagefind indexing) |
 | `pnpm preview` | Preview production build |
 | `pnpm check` | `astro check` for type/error checking |
 | `pnpm type-check` | `tsc --noEmit --isolatedDeclarations` |
 | `pnpm lint` | Biome lint + auto-fix |
 | `pnpm format` | Biome format |
 | `pnpm new-post <filename>` | Scaffold a new blog post |
+| `pnpm new-dynamic` (`new-d`) | Scaffold a new dynamic (microblog) entry |
+| `pnpm lqips` | Regenerate LQIP data into `src/constants/lqips.json` |
 
 Package manager is **pnpm** (enforced). Node.js >= 22 required.
 
@@ -47,15 +49,16 @@ All features are toggled/configured via TypeScript files in `src/config/`, expor
 Defined in `src/content.config.ts`:
 - `posts` — blog posts (`.md`/`.mdx`) with frontmatter: title, published, tags, category, draft, pinned, password, comment, etc.
 - `spec` — special pages (about, guestbook)
+- `dynamic` — microblog entries (`.md`) with frontmatter: published, pinned, location
 
 ### Key Directories
 
 - `src/components/` — organized by domain: `analytics/`, `comment/`, `common/`, `controls/`, `features/`, `layout/`, `misc/`, `pages/`, `widget/`
-- `src/plugins/` — 15 custom remark/rehype plugins (Mermaid, PlantUML, KaTeX, GitHub cards, reading time, etc.)
+- `src/plugins/` — 15 custom remark/rehype plugins (Mermaid, PlantUML, KaTeX, GitHub cards, reading time, wiki links, etc.)
 - `src/i18n/` — translation keys in `i18nKey.ts`, language files in `languages/*.ts`, lookup via `translation.ts`
 - `src/utils/` — content sorting, crypto (encrypted posts), date formatting, image processing/LQIP, TOC generation
 - `src/pages/` — Astro file-based routing
-- `scripts/` — build-time utilities (`generate-icons.js`, `generate-lqips.ts`, `new-post.js`)
+- `scripts/` — build-time utilities (`generate-lqips.ts`, `subset-fonts.ts`, `new-post.js`, `new-dynamic.js`)
 
 ### Path Aliases (tsconfig.json)
 
@@ -64,14 +67,14 @@ Defined in `src/content.config.ts`:
 ## Code Style
 
 - **Biome** enforces: tab indentation, double quotes, recommended lint rules
-- Relaxed rules for `.svelte`/`.astro` files (useConst off, noUnusedVariables off)
+- Relaxed rules for `.svelte`/`.astro`/`.vue` files (`useConst`, `useImportType`, `noUnusedVariables`, `noUnusedImports` off)
 - Commit convention: **Conventional Commits** (`feat:`, `fix:`, `chore:`, etc.)
 
 ## Build Pipeline
 
-Multi-step: `scripts/generate-icons.js` → `scripts/generate-lqips.ts` → `astro build` → `pagefind --site dist`
+Multi-step: `scripts/generate-lqips.ts` → `astro build` → `scripts/subset-fonts.ts` → `pagefind --site dist`
 
-Icons/LQIP data are generated into `src/constants/` and committed. Regenerate with `pnpm icons` or `pnpm lqips`.
+LQIP data is generated into `src/constants/lqips.json` and committed — regenerate with `pnpm lqips`. Icon data lives in `src/constants/icons-data.json` (committed, Biome-ignored, consumed by `src/components/common/Icon.svelte`) but has no generator script in the current build.
 
 ## Deployment
 

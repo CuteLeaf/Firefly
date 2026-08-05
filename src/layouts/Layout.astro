@@ -3,6 +3,7 @@ import GoogleAnalytics from "@components/analytics/GoogleAnalytics.astro";
 import La51Analytics from "@components/analytics/La51Analytics.astro";
 import MicrosoftClarity from "@components/analytics/MicrosoftClarity.astro";
 import UmamiAnalytics from "@components/analytics/UmamiAnalytics.astro";
+import CodeGroupManager from "@components/features/CodeGroupManager.astro";
 import FancyboxManager from "@components/features/FancyboxManager.astro";
 import FontSetup from "@components/features/FontSetup.astro";
 import MusicManager from "@components/features/MusicManager.astro";
@@ -62,6 +63,18 @@ const shouldShowTopHighlight =
 
 const enableBanner = backgroundWallpaper.mode === "banner";
 
+// 子菜单 / 浮动面板的毛玻璃模糊度：跟随 navbar.blur，但不受壁纸模式影响，
+// 且带一个最小值 —— 导航栏可以用 blur: 0 关掉毛玻璃，面板则始终保留毛玻璃。
+// 之所以不复用 #navbar 上的 --navbar-glass-blur：
+// setting-utils.ts 的 updateNavbarTransparency() 会在切到 overlay / none 模式时
+// 把它清成 0px；这里放到 :root 上，同时也能让不在导航栏 DOM 内的
+// .float-panel（#translate-panel、#mobile-toc-panel）继承到。
+const NAVBAR_PANEL_MIN_BLUR = 2;
+const navbarPanelBlur = Math.max(
+	backgroundWallpaper.common?.navbar?.blur ?? 20,
+	NAVBAR_PANEL_MIN_BLUR,
+);
+
 let pageTitle: string;
 if (title) {
 	pageTitle = `${title} - ${siteConfig.title}`;
@@ -92,6 +105,9 @@ const siteLang = lang.replace("_", "-");
 <html lang={siteLang} class="bg-(--page-bg) text-[14px] md:text-[16px]" data-wallpaper-mode={backgroundWallpaper.mode}>
   <head>
     <meta charset="UTF-8" />
+    <style is:inline>
+			@layer properties, theme, base, components, utilities;
+		</style>
     {analyticsConfig?.googleAnalyticsId && (
             <GoogleAnalytics analyticsId={analyticsConfig.googleAnalyticsId} />
     )}
@@ -544,6 +560,7 @@ const siteLang = lang.replace("_", "-");
       define:vars={{
         configHue,
         "page-width": `${siteConfig.pageWidth ?? PAGE_WIDTH}rem`,
+        "navbar-panel-blur": `${navbarPanelBlur}px`,
       }}
     ></style>
     <!-- defines global css variables. This will be applied to <html> <body> and some other elements idk why -->
@@ -605,6 +622,9 @@ const siteLang = lang.replace("_", "-");
 
     <!-- Fancybox Manager -->
     <FancyboxManager />
+
+    <!-- Tab 代码块交互 -->
+    <CodeGroupManager />
   </body>
 </html>
 
@@ -754,6 +774,7 @@ const siteLang = lang.replace("_", "-");
     // MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
   } from "@/constants/constants";
   import { backgroundWallpaper, expressiveCodeConfig, siteConfig } from "@/config";
+  import { initializeFloatingPanels } from "@/utils/floating-panel-utils";
 
   /* Preload fonts */
   // (async function() {
@@ -801,6 +822,8 @@ function disableAnimation() {
 
   const bannerEnabled = !!document.getElementById("wallpaper-wrapper");
   const stickyNavbar = siteConfig.navbar.stickyNavbar ?? false;
+
+  initializeFloatingPanels();
 
   function setClickOutsideToClose(panel: string, ignores: string[]) {
       document.addEventListener("click", (event) => {
@@ -981,6 +1004,7 @@ function disableAnimation() {
       }
     });
     window.swup.hooks.on("content:replace", () => {
+      initializeFloatingPanels();
       const isHome = pathsEqual(window.location.pathname, url("/"));
       const currentMode = document.documentElement.getAttribute("data-wallpaper-mode");
       const isMobileForBanner = window.innerWidth < 1024;

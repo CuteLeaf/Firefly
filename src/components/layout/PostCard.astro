@@ -82,6 +82,12 @@ const showTagsAtBottom = metaShowTags && tagsPosition === "bottom";
 const descriptionClampLines = String(descriptionLines);
 const shouldClampDescription = descriptionLines > 0;
 
+// 底部标签：超出 tagCount 的部分折叠成一个 +N 提示，tagCount 为 0 时不限制
+const tagList = tags ?? [];
+const bottomTags = metaTagCount > 0 ? tagList.slice(0, metaTagCount) : tagList;
+const hiddenTags = tagList.slice(bottomTags.length);
+const hiddenTagCount = hiddenTags.length;
+
 const { remarkPluginFrontmatter } = await render(entry);
 const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
 const words = remarkPluginFrontmatter.words;
@@ -161,9 +167,9 @@ const minutes = remarkPluginFrontmatter.minutes;
     </div>
 
     <!-- bottom tags（与 stats 二选一） -->
-    {showTagsAtBottom && tags && tags.length > 0 && (
+    {showTagsAtBottom && bottomTags.length > 0 && (
       <div class="post-card-bottom-tags flex flex-wrap items-center gap-1.5 mt-auto pt-3">
-        {(metaTagCount > 0 ? tags.slice(0, metaTagCount) : tags).map((tag) => (
+        {bottomTags.map((tag) => (
           <a
             href={getTagUrl(tag)}
             aria-label={`View all posts with the ${tag.trim()} tag`}
@@ -174,6 +180,15 @@ const minutes = remarkPluginFrontmatter.minutes;
             #{tag.trim()}
           </a>
         ))}
+        {hiddenTagCount > 0 && (
+          <span
+            title={hiddenTags.map((tag) => `#${tag.trim()}`).join(" ")}
+            class="text-xs font-medium px-2.5 py-1 rounded-full
+              bg-black/5 dark:bg-white/10 text-neutral-400 dark:text-neutral-500"
+          >
+            +{hiddenTagCount}
+          </span>
+        )}
       </div>
     )}
 
@@ -278,6 +293,17 @@ const minutes = remarkPluginFrontmatter.minutes;
     border-radius: 0.75rem !important;
   }
 
+  /* 封面在左侧：封面改钉左边，内容用 margin-left:auto 推到右边并镜像内边距 */
+  :global(.list-mode.cover-left) .has-cover .post-card-content {
+    margin-left: auto !important;
+    padding: 0.75rem 0.75rem 0.75rem 0.5rem !important;
+  }
+
+  :global(.list-mode.cover-left) .has-cover .post-card-image {
+    right: auto !important;
+    left: 0.5rem !important;
+  }
+
   :global(.list-mode) .post-card-title {
     font-size: 1.125rem !important;
     line-height: 1.75rem !important;
@@ -324,6 +350,21 @@ const minutes = remarkPluginFrontmatter.minutes;
       right: 1rem !important;
       width: var(--coverWidth) !important;
       border-radius: 0.75rem !important;
+    }
+
+    /* 封面在左侧：内边距完全镜像右侧模式（靠封面那侧 0.5rem，靠卡片边缘那侧 2.25rem） */
+    :global(.list-mode.cover-left) .has-cover .post-card-content {
+      padding: 1.75rem 2.25rem 1.75rem 0.5rem !important;
+    }
+
+    :global(.list-mode.cover-left) .has-cover .post-card-image {
+      right: auto !important;
+      left: 1rem !important;
+    }
+
+    /* 标题装饰条是贴着卡片左边缘的设计，封面移到左侧后不再成立，直接隐藏 */
+    :global(.list-mode.cover-left) .has-cover .post-card-title::before {
+      display: none !important;
     }
 
     :global(.list-mode) .post-card-title {

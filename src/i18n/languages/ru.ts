@@ -77,6 +77,11 @@ export const ru: Translation = {
 		"Вот мои друзья, добро пожаловать посетить и общаться друг с другом",
 	[Key.searchFriends]: "Поиск друзей...",
 	[Key.friendsEmpty]: "Друзей пока нет.",
+	[Key.booknav]: "Каталог закладок",
+	[Key.booknavDescription]:
+		"Подборка полезных сайтов, сгруппированных по категориям.",
+	[Key.searchBooknav]: "Поиск закладок...",
+	[Key.booknavEmpty]: "Закладок пока нет.",
 	[Key.guestbook]: "Гостевая книга",
 	[Key.guestbookDescription]:
 		"Добро пожаловать, оставьте свой след здесь, поделитесь своими мыслями и предложениями",

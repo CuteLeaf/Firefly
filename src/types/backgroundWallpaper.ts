@@ -31,8 +31,7 @@ export type BackgroundWallpaperConfig = {
 		};
 		navbar?: {
 			transparentMode?: "semi" | "full" | "semifull"; // 导航栏透明模式
-			enableBlur?: boolean; // 是否开启毛玻璃模糊效果
-			blur?: number; // 毛玻璃模糊度
+			blur?: number; // 毛玻璃模糊度，0 即关闭导航栏毛玻璃
 		};
 		waves?: {
 			enable:

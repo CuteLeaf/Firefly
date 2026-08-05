@@ -23,11 +23,15 @@ const initialLayoutClass =
 	defaultLayout === "grid"
 		? "post-grid-auto grid-mode"
 		: "flex flex-col gap-4 md:gap-4 list-mode";
+
+// 列表模式封面位置，只有 left 需要额外样式，right 是默认布局
+const coverPositionClass =
+	siteConfig.postListLayout.coverPosition === "left" ? " cover-left" : "";
 ---
 
 <div
   id="post-list-container"
-  class={`transition-all duration-500 ease-in-out mb-4 ${initialLayoutClass}`}
+  class={`transition-all duration-500 ease-in-out mb-4 ${initialLayoutClass}${coverPositionClass}`}
   data-default-layout={defaultLayout}
   data-mobile-default-layout={mobileDefaultLayout}
   data-masonry-enabled={masonryEnabled}
