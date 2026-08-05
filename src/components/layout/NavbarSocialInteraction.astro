@@ -1,0 +1,297 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<div
+	id="navbar-social-toast"
+	class="fixed bottom-6 left-1/2 z-[1000] flex max-w-[calc(100vw-2rem)] -translate-x-1/2 items-center gap-3 rounded-xl border border-black/10 dark:border-white/15 bg-white/90 dark:bg-neutral-800/90 px-4 py-3 text-sm text-black/80 dark:text-white/80 shadow-2xl backdrop-blur-md opacity-0 invisible pointer-events-none transition-all duration-300 transform translate-y-3"
+>
+	<Icon is:inline name="material-symbols:check-circle-rounded" class="text-[1.25rem] text-(--primary) shrink-0" />
+	<span data-nav-social-message class="font-medium"></span>
+	<button
+		type="button"
+		class="grid size-7 shrink-0 place-items-center rounded-lg text-black/50 dark:text-white/50 transition hover:bg-black/10 dark:hover:bg-white/15 hover:text-black dark:hover:text-white ml-1"
+		aria-label="关闭提示"
+		title="关闭提示"
+		data-nav-social-toast-close
+	>
+		<Icon is:inline name="material-symbols:close-rounded" class="text-[1.1rem]" />
+	</button>
+</div>
+<p
+	class="sr-only"
+	role="status"
+	aria-live="polite"
+	aria-atomic="true"
+	data-nav-social-live
+></p>
+
+<script>
+	import {
+		calculateQrPopoverPosition,
+		copyWithFallback,
+		createDelayedLinkController,
+		type DelayedLinkNotification,
+	} from "@/utils/navbar-social-interaction";
+
+	let toastAutoHideTimer: number | undefined;
+
+	function getToastElements(): {
+		toast: HTMLElement | null;
+		message: HTMLElement | null;
+		live: HTMLElement | null;
+	} {
+		return {
+			toast: document.getElementById("navbar-social-toast"),
+			message: document.querySelector<HTMLElement>(
+				"[data-nav-social-message]",
+			),
+			live: document.querySelector<HTMLElement>("[data-nav-social-live]"),
+		};
+	}
+
+	function setToastVisible(visible: boolean): void {
+		const { toast, live } = getToastElements();
+		if (!toast) return;
+		if (toastAutoHideTimer !== undefined) {
+			window.clearTimeout(toastAutoHideTimer);
+			toastAutoHideTimer = undefined;
+		}
+		toast.classList.toggle("opacity-0", !visible);
+		toast.classList.toggle("invisible", !visible);
+		toast.classList.toggle("pointer-events-none", !visible);
+		toast.classList.toggle("translate-y-3", !visible);
+		toast.classList.toggle("translate-y-0", visible);
+		toast.classList.toggle("opacity-100", visible);
+		if (!visible && live) live.dataset.announcement = "";
+	}
+
+	function showNotification(notification: DelayedLinkNotification): void {
+		const { message, live } = getToastElements();
+		if (!message) return;
+
+		const announcementKey = `${notification.kind}:${notification.copyText}`;
+		if (notification.kind === "success") {
+			const delaySeconds = (notification.openDelayMs / 1000).toFixed(1);
+			message.textContent = `已复制 "${notification.copyText}"，${delaySeconds} 秒后尝试打开应用`;
+			if (live && live.dataset.announcement !== announcementKey) {
+				live.textContent = message.textContent;
+				live.dataset.announcement = announcementKey;
+			}
+			setToastVisible(true);
+		} else if (notification.kind === "complete") {
+			message.textContent =
+				notification.openDelayMs > 0
+					? `已复制 "${notification.copyText}"，正在尝试打开应用...`
+					: `已复制 "${notification.copyText}" 并正在跳转...`;
+			if (live) {
+				live.textContent = message.textContent;
+				live.dataset.announcement = announcementKey;
+			}
+			setToastVisible(true);
+			if (toastAutoHideTimer !== undefined) {
+				window.clearTimeout(toastAutoHideTimer);
+			}
+			toastAutoHideTimer = window.setTimeout(() => setToastVisible(false), 1500);
+		} else {
+			message.textContent = `无法自动复制，请手动复制：${notification.copyText}`;
+			if (live) {
+				live.textContent = message.textContent;
+				live.dataset.announcement = announcementKey;
+			}
+			setToastVisible(true);
+			if (toastAutoHideTimer !== undefined) {
+				window.clearTimeout(toastAutoHideTimer);
+			}
+			toastAutoHideTimer = window.setTimeout(() => setToastVisible(false), 5000);
+		}
+	}
+
+	function fallbackCopy(text: string): boolean {
+		const input = document.createElement("textarea");
+		input.value = text;
+		input.setAttribute("readonly", "");
+		input.style.position = "fixed";
+		input.style.opacity = "0";
+		document.body.appendChild(input);
+		input.select();
+		try {
+			const legacyDocument = document as unknown as {
+				execCommand: (command: string) => boolean;
+			};
+			return legacyDocument.execCommand("copy");
+		} finally {
+			input.remove();
+		}
+	}
+
+	async function copyText(text: string): Promise<boolean> {
+		const clipboard = (
+			navigator as unknown as {
+				clipboard?: { writeText: (value: string) => Promise<void> };
+			}
+		).clipboard;
+		const primary =
+			clipboard && window.isSecureContext
+				? () => clipboard.writeText(text)
+				: undefined;
+		return copyWithFallback(primary, () => fallbackCopy(text));
+	}
+
+	const delayedLinkController = createDelayedLinkController({
+		copy: copyText,
+		notify: showNotification,
+		open: (href) => {
+			if (href.startsWith("http://") || href.startsWith("https://")) {
+				window.open(href, "_blank", "noopener,noreferrer");
+			} else {
+				window.location.href = href;
+			}
+		},
+		setTimeout: (callback, delay) => window.setTimeout(callback, delay),
+		clearTimeout: (id) => window.clearTimeout(id),
+		setInterval: (callback, delay) => window.setInterval(callback, delay),
+		clearInterval: (id) => window.clearInterval(id),
+	});
+
+	function getItemTrigger(item: HTMLElement): HTMLElement | null {
+		if (item.matches("a")) return item;
+		return item.querySelector<HTMLElement>("a");
+	}
+
+	function positionQrPopover(item: HTMLElement): void {
+		const trigger = getItemTrigger(item);
+		const popover = item.querySelector<HTMLElement>("[data-nav-qr-popover]");
+		if (!trigger || !popover) return;
+
+		const triggerRect = trigger.getBoundingClientRect();
+		const itemRect = item.getBoundingClientRect();
+		const popoverRect = popover.getBoundingClientRect();
+		const position = calculateQrPopoverPosition(
+			triggerRect,
+			{ width: popoverRect.width, height: popoverRect.height },
+			{ width: window.innerWidth, height: window.innerHeight },
+		);
+		popover.style.top = `${position.top - itemRect.top}px`;
+		popover.style.left = `${position.left - itemRect.left}px`;
+		popover.dataset.placement = position.placement;
+	}
+
+	function showQrPopover(item: HTMLElement): void {
+		positionQrPopover(item);
+		const popover = item.querySelector<HTMLElement>("[data-nav-qr-popover]");
+		if (popover) {
+			popover.dataset.visible = "true";
+		}
+	}
+
+	function hideQrPopover(item: HTMLElement): void {
+		const popover = item.querySelector<HTMLElement>("[data-nav-qr-popover]");
+		if (popover) {
+			delete popover.dataset.visible;
+		}
+	}
+
+	function isItemActive(item: HTMLElement): boolean {
+		const popover = item.querySelector<HTMLElement>("[data-nav-qr-popover]");
+		return (
+			item.matches(":hover") ||
+			item.contains(document.activeElement) ||
+			popover?.dataset.visible === "true"
+		);
+	}
+
+	function positionVisiblePopovers(): void {
+		document
+			.querySelectorAll<HTMLElement>("[data-nav-social-item]")
+			.forEach((item) => {
+				if (isItemActive(item)) positionQrPopover(item);
+			});
+	}
+
+	function initializeSocialItems(): void {
+		document
+			.querySelectorAll<HTMLElement>("[data-nav-social-item]")
+			.forEach((item) => {
+				if (item.dataset.navSocialInitialized === "true") return;
+				item.dataset.navSocialInitialized = "true";
+
+				item.addEventListener("pointerenter", () => showQrPopover(item));
+				item.addEventListener("pointerleave", () => hideQrPopover(item));
+				item.addEventListener("focusin", () => showQrPopover(item));
+				item.addEventListener("focusout", (event) => {
+					if (!item.contains(event.relatedTarget as Node)) {
+						hideQrPopover(item);
+					}
+				});
+
+				const image = item.querySelector<HTMLImageElement>("[data-nav-qr-image]");
+				const error = item.querySelector<HTMLElement>("[data-nav-qr-error]");
+				if (image && error) {
+					const showError = (): void => {
+						image.classList.add("hidden");
+						error.classList.remove("hidden");
+						error.classList.add("flex");
+					};
+					image.addEventListener("error", showError, { once: true });
+					if (image.complete && image.naturalWidth === 0) showError();
+				}
+
+				const copyValue = item.dataset.copyText;
+				const link = getItemTrigger(item);
+				if (!copyValue || !link) return;
+				link.addEventListener("click", (event) => {
+					event.preventDefault();
+					const href = item.dataset.linkHref || link.getAttribute("href") || "";
+					const configuredDelay = Number(item.dataset.openDelayMs);
+					const openDelayMs = Number.isFinite(configuredDelay)
+						? Math.max(0, configuredDelay)
+						: 0;
+					void delayedLinkController.activate({
+						copyText: copyValue,
+						href,
+						openDelayMs,
+					});
+					if (toastAutoHideTimer !== undefined) {
+						window.clearTimeout(toastAutoHideTimer);
+					}
+					toastAutoHideTimer = window.setTimeout(() => {
+						setToastVisible(false);
+					}, openDelayMs + 1500);
+				});
+			});
+	}
+
+	function initializeToast(): void {
+		const toast = document.getElementById("navbar-social-toast");
+		if (toast && toast.parentElement !== document.body) {
+			document.body.appendChild(toast);
+		}
+
+		const close = document.querySelector<HTMLElement>(
+			"[data-nav-social-toast-close]",
+		);
+		if (!close || close.dataset.navSocialInitialized === "true") return;
+		close.dataset.navSocialInitialized = "true";
+		close.addEventListener("click", () => setToastVisible(false));
+	}
+
+	function initializeNavbarSocialInteraction(): void {
+		setToastVisible(false);
+		initializeSocialItems();
+		initializeToast();
+	}
+
+	initializeNavbarSocialInteraction();
+	document.addEventListener("astro:page-load", initializeNavbarSocialInteraction);
+	window.addEventListener("pageshow", () => setToastVisible(false));
+	window.addEventListener("focus", () => setToastVisible(false));
+	window.addEventListener("blur", () => setToastVisible(false));
+	document.addEventListener("visibilitychange", () => {
+		if (document.visibilityState === "hidden") {
+			setToastVisible(false);
+		}
+	});
+	window.addEventListener("scroll", positionVisiblePopovers, { passive: true });
+	window.addEventListener("resize", positionVisiblePopovers);
+</script>

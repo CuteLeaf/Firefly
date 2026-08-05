@@ -21,6 +21,7 @@ import { getFallbackFormat, getImageFormats } from "@/utils/image-utils";
 import { isHomePage } from "@/utils/layout-utils";
 import { url } from "@/utils/url-utils";
 import DropdownMenu from "./DropdownMenu.astro";
+import NavbarSocialInteraction from "./NavbarSocialInteraction.astro";
 import NavMenuPanel from "./NavMenuPanel.astro";
 
 const className = Astro.props.class;
@@ -220,8 +221,10 @@ const logoVariants = await Promise.all(
         )}
         <NavMenuPanel links={links}></NavMenuPanel>
         <DisplaySettings client:load></DisplaySettings>
+        <NavbarSocialInteraction />
     </div>
 </div>
+
 
 <script>
 function loadButtonScript() {

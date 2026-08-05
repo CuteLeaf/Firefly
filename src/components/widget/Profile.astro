@@ -12,7 +12,7 @@ const { style } = Astro.props;
 const className = Astro.props.class;
 ---
 
-<div class:list={["card-base", "p-3", className]} style={style}>
+<div class:list={["card-base", "overflow-visible!", "relative", "z-30", "p-3", className]} style={style}>
   <a
     aria-label="Go to About Page"
     href={url("/about/")}
@@ -52,66 +52,121 @@ const className = Astro.props.class;
       {profileConfig.bio}
     </div>
         <div class="flex flex-wrap gap-2 justify-center mb-1">
-            {profileConfig.links.length > 1 && profileConfig.links.map(item =>
-                    {
-                    const showName = item.showName;
-                    const className = showName 
-                        ? "btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95" 
-                        : "btn-regular rounded-lg h-10 w-10 active:scale-90";
+            {profileConfig.links.map(item => {
+                const showName = item.showName;
+                const className = showName 
+                    ? "btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95 flex items-center" 
+                    : "btn-regular rounded-lg h-10 w-10 active:scale-90 flex items-center justify-center";
+                const targetUrl = item.interaction?.copyText ? item.url : (item.url.startsWith("mailto:") ? "#" : item.url);
 
-                    if (item.url.startsWith("mailto:")) {
-                        const encodedEmail = Buffer.from(item.url.replace("mailto:", "")).toString("base64");
-                        return <a rel="me" aria-label={item.name} href="#" data-encoded-email={encodedEmail} onclick={`
-                                            (function() {
-                                                const encodedEmail = this.getAttribute('data-encoded-email');
-                                                const decodedEmail = atob(encodedEmail);
-                                                this.href = 'mailto:' + decodedEmail;
-                                                this.removeAttribute('data-encoded-email');
-                                                this.removeAttribute('onclick');
-                                                this.click();
-                                                return false;
-                                            }).call(this);
-                                        `.replace(/\s+/g, " ").trim()
-                                    },
-                                    class={className}>
-                            <Icon is:inline name={item.icon} class="text-[1.5rem]"></Icon>
-                            {showName && item.name}
-                        </a>
-                    } else {
-                        return <a rel="me" aria-label={item.name} href={item.url} target="_blank" class={className}>
-                            <Icon is:inline name={item.icon} class="text-[1.5rem]"></Icon>
-                            {showName && item.name}
-                        </a>
-                    }
-                    }
-            )}
-            {profileConfig.links.length == 1 && (function(item){
-                if (item.url.startsWith("mailto:")) {
-                        const encodedEmail = Buffer.from(item.url.replace("mailto:", "")).toString("base64");
-                        return <a rel="me" aria-label={item.name} href="#" data-encoded-email={encodedEmail} onclick={`
-                                            (function() {
-                                                const encodedEmail = this.getAttribute('data-encoded-email');
-                                                const decodedEmail = atob(encodedEmail);
-                                                this.href = 'mailto:' + decodedEmail;
-                                                this.removeAttribute('data-encoded-email');
-                                                this.removeAttribute('onclick');
-                                                this.click();
-                                                return false;
-                                            }).call(this);
-                                        `.replace(/\s+/g, " ").trim()
-                                    },
-                                    class="btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95">
-                            <Icon is:inline name={item.icon} class="text-[1.5rem]"></Icon>
-                            {item.name}
-                        </a>
-                    } else {
-                        return <a rel="me" aria-label={item.name} href={item.url} target="_blank"
-                                            class="btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95">
+                if (item.url.startsWith("mailto:") && !item.interaction?.copyText) {
+                    const encodedEmail = Buffer.from(item.url.replace("mailto:", "")).toString("base64");
+                    return (
+                        <div
+                            class="profile-social-item"
+                            data-nav-social-item={item.interaction ? "" : undefined}
+                            data-copy-text={item.interaction?.copyText}
+                            data-open-delay-ms={item.interaction?.openDelayMs}
+                            data-link-href={item.interaction ? item.url : undefined}
+                        >
+                            <a
+                                rel="me"
+                                aria-label={item.name}
+                                href="#"
+                                data-encoded-email={encodedEmail}
+                                onclick={`
+                                    (function() {
+                                        const encodedEmail = this.getAttribute('data-encoded-email');
+                                        const decodedEmail = atob(encodedEmail);
+                                        this.href = 'mailto:' + decodedEmail;
+                                        this.removeAttribute('data-encoded-email');
+                                        this.removeAttribute('onclick');
+                                        this.click();
+                                        return false;
+                                    }).call(this);
+                                `.replace(/\s+/g, " ").trim()}
+                                class={className}
+                            >
                                 <Icon is:inline name={item.icon} class="text-[1.5rem]"></Icon>
-                                {item.name}
+                                {showName && item.name}
                             </a>
-                    }
-            })(profileConfig.links[0])}
+                            {item.interaction?.qrCode && (
+                                <div class="nav-qr-popover" data-nav-qr-popover aria-hidden="true">
+                                    <img
+                                        src={item.interaction.qrCode}
+                                        alt={item.interaction.qrCodeAlt || `${item.name} 二维码`}
+                                        width="176"
+                                        height="176"
+                                        loading="lazy"
+                                        data-nav-qr-image
+                                    />
+                                    <span class="nav-qr-error hidden" data-nav-qr-error>二维码加载失败</span>
+                                </div>
+                            )}
+                        </div>
+                    );
+                }
+
+                return (
+                    <div
+                        class="profile-social-item"
+                        data-nav-social-item={item.interaction ? "" : undefined}
+                        data-copy-text={item.interaction?.copyText}
+                        data-open-delay-ms={item.interaction?.openDelayMs}
+                        data-link-href={item.interaction ? item.url : undefined}
+                    >
+                        <a
+                            rel="me"
+                            aria-label={item.name}
+                            href={targetUrl}
+                            target={item.interaction?.copyText ? undefined : "_blank"}
+                            class={className}
+                        >
+                            <Icon is:inline name={item.icon} class="text-[1.5rem]"></Icon>
+                            {showName && item.name}
+                        </a>
+                        {item.interaction?.qrCode && (
+                            <div class="nav-qr-popover" data-nav-qr-popover aria-hidden="true">
+                                <img
+                                    src={item.interaction.qrCode}
+                                    alt={item.interaction.qrCodeAlt || `${item.name} 二维码`}
+                                    width="176"
+                                    height="176"
+                                    loading="lazy"
+                                    data-nav-qr-image
+                                />
+                                <span class="nav-qr-error hidden" data-nav-qr-error>二维码加载失败</span>
+                            </div>
+                        )}
+                    </div>
+                );
+            })}
         </div>
   </div>
 </div>
+
+<style>
+	@reference "../../styles/main.css";
+
+	.profile-social-item {
+		@apply relative z-40 inline-block;
+	}
+
+	.nav-qr-popover {
+		@apply absolute invisible opacity-0 pointer-events-none z-100 w-[194px] min-w-[194px] rounded-lg border border-black/10 dark:border-white/15 bg-white dark:bg-neutral-800 p-2 shadow-xl transition-opacity duration-150 box-border;
+	}
+
+	[data-nav-social-item]:hover > .nav-qr-popover,
+	[data-nav-social-item]:focus-within > .nav-qr-popover,
+	.nav-qr-popover[data-visible="true"] {
+		@apply visible opacity-100;
+	}
+
+	.nav-qr-popover img {
+		@apply block size-44 rounded object-contain bg-white;
+	}
+
+	.nav-qr-error {
+		@apply size-44 items-center justify-center px-3 text-center text-sm text-black/60 dark:text-white/60;
+	}
+</style>
