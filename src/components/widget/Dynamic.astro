@@ -1,0 +1,54 @@
+---
+import { Icon } from "astro-icon/components";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import DynamicSidebar from "@/components/widget/DynamicSidebar.svelte";
+import { dynamicConfig, siteConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { WidgetComponentConfig } from "@/types/config";
+import { url } from "@/utils/url-utils";
+
+interface Props {
+	class?: string;
+	style?: string;
+	widgetConfig?: WidgetComponentConfig;
+}
+
+const { class: className, style, widgetConfig } = Astro.props;
+const showTitle = widgetConfig?.showTitle !== false;
+const configuredLimit = widgetConfig?.specificConfig?.dynamic?.limit ?? 3;
+const limit = Math.max(1, Math.floor(configuredLimit));
+
+const apiUrl = dynamicConfig.apiUrl?.startsWith("http")
+	? dynamicConfig.apiUrl
+	: url(dynamicConfig.apiUrl || "/api/dynamic.json");
+const memos = dynamicConfig.memos;
+---
+
+{
+	siteConfig.pages.dynamic && (
+		<WidgetLayout
+			name={i18n(I18nKey.latestDynamics)}
+			showTitle={showTitle}
+			id="latest-dynamics"
+			class={className}
+			style={style}
+		>
+			<DynamicSidebar client:load apiUrl={apiUrl} limit={limit} {memos} />
+			<a
+				class="btn-plain mt-2 flex items-center justify-center gap-1 rounded-lg p-1.5
+					text-sm text-(--primary)"
+				href={url("/dynamic/")}
+			>
+				<Icon
+					is:inline
+					name="material-symbols:dynamic-feed-rounded"
+					class="size-4.5"
+					aria-hidden="true"
+				/>
+				<span>{i18n(I18nKey.moreDynamics)}</span>
+				<span data-dynamic-count class="opacity-60"></span>
+			</a>
+		</WidgetLayout>
+	)
+}

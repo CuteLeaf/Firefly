@@ -1,0 +1,194 @@
+---
+import { Icon } from "astro-icon/components";
+import { projectsConfig, siteConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+// 静态生成所有项目详情页
+export function getStaticPaths() {
+	return projectsConfig.projects.map((project) => ({
+		params: { id: project.id },
+	}));
+}
+
+// 检查页面是否启用
+if (!siteConfig.pages.projects) {
+	return Astro.redirect("/404/");
+}
+
+const { id } = Astro.params;
+const project = projectsConfig.projects.find((p) => p.id === id);
+
+if (!project) {
+	return Astro.redirect("/404/");
+}
+
+const hasDetail = !!(project.content || (project.features && project.features.length > 0) || (project.screenshots && project.screenshots.length > 0));
+
+// 没有详情内容时回到列表页
+if (!hasDetail) {
+	return Astro.redirect("/projects/");
+}
+
+const isExternalLink = project.link && project.external;
+const categoryName = projectsConfig.categories.find((c) => c.id === project.category)?.name || project.category;
+---
+
+<MainGridLayout title={project.title} description={project.description || i18n(I18nKey.projectsSubtitle)}>
+  <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+    <div class="card-base z-10 px-6 py-6 md:px-9 md:py-8 relative w-full">
+      <!-- 返回按钮 -->
+      <a
+        href="/projects/"
+        class="inline-flex items-center gap-1 text-sm text-neutral-600 dark:text-neutral-400 hover:text-(--primary) transition-colors mb-6"
+      >
+        <Icon is:inline name="material-symbols:arrow-back" class="text-lg" />
+        <span>{i18n(I18nKey.projects)}</span>
+      </a>
+
+      <!-- 头部 -->
+      <div class="flex flex-col md:flex-row gap-6 md:gap-8 mb-8">
+        <!-- 封面 -->
+        <div class="w-full md:w-64 lg:w-80 shrink-0">
+          <div class="aspect-[16/10] rounded-xl overflow-hidden bg-(--btn-regular-bg) border border-(--line-divider)">
+            {project.cover ? (
+              <img
+                src={project.cover}
+                alt={project.title}
+                class="w-full h-full object-cover"
+                loading="eager"
+                decoding="async"
+              />
+            ) : (
+              <div class="w-full h-full flex items-center justify-center text-(--btn-content)">
+                <span class="text-6xl">🚀</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <!-- 信息 -->
+        <div class="flex-1 min-w-0">
+          <h1 class="text-2xl md:text-3xl font-bold text-neutral-900 dark:text-neutral-100 mb-3">
+            {project.title}
+          </h1>
+
+          {project.description && (
+            <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
+              {project.description}
+            </p>
+          )}
+
+          <div class="flex flex-wrap items-center gap-3 mb-5">
+            {project.date && (
+              <span class="inline-flex items-center gap-1 text-sm text-neutral-500 dark:text-neutral-500">
+                <Icon is:inline name="material-symbols:calendar-today" class="text-base" />
+                {project.date}
+              </span>
+            )}
+            {categoryName && (
+              <span class="inline-flex items-center gap-1 text-sm text-neutral-500 dark:text-neutral-500">
+                <Icon is:inline name="material-symbols:folder-open" class="text-base" />
+                {categoryName}
+              </span>
+            )}
+          </div>
+
+          <!-- 标签 -->
+          {project.tags && project.tags.length > 0 && (
+            <div class="flex flex-wrap gap-2 mb-5">
+              {project.tags.map((tag) => (
+                <span class="text-xs px-2.5 py-1 rounded-full bg-(--btn-regular-bg) text-(--btn-content)">{tag}</span>
+              ))}
+            </div>
+          )}
+
+          <!-- 操作按钮 -->
+          <div class="flex flex-wrap gap-3">
+            {project.link && (
+              <a
+                href={project.link}
+                target={isExternalLink ? "_blank" : undefined}
+                rel={isExternalLink ? "noopener noreferrer nofollow" : undefined}
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-(--primary) text-white dark:text-black/80 text-sm font-medium hover:opacity-90 transition-opacity"
+              >
+                <Icon is:inline name={isExternalLink ? "material-symbols:open-in-new" : "material-symbols:link"} class="text-base" />
+                {i18n(I18nKey.projectsVisit)}
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <!-- 技术栈 -->
+      {project.techStack && project.techStack.length > 0 && (
+        <div class="mb-8">
+          <h2 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 mb-3 flex items-center gap-2">
+            <Icon is:inline name="material-symbols:code" class="text-xl text-(--primary)" />
+            {i18n(I18nKey.projectsTechStack)}
+          </h2>
+          <div class="flex flex-wrap gap-2">
+            {project.techStack.map((tech) => (
+              <span class="text-sm px-3 py-1.5 rounded-lg bg-(--btn-regular-bg) text-(--btn-content) border border-(--line-divider)">{tech}</span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- 功能特性 -->
+      {project.features && project.features.length > 0 && (
+        <div class="mb-8">
+          <h2 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 mb-3 flex items-center gap-2">
+            <Icon is:inline name="material-symbols:check-circle" class="text-xl text-(--primary)" />
+            {i18n(I18nKey.projectsFeatures)}
+          </h2>
+          <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {project.features.map((feature) => (
+              <li class="flex items-start gap-2 text-neutral-700 dark:text-neutral-300">
+                <Icon is:inline name="material-symbols:check" class="text-lg text-(--primary) shrink-0 mt-0.5" />
+                <span>{feature}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <!-- 详细介绍 -->
+      {project.content && (
+        <div class="mb-8">
+          <h2 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 mb-3 flex items-center gap-2">
+            <Icon is:inline name="material-symbols:article" class="text-xl text-(--primary)" />
+            {i18n(I18nKey.projectsIntroduction)}
+          </h2>
+          <div class="prose dark:prose-invert max-w-none text-neutral-700 dark:text-neutral-300">
+            <Fragment set:html={project.content} />
+          </div>
+        </div>
+      )}
+
+      <!-- 截图 -->
+      {project.screenshots && project.screenshots.length > 0 && (
+        <div>
+          <h2 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 mb-3 flex items-center gap-2">
+            <Icon is:inline name="material-symbols:image" class="text-xl text-(--primary)" />
+            {i18n(I18nKey.projectsScreenshots)}
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {project.screenshots.map((screenshot) => (
+              <div class="rounded-xl overflow-hidden border border-(--line-divider) bg-(--btn-regular-bg)">
+                <img
+                  src={screenshot}
+                  alt={`${project.title} screenshot`}
+                  class="w-full h-auto object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+</MainGridLayout>

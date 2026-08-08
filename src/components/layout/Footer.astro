@@ -1,0 +1,80 @@
+---
+import fs from "node:fs";
+import path from "node:path";
+import { footerConfig, profileConfig } from "@/config";
+import { url } from "@/utils/url-utils";
+
+const currentYear = new Date().getFullYear();
+
+// 读取FooterConfig.html文件内容
+let customFooterHtml = "";
+if (footerConfig.enable) {
+	try {
+		const footerConfigPath = path.join(
+			process.cwd(),
+			"src",
+			"config",
+			"FooterConfig.html",
+		);
+		customFooterHtml = fs.readFileSync(footerConfigPath, "utf-8");
+		// 移除HTML注释
+		customFooterHtml = customFooterHtml.replace(/<!--[\s\S]*?-->/g, "").trim();
+	} catch (error) {
+		console.warn(
+			"FooterConfig.html文件读取失败:",
+			error instanceof Error ? error.message : String(error),
+		);
+	}
+}
+---
+
+
+<div
+  class="transition border-t border-black/10 dark:border-white/15 my-10 border-dashed mx-32"
+>
+</div>
+
+<div
+  class="transition border-dashed border-[oklch(85%_0.01_var(--hue))] dark:border-white/15 rounded-2xl mb-12 flex flex-col items-center justify-center px-6"
+>
+  <div class="transition text-50 text-sm text-center wrap">
+    <div class="mb-2">
+      {customFooterHtml && <div set:html={customFooterHtml} />}
+    </div>
+    <div class="m-0.5 flex gap-2 justify-center flex-wrap">
+      &copy; <span id="copyright-year">{currentYear}</span>
+      {profileConfig.name}. All Rights Reserved.
+      <span aria-hidden="true">/</span>
+      <a
+        class="transition link text-(--primary) font-medium"
+        target="_blank"
+        href={url("rss.xml")}>RSS</a
+      >
+      <span aria-hidden="true">/</span>
+      <a
+        class="transition link text-(--primary) font-medium"
+        target="_blank"
+        href={url("sitemap-index.xml")}>Sitemap</a
+      >
+    </div>
+    <div class="m-0.5 flex gap-2 justify-center flex-wrap">
+      <span>Powered by</span>
+      <a
+        class="transition link text-(--primary) font-medium"
+        target="_blank"
+        href="https://astro.build">Astro</a
+      >
+      <span aria-hidden="true">&</span>
+      <a
+        class="transition link text-(--primary) font-medium"
+        target="_blank"
+        href="https://github.com/CuteLeaf/Firefly">Firefly</a
+      >
+    </div>
+    <!-- 
+      注意：请勿随意修改或删除 "Powered by Astro & Firefly" 部分，这是对开源项目的尊重和支持。
+      如果您需要在底部增加内容，请在src/config/footerConfig.ts中修改enable属性为true，然后编辑src/config/FooterConfig.html文件。
+      您可以随意在src/config/FooterConfig.html中随意添加自定义内容，不需要修改Footer.astro文件。
+    -->
+  </div>
+</div>

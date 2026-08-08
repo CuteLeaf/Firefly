@@ -1,0 +1,69 @@
+---
+import { Icon } from "astro-icon/components";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { getCategoryList } from "@/utils/content-utils";
+
+const categories = await getCategoryList();
+const totalPosts = categories.reduce((sum, cat) => sum + cat.count, 0);
+---
+
+<MainGridLayout title={i18n(I18nKey.categories)}>
+    <!-- 页面标题 -->
+    <div class="card-base px-8 py-6 mb-4">
+        <div class="text-2xl font-bold text-(--primary) mb-2">
+            {i18n(I18nKey.categories)}
+        </div>
+        <p class="text-30 text-sm">
+            {i18n(I18nKey.allCategories)} · {totalPosts} {i18n(I18nKey.postsCount)}
+        </p>
+    </div>
+
+    <!-- 分类卡片列表 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+        {
+            categories.map((category, index) => (
+                <a
+                    href={category.url}
+                    class="card-base p-6 flex items-center gap-4 group onload-animation"
+                    style={`animation-delay: calc(var(--content-delay) + ${index * 50}ms);`}
+                >
+                    <div class="shrink-0 w-14 h-14 rounded-full bg-(--primary)/10 group-hover:bg-(--primary)/20 flex items-center justify-center transition-colors">
+                        <Icon is:inline
+                            name="material-symbols:folder-open"
+                            class="text-3xl text-(--primary)"
+                        />
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h2 class="text-lg font-bold text-90 truncate group-hover:text-(--primary) transition-colors" title={category.name}>
+                            {category.name}
+                        </h2>
+                        <p class="text-sm text-30 mt-1 group-hover:text-(--primary)/60 transition-colors">
+                            {category.count} {i18n(I18nKey.postsCount)}
+                        </p>
+                    </div>
+                    <div class="shrink-0">
+                        <Icon is:inline
+                            name="material-symbols:chevron-right-rounded"
+                            class="text-2xl text-30 group-hover:text-(--primary) transition-colors "
+                        />
+                    </div>
+                </a>
+            ))
+        }
+    </div>
+
+    <!-- 空状态 -->
+    {
+        categories.length === 0 && (
+            <div class="card-base px-8 py-12 text-center">
+                <Icon is:inline
+                    name="material-symbols:folder-off"
+                    class="text-5xl text-30 mx-auto mb-4"
+                />
+                <p class="text-30">{i18n(I18nKey.noData)}</p>
+            </div>
+        )
+    }
+</MainGridLayout>

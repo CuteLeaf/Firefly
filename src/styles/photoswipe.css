@@ -1,0 +1,32 @@
+@reference "tailwindcss";
+
+/* PhotoSwipe 按钮样式 */
+.pswp__button {
+    transition: all 0.2s ease !important;
+    background-color: rgba(0, 0, 0, 0.4) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 0 !important;
+    width: 3rem !important;
+    height: 3rem !important;
+}
+.pswp__button:hover {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+.pswp__button:active {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+}
+.pswp__button--zoom, .pswp__button--close {
+    margin-top: 1rem !important;
+    border-radius: 0.75rem !important;
+}
+.pswp__button--zoom:active, .pswp__button--close:active {
+    transform: scale(0.9) !important;
+}
+.pswp__button--zoom {
+    margin-right: 0.625rem !important;
+}
+.pswp__button--close {
+    margin-right: 1rem !important;
+}

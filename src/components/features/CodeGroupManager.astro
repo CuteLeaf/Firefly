@@ -1,0 +1,90 @@
+---
+// Tab 代码块（rehype-code-group）交互管理器
+//
+// 插件自带的脚本依赖 DOMContentLoaded 并为每个代码组单独绑定事件，
+// Swup 跳转后该事件不再触发，标签会失效。
+// 这里改用挂在 document 上的事件委托兜底：跳转后无需重新初始化，
+// 且与插件脚本的行为一致（幂等），两者同时存在也不会冲突。
+---
+
+<script>
+  const GROUP_SELECTOR = ".rehype-code-group";
+  const TAB_SELECTOR = ".rcg-tab";
+  const BLOCK_SELECTOR = ".rcg-block";
+
+  const getTabs = (group: Element): HTMLElement[] =>
+    Array.from(group.querySelectorAll<HTMLElement>(`:scope > .rcg-tab-container > ${TAB_SELECTOR}`));
+
+  const getBlocks = (group: Element): HTMLElement[] =>
+    Array.from(group.querySelectorAll<HTMLElement>(`:scope > ${BLOCK_SELECTOR}`));
+
+  /** 激活指定序号的标签与对应代码块 */
+  function activate(group: Element, index: number, focusTab = false) {
+    const tabs = getTabs(group);
+    const blocks = getBlocks(group);
+    if (tabs.length === 0) return;
+
+    const target = Math.max(0, Math.min(index, tabs.length - 1));
+
+    tabs.forEach((tab, i) => {
+      const selected = i === target;
+      tab.classList.toggle("active", selected);
+      tab.setAttribute("aria-selected", selected ? "true" : "false");
+    });
+
+    blocks.forEach((block, i) => {
+      const selected = i === target;
+      block.classList.toggle("active", selected);
+      if (selected) block.removeAttribute("hidden");
+      else block.setAttribute("hidden", "true");
+    });
+
+    if (focusTab) tabs[target].focus({ preventScroll: true });
+  }
+
+  /** 从事件目标定位所属代码组与标签序号 */
+  function resolveTab(target: EventTarget | null) {
+    if (!(target instanceof Element)) return null;
+    const tab = target.closest<HTMLElement>(TAB_SELECTOR);
+    const group = tab?.closest(GROUP_SELECTOR);
+    if (!tab || !group) return null;
+    const index = getTabs(group).indexOf(tab);
+    if (index === -1) return null;
+    return { group, index };
+  }
+
+  document.addEventListener("click", (event) => {
+    const found = resolveTab(event.target);
+    if (found) activate(found.group, found.index);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
+
+    const found = resolveTab(event.target);
+    if (!found) return;
+
+    const count = getTabs(found.group).length;
+    let next: number;
+
+    switch (event.key) {
+      case "ArrowRight":
+        next = (found.index + 1) % count;
+        break;
+      case "ArrowLeft":
+        next = (found.index - 1 + count) % count;
+        break;
+      case "Home":
+        next = 0;
+        break;
+      case "End":
+        next = count - 1;
+        break;
+      default:
+        return;
+    }
+
+    event.preventDefault();
+    activate(found.group, next, true);
+  });
+</script>

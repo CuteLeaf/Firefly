@@ -1,0 +1,212 @@
+---
+import { Icon } from "astro-icon/components";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { WidgetComponentConfig } from "@/types/config";
+import { url } from "@/utils/url-utils";
+
+export interface Props {
+	class?: string;
+	style?: string;
+	widgetConfig?: WidgetComponentConfig;
+}
+
+const { class: className = "", style, widgetConfig } = Astro.props as Props;
+
+const showTitle = widgetConfig?.showTitle !== false;
+const adConfig = widgetConfig?.specificConfig?.ad;
+
+// 无配置时不做渲染
+if (!adConfig) {
+	return null;
+}
+
+// 检查广告是否过期
+const isExpired = adConfig.expireDate
+	? new Date() > new Date(adConfig.expireDate)
+	: false;
+
+if (isExpired) {
+	return null;
+}
+
+// 计算 padding 内联样式
+const getPaddingStyle = (): string => {
+	if (!adConfig.padding) return "padding: 1rem";
+
+	const { all, top, right, bottom, left } = adConfig.padding;
+
+	if (all !== undefined) {
+		return `padding: ${all === "0" ? "0" : all}`;
+	}
+
+	const parts: string[] = [];
+	if (top !== undefined) parts.push(`padding-top: ${top}`);
+	if (right !== undefined) parts.push(`padding-right: ${right}`);
+	if (bottom !== undefined) parts.push(`padding-bottom: ${bottom}`);
+	if (left !== undefined) parts.push(`padding-left: ${left}`);
+
+	return parts.length > 0 ? parts.join("; ") : "padding: 1rem";
+};
+
+const paddingStyle = getPaddingStyle();
+// 使用随机 ID 避免多个广告实例冲突
+const widgetId = `advertisement-${Math.random().toString(36).slice(2, 8)}`;
+// 当配置了自定义 padding 时，禁用 WidgetLayout 默认的 px-4
+const useContentPadding = !adConfig.padding;
+---
+
+<WidgetLayout
+  name={adConfig.title || i18n(I18nKey.advertisement)}
+  showTitle={showTitle}
+  id={widgetId}
+  contentPadding={useContentPadding}
+  class:list={["advertisement-widget group", className]}
+  style={style}
+>
+  <!-- 关闭按钮 -->
+  {adConfig.closable && (
+    <button
+      class="close-ad-btn absolute top-2 right-2 w-6 h-6 flex items-center justify-center rounded-full
+        bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600
+        text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200
+        transition-all duration-200 z-10 opacity-0 group-hover:opacity-100"
+      title="Close"
+      aria-label="Close"
+      data-ad-id={widgetId}
+    >
+      <Icon is:inline name="fa7-solid:xmark" class="w-3.5 h-3.5" aria-hidden="true" />
+    </button>
+  )}
+
+  <div style={paddingStyle}>
+    <!-- 图片 -->
+    {adConfig.image && (
+      <div class:list={[{ "mb-3": adConfig.content || adConfig.link }]}>
+        {adConfig.image.link ? (
+          <a
+            href={adConfig.image.link}
+            target={adConfig.image.external ? "_blank" : "_self"}
+            rel={adConfig.image.external ? "noopener noreferrer" : ""}
+            class="block overflow-hidden rounded-lg"
+          >
+            <img
+              src={adConfig.image.src.startsWith("/") ? url(adConfig.image.src) : adConfig.image.src}
+              alt={adConfig.image.alt || "Advertisement"}
+              class="w-full h-auto"
+              loading="lazy"
+            />
+          </a>
+        ) : (
+          <img
+            src={adConfig.image.src.startsWith("/") ? url(adConfig.image.src) : adConfig.image.src}
+            alt={adConfig.image.alt || "Advertisement"}
+            class="w-full h-auto rounded-lg"
+            loading="lazy"
+          />
+        )}
+      </div>
+    )}
+
+    <!-- 文本内容 -->
+    {adConfig.content && (
+      <p class="text-sm text-center mb-3 leading-relaxed text-neutral-600 dark:text-neutral-300 transition">
+        {adConfig.content}
+      </p>
+    )}
+
+    <!-- 链接按钮 -->
+    {adConfig.link && (
+      <div class="text-center">
+        <a
+          href={adConfig.link.url}
+          target={adConfig.link.external ? "_blank" : "_self"}
+          rel={adConfig.link.external ? "noopener noreferrer" : ""}
+          class="btn-regular inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105"
+        >
+          <span>{adConfig.link.text}</span>
+          {adConfig.link.external && (
+            <Icon is:inline name="fa7-solid:arrow-up-right-from-square" class="w-3.5 h-3.5" aria-hidden="true" />
+          )}
+        </a>
+      </div>
+    )}
+  </div>
+</WidgetLayout>
+
+<script is:inline data-swup-ignore-script define:vars={{ widgetId, displayCount: adConfig.displayCount ?? -1, isClosable: !!adConfig.closable }}>
+  function initAd() {
+    var widget = document.getElementById(widgetId);
+    if (!widget) return;
+
+    var wrapper = widget.closest(".advertisement-widget");
+    if (!wrapper) return;
+
+    // 检查显示次数限制（每个广告独立计数）
+    if (displayCount > 0) {
+      var storageKey = "ad-display-" + widgetId;
+      var currentCount = parseInt(localStorage.getItem(storageKey) || "0", 10);
+
+      if (currentCount >= displayCount) {
+        wrapper.style.display = "none";
+        return;
+      }
+
+      localStorage.setItem(storageKey, (currentCount + 1).toString());
+    }
+
+    // 绑定关闭按钮事件
+    if (isClosable) {
+      var closeBtn = wrapper.querySelector(".close-ad-btn");
+      if (closeBtn && !closeBtn.dataset.bound) {
+        closeBtn.dataset.bound = "true";
+        closeBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          wrapper.style.transition = "all 0.3s ease-out";
+          wrapper.style.transform = "translateX(100%)";
+          wrapper.style.opacity = "0";
+
+          setTimeout(function () {
+            wrapper.style.display = "none";
+          }, 300);
+        });
+      }
+    }
+  }
+
+  initAd();
+  document.addEventListener("swup:contentReplaced", function () {
+    setTimeout(initAd, 100);
+  });
+</script>
+
+<style>
+  .advertisement-widget {
+    transition: all 0.3s ease;
+  }
+
+  .advertisement-widget:hover {
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .advertisement-widget:hover {
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .advertisement-widget,
+    .advertisement-widget img,
+    .advertisement-widget a {
+      transition: none;
+    }
+
+    .advertisement-widget:hover {
+      transform: none;
+    }
+  }
+</style>

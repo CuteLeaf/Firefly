@@ -1,0 +1,95 @@
+---
+import { commentConfig } from "@/config/commentConfig";
+import { url } from "@/utils/url-utils";
+
+interface Props {
+	path: string;
+}
+
+const twikooConfig = commentConfig.twikoo ?? { envId: "" };
+const jsUrl =
+	twikooConfig.jsUrl ||
+	"https://registry.npmmirror.com/twikoo/1.7.13/files/dist/twikoo.min.js";
+const cssUrl = twikooConfig.cssUrl;
+const config = {
+	...twikooConfig,
+	el: "#tcomment",
+	path: Astro.props.path,
+};
+---
+
+<div id="tcomment"></div>
+<script is:inline src={jsUrl}></script>
+{cssUrl && <link rel="stylesheet" href={cssUrl.startsWith("http") ? cssUrl : url(cssUrl)} />}
+<script is:inline define:vars={{ config }}>
+  // 获取当前页面路径
+  function getCurrentPath() {
+    const requestedPath = new URLSearchParams(window.location.search).get("path");
+    if (requestedPath) return requestedPath;
+    const pathname = window.location.pathname;
+    return pathname.endsWith("/") && pathname.length > 1
+      ? pathname.slice(0, -1)
+      : pathname;
+  }
+
+  // 动态创建配置对象
+  function createTwikooConfig() {
+    return {
+      ...config,
+      path: getCurrentPath(),
+      el: "#tcomment",
+    };
+  }
+
+  // 初始化 Twikoo
+  function initTwikoo() {
+    if (typeof twikoo !== "undefined") {
+      const commentEl = document.getElementById("tcomment");
+      if (commentEl) {
+        commentEl.innerHTML = "";
+
+        const dynamicConfig = createTwikooConfig();
+        console.log("[Twikoo] 初始化配置:", dynamicConfig);
+
+        twikoo
+          .init(dynamicConfig)
+          .then(() => {
+            console.log("[Twikoo] 初始化完成");
+          })
+          .catch((error) => {
+            console.error("[Twikoo] 初始化失败:", error);
+          });
+      }
+    } else {
+      // 如果 Twikoo 未加载，稍后重试
+      setTimeout(initTwikoo, 500);
+    }
+  }
+
+  // 页面加载时初始化
+  document.addEventListener("DOMContentLoaded", initTwikoo);
+
+  // Swup 页面切换后重新初始化
+  if (window.swup && window.swup.hooks) {
+    window.swup.hooks.on("content:replace", function () {
+      setTimeout(initTwikoo, 200);
+    });
+  } else {
+    document.addEventListener("swup:enable", function () {
+      if (window.swup && window.swup.hooks) {
+        window.swup.hooks.on("content:replace", function () {
+          setTimeout(initTwikoo, 200);
+        });
+      }
+    });
+  }
+
+  // 自定义事件监听
+  document.addEventListener("firefly:page:loaded", function () {
+    const commentEl = document.getElementById("tcomment");
+    if (commentEl) {
+      console.log("[Twikoo] 通过自定义事件重新初始化");
+      initTwikoo();
+    }
+  });
+</script>

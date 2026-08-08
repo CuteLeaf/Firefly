@@ -1,0 +1,50 @@
+---
+import FloatingButton from "@/components/common/FloatingButton.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import { url } from "@/utils/url-utils";
+---
+
+
+<FloatingButton
+  id="back-to-home-btn"
+  icon="material-symbols:home-outline-rounded"
+  ariaLabel={i18n(I18nKey.home)}
+  onclick="backToHome()"
+  class="hide"
+/>
+
+
+
+<script is:raw is:inline define:vars={{ homeUrl: url("/")}}>
+  window.backToHome = function() {
+    const url = homeUrl;
+    if (window.swup) {
+      window.swup.navigate(url);
+    } else {
+      window.location.href = url;
+    }
+  };
+</script>
+
+<script is:inline define:vars={{ homeUrl: url("/") }}>
+  function updateBackToHomeVisibility() {
+    const btn = document.getElementById("back-to-home-btn");
+    if (!btn) return;
+
+    const path = window.location.pathname.replace(/\/$/, "") || "/";
+    const homePath = homeUrl.replace(/\/$/, "") || "/";
+    if (path === homePath) {
+      btn.classList.add("hide");
+    } else {
+      btn.classList.remove("hide");
+    }
+  }
+
+  // Initial check
+  updateBackToHomeVisibility();
+  
+  // Re-check on view transitions or swup navigation
+  document.addEventListener("astro:page-load", updateBackToHomeVisibility);
+  document.addEventListener("swup:contentReplaced", updateBackToHomeVisibility);
+</script>

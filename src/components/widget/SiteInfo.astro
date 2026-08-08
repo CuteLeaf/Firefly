@@ -1,0 +1,292 @@
+---
+import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import { Icon } from "astro-icon/components";
+import ci from "ci-info";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import { licenseConfig, siteConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { WidgetComponentConfig } from "@/types/config";
+import { detectBuildPlatform } from "@/utils/build-platform";
+import { formatDateI18nWithTime } from "@/utils/date-utils";
+
+interface Props {
+	class?: string;
+	style?: string;
+	widgetConfig?: WidgetComponentConfig;
+}
+
+const { class: className, style, widgetConfig } = Astro.props;
+
+const showTitle = widgetConfig?.showTitle !== false;
+
+// ---- 构建时收集版本和环境信息 ----
+
+// 博客版本（从 package.json 读取）
+let blogVersion = "unknown";
+try {
+	const pkg = JSON.parse(
+		readFileSync(new URL("../../../package.json", import.meta.url), "utf-8"),
+	);
+	blogVersion = pkg.version || "Firefly unknown";
+} catch {}
+
+// Astro 版本（从已安装的 astro 包读取）
+let astroVersion = "unknown";
+try {
+	const require = createRequire(import.meta.url);
+	const astroPkg = require("astro/package.json");
+	astroVersion = astroPkg.version || "unknown";
+} catch {}
+
+// Node 版本
+const nodeVersion = process.version;
+
+// pnpm 版本（从 npm_config_user_agent 解析）
+let pnpmVersion = "unknown";
+const userAgent = process.env.npm_config_user_agent || "";
+const pnpmMatch = userAgent.match(/pnpm\/([\d.]+)/);
+if (pnpmMatch) {
+	pnpmVersion = `v${pnpmMatch[1]}`;
+}
+
+// 构建时间
+const buildTime = formatDateI18nWithTime(new Date());
+
+// 构建平台检测（使用 ci-info 自动识别 CI 环境）
+const unknownBuildPlatform =
+	widgetConfig?.specificConfig?.siteInfo?.unknownBuildPlatform || "Unknown CI";
+const buildPlatform = detectBuildPlatform({
+	env: process.env,
+	isCI: ci.isCI,
+	ciName: ci.name,
+	isDev: import.meta.env.DEV,
+	unknownBuildPlatform,
+});
+
+// 系统信息（平台 + 架构）
+const platformMap: Record<string, string> = {
+	win32: "Windows",
+	darwin: "macOS",
+	linux: "Linux",
+	freebsd: "FreeBSD",
+};
+const archMap: Record<string, string> = {
+	x64: "x86_64",
+	arm64: "ARM64",
+	arm: "ARM",
+	ia32: "x86",
+};
+const osName = platformMap[process.platform] || process.platform;
+const archName = archMap[process.arch] || process.arch;
+const systemInfo = `${osName} / ${archName}`;
+
+// 站点域名（去掉协议前缀）
+const siteDomain = siteConfig.site_url
+	? siteConfig.site_url.replace(/^https?:\/\//, "").replace(/\/$/, "")
+	: "unknown";
+
+// 文章许可
+const licenseName = licenseConfig.enable ? licenseConfig.name : "None";
+
+// ---- 组装展示数据 ----
+// 始终显示的项目（列表）
+const mainItems = [
+	{
+		icon: "material-symbols:cloud-outline",
+		label: i18n(I18nKey.siteInfoBuildPlatform),
+		value: buildPlatform,
+	},
+	{
+		icon: "mdi:clover",
+		label: i18n(I18nKey.siteInfoBlogVersion),
+		value: `Firefly v${blogVersion}`,
+		href: "https://github.com/CuteLeaf/Firefly",
+	},
+	{
+		icon: "material-symbols:copyright-outline",
+		label: i18n(I18nKey.siteInfoLicense),
+		value: licenseName,
+	},
+];
+
+// 可折叠的项目（格子布局）
+// fullWidth: true 表示独占一行
+const detailItems: {
+	icon: string;
+	label: string;
+	value: string;
+	fullWidth?: boolean;
+}[] = [
+	{
+		icon: "material-symbols:language",
+		label: i18n(I18nKey.siteInfoDomain),
+		value: siteDomain,
+		fullWidth: true,
+	},
+	{
+		icon: "mdi:clover",
+		label: "Firefly",
+		value: `v${blogVersion}`,
+	},
+	{
+		icon: "material-symbols:rocket-launch-outline",
+		label: i18n(I18nKey.siteInfoAstroVersion),
+		value: `v${astroVersion}`,
+	},
+	{
+		icon: "fa7-brands:node-js",
+		label: i18n(I18nKey.siteInfoNodeVersion),
+		value: nodeVersion,
+	},
+	{
+		icon: "simple-icons:pnpm",
+		label: i18n(I18nKey.siteInfoPnpmVersion),
+		value: pnpmVersion,
+	},
+	{
+		icon: "material-symbols:build-outline",
+		label: i18n(I18nKey.siteInfoBuildTime),
+		value: buildTime,
+		fullWidth: true,
+	},
+	{
+		icon: "material-symbols:computer-outline",
+		label: i18n(I18nKey.siteInfoSystem),
+		value: systemInfo,
+		fullWidth: true,
+	},
+];
+---
+
+<WidgetLayout
+  name={i18n(I18nKey.siteInfo)}
+  showTitle={showTitle}
+  id="site-info"
+  class={className}
+  style={style}
+>
+  <div class="flex flex-col gap-2">
+    {/* 始终显示的项目（列表卡片） */}
+    <div class="flex flex-col gap-2">
+      {
+        mainItems.map((item: { icon: string; label: string; value: string; href?: string }) => (
+          <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-neutral-100/60 dark:bg-neutral-800/50">
+            <div class="flex items-center gap-2.5">
+              <div class="text-(--primary) text-lg">
+                <Icon is:inline name={item.icon} />
+              </div>
+              <span class="text-neutral-700 dark:text-neutral-300 font-medium text-sm">
+                {item.label}
+              </span>
+            </div>
+            {item.href ? (
+              <a
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-xs font-bold text-neutral-900 dark:text-neutral-100 text-right max-w-[55%] truncate hover:text-(--primary) transition-colors"
+                title={item.value}
+              >
+                {item.value}
+              </a>
+            ) : (
+              <span
+                class="text-xs font-bold text-neutral-900 dark:text-neutral-100 text-right max-w-[55%] truncate"
+                title={item.value}
+              >
+                {item.value}
+              </span>
+            )}
+          </div>
+        ))
+      }
+    </div>
+
+    {/* 可折叠区域（格子布局） */}
+    <site-info-collapse
+      data-expand-text={i18n(I18nKey.siteInfoExpand)}
+      data-collapse-text={i18n(I18nKey.siteInfoCollapse)}
+    >
+      <div class="site-info-detail overflow-hidden collapsed">
+        <div class="grid grid-cols-2 gap-2">
+          {
+            detailItems.map(
+              (item: { icon: string; label: string; value: string; fullWidth?: boolean }) => (
+                <div class:list={[
+                  "flex flex-col items-center gap-1 py-2 px-1 rounded-lg bg-neutral-100/60 dark:bg-neutral-800/50",
+                  { "col-span-2": item.fullWidth }
+                ]}>
+                  <div class="text-(--primary) text-lg">
+                    <Icon is:inline name={item.icon} />
+                  </div>
+                  <span class="text-xs text-neutral-500 dark:text-neutral-400">
+                    {item.label}
+                  </span>
+                  <span
+                    class:list={[
+                      "text-sm font-bold text-neutral-900 dark:text-neutral-100 text-center truncate w-full",
+                      { "text-xs": item.fullWidth }
+                    ]}
+                    title={item.value}
+                  >
+                    {item.value}
+                  </span>
+                </div>
+              ),
+            )
+          }
+        </div>
+      </div>
+      <button
+        class="site-info-toggle-btn btn-plain rounded-lg w-full h-8 flex items-center justify-center gap-1.5 mt-1 text-(--primary) text-sm cursor-pointer"
+      >
+        <Icon
+          name="material-symbols:keyboard-arrow-down-rounded" is:inline
+          class="site-info-toggle-icon w-6 h-6 transition-transform duration-200"
+        />
+        <span class="site-info-toggle-text"></span>
+      </button>
+    </site-info-collapse>
+  </div>
+</WidgetLayout>
+
+<style>
+  site-info-collapse .collapsed {
+    height: 0;
+  }
+</style>
+
+<script>
+  class SiteInfoCollapse extends HTMLElement {
+    constructor() {
+      super();
+      const btn = this.querySelector(
+        ".site-info-toggle-btn",
+      ) as HTMLButtonElement | null;
+      const detail = this.querySelector(".site-info-detail");
+      const textEl = this.querySelector(".site-info-toggle-text");
+      const iconEl = this.querySelector(".site-info-toggle-icon");
+      if (!btn || !detail || !textEl) return;
+
+      const expandText = this.dataset.expandText || "展开构建信息";
+      const collapseText = this.dataset.collapseText || "收起构建信息";
+
+      // 初始状态已在 HTML 中通过 class="collapsed" 设定，JS 只需同步文字
+      let expanded = false;
+      textEl.textContent = expandText;
+
+      btn.addEventListener("click", () => {
+        expanded = !expanded;
+        detail.classList.toggle("collapsed", !expanded);
+        textEl.textContent = expanded ? collapseText : expandText;
+        iconEl?.classList.toggle("rotate-180", expanded);
+      });
+    }
+  }
+
+  if (!customElements.get("site-info-collapse")) {
+    customElements.define("site-info-collapse", SiteInfoCollapse);
+  }
+</script>

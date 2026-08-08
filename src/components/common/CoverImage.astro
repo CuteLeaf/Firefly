@@ -1,0 +1,260 @@
+---
+import ImageWrapper from "@/components/common/ImageWrapper.astro";
+import { coverImageConfig } from "@/config";
+import type { ImageFormat, ResponsiveImageLayout } from "@/types/config";
+import {
+	getImageFormats,
+	getImageQuality,
+	shouldAddNoReferrer,
+} from "@/utils/image-utils";
+import { getLqipProps } from "@/utils/lqip-utils";
+import { url } from "@/utils/url-utils";
+
+interface Props {
+	id?: string;
+	src: string;
+	class?: string;
+	alt?: string;
+	position?: string;
+	basePath?: string;
+	preview?: boolean;
+	layout?: ResponsiveImageLayout;
+	formats?: ImageFormat[];
+	loading?: "lazy" | "eager";
+	apiUrls?: string[];
+}
+
+const {
+	id,
+	src,
+	alt,
+	position = "center",
+	basePath = "/",
+	preview = false,
+	layout = "constrained",
+	formats = getImageFormats(),
+	loading = "lazy",
+	apiUrls = [],
+} = Astro.props;
+
+const configQuality = getImageQuality();
+const className = Astro.props.class;
+
+// 判断图片类型
+const isLocal = !(
+	src.startsWith("/") ||
+	src.startsWith("http") ||
+	src.startsWith("https") ||
+	src.startsWith("data:")
+);
+const isPublic = src.startsWith("/");
+
+// 图片样式
+const imageClass =
+	"w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-out";
+const imageStyle = `object-position: ${position};`;
+
+// LQIP 渐变占位
+const lqipProps = isLocal
+	? getLqipProps(src, basePath)
+	: isPublic
+		? getLqipProps(src, basePath, true)
+		: getLqipProps(src);
+
+// 列表卡片和文章详情共享同一组封面产物
+const widths = [640, 1200];
+const sizes = preview
+	? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 320px"
+	: "(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px";
+const quality = configQuality;
+
+// 是否显示加载动画
+const showLoading = coverImageConfig.showLoading ?? true;
+
+// 检查远程图片是否需要 referrerpolicy
+const remoteReferrerPolicy =
+	!isLocal && shouldAddNoReferrer(isPublic ? url(src) : src)
+		? "no-referrer"
+		: undefined;
+---
+
+<div
+	id={id}
+	class:list={[className, "cover-image-container overflow-hidden relative"]}
+	data-loading={showLoading ? "true" : "false"}
+	data-api-urls={apiUrls.length > 0 ? JSON.stringify(apiUrls) : undefined}
+>
+	<!-- LQIP 渐变占位 -->
+	<div class="lqip-placeholder absolute inset-0 pointer-events-none" style={lqipProps.style} aria-hidden="true"></div>
+
+	<!-- 加载动画 -->
+	{showLoading && (
+		<div class="loading-spinner absolute inset-0 flex items-center justify-center z-10" style="background-color: var(--card-bg);">
+			<div class="spinner"></div>
+		</div>
+	)}
+
+	<!-- 错误提示 -->
+	<div class="error-message absolute inset-0 items-center justify-center z-20 hidden pointer-events-none">
+		<span class="text-white text-sm px-3 py-1 rounded-sm bg-black/50">Image API Error</span>
+	</div>
+
+	<!-- 本地图片 -->
+	{isLocal && (
+		<ImageWrapper
+			src={src}
+			basePath={basePath}
+			alt={alt || ""}
+			class="w-full h-full"
+			position={position}
+			loading={loading}
+			formats={formats}
+			quality={quality}
+			layout={layout}
+			width={1200}
+			widths={widths}
+			sizes={sizes}
+			dataCoverImg={true}
+			showLqip={false}
+			showOverlay={false}
+		/>
+	)}
+
+	<!-- 远程图片 -->
+	{!isLocal && (
+		<img
+			src={isPublic ? url(src) : src}
+			alt={alt || ""}
+			class={imageClass}
+			style={imageStyle}
+			loading={loading}
+			decoding="async"
+			data-cover-img
+			data-remote="true"
+			referrerpolicy={remoteReferrerPolicy}
+		/>
+	)}
+</div>
+
+<style>
+	.cover-image-container {
+		min-height: 150px;
+	}
+
+	@media (min-width: 768px) {
+		.cover-image-container {
+			min-height: 0;
+		}
+	}
+
+	/* 加载动画容器 */
+	.loading-spinner {
+		transition: opacity 0.3s ease-out;
+	}
+
+	/* 加载完成后隐藏 */
+	.cover-image-container[data-loading="false"] .loading-spinner {
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	/* 错误状态隐藏加载动画 */
+	.cover-image-container[data-error="true"] .loading-spinner {
+		display: none;
+	}
+
+	/* 错误状态显示错误信息 */
+	.cover-image-container[data-error="true"] .error-message {
+		display: flex;
+	}
+
+	/* 错误状态隐藏失败的远程图片 */
+	.cover-image-container[data-error="true"] img[data-remote="true"] {
+		display: none;
+	}
+
+	/* 旋转加载动画 */
+	.spinner {
+		width: 40px;
+		height: 40px;
+		border: 3px solid oklch(0.9 0.05 var(--hue));
+		border-top-color: oklch(0.6 0.15 var(--hue));
+		border-radius: 50%;
+		animation: spin 0.8s linear infinite;
+	}
+
+	@keyframes spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	/* 图片样式 */
+	.cover-image-container img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+</style>
+
+<script>
+	function initCoverImages() {
+		const containers = document.querySelectorAll('.cover-image-container');
+		containers.forEach((container) => {
+			if (container.hasAttribute('data-initialized')) return;
+			container.setAttribute('data-initialized', 'true');
+
+			const img = container.querySelector('img[data-cover-img]') as HTMLImageElement | null;
+			if (!img) return;
+
+			// 解析API URL列表，用于按顺序重试
+			let apiUrls: string[] = [];
+			let currentApiIndex = 1; // 0号已由服务端设为img.src
+			const apiUrlsAttr = container.getAttribute('data-api-urls');
+			if (apiUrlsAttr) {
+				try { apiUrls = JSON.parse(apiUrlsAttr); } catch (_e) { /* ignore */ }
+			}
+
+			const hideLoading = () => {
+				container.setAttribute('data-loading', 'false');
+				img.style.opacity = '1';
+				const placeholder = container.querySelector('.lqip-placeholder') as HTMLElement | null;
+				if (placeholder) placeholder.classList.add('loaded');
+			};
+
+			const showError = () => {
+				container.setAttribute('data-loading', 'false');
+				container.setAttribute('data-error', 'true');
+			};
+
+			// 统一的错误处理：尝试下一个API或显示错误提示
+			const onError = () => {
+				if (img.dataset.remote !== 'true') return;
+
+				if (currentApiIndex < apiUrls.length) {
+					// 先绑定好事件，再更换src
+					img.addEventListener('load', hideLoading, { once: true });
+					img.addEventListener('error', onError, { once: true });
+					img.src = apiUrls[currentApiIndex];
+					currentApiIndex++;
+				} else {
+					showError();
+				}
+			};
+
+			if (img.complete) {
+				if (img.naturalWidth > 0) {
+					hideLoading();
+				} else {
+					onError();
+				}
+			} else {
+				img.addEventListener('load', hideLoading, { once: true });
+				img.addEventListener('error', onError, { once: true });
+			}
+		});
+	}
+
+	initCoverImages();
+	document.addEventListener('astro:page-load', initCoverImages);
+</script>

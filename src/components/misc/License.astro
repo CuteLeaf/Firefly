@@ -1,0 +1,93 @@
+---
+import { Icon } from "astro-icon/components";
+import { licenseConfig } from "@/config/licenseConfig";
+import { profileConfig } from "@/config/profileConfig";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import { formatDateToYYYYMMDD } from "@/utils/date-utils";
+
+interface Props {
+	title: string;
+	id: string;
+	pubDate: Date;
+	class: string;
+	author: string;
+	sourceLink: string;
+	licenseName: string;
+	licenseUrl: string;
+}
+
+const { title, pubDate, author, sourceLink, licenseName, licenseUrl } =
+	Astro.props;
+const className = Astro.props.class;
+const profileConf = profileConfig;
+const licenseConf = licenseConfig;
+const postUrl = sourceLink || decodeURIComponent(Astro.url.toString());
+
+// 根据许可证名称匹配对应图标
+function getLicenseIcon(name: string): string {
+	const n = name.toLowerCase();
+	if (/cc0|creative commons zero/.test(n)) {
+		return "fa7-brands:creative-commons-zero";
+	}
+	if (/public domain|公共领域/.test(n)) {
+		return "fa7-brands:creative-commons-pd";
+	}
+	if (/^cc($|[\s-])|creative commons|知识共享/.test(n)) {
+		return "fa7-brands:creative-commons";
+	}
+	if (/\b(mit|apache|bsd|isc|mulan|unlicense)\b|gpl|mpl\b/.test(n)) {
+		return "fa7-brands:osi";
+	}
+	return "fa7-regular:copyright";
+}
+
+// 文章单独指定的许可证按名称自动匹配；站点默认许可证优先使用配置中的自定义图标
+const licenseIcon = licenseName
+	? getLicenseIcon(licenseName)
+	: licenseConf.icon || getLicenseIcon(licenseConf.name);
+---
+
+<div
+  class={`relative transition overflow-hidden bg-(--license-block-bg) py-5 px-6 ${className}`}
+>
+  <div class="transition font-bold text-black/75 dark:text-white/75">
+    {title}
+  </div>
+  <a href={postUrl} class="link text-(--primary) break-all">
+    {postUrl}
+  </a>
+  <div class="flex flex-col sm:flex-row gap-3 sm:gap-6 mt-2">
+    <div>
+      <div class="transition text-black/30 dark:text-white/30 text-sm">
+        {i18n(I18nKey.author)}
+      </div>
+      <div class="transition text-black/75 dark:text-white/75 line-clamp-2">
+        {author || profileConf.name}
+      </div>
+    </div>
+    <div>
+      <div class="transition text-black/30 dark:text-white/30 text-sm">
+        {i18n(I18nKey.publishedAt)}
+      </div>
+      <div class="transition text-black/75 dark:text-white/75 line-clamp-2">
+        {formatDateToYYYYMMDD(pubDate)}
+      </div>
+    </div>
+    <div>
+      <div class="transition text-black/30 dark:text-white/30 text-sm">
+        {i18n(I18nKey.license)}
+      </div>
+      <a
+        href={licenseName ? licenseUrl || undefined : licenseConf.url}
+        target="_blank"
+        class="link text-(--primary) line-clamp-2"
+        >{licenseName || licenseConf.name}</a
+      >
+    </div>
+  </div>
+  <Icon is:inline
+    name={licenseIcon}
+    class="transition text-[15rem] absolute pointer-events-none right-6 top-1/2 -translate-y-1/2 text-black/5 dark:text-white/5"
+  />
+</div>

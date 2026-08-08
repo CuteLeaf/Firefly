@@ -1,0 +1,348 @@
+---
+import * as fs from "node:fs";
+import * as path from "node:path";
+import { Icon } from "astro-icon/components";
+import AnimeGrid from "@/components/pages/anime/AnimeGrid.svelte";
+import { siteConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import type { StandardizedAnime } from "@/types/anime";
+import { formatDateI18nWithTime } from "@/utils/date-utils";
+
+// 检查页面是否启用
+if (!siteConfig.pages.anime) {
+	return Astro.redirect("/404/");
+}
+
+// 获取构建时间
+const buildTime = formatDateI18nWithTime(new Date());
+
+// 追番配置
+const animeConfig = siteConfig.anime;
+const TMDB_API_KEY = animeConfig?.tmdb?.apiKey;
+const TMDB_LIST_ID = animeConfig?.tmdb?.listId;
+const BILIBILI_UID = animeConfig?.bilibili?.uid;
+const TMDB_IMG = "https://image.tmdb.org/t/p/w500";
+
+// ============ 类型定义 ============
+
+interface TmdbItem {
+	id: number;
+	title?: string;
+	name?: string;
+	original_title?: string;
+	original_name?: string;
+	release_date?: string;
+	first_air_date?: string;
+	media_type?: string;
+	poster_path?: string | null;
+	vote_average?: number;
+	overview?: string;
+}
+
+interface BilibiliItem {
+	media_id: number;
+	title: string;
+	cover?: string;
+	season_type?: number;
+	season_type_name?: string;
+	rating?: { score?: number };
+	evaluate?: string;
+	brief?: string;
+	season_id: number;
+	new_ep?: { index_show?: string };
+}
+
+// ============ 数据获取 ============
+
+/** 从本地缓存读取 TMDB 数据，读取失败返回空数组 */
+function readTmdbLocalCache(): TmdbItem[] {
+	try {
+		const localPath = path.resolve("public/anime-list.json");
+		if (fs.existsSync(localPath)) {
+			const localData = JSON.parse(fs.readFileSync(localPath, "utf-8"));
+			const items = localData.items || localData[0]?.items || [];
+			console.log(`[Anime] Using local cache: ${items.length} items.`);
+			return items;
+		}
+	} catch {
+		// 本地缓存读取失败，忽略
+	}
+	return [];
+}
+
+// 1. TMDB 数据
+let tmdbItems: TmdbItem[] = [];
+if (TMDB_API_KEY && TMDB_LIST_ID) {
+	try {
+		console.log(`[Anime] Fetching TMDB list: ${TMDB_LIST_ID}...`);
+		const firstResponse = await fetch(
+			`https://api.themoviedb.org/3/list/${TMDB_LIST_ID}?api_key=${TMDB_API_KEY}&language=zh-CN&page=1`,
+		);
+
+		if (firstResponse.ok) {
+			const firstData = await firstResponse.json();
+			const totalPages = firstData.total_pages || 1;
+			let allItems = [...(firstData.items || [])];
+
+			if (totalPages > 1) {
+				const promises: Promise<TmdbItem[]>[] = [];
+				for (let page = 2; page <= totalPages; page++) {
+					promises.push(
+						fetch(
+							`https://api.themoviedb.org/3/list/${TMDB_LIST_ID}?api_key=${TMDB_API_KEY}&language=zh-CN&page=${page}`,
+						)
+							.then((res) => res.json())
+							.then((data) => data.items || []),
+					);
+				}
+				const remainingItems = await Promise.all(promises);
+				for (const items of remainingItems) {
+					allItems.push(...items);
+				}
+			}
+
+			tmdbItems = allItems;
+			console.log(`[Anime] Fetched ${tmdbItems.length} items from TMDB.`);
+		} else {
+			console.error(`[Anime] TMDB fetch failed: ${firstResponse.status}`);
+			tmdbItems = readTmdbLocalCache();
+		}
+	} catch (error: unknown) {
+		console.error(
+			"[Anime] TMDB fetch error:",
+			error instanceof Error ? error.message : error,
+		);
+		tmdbItems = readTmdbLocalCache();
+	}
+}
+
+// 2. Bilibili 数据（type=1 追番 + type=2 追剧）
+let bilibiliItems: BilibiliItem[] = [];
+if (BILIBILI_UID) {
+	try {
+		console.log(`[Anime] Fetching Bilibili list for UID: ${BILIBILI_UID}...`);
+		const ps = 30;
+
+		/** 获取指定类型的全部追番数据 */
+		async function fetchBilibiliByType(type: number): Promise<BilibiliItem[]> {
+			const items: BilibiliItem[] = [];
+			// 第一页，获取 total
+			const firstRes = await fetch(
+				`https://api.bilibili.com/x/space/bangumi/follow/list?type=${type}&vmid=${BILIBILI_UID}&pn=1&ps=${ps}`,
+			);
+			const firstJson = await firstRes.json();
+			if (firstJson.code !== 0 || !firstJson.data?.list?.length) return items;
+
+			items.push(...firstJson.data.list);
+			const total = firstJson.data.total || items.length;
+			const totalPages = Math.ceil(total / ps);
+
+			// 并发请求剩余页
+			if (totalPages > 1) {
+				const promises: Promise<BilibiliItem[]>[] = [];
+				for (let pn = 2; pn <= totalPages; pn++) {
+					promises.push(
+						fetch(
+							`https://api.bilibili.com/x/space/bangumi/follow/list?type=${type}&vmid=${BILIBILI_UID}&pn=${pn}&ps=${ps}`,
+						)
+							.then((r) => r.json())
+							.then((j) => j.data?.list || []),
+					);
+				}
+				const remaining = await Promise.all(promises);
+				for (const batch of remaining) {
+					items.push(...batch);
+				}
+			}
+			return items;
+		}
+
+		// 并发获取追番和追剧
+		const [animeItems, dramaItems] = await Promise.all([
+			fetchBilibiliByType(1),
+			fetchBilibiliByType(2),
+		]);
+		bilibiliItems = [...animeItems, ...dramaItems];
+		console.log(
+			`[Anime] Fetched ${bilibiliItems.length} items from Bilibili (anime: ${animeItems.length}, drama: ${dramaItems.length}).`,
+		);
+	} catch (e) {
+		console.error("[Anime] Bilibili fetch error:", e);
+	}
+}
+
+// ============ 数据标准化 ============
+
+// 标准化 TMDB 数据
+let animeList: StandardizedAnime[] = tmdbItems.map((anime) => {
+	const title = anime.title || anime.name || "";
+	const originalTitle = anime.original_title || anime.original_name || "";
+	const date = anime.release_date || anime.first_air_date || "";
+	const type = anime.media_type || "tv";
+
+	return {
+		id: anime.id,
+		title,
+		originalTitle,
+		poster: anime.poster_path ? TMDB_IMG + anime.poster_path : null,
+		type: type as "tv" | "movie",
+		season_type: type === "movie" ? 2 : 1,
+		source: "tmdb",
+		rating: anime.vote_average || 0,
+		date,
+		overview: anime.overview || "",
+		link: `https://www.themoviedb.org/${type}/${anime.id}`,
+		epStatus: undefined,
+	};
+});
+
+// 标准化 Bilibili 数据并合并
+if (bilibiliItems.length > 0) {
+	const bilibiliMapped: StandardizedAnime[] = bilibiliItems.map((item) => ({
+		id: item.media_id,
+		title: item.title,
+		originalTitle: item.title,
+		poster: item.cover ? item.cover.replace("http://", "https://") : null,
+		// season_type: 1=番剧, 2=电影, 3=纪录片, 4=国创, 5=电视剧
+		type: item.season_type === 2 ? ("movie" as const) : ("tv" as const),
+		season_type: item.season_type || 1,
+		source: "bilibili" as const,
+		rating: item.rating?.score || 0,
+		date: "",
+		overview: item.evaluate || item.brief || "",
+		link: `https://www.bilibili.com/bangumi/play/ss${item.season_id}`,
+		epStatus: item.new_ep?.index_show || "",
+	}));
+
+	// 去重：Bilibili 优先（带进度信息）
+	const bilibiliTitles = new Set(bilibiliMapped.map((item) => item.title));
+	animeList = animeList.filter((item) => !bilibiliTitles.has(item.title));
+	animeList = [...animeList, ...bilibiliMapped];
+}
+
+// 统计数据
+const totalCount = animeList.length;
+const tmdbAverageRating =
+	tmdbItems.length > 0
+		? (
+				tmdbItems.reduce(
+					(sum, item) => sum + (Number(item.vote_average) || 0),
+					0,
+				) / tmdbItems.length
+			).toFixed(1)
+		: "0.0";
+
+const bilibiliAverageRating =
+	bilibiliItems.length > 0
+		? (
+				bilibiliItems.reduce(
+					(sum, item) => sum + (Number(item.rating?.score) || 0),
+					0,
+				) / bilibiliItems.length
+			).toFixed(1)
+		: "0.0";
+
+const isConfigured = !!(BILIBILI_UID || (TMDB_API_KEY && TMDB_LIST_ID));
+---
+
+<MainGridLayout title={i18n(I18nKey.anime)} description={i18n(I18nKey.animeSubtitle)}>
+  <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+    <div class="card-base z-10 px-4 sm:px-6 md:px-9 py-4 sm:py-6 relative w-full">
+      <!-- 页面标题 -->
+      <div class="relative w-full mb-8">
+        <div class="mb-6">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70">
+              <Icon is:inline name="material-symbols:live-tv" class="text-[1.5rem]"></Icon>
+            </div>
+            <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+              {i18n(I18nKey.anime)}
+            </div>
+          </div>
+          <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            {i18n(I18nKey.animeSubtitle)}
+          </p>
+          <p class="text-xs text-neutral-500 dark:text-neutral-500 mt-2">
+            {i18n(I18nKey.animeLastUpdated)} {buildTime}
+          </p>
+        </div>
+
+        {!isConfigured ? (
+          /* 未配置提示 */
+          <div class="text-center py-16">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-(--btn-regular-bg) rounded-full mb-6 border border-(--line-divider)">
+              <Icon is:inline name="material-symbols:settings" class="text-[2rem] text-(--btn-content)" />
+            </div>
+            <h2 class="text-xl font-semibold text-black/80 dark:text-white/80 mb-3">
+              {i18n(I18nKey.animeNotConfigured)}
+            </h2>
+            <p class="text-black/60 dark:text-white/60 mb-4 max-w-md mx-auto">
+              {i18n(I18nKey.animeNotConfiguredDesc)}
+            </p>
+          </div>
+        ) : (
+          <>
+            <!-- 统计卡片 -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+              <div class="bg-(--card-bg) rounded-xl p-3 sm:p-4 border border-(--line-divider)">
+                <div class="flex items-center gap-2 sm:gap-3">
+                  <div class="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-(--primary)/10 flex items-center justify-center shrink-0">
+                    <Icon is:inline name="material-symbols:movie-filter" class="text-[1rem] sm:text-[1.25rem] text-(--primary)" />
+                  </div>
+                  <div class="min-w-0">
+                    <div class="text-[10px] sm:text-xs text-neutral-500 dark:text-neutral-400">{i18n(I18nKey.animeTotal)}</div>
+                    <div class="text-lg sm:text-2xl font-bold text-neutral-900 dark:text-neutral-100">{totalCount}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-(--card-bg) rounded-xl p-3 sm:p-4 border border-(--line-divider)">
+                <div class="flex items-center gap-2 sm:gap-3">
+                  <div class="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-pink-500/10 flex items-center justify-center shrink-0">
+                    <Icon is:inline name="material-symbols:favorite" class="text-[1rem] sm:text-[1.25rem] text-pink-500" />
+                  </div>
+                  <div class="min-w-0">
+                    <div class="text-[10px] sm:text-xs text-neutral-500 dark:text-neutral-400">{i18n(I18nKey.animeBilibiliAvg)}</div>
+                    <div class="text-lg sm:text-2xl font-bold text-neutral-900 dark:text-neutral-100">{bilibiliAverageRating}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-(--card-bg) rounded-xl p-3 sm:p-4 border border-(--line-divider)">
+                <div class="flex items-center gap-2 sm:gap-3">
+                  <div class="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-yellow-500/10 flex items-center justify-center shrink-0">
+                    <Icon is:inline name="material-symbols:star" class="text-[1rem] sm:text-[1.25rem] text-yellow-500" />
+                  </div>
+                  <div class="min-w-0">
+                    <div class="text-[10px] sm:text-xs text-neutral-500 dark:text-neutral-400">{i18n(I18nKey.animeTmdbAvg)}</div>
+                    <div class="text-lg sm:text-2xl font-bold text-neutral-900 dark:text-neutral-100">{tmdbAverageRating}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-(--card-bg) rounded-xl p-3 sm:p-4 border border-(--line-divider)">
+                <div class="flex items-center gap-2 sm:gap-3">
+                  <div class="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
+                    <Icon is:inline name="material-symbols:database" class="text-[1rem] sm:text-[1.25rem] text-emerald-500" />
+                  </div>
+                  <div class="min-w-0">
+                    <div class="text-[10px] sm:text-xs text-neutral-500 dark:text-neutral-400">{i18n(I18nKey.animeSource)}</div>
+                    <div class="text-lg sm:text-2xl font-bold text-neutral-900 dark:text-neutral-100 truncate">
+                      {BILIBILI_UID && (TMDB_API_KEY && TMDB_LIST_ID) ? i18n(I18nKey.animeDualSynced) : BILIBILI_UID ? "Bilibili" : "TMDB"}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 番剧网格（Svelte 交互组件） */}
+            <AnimeGrid
+              client:load
+              items={animeList}
+              bilibiliAverageRating={bilibiliAverageRating}
+            />
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+</MainGridLayout>

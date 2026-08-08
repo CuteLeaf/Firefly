@@ -1,0 +1,93 @@
+/* 横幅文字阴影 - 更柔和的扩散效果 */
+.banner-title {
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+    /* 防止大字体标题溢出容器 */
+    overflow-wrap: break-word;
+    word-break: break-word;
+    /* 响应式字体大小：取用户配置值与视口宽度10%中的较小值，防止小屏幕溢出 */
+    font-size: var(--banner-title-size, 3rem);
+    font-size: min(var(--banner-title-size, 3rem), 10vw);
+    /* 独立字体设置，通过 fontConfig.bannerTitleFont 配置 */
+    font-family: var(--font-banner-title, inherit);
+}
+
+.banner-subtitle {
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+    /* 独立字体设置，通过 fontConfig.bannerSubtitleFont 配置 */
+    font-family: var(--font-banner-subtitle, inherit);
+}
+
+/* 横幅背景暗层透明度 - 通过配置文件 common.dimOpacity 控制，内联样式覆盖 */
+
+.banner-post-title {
+    max-width: 72rem;
+    font-size: 2.75rem;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.65);
+}
+
+.banner-page-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.65);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    line-height: 1.2;
+}
+
+/* .banner-page-title-icon {
+    font-size: 1.2em;
+    line-height: 1;
+    vertical-align: middle;
+    transform: translateY(0.08em);
+  } */
+
+.banner-page-title-text {
+    line-height: 1.2;
+    transition: opacity 0.25s ease;
+}
+
+.banner-post-description {
+    position: relative;
+    max-width: min(var(--banner-post-description-width, 50rem), 78vw);
+    padding: 0.85rem 2.25rem;
+    border-radius: var(--radius-large);
+    background: rgba(0, 0, 0, 0.16);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    font-weight: 400;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+    text-wrap: pretty;
+}
+
+.banner-post-description-quote {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 1.5rem;
+    pointer-events: none;
+}
+
+.banner-post-description-quote-start {
+    top: 0.45rem;
+    left: 0.5rem;
+    transform: rotate(180deg);
+}
+
+.banner-post-description-quote-end {
+    right: 0.5rem;
+    bottom: 0.45rem;
+}
+
+.banner-post-description-divider {
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+}
+
+.banner-post-meta-list {
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 1280px) {
+    .banner-post-title {
+        font-size: 2.35rem;
+    }
+}

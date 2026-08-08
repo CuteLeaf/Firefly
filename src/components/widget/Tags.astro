@@ -1,0 +1,42 @@
+---
+
+import ButtonTag from "@/components/common/ButtonTag.astro";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { WidgetComponentConfig } from "@/types/config";
+import { getTagList } from "@/utils/content-utils";
+import { getTagUrl, url } from "@/utils/url-utils";
+
+const tags = await getTagList();
+
+const COLLAPSED_HEIGHT = "7.5rem";
+
+interface Props {
+	class?: string;
+	style?: string;
+	widgetConfig?: WidgetComponentConfig;
+}
+const { class: className, style, widgetConfig } = Astro.props;
+
+const collapseThreshold = widgetConfig?.specificConfig?.collapseThreshold;
+const showTitle = widgetConfig?.showTitle !== false;
+const isCollapsed = collapseThreshold ? tags.length > collapseThreshold : false;
+---
+<WidgetLayout name={i18n(I18nKey.tags)} showTitle={showTitle} id="tags" isCollapsed={isCollapsed} collapsedHeight={COLLAPSED_HEIGHT} useExpandedButtonSpacing={true} moreUrl={url("/tags/")} class={className} style={style}>
+    <div class="tags-container">
+        {tags.map(t => (
+            <ButtonTag href={getTagUrl(t.name)} label={`View all posts with the ${t.name.trim()} tag`}>
+                {t.name.trim()}
+            </ButtonTag>
+        ))}
+    </div>
+</WidgetLayout>
+
+<style>
+  .tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+</style>

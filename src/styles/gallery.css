@@ -1,0 +1,7 @@
+/* Gallery masonry responsive layout */
+@media (min-width: 640px) {
+  .gallery-masonry {
+    column-width: var(--col-width, 240px) !important;
+    column-count: auto !important;
+  }
+}

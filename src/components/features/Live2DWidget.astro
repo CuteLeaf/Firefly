@@ -1,0 +1,258 @@
+---
+import { url } from "@/utils/url-utils";
+
+interface MenuItem {
+	icon?: string;
+	label: string;
+	action: string;
+}
+
+interface Props {
+	config: {
+		enable: boolean;
+		model:
+			| {
+					path: string;
+					volume?: number;
+					scale?: number;
+					x?: number;
+					y?: number;
+			  }
+			| {
+					path: string;
+					volume?: number;
+					scale?: number;
+					x?: number;
+					y?: number;
+			  }[];
+		position?: "bottom-left" | "bottom-right";
+		size?: number | { width: number; height: number };
+		primaryColor?: string;
+		transitionDuration?: number;
+		transitionType?: "slide" | "fade";
+		menus?: {
+			items?: MenuItem[];
+			extraItems?: MenuItem[];
+			align?: "left" | "right";
+		};
+		tips?: {
+			enable?: boolean;
+			welcomeMessage?: string[];
+			messages?: string[];
+			duration?: number;
+			interval?: number;
+			offset?: { x?: number; y?: number };
+			typing?: {
+				param?: string;
+				speed?: number;
+				minValue?: number;
+				maxValue?: number;
+			};
+		};
+		responsive?: {
+			hideOnMobile?: boolean;
+			mobileBreakpoint?: number;
+		};
+	};
+}
+
+const { config } = Astro.props;
+
+// 构建模型配置
+const models = Array.isArray(config.model) ? config.model : [config.model];
+const resolvePath = (p: string) => (/^https?:\/\//.test(p) ? p : url(p));
+
+const modelConfigs = models.map((m) => ({
+	path: resolvePath(m.path),
+	...(m.volume !== undefined && { volume: m.volume }),
+	...(m.scale !== undefined && { scale: m.scale }),
+	...((m.x !== undefined || m.y !== undefined) && {
+		offset: [m.x ?? 0, m.y ?? 0],
+	}),
+}));
+
+// 序列化菜单配置（只保留 icon, label, action）
+function serializeMenus(menus: Props["config"]["menus"]) {
+	if (!menus) return {};
+	const serialize = (items: MenuItem[]) =>
+		items.map(({ icon, label, action }) => ({ icon, label, action }));
+	const result: {
+		items?: ReturnType<typeof serialize>;
+		extraItems?: ReturnType<typeof serialize>;
+		align?: string;
+	} = {};
+	if (menus.items) result.items = serialize(menus.items);
+	if (menus.extraItems) result.extraItems = serialize(menus.extraItems);
+	if (menus.align) result.align = menus.align;
+	return result;
+}
+---
+
+<div
+	id="l2d-widget-container"
+	style="position: fixed; z-index: 999;"
+	data-models={JSON.stringify(modelConfigs)}
+	data-position={config.position || "bottom-left"}
+	data-size={JSON.stringify(config.size || 300)}
+	data-primary-color={config.primaryColor || ""}
+	data-transition-duration={config.transitionDuration?.toString() || ""}
+	data-transition-type={config.transitionType || ""}
+	data-menus={JSON.stringify(serializeMenus(config.menus))}
+	data-tips={JSON.stringify(config.tips || {})}
+	data-responsive={JSON.stringify(config.responsive || {})}
+>
+</div>
+
+<script>
+	import { createWidget } from "l2d-widget";
+
+	// 修复 l2d-widget 气泡 不会自动换行
+	// l2d-widget 使用行内样式，CSS 无法覆盖，需用 JS 修改
+	function patchTipBubble(el: HTMLElement) {
+		if (el.style.whiteSpace === "nowrap") {
+			el.style.whiteSpace = "normal";
+			el.style.width = "190px";
+		}
+	}
+
+	const tipObserver = new MutationObserver((mutations) => {
+		for (const m of mutations) {
+			for (const node of m.addedNodes) {
+				if (node instanceof HTMLElement) {
+					if (node.style.whiteSpace === "nowrap") patchTipBubble(node);
+					node.querySelectorAll<HTMLElement>('*').forEach(patchTipBubble);
+				}
+			}
+		}
+	});
+	tipObserver.observe(document.body, { childList: true, subtree: true });
+
+	// 菜单动作映射
+	let currentModelIndex = 0;
+	const menuActions: Record<string, (widget: any) => void> = {
+		home: () => (window.location.href = "/"),
+		scrollToTop: () => window.scrollTo({ top: 0, behavior: "smooth" }),
+		sleep: (widget) => widget.sleep(),
+		github: () => window.open("https://github.com/CuteLeaf/Firefly", "_blank"),
+		switchModel: (widget) => {
+			const container = document.getElementById("l2d-widget-container");
+			const models = JSON.parse(container?.dataset.models || "[]");
+			currentModelIndex = (currentModelIndex + 1) % models.length;
+			widget.switchModel(currentModelIndex);
+		},
+	};
+
+	function initWidget() {
+		const container = document.getElementById("l2d-widget-container");
+		if (!container) return;
+
+		try {
+			const models = JSON.parse(container.dataset.models || "[]");
+			const position = container.dataset.position || "bottom-left";
+			const size = JSON.parse(container.dataset.size || "300");
+			const primaryColor = container.dataset.primaryColor || undefined;
+			const transitionDuration = container.dataset.transitionDuration
+				? parseInt(container.dataset.transitionDuration)
+				: undefined;
+			const transitionType = container.dataset.transitionType || undefined;
+			const menus = JSON.parse(container.dataset.menus || "{}");
+			const tips = JSON.parse(container.dataset.tips || "{}");
+			const responsive = JSON.parse(container.dataset.responsive || "{}");
+
+			// 响应式检查：移动端隐藏
+			if (responsive.hideOnMobile) {
+				const breakpoint = responsive.mobileBreakpoint || 768;
+				if (window.innerWidth <= breakpoint) {
+					container.style.display = "none";
+					return;
+				}
+			}
+
+			if (models.length === 0) {
+				console.warn("No Live2D models configured");
+				return;
+			}
+
+			const options: any = {
+				model: models.length === 1 ? models[0] : models,
+				position: position,
+				size: size,
+			};
+
+			if (primaryColor) options.primaryColor = primaryColor;
+			if (transitionDuration) options.transitionDuration = transitionDuration;
+			if (transitionType) options.transitionType = transitionType;
+
+			// 菜单配置 - 将 action 字符串映射为实际函数
+			if (menus.items || (menus.extraItems && menus.extraItems.length > 0)) {
+				options.menus = {};
+				if (menus.items) {
+					options.menus.items = menus.items.map((item: any) => ({
+						icon: item.icon,
+						label: item.label,
+						onClick: menuActions[item.action] || (() => {}),
+					}));
+				}
+				if (menus.extraItems) {
+					options.menus.extraItems = menus.extraItems.map((item: any) => ({
+						icon: item.icon,
+						label: item.label,
+						onClick: menuActions[item.action] || (() => {}),
+					}));
+				}
+				if (menus.align) {
+					options.menus.align = menus.align;
+				}
+			}
+
+			// 提示配置
+			if (tips) {
+				const tipsConfig = tips.enable === false ? false : {
+					...(tips.welcomeMessage && { welcomeMessage: tips.welcomeMessage }),
+					...(tips.messages && { messages: tips.messages }),
+					...(tips.duration !== undefined && { duration: tips.duration }),
+					...(tips.interval !== undefined && { interval: tips.interval }),
+					...(tips.offset && { offset: tips.offset }),
+					...(tips.typing && { typing: tips.typing }),
+				};
+				
+				if (tipsConfig === false || Object.keys(tipsConfig).length > 0) {
+					if (Array.isArray(options.model)) {
+						options.model.forEach((m: any) => m.tips = tipsConfig);
+					} else {
+						options.model.tips = tipsConfig;
+					}
+				}
+			}
+
+			createWidget(options);
+		} catch (e) {
+			console.error("Failed to initialize Live2D widget:", e);
+		}
+	}
+
+	// 确保只初始化一次
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", initWidget);
+	} else {
+		initWidget();
+	}
+
+	// 响应式处理：窗口大小变化时显示/隐藏
+	function handleResponsive() {
+		const container = document.getElementById("l2d-widget-container");
+		if (!container) return;
+
+		const responsive = JSON.parse(container.dataset.responsive || "{}");
+		if (responsive.hideOnMobile) {
+			const breakpoint = responsive.mobileBreakpoint || 768;
+			if (window.innerWidth <= breakpoint) {
+				container.style.display = "none";
+			} else {
+				container.style.display = "";
+			}
+		}
+	}
+
+	window.addEventListener("resize", handleResponsive);
+</script>

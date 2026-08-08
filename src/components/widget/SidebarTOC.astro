@@ -1,0 +1,160 @@
+---
+import type { MarkdownHeading } from "astro";
+import "@/styles/toc.css";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { WidgetComponentConfig } from "@/types/config";
+import { computeTocItems } from "@/utils/toc-shared";
+
+interface Props {
+	headings: MarkdownHeading[];
+	encrypted?: boolean;
+	class?: string;
+	style?: string;
+	widgetConfig?: WidgetComponentConfig;
+}
+
+const {
+	headings = [],
+	encrypted = false,
+	class: className,
+	style,
+	widgetConfig,
+} = Astro.props;
+
+const showTitle = widgetConfig?.showTitle !== false;
+
+// 加密文章不在服务端渲染目录（避免标题泄露），交由客户端解密后生成
+const items = encrypted ? [] : computeTocItems(headings, { maxLevel: 3 });
+---
+
+<WidgetLayout
+  name={i18n(I18nKey.tableOfContents)}
+  showTitle={showTitle}
+  id="sidebar-toc"
+  class={className}
+  style={style}
+>
+  <div class="toc-scroll-container custom-scrollbar">
+    <div
+      class="toc-content"
+      id="sidebar-toc-content"
+    >
+      {!encrypted && items.length > 0 && (
+        <>
+          {items.map((item) => (
+            <a
+              href={item.href}
+              class={`toc-item toc-level-${item.depthLevel}`}
+              data-heading-id={item.headingId}
+              aria-label={item.text}
+              title={item.text}
+            >
+              <div class={`toc-badge ${item.badgeKind === "index" ? "toc-badge-index" : ""}`}>
+                {item.badgeKind === "index" ? (
+                  item.badgeIndex
+                ) : item.badgeKind === "dot" ? (
+                  <span class="toc-badge-dot"></span>
+                ) : (
+                  <span class="toc-badge-dot toc-badge-dot-sm"></span>
+                )}
+              </div>
+              <div class={`toc-label ${item.labelPrimary ? "toc-label-primary" : "toc-label-secondary"}`}>
+                {item.text}
+              </div>
+            </a>
+          ))}
+          <div id="sidebar-active-indicator" class="toc-active-indicator" style="opacity: 0;"></div>
+        </>
+      )}
+      {!encrypted && items.length === 0 && (
+        <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+          <p>{i18n(I18nKey.tocEmpty)}</p>
+        </div>
+      )}
+      {/* 加密文章：留空，客户端解密后由 TOCManager 填充 */}
+    </div>
+  </div>
+</WidgetLayout>
+
+<style lang="stylus">
+/* SidebarTOC 特定样式 */
+.toc-scroll-container
+	max-height: calc(100vh - 25rem)
+	/* 滚动条与内容之间的小间隙（从共享样式挪入，避免影响浮动目录的对称内边距） */
+	padding-right: 0.125rem
+</style>
+
+<script>
+  import { TOCManager } from "@/utils/toc-utils";
+
+  if (typeof window.SidebarTOC === "undefined") {
+    window.SidebarTOC = {
+      manager: null
+    };
+  }
+
+  // 侧栏目录在 #right-sidebar-static 内，不是 swup 容器：站内导航后其 DOM 不被替换。
+  // attach() 内部会校验现有锚点是否属于当前正文——新鲜则直接附着（首屏 SSR），
+  // 过时或缺失（导航后/加密解密后）则自动回退 DOM 遍历重建，无需在此区分场景。
+  function initSidebarTOC() {
+    const tocContent = document.getElementById("sidebar-toc-content");
+    if (!tocContent) return;
+
+    try {
+      // 清理旧实例
+      if (window.SidebarTOC.manager) {
+        window.SidebarTOC.manager.cleanup();
+      }
+
+      // 创建新实例
+      window.SidebarTOC.manager = new TOCManager({
+        contentId: "sidebar-toc-content",
+        indicatorId: "sidebar-active-indicator",
+        maxLevel: 3,
+        scrollOffset: 80,
+      });
+
+      window.SidebarTOC.manager.attach();
+    } catch (error) {
+      console.error("Failed to load TOCManager for SidebarTOC:", error);
+    }
+  }
+
+  // 初始化
+  // 确保 DOM 准备好后再执行
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initSidebarTOC);
+  } else {
+    initSidebarTOC();
+  }
+
+  // 页面切换时重新初始化
+  document.addEventListener("swup:contentReplaced", () => {
+    setTimeout(initSidebarTOC, 100);
+  });
+
+  // Astro 页面切换事件
+  document.addEventListener("astro:page-load", () => {
+    setTimeout(initSidebarTOC, 100);
+  });
+
+  // 浏览器导航事件
+  window.addEventListener("popstate", () => {
+    setTimeout(initSidebarTOC, 200);
+  });
+
+  // 监听 hashchange（但排除 TOC 内部导航）
+  window.addEventListener("hashchange", () => {
+    if (!window.tocInternalNavigation) {
+      setTimeout(initSidebarTOC, 100);
+    }
+    window.tocInternalNavigation = false;
+  });
+
+  // 密码解密后重新初始化 TOC（需 DOM 遍历重建）
+  document.addEventListener("password:decrypted", () => {
+    setTimeout(initSidebarTOC, 200);
+  });
+</script>

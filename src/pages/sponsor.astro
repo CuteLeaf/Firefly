@@ -1,0 +1,216 @@
+---
+import Comment from "@components/comment/index.astro";
+import { Icon } from "astro-icon/components";
+import { commentConfig, siteConfig, sponsorConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { getLqipProps } from "@/utils/lqip-utils";
+import { url } from "@/utils/url-utils";
+
+// 检查页面是否启用
+if (!siteConfig.pages.sponsor) {
+	return Astro.redirect("/404/");
+}
+
+// 检查评论系统是否启用
+const isCommentEnabled =
+	commentConfig?.type &&
+	commentConfig.type !== "none" &&
+	sponsorConfig.showComment !== false;
+
+const title = sponsorConfig.title || i18n(I18nKey.sponsorTitle);
+const description =
+	sponsorConfig.description || i18n(I18nKey.sponsorDescription);
+const enabledMethods = sponsorConfig.methods.filter((method) => method.enabled);
+const sponsors = sponsorConfig.sponsors || [];
+const showSponsorsList = sponsorConfig.showSponsorsList !== false;
+
+// LQIP 渐变占位
+function getQrLqipProps(qrCode: string) {
+	return getLqipProps(qrCode, undefined, true);
+}
+---
+
+<MainGridLayout title={title} description={description}>
+  <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+    <div class="card-base z-10 px-9 py-6 relative w-full">
+      <!-- 页面标题和描述 -->
+      <div class="mb-8">
+        <div class="flex items-center gap-3 mb-3">
+            <div class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70">
+                <Icon is:inline name="material-symbols:favorite" class="text-[1.5rem]"></Icon>
+            </div>
+          <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+            {title}
+          </div>
+        </div>
+        {description && (
+          <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
+            {description}
+          </p>
+        )}
+        {sponsorConfig.usage && (
+          <div class="mb-8 p-4 rounded-lg bg-(--primary)/8 dark:bg-(--btn-regular-bg) border border-(--primary)/30 dark:border-none backdrop-blur-xs shadow-xs usage-info-box">
+            <div class="flex items-start gap-2">
+              <Icon is:inline name="material-symbols:info-outline" class="text-(--primary) text-lg shrink-0 mt-0.5" />
+              <p class="text-sm text-neutral-700 dark:text-neutral-200 leading-relaxed">
+                <span class="font-semibold text-(--primary)"></span>
+                {sponsorConfig.usage}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <!-- 打赏方式 -->
+      <div class="mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {enabledMethods.map((method) => (
+                      <div class="flex flex-col items-center card-base p-6 rounded-lg bg-neutral-50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 hover:border-(--primary) transition-colors">
+                        <!-- 图标和名称 -->
+                        <div class="flex items-center gap-3 mb-4">
+                          {method.icon && (
+                            <Icon is:inline name={method.icon} class="text-2xl text-neutral-900 dark:text-neutral-100 transition-colors" />
+                          )}
+                          <h3 class="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
+                            {method.name}
+                          </h3>
+                        </div>
+
+                        <!-- 描述 -->
+                        {method.description && (
+                          <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-4 text-center">
+                            {method.description}
+                          </p>
+                        )}
+
+                        <!-- 二维码或链接 -->
+                        {method.qrCode && (
+                          <div class="relative w-full max-w-[200px] aspect-square bg-white rounded-lg p-4 shadow-md mb-4 overflow-hidden">
+                            <div class="lqip-placeholder absolute inset-0 rounded-lg pointer-events-none" style={getQrLqipProps(method.qrCode).style} aria-hidden="true"></div>
+                            <img
+                              src={url(method.qrCode)}
+                              alt={`${method.name} ${i18n(I18nKey.scanToSponsor)}`}
+                              class="relative w-full h-full object-contain opacity-0 transition-opacity duration-500 ease-out"
+                              loading="lazy"
+                            />
+                          </div>
+                        )}
+
+                        {method.link && (
+                          <a
+                            href={method.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center gap-2 px-4 py-2 bg-(--primary) text-white dark:text-black/70 rounded-lg font-medium hover:bg-(--primary)/90 active:scale-95 transition-all"
+                          >
+                            <span>{i18n(I18nKey.sponsorGoTo)}</span>
+                            <Icon is:inline name="fa7-solid:arrow-up-right-from-square" class="text-sm" />
+                          </a>
+                        )}
+                      </div>
+                    ))}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 打赏者列表 -->
+  {showSponsorsList && (
+    <div class="flex w-full rounded-(--radius-large) overflow-hidden relative mt-4">
+      <div class="card-base z-10 px-9 py-6 relative w-full">
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-3">
+            <div class="h-8 w-8 rounded-lg bg-(--primary)/10 flex items-center justify-center">
+              <Icon is:inline name="material-symbols:emoji-people-rounded" class="text-[1.25rem] text-(--primary)" />
+            </div>
+            <h2 class="text-xl font-bold text-neutral-900 dark:text-neutral-100">
+              {i18n(I18nKey.sponsorList)}
+            </h2>
+          </div>
+          {sponsors.length > 0 && (
+            <span class="text-xs text-neutral-400 dark:text-neutral-500">
+              {sponsors.length}
+            </span>
+          )}
+        </div>
+        {sponsors.length > 0 ? (
+          <div class="sponsor-grid">
+            {sponsors.map((sponsor) => (
+              <div class="group flex items-center gap-3 p-3 rounded-xl border border-(--line-divider) hover:border-(--primary) transition-all duration-200">
+                {/* 头像占位 */}
+                <!-- 新的头像逻辑：有头像用图片，没有用首字母 -->
+                {sponsor.avatar ? (
+                  <img 
+                    src={url(sponsor.avatar)}
+                    alt={sponsor.name}
+                    class="w-9 h-9 rounded-full object-cover shrink-0"
+                    loading="lazy"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                  />
+                ) : null}
+
+                <!-- 首字母头像（作为兜底，图片加载失败也会显示这个） -->
+                <div 
+                  class={`w-9 h-9 rounded-full bg-(--primary)/10 flex items-center justify-center shrink-0 group-hover:bg-(--primary)/20 transition-colors ${sponsor.avatar ? 'hidden' : ''}`}
+                >
+                  <span class="text-sm font-bold text-(--primary)">{sponsor.name.charAt(0)}</span>
+                </div>
+
+                {/* 信息 */}
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2">
+                    <span class="font-semibold text-sm text-neutral-900 dark:text-neutral-100 truncate">
+                      {sponsor.name}
+                    </span>
+                    {sponsor.amount && (
+                      <span class="shrink-0 text-xs font-bold text-(--primary)">
+                        {sponsor.amount}
+                      </span>
+                    )}
+                  </div>
+                  {sponsor.date && (
+                    <span class="text-[0.65rem] text-neutral-400 dark:text-neutral-500">
+                      {new Date(sponsor.date).toLocaleDateString()}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div class="text-center py-12 text-neutral-500 dark:text-neutral-500">
+            <p>{i18n(I18nKey.sponsorEmpty)}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )}
+  <!-- 评论区 -->
+  {isCommentEnabled && (
+    <div class="mt-4">
+      <Comment customPath="/sponsor/" title="sponsor"  />
+    </div>
+  )}
+</MainGridLayout>
+
+<style>
+  /* 透明模式下使用半透明背景 */
+  :global(body.wallpaper-transparent .usage-info-box) {
+    background-color: rgba(var(--primary-rgb, 70, 130, 180), 0.15) !important;
+  }
+
+  :global(:root.dark body.wallpaper-transparent .usage-info-box) {
+    background-color: oklch(from var(--primary) l c h / 0.15) !important;
+  }
+</style>
+
+<style is:global>
+  .sponsor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.75rem;
+  }
+</style>
+

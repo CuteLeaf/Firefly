@@ -1,0 +1,54 @@
+---
+import { commentConfig, siteConfig } from "@/config";
+
+interface Props {
+	path: string;
+}
+
+const config = {
+	...commentConfig.artalk,
+	el: "#artalk",
+	site: siteConfig.title,
+	pageKey: Astro.props.path,
+	dark: "html.dark",
+	pageTitle: "",
+	...(commentConfig.artalk?.visitorCount ? { pageview: true } : {}),
+};
+---
+<!-- Artalk -->
+<div class="relative w-full">
+    <!-- 挂载点 -->
+    <div id="artalk" style="--at-color-main: var(--primary); --at-color-bg: var(--card-bg); --at-color-border: var(--line-divider);"></div>
+
+    <!-- 引入 Artalk 样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/artalk/dist/Artalk.css"/>
+
+    <!-- 脚本逻辑 -->
+    <script type="module" is:inline define:vars={{config}}>
+        import Artalk from 'https://unpkg.com/artalk/dist/Artalk.mjs';
+        const requestedPath = new URLSearchParams(window.location.search).get("path");
+        const effectiveConfig = requestedPath
+            ? { ...config, pageKey: requestedPath }
+            : config;
+
+        // 初始化 Artalk
+        const artalk = Artalk.init(effectiveConfig);
+
+        // 深色模式
+        function updateTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            artalk.setDarkMode(isDark);
+        }
+
+        updateTheme();
+
+        const observer = new MutationObserver((_mutations) => {
+            updateTheme();
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class'],
+        });
+    </script>
+</div>

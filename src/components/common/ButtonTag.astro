@@ -1,0 +1,15 @@
+---
+interface Props {
+	size?: string;
+	dot?: boolean;
+	href?: string;
+	label?: string;
+}
+const { dot, href, label }: Props = Astro.props;
+---
+<a href={href} aria-label={label} class="transition text-sm font-medium px-3 py-1.5 rounded-full
+    bg-black/5 dark:bg-white/10 text-neutral-500 dark:text-neutral-400
+    hover:bg-(--btn-regular-bg) hover:text-(--btn-content)">
+    {dot && <div class="h-1 w-1 bg-(--btn-content) dark:bg-(--card-bg) transition rounded-md mr-2"></div>}
+    <slot></slot>
+</a>

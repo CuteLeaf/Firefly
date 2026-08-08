@@ -1,0 +1,450 @@
+---
+import MessageBox from "@/components/common/PioMessageBox.astro";
+import { spineModelConfig } from "@/config/pioConfig";
+import { url } from "@/utils/url-utils";
+---
+
+<!-- Spine Web Player CSS 将在 script 中动态加载 -->{
+  spineModelConfig.enable && (
+    <div
+      id="spine-model-container"
+      style={`
+      position: fixed;
+      ${spineModelConfig.position.corner.includes("right") ? "right" : "left"}: ${spineModelConfig.position.offsetX}px;
+      ${spineModelConfig.position.corner.includes("top") ? "top" : "bottom"}: ${spineModelConfig.position.offsetY}px;
+      width: ${spineModelConfig.size.width}px;
+      height: ${spineModelConfig.size.height}px;
+      pointer-events: auto;
+      z-index: 1000;
+    `}
+    >
+      <div id="spine-player-container" style="width: 100%; height: 100%;" />
+      <div id="spine-error" style="display: none;" />
+    </div>
+  )
+}
+
+<!-- 引入消息框组件 -->
+<MessageBox />
+
+<script is:inline define:vars={{ spineModelConfig, modelPath: url(spineModelConfig.model.path), atlasPath: url(spineModelConfig.model.path.replace(".json", ".atlas")), cssPath: url("/pio/static/spine-player.min.css"), jsPath: url("/pio/static/spine-player.min.js") }}>
+  // 动态加载 Spine CSS（带本地备用）
+  function loadSpineCSS() {
+    if (!spineModelConfig.enable) return;
+
+    // 检查是否已经加载
+    const existingLink = document.querySelector('link[href*="spine-player"]');
+    if (existingLink) return;
+
+    // 首先尝试加载 CDN CSS
+    const cdnLink = document.createElement("link");
+    cdnLink.rel = "stylesheet";
+    cdnLink.href =
+      "https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/spine-player.min.css";
+
+    // 监听加载失败事件，自动回退到本地文件
+    cdnLink.onerror = function () {
+      console.warn("⚠️ Spine CSS CDN failed, trying local fallback...");
+
+      // 移除失败的 CDN link
+      if (cdnLink.parentNode) {
+        cdnLink.parentNode.removeChild(cdnLink);
+      }
+
+      // 创建本地备用 CSS link
+      const localLink = document.createElement("link");
+      localLink.rel = "stylesheet";
+      localLink.href = cssPath;
+      localLink.onerror = function () {
+        console.error("❌ Failed to load Spine CSS");
+      };
+
+      document.head.appendChild(localLink);
+    };
+
+    document.head.appendChild(cdnLink);
+  }
+
+  // 消息框功能已移至公共组件 MessageBox.astro
+  let isClickProcessing = false; // 防止重复点击的标志
+  let lastClickTime = 0; // 记录最后一次点击时间
+
+  // 全局变量，防止重复初始化
+  window.spineModelInitialized = window.spineModelInitialized || false;
+  window.spinePlayerInstance = window.spinePlayerInstance || null;
+
+  // 消息显示函数 - 使用公共消息框组件
+  function showMessage(message) {
+    // 使用公共消息框组件
+    if (window.showModelMessage) {
+      window.showModelMessage(message, {
+        containerId: "spine-model-container",
+        displayTime: spineModelConfig.interactive.messageDisplayTime || 3000
+      });
+    }
+  }
+
+  // 更新响应式显示
+  function updateResponsiveDisplay() {
+    if (!spineModelConfig.enable) return;
+
+    const container = document.getElementById("spine-model-container");
+    if (!container) return;
+
+    // 检查移动端显示设置
+    if (
+      spineModelConfig.responsive.hideOnMobile &&
+      window.innerWidth <= spineModelConfig.responsive.mobileBreakpoint
+    ) {
+      container.style.display = "none";
+    } else {
+      container.style.display = "block";
+    }
+  }
+
+  // 清理函数
+  function cleanupSpineModel() {
+    console.log("🧹 Cleaning up existing Spine model...");
+
+    // 清理消息显示（使用公共组件）
+    if (window.clearModelMessage) {
+      window.clearModelMessage();
+    }
+
+    // 清理现有的播放器实例
+    if (window.spinePlayerInstance) {
+      try {
+        if (window.spinePlayerInstance.dispose) {
+          window.spinePlayerInstance.dispose();
+        }
+      } catch (e) {
+        console.warn("Error disposing spine player:", e);
+      }
+      window.spinePlayerInstance = null;
+    }
+
+    // 清理容器内容
+    const playerContainer = document.getElementById("spine-player-container");
+    if (playerContainer) {
+      playerContainer.innerHTML = "";
+    }
+
+    // 重置初始化标志
+    window.spineModelInitialized = false;
+  }
+
+  async function initSpineModel() {
+    if (!spineModelConfig.enable) return;
+
+    // 检查移动端显示设置，如果隐藏则不加载运行时
+    if (
+      spineModelConfig.responsive.hideOnMobile &&
+      window.innerWidth <= spineModelConfig.responsive.mobileBreakpoint
+    ) {
+      console.log("📱 Mobile device detected, skipping Spine model initialization");
+      const container = document.getElementById("spine-model-container");
+      if (container) container.style.display = "none";
+      return;
+    }
+
+    // 检查是否已经初始化
+    if (window.spineModelInitialized) {
+      console.log("⏭️ Spine model already initialized, skipping...");
+      return;
+    }
+
+    console.log("🎯 Initializing Spine Model...");
+
+    // 先清理可能存在的旧实例
+    cleanupSpineModel();
+
+    // 首先加载 CSS
+    loadSpineCSS();
+
+    // 加载 Spine Web Player 运行时
+    const loadSpineRuntime = () => {
+      return new Promise((resolve, reject) => {
+        if (typeof window.spine !== "undefined") {
+          console.log("✅ Spine runtime already loaded");
+          resolve();
+          return;
+        }
+
+        console.log("📦 Loading Spine runtime...");
+        const script = document.createElement("script");
+        script.src =
+          "https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/iife/spine-player.min.js";
+        script.onload = () => {
+          console.log("✅ Spine runtime loaded from CDN");
+          resolve();
+        };
+        script.onerror = (_error) => {
+          console.warn("⚠️ CDN failed, trying local fallback...");
+
+          // 尝试本地回退
+          const fallbackScript = document.createElement("script");
+          fallbackScript.src = jsPath;
+          fallbackScript.onload = () => {
+            console.log("✅ Spine runtime loaded from local fallback");
+            resolve();
+          };
+          fallbackScript.onerror = () => {
+            reject(new Error("Failed to load Spine runtime"));
+          };
+          document.head.appendChild(fallbackScript);
+        };
+        document.head.appendChild(script);
+      });
+    };
+
+    // 等待 Spine 库加载
+    const waitForSpine = () => {
+      return new Promise((resolve, reject) => {
+        let attempts = 0;
+        const maxAttempts = 50;
+
+        const check = () => {
+          attempts++;
+          if (typeof window.spine !== "undefined" && window.spine.SpinePlayer) {
+            console.log("✅ Spine runtime loaded");
+            resolve();
+          } else if (attempts >= maxAttempts) {
+            reject(new Error("Spine runtime loading timeout"));
+          } else {
+            setTimeout(check, 100);
+          }
+        };
+        check();
+      });
+    };
+
+    try {
+      // 首先加载 Spine 运行时
+      await loadSpineRuntime();
+
+      // 然后等待 Spine 对象可用
+      await waitForSpine();
+
+      // 标记为已初始化
+      window.spineModelInitialized = true;
+
+      // 创建 SpinePlayer
+      new window.spine.SpinePlayer("spine-player-container", {
+        skeleton: modelPath,
+        atlas: atlasPath,
+        animation: "idle",
+        backgroundColor: "#00000000", // 透明背景
+        showControls: false, // 隐藏控件
+        alpha: true,
+        premultipliedAlpha: false,
+        success: (player) => {
+          console.log("🎉 Spine model loaded successfully!");
+
+          // 保存播放器实例引用
+          window.spinePlayerInstance = player;
+
+          // 构建可用动画索引，避免播放不存在的动画导致报错
+          const availableAnimations = new Set(
+            (player.skeleton?.data?.animations || [])
+              .map((anim) => anim?.name)
+              .filter(Boolean)
+          );
+
+          const pickRandom = (list) =>
+            list[Math.floor(Math.random() * list.length)];
+
+          const configuredClickAnims =
+            spineModelConfig.interactive.clickAnimations ||
+            (spineModelConfig.interactive.clickAnimation
+              ? [spineModelConfig.interactive.clickAnimation]
+              : []);
+
+          const configuredIdleAnims =
+            spineModelConfig.interactive.idleAnimations || ["idle"];
+
+          const validClickAnims = configuredClickAnims.filter((name) =>
+            availableAnimations.has(name)
+          );
+          const validIdleAnims = configuredIdleAnims.filter((name) =>
+            availableAnimations.has(name)
+          );
+
+          const fallbackIdleAnim =
+            (availableAnimations.has("idle") && "idle") ||
+            validIdleAnims[0] ||
+            configuredIdleAnims[0] ||
+            configuredClickAnims[0] ||
+            Array.from(availableAnimations)[0];
+
+          const safeSetAnimation = (name, loop) => {
+            if (!name || !availableAnimations.has(name)) {
+              return false;
+            }
+            try {
+              player.setAnimation(name, loop);
+              return true;
+            } catch (e) {
+              console.warn(`Failed to play animation: ${name}`, e);
+              return false;
+            }
+          };
+
+          // 初始动画兜底，防止默认 idle 不存在
+          if (!safeSetAnimation("idle", true) && fallbackIdleAnim) {
+            safeSetAnimation(fallbackIdleAnim, true);
+          }
+
+          // 输出一次配置校验信息，便于排查模型与配置不一致
+          const missingClickAnims = configuredClickAnims.filter(
+            (name) => !availableAnimations.has(name)
+          );
+          if (missingClickAnims.length > 0) {
+            console.warn(
+              "Spine click animations not found in model:",
+              missingClickAnims
+            );
+          }
+
+          // 初始化完成后设置默认姿态
+          setTimeout(() => {
+            if (player.skeleton) {
+              try {
+                player.skeleton.setToSetupPose();
+                const physicsMode =
+                  window.spine?.Physics?.update ??
+                  window.spine?.Physics?.pose ??
+                  window.spine?.Physics?.none ??
+                  0;
+                player.skeleton.updateWorldTransform(physicsMode);
+              } catch (e) {
+                console.warn("Error positioning skeleton:", e);
+              }
+            }
+          }, 500);
+
+          // 设置交互功能
+          if (spineModelConfig.interactive.enabled) {
+            const canvas = document.querySelector(
+              "#spine-player-container canvas"
+            );
+            if (canvas) {
+              canvas.addEventListener("click", () => {
+                // 防抖处理：防止重复点击
+                const currentTime = Date.now();
+                if (isClickProcessing || currentTime - lastClickTime < 500) {
+                  return; // 500ms 内重复点击忽略
+                }
+
+                isClickProcessing = true;
+                lastClickTime = currentTime;
+
+                // 随机播放点击动画（仅在动画存在时）
+                if (validClickAnims.length > 0) {
+                  const randomClickAnim = pickRandom(validClickAnims);
+                  safeSetAnimation(randomClickAnim, false);
+
+                  // 动画播放完成后回到待机状态
+                  setTimeout(() => {
+                    const randomIdle =
+                      validIdleAnims.length > 0
+                        ? pickRandom(validIdleAnims)
+                        : fallbackIdleAnim;
+                    safeSetAnimation(randomIdle, true);
+                  }, 2000);
+                } else if (fallbackIdleAnim) {
+                  safeSetAnimation(fallbackIdleAnim, true);
+                }
+
+                // 显示随机消息
+                const messages = spineModelConfig.interactive.clickMessages;
+                if (messages && messages.length > 0) {
+                  const randomMessage =
+                    messages[Math.floor(Math.random() * messages.length)];
+                  showMessage(randomMessage);
+                }
+
+                // 500ms 后重置防抖标志
+                setTimeout(() => {
+                  isClickProcessing = false;
+                }, 500);
+              });
+
+              // 设置待机动画循环（仅在至少两个有效待机动画时启用）
+              if (validIdleAnims.length > 1) {
+                setInterval(() => {
+                  const randomIdle = pickRandom(validIdleAnims);
+                  safeSetAnimation(randomIdle, true);
+                }, spineModelConfig.interactive.idleInterval);
+              }
+            }
+          }
+
+          console.log("✅ Spine model setup complete!");
+        },
+        error: (_player, reason) => {
+          console.error("❌ Spine model loading error:", reason);
+
+          const errorDiv = document.getElementById("spine-error");
+          if (errorDiv) {
+            errorDiv.style.display = "block";
+            errorDiv.innerHTML = `
+              <div style="color: #ff4444; padding: 20px; text-align: center; font-size: 14px;">
+                <div>⚠️ Spine 模型加载失败</div>
+                <div style="font-size: 12px; margin-top: 8px; color: #888;">${reason}</div>
+              </div>
+            `;
+          }
+
+          const canvas = document.getElementById("spine-canvas");
+          if (canvas) canvas.style.display = "none";
+        },
+      });
+    } catch (error) {
+      console.error("Spine model initialization error:", error);
+
+      // 重置初始化标志，允许重试
+      window.spineModelInitialized = false;
+
+      const errorDiv = document.getElementById("spine-error");
+      if (errorDiv) {
+        errorDiv.style.display = "block";
+        errorDiv.innerHTML = `
+          <div style="color: #ff4444; padding: 20px; text-align: center; font-size: 14px;">
+            <div>⚠️ Spine 运行时加载失败</div>
+            <div style="font-size: 12px; margin-top: 8px; color: #888;">${error instanceof Error ? error.message : "未知错误"}</div>
+          </div>
+        `;
+      }
+    }
+  }
+
+  // 监听页面卸载事件，清理资源
+  window.addEventListener("beforeunload", cleanupSpineModel);
+
+  // 监听 Swup 页面切换事件（如果使用了 Swup）
+  if (typeof window.swup !== "undefined" && window.swup.hooks) {
+    window.swup.hooks.on("content:replace", () => {
+      // 只更新响应式显示，不重新创建模型
+      setTimeout(() => {
+        updateResponsiveDisplay();
+      }, 100);
+    });
+  }
+
+  // 监听 popstate 事件（浏览器前进后退）
+  window.addEventListener("popstate", () => {
+    setTimeout(() => {
+      updateResponsiveDisplay();
+    }, 100);
+  });
+
+  // 监听窗口大小变化
+  window.addEventListener("resize", updateResponsiveDisplay);
+
+  // 页面加载完成后初始化（只初始化一次）
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initSpineModel);
+  } else {
+    initSpineModel();
+  }
+</script>

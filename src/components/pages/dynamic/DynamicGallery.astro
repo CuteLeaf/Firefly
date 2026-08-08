@@ -1,0 +1,64 @@
+---
+import { Icon } from "astro-icon/components";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+
+interface Props {
+	sourceId: string;
+}
+
+const { sourceId } = Astro.props;
+---
+
+<dynamic-gallery
+	class="dynamic-gallery"
+	data-source-id={sourceId}
+	data-view-image={i18n(I18nKey.dynamicViewImage)}
+	data-select-image={i18n(I18nKey.dynamicSelectImage)}
+	hidden
+>
+	<div class="dynamic-gallery-grid" data-gallery-grid></div>
+
+	<div class="dynamic-gallery-viewer" data-gallery-viewer hidden>
+		<div class="dynamic-gallery-toolbar">
+			<button type="button" class="btn-plain dynamic-gallery-action" data-gallery-collapse>
+				<Icon is:inline name="material-symbols:close-fullscreen-rounded" />
+				<span>{i18n(I18nKey.dynamicCollapseGallery)}</span>
+			</button>
+			<button
+				type="button"
+				class="btn-plain dynamic-gallery-action"
+				data-fancybox={`dynamic-${sourceId}`}
+				data-gallery-lightbox
+				data-type="image"
+			>
+				<Icon is:inline name="material-symbols:zoom-in-rounded" />
+				<span>{i18n(I18nKey.dynamicViewOriginal)}</span>
+			</button>
+		</div>
+
+		<div class="dynamic-gallery-stage">
+			<button
+				type="button"
+				class="btn-plain dynamic-gallery-nav dynamic-gallery-prev"
+				data-gallery-prev
+				aria-label={i18n(I18nKey.dynamicPreviousImage)}
+				title={i18n(I18nKey.dynamicPreviousImage)}
+			>
+				<Icon is:inline name="material-symbols:chevron-left-rounded" />
+			</button>
+			<img class="dynamic-gallery-main-image" data-gallery-main alt="" />
+			<button
+				type="button"
+				class="btn-plain dynamic-gallery-nav dynamic-gallery-next"
+				data-gallery-next
+				aria-label={i18n(I18nKey.dynamicNextImage)}
+				title={i18n(I18nKey.dynamicNextImage)}
+			>
+				<Icon is:inline name="material-symbols:chevron-right-rounded" />
+			</button>
+		</div>
+
+		<div class="dynamic-gallery-thumbnails" data-gallery-thumbnails></div>
+	</div>
+</dynamic-gallery>

@@ -1,0 +1,25 @@
+/* 标签按钮基础样式 - MD3 Filter Chip 风格（中性灰底描边） */
+.tag-item {
+    background: rgba(0, 0, 0, 0.05);
+    color: rgb(115, 115, 115);
+}
+.tag-item:hover {
+    background: var(--btn-regular-bg);
+    color: var(--btn-content);
+}
+:global(.dark) .tag-item {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgb(163, 163, 163);
+}
+:global(.dark) .tag-item:hover {
+    background: var(--btn-regular-bg);
+    color: var(--btn-content);
+}
+.tag-item .tag-count-badge {
+    background: rgba(0, 0, 0, 0.08);
+    color: rgb(115, 115, 115);
+}
+:global(.dark) .tag-item .tag-count-badge {
+    background: rgba(255, 255, 255, 0.15);
+    color: rgb(163, 163, 163);
+}

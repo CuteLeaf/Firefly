@@ -1,0 +1,47 @@
+---
+import FloatingButton from "@/components/common/FloatingButton.astro";
+---
+
+<FloatingButton
+  id="back-to-comment-btn"
+  icon="mingcute:comment-line"
+  ariaLabel="Scroll to comments"
+  onclick="scrollToCommentSection()"
+  class="hide"
+/>
+
+<script is:inline>
+  window.scrollToCommentSection = function () {
+    const commentSection = document.getElementById("post-comments");
+    if (!commentSection) return;
+
+    commentSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
+  function updateCommentButtonVisibility() {
+    const btn = document.getElementById("back-to-comment-btn");
+    const commentSection = document.getElementById("post-comments");
+    if (!btn) return;
+
+    // No comment section on current page: keep hidden.
+    if (!commentSection) {
+      btn.style.display = "none";
+      btn.classList.add("hide");
+      return;
+    }
+
+    btn.style.display = "";
+    btn.classList.remove("hide");
+  }
+
+  updateCommentButtonVisibility();
+  setTimeout(updateCommentButtonVisibility, 0);
+  requestAnimationFrame(updateCommentButtonVisibility);
+
+  document.addEventListener("astro:page-load", updateCommentButtonVisibility);
+  document.addEventListener("swup:contentReplaced", updateCommentButtonVisibility);
+  document.addEventListener("swup:enable", updateCommentButtonVisibility);
+</script>
