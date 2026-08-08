@@ -177,6 +177,38 @@ export const en: Translation = {
 	[Key.bangumiUpdatedAt]: "Build time",
 	[Key.bangumiDataStatic]: "Static data",
 
+	// VNDB
+	[Key.vndb]: "VNDB",
+	[Key.vndbSubtitle]: "My visual novel list from VNDB",
+	[Key.vndbFilterAll]: "All",
+	[Key.vndbFilterVoted]: "Voted",
+	[Key.vndbFilterUnvoted]: "Unvoted",
+	[Key.vndbFilterNotes]: "With notes",
+	[Key.vndbStatusWishlist]: "Wishlist",
+	[Key.vndbStatusPlaying]: "Playing",
+	[Key.vndbStatusFinished]: "Finished",
+	[Key.vndbStatusStalled]: "Stalled",
+	[Key.vndbStatusDropped]: "Dropped",
+	[Key.vndbStatusUnknown]: "Unknown",
+	[Key.vndbNoData]: "No Data",
+	[Key.vndbNoDataDescription]: "No items in this category",
+	[Key.vndbEmpty]: "No Data",
+	[Key.vndbEmptyReason]:
+		"Possible reasons: user ID does not exist, list is private, network issue, or API limit",
+	[Key.vndbFetchError]: "VNDB Data Fetch Failed",
+	[Key.vndbFetchErrorDesc]:
+		"Failed to fetch data from VNDB API during build. This page is temporarily unavailable.",
+	[Key.vndbNotConfigured]: "VNDB User ID Not Configured",
+	[Key.vndbNotConfiguredDesc]:
+		"Please configure your VNDB user ID in src/config/siteConfig.ts",
+	[Key.vndbLastUpdated]: "Data updated at",
+	[Key.vndbVotes]: "votes",
+	[Key.vndbLengthVeryShort]: "Very short",
+	[Key.vndbLengthShort]: "Short",
+	[Key.vndbLengthMedium]: "Medium",
+	[Key.vndbLengthLong]: "Long",
+	[Key.vndbLengthVeryLong]: "Very long",
+
 	// Anime Tracking
 	[Key.anime]: "Anime",
 	[Key.animeSubtitle]: "My anime tracking list, data from Bilibili and TMDB",

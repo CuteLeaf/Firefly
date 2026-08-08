@@ -84,6 +84,7 @@ export type SiteConfig = {
 		sponsor: boolean; // 打赏页面开关
 		guestbook: boolean; // 留言板页面开关
 		bangumi: boolean;
+		vndb: boolean;
 		gallery: boolean; // 相册页面开关
 		anime: boolean; // 追番页面开关
 		dynamic: boolean; // 动态页面开关
@@ -161,6 +162,17 @@ export type SiteConfig = {
 			game?: boolean;
 			real?: boolean;
 		};
+	};
+
+	// VNDB 配置
+	vndb?: {
+		userId?: string; // VNDB 用户 ID，例如 "u2"
+		mode?: "static" | "dynamic"; // 数据模式：static=构建时获取，dynamic=客户端实时获取
+		downloadCovers?: boolean; // 构建时下载并压缩 VNDB 封面到本地
+		apiUrl?: string; // VNDB API 地址
+		vnBaseUrl?: string; // VNDB 条目详情页地址，末尾需要带 /
+		apiToken?: string; // 私密列表访问令牌，仅 static 模式下使用
+		blurNsfw?: boolean; // 对Nsfw的游戏封面模糊化，默认为true
 	};
 
 	// 追番配置（Bilibili + TMDB）

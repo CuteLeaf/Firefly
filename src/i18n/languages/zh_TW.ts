@@ -174,6 +174,38 @@ export const zh_TW: Translation = {
 	[Key.bangumiUpdatedAt]: "構建時間",
 	[Key.bangumiDataStatic]: "靜態數據",
 
+	// VNDB
+	[Key.vndb]: "VNDB",
+	[Key.vndbSubtitle]: "我的 VNDB 視覺小說列表",
+	[Key.vndbFilterAll]: "全部",
+	[Key.vndbFilterVoted]: "已評分",
+	[Key.vndbFilterUnvoted]: "未評分",
+	[Key.vndbFilterNotes]: "有筆記",
+	[Key.vndbStatusWishlist]: "想玩",
+	[Key.vndbStatusPlaying]: "在玩",
+	[Key.vndbStatusFinished]: "已玩",
+	[Key.vndbStatusStalled]: "擱置",
+	[Key.vndbStatusDropped]: "拋棄",
+	[Key.vndbStatusUnknown]: "未知",
+	[Key.vndbNoData]: "暫無數據",
+	[Key.vndbNoDataDescription]: "該分類下還沒有任何條目",
+	[Key.vndbEmpty]: "暫無數據",
+	[Key.vndbEmptyReason]:
+		"可能的原因：用戶 ID 不存在、列表為私密、網絡連接問題或 API 限制",
+	[Key.vndbFetchError]: "VNDB 資料拉取失敗",
+	[Key.vndbFetchErrorDesc]:
+		"構建時從 VNDB API 獲取資料失敗，該頁面內容暫不可用。",
+	[Key.vndbNotConfigured]: "未配置 VNDB 用戶ID",
+	[Key.vndbNotConfiguredDesc]:
+		"請在 src/config/siteConfig.ts 中配置你的 VNDB 用戶ID",
+	[Key.vndbLastUpdated]: "數據更新於",
+	[Key.vndbVotes]: "票",
+	[Key.vndbLengthVeryShort]: "極短",
+	[Key.vndbLengthShort]: "短",
+	[Key.vndbLengthMedium]: "中等",
+	[Key.vndbLengthLong]: "長",
+	[Key.vndbLengthVeryLong]: "極長",
+
 	// 追番
 	[Key.anime]: "追番",
 	[Key.animeSubtitle]: "我的追番列表，數據來自 Bilibili 和 TMDB",

@@ -176,6 +176,38 @@ export const ko: Translation = {
 	[Key.bangumiUpdatedAt]: "빌드 시각",
 	[Key.bangumiDataStatic]: "정적 데이터",
 
+	// VNDB
+	[Key.vndb]: "VNDB",
+	[Key.vndbSubtitle]: "내 VNDB 비주얼 노벨 목록",
+	[Key.vndbFilterAll]: "전체",
+	[Key.vndbFilterVoted]: "평가함",
+	[Key.vndbFilterUnvoted]: "미평가",
+	[Key.vndbFilterNotes]: "메모 있음",
+	[Key.vndbStatusWishlist]: "플레이하고 싶음",
+	[Key.vndbStatusPlaying]: "플레이 중",
+	[Key.vndbStatusFinished]: "플레이 완료",
+	[Key.vndbStatusStalled]: "보류",
+	[Key.vndbStatusDropped]: "중단",
+	[Key.vndbStatusUnknown]: "알 수 없음",
+	[Key.vndbNoData]: "데이터 없음",
+	[Key.vndbNoDataDescription]: "이 카테고리에는 항목이 없습니다",
+	[Key.vndbEmpty]: "데이터 없음",
+	[Key.vndbEmptyReason]:
+		"가능한 원인: 사용자 ID가 존재하지 않음, 목록이 비공개, 네트워크 연결 문제, 또는 API 호출 제한",
+	[Key.vndbFetchError]: "VNDB 데이터 가져오기 실패",
+	[Key.vndbFetchErrorDesc]:
+		"빌드 중 VNDB API에서 데이터를 가져오지 못했습니다. 이 페이지는 일시적으로 사용할 수 없습니다.",
+	[Key.vndbNotConfigured]: "VNDB 사용자 ID가 설정되지 않았습니다",
+	[Key.vndbNotConfiguredDesc]:
+		"src/config/siteConfig.ts에서 VNDB 사용자 ID를 설정하세요",
+	[Key.vndbLastUpdated]: "데이터 업데이트 시각",
+	[Key.vndbVotes]: "표",
+	[Key.vndbLengthVeryShort]: "매우 짧음",
+	[Key.vndbLengthShort]: "짧음",
+	[Key.vndbLengthMedium]: "중간",
+	[Key.vndbLengthLong]: "김",
+	[Key.vndbLengthVeryLong]: "매우 김",
+
 	// Anime Tracking
 	[Key.anime]: "애니메이션",
 	[Key.animeSubtitle]: "저의 애니메이션 시청 기록, Bilibili와 TMDB 데이터 기반",
