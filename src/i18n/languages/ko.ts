@@ -412,6 +412,17 @@ export const ko: Translation = {
 	[Key.galleryBackToAlbums]: "앨범으로 돌아가기",
 	[Key.searchAlbums]: "앨범 검색...",
 
+	// Projects Page
+	[Key.projects]: "프로젝트",
+	[Key.projectsSubtitle]: "내가 참여하거나 독립적으로 개발한 프로젝트들입니다",
+	[Key.projectsEmpty]: "프로젝트 없음",
+	[Key.projectsEmptyDescription]: "아직 추가된 프로젝트가 없습니다. 기대해 주세요~",
+	[Key.projectsVisit]: "프로젝트 방문",
+	[Key.projectsTechStack]: "기술 스택",
+	[Key.projectsFeatures]: "기능",
+	[Key.projectsIntroduction]: "프로젝트 소개",
+	[Key.projectsScreenshots]: "스크린샷",
+
 	// Password Protection
 	[Key.passwordProtected]: "비밀번호로 보호됨",
 	[Key.passwordProtectedDesc]:

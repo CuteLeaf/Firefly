@@ -417,6 +417,17 @@ export const ru: Translation = {
 	[Key.galleryBackToAlbums]: "Вернуться к альбомам",
 	[Key.searchAlbums]: "Поиск альбомов...",
 
+	// Страница проектов
+	[Key.projects]: "Проекты",
+	[Key.projectsSubtitle]: "Здесь представлены проекты, в которых я участвовал или разработал самостоятельно",
+	[Key.projectsEmpty]: "Пока нет проектов",
+	[Key.projectsEmptyDescription]: "Проекты ещё не добавлены. Оставайтесь с нами~",
+	[Key.projectsVisit]: "Перейти к проекту",
+	[Key.projectsTechStack]: "Технологии",
+	[Key.projectsFeatures]: "Возможности",
+	[Key.projectsIntroduction]: "О проекте",
+	[Key.projectsScreenshots]: "Скриншоты",
+
 	// Защита паролем
 	[Key.passwordProtected]: "Защищено паролем",
 	[Key.passwordProtectedDesc]:

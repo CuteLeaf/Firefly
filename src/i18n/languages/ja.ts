@@ -413,6 +413,17 @@ export const ja: Translation = {
 	[Key.galleryBackToAlbums]: "アルバム一覧に戻る",
 	[Key.searchAlbums]: "アルバムを検索...",
 
+	// プロジェクトページ
+	[Key.projects]: "プロジェクト",
+	[Key.projectsSubtitle]: "私が参加または独自に開発したプロジェクトを紹介します",
+	[Key.projectsEmpty]: "プロジェクトがありません",
+	[Key.projectsEmptyDescription]: "まだプロジェクトが追加されていません。お楽しみに~",
+	[Key.projectsVisit]: "プロジェクトを見る",
+	[Key.projectsTechStack]: "技術スタック",
+	[Key.projectsFeatures]: "機能",
+	[Key.projectsIntroduction]: "プロジェクト紹介",
+	[Key.projectsScreenshots]: "スクリーンショット",
+
 	// パスワード保護
 	[Key.passwordProtected]: "パスワード保護",
 	[Key.passwordProtectedDesc]:

@@ -33,6 +33,11 @@ export type {
 } from "./navBarConfig";
 export type { Live2DWidgetConfig, SpineModelConfig } from "./pioConfig";
 export type { PlantUMLConfig } from "./plantumlConfig";
+export type {
+	ProjectCategory,
+	ProjectItem,
+	ProjectsConfig,
+} from "./projectsConfig";
 export type { ProfileConfig } from "./profileConfig";
 export type {
 	AdConfig,

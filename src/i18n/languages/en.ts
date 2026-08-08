@@ -415,6 +415,17 @@ export const en: Translation = {
 	[Key.galleryBackToAlbums]: "Back to albums",
 	[Key.searchAlbums]: "Search albums...",
 
+	// Projects Page
+	[Key.projects]: "Projects",
+	[Key.projectsSubtitle]: "Some projects I have participated in or developed independently",
+	[Key.projectsEmpty]: "No projects yet",
+	[Key.projectsEmptyDescription]: "No projects have been added yet, stay tuned~",
+	[Key.projectsVisit]: "Visit Project",
+	[Key.projectsTechStack]: "Tech Stack",
+	[Key.projectsFeatures]: "Features",
+	[Key.projectsIntroduction]: "Introduction",
+	[Key.projectsScreenshots]: "Screenshots",
+
 	// Password Protection
 	[Key.passwordProtected]: "Password Protected",
 	[Key.passwordProtectedDesc]:
