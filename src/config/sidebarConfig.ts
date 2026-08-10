@@ -237,7 +237,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			// 组件类型：Google AdSense 广告栏
 			type: "advertisement",
 			// 如需启用，将 enable 改为 true
-			enable: true,
+			enable: false,
 			// 是否显示组件标题
 			showTitle: true,
 			// 组件位置
@@ -348,7 +348,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			// 组件类型：Google AdSense 广告栏（移动端）
 			type: "advertisement",
 			// 如需启用，将 enable 改为 true
-			enable: true,
+			enable: false,
 			// 是否显示组件标题
 			showTitle: true,
 			// 是否在文章详情页显示
