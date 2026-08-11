@@ -132,7 +132,7 @@ flowchart TD
 
 你所需要关心的，就是这三个包。第一个包是 Client Hello，我这里使用我的个人博客作为测试，第三个包是 RST ACK，是攻击程序发给受害者的，我们先来看比较好解释的第三个包：
 
-```golang
+```go
 func (s *InterferenceStrategy) sendFakeRSTACK(conn *TCPConnection, fromServer bool) {
 	var srcIP, dstIP net.IP
 	var srcPort, dstPort uint16
@@ -153,7 +153,7 @@ func (s *InterferenceStrategy) sendFakeRSTACK(conn *TCPConnection, fromServer bo
 它只是做了一个简单的修改，将源 IP 修改为目标服务器 IP，将目的 IP 修改为受害者 IP，然后发送一个 RST ACK 包给受害者，这样受害者就无法继续接收数据了。而且在受害者视角，这个包是由目标服务器主动发送的。
 
 最后讲第二个包，它是 RST 包，但是是发给目标服务器的，先看看模拟攻击中是如何实现的：
-```golang
+```go
 func (s *InterferenceStrategy) sendFakeRST(conn *TCPConnection, fromClient bool) {
 	var srcIP, dstIP net.IP
 	var srcPort, dstPort uint16
