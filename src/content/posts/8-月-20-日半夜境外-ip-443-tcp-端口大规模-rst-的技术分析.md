@@ -5,6 +5,8 @@ published: 2025-08-20
 category: 技术
 tags:
   - 计算机
+  - 折腾
+  - 时事
 slug: gfw-820
 ---
 > [!WARNING]
