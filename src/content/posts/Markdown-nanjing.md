@@ -14,6 +14,6 @@ draft: false
     <img src="/images/heping.jpg" style="width: 100%; height: auto; display: block;">
   </div>
   <div style="flex: 1; box-sizing: border-box;">
-    <img src="/images/hanbao.jpg" style="width: 100%; height: auto; display: block;">
+    <img src="" style="width: 100%; height: auto; display: block;">
   </div>
 </div>
