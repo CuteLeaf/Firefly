@@ -5,5 +5,5 @@ pinned: true
 description: 愿世界和平！
 tags: [Markdown, 博客, 主题, 模板]
 category: 文章示例
-image: ./images/heping.jpg
+image: /images/heping.jpg
 ---
