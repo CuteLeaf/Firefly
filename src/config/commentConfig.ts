@@ -2,7 +2,7 @@ import type { CommentConfig } from "../types/commentConfig";
 
 export const commentConfig: CommentConfig = {
 	// 评论系统类型: none, twikoo, waline, giscus, disqus, artalk，默认为none，即不启用评论系统
-	type: "giscus",
+	type: "artalk",
 
 	//twikoo评论系统配置
 	twikoo: {
@@ -44,8 +44,8 @@ export const commentConfig: CommentConfig = {
 	// artalk评论系统配置
 	artalk: {
 		// artalk后端程序 API 地址
-		server: "https://artalk.example.com/",
-		// 设置 Artalk 语言
+		server: "https://comments.ymbit.cn/",
+		// 设置 Artalk 语言s
 		locale: "zh-CN",
 		// 是否启用文章访问量统计功能
 		visitorCount: true,
