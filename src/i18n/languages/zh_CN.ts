@@ -438,6 +438,17 @@ export const zh_CN: Translation = {
 	[Key.galleryBackToAlbums]: "返回相册列表",
 	[Key.searchAlbums]: "搜索相簿...",
 
+	// 项目页面
+	[Key.projects]: "项目",
+	[Key.projectsSubtitle]: "这里展示了我参与或独立开发的一些项目",
+	[Key.projectsEmpty]: "暂无项目",
+	[Key.projectsEmptyDescription]: "目前还没有添加任何项目，敬请期待~",
+	[Key.projectsVisit]: "访问项目",
+	[Key.projectsTechStack]: "技术栈",
+	[Key.projectsFeatures]: "功能特性",
+	[Key.projectsIntroduction]: "项目介绍",
+	[Key.projectsScreenshots]: "项目截图",
+
 	// 密码保护
 	[Key.passwordProtected]: "密码保护",
 	[Key.passwordProtectedDesc]: "此内容已被密码保护，请输入密码查看。",

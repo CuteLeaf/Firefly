@@ -59,6 +59,9 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 			// 相册
 			LinkPresets.Gallery,
 
+			// 项目
+			LinkPresets.Projects,
+
 			// 追番
 			LinkPresets.Anime,
 
@@ -220,6 +223,12 @@ export const LinkPresets: Record<string, NavBarLink> = {
 		url: "/booknav/",
 		icon: "material-symbols:bookmarks",
 		pageKey: "booknav",
+	},
+	Projects: {
+		name: "项目",
+		url: "/projects/",
+		icon: "material-symbols:folder-copy",
+		pageKey: "projects",
 	},
 };
 

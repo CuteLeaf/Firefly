@@ -440,6 +440,17 @@ export const zh_TW: Translation = {
 	[Key.galleryBackToAlbums]: "返回相簿列表",
 	[Key.searchAlbums]: "搜尋相簿...",
 
+	// 項目頁面
+	[Key.projects]: "專案",
+	[Key.projectsSubtitle]: "這裡展示了我參與或獨立開發的一些專案",
+	[Key.projectsEmpty]: "暫無專案",
+	[Key.projectsEmptyDescription]: "目前還沒有添加任何專案，敬請期待~",
+	[Key.projectsVisit]: "訪問專案",
+	[Key.projectsTechStack]: "技術棧",
+	[Key.projectsFeatures]: "功能特性",
+	[Key.projectsIntroduction]: "專案介紹",
+	[Key.projectsScreenshots]: "專案截圖",
+
 	// 密碼保護
 	[Key.passwordProtected]: "密碼保護",
 	[Key.passwordProtectedDesc]: "此內容已被密碼保護，請輸入密碼查看。",

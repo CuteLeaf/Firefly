@@ -435,6 +435,17 @@ enum I18nKey {
 	galleryBackToAlbums = "galleryBackToAlbums",
 	searchAlbums = "searchAlbums",
 
+	// 项目页面
+	projects = "projects",
+	projectsSubtitle = "projectsSubtitle",
+	projectsEmpty = "projectsEmpty",
+	projectsEmptyDescription = "projectsEmptyDescription",
+	projectsVisit = "projectsVisit",
+	projectsTechStack = "projectsTechStack",
+	projectsFeatures = "projectsFeatures",
+	projectsIntroduction = "projectsIntroduction",
+	projectsScreenshots = "projectsScreenshots",
+
 	// 密码保护
 	passwordProtected = "passwordProtected",
 	passwordProtectedDesc = "passwordProtectedDesc",
