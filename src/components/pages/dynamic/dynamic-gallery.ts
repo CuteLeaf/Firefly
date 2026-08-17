@@ -38,12 +38,7 @@ export function registerDynamicGallery(): void {
 			const grid = this.querySelector<HTMLElement>("[data-gallery-grid]");
 			if (!grid) return;
 			grid.dataset.count = String(Math.min(this.images.length, 6));
-			grid.dataset.layout =
-				this.images.length === 1
-					? "single"
-					: this.images.length <= 4
-						? "two"
-						: "three";
+			grid.dataset.layout = this.images.length === 1 ? "single" : "grid";
 			this.images.slice(0, 6).forEach(({ element, alt }, index) => {
 				const button = document.createElement("button");
 				button.type = "button";
@@ -131,7 +126,6 @@ export function registerDynamicGallery(): void {
 						this.images.map((image) => ({
 							src: image.src,
 							type: "image",
-							caption: image.alt,
 						})),
 						{
 							startIndex: this.activeIndex,
@@ -164,7 +158,6 @@ export function registerDynamicGallery(): void {
 				this.images.map((image) => ({
 					src: image.src,
 					type: "image",
-					caption: image.alt,
 				})),
 				{ startIndex: index },
 			);
@@ -172,20 +165,15 @@ export function registerDynamicGallery(): void {
 
 		private select(index: number) {
 			this.activeIndex = (index + this.images.length) % this.images.length;
+			const counter = this.querySelector<HTMLElement>("[data-gallery-counter]");
+			if (counter)
+				counter.textContent = `${this.activeIndex + 1} / ${this.images.length}`;
 			const image = this.images[this.activeIndex];
 			const main = this.querySelector<HTMLImageElement>("[data-gallery-main]");
 			if (!main) return;
 			main.src = image.src;
 			main.alt = image.alt;
 			main.dataset.galleryIndex = String(this.activeIndex);
-			const updateAspect = () => {
-				if (main.naturalWidth === 0 || main.naturalHeight === 0) return;
-				const stage = this.querySelector<HTMLElement>(".dynamic-gallery-stage");
-				if (stage)
-					stage.style.aspectRatio = `${main.naturalWidth} / ${main.naturalHeight}`;
-			};
-			if (main.complete && main.naturalWidth > 0) updateAspect();
-			else main.addEventListener("load", updateAspect, { once: true });
 			this.querySelector<HTMLElement>("[data-gallery-lightbox]")?.setAttribute(
 				"data-src",
 				image.src,
