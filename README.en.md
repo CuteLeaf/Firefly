@@ -317,7 +317,7 @@ Thanks to the following contributors for their contributions to the original pro
 
 ## ⭐ Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=CuteLeaf/Firefly&type=Date)](https://star-history.com/#CuteLeaf/Firefly&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=CuteLeaf/Firefly&type=Date)](https://star-history.dera.page/#CuteLeaf/Firefly&Date)
 
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
