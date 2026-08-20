@@ -1,0 +1,317 @@
+---
+import { getImage } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import { backgroundWallpaper } from "@/config";
+
+const config = backgroundWallpaper.content;
+const enabled = config?.enable === true;
+
+const imageFiles = import.meta.glob<ImageMetadata>(
+	"../../assets/**/*.{png,jpg,jpeg,webp,avif}",
+	{ import: "default" },
+);
+
+const loadImage = async (src?: string) => {
+	if (!src) return null;
+	const loader = imageFiles[`../../${src}`];
+	if (!loader) {
+		console.warn(`[AmbientBackground] 找不到正文背景图片：${src}`);
+		return null;
+	}
+	return loader();
+};
+
+const desktopImage = enabled ? await loadImage(config?.desktop) : null;
+const mobileImage = enabled
+	? await loadImage(config?.mobile ?? config?.desktop)
+	: null;
+
+const desktopOptimized = desktopImage
+	? await getImage({ src: desktopImage, format: "webp", quality: 84 })
+	: null;
+const mobileOptimized = mobileImage
+	? await getImage({ src: mobileImage, format: "webp", quality: 82 })
+	: null;
+
+const opacity = config?.opacity ?? 0.84;
+const dimOpacity = config?.dimOpacity ?? 0.48;
+const desktopPosition = config?.desktopPosition ?? "center center";
+const mobilePosition = config?.mobilePosition ?? "center top";
+---
+
+{enabled && desktopOptimized && (
+	<div
+		id="ambient-background"
+		aria-hidden="true"
+		style={`--ambient-image-opacity: ${opacity}; --ambient-dim-opacity: ${dimOpacity}; --ambient-desktop-position: ${desktopPosition}; --ambient-mobile-position: ${mobilePosition};`}
+	>
+		<picture class="ambient-picture">
+			{mobileOptimized && (
+				<source media="(max-width: 767px)" srcset={mobileOptimized.src} />
+			)}
+			<img
+				class="ambient-image"
+				src={desktopOptimized.src}
+				alt=""
+				loading="eager"
+				decoding="async"
+				fetchpriority="low"
+			/>
+		</picture>
+		<div class="ambient-shade"></div>
+		<canvas id="ambient-particles"></canvas>
+	</div>
+)}
+
+<style>
+	#ambient-background {
+		position: fixed;
+		inset: 0;
+		z-index: 0;
+		pointer-events: none;
+		overflow: hidden;
+		isolation: isolate;
+		background: #0b1220;
+	}
+
+	.ambient-picture,
+	.ambient-image,
+	.ambient-shade,
+	#ambient-particles {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+	.ambient-picture {
+		z-index: 0;
+	}
+
+	.ambient-image {
+		object-fit: cover;
+		object-position: var(--ambient-desktop-position);
+		opacity: var(--ambient-image-opacity);
+		filter: saturate(0.88) brightness(0.9);
+	}
+
+	.ambient-shade {
+		z-index: 1;
+		background:
+			linear-gradient(
+				180deg,
+				rgb(7 12 24 / calc(var(--ambient-dim-opacity) + 0.08)) 0%,
+				rgb(8 14 27 / var(--ambient-dim-opacity)) 38%,
+				rgb(6 11 22 / calc(var(--ambient-dim-opacity) + 0.16)) 100%
+			),
+			radial-gradient(circle at 50% 42%, rgb(116 151 181 / 0.08), transparent 58%);
+	}
+
+	#ambient-particles {
+		z-index: 2;
+	}
+
+	:global(html:not(.dark)) #ambient-background {
+		background: #e8edf2;
+	}
+
+	:global(html:not(.dark)) .ambient-image {
+		opacity: 0.18;
+		filter: saturate(0.55) brightness(1.15);
+	}
+
+	:global(html:not(.dark)) .ambient-shade {
+		background: rgb(242 245 248 / 0.78);
+	}
+
+	@media (max-width: 767px) {
+		.ambient-image {
+			object-position: var(--ambient-mobile-position);
+		}
+	}
+</style>
+
+<script>
+	import { ambientParticleConfig } from "@/config/effectsConfig";
+
+	type Particle = {
+		x: number;
+		y: number;
+		radius: number;
+		baseAlpha: number;
+		phase: number;
+		twinkleSpeed: number;
+		vx: number;
+		vy: number;
+		rgb: [number, number, number];
+	};
+
+	const root = document.getElementById("ambient-background");
+	const canvas = document.getElementById(
+		"ambient-particles",
+	) as HTMLCanvasElement | null;
+
+	if (
+		ambientParticleConfig.enable &&
+		root &&
+		canvas &&
+		root.dataset.particlesInitialized !== "true"
+	) {
+		root.dataset.particlesInitialized = "true";
+		const context = canvas.getContext("2d", { alpha: true });
+
+		if (context) {
+			const reducedMotion = window.matchMedia(
+				"(prefers-reduced-motion: reduce)",
+			);
+			let particles: Particle[] = [];
+			let animationId = 0;
+			let resizeId = 0;
+			let previousTime = 0;
+			let width = window.innerWidth;
+			let height = window.innerHeight;
+
+			const randomBetween = (min: number, max: number) =>
+				min + Math.random() * (max - min);
+
+			const hexToRgb = (hex: string): [number, number, number] => {
+				const normalized = hex.replace("#", "");
+				const value = Number.parseInt(normalized, 16);
+				return [(value >> 16) & 255, (value >> 8) & 255, value & 255];
+			};
+
+			const moonlightRgb = hexToRgb(
+				ambientParticleConfig.colors.moonlight,
+			);
+			const goldRgb = hexToRgb(ambientParticleConfig.colors.gold);
+
+			const createParticle = (): Particle => {
+				const speed = randomBetween(
+					ambientParticleConfig.speed.min,
+					ambientParticleConfig.speed.max,
+				);
+				const angle = randomBetween(-Math.PI * 0.9, -Math.PI * 0.1);
+				return {
+					x: Math.random() * width,
+					y: Math.random() * height,
+					radius: randomBetween(
+						ambientParticleConfig.size.min,
+						ambientParticleConfig.size.max,
+					),
+					baseAlpha: randomBetween(
+						ambientParticleConfig.opacity.min,
+						ambientParticleConfig.opacity.max,
+					),
+					phase: Math.random() * Math.PI * 2,
+					twinkleSpeed: randomBetween(0.00035, 0.0011),
+					vx: Math.cos(angle) * speed,
+					vy: Math.sin(angle) * speed,
+					rgb:
+						Math.random() < ambientParticleConfig.colors.goldRatio
+							? goldRgb
+							: moonlightRgb,
+				};
+			};
+
+			const syncParticleCount = () => {
+				const desired =
+					width < 768
+						? ambientParticleConfig.count.mobile
+						: ambientParticleConfig.count.desktop;
+				while (particles.length < desired) particles.push(createParticle());
+				if (particles.length > desired) particles.length = desired;
+			};
+
+			const resizeCanvas = () => {
+				width = window.innerWidth;
+				height = window.innerHeight;
+				const dpr = Math.min(
+					window.devicePixelRatio || 1,
+					ambientParticleConfig.dprLimit,
+				);
+				canvas.width = Math.round(width * dpr);
+				canvas.height = Math.round(height * dpr);
+				canvas.style.width = `${width}px`;
+				canvas.style.height = `${height}px`;
+				context.setTransform(dpr, 0, 0, dpr, 0, 0);
+				syncParticleCount();
+			};
+
+			const draw = (time: number, update: boolean) => {
+				context.clearRect(0, 0, width, height);
+				context.globalCompositeOperation = "screen";
+				const elapsed = previousTime ? Math.min((time - previousTime) / 16.67, 2) : 1;
+
+				for (const particle of particles) {
+					if (update) {
+						particle.x += particle.vx * elapsed;
+						particle.y += particle.vy * elapsed;
+						if (particle.x < -4) particle.x = width + 4;
+						if (particle.x > width + 4) particle.x = -4;
+						if (particle.y < -4) particle.y = height + 4;
+						if (particle.y > height + 4) particle.y = -4;
+					}
+
+					const pulse = reducedMotion.matches
+						? 0.78
+						: 0.72 + Math.sin(time * particle.twinkleSpeed + particle.phase) * 0.28;
+					const alpha = particle.baseAlpha * pulse;
+					const [red, green, blue] = particle.rgb;
+
+					context.beginPath();
+					context.arc(
+						particle.x,
+						particle.y,
+						particle.radius * 2.4,
+						0,
+						Math.PI * 2,
+					);
+					context.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha * 0.12})`;
+					context.fill();
+
+					context.beginPath();
+					context.arc(
+						particle.x,
+						particle.y,
+						particle.radius,
+						0,
+						Math.PI * 2,
+					);
+					context.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+					context.fill();
+				}
+				context.globalCompositeOperation = "source-over";
+			};
+
+			const animate = (time: number) => {
+				draw(time, true);
+				previousTime = time;
+				animationId = requestAnimationFrame(animate);
+			};
+
+			const start = () => {
+				cancelAnimationFrame(animationId);
+				previousTime = 0;
+				if (reducedMotion.matches) {
+					draw(performance.now(), false);
+					return;
+				}
+				if (!document.hidden) animationId = requestAnimationFrame(animate);
+			};
+
+			const handleResize = () => {
+				cancelAnimationFrame(resizeId);
+				resizeId = requestAnimationFrame(() => {
+					resizeCanvas();
+					if (reducedMotion.matches) draw(performance.now(), false);
+				});
+			};
+
+			resizeCanvas();
+			start();
+			window.addEventListener("resize", handleResize, { passive: true });
+			document.addEventListener("visibilitychange", start);
+			reducedMotion.addEventListener("change", start);
+		}
+	}
+</script>

@@ -257,6 +257,21 @@ html {
         @apply transition-all duration-300 border border-(--line-divider) shadow-xs;
     }
 
+    /* 月夜主题卡片：背景图可见，但正文始终保持足够对比度 */
+    :root.dark .card-base,
+    :root.dark .card-base-transparent {
+        border: 1px solid var(--card-border);
+        box-shadow: none;
+        backdrop-filter: blur(12px) saturate(0.9);
+        -webkit-backdrop-filter: blur(12px) saturate(0.9);
+    }
+
+    :root.dark.enable-card-border .card-base,
+    :root.dark.enable-card-border .card-base-transparent,
+    :root.dark.enable-card-border .btn-card {
+        box-shadow: none;
+    }
+
     /* 导航栏样式适配 */
     .enable-card-border #navbar > div:not(.absolute) {
         @apply transition-all duration-300 border shadow-xs;
@@ -382,19 +397,40 @@ html {
 
 
     .text-90 {
-        @apply text-black/90 dark:text-white/90
+        @apply text-black/90
     }
     .text-75 {
-        @apply text-black/75 dark:text-white/75
+        @apply text-black/75
     }
     .text-50 {
-        @apply text-black/50 dark:text-white/50
+        @apply text-black/50
     }
     .text-30 {
-        @apply text-black/30 dark:text-white/30
+        @apply text-black/30
     }
     .text-25 {
-        @apply text-black/25 dark:text-white/25
+        @apply text-black/25
+    }
+
+    :root.dark .text-90,
+    :root.dark .widget-title {
+        color: var(--text-title);
+    }
+
+    :root.dark .text-75 {
+        color: var(--text-body);
+    }
+
+    :root.dark .text-50 {
+        color: var(--text-muted);
+    }
+
+    :root.dark .text-30 {
+        color: rgb(140 153 168 / 0.62);
+    }
+
+    :root.dark .text-25 {
+        color: rgb(140 153 168 / 0.48);
     }
 
     /* 下拉菜单样式 */

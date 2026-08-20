@@ -1,4 +1,7 @@
-import type { SakuraConfig } from "../types/effectsConfig";
+import type {
+	AmbientParticleConfig,
+	SakuraConfig,
+} from "../types/effectsConfig";
 
 // 特效配置 - 集中管理所有动画特效
 
@@ -52,4 +55,31 @@ export const sakuraConfig: SakuraConfig = {
 
 	// 层级，确保樱花在合适的层级显示
 	zIndex: 100,
+};
+
+// 正文背景星尘：低密度、低亮度，不遮挡卡片与交互元素
+export const ambientParticleConfig: AmbientParticleConfig = {
+	enable: true,
+	count: {
+		desktop: 36,
+		mobile: 14,
+	},
+	colors: {
+		moonlight: "#8FAFC8",
+		gold: "#C6AE78",
+		goldRatio: 0.25,
+	},
+	size: {
+		min: 0.7,
+		max: 1.8,
+	},
+	opacity: {
+		min: 0.16,
+		max: 0.48,
+	},
+	speed: {
+		min: 0.03,
+		max: 0.12,
+	},
+	dprLimit: 1.75,
 };
