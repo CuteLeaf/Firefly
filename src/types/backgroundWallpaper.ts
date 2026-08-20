@@ -89,6 +89,16 @@ export type BackgroundWallpaperConfig = {
 		blur?: number; // 背景模糊程度，单位px
 		cardOpacity?: number; // 卡片背景透明度，0-1之间
 	};
+	// 正文区域独立背景：位于横幅下方和所有卡片之后
+	content?: {
+		enable: boolean;
+		desktop: string;
+		mobile?: string;
+		opacity?: number;
+		dimOpacity?: number;
+		desktopPosition?: string;
+		mobilePosition?: string;
+	};
 	// 全屏壁纸模式特有配置
 	fullscreen?: {
 		position?: string; // 壁纸位置，支持CSS object-position的所有值

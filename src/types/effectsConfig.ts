@@ -24,3 +24,29 @@ export type SakuraConfig = {
 	};
 	zIndex: number; // 层级，确保樱花在合适的层级显示
 };
+
+export type AmbientParticleConfig = {
+	enable: boolean;
+	count: {
+		desktop: number;
+		mobile: number;
+	};
+	colors: {
+		moonlight: string;
+		gold: string;
+		goldRatio: number;
+	};
+	size: {
+		min: number;
+		max: number;
+	};
+	opacity: {
+		min: number;
+		max: number;
+	};
+	speed: {
+		min: number;
+		max: number;
+	};
+	dprLimit: number;
+};

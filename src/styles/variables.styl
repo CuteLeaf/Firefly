@@ -6,6 +6,12 @@
 /* ===== 主题相关变量 ===== */
 :root
   --primary: oklch(0.70 0.14 var(--hue))
+  --primary-hover: oklch(0.76 0.09 var(--hue))
+  --accent-gold: #9f854d
+  --text-title: #1d2733
+  --text-body: #455260
+  --text-muted: #718091
+  --card-border: rgba(38, 55, 72, 0.12)
   --page-bg: oklch(0.95 0.01 var(--hue))
   --card-bg: white
   --card-bg-transparent: unquote("rgb(255 255 255 / var(--card-transparent-opacity, 0.6))")
@@ -89,40 +95,46 @@
 
 /* 暗色主题变量 */
 :root.dark
-  --primary: oklch(0.75 0.14 var(--hue))
-  --page-bg: oklch(0.16 0.014 var(--hue))
-  --card-bg: oklch(0.23 0.015 var(--hue))
-  --card-bg-transparent: unquote("rgb(23 23 23 / var(--card-transparent-opacity, 0.6))")
-  
-  --btn-content: oklch(0.75 0.1 var(--hue))
-  --btn-regular-bg: oklch(0.33 0.035 var(--hue))
-  --btn-regular-bg-hover: oklch(0.38 0.04 var(--hue))
-  --btn-regular-bg-active: oklch(0.43 0.045 var(--hue))
-  
-  --btn-plain-bg-hover: oklch(0.30 0.035 var(--hue))
-  --btn-plain-bg-active: oklch(0.27 0.025 var(--hue))
-  
-  --btn-card-bg-hover: oklch(0.3 0.03 var(--hue))
-  --btn-card-bg-active: oklch(0.35 0.035 var(--hue))
-  
-  --line-divider: rgba(255, 255, 255, 0.08)
-  --line-color: rgba(255, 255, 255, 0.1)
-  --meta-divider: rgba(255, 255, 255, 0.2)
-  --content-meta: rgba(255, 255, 255, 0.6)
-  
-  --muted: oklch(0.25 0.015 var(--hue))
-  --selection-bg: oklch(0.40 0.08 var(--hue))
-  --codeblock-bg: oklch(0.17 0.015 var(--hue))
-  --codeblock-topbar-bg: oklch(0.12 0.015 var(--hue))
-  
+  --primary: #8FAFC8
+  --primary-hover: #A8C6DD
+  --accent-gold: #C6AE78
+  --text-title: #E8EBF0
+  --text-body: #C6CDD6
+  --text-muted: #8C99A8
+  --card-border: rgba(143, 175, 200, 0.14)
+  --page-bg: #0B1220
+  --card-bg: rgba(20, 28, 43, 0.74)
+  --card-bg-transparent: unquote("rgb(20 28 43 / var(--card-transparent-opacity, 0.74))")
+
+  --btn-content: #9ABBD3
+  --btn-regular-bg: rgba(40, 59, 79, 0.72)
+  --btn-regular-bg-hover: rgba(57, 79, 101, 0.82)
+  --btn-regular-bg-active: rgba(72, 96, 119, 0.9)
+
+  --btn-plain-bg-hover: rgba(49, 70, 92, 0.58)
+  --btn-plain-bg-active: rgba(36, 53, 72, 0.72)
+
+  --btn-card-bg-hover: rgba(34, 49, 67, 0.86)
+  --btn-card-bg-active: rgba(45, 64, 84, 0.92)
+
+  --line-divider: rgba(143, 175, 200, 0.13)
+  --line-color: rgba(143, 175, 200, 0.16)
+  --meta-divider: rgba(143, 175, 200, 0.24)
+  --content-meta: #8C99A8
+
+  --muted: #1A2636
+  --selection-bg: rgba(143, 175, 200, 0.28)
+  --codeblock-bg: #0D1523
+  --codeblock-topbar-bg: #111C2B
+
   --license-block-bg: var(--codeblock-bg)
-  
-  --link-underline: oklch(0.40 0.08 var(--hue))
-  --link-hover: oklch(0.40 0.08 var(--hue))
-  --link-active: oklch(0.35 0.07 var(--hue))
-  
-  --float-panel-bg: oklch(0.19 0.015 var(--hue))
-  
+
+  --link-underline: rgba(143, 175, 200, 0.4)
+  --link-hover: rgba(168, 198, 221, 0.42)
+  --link-active: rgba(198, 174, 120, 0.42)
+
+  --float-panel-bg: rgba(15, 23, 36, 0.94)
+
   --scrollbar-bg: var(--scrollbar-bg-dark)
   --scrollbar-bg-hover: var(--scrollbar-bg-hover-dark)
   --scrollbar-bg-active: var(--scrollbar-bg-active-dark)

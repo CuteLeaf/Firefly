@@ -66,9 +66,9 @@ export const siteConfig: SiteConfig = {
 	// 主题色
 	themeColor: {
 		// 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
-		hue: 165,
+		hue: 245,
 		// 默认模式："light" 亮色，"dark" 暗色，"system" 跟随系统
-		defaultMode: "system",
+		defaultMode: "dark",
 	},
 
 	// 页面整体宽度（单位：rem）
@@ -115,7 +115,7 @@ export const siteConfig: SiteConfig = {
 			alt: "🍀",
 		},
 		// 导航栏标题
-		title: "Firefly",
+		title: "晴时的小屋",
 		// 全宽导航栏，导航栏是否占满屏幕宽度
 		widthFull: false,
 		// 导航菜单对齐方式，left：左对齐，center：居中

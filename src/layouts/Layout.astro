@@ -3,6 +3,7 @@ import GoogleAnalytics from "@components/analytics/GoogleAnalytics.astro";
 import La51Analytics from "@components/analytics/La51Analytics.astro";
 import MicrosoftClarity from "@components/analytics/MicrosoftClarity.astro";
 import UmamiAnalytics from "@components/analytics/UmamiAnalytics.astro";
+import AmbientBackground from "@components/features/AmbientBackground.astro";
 import CodeGroupManager from "@components/features/CodeGroupManager.astro";
 import FancyboxManager from "@components/features/FancyboxManager.astro";
 import FontSetup from "@components/features/FontSetup.astro";
@@ -593,6 +594,7 @@ const siteLang = lang.replace("_", "-");
     ]}
   >
 
+    <AmbientBackground />
     <div id="progress-bar"></div>
 
     {/* 卡片样式：根据 localStorage 覆盖默认配置 */}
