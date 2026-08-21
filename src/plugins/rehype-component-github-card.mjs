@@ -58,7 +58,10 @@ export function GithubCardComponent(properties, children) {
 		`script#${cardUuid}-script`,
 		{ type: "text/javascript", defer: true },
 		`
-      fetch('https://api.github.com/repos/${repo}', { referrerPolicy: "no-referrer" }).then(response => response.json()).then(data => {
+      fetch('https://api.github.com/repos/${repo}', { referrerPolicy: "no-referrer" }).then(response => {
+        if (!response.ok) throw new Error(\`GitHub API returned \${response.status}\`);
+        return response.json();
+      }).then(data => {
         document.getElementById('${cardUuid}-description').innerText = data.description?.replace(/:[a-zA-Z0-9_]+:/g, '') || "Description not set";
         document.getElementById('${cardUuid}-language').innerText = data.language;
         document.getElementById('${cardUuid}-forks').innerText = Intl.NumberFormat('en-us', { notation: "compact", maximumFractionDigits: 1 }).format(data.forks).replaceAll("\u202f", '');
@@ -71,8 +74,14 @@ export function GithubCardComponent(properties, children) {
         console.log("[GITHUB-CARD] Loaded card for ${repo} | ${cardUuid}.")
       }).catch(err => {
         const c = document.getElementById('${cardUuid}-card');
+        document.getElementById('${cardUuid}-description').innerText = "Repository details unavailable";
+        document.getElementById('${cardUuid}-language').innerText = "Unavailable";
+        document.getElementById('${cardUuid}-forks').innerText = "—";
+        document.getElementById('${cardUuid}-stars').innerText = "—";
+        document.getElementById('${cardUuid}-license').innerText = "—";
+        c?.classList.remove("fetch-waiting");
         c?.classList.add("fetch-error");
-        console.warn("[GITHUB-CARD] (Error) Loading card for ${repo} | ${cardUuid}.")
+        console.warn("[GITHUB-CARD] (Error) Loading card for ${repo} | ${cardUuid}.", err)
       })
     `,
 	);
