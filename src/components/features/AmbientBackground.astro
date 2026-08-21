@@ -143,7 +143,25 @@ const mobilePosition = config?.mobilePosition ?? "center top";
 		twinkleSpeed: number;
 		vx: number;
 		vy: number;
+		sparkle: boolean;
 		rgb: [number, number, number];
+	};
+
+	type Meteor = {
+		startX: number;
+		startY: number;
+		distanceX: number;
+		distanceY: number;
+		startTime: number;
+		duration: number;
+		length: number;
+		alpha: number;
+		lineWidth: number;
+		rgb: [number, number, number];
+	};
+
+	type AmbientWindow = Window & {
+		__ambientBackgroundCleanup?: () => void;
 	};
 
 	const root = document.getElementById("ambient-background");
@@ -157,19 +175,25 @@ const mobilePosition = config?.mobilePosition ?? "center top";
 		canvas &&
 		root.dataset.particlesInitialized !== "true"
 	) {
+		const ambientWindow = window as AmbientWindow;
+		ambientWindow.__ambientBackgroundCleanup?.();
 		root.dataset.particlesInitialized = "true";
 		const context = canvas.getContext("2d", { alpha: true });
 
 		if (context) {
+			const controller = new AbortController();
 			const reducedMotion = window.matchMedia(
 				"(prefers-reduced-motion: reduce)",
 			);
 			let particles: Particle[] = [];
+			let meteors: Meteor[] = [];
 			let animationId = 0;
 			let resizeId = 0;
 			let previousTime = 0;
 			let width = window.innerWidth;
 			let height = window.innerHeight;
+			let isMobile = width < 768;
+			let nextMeteorAt = performance.now() + 2400;
 
 			const randomBetween = (min: number, max: number) =>
 				min + Math.random() * (max - min);
@@ -186,10 +210,13 @@ const mobilePosition = config?.mobilePosition ?? "center top";
 			const goldRgb = hexToRgb(ambientParticleConfig.colors.gold);
 
 			const createParticle = (): Particle => {
+				const depthRoll = Math.random();
+				const depthScale =
+					depthRoll < 0.64 ? 0.62 : depthRoll > 0.92 ? 1.15 : 0.86;
 				const speed = randomBetween(
 					ambientParticleConfig.speed.min,
 					ambientParticleConfig.speed.max,
-				);
+				) * depthScale;
 				const angle = randomBetween(-Math.PI * 0.9, -Math.PI * 0.1);
 				return {
 					x: Math.random() * width,
@@ -197,15 +224,16 @@ const mobilePosition = config?.mobilePosition ?? "center top";
 					radius: randomBetween(
 						ambientParticleConfig.size.min,
 						ambientParticleConfig.size.max,
-					),
+					) * depthScale,
 					baseAlpha: randomBetween(
 						ambientParticleConfig.opacity.min,
 						ambientParticleConfig.opacity.max,
-					),
+					) * (depthScale < 0.7 ? 0.68 : 1),
 					phase: Math.random() * Math.PI * 2,
-					twinkleSpeed: randomBetween(0.00065, 0.00165),
+					twinkleSpeed: randomBetween(0.00045, 0.00135),
 					vx: Math.cos(angle) * speed,
 					vy: Math.sin(angle) * speed,
+					sparkle: depthRoll > 0.96,
 					rgb:
 						Math.random() < ambientParticleConfig.colors.goldRatio
 							? goldRgb
@@ -225,6 +253,7 @@ const mobilePosition = config?.mobilePosition ?? "center top";
 			const resizeCanvas = () => {
 				width = window.innerWidth;
 				height = window.innerHeight;
+				isMobile = width < 768;
 				const dpr = Math.min(
 					window.devicePixelRatio || 1,
 					ambientParticleConfig.dprLimit,
@@ -235,6 +264,87 @@ const mobilePosition = config?.mobilePosition ?? "center top";
 				canvas.style.height = `${height}px`;
 				context.setTransform(dpr, 0, 0, dpr, 0, 0);
 				syncParticleCount();
+			};
+
+			const scheduleNextMeteor = (time: number) => {
+				const interval = randomBetween(
+					ambientParticleConfig.meteors.interval.min,
+					ambientParticleConfig.meteors.interval.max,
+				) * (isMobile ? 1.75 : 1);
+				nextMeteorAt = time + interval;
+			};
+
+			const createMeteor = (time: number): Meteor => {
+				const travel = Math.min(width, 1600) * randomBetween(0.45, 0.76);
+				return {
+					startX: randomBetween(width * 0.38, width * 1.18),
+					startY: randomBetween(-height * 0.12, height * 0.98),
+					distanceX: -travel,
+					distanceY: travel * randomBetween(0.38, 0.52),
+					startTime: time,
+					duration: randomBetween(
+						ambientParticleConfig.meteors.duration.min,
+						ambientParticleConfig.meteors.duration.max,
+					) * (isMobile ? 1.15 : 1),
+					length: randomBetween(
+						ambientParticleConfig.meteors.length.min,
+						ambientParticleConfig.meteors.length.max,
+					) * (isMobile ? 0.62 : 1),
+					alpha: ambientParticleConfig.meteors.opacity * randomBetween(0.78, 1),
+					lineWidth: randomBetween(0.55, 1.05),
+					rgb: Math.random() < 0.18 ? goldRgb : moonlightRgb,
+				};
+			};
+
+			const drawMeteors = (time: number, update: boolean) => {
+				const enabled =
+					ambientParticleConfig.meteors.enable &&
+					(!isMobile || ambientParticleConfig.meteors.mobileEnable) &&
+					!reducedMotion.matches;
+
+				if (update && enabled && time >= nextMeteorAt) {
+					const limit = isMobile
+						? ambientParticleConfig.meteors.maxActive.mobile
+						: ambientParticleConfig.meteors.maxActive.desktop;
+					const burst = Math.floor(
+						randomBetween(
+							ambientParticleConfig.meteors.burst.min,
+							ambientParticleConfig.meteors.burst.max + 1,
+						),
+					);
+					for (let index = 0; index < burst && meteors.length < limit; index++) {
+						meteors.push(createMeteor(time - index * 110));
+					}
+					scheduleNextMeteor(time);
+				}
+
+				meteors = meteors.filter((meteor) => {
+					const progress = (time - meteor.startTime) / meteor.duration;
+					if (progress < 0 || progress > 1) return false;
+
+					const eased = 1 - (1 - progress) ** 2;
+					const x = meteor.startX + meteor.distanceX * eased;
+					const y = meteor.startY + meteor.distanceY * eased;
+					const magnitude = Math.hypot(meteor.distanceX, meteor.distanceY);
+					const unitX = meteor.distanceX / magnitude;
+					const unitY = meteor.distanceY / magnitude;
+					const tailX = x - unitX * meteor.length;
+					const tailY = y - unitY * meteor.length;
+					const fade = Math.sin(Math.PI * progress) ** 0.52;
+					const [red, green, blue] = meteor.rgb;
+					const trail = context.createLinearGradient(tailX, tailY, x, y);
+					trail.addColorStop(0, `rgba(${red}, ${green}, ${blue}, 0)`);
+					trail.addColorStop(0.78, `rgba(${red}, ${green}, ${blue}, ${meteor.alpha * fade * 0.32})`);
+					trail.addColorStop(1, `rgba(238, 247, 255, ${meteor.alpha * fade})`);
+					context.beginPath();
+					context.moveTo(tailX, tailY);
+					context.lineTo(x, y);
+					context.strokeStyle = trail;
+					context.lineWidth = meteor.lineWidth;
+					context.lineCap = "round";
+					context.stroke();
+					return true;
+				});
 			};
 
 			const draw = (time: number, update: boolean) => {
@@ -262,11 +372,11 @@ const mobilePosition = config?.mobilePosition ?? "center top";
 					context.arc(
 						particle.x,
 						particle.y,
-						particle.radius * 3.2,
+						particle.radius * ambientParticleConfig.glow.radius,
 						0,
 						Math.PI * 2,
 					);
-					context.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha * 0.22})`;
+					context.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha * ambientParticleConfig.glow.opacity})`;
 					context.fill();
 
 					context.beginPath();
@@ -279,7 +389,20 @@ const mobilePosition = config?.mobilePosition ?? "center top";
 					);
 					context.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 					context.fill();
+
+					if (particle.sparkle && alpha > 0.34) {
+						const ray = particle.radius * 3.4;
+						context.beginPath();
+						context.moveTo(particle.x - ray, particle.y);
+						context.lineTo(particle.x + ray, particle.y);
+						context.moveTo(particle.x, particle.y - ray);
+						context.lineTo(particle.x, particle.y + ray);
+						context.strokeStyle = `rgba(${red}, ${green}, ${blue}, ${alpha * 0.22})`;
+						context.lineWidth = 0.45;
+						context.stroke();
+					}
 				}
+				drawMeteors(time, update);
 				context.globalCompositeOperation = "source-over";
 			};
 
@@ -308,10 +431,28 @@ const mobilePosition = config?.mobilePosition ?? "center top";
 			};
 
 			resizeCanvas();
+			scheduleNextMeteor(performance.now());
 			start();
-			window.addEventListener("resize", handleResize, { passive: true });
-			document.addEventListener("visibilitychange", start);
-			reducedMotion.addEventListener("change", start);
+			window.addEventListener("resize", handleResize, {
+				passive: true,
+				signal: controller.signal,
+			});
+			document.addEventListener("visibilitychange", start, {
+				signal: controller.signal,
+			});
+			reducedMotion.addEventListener("change", start, {
+				signal: controller.signal,
+			});
+
+			const cleanup = () => {
+				cancelAnimationFrame(animationId);
+				cancelAnimationFrame(resizeId);
+				controller.abort();
+				if (ambientWindow.__ambientBackgroundCleanup === cleanup) {
+					delete ambientWindow.__ambientBackgroundCleanup;
+				}
+			};
+			ambientWindow.__ambientBackgroundCleanup = cleanup;
 		}
 	}
 </script>

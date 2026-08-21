@@ -57,29 +57,62 @@ export const sakuraConfig: SakuraConfig = {
 	zIndex: 100,
 };
 
-// 正文背景萤光：清晰可见但保持克制，始终位于正文卡片下方
+// 正文背景星尘：密集小星点、轻微闪烁与偶发细长流星
 export const ambientParticleConfig: AmbientParticleConfig = {
 	enable: true,
 	count: {
-		desktop: 64,
-		mobile: 24,
+		desktop: 220,
+		mobile: 72,
 	},
 	colors: {
 		moonlight: "#A8C6DD",
 		gold: "#D2BE8A",
-		goldRatio: 0.25,
+		goldRatio: 0.18,
 	},
 	size: {
-		min: 0.75,
-		max: 2,
+		min: 0.45,
+		max: 1.55,
 	},
 	opacity: {
-		min: 0.28,
-		max: 0.76,
+		min: 0.22,
+		max: 0.78,
 	},
 	speed: {
-		min: 0.065,
-		max: 0.2,
+		min: 0.035,
+		max: 0.13,
+	},
+	glow: {
+		radius: 2.4,
+		opacity: 0.075,
+	},
+	meteors: {
+		enable: true,
+		mobileEnable: true,
+		// 同屏流星数量上限：这里控制桌面端和手机端最多显示多少条
+		maxActive: {
+			desktop: 2,
+			mobile: 1,
+		},
+		// 每轮生成数量：提高 max 会让流星雨更加密集
+		burst: {
+			min: 1,
+			max: 1,
+		},
+		// 生成间隔（毫秒）：数值越小，流星越多
+		interval: {
+			min: 4500,
+			max: 9000,
+		},
+		duration: {
+			min: 1100,
+			max: 1750,
+		},
+		// 流星尾巴长度（像素）：这里控制视觉大小
+		length: {
+			min: 120,
+			max: 230,
+		},
+		opacity: 0.48,
 	},
 	dprLimit: 1.75,
 };
