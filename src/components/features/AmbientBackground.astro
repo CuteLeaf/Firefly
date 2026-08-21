@@ -92,7 +92,7 @@ const mobilePosition = config?.mobilePosition ?? "center top";
 		object-fit: cover;
 		object-position: var(--ambient-desktop-position);
 		opacity: var(--ambient-image-opacity);
-		filter: saturate(0.88) brightness(0.9);
+		filter: brightness(1.04) saturate(0.96) contrast(1.02);
 	}
 
 	.ambient-shade {
@@ -100,11 +100,11 @@ const mobilePosition = config?.mobilePosition ?? "center top";
 		background:
 			linear-gradient(
 				180deg,
-				rgb(7 12 24 / calc(var(--ambient-dim-opacity) + 0.08)) 0%,
-				rgb(8 14 27 / var(--ambient-dim-opacity)) 38%,
-				rgb(6 11 22 / calc(var(--ambient-dim-opacity) + 0.16)) 100%
+					rgb(7 12 24 / calc(var(--ambient-dim-opacity) + 0.04)) 0%,
+					rgb(8 14 27 / var(--ambient-dim-opacity)) 38%,
+					rgb(6 11 22 / calc(var(--ambient-dim-opacity) + 0.16)) 100%
 			),
-			radial-gradient(circle at 50% 42%, rgb(116 151 181 / 0.08), transparent 58%);
+			radial-gradient(circle at 50% 42%, rgb(143 175 200 / 0.12), transparent 60%);
 	}
 
 	#ambient-particles {
@@ -203,7 +203,7 @@ const mobilePosition = config?.mobilePosition ?? "center top";
 						ambientParticleConfig.opacity.max,
 					),
 					phase: Math.random() * Math.PI * 2,
-					twinkleSpeed: randomBetween(0.00055, 0.0015),
+					twinkleSpeed: randomBetween(0.00065, 0.00165),
 					vx: Math.cos(angle) * speed,
 					vy: Math.sin(angle) * speed,
 					rgb:
@@ -266,7 +266,7 @@ const mobilePosition = config?.mobilePosition ?? "center top";
 						0,
 						Math.PI * 2,
 					);
-					context.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha * 0.17})`;
+					context.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha * 0.22})`;
 					context.fill();
 
 					context.beginPath();

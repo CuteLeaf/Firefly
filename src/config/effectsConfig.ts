@@ -61,8 +61,8 @@ export const sakuraConfig: SakuraConfig = {
 export const ambientParticleConfig: AmbientParticleConfig = {
 	enable: true,
 	count: {
-		desktop: 58,
-		mobile: 22,
+		desktop: 64,
+		mobile: 24,
 	},
 	colors: {
 		moonlight: "#A8C6DD",
@@ -74,12 +74,12 @@ export const ambientParticleConfig: AmbientParticleConfig = {
 		max: 2,
 	},
 	opacity: {
-		min: 0.22,
-		max: 0.68,
+		min: 0.28,
+		max: 0.76,
 	},
 	speed: {
-		min: 0.055,
-		max: 0.19,
+		min: 0.065,
+		max: 0.2,
 	},
 	dprLimit: 1.75,
 };
