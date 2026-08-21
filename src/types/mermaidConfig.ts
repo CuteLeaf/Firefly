@@ -1,14 +1,9 @@
+import type { HostThemePresetName } from "@mermanjs/web";
+
 /**
  * merman 内置宿主主题预设名
  */
-export type MermaidThemeName =
-	| "editor-light"
-	| "editor-dark"
-	| "one-dark"
-	| "gruvbox-light"
-	| "gruvbox-dark"
-	| "ayu-light"
-	| "ayu-dark";
+export type MermaidThemeName = HostThemePresetName;
 
 /**
  * Mermaid 图表渲染配置

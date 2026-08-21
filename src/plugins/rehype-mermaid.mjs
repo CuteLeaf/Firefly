@@ -1,4 +1,5 @@
-import { createNodeEngine } from "@mermanjs/node";
+import { readFile } from "node:fs/promises";
+import { assertSafeSvgForDom, initMerman, renderSvg } from "@mermanjs/web";
 import { h } from "hastscript";
 import { visit } from "unist-util-visit";
 import {
@@ -13,18 +14,14 @@ import {
 } from "./utils/diagramConstants.js";
 import { extractText } from "./utils/extractText.js";
 
-const mermanEngine = await createNodeEngine();
-
-// alpha.5 的主题预设不再设置 SVG 根背景色；显式保留 alpha.3 的画布颜色。
-const THEME_BACKGROUND_COLORS = {
-	"editor-light": "#ffffff",
-	"editor-dark": "#0f172a",
-	"one-dark": "#282c34",
-	"gruvbox-light": "#fbf1c7",
-	"gruvbox-dark": "#282828",
-	"ayu-light": "#fafafa",
-	"ayu-dark": "#0b0e14",
-};
+const mermanWasmUrl = import.meta.resolve(
+	"@mermanjs/web/pkg/merman_wasm_bg.wasm",
+);
+await initMerman({
+	wasm: {
+		module_or_path: await readFile(new URL(mermanWasmUrl)),
+	},
+});
 
 /**
  * 在构建时将 Mermaid 源码渲染为浅色和深色两套静态 SVG
@@ -42,32 +39,24 @@ function removeSvgMaxWidth(svg) {
 	return svg.replace(/(<svg[^>]*style="[^"]*?)max-width:\s*[^;]+;?/, "$1");
 }
 
-function renderMermaidSvg(mermaidCode, theme, diagramId) {
-	return mermanEngine.renderSvgSync(mermaidCode, {
-		optionsJson: JSON.stringify({
-			presentation: {
-				theme: { preset: theme },
-			},
-			svg: {
-				diagram_id: diagramId,
-				pipeline: "parity",
-				root_background_color: THEME_BACKGROUND_COLORS[theme],
-			},
-		}),
-	});
-}
-
 function buildMermaidSvgs(mermaidCode, themeConfig, diagramIndex) {
-	const lightSvg = renderMermaidSvg(
-		mermaidCode,
-		themeConfig.lightTheme,
-		`mermaid-${diagramIndex}-light`,
-	);
-	const darkSvg = renderMermaidSvg(
-		mermaidCode,
-		themeConfig.darkTheme,
-		`mermaid-${diagramIndex}-dark`,
-	);
+	const lightSvg = renderSvg(mermaidCode, {
+		host_theme: { preset: themeConfig.lightTheme },
+		svg: {
+			diagram_id: `mermaid-${diagramIndex}-light`,
+			pipeline: "parity",
+		},
+	});
+	const darkSvg = renderSvg(mermaidCode, {
+		host_theme: { preset: themeConfig.darkTheme },
+		svg: {
+			diagram_id: `mermaid-${diagramIndex}-dark`,
+			pipeline: "parity",
+		},
+	});
+
+	assertSafeSvgForDom(lightSvg);
+	assertSafeSvgForDom(darkSvg);
 
 	return {
 		lightSvg: removeSvgMaxWidth(lightSvg),
