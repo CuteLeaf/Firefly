@@ -107,6 +107,10 @@ export type SiteConfig = {
 	postListLayout: {
 		defaultMode: "list" | "grid"; // 默认布局模式：list=列表模式，grid=网格模式
 		mobileDefaultMode?: "list" | "grid"; // 移动端默认布局模式（视口宽度<780px时使用），不设置则跟随 defaultMode
+		home?: {
+			featuredFirst?: boolean; // 首页第一页是否突出首篇文章
+			alternateCovers?: boolean; // 列表模式下后续文章封面是否左右交错
+		};
 		// 列表模式下封面图的位置："right"=右侧（默认），"left"=左侧。网格模式封面固定在顶部，不受此项影响
 		coverPosition?: "left" | "right";
 		descriptionLines?: number; // 文章简介显示行数，设为 0 则不截断，默认 2

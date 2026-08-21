@@ -420,14 +420,6 @@ function switchWallpaperMode(newMode: WALLPAPER_MODE) {
 function checkScreenSize() {
 	isSmallScreen = window.innerWidth < 1200;
 	isMobileWidth = window.innerWidth < 780;
-	// 低于380px强制网格模式
-	if (window.innerWidth < 380 && currentLayout === "list") {
-		currentLayout = "grid";
-		const event = new CustomEvent("layoutChange", {
-			detail: { layout: "grid" },
-		});
-		window.dispatchEvent(event);
-	}
 }
 
 function updateRangeProgress(input: HTMLInputElement) {

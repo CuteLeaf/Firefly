@@ -19,19 +19,19 @@ const columnWidth = siteConfig.postListLayout.grid.columnWidth || 280;
 const defaultLayout = siteConfig.postListLayout.defaultMode || "list";
 const mobileDefaultLayout =
 	siteConfig.postListLayout.mobileDefaultMode || defaultLayout;
+const homeLayout = siteConfig.postListLayout.home ?? {};
+const isFirstPage = page.currentPage === 1;
+const featuredFirst = homeLayout.featuredFirst ?? false;
+const alternateCovers = homeLayout.alternateCovers ?? false;
 const initialLayoutClass =
 	defaultLayout === "grid"
 		? "post-grid-auto grid-mode"
 		: "flex flex-col gap-4 md:gap-4 list-mode";
-
-// 列表模式封面位置，只有 left 需要额外样式，right 是默认布局
-const coverPositionClass =
-	siteConfig.postListLayout.coverPosition === "left" ? " cover-left" : "";
 ---
 
 <div
   id="post-list-container"
-  class={`transition-all duration-500 ease-in-out mb-4 ${initialLayoutClass}${coverPositionClass}`}
+  class={`transition-all duration-500 ease-in-out mb-4 ${initialLayoutClass}`}
   data-default-layout={defaultLayout}
   data-mobile-default-layout={mobileDefaultLayout}
   data-masonry-enabled={masonryEnabled}
@@ -39,25 +39,39 @@ const coverPositionClass =
   style={`--post-card-min-width: ${columnWidth}px;`}
 >
   {
-    page.data.map((entry: PostEntry, index: number) => (
-      <PostCard
-        entry={entry}
-        title={entry.data.title}
-        tags={entry.data.tags}
-        category={entry.data.category}
-        published={entry.data.published}
-        updated={entry.data.updated}
-        url={getPostUrlBySlug(entry.id)}
-        image={entry.data.image}
-        description={entry.data.description}
-        draft={entry.data.draft}
-        pinned={entry.data.pinned}
-        password={!!entry.data.password}
-        loading={index < 2 ? "eager" : "lazy"}
-        class:list="onload-animation post-card-item"
-        style={`animation-delay: calc(var(--content-delay) + ${delay++ * interval}ms);`}
-      />
-    ))
+    page.data.map((entry: PostEntry, index: number) => {
+      const isFeatured = isFirstPage && featuredFirst && index === 0;
+      const variant = isFeatured ? "featured" : "compact";
+      const coverSide = isFeatured
+        ? "left"
+        : isFirstPage && alternateCovers
+          ? index % 2 === 0
+            ? "left"
+            : "right"
+          : siteConfig.postListLayout.coverPosition ?? "right";
+
+      return (
+        <PostCard
+          entry={entry}
+          title={entry.data.title}
+          tags={entry.data.tags}
+          category={entry.data.category}
+          published={entry.data.published}
+          updated={entry.data.updated}
+          url={getPostUrlBySlug(entry.id)}
+          image={entry.data.image}
+          description={entry.data.description}
+          draft={entry.data.draft}
+          pinned={entry.data.pinned}
+          password={!!entry.data.password}
+          variant={variant}
+          coverSide={coverSide}
+          loading={index < 2 ? "eager" : "lazy"}
+          class:list="onload-animation post-card-item"
+          style={`animation-delay: calc(var(--content-delay) + ${delay++ * interval}ms);`}
+        />
+      );
+    })
   }
 </div>
 
@@ -67,8 +81,7 @@ const coverPositionClass =
     const savedLayout = localStorage.getItem('postListLayout');
     // 根据视口宽度确定有效的默认布局
     const effectiveDefault = window.innerWidth < 780 ? mobileDefaultLayout : defaultLayout;
-    // 低于380px强制网格模式
-    const effectiveLayout = window.innerWidth < 380 ? 'grid' : (savedLayout || effectiveDefault);
+    const effectiveLayout = savedLayout || effectiveDefault;
 
     if (effectiveLayout !== defaultLayout) {
       const container = document.getElementById('post-list-container');
@@ -110,11 +123,6 @@ const coverPositionClass =
     // 根据视口宽度确定有效的默认布局
     const effectiveDefault = window.innerWidth < 780 ? mobileDefaultLayout : defaultLayout;
     let currentLayout = savedLayout || effectiveDefault;
-
-    // 低于380px强制网格模式
-    if (window.innerWidth < 380) {
-      currentLayout = "grid";
-    }
 
     // 应用布局
     updatePostListLayout(currentLayout);

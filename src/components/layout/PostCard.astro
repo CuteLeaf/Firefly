@@ -23,6 +23,8 @@ interface Props {
 	draft: boolean;
 	pinned?: boolean;
 	password?: boolean;
+	variant?: "featured" | "compact" | "default";
+	coverSide?: "left" | "right";
 	style: string;
 	loading?: "lazy" | "eager";
 }
@@ -37,6 +39,8 @@ const {
 	description,
 	pinned,
 	password,
+	variant = "default",
+	coverSide = "right",
 	style,
 	loading = "lazy",
 } = Astro.props;
@@ -106,6 +110,8 @@ const minutes = remarkPluginFrontmatter.minutes;
     "post-card-wrapper",
     hasCover ? "has-cover" : "no-cover",
     pinned ? "pinned" : "",
+    `post-card-${variant}`,
+    `cover-${coverSide}`,
     gridCoverFullWidth ? "" : "grid-cover-inset",
     "card-base flex flex-col-reverse w-full rounded-(--radius-large) overflow-hidden relative",
     className,
@@ -314,12 +320,12 @@ const minutes = remarkPluginFrontmatter.minutes;
   }
 
   /* 封面在左侧：封面改钉左边，内容用 margin-left:auto 推到右边并镜像内边距 */
-  :global(.list-mode.cover-left) .has-cover .post-card-content {
+  :global(.list-mode) .post-card-wrapper.cover-left.has-cover .post-card-content {
     margin-left: auto !important;
     padding: 0.75rem 0.75rem 0.75rem 0.5rem !important;
   }
 
-  :global(.list-mode.cover-left) .has-cover .post-card-image {
+  :global(.list-mode) .post-card-wrapper.cover-left.has-cover .post-card-image {
     right: auto !important;
     left: 0.5rem !important;
   }
@@ -344,6 +350,39 @@ const minutes = remarkPluginFrontmatter.minutes;
 
   :global(.list-mode) .post-card-enter-btn {
     display: flex !important;
+  }
+
+  /* 移动端重点文章：大封面位于内容上方，形成明确的首页入口 */
+  :global(.list-mode) .post-card-featured.has-cover {
+    flex-direction: column-reverse !important;
+  }
+
+  :global(.list-mode) .post-card-featured.has-cover .post-card-content {
+    width: 100% !important;
+    padding: 1rem 1rem 1.1rem !important;
+  }
+
+  :global(.list-mode) .post-card-featured.has-cover .post-card-image {
+    position: relative !important;
+    inset: auto !important;
+    width: calc(100% - 2rem) !important;
+    margin: 1rem 1rem 0 !important;
+    aspect-ratio: 16 / 9 !important;
+    border-radius: 0.875rem !important;
+  }
+
+  :global(.list-mode) .post-card-featured .post-card-title {
+    font-size: 1.35rem !important;
+    line-height: 1.75rem !important;
+  }
+
+  :global(.list-mode) .post-card-featured .description-clamped {
+    -webkit-line-clamp: 3 !important;
+    line-clamp: 3 !important;
+  }
+
+  :global(.list-mode) .post-card-compact.has-cover {
+    min-height: 10.5rem;
   }
 
   /* 移动端列表模式 - 隐藏tags，只在有空间时显示 */
@@ -373,17 +412,17 @@ const minutes = remarkPluginFrontmatter.minutes;
     }
 
     /* 封面在左侧：内边距完全镜像右侧模式（靠封面那侧 0.5rem，靠卡片边缘那侧 2.25rem） */
-    :global(.list-mode.cover-left) .has-cover .post-card-content {
+    :global(.list-mode) .post-card-wrapper.cover-left.has-cover .post-card-content {
       padding: 1.75rem 2.25rem 1.75rem 0.5rem !important;
     }
 
-    :global(.list-mode.cover-left) .has-cover .post-card-image {
+    :global(.list-mode) .post-card-wrapper.cover-left.has-cover .post-card-image {
       right: auto !important;
       left: 1rem !important;
     }
 
     /* 标题装饰条是贴着卡片左边缘的设计，封面移到左侧后不再成立，直接隐藏 */
-    :global(.list-mode.cover-left) .has-cover .post-card-title::before {
+    :global(.list-mode) .post-card-wrapper.cover-left.has-cover .post-card-title::before {
       display: none !important;
     }
 
@@ -415,6 +454,101 @@ const minutes = remarkPluginFrontmatter.minutes;
 
     :global(.list-mode) .post-card-enter-btn {
       display: flex !important;
+    }
+
+    /* 首页重点文章：左侧大封面，右侧建立更清晰的阅读层级 */
+    :global(.list-mode) .post-card-featured.has-cover {
+      min-height: 18rem;
+    }
+
+    :global(.list-mode) .post-card-featured.has-cover .post-card-content {
+      width: calc(60% - 0.75rem) !important;
+      margin-left: auto !important;
+      padding: 2rem 2.25rem 2rem 1rem !important;
+    }
+
+    :global(.list-mode) .post-card-featured.has-cover .post-card-image {
+      position: absolute !important;
+      top: 1rem !important;
+      bottom: 1rem !important;
+      left: 1rem !important;
+      right: auto !important;
+      width: 40% !important;
+      margin: 0 !important;
+      aspect-ratio: auto !important;
+      border-radius: 0.875rem !important;
+    }
+
+    :global(.list-mode) .post-card-featured .post-card-title {
+      font-size: 1.65rem !important;
+      line-height: 2.15rem !important;
+      margin-bottom: 0.875rem !important;
+    }
+
+    :global(.list-mode) .post-card-featured .post-card-title::before {
+      display: none !important;
+    }
+
+    /* 后续文章收紧高度，并按卡片自身的 cover-left / cover-right 交错 */
+    :global(.list-mode) .post-card-compact.has-cover {
+      min-height: 12.5rem;
+    }
+
+    :global(.list-mode) .post-card-compact.has-cover .post-card-content {
+      width: calc(66% - 0.75rem) !important;
+      padding: 1.25rem 1.5rem 1.25rem 2rem !important;
+    }
+
+    :global(.list-mode) .post-card-compact.cover-left.has-cover .post-card-content {
+      margin-left: auto !important;
+      padding: 1.25rem 2rem 1.25rem 1.5rem !important;
+    }
+
+    :global(.list-mode) .post-card-compact.has-cover .post-card-image {
+      top: 0.75rem !important;
+      bottom: 0.75rem !important;
+      right: 0.75rem !important;
+      width: 34% !important;
+    }
+
+    :global(.list-mode) .post-card-compact.cover-left.has-cover .post-card-image {
+      left: 0.75rem !important;
+      right: auto !important;
+    }
+
+    :global(.list-mode) .post-card-compact .post-card-title {
+      font-size: 1.35rem !important;
+      line-height: 1.75rem !important;
+      margin-bottom: 0.625rem !important;
+    }
+
+    :global(.list-mode) .post-card-compact .post-card-title::before {
+      top: 1.7rem !important;
+      height: 0.875rem !important;
+    }
+  }
+
+  @media (max-width: 390px) {
+    :global(.list-mode) .post-card-compact.has-cover .post-card-content {
+      width: calc(100% - 7.5rem - 0.625rem) !important;
+      padding: 0.7rem 0.35rem 0.7rem 0.7rem !important;
+    }
+
+    :global(.list-mode) .post-card-compact.has-cover .post-card-image {
+      width: 7.5rem !important;
+      top: 0.5rem !important;
+      right: 0.5rem !important;
+      bottom: 0.5rem !important;
+    }
+
+    :global(.list-mode) .post-card-compact .post-card-title {
+      font-size: 1rem !important;
+      line-height: 1.35rem !important;
+    }
+
+    :global(.list-mode) .post-card-compact .description {
+      font-size: 0.82rem !important;
+      line-height: 1.25rem !important;
     }
   }
 

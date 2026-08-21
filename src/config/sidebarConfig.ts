@@ -57,6 +57,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			position: "top",
 			// 是否在文章详情页显示
 			showOnPostPage: true,
+			// 首页公告移动到右侧，这一项仅保留文章详情页原位置
+			hideOnNonPostPage: true,
 		},
 		{
 			// 组件类型：音乐播放器
@@ -102,6 +104,13 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 
 	// 右侧边栏组件配置列表
 	rightComponents: [
+		{
+			// 首页公告：文章详情页继续使用左侧原公告
+			type: "announcement",
+			enable: true,
+			position: "top",
+			showOnPostPage: false,
+		},
 		{
 			// 组件类型：最新动态组件
 			type: "dynamic",
