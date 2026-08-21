@@ -57,29 +57,29 @@ export const sakuraConfig: SakuraConfig = {
 	zIndex: 100,
 };
 
-// 正文背景星尘：低密度、低亮度，不遮挡卡片与交互元素
+// 正文背景萤光：清晰可见但保持克制，始终位于正文卡片下方
 export const ambientParticleConfig: AmbientParticleConfig = {
 	enable: true,
 	count: {
-		desktop: 36,
-		mobile: 14,
+		desktop: 58,
+		mobile: 22,
 	},
 	colors: {
-		moonlight: "#8FAFC8",
-		gold: "#C6AE78",
+		moonlight: "#A8C6DD",
+		gold: "#D2BE8A",
 		goldRatio: 0.25,
 	},
 	size: {
-		min: 0.7,
-		max: 1.8,
+		min: 0.75,
+		max: 2,
 	},
 	opacity: {
-		min: 0.16,
-		max: 0.48,
+		min: 0.22,
+		max: 0.68,
 	},
 	speed: {
-		min: 0.03,
-		max: 0.12,
+		min: 0.055,
+		max: 0.19,
 	},
 	dprLimit: 1.75,
 };

@@ -203,7 +203,7 @@ const mobilePosition = config?.mobilePosition ?? "center top";
 						ambientParticleConfig.opacity.max,
 					),
 					phase: Math.random() * Math.PI * 2,
-					twinkleSpeed: randomBetween(0.00035, 0.0011),
+					twinkleSpeed: randomBetween(0.00055, 0.0015),
 					vx: Math.cos(angle) * speed,
 					vy: Math.sin(angle) * speed,
 					rgb:
@@ -253,8 +253,8 @@ const mobilePosition = config?.mobilePosition ?? "center top";
 					}
 
 					const pulse = reducedMotion.matches
-						? 0.78
-						: 0.72 + Math.sin(time * particle.twinkleSpeed + particle.phase) * 0.28;
+						? 0.8
+						: 0.7 + Math.sin(time * particle.twinkleSpeed + particle.phase) * 0.3;
 					const alpha = particle.baseAlpha * pulse;
 					const [red, green, blue] = particle.rgb;
 
@@ -262,11 +262,11 @@ const mobilePosition = config?.mobilePosition ?? "center top";
 					context.arc(
 						particle.x,
 						particle.y,
-						particle.radius * 2.4,
+						particle.radius * 3.2,
 						0,
 						Math.PI * 2,
 					);
-					context.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha * 0.12})`;
+					context.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha * 0.17})`;
 					context.fill();
 
 					context.beginPath();
