@@ -1,10 +1,6 @@
 import { siteConfig } from "@/config";
-import {
-	BANNER_HEIGHT,
-	BANNER_HEIGHT_EXTEND,
-	BANNER_HEIGHT_HOME,
-} from "@/constants/constants";
-import { bannerEnabled } from "@/utils/banner-utils";
+import { BANNER_HEIGHT, BANNER_HEIGHT_HOME } from "@/constants/constants";
+import { isBannerMode } from "@/utils/banner-utils";
 import { updateSidebarStickySpacing } from "@/utils/grid-layout-utils";
 
 const stickyNavbar = siteConfig.navbar.stickyNavbar ?? false;
@@ -38,7 +34,7 @@ export function scrollFunction(): void {
 		});
 	}
 
-	if (bannerEnabled && toc) {
+	if (isBannerMode() && toc) {
 		operations.push(() => {
 			if (scrollTop > bannerHeight) {
 				toc.classList.remove("toc-hide");
@@ -52,7 +48,7 @@ export function scrollFunction(): void {
 		operations.push(() => {
 			navbar.classList.remove("navbar-hidden");
 		});
-	} else if (bannerEnabled && navbar) {
+	} else if (isBannerMode() && navbar) {
 		operations.push(() => {
 			const threshold = window.innerHeight * (BANNER_HEIGHT_HOME / 100) - 88;
 
@@ -102,14 +98,4 @@ export function initScroll(): void {
 
 	// 初始化滚动状态（例如从历史位置恢复时）
 	scrollFunction();
-
-	window.onresize = () => {
-		// calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
-		let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
-		offset = offset - (offset % 4);
-		document.documentElement.style.setProperty(
-			"--banner-height-extend",
-			`${offset}px`,
-		);
-	};
 }

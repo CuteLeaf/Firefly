@@ -5,7 +5,6 @@ import BackgroundPlayer from "@/components/features/BackgroundPlayer.astro";
 import BannerHomeTextOverlay from "@/components/layout/BannerHomeTextOverlay.astro";
 import BannerPostMetaOverlay from "@/components/layout/BannerPostMetaOverlay.astro";
 import { backgroundWallpaper } from "@/config";
-import { BANNER_HEIGHT_EXTEND } from "@/constants/constants";
 import type {
 	BannerPostMeta,
 	BannerVisibilityState,
@@ -15,33 +14,17 @@ import type { BackgroundImages } from "@/utils/layout-utils";
 interface Props {
 	state: BannerVisibilityState;
 	backgroundImages: BackgroundImages;
-	isHomePage: boolean;
 	title?: string;
 	bannerPostMeta?: BannerPostMeta;
 }
 
-const { state, backgroundImages, isHomePage, title, bannerPostMeta } =
-	Astro.props;
+const { state, backgroundImages, title, bannerPostMeta } = Astro.props;
 ---
 
 <!-- Wallpaper - 如果允许切换则始终渲染，否则只渲染当前模式 -->
 {(state.isWallpaperSwitchable || state.isBannerMode || state.isFullscreenMode || state.isOverlayMode) && (
-<div id="wallpaper-wrapper" class:list={[
-	`absolute z-10 w-full transition duration-700 overflow-hidden ${state.mobileNonHomeBannerClass}`,
-	(state.isOverlayMode && !state.isWallpaperSwitchable) ? 'wallpaper-overlay' : '',
-	(state.isFullscreenMode && !state.isWallpaperSwitchable) ? 'wallpaper-fullscreen' : '',
-]} style={
-	state.isWallpaperSwitchable
-		? (state.isBannerMode
-			? `top: -${BANNER_HEIGHT_EXTEND}vh; --overlay-opacity: ${backgroundWallpaper.overlay?.opacity ?? 0.8}; --overlay-z-index: ${backgroundWallpaper.overlay?.zIndex ?? -1}; --overlay-blur: ${backgroundWallpaper.overlay?.blur ?? 0}px;`
-			: `display: none; --overlay-opacity: ${backgroundWallpaper.overlay?.opacity ?? 0.8}; --overlay-z-index: ${backgroundWallpaper.overlay?.zIndex ?? -1}; --overlay-blur: ${backgroundWallpaper.overlay?.blur ?? 0}px;`)
-		: state.isOverlayMode
-			? `--overlay-opacity: ${backgroundWallpaper.overlay?.opacity ?? 0.8}; --overlay-z-index: ${backgroundWallpaper.overlay?.zIndex ?? -1}; --overlay-blur: ${backgroundWallpaper.overlay?.blur ?? 0}px;`
-			: state.isFullscreenMode
-				? `--overlay-opacity: ${backgroundWallpaper.overlay?.opacity ?? 0.8}; --overlay-z-index: ${backgroundWallpaper.overlay?.zIndex ?? -1}; --overlay-blur: ${backgroundWallpaper.overlay?.blur ?? 0}px;`
-				: `top: -${BANNER_HEIGHT_EXTEND}vh`
-}>
-    <!-- 背景图片显示 -->
+<div id="wallpaper-wrapper" class="absolute z-10 w-full overflow-hidden" style="--overlay-opacity: ${backgroundWallpaper.overlay?.opacity ?? 0.8}; --overlay-z-index: ${backgroundWallpaper.overlay?.zIndex ?? -1}; --overlay-blur: ${backgroundWallpaper.overlay?.blur ?? 0}px;">
+<!-- 背景图片显示 -->
     {state.hasMultipleImages ? (
     /* 轮播模式：渲染所有图片为 slide-item */
     <div class:list={["relative h-full w-full bg-(--page-bg)", `effect-${state.bannerCarouselEffect}`]} id="banner-images-container"
@@ -72,7 +55,6 @@ const { state, backgroundImages, isHomePage, title, bannerPostMeta } =
             <div class:list={["slide-item hidden lg:block", index === 0 && "active"]} data-index={index}>
                 <template>
                     <ImageWrapper
-                        id="banner"
                         alt="Desktop background image of the blog"
                         class="object-cover h-full"
                         src={src}
@@ -149,7 +131,6 @@ const { state, backgroundImages, isHomePage, title, bannerPostMeta } =
             <div class="banner-image-slot absolute inset-0 hidden lg:block">
                 <template>
                     <ImageWrapper
-                        id="banner"
                         alt="Desktop background image of the blog"
                         class="object-cover h-full"
                         src={backgroundImages.desktop[0]}
@@ -571,8 +552,10 @@ const { state, backgroundImages, isHomePage, title, bannerPostMeta } =
 
     </div>
 
-    <!-- Fullscreen 模式下显示向下滚动指示器（仅首页；放在 overlay 容器外，避免被标题视差 transform 带离） -->
-    {isHomePage && (state.isFullscreenMode || state.isWallpaperSwitchable) && <ScrollDownIndicator />}
+    <!-- Fullscreen 模式下显示向下滚动指示器（仅首页显示；放在 overlay 容器外，避免被标题视差 transform 带离）。
+         始终渲染：壁纸区在 Swup 容器外、切页不重渲染，若首开非首页则指示器不会出现。
+         是否显示交给 CSS（body.is-home + fullscreen 模式才 display:flex） -->
+    {(state.isFullscreenMode || state.isWallpaperSwitchable) && <ScrollDownIndicator />}
 
     <!-- Water waves effect - 如果允许切换或任一设备启用则渲染 -->
     {state.shouldRenderWaves ? (

@@ -1,8 +1,4 @@
 import { backgroundWallpaper, displaySettingsConfig } from "@/config";
-import {
-	BANNER_HEIGHT,
-	MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
-} from "@/constants/constants";
 import { getImageQuality } from "@/utils/image-utils";
 import { getBackgroundImages } from "@/utils/layout-utils";
 
@@ -47,9 +43,6 @@ export interface BannerVisibilityState {
 	showBannerDim: boolean;
 	dimOpacity: number;
 	showBannerPageTitle: boolean;
-	mobileNonHomeBannerClass: string;
-	finalMainPanelTop: string;
-	shouldEnableTransparency: boolean;
 	bannerCarouselEnabledDefault: boolean;
 	bannerCarouselSwitchable: boolean;
 	bannerCarouselInterval: number;
@@ -165,19 +158,6 @@ export function getBannerVisibilityState(
 		!isPostPage &&
 		!!title;
 
-	const mobileNonHomeBannerClass =
-		isBannerMode && !isHomePageCheck ? "mobile-hide-banner" : "";
-
-	const mainPanelTop =
-		isBannerMode && isBackgroundEnabled
-			? `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`
-			: "5.5rem";
-	const finalMainPanelTop =
-		isBannerMode && isBackgroundEnabled ? mainPanelTop : "5.5rem";
-
-	const shouldEnableTransparency =
-		(isOverlayMode || isFullscreenMode) && isBackgroundEnabled;
-
 	const backgroundImages = getBackgroundImages();
 	const configQuality = getImageQuality();
 	const mobileQuality = Math.round(configQuality * 0.9);
@@ -222,9 +202,6 @@ export function getBannerVisibilityState(
 		showBannerDim,
 		dimOpacity,
 		showBannerPageTitle,
-		mobileNonHomeBannerClass,
-		finalMainPanelTop,
-		shouldEnableTransparency,
 		bannerCarouselEnabledDefault,
 		bannerCarouselSwitchable,
 		bannerCarouselInterval,

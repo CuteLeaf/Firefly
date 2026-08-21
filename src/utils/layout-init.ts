@@ -1,4 +1,3 @@
-import { showBanner } from "@/utils/banner-utils";
 import {
 	registerContentOverflowListeners,
 	scheduleContentOverflowEnhancements,
@@ -65,11 +64,9 @@ export function initLayout(): void {
 	// 页面加载完成后初始化banner和内容溢出容器
 	if (document.readyState === "loading") {
 		document.addEventListener("DOMContentLoaded", () => {
-			showBanner();
 			scheduleContentOverflowEnhancements();
 		});
 	} else {
-		showBanner();
 		scheduleContentOverflowEnhancements();
 	}
 

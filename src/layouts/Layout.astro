@@ -23,7 +23,6 @@ import {
 } from "@/config";
 import {
 	BANNER_HEIGHT,
-	BANNER_HEIGHT_EXTEND,
 	BANNER_HEIGHT_HOME,
 	PAGE_WIDTH,
 } from "@/constants/constants";
@@ -69,8 +68,6 @@ const navbarTransparentMode =
 // 判断是否应该显示顶部高光效果（只在full和semifull模式下显示）
 const shouldShowTopHighlight =
 	navbarTransparentMode === "full" || navbarTransparentMode === "semifull";
-
-const enableBanner = backgroundWallpaper.mode === "banner";
 
 // 子菜单 / 浮动面板的毛玻璃模糊度：跟随 navbar.blur，但不受壁纸模式影响，
 // 且带一个最小值 —— 导航栏可以用 blur: 0 关掉毛玻璃，面板则始终保留毛玻璃。
@@ -264,7 +261,6 @@ const siteLang = lang.replace("_", "-");
     <script
       is:inline
       define:vars={{
-        BANNER_HEIGHT_EXTEND,
         PAGE_WIDTH,
         configHue,
         defaultMode: siteConfig.themeColor.defaultMode ?? "light",
@@ -328,47 +324,9 @@ const siteLang = lang.replace("_", "-");
         : cardTransparentOpacity;
       document.documentElement.style.setProperty("--card-transparent-opacity", String(resolvedCardOpacity));
 
-      // calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
-      // 使用更准确的窗口高度计算
-      function calculateBannerHeightExtend() {
-        let offset = Math.floor(
-          window.innerHeight * (BANNER_HEIGHT_EXTEND / 100)
-        );
-        offset = offset - (offset % 4);
-        document.documentElement.style.setProperty(
-          "--banner-height-extend",
-          `${offset}px`
-        );
-      }
+      // 内容定位已由 --content-top 纯 CSS 决定（layout-base.css），无需 --banner-height-extend 变量/计算
 
-      // 立即设置初始值
-      calculateBannerHeightExtend();
-
-      // 在下一帧重新计算精确值（仅在值变化时更新，避免闪烁）
-      requestAnimationFrame(() => {
-        const oldValue = parseInt(
-          document.documentElement.style.getPropertyValue(
-            "--banner-height-extend"
-          )
-        );
-        calculateBannerHeightExtend();
-        const newValue = parseInt(
-          document.documentElement.style.getPropertyValue(
-            "--banner-height-extend"
-          )
-        );
-        // 如果值变化了，再更新一次确保准确
-        if (Math.abs(oldValue - newValue) > 4) {
-          // 如果有明显变化，延迟一帧再更新，避免闪烁
-          requestAnimationFrame(calculateBannerHeightExtend);
-        }
-      });
-
-      // 初始化壁纸模式 - 在页面渲染前应用
-      const WALLPAPER_BANNER = "banner";
-      const WALLPAPER_FULLSCREEN = "fullscreen";
-      const WALLPAPER_OVERLAY = "overlay";
-      const WALLPAPER_NONE = "none";
+      // 初始化壁纸模式 - 在页面渲染前同步应用（其余布局由 CSS 属性选择器接管）
       const wallpaperMode = isWallpaperSwitchable
         ? localStorage.getItem("wallpaperMode") || defaultWallpaperMode
         : defaultWallpaperMode;
@@ -379,182 +337,19 @@ const siteLang = lang.replace("_", "-");
         wallpaperMode
       );
 
-      // 立即执行函数来处理DOM
-      (function applyWallpaperMode() {
-        // 初始化期间禁用 #main-grid transform 过渡，避免加载时布局/变量变化产生内容下移动画；
-        // load 后移除（仅首次设置，swup 切页重跑脚本时不再重复）
-        if (!window.__fireflyLayoutTransitionGuard) {
-          window.__fireflyLayoutTransitionGuard = true;
-          document.documentElement.setAttribute("data-layout-init", "");
-          const removeLayoutInit = () =>
-            document.documentElement.removeAttribute("data-layout-init");
-          if (document.readyState === "complete") {
-            requestAnimationFrame(removeLayoutInit);
-          } else {
-            window.addEventListener("load", removeLayoutInit, { once: true });
-          }
+      // 初始化期间禁用 content-panel/wrapper 过渡，避免加载时布局/变量变化产生内容移动动画；
+      // load 后移除（仅首次设置，swup 切页重跑脚本时不再重复）。布局已由 CSS 接管，无需 rAF 校正
+      if (!window.__fireflyLayoutTransitionGuard) {
+        window.__fireflyLayoutTransitionGuard = true;
+        document.documentElement.setAttribute("data-layout-init", "");
+        const removeLayoutInit = () =>
+          document.documentElement.removeAttribute("data-layout-init");
+        if (document.readyState === "complete") {
+          requestAnimationFrame(removeLayoutInit);
+        } else {
+          window.addEventListener("load", removeLayoutInit, { once: true });
         }
-
-        // 使用 requestAnimationFrame 确保在下一帧之前执行（wrapper 等在 slot 之后才解析）
-        requestAnimationFrame(function () {
-          // 根据模式隐藏显示对应元素（body 类；首帧前已由 body 起始处的同步脚本应用，
-          // 此处 rAF 再校正一次以覆盖 swup 切页等场景）
-          if (
-            wallpaperMode === WALLPAPER_NONE ||
-            wallpaperMode === WALLPAPER_OVERLAY ||
-            wallpaperMode === WALLPAPER_FULLSCREEN
-          ) {
-            // 隐藏横幅
-            if (document.body) {
-              document.body.classList.remove("enable-banner");
-              document.body.classList.add("no-banner-layout");
-            }
-          } else {
-            if (document.body) {
-              document.body.classList.add("enable-banner");
-              document.body.classList.remove("no-banner-layout");
-            }
-          }
-
-          // 全屏透明模式 / 全屏壁纸模式（卡片半透明，复用 overlay 的 cardOpacity 配置）
-          if (
-            wallpaperMode === WALLPAPER_OVERLAY ||
-            wallpaperMode === WALLPAPER_FULLSCREEN
-          ) {
-            if (document.body) {
-              document.body.classList.add("wallpaper-transparent");
-            }
-          } else {
-            if (document.body) {
-              document.body.classList.remove("wallpaper-transparent");
-            }
-          }
-
-          // 处理wallpaper-wrapper的显示
-          const wallpaperWrapper = document.getElementById("wallpaper-wrapper");
-
-          // 检查当前是否为首页
-          const isHomePage =
-            window.location.pathname === baseUrl ||
-            (baseUrl !== '/' && window.location.pathname === baseUrl.replace(/\/$/, '')) ||
-            window.location.pathname === "/";
-
-          if (wallpaperMode === WALLPAPER_OVERLAY) {
-            // 全屏壁纸透明模式：切换为 overlay 显示
-            if (wallpaperWrapper) {
-              wallpaperWrapper.classList.add("wallpaper-overlay");
-              wallpaperWrapper.style.display = "block";
-              wallpaperWrapper.classList.remove("hidden", "opacity-0", "mobile-hide-banner");
-              wallpaperWrapper.classList.add("opacity-100");
-              wallpaperWrapper.style.top = "";
-            }
-          } else if (wallpaperMode === WALLPAPER_FULLSCREEN) {
-            // 全屏壁纸模式：切换为全屏壁纸显示
-            if (wallpaperWrapper) {
-              wallpaperWrapper.classList.remove("wallpaper-overlay");
-              wallpaperWrapper.classList.add("wallpaper-fullscreen");
-              // 始终显示壁纸（移动端非首页也显示，与 overlay 一致）
-              wallpaperWrapper.style.display = "block";
-              wallpaperWrapper.classList.remove("hidden", "opacity-0", "mobile-hide-banner");
-              wallpaperWrapper.classList.add("opacity-100");
-              wallpaperWrapper.style.top = "";
-            }
-          } else if (wallpaperMode === WALLPAPER_NONE) {
-            // 纯色背景：隐藏壁纸
-            if (wallpaperWrapper) {
-              wallpaperWrapper.style.display = "none";
-              wallpaperWrapper.classList.add("hidden", "opacity-0");
-            }
-          } else {
-            // banner模式：以 banner 方式显示
-            if (wallpaperWrapper) {
-              wallpaperWrapper.classList.remove("wallpaper-overlay");
-              wallpaperWrapper.classList.remove("wallpaper-fullscreen");
-              const isMobile = window.innerWidth < 1024;
-              // 移动端非首页时隐藏banner（初始状态直接隐藏，不需要动画）
-              // 桌面端始终显示banner
-              if (isMobile && !isHomePage) {
-                wallpaperWrapper.style.display = "none";
-                wallpaperWrapper.classList.add("mobile-hide-banner");
-              } else {
-                wallpaperWrapper.style.display = "block";
-                wallpaperWrapper.classList.remove("mobile-hide-banner");
-              }
-            }
-          }
-
-          // 处理主内容区域位置
-          const mainContentWrapper = document.querySelector(
-            ".w-full.z-30.pointer-events-none"
-          );
-          if (mainContentWrapper) {
-            // 初始化期间禁用过渡动画，防止内容位置跳动
-            mainContentWrapper.style.setProperty("transition", "none", "important");
-            const isMobile = window.innerWidth < 1024;
-            // 只在移动端非首页时调整主内容位置
-            if (isMobile && !isHomePage) {
-              mainContentWrapper.classList.add("mobile-main-no-banner");
-            } else {
-              mainContentWrapper.classList.remove("mobile-main-no-banner");
-            }
-            // 全屏壁纸模式：首页用 hero 结构（内容在首屏之下），非首页与 overlay 一致（内容在最上面）
-            const isMobileNonHome = window.innerWidth < 1024 && !isHomePage;
-            if (wallpaperMode === WALLPAPER_FULLSCREEN && !isMobileNonHome) {
-              if (isHomePage) {
-                mainContentWrapper.style.position = "relative";
-                mainContentWrapper.style.top = "0";
-                mainContentWrapper.style.zIndex = "30";
-                mainContentWrapper.style.setProperty("margin-top", "100vh", "important");
-              } else {
-                // 桌面端非首页：与 overlay 一致，内容在最上面
-                mainContentWrapper.style.setProperty("top", "5.5rem", "important");
-                mainContentWrapper.style.position = "";
-                mainContentWrapper.style.zIndex = "";
-                mainContentWrapper.style.setProperty("margin-top", "0", "important");
-              }
-            } else if (isMobile && isHomePage && (wallpaperMode === WALLPAPER_BANNER || wallpaperMode === undefined)) {
-              // 移动端横幅模式首页：清除 inline top，让 CSS 响应式规则生效
-              mainContentWrapper.style.removeProperty("top");
-              mainContentWrapper.style.position = "";
-              mainContentWrapper.style.zIndex = "";
-              mainContentWrapper.style.setProperty("margin-top", "0", "important");
-            } else if (isMobileNonHome) {
-              mainContentWrapper.style.setProperty("top", "5.5rem", "important");
-              mainContentWrapper.style.position = "";
-              mainContentWrapper.style.zIndex = "";
-              mainContentWrapper.style.setProperty("margin-top", "0", "important");
-            } else if (wallpaperMode === WALLPAPER_BANNER && !isHomePage) {
-              // 桌面端横幅模式非首页：与首页相同定位（保留grid transform）
-              mainContentWrapper.style.setProperty("top", "calc(var(--banner-height) - 3.5rem)", "important");
-              mainContentWrapper.style.position = "";
-              mainContentWrapper.style.zIndex = "";
-              mainContentWrapper.style.setProperty("margin-top", "0", "important");
-            }
-            // 定位完成后显示主内容（初始CSS规则会隐藏，防止壁纸初始化前闪烁）
-            mainContentWrapper.style.visibility = "visible";
-            // 延迟恢复过渡动画，确保位置已生效
-            requestAnimationFrame(() => {
-              mainContentWrapper.style.removeProperty("transition");
-            });
-          }
-
-          // 处理banner homeText元素
-          const bannerTextOverlay = document.querySelector(
-            ".banner-home-text-overlay"
-          );
-          if (bannerTextOverlay) {
-            const isHomePage =
-              window.location.pathname === baseUrl || 
-              (baseUrl !== '/' && window.location.pathname === baseUrl.replace(/\/$/, '')) ||
-              window.location.pathname === "/";
-            if ((wallpaperMode === WALLPAPER_BANNER || wallpaperMode === WALLPAPER_FULLSCREEN) && isHomePage) {
-              bannerTextOverlay.classList.remove("hidden");
-            } else {
-              bannerTextOverlay.classList.add("hidden");
-            }
-          }
-        });
-      })();
+      }
 
       // 初始化水波纹动画状态 - 在 html 元素上设置属性，CSS 会立即生效
       (function applyWavesEnabled() {
@@ -608,28 +403,19 @@ const siteLang = lang.replace("_", "-");
     class:list={[
       {
         "is-home": isHomePageCheck,
-        "lg:is-home": isHomePageCheck,
-        "enable-banner": enableBanner,
         "sticky-navbar": siteConfig.navbar.stickyNavbar ?? false,
       },
     ]}
   >
-    <!-- 首帧前应用运行时壁纸模式的 body 类：head 中 applyWallpaperMode 已同步设置 data-wallpaper-mode，
-         此处 body 已创建、内容尚未解析（早于 rAF/DOMContentLoaded），避免布局类晚应用导致刷新闪烁 -->
+    <!-- 首帧前按运行时壁纸模式翻转卡片透明类（布局已由 data-wallpaper-mode 属性规则接管） -->
     <script is:inline>
       (function () {
         const wm = document.documentElement.getAttribute("data-wallpaper-mode");
         if (!wm) return;
-        const banner = wm === "banner";
-        document.body.classList.toggle("enable-banner", banner);
-        document.body.classList.toggle("no-banner-layout", !banner);
         document.body.classList.toggle(
           "wallpaper-transparent",
           wm === "overlay" || wm === "fullscreen",
         );
-        // 壁纸布局已由 data-wallpaper-mode 属性规则在首帧生效，提前标记初始化完成，
-        // 避免 fullscreen 非首页依赖 DOMContentLoaded 才显示主内容（先空白后出现）
-        document.body.classList.add("wallpaper-initialized");
       })();
     </script>
 

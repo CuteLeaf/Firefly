@@ -250,7 +250,8 @@ function initialActive(categoryName: string): {
   function shouldDeferCategoryScroll(bar: HTMLElement, currentUrl: URL) {
     const { isHome } = getCategoryBarState(bar, currentUrl);
     const isMobile = window.innerWidth < 1024;
-    const isBannerMode = document.body.classList.contains("enable-banner");
+    const isBannerMode =
+      document.documentElement.getAttribute("data-wallpaper-mode") === "banner";
     return isMobile && isBannerMode && !isHome;
   }
 

@@ -20,6 +20,13 @@
         opacity 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
+/* 切页期间将过渡元素提升到合成层，避免移动端动画在主线程绘制掉帧卡顿 */
+html.is-changing .transition-main,
+html.is-animating .transition-main,
+html.is-animating.is-leaving .transition-leaving {
+    will-change: transform, opacity;
+}
+
 /* State: Changing (Swup) */
 html.is-changing .transition-main {
     transition: 
@@ -77,6 +84,7 @@ html.is-animating .transition-swup-fade {
 .onload-animation {
     opacity: 0;
     animation: fade-in-up 120ms ease-out forwards;
+    will-change: transform, opacity;
 }
 
 /* 渐进式动画延迟 */

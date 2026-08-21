@@ -1,80 +1,98 @@
 /* Layout 基础布局样式（从 Layout.astro 内联 <style is:global> 迁出） */
 
 @layer components {
-  .enable-banner #wallpaper-wrapper {
+  /* 内容面板：单一 top 属性定位（--content-top 由模式/首页/设备在解析期解析） */
+  .content-panel {
+    position: absolute;
+    top: var(--content-top, 5.5rem);
+    min-height: calc(100vh - var(--content-top, 5.5rem));
+  }
+
+  /* --content-top 由 html[data-wallpaper-mode] + body.is-home + 媒体查询解析（解析期生效，无 JS 内联 top） */
+  /* banner（桌面全页 + 移动首页）：内容在横幅下方，重叠 3.5rem */
+  html[data-wallpaper-mode="banner"] .content-panel {
+    --content-top: calc(var(--banner-height-home) - 3.5rem); /* = 65vh - 3.5rem */
+  }
+  /* banner 移动端非首页：横幅隐藏，内容从导航栏下方开始 */
+  @media (max-width: 1023px) {
+    html[data-wallpaper-mode="banner"] body:not(.is-home) .content-panel {
+      --content-top: 5.5rem;
+    }
+  }
+  /* overlay / none / fullscreen 非首页：内容从导航栏下方开始 */
+  html[data-wallpaper-mode="overlay"] .content-panel,
+  html[data-wallpaper-mode="none"] .content-panel,
+  html[data-wallpaper-mode="fullscreen"] body:not(.is-home) .content-panel {
+    --content-top: 5.5rem;
+  }
+  /* fullscreen 首页 hero：内容推到首屏之下 */
+  html[data-wallpaper-mode="fullscreen"] body.is-home .content-panel {
+    --content-top: 100vh;
+  }
+
+  /* banner wrapper：统一顶到顶部、高 65vh（不再用 -30vh/translateY 抵消；短屏高度由 layout-styles 媒体查询覆盖） */
+  html[data-wallpaper-mode="banner"] #wallpaper-wrapper {
+    position: absolute;
+    top: 0;
     height: var(--banner-height-home);
-    transform: translateY(var(--banner-height-extend));
+    transform: none;
+    display: block;
+  }
+  @media (max-width: 1023px) {
+    html[data-wallpaper-mode="banner"] body:not(.is-home) #wallpaper-wrapper {
+      display: none !important;
+    }
+  }
+  /* none 模式隐藏壁纸 */
+  html[data-wallpaper-mode="none"] #wallpaper-wrapper {
+    display: none !important;
   }
 
-  .enable-banner #banner {
-    height: var(--banner-height-home);
-    transform: translateY(0);
-  }
-
-  .enable-banner #main-grid {
-    transform: translateY(var(--banner-height-extend));
-  }
-
-  /* 初始化期间禁用 #main-grid transform 过渡（data-layout-init 由 Layout.astro 解析期
-     同步设置、load 后移除），避免加载时布局/变量变化产生内容下移的可见动画 */
-  html[data-layout-init] #main-grid {
-    transition: none !important;
-  }
-
-  /* 初始化期间同样禁用 wallpaper-wrapper 过渡，避免加载时尺寸/透明度变化产生壁纸尺寸闪烁 */
-  html[data-layout-init] #wallpaper-wrapper {
-    transition: none !important;
-  }
-
-  .enable-banner #top-row {
+  /* banner 模式 top-row 占位高度 */
+  html[data-wallpaper-mode="banner"] #top-row {
     height: calc(var(--banner-height-home) - 4.5rem);
     @apply transition-all duration-300;
   }
 
-  /* 全屏壁纸模式 */
-  .no-banner-layout #wallpaper-wrapper.wallpaper-fullscreen {
-    position: fixed;
-    inset: 0;
-    z-index: var(--overlay-z-index, -1);
-    height: 100vh;
-    min-height: 100vh;
-    max-height: 100vh;
-    top: 0;
-    transform: none;
-    overflow: hidden;
+  /* 过渡：切页 / 切模式 / 初始化
+     - 切页：transform 合成动画（由 visit:start 的 FLIP 计算位移差驱动，避免 top 每帧重排卡顿）
+     - 切模式：top 过渡（无 DOM 替换，已验证丝滑） */
+  html.is-page-transitioning .content-panel {
+    transition: transform 220ms linear;
   }
-
-  .no-banner-layout #wallpaper-wrapper.wallpaper-fullscreen img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    object-position: center !important;
-    /* 注意：这里不能设置 filter/transform（会进入 @layer components，
-       而 !important 时 layered 优先于 unlayered，会压过 layout-styles.css 里
-       的模糊规则；首屏/下滑的模糊由 .fullscreen-blurred 类 + JS 控制） */
-    opacity: 1 !important;
+  html.is-wallpaper-transitioning .content-panel {
+    transition: top 450ms cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  }
+  html.is-wallpaper-transitioning #wallpaper-wrapper {
+    transition: opacity 400ms ease, height 450ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  html[data-layout-init] .content-panel,
+  html[data-layout-init] #wallpaper-wrapper {
+    transition: none !important;
   }
 }
 
 @layer utilities {
-  .enable-banner #sidebar-sticky {
-    top: calc(1rem - var(--banner-height-extend)) !important;
-  }
-  .enable-banner #left-sidebar-sticky {
-    top: calc(1rem - var(--banner-height-extend)) !important;
-  }
-  .enable-banner #right-sidebar-sticky {
-    top: calc(1rem - var(--banner-height-extend)) !important;
-  }
-
-  body.enable-banner.sticky-navbar #sidebar-sticky,
-  body.enable-banner.sticky-navbar #left-sidebar-sticky,
-  body.enable-banner.sticky-navbar #right-sidebar-sticky {
-    top: calc(5.5rem - var(--banner-height-extend)) !important;
+  /* 侧边栏 sticky：#main-grid transform 已删除，无需 --banner-height-extend 补偿；sticky-navbar 统一 5.5rem */
+  body.sticky-navbar #sidebar-sticky,
+  body.sticky-navbar #left-sidebar-sticky,
+  body.sticky-navbar #right-sidebar-sticky {
+    top: 5.5rem !important;
   }
 
   .navbar-hidden {
-    @apply opacity-0 -translate-y-16;
+    /* 隐藏只滑动不淡出：opacity<1 会让祖先成为 backdrop root，
+       导航栏毛玻璃（#navbar > div::before 的 backdrop-filter）期间无法采样页面、显示无模糊白底，
+       透明度回到 1 时模糊才突然出现（表现为白闪）。transform 不创建 backdrop root，毛玻璃全程生效。
+       位移 -100% 使导航栏整体移出视口上方，避免残留边缘 */
+    @apply -translate-y-full;
+  }
+
+  /* 非 sticky 导航栏隐藏/显示：只过渡 translate（Tailwind v4 的 translate-y-* 用原生
+     translate 属性而非 transform），实现平滑下滑；不过渡 opacity，避免淡入期间
+     backdrop root 导致的毛玻璃失效白闪（sticky 导航栏永不隐藏，不受影响） */
+  body:not(.sticky-navbar) #navbar-wrapper {
+    transition: translate 0.2s ease-out;
   }
 
   body.sticky-navbar #top-row {
@@ -90,53 +108,17 @@
     position: static !important;
     opacity: 1 !important;
     transform: none !important;
+    translate: none !important;
   }
 
   body.sticky-navbar #navbar-wrapper.navbar-hidden {
     opacity: 1 !important;
     transform: none !important;
-  }
-
-  html[data-wallpaper-mode="none"] body.sticky-navbar #sidebar-sticky,
-  html[data-wallpaper-mode="none"] body.sticky-navbar #left-sidebar-sticky,
-  html[data-wallpaper-mode="none"] body.sticky-navbar #right-sidebar-sticky,
-  html[data-wallpaper-mode="overlay"] body.sticky-navbar #sidebar-sticky,
-  html[data-wallpaper-mode="overlay"] body.sticky-navbar #left-sidebar-sticky,
-  html[data-wallpaper-mode="overlay"] body.sticky-navbar #right-sidebar-sticky,
-  body.sticky-navbar.no-banner-layout #sidebar-sticky,
-  body.sticky-navbar.no-banner-layout #left-sidebar-sticky,
-  body.sticky-navbar.no-banner-layout #right-sidebar-sticky {
-    top: 5.5rem !important;
+    translate: none !important;
   }
 }
 
 @media (max-width: 1023px) {
-  body.enable-banner:not(.lg\:is-home) #main-grid {
-    transform: none !important;
-  }
-
-  body.enable-banner:not(.lg\:is-home) #top-row {
-    height: auto !important;
-  }
-
-  body.enable-banner:not(.lg\:is-home) #sidebar-sticky,
-  body.enable-banner:not(.lg\:is-home) #left-sidebar-sticky,
-  body.enable-banner:not(.lg\:is-home) #right-sidebar-sticky {
-    top: 1rem !important;
-  }
-
-  html[data-wallpaper-mode="none"] body.sticky-navbar #sidebar-sticky,
-  html[data-wallpaper-mode="none"] body.sticky-navbar #left-sidebar-sticky,
-  html[data-wallpaper-mode="none"] body.sticky-navbar #right-sidebar-sticky,
-  html[data-wallpaper-mode="overlay"] body.sticky-navbar #sidebar-sticky,
-  html[data-wallpaper-mode="overlay"] body.sticky-navbar #left-sidebar-sticky,
-  html[data-wallpaper-mode="overlay"] body.sticky-navbar #right-sidebar-sticky,
-  body.sticky-navbar.no-banner-layout #sidebar-sticky,
-  body.sticky-navbar.no-banner-layout #left-sidebar-sticky,
-  body.sticky-navbar.no-banner-layout #right-sidebar-sticky {
-    top: 5.5rem !important;
-  }
-
   body.sticky-navbar #top-row {
     height: 4.5rem !important;
   }
