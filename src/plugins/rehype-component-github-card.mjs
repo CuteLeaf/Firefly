@@ -3,12 +3,7 @@ import { h } from "hastscript";
 import githubCardData from "../constants/github-card-data.json" with {
 	type: "json",
 };
-
-function isValidRepository(repo) {
-	return (
-		typeof repo === "string" && /^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/.test(repo)
-	);
-}
+import { isValidGithubRepository } from "../utils/github-card-utils.ts";
 
 function formatCount(value) {
 	return Intl.NumberFormat("en-us", {
@@ -33,7 +28,7 @@ export function GithubCardComponent(properties, children) {
 			'Invalid directive. ("github" directive must be leaf type "::github{repo="owner/repo"}")',
 		]);
 
-	if (!isValidRepository(properties.repo))
+	if (!isValidGithubRepository(properties.repo))
 		return h(
 			"div",
 			{ class: "hidden" },

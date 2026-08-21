@@ -1,12 +1,12 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { glob } from "glob";
+import { isValidGithubRepository } from "../src/utils/github-card-utils";
 
 const OUTPUT_FILE = "src/constants/github-card-data.json";
 const CONTENT_GLOB = "src/content/**/*.{md,mdx}";
 const GITHUB_DIRECTIVE_PATTERN =
 	/::github\s*\{[^}]*\brepo\s*=\s*["']([^"']+)["'][^}]*\}/g;
-const REPOSITORY_PATTERN = /^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/;
 
 interface GithubCardData {
 	description: string | null;
@@ -35,7 +35,7 @@ async function findRepositories(): Promise<Map<string, string>> {
 		const content = await fs.readFile(file, "utf-8");
 		for (const match of content.matchAll(GITHUB_DIRECTIVE_PATTERN)) {
 			const repo = match[1];
-			if (REPOSITORY_PATTERN.test(repo)) {
+			if (isValidGithubRepository(repo)) {
 				repositories.set(repo.toLowerCase(), repo);
 			}
 		}
@@ -61,7 +61,9 @@ async function fetchRepositoryData(repo: string): Promise<GithubCardData> {
 		},
 	);
 	if (!response.ok) {
-		throw new Error(`GitHub API returned ${response.status}`);
+		throw new Error(
+			`GitHub API returned ${response.status}${response.statusText ? ` ${response.statusText}` : ""}`,
+		);
 	}
 
 	const data = await response.json();
