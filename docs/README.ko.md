@@ -7,7 +7,7 @@
 > 산뜻하고 아름다운 Astro 정적 블로그 테마 템플릿
 >
 > ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen)
-![pnpm >= 11](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
+![pnpm >= 11](https://img.shields.io/badge/pnpm-%3E%3D11-blue)
 ![Astro](https://img.shields.io/badge/Astro-7.2.0-orange)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6.0.3-blue)
 >
@@ -103,7 +103,7 @@
 
 1. **저장소 복제:**
    ```bash
-   git clone https://github.com/Cuteleaf/Firefly.git
+   git clone https://github.com/CuteLeaf/Firefly.git
    cd Firefly
    ```
 
@@ -235,7 +235,7 @@ pinned: true  # Pin article
 location: China # Location
 ---
 
-Moment content supports Markdown.
+일상 내용은 Markdown을 지원합니다.
 ```
 
 [Memos](https://www.usememos.com/)를 데이터 소스로 사용할 수도 있습니다. `src/config/dynamicConfig.ts`의 `memos` 옵션을 구성하면 고정 항목 동기화와 이미지 첨부 표시를 지원하면서 Memos의 일상을 실시간으로 가져옵니다. 자세한 내용은 [일상 문서](https://docs-firefly.cuteleaf.cn/en/guide/dynamic.html)를 확인하세요.
