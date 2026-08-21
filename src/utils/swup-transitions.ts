@@ -23,6 +23,45 @@ import { pathsEqual, url } from "@/utils/url-utils";
 const stickyNavbar = siteConfig.navbar.stickyNavbar ?? false;
 
 /**
+ * 进度条：WAAPI 驱动 transform/opacity（合成线程动画）。
+ * 替代原 width 关键帧 + `void offsetWidth` 强制回流方案——后者在大型文章 DOM 上
+ * 会触发整棵布局树同步重排，正是切页卡顿来源之一。
+ */
+function startProgressBar(): void {
+	const bar = document.getElementById("progress-bar");
+	if (!bar) return;
+	bar.getAnimations().forEach((a) => {
+		a.cancel();
+	});
+	bar.animate(
+		[
+			{ transform: "scaleX(0)", opacity: 1 },
+			{ transform: "scaleX(0.95)", opacity: 1 },
+		],
+		{
+			duration: 8000,
+			easing: "cubic-bezier(0.1, 0.05, 0.1, 1)",
+			fill: "forwards",
+		},
+	);
+}
+
+function finishProgressBar(): void {
+	const bar = document.getElementById("progress-bar");
+	if (!bar) return;
+	bar.getAnimations().forEach((a) => {
+		a.cancel();
+	});
+	bar.animate(
+		[
+			{ transform: "scaleX(1)", opacity: 1 },
+			{ transform: "scaleX(1)", opacity: 0 },
+		],
+		{ duration: 500, easing: "ease-out", fill: "forwards" },
+	);
+}
+
+/**
  * Swup 页面切换编排（从 Layout.astro 迁出）。
  * 注册 link:click / content:replace / visit:start / page:view / visit:end 钩子。
  */
@@ -68,8 +107,8 @@ function registerSwupHooks(): void {
 	window.swup.hooks.on("content:replace", () => {
 		initializeFloatingPanels();
 
-		// 更新侧边栏组件的可见性（根据新页面的 URL）
-		updateSidebarComponentsVisibility();
+		// 侧边栏组件可见性由 page:view 统一更新（含 refreshSidebarStickyState 的
+		// offsetHeight 布局读取），content:replace 不重复执行，避免每趟切页强制布局两次
 
 		// 只处理katex元素的容器，使用浏览器原生滚动条
 		scheduleContentOverflowEnhancements();
@@ -113,30 +152,22 @@ function registerSwupHooks(): void {
 		}
 	});
 	window.swup.hooks.on("visit:start", (visit: { to: { url: string } }) => {
-		// Start progress bar
-		const progressBar = document.getElementById("progress-bar");
-		if (progressBar) {
-			progressBar.classList.remove("finishing", "done");
-			// Force reflow so the animation restarts cleanly
-			void progressBar.offsetWidth;
-			progressBar.classList.add("loading");
-		}
+		// Start progress bar（WAAPI 合成线程动画，不强制回流）
+		startProgressBar();
 
 		// 更新首页状态（body.is-home 驱动 CSS --content-top 等）
 		const bodyElement = document.querySelector("body") as HTMLElement;
 		const isHomePage = pathsEqual(visit.to.url, url("/"));
+		const wasHome = bodyElement.classList.contains("is-home");
 		const contentPanel = document.querySelector(
 			".content-panel",
 		) as HTMLElement | null;
-		const oldTop = contentPanel?.getBoundingClientRect().top ?? 0;
-		if (isHomePage) {
-			bodyElement.classList.add("is-home");
-		} else {
-			bodyElement.classList.remove("is-home");
-		}
-		// FLIP：top 已瞬时定位到目标，用 transform 从旧位置平滑过渡（合成动画，避免 top 重排卡顿）
-		if (contentPanel) {
-			const newTop = contentPanel.getBoundingClientRect().top;
+		// FLIP 只在 is-home 状态变化（首页↔非首页）时才有意义；文章↔文章、首页↔首页
+		// 类未变 → delta 必为 0，直接短路，避免常见切页白付两次强制布局读取
+		if (isHomePage !== wasHome && contentPanel) {
+			const oldTop = contentPanel.getBoundingClientRect().top; // 类切换前读
+			bodyElement.classList.toggle("is-home", isHomePage);
+			const newTop = contentPanel.getBoundingClientRect().top; // 类切换后读
 			const delta = oldTop - newTop;
 			// 超大位移（>75% 视口，如全屏首页→非首页）不做 FLIP：新页内容重排叠加会抖动，直接到位由 swup 淡入掩盖
 			if (delta !== 0 && Math.abs(delta) <= window.innerHeight * 0.75) {
@@ -284,19 +315,8 @@ function registerSwupHooks(): void {
 		}, 300);
 	});
 	window.swup.hooks.on("visit:end", (_visit: { to: { url: string } }) => {
-		// Finish progress bar
-		const progressBar = document.getElementById("progress-bar");
-		if (progressBar) {
-			progressBar.classList.remove("loading");
-			progressBar.classList.add("finishing");
-			setTimeout(() => {
-				progressBar.classList.remove("finishing");
-				progressBar.classList.add("done");
-				setTimeout(() => {
-					progressBar.classList.remove("done");
-				}, 300);
-			}, 200);
-		}
+		// Finish progress bar（WAAPI：快速填满后淡出）
+		finishProgressBar();
 
 		setTimeout(() => {
 			const heightExtend = document.getElementById("page-height-extend");

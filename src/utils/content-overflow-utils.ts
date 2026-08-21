@@ -51,9 +51,8 @@ function initContentOverflowEnhancements(): void {
 	initHorizontalOverflowContainers();
 }
 
-/** 立即 + rAF + 100ms 后各执行一次内容溢出增强（新内容注入后需多次扫） */
+/** rAF + 100ms 后各执行一次内容溢出增强（新内容注入后需多次扫；不做同步立即执行，避免切页换入时主线程卡顿） */
 export function scheduleContentOverflowEnhancements(): void {
-	initContentOverflowEnhancements();
 	requestAnimationFrame(() => {
 		initContentOverflowEnhancements();
 	});
