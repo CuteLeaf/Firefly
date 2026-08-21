@@ -117,7 +117,7 @@ html.is-page-transitioning #header-waves {
    -------------------------------------------------------------------------- */
 html[data-wallpaper-mode="none"] .waves,
 html[data-wallpaper-mode="none"] #header-waves,
-html[data-wallpaper-mode="none"] #banner-dim-container {
+html[data-wallpaper-mode="none"] #wallpaper-wrapper #banner-dim-container {
     display: none !important;
 }
 
@@ -126,12 +126,16 @@ html[data-wallpaper-mode="none"] #banner-dim-container {
    data-wallpaper-mode 在解析期内联脚本中同步设置，早于 rAF 应用
    wallpaper-fullscreen/overlay 类；据此隐藏可避免刷新时波浪/渐变先显示后消失的闪烁。
    -------------------------------------------------------------------------- */
+html[data-wallpaper-mode="fullscreen"] body:not(.is-home) #wallpaper-wrapper #banner-dim-container {
+    display: none !important;
+}
 html[data-wallpaper-mode="fullscreen"] .waves,
 html[data-wallpaper-mode="fullscreen"] #header-waves,
-html[data-wallpaper-mode="fullscreen"] #wallpaper-gradient,
+html[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper #wallpaper-gradient,
 html[data-wallpaper-mode="overlay"] .waves,
 html[data-wallpaper-mode="overlay"] #header-waves,
-html[data-wallpaper-mode="overlay"] #wallpaper-gradient {
+html[data-wallpaper-mode="overlay"] #wallpaper-wrapper #wallpaper-gradient,
+html[data-wallpaper-mode="overlay"] #wallpaper-wrapper #banner-dim-container {
     display: none !important;
 }
 
@@ -142,7 +146,7 @@ html[data-wallpaper-mode="overlay"] #wallpaper-gradient {
 /* --------------------------------------------------------------------------
    1. 用户控制 - 通过 html 属性控制显隐
    -------------------------------------------------------------------------- */
-html[data-gradient-enabled="false"] #wallpaper-gradient {
+html[data-gradient-enabled="false"] #wallpaper-wrapper #wallpaper-gradient {
     display: none !important;
 }
 
@@ -175,6 +179,14 @@ html[data-waves-enabled="true"] #wallpaper-gradient {
 /* --------------------------------------------------------------------------
    5. None 模式隐藏渐变
    -------------------------------------------------------------------------- */
-html[data-wallpaper-mode="none"] #wallpaper-gradient {
+html[data-wallpaper-mode="none"] #wallpaper-wrapper #wallpaper-gradient {
     display: none !important;
+}
+/* 模式切换（全屏/覆盖/纯色 → 横幅）：水波纹从全屏底部随内容一起上移淡入到横幅底部 */
+@keyframes firefly-waves-slide-up {
+    from { transform: translateY(calc(100vh - var(--banner-height-home))); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+html.is-wallpaper-transitioning[data-wallpaper-mode="banner"] #header-waves {
+    animation: firefly-waves-slide-up 450ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }

@@ -65,15 +65,7 @@ const banner = getBannerVisibilityState({
 });
 const sidebar = getEffectiveSidebarState({ isPostPage });
 
-const {
-	isBannerMode,
-	isFullscreenMode,
-	isBackgroundEnabled,
-	hasWallpaper,
-	mobileNonHomeBannerClass,
-	finalMainPanelTop,
-	shouldEnableTransparency,
-} = banner;
+const { hasWallpaper } = banner;
 const {
 	hideSidebarOnPostPage,
 	effectiveIsBothSidebars,
@@ -90,24 +82,13 @@ const {
 
 <Layout title={title} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} postSlug={postSlug} hasWallpaper={hasWallpaper}>
 
-
-<!-- 为全屏壁纸模式添加body类（按运行时模式判断：Swup 切页注入时会重新执行，
-     需避免把 config 的模式误应用到运行时已切换到其他模式的情况） -->
-{shouldEnableTransparency && (
-	<script>
-		const wm = document.documentElement.getAttribute("data-wallpaper-mode");
-		if (wm === "overlay" || wm === "fullscreen") {
-			document.body.classList.add("wallpaper-transparent");
-		}
-	</script>
-)}
-
+<slot slot="head" name="head" />
 <HeaderTopRow stickyNavbar={stickyNavbar} navbarWidthFull={navbarWidthFull} />
 
-<WallpaperSection state={banner} backgroundImages={backgroundImages} isHomePage={isHomePageCheck} title={title} bannerPostMeta={bannerPostMeta} />
+<WallpaperSection state={banner} backgroundImages={backgroundImages} title={title} bannerPostMeta={bannerPostMeta} />
 
 <!-- Main content -->
-<div class={`absolute w-full z-30 pointer-events-none ${mobileNonHomeBannerClass ? 'mobile-main-no-banner' : ''} ${!(isBannerMode && isBackgroundEnabled) ? 'no-banner-layout' : ''}`} style={isFullscreenMode && isHomePageCheck ? 'top: 0;' : `top: ${finalMainPanelTop}`}>
+<div class="content-panel absolute w-full z-30 pointer-events-none">
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
     <div class="relative w-full xl:w-[92vw] max-w-(--page-width) mx-auto pointer-events-auto">
         <div id="main-grid"

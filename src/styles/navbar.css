@@ -49,6 +49,10 @@
     /* 给下面的 ::before 当定位包含块与层叠上下文 */
     position: relative;
     z-index: 0;
+    /* 提升为独立合成层：避免祖先（#navbar-wrapper）做 transform/opacity 过渡时
+       ::before 的 backdrop-filter 被浏览器跳过、动画期间显示无模糊的原始白底，
+       结束后才突然启用（表现为白闪）；will-change 不影响布局/fixed 定位 */
+    will-change: transform;
     @apply navbar-surface-transition;
 }
 
