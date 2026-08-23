@@ -15,7 +15,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	volume: 0.7,
 
 	// 播放模式：'list'=列表循环, 'one'=单曲循环, 'random'=随机播放
-	playMode: "list",
+	playMode: "random",
 
 	// 是否显启用歌词
 	showLyrics: false,
@@ -86,6 +86,13 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 				name: "春泥",
 				artist: "庾澄庆",
 				url: "/assets/music/春泥-庾澄庆.mp3",
+				cover: "",
+				lrc: "",
+			},
+			{
+				name: "娃娃脸",
+				artist: "后弦",
+				url: "/assets/music/娃娃脸-后弦.mp3",
 				cover: "",
 				lrc: "",
 			},
