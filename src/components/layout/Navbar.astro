@@ -68,8 +68,21 @@ const hasDisplaySettings =
 const pages = siteConfig.pages;
 
 function isPageEnabled(link: NavBarLink): boolean {
-	if (!link.pageKey) return true;
-	return pages[link.pageKey as keyof typeof pages] !== false;
+  if (!link) return false;
+  if (typeof link.pageKey === 'undefined') return true;
+  return true;
+}
+
+function filterLinks(link: NavBarLink): NavBarLink | null {
+  if (!link.children) {
+    return isPageEnabled(link) ? link : null;
+  }
+
+  const filteredChildren = link.children.filter(isPageEnabled);
+
+  if (filteredChildren.length === 0) return null;
+  if (filteredChildren.length === 1) return filteredChildren[0];
+  return { ...link, children: filteredChildren };
 }
 
 function filterLinks(link: NavBarLink): NavBarLink | null {

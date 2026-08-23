@@ -15,7 +15,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	volume: 0.7,
 
 	// 播放模式：'list'=列表循环, 'one'=单曲循环, 'random'=随机播放
-	playMode: "list",
+	playMode: "random",
 
 	// 是否显启用歌词
 	showLyrics: false,
@@ -48,10 +48,45 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	local: {
 		playlist: [
 			{
-				name: "使一颗心免于哀伤",
-				artist: "知更鸟 / HOYO-MiX / Chevy",
-				url: "/assets/music/使一颗心免于哀伤-哼唱.mp3",
-				cover: "/assets/music/cover/109951169585655912.webp",
+				name: "友情岁月",
+				artist: "郑伊健",
+				url: "/assets/music/友情岁月-郑伊健.mp3",
+				cover: "",
+				lrc: "",
+			},
+			{
+				name: "红尘客栈",
+				artist: "周杰伦",
+				url: "/assets/music/红尘客栈-周杰伦.mp3",
+				cover: "",
+				lrc: "",
+			},
+						{
+				name: "苦瓜",
+				artist: "陈奕迅",
+				url: "/assets/music/苦瓜-陈奕迅.mp3",
+				cover: "",
+				lrc: "",
+			},
+						{
+				name: "黄金时代",
+				artist: "陈奕迅",
+				url: "/assets/music/黄金时代-陈奕迅.mp3",
+				cover: "",
+				lrc: "",
+			},
+			{
+				name: "天龙八部之宿敌",
+				artist: "许嵩",
+				url: "/assets/music/天龙八部之宿敌-许嵩.mp3",
+				cover: "",
+				lrc: "",
+			},
+			{
+				name: "春泥",
+				artist: "庾澄庆",
+				url: "/assets/music/春泥-庾澄庆.mp3",
+				cover: "",
 				lrc: "",
 			},
 		],
