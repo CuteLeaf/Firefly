@@ -3,6 +3,7 @@
  * 直接从 Memos API 获取数据并转换为动态系统格式
  * @author: CuteLeaf <xiaye@msn.com>
  */
+import { Marked } from "marked";
 
 interface MemoAttachment {
 	name: string;
@@ -50,57 +51,31 @@ export interface DynamicEntry {
 }
 
 /**
- * 将 Markdown 内容转换为简单的 HTML
+ * 专用的 marked 实例，用于把 Memos 的 Markdown 渲染为 HTML
+ * 启用 GFM 与单换行转 <br>（贴近 Memos 的社交化渲染效果），
+ * 链接默认新标签页打开并防止反向标签页劫持
+ */
+const memosMarked = new Marked({ gfm: true, breaks: true });
+memosMarked.use({
+	renderer: {
+		link({ href, title, tokens }) {
+			const text = this.parser.parseInline(tokens);
+			const titleAttr = title ? ` title="${title}"` : "";
+			return `<a href="${href}"${titleAttr} target="_blank" rel="noopener noreferrer">${text}</a>`;
+		},
+	},
+});
+
+/**
+ * 将 Memos 的 Markdown 内容转换为 HTML
+ * 图片语法在此处移除，由 extractImages 单独提取并追加到内容后，避免重复渲染
  */
 function markdownToHtml(markdown: string): string {
-	let html = markdown
-		// 图片（已在后续提取，这里替换为空）
-		.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, "")
-		// 链接
-		.replace(
-			/\[([^\]]+)\]\(([^)]+)\)/g,
-			'<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>',
-		)
-		// 加粗
-		.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-		// 斜体
-		.replace(/\*(.+?)\*/g, "<em>$1</em>")
-		// 行内代码
-		.replace(/`([^`]+)`/g, "<code>$1</code>")
-		// 标题
-		.replace(/^### (.+)$/gm, "<h3>$1</h3>")
-		.replace(/^## (.+)$/gm, "<h2>$1</h2>")
-		.replace(/^# (.+)$/gm, "<h1>$1</h1>")
-		// 无序列表
-		.replace(/^\s*[-*] (.+)$/gm, "<li>$1</li>")
-		// 引用
-		.replace(/^> (.+)$/gm, "<blockquote>$1</blockquote>")
-		// 分割线
-		.replace(/^---$/gm, "<hr>")
-		// 任务列表
-		.replace(
-			/^- \[x\] (.+)$/gm,
-			'<li><input type="checkbox" checked disabled> $1</li>',
-		)
-		.replace(
-			/^- \[ \] (.+)$/gm,
-			'<li><input type="checkbox" disabled> $1</li>',
-		);
-
-	// 换行转换为 <br>，但保留段落分隔
-	const paragraphs = html.split(/\n\n+/);
-	html = paragraphs
-		.map((p) => {
-			const trimmed = p.trim();
-			if (!trimmed) return "";
-			// 如果已经是块级元素，不包裹 <p>
-			if (/^<[a-z]/.test(trimmed)) return trimmed;
-			return `<p>${trimmed.replace(/\n/g, "<br>")}</p>`;
-		})
-		.filter(Boolean)
-		.join("\n");
-
-	return html;
+	const contentWithoutImages = markdown.replace(
+		/!\[([^\]]*)\]\(([^)]+)\)/g,
+		"",
+	);
+	return memosMarked.parse(contentWithoutImages) as string;
 }
 
 /**
