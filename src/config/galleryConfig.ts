@@ -34,6 +34,14 @@ export const galleryConfig: GalleryConfig = {
 			password: "123456",
 			passwordHint: "测试密码123456",
 		},
+		{
+			id: "dongtai",
+			name: "动态图片",
+			description: "",
+			location: "",
+			date: "2026-08-24",
+			tags: ["动态图片"],
+		},
 	],
 
 	// 瀑布流最小列宽(px)，浏览器根据容器宽度自动计算列数，默认 240
