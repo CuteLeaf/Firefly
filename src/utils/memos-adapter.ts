@@ -53,7 +53,8 @@ export interface DynamicEntry {
 /**
  * 专用的 marked 实例，用于把 Memos 的 Markdown 渲染为 HTML
  * 启用 GFM 与单换行转 <br>（贴近 Memos 的社交化渲染效果），
- * 链接默认新标签页打开并防止反向标签页劫持
+ * 链接默认新标签页打开并防止反向标签页劫持；
+ * 图片由 extractImages 单独提取并追加到内容后，故此处直接渲染为空
  */
 const memosMarked = new Marked({ gfm: true, breaks: true });
 memosMarked.use({
@@ -63,19 +64,18 @@ memosMarked.use({
 			const titleAttr = title ? ` title="${title}"` : "";
 			return `<a href="${href}"${titleAttr} target="_blank" rel="noopener noreferrer">${text}</a>`;
 		},
+		image() {
+			return "";
+		},
 	},
 });
 
 /**
  * 将 Memos 的 Markdown 内容转换为 HTML
- * 图片语法在此处移除，由 extractImages 单独提取并追加到内容后，避免重复渲染
+ * 图片语法由 marked 的 image 渲染器置空，避免重复渲染
  */
 function markdownToHtml(markdown: string): string {
-	const contentWithoutImages = markdown.replace(
-		/!\[([^\]]*)\]\(([^)]+)\)/g,
-		"",
-	);
-	return memosMarked.parse(contentWithoutImages) as string;
+	return memosMarked.parse(markdown) as string;
 }
 
 /**
@@ -93,26 +93,26 @@ function extractPlainText(content: string): string {
 
 /**
  * 从 Memos 内容中提取图片
+ * 使用 marked 的词法分析器定位图片 token，可正确处理含括号的图片地址与可选标题
  */
 function extractImages(memo: Memo, memosApiUrl: string): DynamicImage[] {
 	const images: DynamicImage[] = [];
 
 	// 从 Markdown 内容中提取图片
-	const imagePattern = /!\[([^\]]*)\]\(([^)]+)\)/g;
-	let match: RegExpExecArray | null;
-	match = imagePattern.exec(memo.content);
-	while (match !== null) {
-		let src = match[2];
+	const tokens = memosMarked.lexer(memo.content);
+	memosMarked.walkTokens(tokens, (token) => {
+		if (token.type !== "image") return;
+		let src = token.href;
 		// 处理相对路径
 		if (!src.startsWith("http") && !src.startsWith("//")) {
 			src = `${memosApiUrl}${src.startsWith("/") ? "" : "/"}${src}`;
 		}
 		images.push({
-			alt: match[1] || "",
+			alt: token.text || "",
 			src,
+			title: token.title || undefined,
 		});
-		match = imagePattern.exec(memo.content);
-	}
+	});
 
 	// 从 Memos 附件中提取图片
 	if (memo.attachments) {
