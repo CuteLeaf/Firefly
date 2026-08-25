@@ -3,7 +3,7 @@ title: 如何永久破解IDM
 published: 2026-08-23
 description: 关于激活IDM
 image: ./images/idmgw.avif
-tags: [idm，破解]
+tags: [idm,破解,技术]
 category: 激活破解
 draft: false    
 ---
