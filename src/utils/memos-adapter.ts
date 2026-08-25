@@ -192,7 +192,13 @@ async function fetchMemosInternal(
 		pageToken = data.nextPageToken;
 	}
 
-	return allMemos
+	// Memos 的 ListMemos API 并不会按 parent 过滤 creator（实测带不带 parent 返回结果一致），
+	// 因此这里在客户端按 creator 二次过滤，确保只显示指定用户的动态
+	const userFilteredMemos = parent
+		? allMemos.filter((memo) => memo.creator === parent)
+		: allMemos;
+
+	return userFilteredMemos
 		.filter((memo) => memo.state === "NORMAL")
 		.map((memo) => {
 			const id = memo.name.split("/").pop() || "";
