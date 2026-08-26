@@ -271,7 +271,7 @@ export async function GET({
 												type: "div",
 												props: {
 													style: {
-														fontSize: "62px",
+														fontSize: "72px",
 														fontWeight: 700,
 														color: textColor,
 														marginLeft: "25px",
