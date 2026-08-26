@@ -2,13 +2,11 @@ import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import * as fs from "node:fs";
 import type { APIContext, GetStaticPaths } from "astro";
-import { ImageResponse } from "takumi-js/response";
 import { googleFonts } from "takumi-js/helpers";
-
-import { removeFileExtension } from "@/utils/url-utils";
-
+import { ImageResponse } from "takumi-js/response";
 import { profileConfig } from "@/config/profileConfig";
 import { siteConfig } from "@/config/siteConfig";
+import { removeFileExtension } from "@/utils/url-utils";
 
 export const prerender = true;
 
@@ -30,7 +28,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 	});
 };
 
-const fontCache = new Map<string, Promise<string>>();//new Map();
+const fontCache = new Map<string, Promise<string>>(); //new Map();
 
 // Detect image format from magic bytes, returns mime type or null if unknown
 const detectImageFormat = (buffer: Buffer): string | null => {
@@ -38,11 +36,16 @@ const detectImageFormat = (buffer: Buffer): string | null => {
 
 	// PNG: 89 50 4E 47 0D 0A 1A 0A
 	if (
-		buffer[0] === 0x89 && buffer[1] === 0x50 &&
-		buffer[2] === 0x4e && buffer[3] === 0x47 &&
-		buffer[4] === 0x0d && buffer[5] === 0x0a &&
-		buffer[6] === 0x1a && buffer[7] === 0x0a
-	) return "image/png";
+		buffer[0] === 0x89 &&
+		buffer[1] === 0x50 &&
+		buffer[2] === 0x4e &&
+		buffer[3] === 0x47 &&
+		buffer[4] === 0x0d &&
+		buffer[5] === 0x0a &&
+		buffer[6] === 0x1a &&
+		buffer[7] === 0x0a
+	)
+		return "image/png";
 
 	// JPEG: FF D8 FF
 	if (buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff)
@@ -50,19 +53,27 @@ const detectImageFormat = (buffer: Buffer): string | null => {
 
 	// GIF: GIF87a or GIF89a
 	if (
-		buffer[0] === 0x47 && buffer[1] === 0x49 && buffer[2] === 0x46 &&
+		buffer[0] === 0x47 &&
+		buffer[1] === 0x49 &&
+		buffer[2] === 0x46 &&
 		buffer[3] === 0x38 &&
 		(buffer[4] === 0x37 || buffer[4] === 0x39) &&
 		buffer[5] === 0x61
-	) return "image/gif";
+	)
+		return "image/gif";
 
 	// WebP: RIFF ???? WEBP
 	if (
-		buffer[0] === 0x52 && buffer[1] === 0x49 &&
-		buffer[2] === 0x46 && buffer[3] === 0x46 &&
-		buffer[8] === 0x57 && buffer[9] === 0x45 &&
-		buffer[10] === 0x42 && buffer[11] === 0x50
-	) return "image/webp";
+		buffer[0] === 0x52 &&
+		buffer[1] === 0x49 &&
+		buffer[2] === 0x46 &&
+		buffer[3] === 0x46 &&
+		buffer[8] === 0x57 &&
+		buffer[9] === 0x45 &&
+		buffer[10] === 0x42 &&
+		buffer[11] === 0x50
+	)
+		return "image/webp";
 
 	return null;
 };
@@ -115,7 +126,9 @@ const warnAndFallback = (imagePath: string, detail: string): ArrayBuffer => {
 };
 
 // Helper to load avatar/favicon with caching
-const loadImageAsArrayBuffer = async (imagePath: string): Promise<ArrayBuffer> => {
+const loadImageAsArrayBuffer = async (
+	imagePath: string,
+): Promise<ArrayBuffer> => {
 	try {
 		let buffer: Buffer;
 
@@ -127,10 +140,7 @@ const loadImageAsArrayBuffer = async (imagePath: string): Promise<ArrayBuffer> =
 			const normalized = imagePath.replace(/^\.\//, "");
 
 			// Try resolving the file in order: src/ -> public/ -> path as-is
-			const candidatePaths = [
-				`./src/${normalized}`,
-				`./public/${normalized}`,
-			];
+			const candidatePaths = [`./src/${normalized}`, `./public/${normalized}`];
 
 			const foundPath = candidatePaths.find((p) => fs.existsSync(p));
 
@@ -148,7 +158,11 @@ const loadImageAsArrayBuffer = async (imagePath: string): Promise<ArrayBuffer> =
 
 		if (!detectedFormat || !SUPPORTED_FORMATS.has(detectedFormat)) {
 			const sharp = await getSharp();
-			buffer = Buffer.from(await sharp(buffer as Buffer).png().toBuffer());
+			buffer = Buffer.from(
+				await sharp(buffer as Buffer)
+					.png()
+					.toBuffer(),
+			);
 		}
 
 		return buffer.buffer.slice(
@@ -169,8 +183,13 @@ export async function GET({
 	const { post } = props;
 
 	// Load and get static assets
-	let iconPath = "./public/favicon/favicon-dark-192.png";
-	if (siteConfig.favicon.length > 0) iconPath = siteConfig.favicon[0].src;
+	let iconPath = "/favicon/favicon-dark-192.png";
+	if (siteConfig.favicon.length > 0) {
+		const pngFavicon = siteConfig.favicon.find((f) =>
+			f.src.toLowerCase().endsWith(".png"),
+		);
+		iconPath = (pngFavicon ?? siteConfig.favicon[0]).src;
+	}
 
 	const hue = siteConfig.themeColor.hue;
 	const primaryColor = `hsl(${hue}, 90%, 65%)`;
@@ -217,7 +236,12 @@ export async function GET({
 										src: "og-icon",
 										width: 48,
 										height: 48,
-										style: { borderRadius: "10px", width: 48, height: 48, objectFit: "cover" },
+										style: {
+											borderRadius: "10px",
+											width: 48,
+											height: 48,
+											objectFit: "cover",
+										},
 									},
 								},
 								{
@@ -341,7 +365,12 @@ export async function GET({
 													src: "og-avatar",
 													width: 60,
 													height: 60,
-													style: { borderRadius: "50%", width: 60, height: 60, objectFit: "cover" },
+													style: {
+														borderRadius: "50%",
+														width: 60,
+														height: 60,
+														objectFit: "cover",
+													},
 												},
 											},
 											{
@@ -370,7 +399,7 @@ export async function GET({
 					},
 				],
 			},
-		} as any,
+		},
 		{
 			width: 1200,
 			height: 630,
@@ -380,27 +409,28 @@ export async function GET({
 				sources: [
 					{
 						src: "og-avatar",
-						data: () => loadImageAsArrayBuffer(profileConfig.avatar!),
+						data: () => loadImageAsArrayBuffer(profileConfig.avatar ?? ""),
 					},
 					{
 						src: "og-icon",
 						data: () => loadImageAsArrayBuffer(iconPath),
-					}
+					},
 				],
 			},
-			fonts: googleFonts({ 
-				families: 
-				[{
-					name: "Noto Sans SC",
-					weight: "100..900",
-					style: "normal",
-				 }],
+			fonts: googleFonts({
+				families: [
+					{
+						name: "Noto Sans SC",
+						weight: "100..900",
+						style: "normal",
+					},
+				],
 				cache: fontCache,
-			 }),
+			}),
 			headers: {
 				"Content-Type": "image/png",
 				"Cache-Control": "public, max-age=31536000, immutable",
 			},
-		}
+		},
 	);
 }
