@@ -1,0 +1,370 @@
+---
+import { siteConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import { getSortedPostsList } from "@/utils/content-utils";
+import { getPostUrlBySlug, url } from "@/utils/url-utils";
+
+// 归档列表：全量按年分组，服务端渲染。筛选（?tag=/?category=/?uncategorized）
+// 与年份折叠由客户端脚本处理——数据本身在构建期已全部就绪。
+const sortedPostsList = await getSortedPostsList();
+
+// 严格按发布时间倒序（不受置顶影响），镜像原 Svelte 版行为
+const posts = sortedPostsList
+	.slice()
+	.sort((a, b) => b.data.published.getTime() - a.data.published.getTime());
+
+// 按年份分组
+const grouped = new Map<number, typeof posts>();
+for (const post of posts) {
+	const year = post.data.published.getFullYear();
+	if (!grouped.has(year)) grouped.set(year, []);
+	grouped.get(year)?.push(post);
+}
+const groups = Array.from(grouped.entries())
+	.map(([year, yearPosts]) => ({ year, posts: yearPosts }))
+	.sort((a, b) => b.year - a.year);
+
+// 初始折叠规则：foldArticle 非 false 且多于一年时，除首年外全部折叠
+const foldArticle = siteConfig.foldArticle !== false;
+const collapseAllButFirst = foldArticle && groups.length > 1;
+
+function formatDate(date: Date) {
+	const month = (date.getMonth() + 1).toString().padStart(2, "0");
+	const day = date.getDate().toString().padStart(2, "0");
+	return `${month}-${day}`;
+}
+
+function formatTag(tagList: string[]) {
+	return tagList.map((t) => `#${t}`).join(" ");
+}
+
+// 传给客户端脚本的 i18n 文案与配置
+const i18nStrings = {
+	categories: i18n(I18nKey.categories),
+	tags: i18n(I18nKey.tags),
+	uncategorized: i18n(I18nKey.uncategorized),
+	postCount: i18n(I18nKey.postCount),
+	postsCount: i18n(I18nKey.postsCount),
+};
+const tagsBaseUrl = url("/tags/");
+const categoriesBaseUrl = url("/categories/");
+const foldOnFilter = collapseAllButFirst;
+---
+
+<archive-panel
+  class="card-base px-8 py-6"
+  data-fold={foldOnFilter ? "true" : "false"}
+>
+  {/* 筛选头部：默认隐藏，客户端在有筛选时填充并显示 */}
+  <div id="archive-filter-header" class="mb-5 hidden">
+    <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+      <div class="min-w-0 text-sm text-75">
+        <a id="archive-filter-link" href={tagsBaseUrl} class="text-50 hover:text-(--primary) transition-colors"></a>
+        <span class="mx-2 text-30">/</span>
+        <span id="archive-filter-values" class="font-semibold text-(--primary)"></span>
+        <span id="archive-filter-secondary" class="ml-2 text-50 hidden"></span>
+      </div>
+      <div class="shrink-0 text-xs text-50">
+        <span id="archive-filter-count"></span> <span id="archive-filter-count-label"></span>
+      </div>
+    </div>
+  </div>
+
+  {groups.map((group, groupIndex) => {
+    const collapsed = collapseAllButFirst && groupIndex > 0;
+    return (
+      <div class="archive-year-block" data-year={group.year} data-count={group.posts.length}>
+        <button
+          class="archive-year-toggle flex flex-row w-full items-center h-15 cursor-pointer rounded-lg
+                 hover:bg-(--btn-plain-bg-hover) transition-colors group/yr"
+          aria-expanded={collapsed ? "false" : "true"}
+        >
+          <div class="w-[15%] md:w-[10%] transition text-2xl font-bold text-right text-75
+                      group-hover/yr:text-(--primary)">
+            {group.year}
+          </div>
+          <div class="w-[15%] md:w-[10%]">
+            <div class="h-3 w-3 bg-none rounded-full outline-(--primary) mx-auto
+                        -outline-offset-2 z-50 outline-3"></div>
+          </div>
+          <div class="w-[70%] md:w-[80%] transition text-left text-50 flex items-center gap-2
+                      group-hover/yr:text-(--primary)">
+            <span class="archive-year-count">{group.posts.length}</span>
+            {" "}
+            <span class="archive-year-count-label">{i18n(group.posts.length === 1 ? I18nKey.postCount : I18nKey.postsCount)}</span>
+            <span class="archive-arrow" style={collapsed ? "transform: rotate(-90deg)" : ""}>
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </div>
+        </button>
+
+        <div class="archive-year-content" hidden={collapsed}>
+          {group.posts.map((post) => (
+            <a
+              href={getPostUrlBySlug(post.id)}
+              aria-label={post.data.title}
+              class="archive-post group btn-plain block! h-10 w-full rounded-lg hover:text-[initial]"
+              data-tags={JSON.stringify(post.data.tags || [])}
+              data-category={post.data.category || ""}
+            >
+              <div class="flex flex-row justify-start items-center h-full">
+                {/* date */}
+                <div class="w-[15%] md:w-[10%] transition text-sm text-right text-50">
+                  {formatDate(post.data.published)}
+                </div>
+
+                {/* dot and line */}
+                <div class="w-[15%] md:w-[10%] relative dash-line h-full flex items-center">
+                  <div class="transition-all mx-auto w-1 h-1 rounded-sm group-hover:h-5
+                              bg-[oklch(0.5_0.05_var(--hue))] group-hover:bg-(--primary)
+                              outline-4 z-50 outline-(--card-bg)
+                              group-hover:outline-(--btn-plain-bg-hover)
+                              group-active:outline-(--btn-plain-bg-active)"></div>
+                </div>
+
+                {/* post title */}
+                <div class="w-[70%] md:max-w-[65%] md:w-[65%] text-left font-bold
+                            group-hover:translate-x-1 transition-all group-hover:text-(--primary)
+                            text-75 pr-8 whitespace-nowrap text-ellipsis overflow-hidden flex items-center gap-2">
+                  {post.data.category && (
+                    <span class="shrink-0 inline-block text-xs font-medium px-1.5 py-0.5 rounded-sm
+                                 bg-[oklch(0.95_0.025_var(--hue))] dark:bg-[oklch(0.25_0.025_var(--hue))]
+                                 text-(--primary) group-hover:bg-(--primary) group-hover:text-white!
+                                 transition-colors">
+                      {post.data.category}
+                    </span>
+                  )}
+                  <span class="truncate">{post.data.title}</span>
+                </div>
+
+                {/* tag list */}
+                <div class="hidden md:block md:w-[15%] text-left text-sm transition
+                            whitespace-nowrap text-ellipsis overflow-hidden text-30">
+                  {formatTag(post.data.tags || [])}
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    );
+  })}
+</archive-panel>
+
+<style>
+  archive-panel {
+    display: block;
+  }
+  .archive-arrow {
+    display: inline-flex;
+  }
+</style>
+
+<script is:inline define:vars={{ i18nStrings, tagsBaseUrl, categoriesBaseUrl }}>
+  class ArchivePanel extends HTMLElement {
+    constructor() {
+      super();
+      // 避免 swup 重复初始化
+      if (this.dataset.initialized === "true") return;
+      this.dataset.initialized = "true";
+      this.init();
+    }
+
+    init() {
+      const params = new URLSearchParams(window.location.search);
+      const tags = params.has("tag") ? params.getAll("tag") : [];
+      const categories = params.has("category") ? params.getAll("category") : [];
+      const uncategorized = params.get("uncategorized");
+
+      const hasFilter = tags.length > 0 || categories.length > 0 || !!uncategorized;
+
+      if (hasFilter) {
+        this.applyFilter(tags, categories, !!uncategorized);
+        this.updateBannerTitle(tags, categories, !!uncategorized);
+      }
+
+      this.bindYearToggles();
+    }
+
+    // 按筛选条件隐藏不匹配的文章行，重算每年计数，隐藏空年份，重新折叠
+    applyFilter(tags, categories, uncategorized) {
+      const foldOnFilter = this.dataset.fold === "true";
+      const blocks = Array.from(this.querySelectorAll(".archive-year-block"));
+      let totalVisible = 0;
+      const visibleBlocks = [];
+
+      for (const block of blocks) {
+        const rows = Array.from(block.querySelectorAll(".archive-post"));
+        let visibleCount = 0;
+
+        for (const row of rows) {
+          let rowTags = [];
+          try {
+            rowTags = JSON.parse(row.dataset.tags || "[]");
+          } catch {
+            rowTags = [];
+          }
+          const rowCategory = row.dataset.category || "";
+
+          let match = true;
+          if (tags.length > 0) {
+            match = match && rowTags.some((t) => tags.includes(t));
+          }
+          if (categories.length > 0) {
+            match = match && !!rowCategory && categories.includes(rowCategory);
+          }
+          if (uncategorized) {
+            match = match && !rowCategory;
+          }
+
+          row.hidden = !match;
+          if (match) visibleCount++;
+        }
+
+        // 更新每年计数显示
+        const countEl = block.querySelector(".archive-year-count");
+        const labelEl = block.querySelector(".archive-year-count-label");
+        if (countEl) countEl.textContent = String(visibleCount);
+        if (labelEl) {
+          labelEl.textContent =
+            visibleCount === 1 ? i18nStrings.postCount : i18nStrings.postsCount;
+        }
+
+        // 隐藏没有可见文章的年份块
+        block.hidden = visibleCount === 0;
+        if (visibleCount > 0) {
+          visibleBlocks.push(block);
+          totalVisible += visibleCount;
+        }
+      }
+
+      // 重新应用折叠：首个可见年份展开，其余折叠
+      visibleBlocks.forEach((block, index) => {
+        const shouldCollapse = foldOnFilter && index > 0;
+        this.setBlockCollapsed(block, shouldCollapse);
+      });
+
+      // 填充并显示筛选头部
+      this.renderFilterHeader(tags, categories, uncategorized, totalVisible);
+    }
+
+    setBlockCollapsed(block, collapsed) {
+      const content = block.querySelector(".archive-year-content");
+      const toggle = block.querySelector(".archive-year-toggle");
+      const arrow = block.querySelector(".archive-arrow");
+      if (content) content.hidden = collapsed;
+      if (toggle) toggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
+      if (arrow) {
+        arrow.style.transform = collapsed ? "rotate(-90deg)" : "";
+      }
+    }
+
+    renderFilterHeader(tags, categories, uncategorized, count) {
+      const header = this.querySelector("#archive-filter-header");
+      if (!header) return;
+
+      // 构造筛选项（tag 优先作为主筛选，镜像原逻辑）
+      const filters = [];
+      if (categories.length > 0)
+        filters.push({ label: i18nStrings.categories, values: categories, isTag: false });
+      if (uncategorized)
+        filters.push({ label: i18nStrings.categories, values: [i18nStrings.uncategorized], isTag: false });
+      if (tags.length > 0)
+        filters.push({ label: i18nStrings.tags, values: tags, isTag: true });
+
+      const primary =
+        filters.find((f) => f.isTag) || filters[0] || null;
+      if (!primary) return;
+      const secondary = filters.filter((f) => f !== primary);
+
+      const linkEl = header.querySelector("#archive-filter-link");
+      const valuesEl = header.querySelector("#archive-filter-values");
+      const secondaryEl = header.querySelector("#archive-filter-secondary");
+      const countEl = header.querySelector("#archive-filter-count");
+      const countLabelEl = header.querySelector("#archive-filter-count-label");
+
+      const fmtValues = (f) => {
+        const prefix = f.isTag ? "#" : "";
+        return f.values.map((v) => `${prefix}${v}`).join(" / ");
+      };
+
+      if (linkEl) {
+        linkEl.textContent = primary.label;
+        linkEl.setAttribute("href", primary.isTag ? tagsBaseUrl : categoriesBaseUrl);
+      }
+      if (valuesEl) valuesEl.textContent = fmtValues(primary);
+      if (secondaryEl) {
+        if (secondary.length > 0) {
+          const summary = secondary
+            .map((f) => `${f.label}: ${fmtValues(f)}`)
+            .join("  ·  ");
+          secondaryEl.textContent = `· ${summary}`;
+          secondaryEl.classList.remove("hidden");
+        } else {
+          secondaryEl.classList.add("hidden");
+        }
+      }
+      if (countEl) countEl.textContent = String(count);
+      if (countLabelEl) {
+        countLabelEl.textContent =
+          count === 1 ? i18nStrings.postCount : i18nStrings.postsCount;
+      }
+
+      header.classList.remove("hidden");
+    }
+
+    updateBannerTitle(tags, categories, uncategorized) {
+      const bannerTitle = document.querySelector(".banner-page-title-text");
+      if (!bannerTitle) return;
+
+      let newTitle = "";
+      if (categories.length > 0) {
+        newTitle = categories.join(" / ");
+      } else if (uncategorized) {
+        newTitle = i18nStrings.uncategorized;
+      } else if (tags.length > 0) {
+        newTitle = tags.map((t) => `#${t}`).join(" / ");
+      }
+      // 直接设置（自定义元素在解析阶段升级、首帧前执行），避免默认标题闪烁
+      if (newTitle && bannerTitle.textContent !== newTitle) {
+        bannerTitle.textContent = newTitle;
+      }
+    }
+
+    bindYearToggles() {
+      const blocks = Array.from(this.querySelectorAll(".archive-year-block"));
+      for (const block of blocks) {
+        const toggle = block.querySelector(".archive-year-toggle");
+        const content = block.querySelector(".archive-year-content");
+        const arrow = block.querySelector(".archive-arrow");
+        if (!toggle || !content) continue;
+
+        toggle.addEventListener("click", () => {
+          const willCollapse = !content.hidden;
+          content.hidden = willCollapse;
+          toggle.setAttribute("aria-expanded", willCollapse ? "false" : "true");
+
+          // 用 Web Animations API 做旋转动画，绕开 Swup 对 CSS transition 的干扰
+          if (arrow) {
+            requestAnimationFrame(() => {
+              arrow.animate(
+                [
+                  { transform: willCollapse ? "rotate(0deg)" : "rotate(-90deg)" },
+                  { transform: willCollapse ? "rotate(-90deg)" : "rotate(0deg)" },
+                ],
+                { duration: 200, easing: "ease", fill: "forwards" },
+              );
+            });
+          }
+        });
+      }
+    }
+  }
+
+  if (!customElements.get("archive-panel")) {
+    customElements.define("archive-panel", ArchivePanel);
+  }
+</script>

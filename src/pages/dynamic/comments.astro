@@ -1,0 +1,59 @@
+---
+import Comment from "@/components/comment/index.astro";
+import { commentConfig, dynamicConfig, siteConfig } from "@/config";
+import Layout from "@/layouts/Layout.astro";
+
+if (
+	!siteConfig.pages.dynamic ||
+	dynamicConfig.showComment === false ||
+	!commentConfig.type ||
+	commentConfig.type === "none"
+) {
+	return Astro.redirect("/404/");
+}
+---
+
+<Layout title="">
+	<main class="dynamic-comment-embed">
+		<Comment customPath="/dynamic/" />
+	</main>
+</Layout>
+
+<script>
+	window.addEventListener("message", (event) => {
+		if (
+			event.origin !== window.location.origin ||
+			event.data?.type !== "dynamic-comment-theme"
+		) {
+			return;
+		}
+		document.documentElement.classList.toggle("dark", Boolean(event.data.dark));
+		document.documentElement.dataset.theme = event.data.dark ? "dark" : "light";
+	});
+
+	const reportHeight = () => {
+		window.parent.postMessage(
+			{
+				type: "dynamic-comment-height",
+				height: document.documentElement.scrollHeight,
+			},
+			window.location.origin,
+		);
+	};
+	new ResizeObserver(reportHeight).observe(document.body);
+	window.addEventListener("load", reportHeight);
+</script>
+
+<style is:global>
+	html:has(.dynamic-comment-embed),
+	body:has(.dynamic-comment-embed) {
+		overflow: hidden;
+		background: transparent !important;
+	}
+
+	.dynamic-comment-embed #post-comments {
+		margin: 0;
+		border: 0;
+		box-shadow: none;
+	}
+</style>

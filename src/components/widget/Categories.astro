@@ -1,0 +1,39 @@
+---
+import ButtonLink from "@/components/common/ButtonLink.astro";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { WidgetComponentConfig } from "@/types/config";
+import { getCategoryList } from "@/utils/content-utils";
+
+const categories = await getCategoryList();
+
+const COLLAPSED_HEIGHT = "7.5rem";
+
+interface Props {
+	class?: string;
+	style?: string;
+	widgetConfig?: WidgetComponentConfig;
+}
+const { class: className, style, widgetConfig } = Astro.props;
+
+const collapseThreshold = widgetConfig?.specificConfig?.collapseThreshold;
+const showTitle = widgetConfig?.showTitle !== false;
+const isCollapsed = collapseThreshold
+	? categories.length > collapseThreshold
+	: false;
+---
+
+<WidgetLayout name={i18n(I18nKey.categories)} showTitle={showTitle} id="categories" isCollapsed={isCollapsed} collapsedHeight={COLLAPSED_HEIGHT}
+                class={className} style={style}
+>
+    {categories.map((c) =>
+        <ButtonLink
+            url={c.url}
+            badge={String(c.count)}
+            label={`View all posts in the ${c.name.trim()} category`}
+        >
+            {c.name.trim()}
+        </ButtonLink>
+    )}
+</WidgetLayout>

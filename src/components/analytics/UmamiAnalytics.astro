@@ -1,0 +1,88 @@
+---
+interface Props {
+	websiteId: string;
+	scriptUrl?: string;
+	replaysScriptUrl?: string;
+	trackOutboundLinks?: boolean;
+	collectWebVitals?: boolean;
+	replays?: {
+		enabled?: boolean;
+		sampleRate?: number;
+		maskLevel?: "moderate" | "strict";
+		maxDuration?: number;
+		blockSelector?: string;
+	};
+}
+
+const {
+	websiteId,
+	scriptUrl,
+	replaysScriptUrl,
+	trackOutboundLinks = true,
+	collectWebVitals = false,
+	replays,
+} = Astro.props;
+
+const replaysEnabled = replays?.enabled ?? false;
+const replaysSampleRate = replays?.sampleRate ?? 0.15;
+const replaysMaskLevel = replays?.maskLevel ?? "moderate";
+const replaysMaxDuration = replays?.maxDuration ?? 300000;
+const replaysBlockSelector = replays?.blockSelector?.trim();
+---
+
+<script
+	is:inline
+	data-swup-ignore-script
+	defer
+	src={scriptUrl}
+	data-website-id={websiteId}
+	data-performance={collectWebVitals ? "true" : undefined}
+></script>
+
+{
+	replaysEnabled && (
+		<script
+			is:inline
+			data-swup-ignore-script
+			defer
+			src={replaysScriptUrl}
+			data-website-id={websiteId}
+			data-sample-rate={String(replaysSampleRate)}
+			data-mask-level={replaysMaskLevel}
+			data-max-duration={String(replaysMaxDuration)}
+			data-block-selector={replaysBlockSelector || undefined}
+		/>
+	)
+}
+
+{
+	trackOutboundLinks && (
+		<script is:inline data-swup-ignore-script>
+			;(() => {
+				const name = 'outbound-link-click'
+
+				const applyOutboundTracking = () => {
+					document.querySelectorAll('a').forEach((a) => {
+						if (
+							a.host !== window.location.host &&
+							!a.getAttribute('data-umami-event')
+						) {
+							a.setAttribute('data-umami-event', name)
+							a.setAttribute('data-umami-event-url', a.href)
+						}
+					})
+				}
+
+				if (document.readyState === 'loading') {
+					document.addEventListener('DOMContentLoaded', applyOutboundTracking, {
+						once: true,
+					})
+				} else {
+					applyOutboundTracking()
+				}
+
+				document.addEventListener('astro:page-load', applyOutboundTracking)
+			})()
+		</script>
+	)
+}

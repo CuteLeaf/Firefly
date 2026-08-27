@@ -1,0 +1,46 @@
+---
+// MDX 步骤条容器组件（配合 StepItem 使用）
+//
+// 用法（.mdx）：
+//   <Steps>
+//     <StepItem title="安装依赖">
+//       运行 `pnpm install`。
+//     </StepItem>
+//     <StepItem title="启动开发服务器" type="tip" icon="rocket">
+//       运行 `pnpm dev`。
+//     </StepItem>
+//   </Steps>
+//
+// 编号由 CSS counter 自动生成（无需手动传序号）；竖线画在本组件上，
+// 贯穿整个步骤条。条目由 StepItem 渲染，支持标题、编号圆颜色和内置图标。
+
+---
+
+<ol class="steps">
+	<slot />
+</ol>
+
+<style>
+	.steps {
+		/* 编号圆直径，竖线与子项圆共用同一坐标 */
+		--steps-marker-size: 1.5rem;
+
+		counter-reset: step;
+		position: relative;
+		list-style: none;
+		margin: var(--spacing-2xl) 0;
+		padding: 0;
+	}
+
+	/* 贯穿竖线，位于编号圆中心 */
+	.steps::before {
+		content: "";
+		position: absolute;
+		left: calc(var(--steps-marker-size) / 2 - 1px);
+		top: var(--spacing-xs);
+		bottom: var(--spacing-xs);
+		width: 2px;
+		background: var(--line-divider);
+		border-radius: var(--radius-full);
+	}
+</style>

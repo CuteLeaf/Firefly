@@ -1,0 +1,71 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<div
+  id="scroll-down-indicator"
+  class="scroll-down-indicator"
+  onclick="document.getElementById('main-grid')?.scrollIntoView({ behavior: 'smooth' })"
+>
+  <Icon name="material-symbols:keyboard-arrow-down-rounded" class="scroll-down-icon" />
+</div>
+
+<script is:inline>
+  (function () {
+    // 防止重复初始化（Swup 页面切换时可能重复执行）
+    if (window.__scrollDownIndicatorInit) return;
+    window.__scrollDownIndicatorInit = true;
+
+    // 移动端基准：目标让指示器底部距可见视口底约 6.5rem（≈104px）。
+    // 与桌面/其他移动端浏览器下 bottom:10rem 的实际观感接近（它们的壁纸底同样超出视口，被顶部地址栏占掉一部分），
+    // 仅 Edge Android 的底部导航栏需要额外把被挡住的高度补回来。
+    var TARGET_CLEARANCE = 104;
+
+    function updateVisibility() {
+      var indicator = document.getElementById("scroll-down-indicator");
+      if (!indicator) return;
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      if (scrollTop > 100) {
+        indicator.classList.add("hide");
+      } else {
+        indicator.classList.remove("hide");
+      }
+    }
+
+    // 计算被浏览器工具栏遮挡的壁纸底部高度：wrapper 底超出可见视口底（visualViewport）的部分
+    function getToolbarOverlap() {
+      var el = document.getElementById("wallpaper-wrapper");
+      var vv = window.visualViewport;
+      if (!el || !vv) return 0;
+      var visibleBottom = vv.offsetTop + vv.height;
+      return Math.max(0, el.getBoundingClientRect().bottom - visibleBottom);
+    }
+
+    // Edge Android 的底部导航栏是常驻浏览器 chrome，且不反映到 vh/dvh/lvh：
+    // 全屏壁纸 wrapper（100lvh）会延伸到工具栏后面，指示器 bottom 相对壁纸底（在工具栏后面）而显得太靠下。
+    // 其他浏览器无此问题，保持 CSS 的 bottom 不动，仅 Edge Android 用 JS 把被遮挡的高度补回来。
+    function updatePosition() {
+      var indicator = document.getElementById("scroll-down-indicator");
+      if (!indicator) return;
+      if (window.innerWidth > 1023 || !/EdgA\//i.test(navigator.userAgent)) {
+        indicator.style.removeProperty("bottom");
+        return;
+      }
+      var overlap = getToolbarOverlap() || 48; // visualViewport 无法反映底部栏时的兜底高度
+      indicator.style.bottom = TARGET_CLEARANCE + overlap + "px";
+    }
+
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+    window.addEventListener("resize", updatePosition, { passive: true });
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", updatePosition, { passive: true });
+      window.visualViewport.addEventListener("scroll", updatePosition, { passive: true });
+    }
+    // 模式切换时 wrapper 高度会过渡（65vh↔100lvh），过渡结束后重算底部遮挡
+    var wrapper = document.getElementById("wallpaper-wrapper");
+    if (wrapper) wrapper.addEventListener("transitionend", updatePosition);
+
+    updateVisibility();
+    updatePosition();
+  })();
+</script>

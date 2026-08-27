@@ -1,0 +1,89 @@
+---
+import SideBar from "@components/layout/SideBar.astro";
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+	side: "left" | "right";
+	position: "left" | "right" | "both";
+	enable: boolean;
+	hideSidebarOnPostPage: boolean;
+	effectiveIsBothSidebars: boolean;
+	effectiveHasLeftComponents: boolean;
+	effectiveHasRightComponents: boolean;
+	sidebarClass: string;
+	rightSidebarClass: string;
+	headings?: MarkdownHeading[];
+	encrypted?: boolean;
+}
+
+const {
+	side,
+	position,
+	enable,
+	hideSidebarOnPostPage,
+	effectiveIsBothSidebars,
+	effectiveHasLeftComponents,
+	effectiveHasRightComponents,
+	sidebarClass,
+	rightSidebarClass,
+	headings = [],
+	encrypted = false,
+} = Astro.props;
+
+// 静态容器 id（左侧为 wrapper，右侧为 static，保持原有 id 不变）
+const staticId =
+	side === "left" ? "left-sidebar-wrapper" : "right-sidebar-static";
+// 双侧栏或该侧为主侧栏时用静态容器（不被 swup 替换，避免闪烁）；否则用动态容器
+const staticShown = position === "both" || position === side;
+const hasComponents =
+	side === "left" ? effectiveHasLeftComponents : effectiveHasRightComponents;
+const sideClass = side === "left" ? sidebarClass : rightSidebarClass;
+// 静态容器内 SideBar 的显示条件（与原有左右逻辑一致）
+const staticSideBarShown =
+	enable &&
+	hasComponents &&
+	(side === "left" || effectiveIsBothSidebars || position === "right");
+// 左侧静态容器在非双侧栏时 side 传 undefined（SideBar 内部回退为 "left"）
+const staticSideBarSide =
+	side === "left"
+		? effectiveIsBothSidebars
+			? "left"
+			: undefined
+		: ("right" as const);
+---
+
+{staticShown ? (
+	<>
+		{enable ? (
+			<div
+				id={staticId}
+				class="contents"
+				data-hide-sidebar-on-post={hideSidebarOnPostPage ? "true" : "false"}
+				style={side === "left" ? "contain: layout style paint;" : undefined}
+			>
+				{staticSideBarShown && (
+					<SideBar
+						side={staticSideBarSide}
+						class={sideClass}
+						headings={headings}
+						encrypted={encrypted}
+					/>
+				)}
+			</div>
+		) : (
+			<div id={staticId} class="hidden"></div>
+		)}
+		<div id={`${side}-sidebar-dynamic`} class="hidden transition-swup-fade"></div>
+	</>
+) : (
+	<div id={`${side}-sidebar-dynamic`} class="contents transition-swup-fade">
+		{effectiveIsBothSidebars && hasComponents && (
+			<SideBar
+				side={side}
+				class={sideClass}
+				headings={headings}
+				encrypted={encrypted}
+			></SideBar>
+		)}
+	</div>
+)}

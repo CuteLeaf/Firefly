@@ -1,0 +1,145 @@
+---
+import { Icon } from "astro-icon/components";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { getSeriesList } from "@/utils/content-utils";
+import { getPostUrlBySlug } from "@/utils/url-utils";
+
+const seriesList = await getSeriesList();
+const totalPosts = seriesList.reduce((sum, series) => sum + series.count, 0);
+---
+
+<MainGridLayout title={i18n(I18nKey.series)} description={i18n(I18nKey.allSeries)}>
+    <!-- 页面标题 -->
+    <div class="card-base px-8 py-6 mb-4">
+        <div class="text-2xl font-bold text-(--primary) mb-2">
+            {i18n(I18nKey.series)}
+        </div>
+        <p class="text-30 text-sm">
+            {i18n(I18nKey.allSeries)} · {totalPosts} {i18n(I18nKey.postsCount)}
+        </p>
+    </div>
+
+    <!-- 系列列表：手风琴卡片（默认收起） -->
+    {
+        seriesList.length > 0 ? (
+            <div class="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] items-start gap-4 mb-4">
+                {
+                    seriesList.map((series) => (
+                        <div class="series-acc card-base overflow-hidden">
+                            <button
+                                type="button"
+                                aria-expanded="false"
+                                class="series-acc-header group flex w-full items-center gap-3 p-5 md:p-6 pb-3 cursor-pointer select-none text-left transition"
+                            >
+                                <span class="shrink-0 w-12 h-12 rounded-full bg-(--primary)/10 group-hover:bg-(--primary)/20 flex items-center justify-center transition-colors">
+                                    <Icon name="material-symbols:layers" aria-hidden="true" class="text-2xl text-(--primary)" />
+                                </span>
+                                <span class="flex-1 min-w-0">
+                                    <span class="block text-lg font-bold text-90 truncate group-hover:text-(--primary) transition">
+                                        {series.name}
+                                    </span>
+                                    <span class="block text-sm text-30 mt-0.5 transition group-hover:text-(--primary)/60">
+                                        {series.count} {i18n(I18nKey.postsCount)}
+                                    </span>
+                                </span>
+                                <Icon
+                                    name="material-symbols:keyboard-arrow-down-rounded"
+                                    aria-hidden="true"
+                                    class="acc-arrow shrink-0 text-[1.25rem] text-30 group-hover:text-(--primary) transition-transform duration-300"
+                                />
+                            </button>
+
+                            <div class="series-acc-content overflow-hidden max-h-0 transition-[max-height,opacity] duration-300 ease-in-out">
+                                <ol class="flex flex-col px-5 md:px-6 pb-4">
+                                    {
+                                        series.posts.map((post, idx) => (
+                                            <li>
+                                                <a
+                                                    href={getPostUrlBySlug(post.id)}
+                                                    class:list={[
+                                                        "group flex items-center gap-3 px-3 py-3 -mx-1 rounded-lg transition-all",
+                                                        "hover:bg-black/5 dark:hover:bg-white/5 active:scale-[0.98]",
+                                                        idx < series.posts.length - 1 &&
+                                                            "border-b border-dashed border-(--line-divider)",
+                                                    ]}
+                                                >
+                                                    <span class="shrink-0 w-6 h-6 rounded-md bg-(--enter-btn-bg) text-(--primary) flex items-center justify-center text-sm font-bold transition">
+                                                        {idx + 1}
+                                                    </span>
+                                                    <span class="flex-1 min-w-0 font-bold text-sm text-black/75 dark:text-white/75 truncate transition group-hover:text-(--primary)">
+                                                        {post.data.title}
+                                                    </span>
+                                                    <Icon
+                                                        name="material-symbols:chevron-right-rounded"
+                                                        aria-hidden="true"
+                                                        class="shrink-0 text-xl text-black/15 dark:text-white/15 transition group-hover:text-(--primary) group-hover:translate-x-0.5"
+                                                    />
+                                                </a>
+                                            </li>
+                                        ))
+                                    }
+                                </ol>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+        ) : (
+            <div class="card-base px-8 py-12 text-center">
+                <Icon name="material-symbols:layers" class="text-5xl text-30 mx-auto mb-4" />
+                <p class="text-30">{i18n(I18nKey.noSeries)}</p>
+            </div>
+        )
+    }
+
+    <script is:inline>
+        function onSeriesAccordion(e) {
+            var btn = e.target && e.target.closest ? e.target.closest('.series-acc-header') : null;
+            if (!btn) return;
+            var card = btn.closest('.series-acc');
+            var content = card ? card.querySelector('.series-acc-content') : null;
+            if (!content) return;
+
+            var isOpen = btn.getAttribute('aria-expanded') === 'true';
+
+            // 手风琴：关闭其它已展开的系列
+            var others = document.querySelectorAll('.series-acc-header[aria-expanded="true"]');
+            for (var i = 0; i < others.length; i++) {
+                var o = others[i];
+                if (o === btn) continue;
+                o.setAttribute('aria-expanded', 'false');
+                var oc = o.closest('.series-acc');
+                var ocC = oc ? oc.querySelector('.series-acc-content') : null;
+                if (ocC) {
+                    ocC.setAttribute('data-open', 'false');
+                    ocC.style.maxHeight = '0px';
+                }
+            }
+
+            var next = !isOpen;
+            btn.setAttribute('aria-expanded', String(next));
+            content.setAttribute('data-open', String(next));
+            content.style.maxHeight = next ? content.scrollHeight + 'px' : '0px';
+        }
+
+        // 事件委托，Swup 切页后新内容也能工作；避免重复注册（@swup/scripts-plugin 会重跑内联脚本）
+        if (!window.__seriesAccordionInit) {
+            window.__seriesAccordionInit = true;
+            document.addEventListener('click', onSeriesAccordion);
+        }
+    </script>
+</MainGridLayout>
+
+<style>
+    .series-acc-header[aria-expanded="true"] .acc-arrow {
+        transform: rotate(180deg);
+    }
+    .series-acc-content {
+        opacity: 0;
+    }
+    .series-acc-content[data-open="true"] {
+        opacity: 1;
+    }
+</style>

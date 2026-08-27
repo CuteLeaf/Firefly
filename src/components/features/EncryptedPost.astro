@@ -1,0 +1,13 @@
+---
+import EncryptedContent from "./EncryptedContent.astro";
+
+interface Props {
+	password: string;
+	slug: string;
+	hint?: string;
+}
+---
+
+<EncryptedContent {...Astro.props}>
+  <slot />
+</EncryptedContent>

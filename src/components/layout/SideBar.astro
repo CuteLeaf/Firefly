@@ -1,0 +1,239 @@
+---
+import type { MarkdownHeading } from "astro";
+import Advertisement from "@/components/widget/Advertisement.astro";
+import Announcement from "@/components/widget/Announcement.astro";
+import Calendar from "@/components/widget/Calendar.astro";
+import Categories from "@/components/widget/Categories.astro";
+import Dynamic from "@/components/widget/Dynamic.astro";
+import Music from "@/components/widget/Music.astro";
+import Profile from "@/components/widget/Profile.astro";
+import SidebarTOC from "@/components/widget/SidebarTOC.astro";
+import SiteInfo from "@/components/widget/SiteInfo.astro";
+import SiteStats from "@/components/widget/SiteStats.astro";
+import Tags from "@/components/widget/Tags.astro";
+import { sidebarLayoutConfig } from "@/config";
+import type {
+	MobileBottomComponentConfig,
+	WidgetComponentConfig,
+} from "@/types/config";
+
+interface Props {
+	class?: string;
+	headings?: MarkdownHeading[];
+	encrypted?: boolean;
+	side?: "left" | "right" | "bottom";
+}
+
+// 侧边栏位置常量
+const SIDEBAR_SIDE = {
+	LEFT: "left",
+	RIGHT: "right",
+	BOTTOM: "bottom",
+} as const;
+
+// 组件位置常量
+const COMPONENT_POSITION = {
+	TOP: "top",
+	STICKY: "sticky",
+} as const;
+
+// 动画延迟配置
+const ANIMATION_DELAY_UNIT = 50; // ms
+
+// 组件映射表
+const componentMap = {
+	profile: Profile,
+	announcement: Announcement,
+	categories: Categories,
+	tags: Tags,
+	sidebarToc: SidebarTOC,
+	advertisement: Advertisement,
+	stats: SiteStats,
+	calendar: Calendar,
+	music: Music,
+	siteInfo: SiteInfo,
+	dynamic: Dynamic,
+};
+
+// 获取侧边栏位置
+const side = (Astro.props.side ||
+	SIDEBAR_SIDE.LEFT) as (typeof SIDEBAR_SIDE)[keyof typeof SIDEBAR_SIDE];
+const className = Astro.props.class;
+
+// 根据 side 属性获取对应的组件列表
+const getComponents = (): (
+	| WidgetComponentConfig
+	| MobileBottomComponentConfig
+)[] => {
+	if (side === SIDEBAR_SIDE.LEFT) {
+		return sidebarLayoutConfig.leftComponents;
+	}
+	if (side === SIDEBAR_SIDE.RIGHT) {
+		return sidebarLayoutConfig.rightComponents;
+	}
+	if (side === SIDEBAR_SIDE.BOTTOM) {
+		return sidebarLayoutConfig.mobileBottomComponents;
+	}
+	return [];
+};
+
+// 过滤并排序组件（不再进行 showOnPostPage 过滤，交由客户端处理）
+const filterAndSortComponents = (
+	components: (WidgetComponentConfig | MobileBottomComponentConfig)[],
+) => {
+	return components.filter((comp) => comp.enable);
+};
+
+// 分离 top 和 sticky 位置的组件（保持原始数组顺序）
+const getComponentsByPosition = (
+	components: (WidgetComponentConfig | MobileBottomComponentConfig)[],
+) => {
+	const topComponents = components.filter(
+		(c) => "position" in c && c.position === COMPONENT_POSITION.TOP,
+	) as WidgetComponentConfig[];
+	const stickyComponents = components.filter(
+		(c) => "position" in c && c.position === COMPONENT_POSITION.STICKY,
+	) as WidgetComponentConfig[];
+	return { topComponents, stickyComponents };
+};
+
+// 获取动画延迟（硬编码）
+const getAnimationDelay = (index: number): string => {
+	return `${index * ANIMATION_DELAY_UNIT}ms`;
+};
+
+// 判断当前页面是否为文章页面（服务端渲染时确定）
+const isPostPage = Astro.url.pathname.includes("/posts/");
+
+// 判断组件在当前页面首屏是否可见（用于计算布局间距，避免隐藏组件占位）
+const isComponentInitiallyVisible = (
+	config: WidgetComponentConfig | MobileBottomComponentConfig,
+): boolean => {
+	if (
+		"showOnPostPage" in config &&
+		config.showOnPostPage === false &&
+		isPostPage
+	) {
+		return false;
+	}
+	if (
+		"hideOnNonPostPage" in config &&
+		config.hideOnNonPostPage === true &&
+		!isPostPage
+	) {
+		return false;
+	}
+	return true;
+};
+
+// 动态构建组件 props
+const getComponentProps = (
+	config: WidgetComponentConfig | MobileBottomComponentConfig,
+	index: number,
+): Record<string, unknown> => {
+	const baseProps: Record<string, unknown> = {
+		class: "onload-animation",
+		style: `animation-delay: ${getAnimationDelay(index)}`,
+		widgetConfig: config,
+	};
+
+	// 添加 showOnPostPage 和 hideOnNonPostPage 标记class（仅WidgetComponentConfig有这些属性）
+	// 同时根据当前页面类型在服务端渲染时设置初始 hidden 状态，避免页面加载时闪烁
+	if ("showOnPostPage" in config && config.showOnPostPage === false) {
+		baseProps.class = `${baseProps.class} widget-hide-on-post`;
+		if (isPostPage) {
+			baseProps.class = `${baseProps.class} hidden`;
+		}
+	}
+	if ("hideOnNonPostPage" in config && config.hideOnNonPostPage === true) {
+		baseProps.class = `${baseProps.class} widget-hide-on-non-post`;
+		if (!isPostPage) {
+			baseProps.class = `${baseProps.class} hidden`;
+		}
+	}
+
+	// 特殊处理 SidebarTOC 组件
+	if (config.type === "sidebarToc") {
+		return {
+			...baseProps,
+			headings: Astro.props.headings || [],
+			encrypted: Astro.props.encrypted || false,
+		};
+	}
+
+	return baseProps;
+};
+
+// 获取所有需要渲染的组件
+const allComponents = getComponents();
+const filteredComponents = filterAndSortComponents(allComponents);
+
+// 对于移动端底部组件，直接使用所有组件，不进行position分组
+const isMobileBottom = side === SIDEBAR_SIDE.BOTTOM;
+const { topComponents, stickyComponents } = !isMobileBottom
+	? getComponentsByPosition(filteredComponents)
+	: { topComponents: [], stickyComponents: [] };
+const bottomComponents = isMobileBottom ? filteredComponents : [];
+const hasInitiallyVisibleTopComponents = topComponents.some(
+	isComponentInitiallyVisible,
+);
+---
+
+{
+	(topComponents.length > 0 || stickyComponents.length > 0 || bottomComponents.length > 0) && (
+		<div id={`${side}-sidebar`} class:list={[className, "flex flex-col w-full pt-0"]}>
+			{/* Mobile bottom components - 直接渲染所有组件，不分组 */}
+			{isMobileBottom ? (
+				<div class="flex flex-col w-full gap-4">
+					{bottomComponents.map((comp, index) => {
+						const Component = componentMap[comp.type];
+						if (!Component) return null;
+						const props = getComponentProps(comp, index) as any;
+						return <Component {...props} />;
+					})}
+				</div>
+			) : (
+				<>
+					{/* Top components */}
+					{topComponents.length > 0 && (
+						<div
+							class:list={[
+								"flex flex-col w-full gap-4",
+								hasInitiallyVisibleTopComponents && "mb-4",
+							]}
+						>
+							{topComponents.map((comp, index) => {
+								const Component = componentMap[comp.type];
+								if (!Component) return null;
+								const props = getComponentProps(comp, index) as any;
+								return <Component {...props} />;
+							})}
+						</div>
+					)}
+
+					{/* Sticky components */}
+					{stickyComponents.length > 0 && (
+						<div
+							id={`${side}-sidebar-sticky`}
+							class:list={[
+								"flex flex-col w-full mt-0 gap-4",
+								"sticky",
+								hasInitiallyVisibleTopComponents ? "top-4" : "top-0",
+							]}
+						>
+							{stickyComponents.map((comp, index) => {
+								const Component = componentMap[comp.type];
+								if (!Component) return null;
+								const props = getComponentProps(
+									comp,
+									topComponents.length + index
+								) as any;
+								return <Component {...props} />;
+							})}
+						</div>
+					)}
+				</>
+			)}
+		</div>
+	)
+}

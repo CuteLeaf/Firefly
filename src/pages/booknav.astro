@@ -1,0 +1,340 @@
+---
+import { Icon } from "astro-icon/components";
+import { booknavPageConfig, siteConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import {
+	getBooknavDomain,
+	getBooknavLetter,
+	getEnabledBooknavGroups,
+	resolveBooknavIcon,
+} from "@/utils/booknav-utils";
+
+// 检查页面是否启用
+if (!siteConfig.pages.booknav) {
+	return Astro.redirect("/404/");
+}
+
+// 使用配置文件中的书签数据，按权重排序
+const groups = getEnabledBooknavGroups();
+
+// 预先解析每个书签的图标与域名，避免在模板里重复计算
+const resolvedGroups = groups.map((group) => ({
+	...group,
+	items: group.items.map((item) => ({
+		...item,
+		domain: getBooknavDomain(item.url),
+		letter: getBooknavLetter(item.title),
+		resolvedIcon: resolveBooknavIcon(item, booknavPageConfig.favicon),
+	})),
+}));
+
+const totalCount = resolvedGroups.reduce((sum, g) => sum + g.items.length, 0);
+
+// 页面标题和描述
+const title = booknavPageConfig.title || i18n(I18nKey.booknav);
+const description =
+	booknavPageConfig.description || i18n(I18nKey.booknavDescription);
+---
+
+<MainGridLayout title={title} description={description}>
+  <div
+    class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32"
+  >
+    <div class="card-base z-10 px-9 py-6 relative w-full">
+      <!-- 页面标题和描述 -->
+      <div class="mb-4">
+        <div class="flex items-center gap-3 mb-3">
+          <div
+            class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70"
+          >
+            <Icon name="material-symbols:bookmarks" class="text-[1.5rem]" />
+          </div>
+          <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+            {title}
+          </div>
+        </div>
+        {
+          description && (
+            <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
+              {description}
+            </p>
+          )
+        }
+      </div>
+
+      {
+        totalCount > 0 ? (
+          <booknav-list>
+            {/* 搜索框 */}
+            <div class="relative mb-3">
+              <Icon
+                name="material-symbols:search"
+                class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 dark:text-neutral-500 text-lg pointer-events-none"
+              />
+              <input
+                type="text"
+                data-search
+                placeholder={i18n(I18nKey.searchBooknav)}
+                class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-(--line-divider) bg-transparent text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 focus:border-(--primary) focus:ring-1 focus:ring-(--primary) outline-none transition-all duration-200 text-sm"
+              />
+            </div>
+
+            {/* 分类锚点导航 */}
+            <div class="flex flex-wrap gap-2 mb-6">
+              {resolvedGroups.map((group) => (
+                <button
+                  data-target={group.id}
+                  class="category-pill px-3 py-1.5 rounded-full text-sm font-medium transition-colors duration-200 inline-flex items-center"
+                >
+                  {group.icon && (
+                    <Icon name={group.icon} class="text-base" />
+                  )}
+                  {group.name}
+                  <span class="pill-count">{group.items.length}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* 分组区块 */}
+            <div class="booknav-groups">
+              {resolvedGroups.map((group) => (
+                <section
+                  id={group.id}
+                  class="booknav-group mb-8 last:mb-2"
+                  data-group-id={group.id}
+                >
+                  {/* 分组标题 */}
+                  <div class="booknav-group-heading flex items-center gap-2 mb-3 pb-2 border-b border-(--line-divider)">
+                    {group.icon && (
+                      <Icon
+                        name={group.icon}
+                        class="text-(--primary) text-xl shrink-0"
+                      />
+                    )}
+                    <div class="flex items-baseline gap-2 min-w-0">
+                      <h2 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 shrink-0">
+                        {group.name}
+                      </h2>
+                      {group.desc && (
+                        <span class="text-xs text-neutral-500 dark:text-neutral-400 truncate">
+                          {group.desc}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* 书签卡片网格 */}
+                  <div class="booknav-grid">
+                    {group.items.map((item) => (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={item.desc || item.title}
+                        data-title={item.title.toLowerCase()}
+                        data-desc={(item.desc || "").toLowerCase()}
+                        data-domain={item.domain.toLowerCase()}
+                        class="booknav-card group flex items-center gap-3 p-3 rounded-xl border border-(--line-divider) hover:border-(--primary) hover:bg-(--card-bg) transition-all duration-300 hover:shadow-lg relative overflow-hidden"
+                      >
+                        {/* 背景装饰 - 仅悬停显示 */}
+                        <div class="absolute inset-0 bg-(--primary) opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none" />
+
+                        {/* 图标 */}
+                        <div
+                          class="booknav-icon relative w-14 h-14 shrink-0 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-black/5 dark:border-white/5 flex items-center justify-center group-hover:scale-105 transition-transform duration-300"
+                          data-letter={item.letter}
+                        >
+                          {item.resolvedIcon.kind === "icon" && (
+                            <Icon
+                              name={item.resolvedIcon.value}
+                              class="text-6xl text-neutral-700 dark:text-neutral-200"
+                            />
+                          )}
+                          {item.resolvedIcon.kind === "image" && (
+                            <img
+                              src={item.resolvedIcon.value}
+                              alt={item.title}
+                              loading="lazy"
+                              decoding="async"
+                              referrerpolicy="no-referrer"
+                              class="w-full h-full object-contain"
+                            />
+                          )}
+                          {item.resolvedIcon.kind === "letter" && (
+                            <span class="booknav-letter">{item.letter}</span>
+                          )}
+                        </div>
+
+                        {/* 外部链接图标 - 固定在卡片右上角 */}
+                        <Icon
+                          name="material-symbols:arrow-outward-rounded"
+                          class="absolute top-3 right-3 text-(--primary) text-lg opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
+                        />
+
+                        {/* 内容 */}
+                        <div class="grow min-w-0 flex flex-col justify-center">
+                          <div class="font-bold text-base text-neutral-900 dark:text-neutral-100 group-hover:text-(--primary) transition-colors truncate pr-4">
+                            {item.title}
+                          </div>
+                          <div class="text-sm text-neutral-500 dark:text-neutral-400 truncate">
+                            {item.desc || item.domain}
+                          </div>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+
+            {/* 搜索无结果提示 */}
+            <div class="booknav-empty hidden flex-col items-center justify-center py-12 text-neutral-400 dark:text-neutral-500">
+              <Icon name="material-symbols:search-off-rounded" class="text-4xl mb-3" />
+              <div class="text-sm">{i18n(I18nKey.searchNoResults)}</div>
+            </div>
+          </booknav-list>
+        ) : (
+          <div class="flex flex-col items-center justify-center py-16 text-neutral-400 dark:text-neutral-500">
+            <Icon name="material-symbols:bookmarks" class="text-6xl mb-4 opacity-50" />
+            <p class="text-lg">{i18n(I18nKey.booknavEmpty)}</p>
+          </div>
+        )
+      }
+    </div>
+  </div>
+
+  <script slot="head" is:inline>
+    if (!customElements.get("booknav-list")) {
+      class BooknavList extends HTMLElement {
+        constructor() {
+          super();
+          this.handleClick = this.handleClick.bind(this);
+          this.handleInput = this.handleInput.bind(this);
+          this.handleIconError = this.handleIconError.bind(this);
+        }
+
+        connectedCallback() {
+          this.addEventListener("click", this.handleClick);
+
+          // 首屏时自定义元素会在子节点解析完成前升级，此刻 querySelector 取不到输入框，
+          // 因此用事件委托监听冒泡上来的 input 事件
+          this.addEventListener("input", this.handleInput);
+
+          // error 事件不冒泡，必须用捕获阶段监听图标加载失败
+          this.addEventListener("error", this.handleIconError, true);
+        }
+
+        disconnectedCallback() {
+          this.removeEventListener("click", this.handleClick);
+          this.removeEventListener("input", this.handleInput);
+          this.removeEventListener("error", this.handleIconError, true);
+        }
+
+        // 搜索框输入时过滤书签
+        handleInput(e) {
+          if (!e.target.matches?.("[data-search]")) return;
+          this.applyFilters();
+        }
+
+        // 图标加载失败时降级为首字母块
+        handleIconError(e) {
+          const img = e.target;
+          if (!img || img.tagName !== "IMG") return;
+          const wrapper = img.closest(".booknav-icon");
+          if (!wrapper || wrapper.dataset.fallback === "done") return;
+          wrapper.dataset.fallback = "done";
+          const letter = wrapper.dataset.letter || "?";
+          wrapper.innerHTML = `<span class="booknav-letter">${letter}</span>`;
+        }
+
+        // 点击分类胶囊平滑滚动到对应分组
+        handleClick(e) {
+          const button = e.target.closest("button[data-target]");
+          if (!button) return;
+
+          const section = this.querySelector(
+            `[data-group-id="${button.dataset.target}"]`,
+          );
+          if (section) {
+            section.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }
+
+        // 按标题/描述/域名过滤书签，并隐藏变空的分组
+        applyFilters() {
+          const input = this.querySelector("[data-search]");
+          const query = (input?.value || "").toLowerCase().trim();
+          const sections = this.querySelectorAll("[data-group-id]");
+
+          let hasVisible = false;
+
+          sections.forEach((section) => {
+            const cards = section.querySelectorAll(".booknav-card");
+            let groupVisible = 0;
+
+            cards.forEach((card) => {
+              const match =
+                !query ||
+                (card.dataset.title || "").includes(query) ||
+                (card.dataset.desc || "").includes(query) ||
+                (card.dataset.domain || "").includes(query);
+
+              if (match) {
+                card.style.display = "";
+                card.classList.add("animate-fade-in-up");
+                groupVisible++;
+              } else {
+                card.style.display = "none";
+                card.classList.remove("animate-fade-in-up");
+              }
+            });
+
+            section.style.display = groupVisible > 0 ? "" : "none";
+            if (groupVisible > 0) hasVisible = true;
+          });
+
+          const emptyEl = this.querySelector(".booknav-empty");
+          if (emptyEl) {
+            emptyEl.classList.toggle("hidden", hasVisible);
+            emptyEl.classList.toggle("flex", !hasVisible);
+          }
+        }
+      }
+      customElements.define("booknav-list", BooknavList);
+    }
+  </script>
+
+  <style is:global>
+    /* 自定义元素默认是 inline，需要撑成块级容器 */
+    booknav-list {
+      display: block;
+    }
+
+    .booknav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 0.75rem;
+    }
+
+    /* 避让固定导航栏，与主题其他锚点保持一致 */
+    .booknav-group {
+      scroll-margin-top: 5.5rem;
+    }
+
+    /* 图标缺失时的首字母兜底样式 */
+    .booknav-letter {
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--primary);
+      background: color-mix(in srgb, var(--primary) 12%, transparent);
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</MainGridLayout>

@@ -1,0 +1,279 @@
+/*
+ * Twikoo 主题覆盖样式
+ * 在 twikoo.css 之后加载，用于覆盖默认样式并跟随站点主题色。
+ * Firefly 主题专用：https://github.com/CuteLeaf/Firefly
+ */
+
+/* 主题变量：定义主色、背景、边框、正文和次要文字颜色 */
+.twikoo {
+  --tk-accent: var(--primary);
+  --tk-bg: var(--card-bg);
+  --tk-border: var(--line-divider);
+  --tk-text: color-mix(in oklch, var(--card-bg) 12%, #000 88%);
+  --tk-muted: color-mix(in oklch, var(--card-bg) 35%, #666 65%);
+  --tk-accent-soft: color-mix(in oklch, var(--primary) 18%, transparent);
+}
+
+/* 暗色模式变量：调整正文和次要文字在暗色下的对比度 */
+.dark .twikoo {
+  --tk-text: color-mix(in oklch, var(--card-bg) 12%, #fff 88%);
+  --tk-muted: color-mix(in oklch, var(--card-bg) 45%, #c0c4cc 55%);
+}
+
+/* 强调色文本：评论标题、操作按钮、排序入口等统一使用主题主色 */
+.twikoo .tk-comments-title,
+.twikoo .tk-action-link,
+.twikoo .tk-action-icon,
+.twikoo .tk-icon.__comments,
+.twikoo .tk-sort-select,
+.twikoo .tk-nick-link:hover,
+.twikoo .tk-expand,
+.twikoo .tk-login-msg a,
+.twikoo .tk-panel-logout {
+  color: var(--tk-accent);
+}
+
+/* 全局边框：评论模块内部元素边框统一跟随主题分割线 */
+.twikoo,
+.twikoo * {
+  border-color: var(--tk-border);
+}
+
+/* 全局文字：评论模块默认文字色 */
+.twikoo {
+  color: var(--tk-text);
+}
+
+/* 高亮元素：标签、分页当前项、主按钮背景色改为主题主色 */
+.twikoo .tk-tag-blue,
+.twikoo .tk-pagination-pager.__current,
+.twikoo .el-button--primary,
+.twikoo .el-button--primary.is-plain:focus,
+.twikoo .el-button--primary.is-plain:hover {
+  background-color: var(--tk-accent);
+  border-color: var(--tk-accent);
+}
+
+/* 蓝色标签：保持主题色文字 + 主题浅色背景 */
+.twikoo .tk-tag-blue {
+  color: var(--tk-accent);
+  background-color: var(--tk-accent-soft);
+}
+
+/* 表单与面板基础色：输入框、预览区、管理面板、OwO 面板统一底色 */
+.twikoo .tk-sort-select,
+.twikoo .el-input__inner,
+.twikoo .el-textarea__inner,
+.twikoo .el-input-group__append,
+.twikoo .el-input-group__prepend,
+.twikoo .OwO .OwO-body,
+.twikoo .tk-preview-container {
+  background-color: var(--tk-bg);
+  border-color: var(--tk-border);
+  color: var(--tk-text);
+}
+
+/* 输入类 hover 态：边框过渡到主题色 */
+.twikoo .el-input__inner:hover,
+.twikoo .el-textarea__inner:hover,
+.twikoo .tk-sort-select:hover {
+  border-color: color-mix(in oklch, var(--tk-accent) 55%, var(--tk-border) 45%);
+}
+
+/* 输入类 focus 态：边框 + 外发光跟随主题色 */
+.twikoo .el-input__inner:focus,
+.twikoo .el-textarea__inner:focus,
+.twikoo .tk-sort-select:focus {
+  border-color: var(--tk-accent);
+  box-shadow: 0 0 0 2px color-mix(in oklch, var(--tk-accent) 20%, transparent);
+}
+
+/* 新版排序样式：并排文字按钮，仅改文字颜色（默认/悬停/激活） */
+.twikoo .tk-comments-sort .tk-sort-item {
+  color: var(--tk-muted);
+}
+
+.twikoo .tk-comments-sort .tk-sort-item:hover {
+  color: var(--tk-accent);
+}
+
+.twikoo .tk-comments-sort .tk-sort-item:focus-visible {
+  color: var(--tk-accent);
+}
+
+.twikoo .tk-comments-sort .tk-sort-item.__active {
+  color: var(--tk-accent);
+}
+
+/* 次级按钮样式：非主按钮背景和边框使用主题浅色 */
+.twikoo .el-button:not(.el-button--primary):not(.el-button--text) {
+  background-color: color-mix(in oklch, var(--tk-bg) 90%, var(--tk-accent) 10%);
+  border-color: var(--tk-border);
+  color: var(--tk-text);
+}
+
+/* 次级按钮交互态：悬停/聚焦时文字与边框切换到主题主色 */
+.twikoo .el-button:not(.el-button--primary):not(.el-button--text):hover,
+.twikoo .el-button:not(.el-button--primary):not(.el-button--text):focus {
+  border-color: var(--tk-accent);
+  color: var(--tk-accent);
+}
+
+/* 主按钮/当前分页文字：保持白字对比度 */
+.twikoo .el-button--text,
+.twikoo .tk-pagination-pager.__current,
+.twikoo .el-button--primary,
+.twikoo .el-button--primary:hover,
+.twikoo .el-button--primary:focus {
+  color: #fff;
+}
+
+/* 次要信息文字：时间、额外信息、计数等使用弱化文本色 */
+.twikoo .tk-extras,
+.twikoo .tk-footer,
+.twikoo .tk-extra-text,
+.twikoo .tk-action-count {
+  color: var(--tk-muted);
+}
+
+/* 加载指示器颜色：加载图标和文字统一主题色 */
+.twikoo .tk-loading-spinner .path,
+.twikoo .el-loading-spinner .path,
+.twikoo .el-loading-spinner i,
+.twikoo .el-loading-spinner .el-loading-text {
+  stroke: var(--tk-accent);
+  color: var(--tk-accent);
+}
+
+/* 默认头像主题化：仅调整图标颜色，不额外添加底色 */
+
+.twikoo .tk-avatar .tk-avatar-img {
+  color: color-mix(in oklch, var(--tk-accent) 58%, var(--tk-muted) 42%);
+}
+
+.twikoo .tk-avatar .tk-avatar-img svg,
+.twikoo .tk-avatar .tk-avatar-img svg path {
+  fill: currentColor;
+}
+
+/* 加载遮罩居中：刷新评论时的 loading 指示器居中显示 */
+.twikoo .tk-comments-container {
+  position: relative;
+}
+
+.twikoo .el-loading-mask {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.twikoo .el-loading-spinner {
+  position: static;
+  top: auto;
+  margin-top: 0;
+  width: auto;
+}
+
+/* 输入框禁用态：降低对比度并保持边框统一 */
+.twikoo .el-input.is-disabled .el-input__inner,
+.twikoo .el-textarea.is-disabled .el-textarea__inner {
+  background-color: color-mix(in oklch, var(--tk-bg) 88%, var(--tk-border) 12%);
+  border-color: var(--tk-border);
+  color: color-mix(in oklch, var(--tk-text) 55%, var(--tk-bg) 45%);
+}
+
+/* 占位符颜色：统一弱化文本风格 */
+.twikoo .el-input__inner::placeholder,
+.twikoo .el-textarea__inner::placeholder {
+  color: color-mix(in oklch, var(--tk-muted) 75%, var(--tk-bg) 25%);
+}
+
+/* 输入组前后缀：背景与文字色跟随主题 */
+.twikoo .el-input-group__append,
+.twikoo .el-input-group__prepend {
+  background-color: color-mix(in oklch, var(--tk-bg) 90%, var(--tk-accent) 10%);
+  color: var(--tk-muted);
+}
+
+/* 主按钮基础态：背景与边框使用主题主色 */
+.twikoo .el-button--primary {
+  background-color: var(--tk-accent);
+  border-color: var(--tk-accent);
+}
+
+/* 主按钮 hover/focus 态：轻微提亮 */
+.twikoo .el-button--primary:hover,
+.twikoo .el-button--primary:focus {
+  background-color: color-mix(in oklch, var(--tk-accent) 88%, #fff 12%);
+  border-color: color-mix(in oklch, var(--tk-accent) 88%, #fff 12%);
+}
+
+/* 主按钮 active 态：轻微压暗 */
+.twikoo .el-button--primary:active,
+.twikoo .el-button--primary.is-active {
+  background-color: color-mix(in oklch, var(--tk-accent) 86%, #000 14%);
+  border-color: color-mix(in oklch, var(--tk-accent) 86%, #000 14%);
+}
+
+/* 主按钮禁用态：降低饱和和透明度 */
+.twikoo .el-button--primary.is-disabled,
+.twikoo .el-button--primary.is-disabled:hover,
+.twikoo .el-button--primary.is-disabled:focus,
+.twikoo .el-button--primary.is-disabled:active {
+  color: color-mix(in oklch, #fff 70%, transparent);
+  background-color: color-mix(in oklch, var(--tk-accent) 55%, transparent);
+  border-color: color-mix(in oklch, var(--tk-accent) 55%, transparent);
+}
+
+/* 其他语义按钮：success/warning/danger/info 统一主题化 */
+.twikoo .el-button--success,
+.twikoo .el-button--warning,
+.twikoo .el-button--danger,
+.twikoo .el-button--info {
+  color: var(--tk-text);
+  background-color: color-mix(in oklch, var(--tk-bg) 88%, var(--tk-accent) 12%);
+  border-color: color-mix(in oklch, var(--tk-border) 72%, var(--tk-accent) 28%);
+}
+
+/* 其他语义按钮交互态：悬停/聚焦强调主题主色 */
+.twikoo .el-button--success:hover,
+.twikoo .el-button--warning:hover,
+.twikoo .el-button--danger:hover,
+.twikoo .el-button--info:hover,
+.twikoo .el-button--success:focus,
+.twikoo .el-button--warning:focus,
+.twikoo .el-button--danger:focus,
+.twikoo .el-button--info:focus {
+  color: var(--tk-accent);
+  border-color: var(--tk-accent);
+  background-color: color-mix(in oklch, var(--tk-bg) 84%, var(--tk-accent) 16%);
+}
+
+/* 全屏透明模式变量：背景、边框和文字在透明壁纸下重新平衡 */
+body.wallpaper-transparent .twikoo {
+  --tk-bg: var(--card-bg-transparent);
+  --tk-border: color-mix(in oklch, var(--line-divider) 70%, transparent 30%);
+  --tk-text: color-mix(in oklch, var(--card-bg) 8%, #000 92%);
+  --tk-muted: color-mix(in oklch, var(--card-bg) 28%, #666 72%);
+}
+
+/* 全屏透明模式（暗色）：进一步提高文字对比度 */
+:root.dark body.wallpaper-transparent .twikoo {
+  --tk-text: color-mix(in oklch, var(--card-bg) 8%, #fff 92%);
+  --tk-muted: color-mix(in oklch, var(--card-bg) 40%, #c0c4cc 60%);
+}
+
+/* 全屏透明模式面板：开启毛玻璃效果 */
+body.wallpaper-transparent .twikoo .el-input__inner,
+body.wallpaper-transparent .twikoo .el-textarea__inner,
+body.wallpaper-transparent .twikoo .el-input-group__append,
+body.wallpaper-transparent .twikoo .el-input-group__prepend,
+body.wallpaper-transparent .twikoo .tk-sort-select,
+body.wallpaper-transparent .twikoo .tk-preview-container,
+body.wallpaper-transparent .twikoo .OwO .OwO-body {
+  background-color: var(--tk-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}

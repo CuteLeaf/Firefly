@@ -1,0 +1,30 @@
+---
+import Navbar from "@components/layout/Navbar.astro";
+
+interface Props {
+	stickyNavbar: boolean;
+	navbarWidthFull: boolean;
+}
+
+const { stickyNavbar, navbarWidthFull } = Astro.props;
+---
+
+<!-- 导航栏外壳（从 MainGridLayout.astro 迁出） -->
+<div
+    id="top-row"
+    class="z-50 pointer-events-none relative transition-all duration-700 mx-auto"
+    class:list={[
+        stickyNavbar ? "h-18 fixed top-0 left-0 right-0 z-80" : "",
+        navbarWidthFull ? "" : "w-full xl:w-[92vw] max-w-(--page-width) px-0 md:px-4",
+    ]}
+>
+    <div
+        id="navbar-wrapper"
+        class:list={[
+            "pointer-events-auto transition-all",
+            stickyNavbar ? "" : "sticky top-0",
+        ]}
+    >
+        <Navbar></Navbar>
+    </div>
+</div>
