@@ -36,6 +36,7 @@ export type SlimSubject = {
 	score: number; // 评分
 	rank: number; // 排名
 	tags: SubjectTag[]; // 标签
+	nsfw?: boolean; // Bangumi API subject 自带的 NSFW 标记
 };
 
 // 1: 书籍，2: 动画，3: 音乐，4: 游戏，6: 三次元

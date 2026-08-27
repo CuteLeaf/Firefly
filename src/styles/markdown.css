@@ -52,16 +52,18 @@
   code {
     @apply bg-(--inline-code-bg) text-(--inline-code-color) px-1 py-0.5 rounded-md overflow-hidden;
 
-    font-family:
-      var(--font-jetbrains-mono),
+    /* 行内代码走 fontConfig.codeFont（--font-code 由 FontSetup.astro 输出），带等宽保底 */
+    font-family: var(
+      --font-code,
       ui-monospace,
       SFMono-Regular,
       Menlo,
       Monaco,
       Consolas,
-      Liberation Mono,
-      Courier New,
-      monospace;
+      "Liberation Mono",
+      "Courier New",
+      monospace
+    );
 
     &:before {
       content: none;

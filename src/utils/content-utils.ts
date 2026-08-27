@@ -22,7 +22,7 @@ async function getRawSortedPosts() {
 	return sorted;
 }
 
-export async function getSortedPosts() {
+export async function getSortedPosts(): Promise<CollectionEntry<"posts">[]> {
 	const sorted = await getRawSortedPosts();
 
 	for (let i = 1; i < sorted.length; i++) {
@@ -50,6 +50,76 @@ export async function getSortedPostsList(): Promise<PostForList[]> {
 	}));
 
 	return sortedPostsList;
+}
+
+/**
+ * 系列内排序：按 seriesOrder 升序，未设置者排最后；再按发布日期降序、标题兜底
+ * 注意：判断 seriesOrder 是否设置必须用 !== undefined，否则 0 会被当作「未设置」排到最后
+ */
+function sortBySeriesOrder(a: PostForList, b: PostForList): number {
+	const ao = a.data.seriesOrder;
+	const bo = b.data.seriesOrder;
+	if (ao !== undefined && bo !== undefined) {
+		if (ao !== bo) return ao - bo;
+	} else if (ao === undefined && bo !== undefined) {
+		return 1;
+	} else if (ao !== undefined && bo === undefined) {
+		return -1;
+	}
+	// tiebreaker: 相同序号或都未设置时，按发布日期降序、标题兜底
+	return (
+		b.data.published.getTime() - a.data.published.getTime() ||
+		a.data.title.localeCompare(b.data.title)
+	);
+}
+
+/**
+ * 获取当前文章所属系列的全部文章（按系列序号排序）
+ * 文章未设置 series 时返回 null（文章页不渲染系列导航盒）
+ */
+export async function getSeriesPosts(
+	currentPost: CollectionEntry<"posts">,
+): Promise<{
+	seriesName: string;
+	posts: PostForList[];
+	currentIndex: number;
+} | null> {
+	const seriesName = currentPost.data.series.trim();
+	if (!seriesName) return null;
+
+	const allPosts = await getSortedPostsList();
+	const posts = allPosts.filter((p) => p.data.series.trim() === seriesName);
+	posts.sort(sortBySeriesOrder);
+
+	const currentIndex = posts.findIndex((p) => p.id === currentPost.id);
+	return { seriesName, posts, currentIndex };
+}
+
+export type Series = { name: string; count: number; posts: PostForList[] };
+
+/**
+ * 获取全站所有系列（按文章中 series 字段分组，每组内部按系列序号排序）
+ * 供 /series/ 索引页使用
+ */
+export async function getSeriesList(): Promise<Series[]> {
+	const allPosts = await getSortedPostsList();
+
+	const groupMap = new Map<string, PostForList[]>();
+	for (const post of allPosts) {
+		const name = post.data.series.trim();
+		if (!name) continue;
+		if (!groupMap.has(name)) groupMap.set(name, []);
+		groupMap.get(name)?.push(post);
+	}
+
+	const seriesList: Series[] = [];
+	for (const [name, posts] of groupMap) {
+		posts.sort(sortBySeriesOrder);
+		seriesList.push({ name, count: posts.length, posts });
+	}
+
+	seriesList.sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+	return seriesList;
 }
 export type Tag = {
 	name: string;

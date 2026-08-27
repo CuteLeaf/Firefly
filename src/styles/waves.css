@@ -33,54 +33,22 @@ html[data-waves-enabled="true"] #header-waves {
     contain: layout style;
 }
 
-.waves svg {
+.waves canvas {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     display: block;
-    transform: translateZ(0);
-    backface-visibility: hidden;
+    pointer-events: none;
 }
 
-/* --------------------------------------------------------------------------
-   3. 波浪动画
-   -------------------------------------------------------------------------- */
-.waves > .parallax {
-    will-change: transform;
-    transform: translateZ(0);
-    backface-visibility: hidden;
-}
-
-.waves > .parallax use {
-    animation: wave 25s cubic-bezier(0.5, 0.5, 0.45, 0.5) infinite;
-}
-
-.waves > .parallax use:nth-child(1) {
-    animation-delay: -2s;
-    animation-duration: 7s;
-}
-
-.waves > .parallax use:nth-child(2) {
-    animation-delay: -3s;
-    animation-duration: 10s;
-}
-
-.waves > .parallax use:nth-child(3) {
-    animation-delay: -4s;
-    animation-duration: 13s;
-}
-
-.waves > .parallax use:nth-child(4) {
-    animation-delay: -5s;
-    animation-duration: 20s;
-}
-
-@keyframes wave {
-    0% {
-        transform: translate3d(-90px, 0, 0);
-    }
-    100% {
-        transform: translate3d(85px, 0, 0);
-    }
+.waves .waves-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
 }
 
 /* --------------------------------------------------------------------------
@@ -93,9 +61,7 @@ html.is-page-transitioning #header-waves {
 /* --------------------------------------------------------------------------
    5. 主题切换优化
    -------------------------------------------------------------------------- */
-.theme-changing #header-waves,
-.theme-changing #header-waves svg,
-.theme-changing #header-waves use {
+.theme-changing #header-waves {
     will-change: auto;
     transform: translateZ(0);
     backface-visibility: hidden;
@@ -107,11 +73,6 @@ html.is-page-transitioning #header-waves {
     contain: layout style paint;
     transform: translateZ(0);
     background: transparent;
-}
-
-.is-theme-transitioning #header-waves use {
-    will-change: transform;
-    transform: translateZ(0);
 }
 
 /* --------------------------------------------------------------------------
@@ -131,7 +92,8 @@ html.is-page-transitioning #header-waves {
         transition: transform 0.25s ease-in, opacity 0.15s ease-in;
     }
 
-    .waves svg {
+    .waves canvas,
+    .waves .waves-svg {
         min-height: 60px;
     }
 
@@ -155,7 +117,25 @@ html.is-page-transitioning #header-waves {
    -------------------------------------------------------------------------- */
 html[data-wallpaper-mode="none"] .waves,
 html[data-wallpaper-mode="none"] #header-waves,
-html[data-wallpaper-mode="none"] #banner-dim-container {
+html[data-wallpaper-mode="none"] #wallpaper-wrapper #banner-dim-container {
+    display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   9. Fullscreen / Overlay 模式隐藏波浪和渐变
+   data-wallpaper-mode 在解析期内联脚本中同步设置，早于 rAF 应用
+   wallpaper-fullscreen/overlay 类；据此隐藏可避免刷新时波浪/渐变先显示后消失的闪烁。
+   -------------------------------------------------------------------------- */
+html[data-wallpaper-mode="fullscreen"] body:not(.is-home) #wallpaper-wrapper #banner-dim-container {
+    display: none !important;
+}
+html[data-wallpaper-mode="fullscreen"] .waves,
+html[data-wallpaper-mode="fullscreen"] #header-waves,
+html[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper #wallpaper-gradient,
+html[data-wallpaper-mode="overlay"] .waves,
+html[data-wallpaper-mode="overlay"] #header-waves,
+html[data-wallpaper-mode="overlay"] #wallpaper-wrapper #wallpaper-gradient,
+html[data-wallpaper-mode="overlay"] #wallpaper-wrapper #banner-dim-container {
     display: none !important;
 }
 
@@ -166,7 +146,7 @@ html[data-wallpaper-mode="none"] #banner-dim-container {
 /* --------------------------------------------------------------------------
    1. 用户控制 - 通过 html 属性控制显隐
    -------------------------------------------------------------------------- */
-html[data-gradient-enabled="false"] #wallpaper-gradient {
+html[data-gradient-enabled="false"] #wallpaper-wrapper #wallpaper-gradient {
     display: none !important;
 }
 
@@ -199,6 +179,14 @@ html[data-waves-enabled="true"] #wallpaper-gradient {
 /* --------------------------------------------------------------------------
    5. None 模式隐藏渐变
    -------------------------------------------------------------------------- */
-html[data-wallpaper-mode="none"] #wallpaper-gradient {
+html[data-wallpaper-mode="none"] #wallpaper-wrapper #wallpaper-gradient {
     display: none !important;
+}
+/* 模式切换（全屏/覆盖/纯色 → 横幅）：水波纹从全屏底部随内容一起上移淡入到横幅底部 */
+@keyframes firefly-waves-slide-up {
+    from { transform: translateY(calc(100vh - var(--banner-height-home))); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+html.is-wallpaper-transitioning[data-wallpaper-mode="banner"] #header-waves {
+    animation: firefly-waves-slide-up 450ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }

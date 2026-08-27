@@ -6,9 +6,11 @@
 @import './transition.css';
 @import './custom-scrollbar.css';
 @import './gallery.css';
-@import './anime-bangumi.css';
+@import './media-grid.css';
 @import './tags.css';
+@import './display-settings.css';
 @import './categories.css';
+@import './layout-base.css';
 
 @plugin '@tailwindcss/typography';
 
@@ -35,7 +37,8 @@
     z-index: -10;
     transition: all 0.15s ease-out;
   }
-  &:hover::before {
+  &:hover::before,
+  &:focus-visible::before {
     background-color: var(--btn-plain-bg-hover);
     scale: 1;
   }
@@ -50,6 +53,28 @@
 /* 确保平滑滚动 */
 html {
     scroll-behavior: smooth;
+}
+
+/* 全站键盘焦点基线；组件可以在更高的层中覆盖间距或形态。 */
+@layer components {
+    :where(
+        a[href],
+        button,
+        input,
+        select,
+        textarea,
+        summary,
+        [contenteditable="true"],
+        [tabindex]:not([tabindex="-1"])
+    ):focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    /* 用于外侧焦点环会被溢出隐藏容器裁切的交互元素。 */
+    .focus-ring-inset:focus-visible {
+        outline-offset: -2px;
+    }
 }
 
 /* 页面顶部渐变高光效果 */
@@ -182,11 +207,13 @@ html {
     .is-theme-transitioning:not(.use-view-transition) #navbar[data-transparent-mode].scrolled > div,
     .is-theme-transitioning:not(.use-view-transition) body.wallpaper-transparent #navbar > div,
     .is-theme-transitioning:not(.use-view-transition) body.wallpaper-transparent #navbar[data-transparent-mode] > div,
-    .is-theme-transitioning:not(.use-view-transition) body.wallpaper-transparent #navbar[data-transparent-mode].scrolled > div,
-    .is-theme-transitioning:not(.use-view-transition) #wallpaper-wrapper ~ * #navbar > div,
-    .is-theme-transitioning:not(.use-view-transition) #wallpaper-wrapper ~ * #navbar[data-transparent-mode] > div,
-    .is-theme-transitioning:not(.use-view-transition) body:has(#wallpaper-wrapper) #navbar > div,
-    .is-theme-transitioning:not(.use-view-transition) body:has(#wallpaper-wrapper) #navbar[data-transparent-mode] > div {
+    .is-theme-transitioning:not(.use-view-transition) body.wallpaper-transparent #navbar[data-transparent-mode].scrolled > div {
+        transition: none !important;
+        backdrop-filter: none !important;
+    }
+
+    /* 导航栏的毛玻璃层现在挂在 ::before 上（见 navbar.css），要单独关掉 */
+    .is-theme-transitioning:not(.use-view-transition) #navbar > div::before {
         transition: none !important;
         backdrop-filter: none !important;
     }
@@ -259,14 +286,29 @@ html {
         background-color: var(--card-bg-transparent) !important;
     }
 
+    /* 全屏壁纸首页动态透明（semifull）：顶部透明，下滑后显示卡片底色。
+       需要比上面 wallpaper-transparent 的固定底色更高特异性，才能让顶部透明生效 */
+    html[data-wallpaper-mode="fullscreen"] #navbar[data-transparent-mode="semifull"]:not(.scrolled) > div {
+        background: transparent !important;
+        --navbar-surface-blur: 0px !important;
+        box-shadow: none !important;
+    }
+
+    /* 全屏壁纸模式：导航栏统一禁用边框/轮廓（覆盖 semifull/none 及 enable-card-border 的卡片边框），
+       避免切换页面瞬间 enable-card-border 边框闪现黑色边框 */
+    html[data-wallpaper-mode="fullscreen"] #navbar > div {
+        border: none !important;
+        outline: none !important;
+    }
+
     /* Overlay 模式下，滚动后提高导航栏背景模糊度，增强与正文区分 */
     .wallpaper-transparent #navbar.navbar-sticky-shadow > div {
-        backdrop-filter: blur(20px) !important;
-     
+        --navbar-surface-blur: 20px !important;
+
     }
 
     :root.dark .wallpaper-transparent #navbar.navbar-sticky-shadow > div {
-        backdrop-filter: blur(20px) !important;
+        --navbar-surface-blur: 20px !important;
     }
     
     .wallpaper-transparent .btn-card {
@@ -274,6 +316,11 @@ html {
     }
 
     .wallpaper-transparent .bg-\(--card-bg\) {
+        background-color: var(--card-bg-transparent) !important;
+    }
+
+    /* 透明模式：文章页系列导航盒底色由实色换为半透明 */
+    .wallpaper-transparent .series-nav-toggle {
         background-color: var(--card-bg-transparent) !important;
     }
 
@@ -312,8 +359,14 @@ html {
     .btn-plain {
         @apply transition-colors duration-150 relative flex items-center justify-center bg-none
         text-black/75 hover:text-(--primary) dark:text-white/75 dark:hover:text-(--primary);
+        &:focus-visible {
+            color: var(--primary);
+        }
         &:not(.scale-animation) {
             @apply hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active)
+        }
+        &:not(.scale-animation):focus-visible {
+            background-color: var(--btn-plain-bg-hover);
         }
         &.scale-animation {
             @apply expand-animation;
@@ -371,12 +424,12 @@ html {
     }
 
     .dropdown-menu {
-        @apply absolute top-full left-0 pt-2 opacity-0 invisible pointer-events-none transition-all duration-200 ease-out transform translate-y-[-8px] z-50;
+        @apply absolute top-full left-0 pt-2 pointer-events-none z-50;
     }
 
     .dropdown-container:hover .dropdown-menu,
     .dropdown-container:focus-within .dropdown-menu {
-        @apply opacity-100 visible pointer-events-auto translate-y-0;
+        @apply pointer-events-auto;
     }
 
     .dropdown-container:hover .dropdown-arrow,
@@ -385,7 +438,13 @@ html {
     }
 
     .dropdown-content {
-        @apply bg-(--card-bg) rounded-(--radius-large) shadow-xl border border-black/5 dark:border-white/10 py-2 min-w-48;
+        @apply bg-(--card-bg) rounded-(--radius-large) shadow-xl border border-black/5 dark:border-white/10 py-2 min-w-48
+        opacity-0 translate-y-[-8px] transition-[opacity,translate,background-color,border-color] duration-200 ease-out;
+    }
+
+    .dropdown-container:hover .dropdown-content,
+    .dropdown-container:focus-within .dropdown-content {
+        @apply opacity-100 translate-y-0;
     }
 
     .dropdown-item {
@@ -422,15 +481,7 @@ html {
 
     /* 无障碍支持 */
     .dropdown-container:focus-within .dropdown-menu {
-        @apply opacity-100 visible pointer-events-auto translate-y-0;
-    }
-
-    .dropdown-item:focus {
-        @apply outline-hidden;
-    }
-
-    .mobile-dropdown button:focus {
-        @apply outline-hidden;
+        @apply pointer-events-auto;
     }
 
     .meta-icon {
@@ -484,9 +535,9 @@ html {
   background-color: var(--_spoiler-mask);
   box-decoration-break: clone;
   &:not(:hover) {
-    color: var(--_spoiler-mask);
+   color: transparent;
     * {
-        color: var(--_spoiler-mask);
+       opacity: 0;
     }
   }
 }
@@ -586,4 +637,3 @@ html {
 .pagination-info {
   @apply text-sm text-(--text-secondary) text-center mb-2;
 }
-

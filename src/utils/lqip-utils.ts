@@ -76,3 +76,42 @@ export function getLqipProps(
 	const style = getLqipStyle(src, basePath, isPublic);
 	return { style: style || `background: ${DEFAULT_GRADIENT}` };
 }
+
+/**
+ * LQIP fade-in：图片加载完成后淡出占位渐变。
+ * 纯函数（本模块被 frontmatter 导入，顶层不能有 DOM 副作用），
+ * 监听器由 layout-init.ts 注册。
+ */
+export function initImageLoadFadeIn(): void {
+	const placeholders =
+		document.querySelectorAll<HTMLElement>(".lqip-placeholder");
+	placeholders.forEach((placeholder) => {
+		const container = placeholder.parentElement;
+		if (!container) return;
+		const img = container.querySelector<HTMLImageElement>("img, picture img");
+		if (!img) return;
+
+		if (img.complete && img.naturalWidth > 0) {
+			img.style.opacity = "1";
+			placeholder.classList.add("loaded");
+		} else {
+			img.addEventListener(
+				"load",
+				() => {
+					img.style.opacity = "1";
+					placeholder.classList.add("loaded");
+				},
+				{ once: true },
+			);
+			img.addEventListener(
+				"error",
+				() => {
+					if (!container.classList.contains("cover-image-container")) {
+						placeholder.classList.add("loaded");
+					}
+				},
+				{ once: true },
+			);
+		}
+	});
+}
