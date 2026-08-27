@@ -1,23 +1,32 @@
-
+---
+title: Firefly 简单使用指南
+published: 1970-01-02
+pinned: true
+description: "如何使用 Firefly 博客模板。"
+image: "./cover.avif"
+tags: ["Firefly", "博客", "Markdown", "指南"]
+category: 博客指南
+series: "Firefly 功能示例"
+seriesOrder: 1
 ---
 
 
 
-//这个博客模板是基于 [Astro](https://astro.build/) 构建的。对于本指南中未提及的内容，您可以在 [Astro 文档](https://docs.astro.build/) 中找到答案。
+这个博客模板是基于 [Astro](https://astro.build/) 构建的。对于本指南中未提及的内容，您可以在 [Astro 文档](https://docs.astro.build/) 中找到答案。
 
-//## 文章的 Front-matter
+## 文章的 Front-matter
 
-//```yaml
-//---
-//title: 我的第一篇博客文章
-//published: 2023-09-09
-//description: 这是我新 Astro 博客的第一篇文章。
-//image: ./cover.jpg
-//tags: [前端, 开发]
-//category: 前端开发
-//draft: false
-//---
-//```
+```yaml
+---
+title: 我的第一篇博客文章
+published: 2023-09-09
+description: 这是我新 Astro 博客的第一篇文章。
+image: ./cover.jpg
+tags: [前端, 开发]
+category: 前端开发
+draft: false
+---
+```
 
 
 
