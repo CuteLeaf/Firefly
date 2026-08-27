@@ -1,6 +1,6 @@
 ---
 title: "恭喜成为TX站长"
-published: 2026-09-1
+published: 2026-09-01
 description: "恭喜你成为TX站长"
 image: "https://p1.music.126.net/czvS_ysHIuuAhj8B4WZ8Yw==/109951172840539187.jpg"
 pinned: true
