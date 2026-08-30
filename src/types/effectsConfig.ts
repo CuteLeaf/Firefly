@@ -48,5 +48,34 @@ export type AmbientParticleConfig = {
 		min: number;
 		max: number;
 	};
+	glow: {
+		radius: number;
+		opacity: number;
+	};
+	meteors: {
+		enable: boolean;
+		mobileEnable: boolean;
+		maxActive: {
+			desktop: number;
+			mobile: number;
+		};
+		burst: {
+			min: number;
+			max: number;
+		};
+		interval: {
+			min: number;
+			max: number;
+		};
+		duration: {
+			min: number;
+			max: number;
+		};
+		length: {
+			min: number;
+			max: number;
+		};
+		opacity: number;
+	};
 	dprLimit: number;
 };

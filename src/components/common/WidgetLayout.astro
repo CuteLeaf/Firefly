@@ -32,21 +32,21 @@ const className = Astro.props.class;
     data-id={id}
     data-is-collapsed={String(isCollapsed)}
     data-use-expanded-button-spacing={String(useExpandedButtonSpacing)}
-    class:list={["card-base", {"pb-4": contentPadding}, className]}
+    class:list={["card-base", {"pb-3.5": contentPadding}, className]}
     style={style}
 >
     {name && showTitle && (
-        <div class="widget-title font-bold transition text-lg text-neutral-900 dark:text-neutral-100 relative ml-8 mt-4 mb-2
+        <div class="widget-title font-bold transition text-[1.05rem] text-neutral-900 dark:text-neutral-100 relative ml-7 mt-3.5 mb-1.5
             before:w-1 before:h-4 before:rounded-md before:bg-(--primary)
-            before:absolute before:left-[-16px] before:top-[5.5px] flex items-center justify-between">
+            before:absolute before:left-[-14px] before:top-[5px] flex items-center justify-between">
             <span class="widget-name">{name}</span>
             <slot name="title-icon" />
         </div>
     )}
-    <div id={id} class:list={["collapse-wrapper overflow-hidden", {"px-4": contentPadding, "collapsed": isCollapsed, "pt-4": contentPadding && (!name || !showTitle)}]}>
+    <div id={id} class:list={["collapse-wrapper overflow-hidden", {"px-3.5": contentPadding, "collapsed": isCollapsed, "pt-3.5": contentPadding && (!name || !showTitle)}]}>
         <slot></slot>
     </div>
-    {isCollapsed && <div class="expand-btn px-4 -mb-2">
+    {isCollapsed && <div class="expand-btn px-3.5 -mb-2">
         {moreUrl ? (
             <a
                 href={moreUrl}

@@ -48,10 +48,24 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	local: {
 		playlist: [
 			{
-				name: "使一颗心免于哀伤",
-				artist: "知更鸟 / HOYO-MiX / Chevy",
-				url: "/assets/music/使一颗心免于哀伤-哼唱.mp3",
-				cover: "/assets/music/cover/109951169585655912.webp",
+				name: "Departures ～送给你的爱之歌～",
+				artist: "EGOIST",
+				url: "/assets/music/EGOIST - Departures 〜あなたにおくるアイの歌〜_54902885.mp3",
+				cover: "/assets/music/cover/depatures.jpg",
+				lrc: "",
+			},
+			{
+				name: "ありがとう…",
+				artist: "KOKIA",
+				url: "/assets/music/KOKIA - ありがとう…_53591445.mp3",
+				cover: "/assets/music/cover/kokia-arigatou.jpg",
+				lrc: "",
+			},
+			{
+				name: "願い〜あの頃のキミへ〜",
+				artist: "當山みれい",
+				url: "/assets/music/當山みれい - 願い〜あの頃のキミへ〜_142305977.mp3",
+				cover: "/assets/music/cover/touyama-mirei-negai.jpg",
 				lrc: "",
 			},
 		],

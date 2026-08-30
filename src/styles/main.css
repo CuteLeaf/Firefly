@@ -262,8 +262,8 @@ html {
     :root.dark .card-base-transparent {
         border: 1px solid var(--card-border);
         box-shadow: none;
-        backdrop-filter: blur(12px) saturate(0.9);
-        -webkit-backdrop-filter: blur(12px) saturate(0.9);
+        backdrop-filter: blur(8px) saturate(0.88);
+        -webkit-backdrop-filter: blur(8px) saturate(0.88);
     }
 
     :root.dark.enable-card-border .card-base,
@@ -426,11 +426,11 @@ html {
     }
 
     :root.dark .text-30 {
-        color: rgb(140 153 168 / 0.62);
+        color: rgb(127 137 152 / 0.66);
     }
 
     :root.dark .text-25 {
-        color: rgb(140 153 168 / 0.48);
+        color: rgb(127 137 152 / 0.5);
     }
 
     /* 下拉菜单样式 */

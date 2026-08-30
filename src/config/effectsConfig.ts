@@ -7,7 +7,7 @@ import type {
 
 export const sakuraConfig: SakuraConfig = {
 	// 是否启用樱花特效
-	enable: false,
+	enable: true,
 
 	// 樱花数量
 	sakuraNum: 21,
@@ -20,7 +20,7 @@ export const sakuraConfig: SakuraConfig = {
 		// 樱花最小尺寸倍数
 		min: 0.5,
 		// 樱花最大尺寸倍数
-		max: 1.1,
+		max: 0.8,
 	},
 
 	// 樱花不透明度
@@ -57,29 +57,62 @@ export const sakuraConfig: SakuraConfig = {
 	zIndex: 100,
 };
 
-// 正文背景星尘：低密度、低亮度，不遮挡卡片与交互元素
+// 正文背景星尘：密集小星点、轻微闪烁与偶发细长流星
 export const ambientParticleConfig: AmbientParticleConfig = {
 	enable: true,
 	count: {
-		desktop: 36,
-		mobile: 14,
+		desktop: 220,
+		mobile: 72,
 	},
 	colors: {
-		moonlight: "#8FAFC8",
-		gold: "#C6AE78",
-		goldRatio: 0.25,
+		moonlight: "#59b2f7",
+		gold: "#f4ca5f",
+		goldRatio: 0.18,
 	},
 	size: {
-		min: 0.7,
-		max: 1.8,
+		min: 1,
+		max: 3,
 	},
 	opacity: {
-		min: 0.16,
-		max: 0.48,
+		min: 0.5,
+		max: 0.78,
 	},
 	speed: {
-		min: 0.03,
-		max: 0.12,
+		min: 0.1,
+		max: 0.3,
+	},
+	glow: {
+		radius: 0.5,
+		opacity: 0.5,
+	},
+	meteors: {
+		enable: true,
+		mobileEnable: true,
+		// 同屏流星数量上限：这里控制桌面端和手机端最多显示多少条
+		maxActive: {
+			desktop: 2,
+			mobile: 1,
+		},
+		// 每轮生成数量：提高 max 会让流星雨更加密集
+		burst: {
+			min: 1,
+			max: 4,
+		},
+		// 生成间隔（毫秒）：数值越小，流星越多
+		interval: {
+			min: 4500,
+			max: 9000,
+		},
+		duration: {
+			min: 1100,
+			max: 1750,
+		},
+		// 流星尾巴长度（像素）：这里控制视觉大小
+		length: {
+			min: 120,
+			max: 230,
+		},
+		opacity: 0.48,
 	},
 	dprLimit: 1.75,
 };
