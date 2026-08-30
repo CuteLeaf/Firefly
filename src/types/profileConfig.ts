@@ -2,10 +2,24 @@ export type ProfileConfig = {
 	avatar?: string;
 	name: string;
 	bio?: string;
-	links: {
-		name: string;
-		url: string;
-		icon: string;
-		showName?: boolean;
-	}[];
+	links: ProfileLink[];
 };
+
+type ProfileLinkBase = {
+	name: string;
+	icon: string;
+	showName?: boolean;
+};
+
+export type ProfileLink = ProfileLinkBase &
+	(
+		| {
+				type?: "link";
+				url: string;
+		  }
+		| {
+				type: "dialog";
+				value: string;
+				title?: string;
+		  }
+	);

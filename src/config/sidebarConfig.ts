@@ -159,7 +159,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			// 组件类型：日历组件
 			type: "calendar",
 			// 是否启用该组件
-			enable: true,
+			enable: false,
 			// 是否显示组件标题
 			showTitle: false,
 			// 组件位置

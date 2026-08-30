@@ -7,7 +7,7 @@ import type {
 
 export const sakuraConfig: SakuraConfig = {
 	// 是否启用樱花特效
-	enable: false,
+	enable: true,
 
 	// 樱花数量
 	sakuraNum: 21,
@@ -20,7 +20,7 @@ export const sakuraConfig: SakuraConfig = {
 		// 樱花最小尺寸倍数
 		min: 0.5,
 		// 樱花最大尺寸倍数
-		max: 1.1,
+		max: 0.8,
 	},
 
 	// 樱花不透明度
@@ -65,25 +65,25 @@ export const ambientParticleConfig: AmbientParticleConfig = {
 		mobile: 72,
 	},
 	colors: {
-		moonlight: "#A8C6DD",
-		gold: "#D2BE8A",
+		moonlight: "#59b2f7",
+		gold: "#f4ca5f",
 		goldRatio: 0.18,
 	},
 	size: {
-		min: 0.45,
-		max: 1.55,
+		min: 1,
+		max: 3,
 	},
 	opacity: {
-		min: 0.22,
+		min: 0.5,
 		max: 0.78,
 	},
 	speed: {
-		min: 0.035,
-		max: 0.13,
+		min: 0.1,
+		max: 0.3,
 	},
 	glow: {
-		radius: 2.4,
-		opacity: 0.075,
+		radius: 0.5,
+		opacity: 0.5,
 	},
 	meteors: {
 		enable: true,
@@ -96,7 +96,7 @@ export const ambientParticleConfig: AmbientParticleConfig = {
 		// 每轮生成数量：提高 max 会让流星雨更加密集
 		burst: {
 			min: 1,
-			max: 1,
+			max: 4,
 		},
 		// 生成间隔（毫秒）：数值越小，流星越多
 		interval: {

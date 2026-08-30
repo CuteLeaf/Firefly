@@ -10,9 +10,12 @@ interface Props {
 }
 const { style } = Astro.props;
 const className = Astro.props.class;
+
+const encodeContactValue = (value: string) =>
+	Buffer.from(value).toString("base64");
 ---
 
-<div class:list={["card-base", "p-3", className]} style={style}>
+<div class:list={["card-base", "p-3", className]} style={style} data-profile-card>
   <a
     aria-label="Go to About Page"
     href={url("/about/")}
@@ -51,67 +54,122 @@ const className = Astro.props.class;
     <div class="text-center text-neutral-400 mb-2.5 transition">
       {profileConfig.bio}
     </div>
-        <div class="flex flex-wrap gap-2 justify-center mb-1">
-            {profileConfig.links.length > 1 && profileConfig.links.map(item =>
-                    {
-                    const showName = item.showName;
-                    const className = showName 
-                        ? "btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95" 
-                        : "btn-regular rounded-lg h-10 w-10 active:scale-90";
+		<div class="flex flex-wrap gap-2 justify-center mb-1">
+			{profileConfig.links.map((item) => {
+				const showName = profileConfig.links.length === 1 || item.showName;
+				const linkClass = showName
+					? "btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95"
+					: "btn-regular rounded-lg h-10 w-10 active:scale-90";
 
-                    if (item.url.startsWith("mailto:")) {
-                        const encodedEmail = Buffer.from(item.url.replace("mailto:", "")).toString("base64");
-                        return <a rel="me" aria-label={item.name} href="#" data-encoded-email={encodedEmail} onclick={`
-                                            (function() {
-                                                const encodedEmail = this.getAttribute('data-encoded-email');
-                                                const decodedEmail = atob(encodedEmail);
-                                                this.href = 'mailto:' + decodedEmail;
-                                                this.removeAttribute('data-encoded-email');
-                                                this.removeAttribute('onclick');
-                                                this.click();
-                                                return false;
-                                            }).call(this);
-                                        `.replace(/\s+/g, " ").trim()
-                                    },
-                                    class={className}>
-                            <Icon is:inline name={item.icon} class="text-[1.5rem]"></Icon>
-                            {showName && item.name}
-                        </a>
-                    } else {
-                        return <a rel="me" aria-label={item.name} href={item.url} target="_blank" class={className}>
-                            <Icon is:inline name={item.icon} class="text-[1.5rem]"></Icon>
-                            {showName && item.name}
-                        </a>
-                    }
-                    }
-            )}
-            {profileConfig.links.length == 1 && (function(item){
-                if (item.url.startsWith("mailto:")) {
-                        const encodedEmail = Buffer.from(item.url.replace("mailto:", "")).toString("base64");
-                        return <a rel="me" aria-label={item.name} href="#" data-encoded-email={encodedEmail} onclick={`
-                                            (function() {
-                                                const encodedEmail = this.getAttribute('data-encoded-email');
-                                                const decodedEmail = atob(encodedEmail);
-                                                this.href = 'mailto:' + decodedEmail;
-                                                this.removeAttribute('data-encoded-email');
-                                                this.removeAttribute('onclick');
-                                                this.click();
-                                                return false;
-                                            }).call(this);
-                                        `.replace(/\s+/g, " ").trim()
-                                    },
-                                    class="btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95">
-                            <Icon is:inline name={item.icon} class="text-[1.5rem]"></Icon>
-                            {item.name}
-                        </a>
-                    } else {
-                        return <a rel="me" aria-label={item.name} href={item.url} target="_blank"
-                                            class="btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95">
-                                <Icon is:inline name={item.icon} class="text-[1.5rem]"></Icon>
-                                {item.name}
-                            </a>
-                    }
-            })(profileConfig.links[0])}
-        </div>
+				if (item.type === "dialog") {
+					return (
+						<button
+							type="button"
+							aria-label={item.name}
+							class={linkClass}
+							data-profile-contact-trigger
+							data-contact-title={item.title || item.name}
+							data-contact-value={encodeContactValue(item.value)}
+						>
+							<Icon is:inline name={item.icon} class="text-[1.5rem]" />
+							{showName && item.name}
+						</button>
+					);
+				}
+
+				return (
+					<a
+						rel="me"
+						aria-label={item.name}
+						href={item.url}
+						target="_blank"
+						class={linkClass}
+					>
+						<Icon is:inline name={item.icon} class="text-[1.5rem]" />
+						{showName && item.name}
+					</a>
+				);
+			})}
+		</div>
   </div>
+
+<dialog
+	data-profile-contact-dialog
+	class="m-auto w-[min(90vw,24rem)] rounded-2xl border border-black/10 dark:border-white/10 bg-white/95 dark:bg-[#182236]/95 p-0 text-neutral-800 dark:text-neutral-100 shadow-2xl backdrop:bg-black/60 backdrop:backdrop-blur-sm"
+>
+	<div class="p-5">
+		<div class="flex items-center justify-between gap-4 mb-4">
+			<h2 class="text-lg font-bold" data-contact-dialog-title>联系方式</h2>
+			<button
+				type="button"
+				class="btn-regular rounded-lg h-9 w-9 active:scale-90"
+				aria-label="关闭弹窗"
+				data-contact-dialog-close
+			>
+				<Icon is:inline name="fa7-solid:xmark" class="text-lg" />
+			</button>
+		</div>
+		<div class="rounded-xl bg-black/5 dark:bg-white/6 px-4 py-3 font-mono text-center break-all select-all" data-contact-dialog-value></div>
+		<button
+			type="button"
+			class="btn-regular rounded-xl w-full h-10 mt-4 font-bold active:scale-[0.98]"
+			data-contact-dialog-copy
+		>
+			复制
+		</button>
+	</div>
+</dialog>
 </div>
+
+<script>
+	document.querySelectorAll<HTMLElement>("[data-profile-card]").forEach((card) => {
+		const contactDialog = card.querySelector<HTMLDialogElement>(
+			"[data-profile-contact-dialog]",
+		);
+		if (!contactDialog) return;
+
+		const title = contactDialog.querySelector<HTMLElement>(
+			"[data-contact-dialog-title]",
+		);
+		const value = contactDialog.querySelector<HTMLElement>(
+			"[data-contact-dialog-value]",
+		);
+		const copyButton = contactDialog.querySelector<HTMLButtonElement>(
+			"[data-contact-dialog-copy]",
+		);
+		let contactValue = "";
+
+		card
+			.querySelectorAll<HTMLElement>("[data-profile-contact-trigger]")
+			.forEach((trigger) => {
+				trigger.addEventListener("click", () => {
+					const encodedValue = trigger.dataset.contactValue;
+					if (!encodedValue || !title || !value || !copyButton) return;
+
+					contactValue = atob(encodedValue);
+					title.textContent = trigger.dataset.contactTitle || "联系方式";
+					value.textContent = contactValue;
+					copyButton.textContent = "复制";
+					contactDialog.showModal();
+				});
+			});
+
+		contactDialog
+			.querySelector<HTMLElement>("[data-contact-dialog-close]")
+			?.addEventListener("click", () => contactDialog.close());
+
+		contactDialog.addEventListener("click", (event) => {
+			if (event.target === contactDialog) contactDialog.close();
+		});
+
+		copyButton?.addEventListener("click", async () => {
+			if (!contactValue) return;
+			try {
+				await navigator.clipboard.writeText(contactValue);
+				copyButton.textContent = "已复制";
+			} catch {
+				copyButton.textContent = "复制失败";
+			}
+		});
+	});
+</script>
