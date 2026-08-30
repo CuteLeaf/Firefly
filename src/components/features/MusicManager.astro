@@ -24,6 +24,7 @@ const localPlaylist =
 							? song.lrc
 							: url(song.lrc)
 						: undefined,
+					lrcOffset: song.lrcOffset ?? 0,
 				};
 			})
 		: [];
@@ -115,6 +116,7 @@ const managerConfigStr = JSON.stringify({
         isMuted: false,
         lyrics: [],
         currentLrcIndex: -1,
+		lyricOffsetMs: 0,
         initialized: false,
         initializing: false,
         error: null
@@ -171,7 +173,7 @@ const managerConfigStr = JSON.stringify({
     }
 
     // ── Lyrics ───────────────────────────────────────────────
-    function loadLyrics(track) {
+    function loadLyrics(track, ver) {
         state.lyrics = [];
         state.currentLrcIndex = -1;
 
@@ -189,16 +191,20 @@ const managerConfigStr = JSON.stringify({
             fetch(track.lrc)
                 .then(function (r) { return r.text(); })
                 .then(function (text) {
+					if (ver !== loadVersion) return;
                     state.lyrics = parseLRC(text);
                     emit('fm:lyrics', { lyrics: state.lyrics, status: 'loaded' });
+					updateLyricIndex(audio.currentTime);
                 })
                 .catch(function () {
+					if (ver !== loadVersion) return;
                     state.lyrics = [];
                     emit('fm:lyrics', { lyrics: [], status: 'failed' });
                 });
         } else {
             state.lyrics = parseLRC(track.lrc);
             emit('fm:lyrics', { lyrics: state.lyrics, status: state.lyrics.length > 0 ? 'loaded' : 'none' });
+			updateLyricIndex(audio.currentTime);
         }
     }
 
@@ -242,6 +248,7 @@ const managerConfigStr = JSON.stringify({
 
         currentTrackUrls = [track.url];
         currentTrackUrlIndex = 0;
+		state.lyricOffsetMs = Number(track.lrcOffset) || 0;
 
         var matchId = track.url.match(/[?&]id=([^&]+)/);
         var matchServer = track.url.match(/[?&]server=([^&]+)/);
@@ -257,7 +264,7 @@ const managerConfigStr = JSON.stringify({
             });
         }
 
-        loadLyrics(track);
+        loadLyrics(track, ver);
 
         emit('fm:track', { index: index, track: track, autoPlay: !!autoPlay });
 
@@ -349,6 +356,48 @@ const managerConfigStr = JSON.stringify({
         }
     }
 
+    function updateLyricIndex(currentTime) {
+		if (state.lyrics.length === 0) return;
+
+		var adjustedTime = currentTime + state.lyricOffsetMs / 1000;
+		var low = 0;
+		var high = state.lyrics.length - 1;
+		var idx = -1;
+
+		while (low <= high) {
+			var mid = Math.floor((low + high) / 2);
+			if (adjustedTime >= state.lyrics[mid].time) {
+				idx = mid;
+				low = mid + 1;
+			} else {
+				high = mid - 1;
+			}
+		}
+
+		if (idx !== state.currentLrcIndex) {
+			state.currentLrcIndex = idx;
+			emit('fm:lrc-index', { index: idx });
+		}
+	}
+
+	var lyricSyncFrame = 0;
+	function runLyricSync() {
+		updateLyricIndex(audio.currentTime);
+		if (!audio.paused) {
+			lyricSyncFrame = requestAnimationFrame(runLyricSync);
+		}
+	}
+
+	function startLyricSync() {
+		cancelAnimationFrame(lyricSyncFrame);
+		lyricSyncFrame = requestAnimationFrame(runLyricSync);
+	}
+
+	function stopLyricSync() {
+		cancelAnimationFrame(lyricSyncFrame);
+		lyricSyncFrame = 0;
+	}
+
     // ── Audio events → broadcast ─────────────────────────────
     audio.addEventListener('timeupdate', function () {
         if (isNaN(audio.duration)) return;
@@ -364,21 +413,16 @@ const managerConfigStr = JSON.stringify({
             durationStr: formatTime(dur)
         });
 
-        // Lyrics sync
-        if (state.lyrics.length > 0) {
-            var idx = -1;
-            for (var i = 0; i < state.lyrics.length; i++) {
-                if (ct >= state.lyrics[i].time) idx = i;
-                else break;
-            }
-            if (idx !== state.currentLrcIndex) {
-                state.currentLrcIndex = idx;
-                emit('fm:lrc-index', { index: idx });
-            }
-        }
+		if (document.hidden) {
+			updateLyricIndex(ct);
+		}
     });
 
+	audio.addEventListener('play', startLyricSync);
+	audio.addEventListener('pause', stopLyricSync);
+
     audio.addEventListener('ended', function () {
+		stopLyricSync();
         playNext(true);
     });
 

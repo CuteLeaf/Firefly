@@ -17,8 +17,8 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	// 播放模式：'list'=列表循环, 'one'=单曲循环, 'random'=随机播放
 	playMode: "list",
 
-	// 是否显启用歌词
-	showLyrics: false,
+	// 是否启用歌词
+	showLyrics: true,
 
 	// Meting API 配置
 	meting: {
@@ -52,21 +52,21 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 				artist: "EGOIST",
 				url: "/assets/music/EGOIST - Departures 〜あなたにおくるアイの歌〜_54902885.mp3",
 				cover: "/assets/music/cover/depatures.jpg",
-				lrc: "",
+				lrc: "/assets/music/lrc/departures.lrc",
 			},
 			{
 				name: "ありがとう…",
 				artist: "KOKIA",
 				url: "/assets/music/KOKIA - ありがとう…_53591445.mp3",
 				cover: "/assets/music/cover/kokia-arigatou.jpg",
-				lrc: "",
+				lrc: "/assets/music/lrc/kokia-arigatou.lrc",
 			},
 			{
 				name: "願い〜あの頃のキミへ〜",
 				artist: "當山みれい",
 				url: "/assets/music/當山みれい - 願い〜あの頃のキミへ〜_142305977.mp3",
 				cover: "/assets/music/cover/touyama-mirei-negai.jpg",
-				lrc: "",
+				lrc: "/assets/music/lrc/touyama-mirei-negai.lrc",
 			},
 		],
 	},

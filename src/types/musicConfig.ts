@@ -47,6 +47,7 @@ export type MusicPlayerConfig = {
 			url: string; // 音乐文件路径（相对于 public 目录）
 			cover?: string; // 封面图片路径（相对于 public 目录）
 			lrc?: string; // 歌词内容，支持 LRC 格式
+			lrcOffset?: number; // 歌词偏移量（毫秒），正数表示歌词提前
 		}>;
 	};
 };

@@ -110,10 +110,6 @@ const viewConfigStr = JSON.stringify({
             iconVolMute: widget.querySelector('.icon-vol-mute'),
             volContainer: widget.querySelector('.vol-container'),
             volBar: widget.querySelector('.vol-bar'),
-            btnLrc: widget.querySelector('.btn-lrc-toggle'),
-            iconLrcOn: widget.querySelector('.icon-lrc-on'),
-            iconLrcOff: widget.querySelector('.icon-lrc-off'),
-            lrcDrawer: widget.querySelector('.lrc-drawer'),
             lrcContainer: widget.querySelector('.lrc-container'),
             btnDrawer: widget.querySelector('.btn-drawer-toggle'),
             playlistDrawer: widget.querySelector('.playlist-drawer'),
@@ -123,17 +119,15 @@ const viewConfigStr = JSON.stringify({
 
         // Verify critical elements
         var _critical = [ui.btnPlay, ui.btnRepeat, ui.btnMute, ui.volContainer,
-            ui.btnDrawer, ui.btnLrc, ui.lrcDrawer, ui.lrcContainer,
+			ui.btnDrawer, ui.lrcContainer,
             ui.progressContainer, ui.btnNext, ui.btnPrev, ui.loading,
             ui.cover, ui.title, ui.artist, ui.playlistContainer, ui.itemTemplate];
         if (_critical.some(function(el) { return !el; })) return;
 
-        // ── Local state (drawers, user scrolling, virtual scroll) ──
+        // ── Local state (lyrics, virtual scroll) ────────────────
         var ITEM_H = 42;
         var OVERSCAN = 8;
         var local = {
-            isUserScrolling: false,
-            scrollTimeout: null,
             currentLrcIndex: -1,
             vs: {
                 playlist: [],
@@ -161,7 +155,7 @@ const viewConfigStr = JSON.stringify({
                 ui.btnPlay.classList.remove('bg-(--btn-regular-bg)', 'hover:bg-(--btn-regular-bg-hover)', 'active:bg-(--btn-regular-bg-active)', 'text-(--primary)');
                 ui.iconPlay.classList.add('hidden');
                 ui.iconPause.classList.remove('hidden');
-                ui.cover.style.animationPlayState = 'running';
+				ui.cover.style.animationPlayState = 'running';
                 ui.btnPlay.setAttribute('aria-label', cfg.i18n.pause);
                 ui.btnPlay.title = cfg.i18n.pause;
             } else {
@@ -169,7 +163,7 @@ const viewConfigStr = JSON.stringify({
                 ui.btnPlay.classList.add('bg-(--btn-regular-bg)', 'hover:bg-(--btn-regular-bg-hover)', 'active:bg-(--btn-regular-bg-active)', 'text-(--primary)');
                 ui.iconPlay.classList.remove('hidden');
                 ui.iconPause.classList.add('hidden');
-                ui.cover.style.animationPlayState = 'paused';
+				ui.cover.style.animationPlayState = 'paused';
                 ui.btnPlay.setAttribute('aria-label', cfg.i18n.play);
                 ui.btnPlay.title = cfg.i18n.play;
             }
@@ -240,11 +234,11 @@ const viewConfigStr = JSON.stringify({
                 ui.cover.alt = cfg.i18n.noCover;
             }
 
-            // Reset cover rotation
-            ui.cover.classList.remove('animate-spin-slow');
-            void ui.cover.offsetWidth;
-            ui.cover.classList.add('animate-spin-slow');
-            ui.cover.style.animationPlayState = 'paused';
+			// 切歌时让唱片从初始角度开始，播放后继续旋转。
+			ui.cover.classList.remove('animate-spin');
+			void ui.cover.offsetWidth;
+			ui.cover.classList.add('animate-spin');
+			ui.cover.style.animationPlayState = 'paused';
 
             // Reset progress
             ui.progressBar.style.width = '0%';
@@ -427,23 +421,25 @@ const viewConfigStr = JSON.stringify({
             local.currentLrcIndex = -1;
             ui.lrcContainer.innerHTML = '';
             if (status === 'loading') {
-                ui.lrcContainer.innerHTML = '<div class="text-neutral-400 text-sm py-10">' + cfg.i18n.loadingLyrics + '</div>';
+				ui.lrcContainer.innerHTML = '<div class="h-5 leading-5 text-xs text-neutral-400 truncate" role="status">' + cfg.i18n.loadingLyrics + '</div>';
                 return;
             }
             if (status === 'failed') {
-                ui.lrcContainer.innerHTML = '<div class="text-neutral-400 text-sm py-10">' + cfg.i18n.failedLyrics + '</div>';
+				ui.lrcContainer.innerHTML = '<div class="h-5 leading-5 text-xs text-neutral-400 truncate" role="status">' + cfg.i18n.failedLyrics + '</div>';
                 return;
             }
             if (!lyrics || lyrics.length === 0) {
-                ui.lrcContainer.innerHTML = '<div class="text-neutral-400 text-sm py-10" role="option">' + cfg.i18n.noLyrics + '</div>';
+				ui.lrcContainer.innerHTML = '<div class="h-5 leading-5 text-xs text-neutral-400 truncate" role="status">' + cfg.i18n.noLyrics + '</div>';
                 return;
             }
             lyrics.forEach(function (line, index) {
-                var lineEl = document.createElement('div');
-                lineEl.className = 'lrc-line transition-all duration-300 text-sm text-neutral-400 py-1 cursor-pointer hover:text-(--primary)';
+				var lineEl = document.createElement('button');
+				lineEl.type = 'button';
+				lineEl.className = 'lrc-line block w-full h-5 leading-5 px-1 truncate text-xs text-neutral-400 opacity-35 scale-95 transition-all duration-500 ease-out hover:opacity-80';
                 lineEl.innerText = line.text;
                 lineEl.dataset.index = index;
                 lineEl.setAttribute('role', 'option');
+				lineEl.setAttribute('aria-selected', 'false');
                 lineEl.setAttribute('aria-label', line.text);
                 lineEl.onclick = function () {
                     mgr.seekToTime(line.time);
@@ -458,17 +454,24 @@ const viewConfigStr = JSON.stringify({
 
             var lines = ui.lrcContainer.querySelectorAll('.lrc-line');
             lines.forEach(function (line, i) {
+				var distance = Math.abs(i - index);
                 if (i === index) {
-                    line.classList.add('text-(--primary)', 'font-bold', 'text-base');
-                    line.classList.remove('text-neutral-400', 'text-sm');
+					line.classList.add('text-neutral-800', 'dark:text-white', 'font-semibold', 'text-sm', 'opacity-100', 'scale-100');
+					line.classList.remove('text-neutral-400', 'text-xs', 'opacity-35', 'opacity-55', 'scale-95');
+					line.setAttribute('aria-selected', 'true');
+				} else if (distance === 1) {
+					line.classList.add('text-neutral-400', 'text-xs', 'opacity-55', 'scale-95');
+					line.classList.remove('text-neutral-800', 'dark:text-white', 'font-semibold', 'text-sm', 'opacity-100', 'opacity-35', 'scale-100');
+					line.setAttribute('aria-selected', 'false');
                 } else {
-                    line.classList.remove('text-(--primary)', 'font-bold', 'text-base');
-                    line.classList.add('text-neutral-400', 'text-sm');
+					line.classList.add('text-neutral-400', 'text-xs', 'opacity-35', 'scale-95');
+					line.classList.remove('text-neutral-800', 'dark:text-white', 'font-semibold', 'text-sm', 'opacity-100', 'opacity-55', 'scale-100');
+					line.setAttribute('aria-selected', 'false');
                 }
             });
 
-            // Auto-scroll unless user is scrolling
-            if (index !== -1 && !local.isUserScrolling) {
+			// 当前歌词始终保持在三行窗口的中间。
+			if (index !== -1) {
                 var line = ui.lrcContainer.querySelector('.lrc-line[data-index="' + index + '"]');
                 if (line) {
                     var containerHeight = ui.lrcContainer.clientHeight;
@@ -516,8 +519,7 @@ const viewConfigStr = JSON.stringify({
             if (s.track && s.track.pic && ui.cover.src && ui.cover.complete && ui.cover.naturalWidth > 0) {
                 ui.cover.classList.remove('opacity-0');
             }
-            // Update cover animation state to match play state
-            ui.cover.style.animationPlayState = s.isPlaying ? 'running' : 'paused';
+			ui.cover.style.animationPlayState = s.isPlaying ? 'running' : 'paused';
         }
 
         // ── Event listeners (fm:* from manager) ──────────────────
@@ -600,35 +602,7 @@ const viewConfigStr = JSON.stringify({
             mgr.seek(percent);
         });
 
-        // ── Drawer logic (local state) ───────────────────────────
-        ui.btnLrc.addEventListener('click', function () {
-            var isOpen = ui.lrcDrawer.style.gridTemplateRows === '1fr';
-            if (isOpen) {
-                ui.lrcDrawer.style.gridTemplateRows = '0fr';
-                ui.lrcDrawer.classList.remove('opacity-100');
-                ui.lrcDrawer.classList.add('opacity-0');
-                ui.btnLrc.classList.remove('text-(--primary)');
-                ui.btnLrc.classList.add('text-neutral-400');
-                ui.iconLrcOn.classList.add('hidden');
-                ui.iconLrcOff.classList.remove('hidden');
-            } else {
-                // Close playlist if open
-                ui.playlistDrawer.style.gridTemplateRows = '0fr';
-                ui.playlistDrawer.classList.remove('opacity-100');
-                ui.playlistDrawer.classList.add('opacity-0');
-                ui.btnDrawer.classList.remove('text-(--primary)');
-                ui.btnDrawer.classList.add('text-neutral-400');
-
-                ui.lrcDrawer.style.gridTemplateRows = '1fr';
-                ui.lrcDrawer.classList.add('opacity-100');
-                ui.lrcDrawer.classList.remove('opacity-0');
-                ui.btnLrc.classList.add('text-(--primary)');
-                ui.btnLrc.classList.remove('text-neutral-400');
-                ui.iconLrcOn.classList.remove('hidden');
-                ui.iconLrcOff.classList.add('hidden');
-            }
-        });
-
+		// ── Playlist drawer logic ─────────────────────────────────
         ui.btnDrawer.addEventListener('click', function () {
             var isOpen = ui.playlistDrawer.style.gridTemplateRows === '1fr';
             if (isOpen) {
@@ -637,17 +611,8 @@ const viewConfigStr = JSON.stringify({
                 ui.playlistDrawer.classList.add('opacity-0');
                 ui.btnDrawer.classList.add('text-neutral-400');
                 ui.btnDrawer.classList.remove('text-(--primary)');
-                local.vs.drawerOpen = false;
+				local.vs.drawerOpen = false;
             } else {
-                // Close lyrics if open
-                ui.lrcDrawer.style.gridTemplateRows = '0fr';
-                ui.lrcDrawer.classList.remove('opacity-100');
-                ui.lrcDrawer.classList.add('opacity-0');
-                ui.btnLrc.classList.remove('text-(--primary)');
-                ui.btnLrc.classList.add('text-neutral-400');
-                ui.iconLrcOn.classList.add('hidden');
-                ui.iconLrcOff.classList.remove('hidden');
-
                 ui.playlistDrawer.style.gridTemplateRows = '1fr';
                 ui.playlistDrawer.classList.add('opacity-100');
                 ui.playlistDrawer.classList.remove('opacity-0');
@@ -670,35 +635,6 @@ const viewConfigStr = JSON.stringify({
             vsRequestUpdate();
         });
 
-        // ── Lyrics user scroll detection ─────────────────────────
-        function resetScrollTimeout() {
-            clearTimeout(local.scrollTimeout);
-            local.scrollTimeout = setTimeout(function () {
-                local.isUserScrolling = false;
-                // Snap back to current lyric
-                var s = mgr.getState();
-                if (s.currentLrcIndex >= 0) {
-                    var line = ui.lrcContainer.querySelector('.lrc-line[data-index="' + s.currentLrcIndex + '"]');
-                    if (line) {
-                        var containerHeight = ui.lrcContainer.clientHeight;
-                        var lineOffset = line.offsetTop;
-                        var lineHeight = line.offsetHeight;
-                        var targetScroll = lineOffset - (containerHeight / 2) + (lineHeight / 2);
-                        ui.lrcContainer.scrollTo({ top: targetScroll, behavior: 'auto' });
-                    }
-                }
-            }, 3000);
-        }
-
-        ui.lrcContainer.addEventListener('wheel', function () {
-            local.isUserScrolling = true;
-            resetScrollTimeout();
-        });
-        ui.lrcContainer.addEventListener('touchstart', function () {
-            local.isUserScrolling = true;
-            resetScrollTimeout();
-        });
-
         // ── Cover image events ───────────────────────────────────
         ui.cover.addEventListener('load', function () {
             ui.cover.classList.remove('opacity-0');
@@ -718,7 +654,6 @@ const viewConfigStr = JSON.stringify({
                             window.removeEventListener(name, handlers[name]);
                         });
                         observer.disconnect();
-                        clearTimeout(local.scrollTimeout);
                         return;
                     }
                 }
