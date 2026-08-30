@@ -51,7 +51,7 @@ export type SiteConfig = {
 	};
 
 	// 站点开始日期，用于计算运行天数
-	siteStartDate?: string; // 格式: "YYYY-MM-DD"
+	siteStartDate?: string; // ISO 8601 日期或日期时间
 
 	// 可选：站点时区，使用 IANA 时区标识，例如 "Asia/Shanghai"、"UTC"
 	timezone?: string;
@@ -81,7 +81,6 @@ export type SiteConfig = {
 	pages: {
 		booknav: boolean; // 书签导航页面开关
 		friends: boolean; // 友链页面开关
-		sponsor: boolean; // 打赏页面开关
 		guestbook: boolean; // 留言板页面开关
 		bangumi: boolean;
 		vndb: boolean;

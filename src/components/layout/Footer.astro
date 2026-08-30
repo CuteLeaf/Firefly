@@ -1,7 +1,10 @@
 ---
-import { profileConfig } from "@/config";
+import { Icon } from "astro-icon/components";
+import { profileConfig, siteConfig } from "@/config";
 
 const currentYear = new Date().getFullYear();
+const siteStartDate = siteConfig.siteStartDate || "2026-08-19T00:00:00+08:00";
+const lastUpdatedAt = new Date().toISOString();
 ---
 
 
@@ -14,6 +17,14 @@ const currentYear = new Date().getFullYear();
   class="transition border-dashed border-[oklch(85%_0.01_var(--hue))] dark:border-white/15 rounded-2xl mb-12 flex flex-col items-center justify-center px-6"
 >
   <div class="transition text-50 text-sm text-center wrap">
+    <div class="mx-0.5 my-2.5 flex items-center gap-2 justify-center">
+      <Icon is:inline name="material-symbols:calendar-clock-outline" class="text-lg" />
+      <span>本站已苟活 <span id="site-runtime">0 天 0 时 0 分 0 秒</span></span>
+    </div>
+    <div class="mx-0.5 my-2.5 flex items-center gap-2 justify-center">
+      <Icon is:inline name="mingcute:heartbeat-line" class="text-lg" />
+      <span>最后更新于 <span id="site-last-updated">今天</span></span>
+    </div>
     <div class="mx-0.5 my-2.5 flex gap-x-2 gap-y-2.5 justify-center flex-wrap">
       <span>
         Copyright &copy; <span id="copyright-year">{currentYear}</span>
@@ -30,3 +41,36 @@ const currentYear = new Date().getFullYear();
     </div>
   </div>
 </div>
+
+<script is:inline define:vars={{ siteStartDate, lastUpdatedAt }}>
+  function updateFooterStatus() {
+    const now = Date.now();
+    const startTime = new Date(siteStartDate).getTime();
+    const elapsed = Math.max(0, now - startTime);
+
+    const totalSeconds = Math.floor(elapsed / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    const runtimeElement = document.getElementById("site-runtime");
+    if (runtimeElement) {
+      runtimeElement.textContent = `${days} 天 ${hours} 时 ${minutes} 分 ${seconds} 秒`;
+    }
+
+    const lastUpdatedElement = document.getElementById("site-last-updated");
+    if (lastUpdatedElement) {
+      const updatedTime = new Date(lastUpdatedAt).getTime();
+      const daysSinceUpdate = Math.max(0, Math.floor((now - updatedTime) / 86400000));
+      lastUpdatedElement.textContent = daysSinceUpdate === 0 ? "今天" : `${daysSinceUpdate} 天前`;
+    }
+  }
+
+  updateFooterStatus();
+  if (window.__fireflyFooterStatusTimer) {
+    window.clearInterval(window.__fireflyFooterStatusTimer);
+  }
+  window.__fireflyFooterStatusTimer = window.setInterval(updateFooterStatus, 1000);
+  document.addEventListener("swup:contentReplaced", updateFooterStatus);
+</script>
