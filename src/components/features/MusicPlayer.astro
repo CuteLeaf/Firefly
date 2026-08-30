@@ -21,11 +21,11 @@ const widgetId =
 
     <!-- Top Row: Cover & Info -->
 <div class="flex items-center gap-2 mb-2 px-1">
-    <!-- Circular Cover -->
+    <!-- Circular record cover -->
     <div class="relative shrink-0 w-14 h-14 group">
             <div class="w-full h-full rounded-full overflow-hidden shadow-lg border-2 border-white dark:border-neutral-700 relative z-10 bg-(--primary)/10 flex items-center justify-center">
             <Icon is:inline name="material-symbols:music-note-rounded" class="text-2xl text-(--primary) opacity-40 absolute" aria-hidden="true" />
-            <img class="music-cover w-full h-full object-cover animate-spin-slow relative z-10 opacity-0 transition-opacity duration-300" src="" alt={i18n(I18nKey.musicCover)} style="animation-play-state: paused;" />
+			<img class="music-cover animate-spin w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300" src="" alt={i18n(I18nKey.musicCover)} style="animation-duration: 10s; animation-play-state: paused;" />
             </div>
     </div>
 
@@ -37,11 +37,6 @@ const widgetId =
                     {i18n(I18nKey.music)}
                 </h3>
             </div>
-            <!-- Top Right: Lyric Toggle -->
-            <button class={`btn-lrc-toggle hover:text-(--primary) transition-all duration-300 p-0.5 pr-2 transform active:scale-95 text-neutral-400 shrink-0 ${!config.showLyrics ? 'hidden' : ''}`} title={i18n(I18nKey.musicLyrics)} aria-label={i18n(I18nKey.musicLyrics)}>
-                <Icon is:inline name="material-symbols:subtitles-off-outline-rounded" class="icon-lrc-off text-xl" aria-hidden="true" />
-                <Icon is:inline name="material-symbols:subtitles-outline-rounded" class="icon-lrc-on text-xl hidden" aria-hidden="true" />
-            </button>
         </div>
 
         <div class="min-w-0 overflow-hidden">
@@ -49,6 +44,13 @@ const widgetId =
                 {i18n(I18nKey.musicNoPlaying)}
             </p>
         </div>
+
+		<!-- Inline synchronized lyrics -->
+		<div class:list={["lrc-inline-window relative h-[3.75rem] overflow-hidden mt-1", { hidden: !config.showLyrics }]} aria-live="polite" aria-label={i18n(I18nKey.musicLyrics)}>
+			<div class="lrc-container h-full overflow-hidden py-5 text-center scroll-smooth">
+				<div class="h-5 leading-5 text-xs text-neutral-400 truncate" role="status">{i18n(I18nKey.musicNoLyrics)}</div>
+			</div>
+		</div>
 
         <!-- Time Display & Volume -->
         <div class="flex items-center gap-3 text-neutral-400 h-5">
@@ -114,17 +116,6 @@ const widgetId =
     </button>
 </div>
 
-<!-- Lyrics Drawer -->
-<div class="lrc-drawer grid transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] grid-rows-[0fr] opacity-0">
-    <div class="overflow-hidden min-h-0">
-        <div class="mt-2 pt-2 border-t border-neutral-100 dark:border-white/5 mx-1">
-            <div class="lrc-container h-48 overflow-y-auto custom-scrollbar flex flex-col items-center gap-2 p-4 py-24 text-center relative scroll-smooth" role="listbox" aria-label={i18n(I18nKey.musicLyrics)}>
-                <div class="text-neutral-400 text-sm py-10" role="option">{i18n(I18nKey.musicNoLyrics)}</div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Playlist Drawer (Accordion) -->
 <div class="playlist-drawer grid transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] grid-rows-[0fr] opacity-0">
     <div class="overflow-hidden min-h-0">
@@ -145,11 +136,7 @@ const widgetId =
 </div>
 
 <style>
-    @keyframes spin-slow {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-    .animate-spin-slow {
-        animation: spin-slow 10s linear infinite;
-    }
+	.lrc-inline-window {
+		mask-image: linear-gradient(to bottom, transparent, black 24%, black 76%, transparent);
+	}
 </style>
