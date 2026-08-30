@@ -19,7 +19,6 @@ export const zh_CN: Translation = {
 	[Key.navSocial]: "社交",
 	[Key.navMine]: "我的",
 	[Key.navAbout]: "关于",
-	[Key.navLinks]: "链接",
 	[Key.all]: "全部",
 
 	[Key.tags]: "标签",
@@ -378,24 +377,6 @@ export const zh_CN: Translation = {
 	[Key.postListLayout]: "文章布局",
 	[Key.postListLayoutList]: "列表",
 	[Key.postListLayoutGrid]: "网格",
-
-	// 打赏页面
-	[Key.sponsor]: "打赏",
-	[Key.sponsorTitle]: "打赏支持",
-	[Key.sponsorDescription]:
-		"如果我的内容对你有帮助，欢迎通过以下方式打赏我，你的支持是我持续创作的动力！",
-	[Key.sponsorMethods]: "打赏方式",
-	[Key.sponsorList]: "打赏列表",
-	[Key.sponsorEmpty]: "暂无打赏记录",
-	[Key.sponsorAmount]: "金额",
-	[Key.sponsorDate]: "日期",
-	[Key.sponsorMessage]: "留言",
-	[Key.sponsorAnonymous]: "匿名",
-	[Key.scanToSponsor]: "扫码打赏",
-	[Key.sponsorGoTo]: "前往打赏",
-	[Key.sponsorButton]: "支持与分享",
-	[Key.sponsorButtonText]:
-		"如果这篇文章对你有帮助，欢迎分享给更多人或打赏支持！",
 
 	[Key.shareOnSocial]: "文章分享",
 	[Key.shareOnSocialDescription]: "如果这篇文章对你有帮助，欢迎分享给更多人！",

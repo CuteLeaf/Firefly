@@ -19,7 +19,6 @@ export const ja: Translation = {
 	[Key.navSocial]: "ソーシャル",
 	[Key.navMine]: "マイ",
 	[Key.navAbout]: "について",
-	[Key.navLinks]: "リンク",
 	[Key.all]: "すべて",
 
 	[Key.tags]: "タグ",
@@ -385,24 +384,6 @@ export const ja: Translation = {
 	[Key.postListLayout]: "投稿リストレイアウト",
 	[Key.postListLayoutList]: "リスト",
 	[Key.postListLayoutGrid]: "グリッド",
-
-	// スポンサーページ
-	[Key.sponsor]: "スポンサー",
-	[Key.sponsorTitle]: "サポート",
-	[Key.sponsorDescription]:
-		"私のコンテンツがあなたの役に立ったなら、以下の方法で私をスポンサーしてください。あなたのサポートは私の継続的な創作の原動力です！",
-	[Key.sponsorMethods]: "支払い方法",
-	[Key.sponsorList]: "スポンサーリスト",
-	[Key.sponsorEmpty]: "スポンサー記録なし",
-	[Key.sponsorAmount]: "金額",
-	[Key.sponsorDate]: "日付",
-	[Key.sponsorMessage]: "メッセージ",
-	[Key.sponsorAnonymous]: "匿名",
-	[Key.scanToSponsor]: "スキャンしてスポンサー",
-	[Key.sponsorGoTo]: "スポンサーへ",
-	[Key.sponsorButton]: "サポートと共有",
-	[Key.sponsorButtonText]:
-		"この記事が役に立ったなら、共有またはサポートをお願いします！",
 
 	[Key.shareOnSocial]: "記事を共有",
 	[Key.shareOnSocialDescription]:

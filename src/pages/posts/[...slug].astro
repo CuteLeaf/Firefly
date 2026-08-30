@@ -25,7 +25,6 @@ import { coverImageConfig } from "@/config/coverImageConfig";
 import { licenseConfig } from "@/config/licenseConfig";
 import { profileConfig } from "@/config/profileConfig";
 import { siteConfig } from "@/config/siteConfig";
-import { sponsorConfig } from "@/config/sponsorConfig";
 import { formatDateToYYYYMMDD } from "@/utils/date-utils";
 import { getApiUrlList, processCoverImageSync } from "@/utils/image-utils";
 import { url } from "@/utils/url-utils";
@@ -307,36 +306,22 @@ const relatedPosts = await getRelatedPosts(entry, 5);
             <Content />
           </Markdown>
 
-          {/* 打赏按钮 & 分享按钮 */}
+          {/* 分享按钮 */}
           {
-            (siteConfig.post.sharePoster || (sponsorConfig.showButtonInPost && siteConfig.pages.sponsor)) && (
+            siteConfig.post.sharePoster && (
               <div class="mb-6 rounded-xl onload-animation">
                 <div class="p-6 bg-(--license-block-bg) rounded-xl">
                   <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div class="flex items-center gap-3 flex-1">
                       <div class="h-12 w-12 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70 shrink-0">
-                        <Icon is:inline
-                          name={sponsorConfig.showButtonInPost &&
-                          siteConfig.pages.sponsor
-                            ? "material-symbols:favorite"
-                            : "material-symbols:share"}
-                          class="text-2xl"
-                        />
+                        <Icon is:inline name="material-symbols:share" class="text-2xl" />
                       </div>
                       <div>
                         <h3 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
-                          {
-                            sponsorConfig.showButtonInPost && siteConfig.pages.sponsor
-                              ? i18n(I18nKey.sponsorButton)
-                              : i18n(I18nKey.shareOnSocial)
-                          }
+                          {i18n(I18nKey.shareOnSocial)}
                         </h3>
                         <p class="text-sm text-neutral-600 dark:text-neutral-400">
-                          {
-                            sponsorConfig.showButtonInPost && siteConfig.pages.sponsor
-                              ? i18n(I18nKey.sponsorButtonText)
-                              : i18n(I18nKey.shareOnSocialDescription)
-                          }
+                          {i18n(I18nKey.shareOnSocialDescription)}
                         </p>
                       </div>
                     </div>
@@ -356,17 +341,6 @@ const relatedPosts = await getRelatedPosts(entry, 5);
                             avatar={posterAvatarUrl}
                             avatarSelector={posterAvatarSelector}
                           />
-                        )
-                      }
-                      {
-                        sponsorConfig.showButtonInPost && siteConfig.pages.sponsor && (
-                          <a
-                            href={url("/sponsor/")}
-                            class="inline-flex items-center gap-2 px-6 py-3 bg-(--primary) text-white dark:text-black/70 rounded-lg font-medium hover:bg-(--primary)/80 hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
-                          >
-                            <span>{i18n(I18nKey.sponsor)}</span>
-                            <Icon is:inline name="fa7-solid:arrow-right" class="text-sm" />
-                          </a>
                         )
                       }
                     </div>
@@ -397,36 +371,22 @@ const relatedPosts = await getRelatedPosts(entry, 5);
             <Content />
           </Markdown>
 
-          {/* 打赏按钮 & 分享按钮 */}
+          {/* 分享按钮 */}
           {
-            (siteConfig.post.sharePoster || (sponsorConfig.showButtonInPost && siteConfig.pages.sponsor)) && (
+            siteConfig.post.sharePoster && (
               <div class="mb-6 rounded-xl onload-animation">
                 <div class="p-6 bg-(--license-block-bg) rounded-xl">
                   <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div class="flex items-center gap-3 flex-1">
                       <div class="h-12 w-12 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70 shrink-0">
-                        <Icon is:inline
-                          name={sponsorConfig.showButtonInPost &&
-                          siteConfig.pages.sponsor
-                            ? "material-symbols:favorite"
-                            : "material-symbols:share"}
-                          class="text-2xl"
-                        />
+                        <Icon is:inline name="material-symbols:share" class="text-2xl" />
                       </div>
                       <div>
                         <h3 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
-                          {
-                            sponsorConfig.showButtonInPost && siteConfig.pages.sponsor
-                              ? i18n(I18nKey.sponsorButton)
-                              : i18n(I18nKey.shareOnSocial)
-                          }
+                          {i18n(I18nKey.shareOnSocial)}
                         </h3>
                         <p class="text-sm text-neutral-600 dark:text-neutral-400">
-                          {
-                            sponsorConfig.showButtonInPost && siteConfig.pages.sponsor
-                              ? i18n(I18nKey.sponsorButtonText)
-                              : i18n(I18nKey.shareOnSocialDescription)
-                          }
+                          {i18n(I18nKey.shareOnSocialDescription)}
                         </p>
                       </div>
                     </div>
@@ -446,17 +406,6 @@ const relatedPosts = await getRelatedPosts(entry, 5);
                             avatar={posterAvatarUrl}
                             avatarSelector={posterAvatarSelector}
                           />
-                        )
-                      }
-                      {
-                        sponsorConfig.showButtonInPost && siteConfig.pages.sponsor && (
-                          <a
-                            href={url("/sponsor/")}
-                            class="inline-flex items-center gap-2 px-6 py-3 bg-(--primary) text-white dark:text-black/70 rounded-lg font-medium hover:bg-(--primary)/80 hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
-                          >
-                            <span>{i18n(I18nKey.sponsor)}</span>
-                            <Icon is:inline name="fa7-solid:arrow-right" class="text-sm" />
-                          </a>
                         )
                       }
                     </div>
