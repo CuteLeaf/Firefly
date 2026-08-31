@@ -5,7 +5,7 @@ export const announcementConfig: AnnouncementConfig = {
 	title: "",
 
 	// 公告内容
-	content: "欢迎来到我的博客！这是一则示例公告。",
+	content: "喵～ 欢迎光临！本喵是小晴，那个耗尽电量的站长正瘫在旁边放空，就由我来接客啦喵～ 这个小破站没啥大追求，纯粹是他用来装那些慢吞吞的日常和无聊脑洞的角落。随便找个地方坐，喝口水，别打扰他就好喵～",
 
 	// 是否允许用户关闭公告
 	closable: true,
