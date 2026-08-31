@@ -2,7 +2,7 @@
 title: RAG 文档解析工程：从 PDF、Word、Excel 到可检索语义块的保姆级指南
 published: 2026-08-30
 description: 从文件接入、解析路由、PDF/Word/Excel 内容提取，到结构重建、去噪、切块、质量校验与可追溯输出，系统讲清生产级 RAG 文档解析流水线。
-image: ""
+image: "./images/rag-document-parsing-roxy.png"
 tags: [RAG, 文档解析, PDF, Word, Excel, Python]
 category: 人工智能
 draft: false

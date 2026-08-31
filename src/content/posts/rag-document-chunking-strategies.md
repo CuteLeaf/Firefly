@@ -2,7 +2,7 @@
 title: RAG 文档切分工程：策略全景、生产权衡与落地方法
 published: 2026-08-31
 description: 系统梳理固定长度、递归、结构化、语义、命题、Parent-Child、Late Chunking 等 RAG 文档切分策略，并从召回质量、上下文完整性、成本、更新、权限与可观测性出发，给出生产环境中的选型与评估方法。
-image: ""
+image: "./images/rag-document-chunking-roxy.png"
 tags: [RAG, 文档切分, Chunking, 向量检索, 知识库, 工程实践]
 category: 人工智能
 draft: false
