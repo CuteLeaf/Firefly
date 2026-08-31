@@ -42,7 +42,7 @@ export const siteConfig: SiteConfig = {
 	subtitle: "晴时",
 
 	// 站点 URL
-	site_url: "https://firefly.cuteleaf.cn",
+	site_url: "https://ciquqingshi.cn",
 
 	// 站点描述
 	description:
