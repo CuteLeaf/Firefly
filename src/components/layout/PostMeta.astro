@@ -124,7 +124,7 @@ const visibleTags =
         <div class="flex flex-row flex-nowrap items-center">
           <a
             href={getCategoryUrl(category || "")}
-            aria-label={`View all posts in the ${category} category`}
+            aria-label={`View all posts in the ${category || i18n(I18nKey.uncategorized)} category`}
             class="link-lg transition text-50 text-sm font-medium
               hover:text-(--primary) dark:hover:text-(--primary) whitespace-nowrap"
           >
