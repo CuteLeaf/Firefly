@@ -161,7 +161,6 @@ function initialActive(categoryName: string): {
   .category-scroll {
     scrollbar-width: none;
     -ms-overflow-style: none;
-    scroll-behavior: smooth;
   }
   .category-scroll::-webkit-scrollbar {
     display: none;
@@ -340,11 +339,34 @@ function initialActive(categoryName: string): {
     }
     scroll.dataset.featuresBound = "true";
 
-    // 鼠标滚轮横向滚动
+    // 将垂直滚轮映射为即时横向滚动；触控板的原生水平滚动交给浏览器处理
     scroll.addEventListener("wheel", (e) => {
-      if (scroll.scrollWidth <= scroll.clientWidth) return;
+      if (
+        scroll.scrollWidth <= scroll.clientWidth ||
+        e.ctrlKey ||
+        Math.abs(e.deltaX) >= Math.abs(e.deltaY)
+      ) return;
+
+      const delta = e.deltaMode === WheelEvent.DOM_DELTA_LINE
+        ? e.deltaY * 16
+        : e.deltaMode === WheelEvent.DOM_DELTA_PAGE
+          ? e.deltaY * scroll.clientWidth
+          : e.deltaY;
+      const maxScrollLeft = scroll.scrollWidth - scroll.clientWidth;
+      const atStart = scroll.scrollLeft <= 1;
+      const atEnd = scroll.scrollLeft >= maxScrollLeft - 1;
+
+      // 到达边界后允许页面继续垂直滚动
+      if ((delta < 0 && atStart) || (delta > 0 && atEnd)) return;
+
+      const nextScrollLeft = Math.min(
+        maxScrollLeft,
+        Math.max(0, scroll.scrollLeft + delta),
+      );
+
+      if (nextScrollLeft === scroll.scrollLeft) return;
       e.preventDefault();
-      scroll.scrollLeft += e.deltaY;
+      scroll.scrollLeft = nextScrollLeft;
     }, { passive: false });
 
     // 监听滚动更新提示图标
