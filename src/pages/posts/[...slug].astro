@@ -29,7 +29,6 @@ import SeriesNav from "@/components/misc/SeriesNav.astro";
 import SharePoster from "@/components/misc/SharePoster.svelte";
 import { coverImageConfig } from "@/config/coverImageConfig";
 import { licenseConfig } from "@/config/licenseConfig";
-import { pageDisplayConfig } from "@/config/pageDisplayConfig";
 import { profileConfig } from "@/config/profileConfig";
 import { siteConfig } from "@/config/siteConfig";
 import { sponsorConfig } from "@/config/sponsorConfig";
@@ -48,10 +47,9 @@ import {
 } from "@/utils/schema-utils";
 import { url } from "@/utils/url-utils";
 
-const showSharePoster = pageDisplayConfig.share && siteConfig.post.sharePoster;
 const showSponsorButton =
 	sponsorConfig.showButtonInPost && siteConfig.pages.sponsor;
-const showPostActionCard = showSharePoster || showSponsorButton;
+const showPostActionCard = siteConfig.post.share || showSponsorButton;
 
 export async function getStaticPaths() {
 	const blogEntries = await getSortedPosts();
@@ -447,7 +445,7 @@ const seriesData = await getSeriesPosts(entry);
                     </div>
                     <div class="flex items-center gap-3">
                       {
-                        showSharePoster && (
+                        siteConfig.post.share && (
                           <SharePoster
                             client:load
                             title={entry.data.title}
@@ -537,7 +535,7 @@ const seriesData = await getSeriesPosts(entry);
                     </div>
                     <div class="flex items-center gap-3">
                       {
-                        showSharePoster && (
+                        siteConfig.post.share && (
                           <SharePoster
                             client:load
                             title={entry.data.title}
@@ -660,7 +658,7 @@ const seriesData = await getSeriesPosts(entry);
   </script>
 
   {
-    pageDisplayConfig.postNavigation && (
+    siteConfig.post.postNavigation && (
       <div
         class="flex flex-col md:flex-row justify-between mb-4 gap-4 overflow-hidden w-full"
       >
@@ -698,12 +696,12 @@ const seriesData = await getSeriesPosts(entry);
   }
 
   {
-    (pageDisplayConfig.relatedPosts || pageDisplayConfig.randomPosts) && (
+    (siteConfig.post.relatedPosts || siteConfig.post.randomPosts) && (
       <RecommendedPost
         relatedPosts={relatedPosts}
         currentPostId={entry.id}
-        showRelatedPosts={pageDisplayConfig.relatedPosts}
-        showRandomPosts={pageDisplayConfig.randomPosts}
+        showRelatedPosts={siteConfig.post.relatedPosts}
+        showRandomPosts={siteConfig.post.randomPosts}
       />
     )
   }

@@ -234,22 +234,16 @@ export const siteConfig: SiteConfig = {
 		showLastModified: true,
 		// 文章过期阈值（天数），超过此天数才显示"上次编辑"卡片
 		outdatedThreshold: 30,
-		// 是否开启分享海报生成功能
-		sharePoster: true,
+		// 是否显示文章页的分享按钮
+		share: true,
+		// 是否显示上一篇/下一篇文章导航
+		postNavigation: true,
+		// 是否显示相关文章推荐
+		relatedPosts: true,
+		// 是否显示随机文章推荐
+		randomPosts: true,
 		// OpenGraph图片功能，注意开启后要渲染很长时间，不建议本地调试的时候开启
 		generateOgImages: true,
-
-		// 沉浸阅读配置：文章详情页右下角按钮，进入后只留文章卡片+左侧目录
-		immersiveReading: {
-			// 总开关：false 则不显示按钮
-			enable: true,
-			// 进入文章页是否默认开启沉浸阅读
-			defaultOn: false,
-			// 沉浸阅读中是否显示目录栏
-			tocEnabled: true,
-			// 目录栏位置："left" | "right"
-			tocPosition: "left",
-		},
 	},
 
 	// ── Bilibili配置 ──────────────────────────────────

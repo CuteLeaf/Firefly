@@ -30,7 +30,6 @@ src/config/
 ├── profileConfig.ts          # 用户资料配置
 ├── sidebarConfig.ts          # 侧边栏布局配置
 ├── sponsorConfig.ts          # 打赏配置
-├── pageDisplayConfig.ts      # 文章页面显示配置
 └── README.md                 # 本文件
 ```
 
@@ -73,10 +72,6 @@ import { profileConfig } from "@/config/profileConfig";
 | `profileConfig.ts` | 用户资料配置（头像、姓名、社交链接） |
 | `sidebarConfig.ts` | 侧边栏布局配置（左侧/右侧/移动端组件列表） |
 | `sponsorConfig.ts` | 打赏配置（打赏方式、打赏者列表） |
-<<<<<<< HEAD
-| `pageDisplayConfig.ts` | 文章页面显示配置（分享、上一篇/下一篇、相关文章和随机文章开关） |
-=======
->>>>>>> aeaee7127c43851b4886dcc298c581d3cb6f6fb1
 
 ## 📝 说明
 

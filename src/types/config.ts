@@ -37,7 +37,6 @@ export type {
 export type { Live2DWidgetConfig, SpineModelConfig } from "./pioConfig";
 export type { PlantUMLConfig } from "./plantumlConfig";
 export type { ProfileConfig } from "./profileConfig";
-export type { PageDisplayConfig } from "./pageDisplayConfig";
 export type {
 	AdConfig,
 	CalendarConfig,
