@@ -1,0 +1,121 @@
+/* Fancybox 自定义样式 */
+.fancybox__container {
+  --fancybox-bg: rgba(0, 0, 0, 0.9);
+  --fancybox-thumbs-width: 64px;
+  --fancybox-thumbs-ratio: 1;
+  --fancybox-thumbs-border-radius: 4px;
+}
+
+.fancybox__toolbar {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent);
+  padding: 8px;
+  backdrop-filter: blur(4px);
+}
+
+.fancybox__caption {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  color: white;
+  font-size: 1rem;
+  padding: 1rem;
+  text-align: center;
+  backdrop-filter: blur(4px);
+  border-radius: 8px;
+  margin: 0 1rem 1rem 1rem;
+}
+
+.fancybox__nav {
+  --carousel-button-svg-width: 24px;
+  --carousel-button-svg-height: 24px;
+}
+
+.fancybox__thumbs {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 2px;
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+}
+
+.fancybox__thumb {
+  border-radius: 4px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.fancybox__thumb.is-loading {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.fancybox__thumb:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.fancybox__thumb.is-active {
+  border-color: #fff;
+}
+
+/* 按钮样式 */
+.fancybox__button {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.fancybox__button:hover {
+  background: rgba(0, 0, 0, 0.7);
+  transform: scale(1.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.fancybox__button svg {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+.fancybox__infobar {
+  color: white;
+  font-size: 0.9rem;
+  padding: 0 8px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .fancybox__toolbar {
+    padding: 4px;
+  }
+  
+  .fancybox__button {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .fancybox__caption {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    margin: 0 0.5rem 0.5rem 0.5rem;
+  }
+  
+  .fancybox__thumbs {
+    --fancybox-thumbs-width: 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .fancybox__button {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .fancybox__caption {
+    font-size: 0.8rem;
+    padding: 0.4rem;
+  }
+  
+  .fancybox__thumbs {
+    --fancybox-thumbs-width: 40px;
+  }
+}

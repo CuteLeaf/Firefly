@@ -1,0 +1,340 @@
+---
+import { Icon } from "astro-icon/components";
+import { siteConfig } from "@/config";
+import type { NavBarLink } from "@/types/config";
+import { url } from "@/utils/url-utils";
+
+interface Props {
+	links: NavBarLink[];
+}
+
+const processedLinks = Astro.props.links;
+const navTitle = siteConfig.navbar.title || siteConfig.title;
+---
+<div id="nav-menu-panel" class:list={["float-panel-closed fixed inset-0 z-1100"]} data-floating-panel data-floating-panel-trigger="nav-menu-switch" data-floating-panel-scroll-lock inert aria-hidden="true">
+    <!-- 遮罩（scrim）：点击关闭 -->
+    <div class="mobile-menu-scrim" aria-hidden="true"></div>
+    <!-- 抽屉：MD3 侧边导航，右侧滑入，占满整高，内部滚动 -->
+    <aside class="mobile-menu-drawer" role="dialog" aria-modal="true" aria-label="导航菜单">
+        <header class="mobile-menu-header">
+            <span class="mobile-menu-title">{navTitle}</span>
+            <button type="button" class="mobile-menu-close" aria-label="关闭菜单">
+                <Icon name="material-symbols:close-rounded" class="text-[1.5rem]" />
+            </button>
+        </header>
+        <nav class="mobile-menu-list">
+            {processedLinks.map((link, index) => (
+                <div class="mobile-menu-item-root">
+                    {link.children && link.children.length > 0 ? (
+                        /* 有子菜单的项目：MD3 手风琴 */
+                        <div class="mobile-dropdown" data-mobile-dropdown>
+                            <button
+                                type="button"
+                                class="mobile-menu-item"
+                                data-mobile-dropdown-trigger
+                                aria-expanded="false"
+                                aria-controls={`mobile-submenu-${index}`}
+                            >
+								{link.icon && <Icon name={link.icon} class="mobile-menu-item-icon" />}
+                                <span class="mobile-menu-item-label">{link.name}</span>
+                                <Icon name="material-symbols:keyboard-arrow-down-rounded"
+                                      class="mobile-menu-item-arrow"
+                                />
+                            </button>
+                            <div id={`mobile-submenu-${index}`} class="mobile-submenu" data-mobile-submenu inert aria-hidden="true">
+                                {link.children.map((child) => (
+                                    <a
+                                        href={child.external ? child.url : url(child.url)}
+                                        class="mobile-menu-item"
+                                        data-nav-href={child.external ? undefined : url(child.url)}
+                                        target={child.external ? "_blank" : null}
+                                    >
+										{child.icon && <Icon name={child.icon} class="mobile-menu-item-icon" />}
+                                        <span class="mobile-menu-item-label">{child.name}</span>
+                                        {child.external && <Icon
+                                            name="fa7-solid:arrow-up-right-from-square"
+                                            class="mobile-menu-item-external text-[0.9rem] shrink-0"
+                                        />}
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                    ) : (
+                        /* 普通链接项目 */
+                        <a
+                            href={link.external ? link.url : url(link.url)}
+                            class="mobile-menu-item"
+                            data-nav-href={link.external ? undefined : url(link.url)}
+                            target={link.external ? "_blank" : null}
+                        >
+							{link.icon && <Icon name={link.icon} class="mobile-menu-item-icon" />}
+                            <span class="mobile-menu-item-label">{link.name}</span>
+							{!link.external && <Icon
+                                name="material-symbols:chevron-right-rounded"
+                                class="mobile-menu-item-arrow"
+                            />}
+							{link.external && <Icon
+                                name="fa7-solid:arrow-up-right-from-square"
+                                class="mobile-menu-item-external text-[0.9rem] shrink-0"
+                            />}
+                        </a>
+                    )}
+                </div>
+            ))}
+        </nav>
+    </aside>
+</div>
+
+<style>
+    @reference "../../styles/main.css";
+
+    /* ---- 手风琴子菜单 ---- */
+    .mobile-submenu {
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height 0.3s var(--ease-standard);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .mobile-dropdown[data-expanded="true"] .mobile-submenu {
+        max-height: 60vh;
+        margin-top: 4px; /* 触发器与子项之间留距 */
+    }
+
+    /* MD3 抽屉：面板改成透明全屏定位层，动画放在「遮罩/抽屉」子层上 */
+    #nav-menu-panel {
+        top: 0;
+        bottom: 0;
+        border-radius: 0; /* 覆盖 .float-panel 的圆角，避免遮罩四角被裁剪 */
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        transition: none;
+    }
+    /* 关闭态：整体不可点，但不再整体淡出/下移（动画由子层负责） */
+    #nav-menu-panel.float-panel-closed {
+        opacity: 1;
+        transform: none;
+        pointer-events: none;
+    }
+
+    /* ---- 遮罩（scrim）：fixed 锚定视口，铺满整屏 ---- */
+    .mobile-menu-scrim {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.28s var(--ease-standard);
+    }
+    :root.dark .mobile-menu-scrim {
+        background: rgba(0, 0, 0, 0.62);
+    }
+    #nav-menu-panel:not(.float-panel-closed) .mobile-menu-scrim {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* ---- 抽屉面板：fixed 锚定视口占满整高 ---- */
+    .mobile-menu-drawer {
+        /* MD3 color roles */
+        --drawer-on-surface: var(--deep-text);
+        --drawer-on-surface-variant: color-mix(in oklch, var(--deep-text) 70%, transparent);
+        --drawer-hover: color-mix(in oklch, var(--primary) 8%, transparent);
+        --drawer-selected-bg: color-mix(in oklch, var(--primary) 14%, transparent);
+
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: min(85vw, 380px);
+        display: flex;
+        flex-direction: column;
+        background: var(--card-bg);
+        border-radius: var(--radius-large) 0 0 var(--radius-large); /* 仅左侧，跟随主题统一圆角 */
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
+        overflow: hidden;
+        transform: translateX(100%);
+        transition: transform 0.3s var(--ease-decelerate);
+    }
+    :root.dark .mobile-menu-drawer {
+        --drawer-on-surface: rgba(255, 255, 255, 0.87);
+        --drawer-on-surface-variant: rgba(255, 255, 255, 0.62);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    }
+    #nav-menu-panel:not(.float-panel-closed) .mobile-menu-drawer {
+        transform: translateX(0);
+    }
+
+    /* ---- 头部 ---- */
+    .mobile-menu-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 20px 16px 12px 24px;
+        flex-shrink: 0;
+    }
+    .mobile-menu-title {
+        font-weight: 600;
+        font-size: 1.125rem;
+        color: var(--drawer-on-surface);
+        user-select: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .mobile-menu-close {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-lg);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--drawer-on-surface-variant);
+        transition: background-color 0.2s, color 0.2s;
+    }
+    .mobile-menu-close:hover {
+        background: var(--drawer-hover);
+        color: var(--drawer-on-surface);
+    }
+
+    /* ---- 列表 ---- */
+    .mobile-menu-list {
+        flex: 1;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: 8px 12px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    /* ---- MD3 导航项：leading icon + label，pill 状态层 ---- */
+    .mobile-menu-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        width: 100%;
+        min-height: 56px;
+        padding: 0 16px;
+        border: none;
+        border-radius: var(--radius-large);
+        background: transparent;
+        color: var(--drawer-on-surface-variant);
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1.25;
+        cursor: pointer;
+        user-select: none;
+        text-align: left;
+        transition: background-color 0.2s, color 0.2s;
+    }
+    .mobile-menu-item:hover {
+        background: var(--drawer-hover);
+        color: var(--drawer-on-surface);
+    }
+    .mobile-menu-item:active {
+        background: color-mix(in oklch, var(--primary) 12%, transparent);
+    }
+    .mobile-menu-item[data-active="true"] {
+        background: var(--drawer-selected-bg);
+        color: var(--primary);
+    }
+    .mobile-menu-item-icon {
+        flex-shrink: 0;
+        font-size: 1.5rem;
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+    .mobile-menu-item-label {
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .mobile-menu-item-arrow {
+        flex-shrink: 0;
+        font-size: 1.25rem;
+        transition: transform 0.2s;
+    }
+    .mobile-dropdown[data-expanded="true"] .mobile-menu-item-arrow {
+        transform: rotate(180deg);
+    }
+    .mobile-menu-item-external {
+        color: var(--drawer-on-surface-variant);
+    }
+
+    /* ---- 子项缩进 ---- */
+    .mobile-submenu .mobile-menu-item {
+        padding-left: 52px;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const mobileDropdowns = document.querySelectorAll("[data-mobile-dropdown]");
+        mobileDropdowns.forEach((dropdown) => {
+            const trigger = dropdown.querySelector("[data-mobile-dropdown-trigger]");
+            const submenu = dropdown.querySelector("[data-mobile-submenu]");
+            if (!trigger || !submenu) return;
+
+            trigger.addEventListener("click", (e) => {
+                e.preventDefault();
+                const isExpanded = dropdown.getAttribute("data-expanded") === "true";
+                mobileDropdowns.forEach((other) => {
+                    if (other !== dropdown) setDropdownExpanded(other, false);
+                });
+                setDropdownExpanded(dropdown, !isExpanded);
+            });
+        });
+        markActiveNav();
+    });
+
+    // 当前页高亮 + 含当前页的父级自动展开（Swup 切页后重扫）
+    document.addEventListener("astro:page-load", markActiveNav);
+    document.addEventListener("swup:contentReplaced", markActiveNav);
+
+    // 遮罩点击 / 关闭按钮：文档级委托监听，跨 Swup 替换也有效
+    document.addEventListener("click", (e) => {
+        const t = e.target;
+        if (t instanceof Element && t.closest(".mobile-menu-scrim, .mobile-menu-close")) {
+            document.getElementById("nav-menu-panel")?.classList.add("float-panel-closed");
+        }
+    });
+
+    function markActiveNav() {
+        const path = location.pathname;
+        document.querySelectorAll(".mobile-menu-item[data-nav-href]").forEach((item) => {
+            const href = item.getAttribute("data-nav-href");
+            let active = false;
+            if (href) {
+                try {
+                    active = new URL(href, location.href).pathname === path;
+                } catch {
+                    active = false;
+                }
+            }
+            item.setAttribute("data-active", active ? "true" : "false");
+            if (active) {
+                const group = item.closest("[data-mobile-dropdown]");
+                if (group) setDropdownExpanded(group, true);
+            }
+        });
+    }
+
+    function setDropdownExpanded(dropdown: Element, isExpanded: boolean) {
+        dropdown.setAttribute("data-expanded", isExpanded.toString());
+        const trigger = dropdown.querySelector("[data-mobile-dropdown-trigger]");
+        trigger?.setAttribute("aria-expanded", isExpanded.toString());
+        const submenu = dropdown.querySelector("[data-mobile-submenu]");
+        if (submenu instanceof HTMLElement) {
+            submenu.inert = !isExpanded;
+            submenu.setAttribute("aria-hidden", (!isExpanded).toString());
+        }
+    }
+</script>

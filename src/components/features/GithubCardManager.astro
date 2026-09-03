@@ -1,0 +1,157 @@
+---
+// GitHub 卡片客户端管理器
+//
+// 构建期只在 github-card-data.json 里缓存「静态兜底信息」（description / language /
+// avatarUrl / license），forks / stars 由浏览器运行时向 api.github.com 请求一次，
+// 写入 localStorage 缓存（24h 过期后重新请求）；请求失败则回退到构建期的静态信息。
+// 复用 markdown-extend.styl 里已存在的 .fetch-waiting / .fetch-error / pulsate 状态样式。
+---
+<script>
+  import { formatCount } from "@/utils/github-card-utils";
+
+  const CACHE_KEY_PREFIX = "github-card:";
+  const CACHE_TTL = 24 * 60 * 60 * 1000; // 24h
+
+  interface GithubApiRepo {
+    description: string | null;
+    language: string | null;
+    forks: number;
+    stargazers_count: number;
+    owner?: { avatar_url?: string };
+    license?: { spdx_id?: string } | null;
+  }
+
+  // 一次会话内每个 repo 只做一次请求：inflight 去重并发，done 防止 Swup 切页重复请求
+  const inflight = new Map<string, Promise<GithubApiRepo | null>>();
+  const done = new Set<string>();
+
+  function cacheKey(repo: string): string {
+    return CACHE_KEY_PREFIX + repo.toLowerCase();
+  }
+
+  function readCache(repo: string): GithubApiRepo | null {
+    try {
+      const raw = localStorage.getItem(cacheKey(repo));
+      if (!raw) return null;
+      const entry = JSON.parse(raw) as {
+        data?: GithubApiRepo;
+        fetchedAt?: number;
+      };
+      const data = entry.data;
+      if (!data || typeof entry.fetchedAt !== "number") return null;
+      if (typeof data.stargazers_count !== "number" || typeof data.forks !== "number")
+        return null;
+      if (Date.now() - entry.fetchedAt >= CACHE_TTL) return null;
+      return data;
+    } catch {
+      return null;
+    }
+  }
+
+  function writeCache(repo: string, data: GithubApiRepo): void {
+    try {
+      localStorage.setItem(
+        cacheKey(repo),
+        JSON.stringify({ data, fetchedAt: Date.now() }),
+      );
+    } catch {
+      // 隐私模式 / 配额失败时静默跳过，不影响卡片渲染
+    }
+  }
+
+  async function fetchRepo(repo: string): Promise<GithubApiRepo> {
+    const [owner, name] = repo.split("/");
+    const url = `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`;
+    const response = await fetch(url, {
+      referrerPolicy: "no-referrer",
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!response.ok) {
+      throw new Error(`GitHub API returned ${response.status}`);
+    }
+    return (await response.json()) as GithubApiRepo;
+  }
+
+  function applyData(card: Element, data: GithubApiRepo): void {
+    const setText = (selector: string, value: string) => {
+      const el = card.querySelector(selector);
+      if (el) el.textContent = value;
+    };
+
+    setText(".gc-stars", formatCount(data.stargazers_count));
+    setText(".gc-forks", formatCount(data.forks));
+    setText(
+      ".gc-description",
+      data.description?.replace(/:[a-zA-Z0-9_]+:/g, "") || "Description not set",
+    );
+    setText(".gc-language", data.language ?? "Unavailable");
+    setText(".gc-license", data.license?.spdx_id || "no-license");
+
+    const avatar = card.querySelector<HTMLElement>(".gc-avatar");
+    if (avatar && data.owner?.avatar_url) {
+      const avatarUrl = data.owner.avatar_url;
+      avatar.style.backgroundImage = `url("${avatarUrl}${avatarUrl.includes("?") ? "&" : "?"}s=32")`;
+      avatar.style.backgroundColor = "transparent";
+    }
+
+    card.classList.remove("fetch-waiting", "fetch-error");
+  }
+
+  function enhanceCard(card: Element, repo: string): void {
+    const cached = readCache(repo);
+    if (cached) {
+      applyData(card, cached);
+      return;
+    }
+
+    const key = repo.toLowerCase();
+    if (done.has(key)) return; // 本会话已尝试过且失败，保留构建兜底
+    let promise = inflight.get(key);
+    if (!promise) {
+      promise = fetchRepo(repo)
+        .then((data) => {
+          writeCache(repo, data);
+          return data;
+        })
+        .catch((error) => {
+          console.warn("[GITHUB-CARD] Failed to load", repo, error);
+          return null;
+        })
+        .finally(() => {
+          inflight.delete(key);
+          done.add(key);
+        });
+      inflight.set(key, promise);
+    }
+
+    promise.then((data) => {
+      if (data) applyData(card, data);
+      else card.classList.add("fetch-error");
+    });
+  }
+
+  function enhanceCards(): void {
+    document
+      .querySelectorAll<HTMLElement>(".card-github[repo]")
+      .forEach((card) => {
+        const repo = card.getAttribute("repo");
+        if (repo) enhanceCard(card, repo);
+      });
+  }
+
+  function init(): void {
+    enhanceCards();
+    document.addEventListener("swup:content:replace", () => {
+      requestAnimationFrame(enhanceCards);
+    });
+    document.addEventListener("password:decrypted", () => {
+      requestAnimationFrame(enhanceCards);
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+</script>

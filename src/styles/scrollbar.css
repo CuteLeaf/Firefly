@@ -1,0 +1,84 @@
+.scrollbar-base.os-scrollbar {
+  transition:
+    width 0.15s ease-in-out,
+    height 0.15s ease-in-out,
+    opacity 0.15s,
+    visibility 0.15s,
+    top 0.15s,
+    right 0.15s,
+    bottom 0.15s,
+    left 0.15s;
+  pointer-events: unset;
+}
+
+.scrollbar-base.os-scrollbar.os-scrollbar-horizontal {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  height: 16px;
+}
+
+.scrollbar-base.os-scrollbar.os-scrollbar-horizontal
+  .os-scrollbar-track
+  .os-scrollbar-handle {
+  height: 4px;
+  border-radius: 4px;
+}
+
+.scrollbar-base.os-scrollbar.os-scrollbar-horizontal:hover
+  .os-scrollbar-track
+  .os-scrollbar-handle {
+  height: 8px;
+}
+
+.scrollbar-base.os-scrollbar.os-scrollbar-horizontal.px-2 {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.scrollbar-base.os-scrollbar.os-scrollbar-vertical {
+  padding-left: 4px;
+  padding-right: 4px;
+  width: 16px;
+}
+
+.scrollbar-base.os-scrollbar.os-scrollbar-vertical
+  .os-scrollbar-track
+  .os-scrollbar-handle {
+  width: 4px;
+  border-radius: 4px;
+}
+
+.scrollbar-base.os-scrollbar.os-scrollbar-vertical:hover
+  .os-scrollbar-track
+  .os-scrollbar-handle {
+  width: 8px;
+}
+
+.scrollbar-base.os-scrollbar.os-scrollbar-vertical.py-1 {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+:root {
+  --os-handle-bg-custom: rgba(0, 0, 0, 0.3);
+  --os-handle-bg-custom-hover: rgba(0, 0, 0, 0.5);
+  --os-handle-bg-custom-active: rgba(0, 0, 0, 0.6);
+}
+
+:root.dark {
+  --os-handle-bg-custom: rgba(255, 255, 255, 0.4);
+  --os-handle-bg-custom-hover: rgba(255, 255, 255, 0.6);
+  --os-handle-bg-custom-active: rgba(255, 255, 255, 0.7);
+}
+
+.scrollbar-auto.os-scrollbar {
+  --os-handle-bg: var(--os-handle-bg-custom);
+  --os-handle-bg-hover: var(--os-handle-bg-custom-hover);
+  --os-handle-bg-active: var(--os-handle-bg-custom-active);
+}
+
+.scrollbar-dark.os-scrollbar {
+  --os-handle-bg: rgba(255, 255, 255, 0.4);
+  --os-handle-bg-hover: rgba(255, 255, 255, 0.6);
+  --os-handle-bg-active: rgba(255, 255, 255, 0.7);
+}

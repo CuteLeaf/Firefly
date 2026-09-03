@@ -1,0 +1,104 @@
+---
+import type { MarkdownHeading } from "astro";
+import FloatingButton from "@/components/common/FloatingButton.astro";
+import { siteConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import "@/styles/toc.css";
+import { computeTocItems } from "@/utils/toc-shared";
+
+interface Props {
+	headings?: MarkdownHeading[];
+	encrypted?: boolean;
+}
+
+const { headings = [], encrypted = false } = Astro.props;
+
+// 沉浸阅读配置（挂在 siteConfig.post.immersiveReading）
+const immersiveConfig = siteConfig.post.immersiveReading;
+const tocEnabled = immersiveConfig?.tocEnabled ?? true;
+const tocPosition = immersiveConfig?.tocPosition ?? "left";
+
+// 加密文章不在服务端渲染目录（避免标题泄露），交由客户端解密后生成
+const items = encrypted ? [] : computeTocItems(headings, { maxLevel: 3 });
+---
+
+{
+  tocEnabled && (
+    <>
+      <!-- 目录开关（沉浸态下显示，可折叠/展开目录栏） -->
+      <FloatingButton
+        id="immersive-toc-toggle-btn"
+        icon="material-symbols:format-list-bulleted"
+        toggleIcon="material-symbols:close"
+        ariaLabel={i18n(I18nKey.immersiveReading)}
+        onclick="window.toggleImmersiveTOC()"
+        class="hide"
+      />
+
+      <!-- 常驻目录栏：桌面/移动一致，默认展开（类 PDF） -->
+      <div id="immersive-toc" class="immersive-toc" data-position={tocPosition}>
+        <div class="immersive-toc-header">
+          <span class="immersive-toc-title">{i18n(I18nKey.tableOfContents)}</span>
+          <button
+            class="immersive-toc-toggle"
+            type="button"
+            aria-label={i18n(I18nKey.immersiveReading)}
+            onclick="window.toggleImmersiveTOC()"
+          >
+            ×
+          </button>
+        </div>
+        <div class="toc-scroll-container custom-scrollbar">
+          <div
+            class="toc-content"
+            id="immersive-toc-content"
+            style="width: 100%; max-width: 100%;"
+          >
+            {!encrypted && items.length > 0 && (
+              <>
+                {items.map((item) => (
+                  <a
+                    href={item.href}
+                    class={`toc-item toc-level-${item.depthLevel}`}
+                    data-heading-id={item.headingId}
+                    aria-label={item.text}
+                    title={item.text}
+                  >
+                    <div
+                      class={`toc-badge ${item.badgeKind === "index" ? "toc-badge-index" : ""}`}
+                    >
+                      {item.badgeKind === "index" ? (
+                        item.badgeIndex
+                      ) : item.badgeKind === "dot" ? (
+                        <span class="toc-badge-dot"></span>
+                      ) : (
+                        <span class="toc-badge-dot toc-badge-dot-sm"></span>
+                      )}
+                    </div>
+                    <div
+                      class={`toc-label ${item.labelPrimary ? "toc-label-primary" : "toc-label-secondary"}`}
+                    >
+                      {item.text}
+                    </div>
+                  </a>
+                ))}
+                <div
+                  id="immersive-toc-indicator"
+                  class="toc-active-indicator"
+                  style="opacity: 0;"
+                ></div>
+              </>
+            )}
+            {!encrypted && items.length === 0 && (
+              <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                <p>{i18n(I18nKey.tocEmpty)}</p>
+              </div>
+            )}
+            {/* 加密文章：留空，客户端解密后由 TOCManager 填充 */}
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}

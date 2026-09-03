@@ -1,0 +1,355 @@
+---
+// 水波纹特效:纯主线程 Canvas 2D 实现。
+// 首帧在模块脚本中同步绘制(无 await),先于壁纸图片出现,避免闪烁;
+// 逐帧仅对预渲染条带做 drawImage(GPU 合成),开销极低,远优于原 SVG 每帧重绘。
+// 绘制几何共享自 src/utils/waves-draw.ts,管理器契约见 src/types/waves.ts
+---
+
+<script>
+	import type { WavesManagerLike } from "@/types/waves";
+	import { WavesRenderer } from "@/utils/waves-draw";
+
+	// ===========================================================================
+	// 通用工具
+	// ===========================================================================
+	function readPageBg(): string {
+		return getComputedStyle(document.documentElement)
+			.getPropertyValue("--page-bg")
+			.trim();
+	}
+
+	// ===========================================================================
+	// 主线程 Canvas 2D 管理器
+	// ===========================================================================
+	class WavesManager implements WavesManagerLike {
+		isRunning = false;
+		canvas: HTMLCanvasElement | null = null;
+
+		private ctx: CanvasRenderingContext2D | null = null;
+		private renderer: WavesRenderer | null = null;
+		private animationId: number | null = null;
+		private startTime = 0;
+		private reducedMotion = false;
+		private lastVisibilityHidden = document.hidden;
+		private lastFillColor = "";
+
+		private resizeObserver: ResizeObserver | null = null;
+		private resizeRafId: number | null = null;
+		private dprQuery: MediaQueryList | null = null;
+		private reducedMotionQuery: MediaQueryList | null = null;
+		private themeObserver: MutationObserver | null = null;
+
+		private boundHandleResize: (() => void) | null = null;
+		private boundHandleVisibility: (() => void) | null = null;
+		private boundHandleTheme: (() => void) | null = null;
+		private boundHandleReducedMotion:
+			| ((e: MediaQueryListEvent) => void)
+			| null = null;
+
+		async init(): Promise<void> {
+			if (this.isRunning) return;
+			this.isRunning = true;
+
+			const container = document.getElementById("header-waves");
+			if (!container) {
+				// 波浪未启用且不可切换 → 无容器 → no-op
+				this.isRunning = false;
+				return;
+			}
+
+			try {
+				const canvas = document.createElement("canvas");
+				canvas.setAttribute("aria-hidden", "true");
+				container.appendChild(canvas);
+				this.canvas = canvas;
+
+				// 隐藏静态占位 SVG,由动画 canvas 无缝接管
+				// (canvas 首帧 offset=0,与占位逐像素一致,隐藏瞬间无跳变)
+				const placeholder = container.querySelector<HTMLElement>(
+					".waves-svg",
+				);
+				if (placeholder) {
+					placeholder.style.display = "none";
+				}
+
+				this.ctx = canvas.getContext("2d");
+				if (!this.ctx) {
+					throw new Error("Canvas 2D context not initialized");
+				}
+
+				this.reducedMotionQuery = window.matchMedia(
+					"(prefers-reduced-motion: reduce)",
+				);
+				this.reducedMotion = this.reducedMotionQuery.matches;
+				this.lastFillColor = readPageBg();
+				this.lastVisibilityHidden = document.hidden;
+
+				const { width, height, dpr } = this.measure();
+				if (width > 0 && height > 0) {
+					// 首帧同步绘制(无 await),先于壁纸图片出现,避免闪烁
+					this.buildRenderer(width, height, dpr);
+					this.renderer?.draw(performance.now(), this.startTime);
+				}
+
+				this.setupObservers();
+
+				if (!this.reducedMotion && width > 0 && height > 0 && !document.hidden) {
+					this.startAnimation();
+				}
+			} catch (err) {
+				console.warn("[Waves] init failed:", err);
+				this.stop();
+			}
+		}
+
+		private measure(): { width: number; height: number; dpr: number } {
+			const rect = this.canvas
+				? this.canvas.getBoundingClientRect()
+				: { width: 0, height: 0 };
+			return {
+				width: rect.width,
+				height: rect.height,
+				dpr: window.devicePixelRatio || 1,
+			};
+		}
+
+		/** 设置 backing store 尺寸并重建 renderer(首帧前或首帧缺失时调用) */
+		private buildRenderer(width: number, height: number, dpr: number): void {
+			if (!this.canvas || !this.ctx) return;
+			this.canvas.width = Math.max(1, Math.ceil(width * dpr));
+			this.canvas.height = Math.max(1, Math.ceil(height * dpr));
+			this.renderer = new WavesRenderer(
+				this.ctx,
+				width,
+				height,
+				dpr,
+				this.lastFillColor,
+			);
+			this.startTime = performance.now();
+		}
+
+		/** 尺寸变化(窗口 resize / dpr 变化 / 容器显隐)时更新 */
+		private applySize(width: number, height: number, dpr: number): void {
+			// 容器隐藏时尺寸为 0,暂停动画(ResizeObserver 会在显示时再次触发)
+			if (width <= 0 || height <= 0) {
+				this.cancelAnimation();
+				return;
+			}
+			if (!this.renderer) {
+				this.buildRenderer(width, height, dpr);
+			} else {
+				if (this.canvas) {
+					this.canvas.width = Math.max(1, Math.ceil(width * dpr));
+					this.canvas.height = Math.max(1, Math.ceil(height * dpr));
+				}
+				this.renderer.setSize(width, height, dpr);
+			}
+			// 先同步画一帧,再启动 rAF,避免 resize/重新显示瞬间出现空白帧
+			this.renderer?.draw(performance.now(), this.startTime);
+			if (this.reducedMotion) {
+				// 弱动效:仅静态一帧,不启动 rAF
+			} else if (!this.lastVisibilityHidden) {
+				this.startAnimation();
+			}
+		}
+
+		private startAnimation(): void {
+			if (this.animationId !== null || !this.renderer) return;
+			const animate = () => {
+				if (!this.renderer || !this.canvas) return;
+				try {
+					this.renderer.draw(performance.now(), this.startTime);
+					this.animationId = requestAnimationFrame(animate);
+				} catch (err) {
+					console.warn("[Waves] animate error:", err);
+					this.cancelAnimation();
+				}
+			};
+			this.animationId = requestAnimationFrame(animate);
+		}
+
+		private cancelAnimation(): void {
+			if (this.animationId !== null) {
+				cancelAnimationFrame(this.animationId);
+				this.animationId = null;
+			}
+		}
+
+		private applyHidden(hidden: boolean): void {
+			this.lastVisibilityHidden = hidden;
+			if (hidden) {
+				this.cancelAnimation();
+			} else if (!this.reducedMotion) {
+				this.startAnimation();
+			}
+		}
+
+		private applyReducedMotion(enabled: boolean): void {
+			this.reducedMotion = enabled;
+			if (enabled) {
+				this.cancelAnimation();
+				this.renderer?.draw(performance.now(), this.startTime);
+			} else if (!this.lastVisibilityHidden) {
+				this.startAnimation();
+			}
+		}
+
+		private scheduleResize(): void {
+			if (this.resizeRafId !== null || !this.canvas) return;
+			this.resizeRafId = requestAnimationFrame(() => {
+				this.resizeRafId = null;
+				const { width, height, dpr } = this.measure();
+				this.applySize(width, height, dpr);
+			});
+		}
+
+		private syncThemeColor(): void {
+			const color = readPageBg();
+			if (color === this.lastFillColor) return;
+			this.lastFillColor = color;
+			this.renderer?.setFillColor(color);
+			if (this.reducedMotion) {
+				this.renderer?.draw(performance.now(), this.startTime);
+			}
+		}
+
+		private setupObservers(): void {
+			// 尺寸:ResizeObserver 观察 canvas 自身(自动覆盖容器显隐、min-height、vh 变化)
+			this.resizeObserver = new ResizeObserver(() => this.scheduleResize());
+			if (this.canvas) {
+				this.resizeObserver.observe(this.canvas);
+			}
+
+			// window resize + dpr/zoom 变化
+			const onResize = () => this.scheduleResize();
+			this.boundHandleResize = onResize;
+			window.addEventListener("resize", onResize);
+			this.dprQuery = window.matchMedia(
+				`(resolution: ${window.devicePixelRatio || 1}dppx)`,
+			);
+			this.dprQuery.addEventListener("change", onResize);
+
+			// 页面可见性:隐藏时暂停动画
+			const onVisibility = () => {
+				this.applyHidden(document.hidden);
+			};
+			this.boundHandleVisibility = onVisibility;
+			document.addEventListener("visibilitychange", onVisibility);
+
+			// 主题:theme-change 事件 + MutationObserver 兜底
+			// (手动切换主题不派发 theme-change 事件,observer 覆盖 class/data-theme/style 变化)
+			const onTheme = () => this.syncThemeColor();
+			this.boundHandleTheme = onTheme;
+			window.addEventListener("theme-change", onTheme);
+			this.themeObserver = new MutationObserver(() =>
+				this.syncThemeColor(),
+			);
+			this.themeObserver.observe(document.documentElement, {
+				attributes: true,
+				attributeFilter: ["class", "data-theme", "style"],
+			});
+
+			// prefers-reduced-motion
+			const onReducedMotion = (e: MediaQueryListEvent) => {
+				this.applyReducedMotion(e.matches);
+			};
+			this.boundHandleReducedMotion = onReducedMotion;
+			if (this.reducedMotionQuery) {
+				this.reducedMotionQuery.addEventListener(
+					"change",
+					onReducedMotion,
+				);
+			}
+		}
+
+		stop(): void {
+			if (this.resizeRafId !== null) {
+				cancelAnimationFrame(this.resizeRafId);
+				this.resizeRafId = null;
+			}
+			this.cancelAnimation();
+			this.resizeObserver?.disconnect();
+			this.resizeObserver = null;
+			const onResize = this.boundHandleResize;
+			if (onResize) {
+				window.removeEventListener("resize", onResize);
+				this.dprQuery?.removeEventListener("change", onResize);
+			}
+			this.dprQuery = null;
+			const onVisibility = this.boundHandleVisibility;
+			if (onVisibility) {
+				document.removeEventListener(
+					"visibilitychange",
+					onVisibility,
+				);
+			}
+			const onTheme = this.boundHandleTheme;
+			if (onTheme) {
+				window.removeEventListener("theme-change", onTheme);
+			}
+			this.themeObserver?.disconnect();
+			this.themeObserver = null;
+			const onReducedMotion = this.boundHandleReducedMotion;
+			if (onReducedMotion) {
+				this.reducedMotionQuery?.removeEventListener(
+					"change",
+					onReducedMotion,
+				);
+			}
+			this.reducedMotionQuery = null;
+			this.boundHandleResize = null;
+			this.boundHandleVisibility = null;
+			this.boundHandleTheme = null;
+			this.boundHandleReducedMotion = null;
+			this.renderer = null;
+			this.ctx = null;
+			this.canvas?.remove();
+			this.canvas = null;
+			this.isRunning = false;
+		}
+
+		getIsRunning(): boolean {
+			return this.isRunning;
+		}
+	}
+
+	// ===========================================================================
+	// 初始化
+	// ===========================================================================
+	function initWaves(): void {
+		if (window.wavesManager) {
+			return;
+		}
+		const manager = new WavesManager();
+		window.wavesManager = manager;
+		void manager.init();
+	}
+
+	// ===========================================================================
+	// 入口:幂等初始化
+	// 守卫确保 Swup 切页重跑模块化脚本时不会重复初始化或重复注册监听器
+	// ===========================================================================
+	(function setupWaves() {
+		if (window.wavesInitialized) {
+			return;
+		}
+		window.wavesInitialized = true;
+
+		initWaves();
+
+		// 防御性重校验:Swup 切页后若 canvas 脱离 DOM(容器被意外替换),则重建。
+		// 当前 #header-waves 不在 Swup 容器内、跨导航持久存在,正常是 no-op。
+		try {
+			window.swup?.hooks?.on?.("content:replace", () => {
+				const mgr = window.wavesManager;
+				const canvas = mgr?.canvas;
+				if (canvas && !canvas.isConnected) {
+					mgr.stop();
+					void mgr.init();
+				}
+			});
+		} catch {
+			// swup 未就绪则跳过(仅防御)
+		}
+	})();
+</script>

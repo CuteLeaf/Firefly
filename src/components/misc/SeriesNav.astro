@@ -1,0 +1,137 @@
+---
+import { Icon } from "astro-icon/components";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { PostForList } from "@/utils/content-utils";
+import { getPostUrlBySlug } from "@/utils/url-utils";
+
+interface Props {
+	seriesName: string;
+	posts: PostForList[];
+	currentPostId?: string;
+}
+
+const { seriesName, posts, currentPostId } = Astro.props;
+---
+
+{
+  posts.length > 0 && (
+    <div class="series-nav my-3 rounded-xl border border-(--primary)/25 overflow-hidden" data-pagefind-ignore>
+      <button
+        type="button"
+        aria-expanded="false"
+        class="series-nav-toggle flex w-full items-center gap-2 px-3 py-1.5 rounded-lg bg-(--btn-plain-bg-hover) group cursor-pointer select-none text-left"
+      >
+        <Icon name="material-symbols:format-list-bulleted" aria-hidden="true" class="shrink-0 text-lg text-(--primary)" />
+        <span class="font-bold text-base text-black/80 dark:text-white/80 transition group-hover:text-(--primary)">
+          {i18n(I18nKey.seriesPartOf)}：{seriesName}
+        </span>
+        <span class="ml-auto shrink-0 text-xs px-2 py-0.5 rounded-full bg-(--btn-regular-bg) text-(--btn-content) transition">
+          {posts.length}
+        </span>
+        <Icon
+          name="material-symbols:keyboard-arrow-down-rounded"
+          aria-hidden="true"
+          class="details-arrow shrink-0 text-[1.25rem] text-(--primary) transition-transform duration-300"
+        />
+      </button>
+
+      <div class="series-nav-content overflow-hidden max-h-0 transition-[max-height,opacity] duration-300 ease-in-out">
+        <ol class="flex flex-col mt-1">
+          {posts.map((post, idx) => {
+            const part = i18n(I18nKey.seriesPart).replace("{n}", String(idx + 1));
+            const isCurrent = !!currentPostId && post.id === currentPostId;
+            const rowClass = [
+              "group flex items-center gap-3 px-3 py-1.5 rounded-lg transition-all",
+              !isCurrent && "hover:bg-black/5 dark:hover:bg-white/5 active:scale-[0.98]",
+              idx < posts.length - 1 && "border-b border-dashed border-(--line-divider)",
+            ];
+            return isCurrent ? (
+              <li class:list={rowClass}>
+                <span class="shrink-0 w-6 h-6 rounded-md bg-(--enter-btn-bg) text-(--primary) flex items-center justify-center text-sm font-bold transition">
+                  {idx + 1}
+                </span>
+                <span class="flex-1 min-w-0 font-bold text-sm text-black/75 dark:text-white/75 truncate transition group-hover:text-(--primary)">
+                  {post.data.title}
+                </span>
+                <span
+                  aria-current="page"
+                  title={part}
+                  class="ml-auto shrink-0 text-xs px-1.5 py-0.5 rounded-sm bg-(--enter-btn-bg) text-(--primary)"
+                >
+                  {i18n(I18nKey.seriesThisArticle)}
+                </span>
+              </li>
+            ) : (
+              <li>
+                <a href={getPostUrlBySlug(post.id)} title={part} aria-label={part} class:list={rowClass}>
+                  <span class="shrink-0 w-6 h-6 rounded-md bg-(--enter-btn-bg) text-(--primary) flex items-center justify-center text-sm font-bold transition">
+                    {idx + 1}
+                  </span>
+                  <span class="flex-1 min-w-0 font-bold text-sm text-black/75 dark:text-white/75 truncate transition group-hover:text-(--primary)">
+                    {post.data.title}
+                  </span>
+                  <Icon
+                    name="material-symbols:chevron-right-rounded"
+                    aria-hidden="true"
+                    class="shrink-0 text-xl text-black/15 dark:text-white/15 transition group-hover:text-(--primary) group-hover:translate-x-0.5"
+                  />
+                </a>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .series-nav-toggle[aria-expanded="true"] .details-arrow {
+    transform: rotate(180deg);
+  }
+  /* 展开后头部与列表相连，底部两角设为直角；收起动画走完才恢复圆角 */
+  .series-nav.is-expanded .series-nav-toggle {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .series-nav-content {
+    opacity: 0;
+  }
+  .series-nav-content[data-open="true"] {
+    opacity: 1;
+  }
+</style>
+
+<script is:inline>
+  function onSeriesNavToggle(e) {
+    var btn = e.target && e.target.closest ? e.target.closest('.series-nav-toggle') : null;
+    if (!btn) return;
+    var box = btn.closest('.series-nav');
+    var content = box ? box.querySelector('.series-nav-content') : null;
+    if (!content) return;
+
+    var isOpen = btn.getAttribute('aria-expanded') === 'true';
+    var next = !isOpen;
+    btn.setAttribute('aria-expanded', String(next));
+    content.setAttribute('data-open', String(next));
+    content.style.maxHeight = next ? content.scrollHeight + 'px' : '0px';
+
+    if (next) {
+      box.classList.add('is-expanded');
+    } else {
+      // 收起动画走完后再恢复圆角（与 max-height 过渡时长一致）
+      setTimeout(function () {
+        if (box && btn.getAttribute('aria-expanded') !== 'true') {
+          box.classList.remove('is-expanded');
+        }
+      }, 300);
+    }
+  }
+
+  // 事件委托，Swup 切页后新内容也能直接工作；避免重复注册（@swup/scripts-plugin 会重跑内联脚本）
+  if (!window.__seriesNavInit) {
+    window.__seriesNavInit = true;
+    document.addEventListener('click', onSeriesNavToggle);
+  }
+</script>

@@ -1,0 +1,635 @@
+---
+import ImageWrapper from "@/components/common/ImageWrapper.astro";
+import ScrollDownIndicator from "@/components/controls/ScrollDownIndicator.astro";
+import BackgroundPlayer from "@/components/features/BackgroundPlayer.astro";
+import BannerHomeTextOverlay from "@/components/layout/BannerHomeTextOverlay.astro";
+import BannerPostMetaOverlay from "@/components/layout/BannerPostMetaOverlay.astro";
+import { backgroundWallpaper } from "@/config";
+import type {
+	BannerPostMeta,
+	BannerVisibilityState,
+} from "@/utils/banner-visibility-utils";
+import type { BackgroundImages } from "@/utils/layout-utils";
+
+interface Props {
+	state: BannerVisibilityState;
+	backgroundImages: BackgroundImages;
+	title?: string;
+	bannerPostMeta?: BannerPostMeta;
+}
+
+const { state, backgroundImages, title, bannerPostMeta } = Astro.props;
+const wallpaperPosition = state.isFullscreenMode
+	? (backgroundWallpaper.fullscreen?.position ??
+		backgroundWallpaper.banner?.position)
+	: backgroundWallpaper.banner?.position;
+---
+
+<!-- Wallpaper - 如果允许切换则始终渲染，否则只渲染当前模式 -->
+{(state.isWallpaperSwitchable || state.isBannerMode || state.isFullscreenMode || state.isOverlayMode) && (
+<div id="wallpaper-wrapper" class="absolute z-10 w-full overflow-hidden" style="--overlay-opacity: ${backgroundWallpaper.overlay?.opacity ?? 0.8}; --overlay-z-index: ${backgroundWallpaper.overlay?.zIndex ?? -1}; --overlay-blur: ${backgroundWallpaper.overlay?.blur ?? 0}px;">
+<!-- 背景图片显示 -->
+    {state.hasMultipleImages ? (
+    /* 轮播模式：渲染所有图片为 slide-item */
+    <div class:list={["relative h-full w-full bg-(--page-bg)", `effect-${state.bannerCarouselEffect}`]} id="banner-images-container"
+         style={`z-index: 5; --carousel-interval: ${state.bannerCarouselInterval}ms`}
+         data-carousel-enabled={state.bannerCarouselEnabledDefault}
+         data-carousel-switchable={state.bannerCarouselSwitchable}
+         data-carousel-interval={state.bannerCarouselInterval}
+         data-carousel-effect={state.bannerCarouselEffect}>
+        {/* 图片放在 <template> 里，浏览器不会发起请求；由轮播脚本挑中随机那张后克隆进 DOM */}
+        {backgroundImages.mobile.map((src, index) => (
+            <div class:list={["slide-item block lg:hidden", index === 0 && "active"]} data-index={index}>
+                <template>
+                    <ImageWrapper
+                        alt="Mobile background image of the blog"
+                        class="object-cover h-full w-full"
+                        src={src}
+                        position={wallpaperPosition}
+                        width={828}
+                        widths={[640, 828]}
+                        sizes="100vw"
+                        loading="eager"
+                        quality={state.mobileQuality}
+                    />
+                </template>
+            </div>
+        ))}
+        {backgroundImages.desktop.map((src, index) => (
+            <div class:list={["slide-item hidden lg:block", index === 0 && "active"]} data-index={index}>
+                <template>
+                    <ImageWrapper
+                        alt="Desktop background image of the blog"
+                        class="object-cover h-full"
+                        src={src}
+                        position={wallpaperPosition}
+                        width={1920}
+                        widths={[1280, 1920]}
+                        sizes="100vw"
+                        loading="eager"
+                        quality={state.configQuality}
+                    />
+                </template>
+            </div>
+        ))}
+        <noscript>
+            {backgroundImages.mobile.length > 0 && (
+                <div class="slide-item active block lg:hidden">
+                    <ImageWrapper
+                        alt="Mobile background image of the blog"
+                        class="object-cover h-full w-full"
+                        src={backgroundImages.mobile[0]}
+                        position={wallpaperPosition}
+                        width={828}
+                        widths={[640, 828]}
+                        sizes="100vw"
+                        loading="eager"
+                        fetchpriority="high"
+                        fadeIn={false}
+                        quality={state.mobileQuality}
+                    />
+                </div>
+            )}
+            {backgroundImages.desktop.length > 0 && (
+                <div class="slide-item active hidden lg:block">
+                    <ImageWrapper
+                        alt="Desktop background image of the blog"
+                        class="object-cover h-full"
+                        src={backgroundImages.desktop[0]}
+                        position={wallpaperPosition}
+                        width={1920}
+                        widths={[1280, 1920]}
+                        sizes="100vw"
+                        loading="eager"
+                        fetchpriority="high"
+                        fadeIn={false}
+                        quality={state.configQuality}
+                    />
+                </div>
+            )}
+        </noscript>
+    </div>
+    ) : (
+    /* 单图模式 */
+    <div class="relative h-full w-full" id="banner-images-container">
+        {/* 两侧都放在 <template> 里，由下面的脚本按 matchMedia 只实例化匹配的那一侧，
+            避免桌面端白下一张手机图（display:none 挡不住 loading="eager"） */}
+        {backgroundImages.mobile.length > 0 && (
+            <div class="banner-image-slot absolute inset-0 block lg:hidden">
+                <template>
+                    <ImageWrapper
+                        alt="Mobile background image of the blog"
+                        class="object-cover h-full w-full"
+                        src={backgroundImages.mobile[0]}
+                        position={wallpaperPosition}
+                        width={828}
+                        widths={[640, 828]}
+                        sizes="100vw"
+                        loading="eager"
+                        quality={state.mobileQuality}
+                    />
+                </template>
+            </div>
+        )}
+        {backgroundImages.desktop.length > 0 && (
+            <div class="banner-image-slot absolute inset-0 hidden lg:block">
+                <template>
+                    <ImageWrapper
+                        alt="Desktop background image of the blog"
+                        class="object-cover h-full"
+                        src={backgroundImages.desktop[0]}
+                        position={wallpaperPosition}
+                        width={1920}
+                        widths={[1280, 1920]}
+                        sizes="100vw"
+                        loading="eager"
+                        quality={state.configQuality}
+                    />
+                </template>
+            </div>
+        )}
+        <noscript>
+            {backgroundImages.mobile.length > 0 && (
+                <div class="absolute inset-0 block lg:hidden">
+                    <ImageWrapper
+                        alt="Mobile background image of the blog"
+                        class="object-cover h-full w-full"
+                        src={backgroundImages.mobile[0]}
+                        position={wallpaperPosition}
+                        width={828}
+                        widths={[640, 828]}
+                        sizes="100vw"
+                        loading="eager"
+                        fetchpriority="high"
+                        fadeIn={false}
+                        quality={state.mobileQuality}
+                    />
+                </div>
+            )}
+            {backgroundImages.desktop.length > 0 && (
+                <div class="absolute inset-0 hidden lg:block">
+                    <ImageWrapper
+                        alt="Desktop background image of the blog"
+                        class="object-cover h-full"
+                        src={backgroundImages.desktop[0]}
+                        position={wallpaperPosition}
+                        width={1920}
+                        widths={[1280, 1920]}
+                        sizes="100vw"
+                        loading="eager"
+                        fetchpriority="high"
+                        fadeIn={false}
+                        quality={state.configQuality}
+                    />
+                </div>
+            )}
+        </noscript>
+    </div>
+    )}
+
+    <!-- 壁纸轮播脚本（基于 CSS transition） -->
+    {state.hasMultipleImages && (
+    <script is:inline data-swup-ignore-script>
+        (function initBannerCarousel() {
+            var container = document.getElementById('banner-images-container');
+            if (!container) return;
+
+            var WALLPAPER_BANNER = 'banner';
+            var interval = parseInt(container.dataset.carouselInterval || '5000', 10);
+            var switchable = container.dataset.carouselSwitchable === 'true';
+            var defaultEnabled = container.dataset.carouselEnabled === 'true';
+            var effect = container.dataset.carouselEffect || 'fade';
+            var transitioning = false;
+
+            function isCarouselEnabled() {
+                if (!switchable) return defaultEnabled;
+                var stored = localStorage.getItem('bannerCarouselEnabled');
+                if (stored === null) return defaultEnabled;
+                return stored === 'true';
+            }
+
+            function isBannerWallpaperMode() {
+                var mode = document.documentElement.getAttribute('data-wallpaper-mode');
+                return mode === WALLPAPER_BANNER || mode === 'fullscreen';
+            }
+
+            // 图片淡入：Layout 里的全局 initImageLoadFadeIn 只在解析期扫一次，
+            // 之后克隆进来的图片得自己接管，否则会一直停在 opacity-0
+            function fadeInWhenLoaded(root) {
+                var ph = root.querySelector('.lqip-placeholder');
+                var img = root.querySelector('img');
+                if (!img) return;
+                function done() {
+                    img.style.opacity = '1';
+                    if (ph) ph.classList.add('loaded');
+                }
+                if (img.complete && img.naturalWidth > 0) {
+                    done();
+                } else {
+                    img.addEventListener('load', done, { once: true });
+                    img.addEventListener('error', function () {
+                        if (ph) ph.classList.add('loaded');
+                    }, { once: true });
+                }
+            }
+
+            // 把 <template> 里的图片实例化进 DOM —— 插入的那一刻才开始下载
+            function materialize(slideEl, high) {
+                if (!slideEl) return false;
+                var tpl = slideEl.querySelector('template');
+                if (!tpl) return false;
+                var frag = tpl.content.cloneNode(true);
+                if (high) {
+                    var img = frag.querySelector('img');
+                    // 必须在插入前写，插入即发起请求
+                    if (img) {
+                        img.setAttribute('fetchpriority', 'high');
+                        // 这张是 LCP 元素，不做淡入：图片没下完时 <img> 本来就不画东西，
+                        // 那 500ms 过渡只是把已经能看的画面又藏半秒，Chrome 会把 LCP 往后记。
+                        img.classList.remove('opacity-0', 'transition-opacity', 'duration-500', 'ease-out');
+                        img.style.opacity = '1';
+                    }
+                    // LQIP 占位层是 absolute + z-index:0，盖在 img 上面，
+                    // 它那 0.5s 淡出同样会挡住 LCP
+                    var ph = frag.querySelector('.lqip-placeholder');
+                    if (ph) ph.style.transition = 'none';
+                }
+                slideEl.appendChild(frag);
+                tpl.remove();
+                fadeInWhenLoaded(slideEl);
+                return true;
+            }
+
+            // 预取下一张，避免切换时闪一帧黑
+            function materializeAhead(slides, index) {
+                if (slides.length < 2) return;
+                materialize(slides[(index + 1) % slides.length], false);
+            }
+
+            // 获取当前设备可见的 slide-item
+            function getVisibleSlides() {
+                var all = container.querySelectorAll('.slide-item');
+                var isLg = window.innerWidth >= 1024;
+                var visible = [];
+                for (var i = 0; i < all.length; i++) {
+                    var el = all[i];
+                    if (isLg && el.classList.contains('lg:hidden')) continue;
+                    if (!isLg && el.classList.contains('hidden') && !el.classList.contains('lg:hidden')) continue;
+                    visible.push(el);
+                }
+                if (visible.length === 0) {
+                    for (var j = 0; j < all.length; j++) visible.push(all[j]);
+                }
+                return visible;
+            }
+
+            function getCurrentIndex(slides) {
+                for (var i = 0; i < slides.length; i++) {
+                    if (slides[i].classList.contains('active')) return i;
+                }
+                return 0;
+            }
+
+            function applySlideChange(slides, nextIndex) {
+                // Slide 效果需要 prev-waiting 辅助类
+                if (effect === 'slide') {
+                    for (var i = 0; i < slides.length; i++) {
+                        slides[i].classList.remove('prev-waiting');
+                        if (i < nextIndex) slides[i].classList.add('prev-waiting');
+                    }
+                }
+                if (effect === 'kenburns') {
+                    // Ken Burns: 交叉淡入淡出，先激活新图再隐藏旧图
+                    slides[nextIndex].classList.add('active');
+                    requestAnimationFrame(function() {
+                        for (var j = 0; j < slides.length; j++) {
+                            if (j !== nextIndex) slides[j].classList.remove('active');
+                        }
+                    });
+                } else {
+                    for (var j = 0; j < slides.length; j++) {
+                        if (j === nextIndex) slides[j].classList.add('active');
+                        else slides[j].classList.remove('active');
+                    }
+                }
+            }
+
+            function changeToSlide(targetIndex, resetProgress) {
+                var slides = getVisibleSlides();
+                if (slides.length <= 1) return;
+                if (transitioning) return;
+
+                var nextIndex = targetIndex;
+                if (nextIndex >= slides.length) nextIndex = 0;
+                else if (nextIndex < 0) nextIndex = slides.length - 1;
+
+                var currentIndex = getCurrentIndex(slides);
+                if (nextIndex === currentIndex) return;
+
+                // 目标图可能还躺在 <template> 里，先实例化再切
+                materialize(slides[nextIndex], false);
+                materializeAhead(slides, nextIndex);
+
+                // 直接切换（CSS 处理过渡动画）
+                applySlideChange(slides, nextIndex);
+
+                if (resetProgress !== false && appState.isPlaying) {
+                    startAutoPlay();
+                }
+            }
+
+            var appState = {
+                isPlaying: false,
+                autoPlayTimer: null,
+                touchStartX: 0,
+                touchEndX: 0
+            };
+
+            function startAutoPlay() {
+                stopAutoPlay();
+                if (!isCarouselEnabled()) return;
+                if (!isBannerWallpaperMode()) return;
+
+                appState.isPlaying = true;
+                appState.autoPlayTimer = setTimeout(function advance() {
+                    if (!appState.isPlaying) return;
+                    var slides = getVisibleSlides();
+                    var currentIdx = getCurrentIndex(slides);
+                    changeToSlide(currentIdx + 1, false);
+                    appState.autoPlayTimer = setTimeout(advance, interval);
+                }, interval);
+            }
+
+            function stopAutoPlay() {
+                appState.isPlaying = false;
+                if (appState.autoPlayTimer) {
+                    clearTimeout(appState.autoPlayTimer);
+                    appState.autoPlayTimer = null;
+                }
+            }
+
+            // 键盘控制
+            document.addEventListener('keydown', function(e) {
+                if (!isBannerWallpaperMode() || !isCarouselEnabled()) return;
+                if (e.key === 'ArrowRight') {
+                    var slides = getVisibleSlides();
+                    changeToSlide(getCurrentIndex(slides) + 1);
+                } else if (e.key === 'ArrowLeft') {
+                    var slides2 = getVisibleSlides();
+                    changeToSlide(getCurrentIndex(slides2) - 1);
+                } else if (e.key === ' ') {
+                    e.preventDefault();
+                    appState.isPlaying ? stopAutoPlay() : startAutoPlay();
+                }
+            });
+
+            // 触屏滑动
+            document.addEventListener('touchstart', function(e) {
+                appState.touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+            document.addEventListener('touchend', function(e) {
+                if (!isBannerWallpaperMode() || !isCarouselEnabled()) return;
+                appState.touchEndX = e.changedTouches[0].screenX;
+                var diff = appState.touchEndX - appState.touchStartX;
+                if (Math.abs(diff) > 50) {
+                    var slides = getVisibleSlides();
+                    if (diff > 0) changeToSlide(getCurrentIndex(slides) - 1);
+                    else changeToSlide(getCurrentIndex(slides) + 1);
+                }
+            }, { passive: true });
+
+            // 事件监听
+            window.addEventListener('bannerCarouselChange', function(e) {
+                e.detail && e.detail.enabled ? startAutoPlay() : stopAutoPlay();
+            });
+            window.addEventListener('wallpaperModeChange', function(e) {
+                if (e.detail && (e.detail.mode === 'banner' || e.detail.mode === 'fullscreen')) {
+                    if (isCarouselEnabled()) startAutoPlay();
+                } else {
+                    stopAutoPlay();
+                }
+            });
+
+            // 随机首张：只有被抽中的这一张会真的下载，其余仍留在 <template> 里
+            var slides = getVisibleSlides();
+            var startIdx = slides.length > 1 ? Math.floor(Math.random() * slides.length) : 0;
+            var firstSlide = slides[startIdx];
+            // .slide-item 自带 1000ms 的 opacity 过渡，首张不该吃它（它是 LCP 元素）。
+            // 必须在下面加 active 之前就关掉，否则过渡已经启动了。
+            if (firstSlide) firstSlide.style.transition = 'none';
+            for (var k = 0; k < slides.length; k++) {
+                if (k === startIdx) slides[k].classList.add('active');
+                else slides[k].classList.remove('active');
+            }
+            materialize(firstSlide, true);
+            if (firstSlide) {
+                // 下一帧再放开，后续轮播切换的交叉淡入照旧。双 rAF 是为了确保
+                // opacity:1 已经 flush 成新的 before-change style，恢复时不会倒着跑一遍
+                requestAnimationFrame(function () {
+                    requestAnimationFrame(function () { firstSlide.style.transition = ''; });
+                });
+            }
+
+            // 断点跨过 1024px 时，另一侧那组还没有实例化过的 active，需要补上
+            if (window.matchMedia) {
+                var lgQuery = window.matchMedia('(min-width: 1024px)');
+                var onBreakpointChange = function () {
+                    var s = getVisibleSlides();
+                    if (!s.length) return;
+                    var hasActive = false;
+                    for (var i = 0; i < s.length; i++) {
+                        if (s[i].classList.contains('active')) { hasActive = true; break; }
+                    }
+                    if (!hasActive) s[0].classList.add('active');
+                    var idx = getCurrentIndex(s);
+                    materialize(s[idx], false);
+                    if (isCarouselEnabled()) materializeAhead(s, idx);
+                };
+                if (lgQuery.addEventListener) lgQuery.addEventListener('change', onBreakpointChange);
+                else if (lgQuery.addListener) lgQuery.addListener(onBreakpointChange);
+            }
+
+            // 空闲时预取下一张（轮播关掉时其余图片永远不会显示，一张都不下）
+            if (isCarouselEnabled()) {
+                var schedulePrefetch = function () {
+                    var idle = window.requestIdleCallback || function (cb) { return setTimeout(cb, 1500); };
+                    idle(function () { materializeAhead(getVisibleSlides(), startIdx); });
+                };
+                if (document.readyState === 'complete') schedulePrefetch();
+                else window.addEventListener('load', schedulePrefetch, { once: true });
+            }
+
+            // 启动
+            if (isCarouselEnabled() && isBannerWallpaperMode()) {
+                startAutoPlay();
+            }
+        })();
+    </script>
+    )}
+
+    <!-- 单图模式：只实例化当前断点匹配的那一侧 -->
+    {!state.hasMultipleImages && (
+    <script is:inline data-swup-ignore-script>
+        (function initBannerSingle() {
+            var container = document.getElementById('banner-images-container');
+            if (!container) return;
+
+            function materialize(slot, high) {
+                var tpl = slot.querySelector('template');
+                if (!tpl) return;
+                var frag = tpl.content.cloneNode(true);
+                var img = frag.querySelector('img');
+                var phFrag = frag.querySelector('.lqip-placeholder');
+                if (img && high) {
+                    img.setAttribute('fetchpriority', 'high');
+                    // 这张是 LCP 元素，不做淡入：图片没下完时 <img> 本来就不画东西，
+                    // 那 500ms 过渡只是把已经能看的画面又藏半秒，Chrome 会把 LCP 往后记。
+                    img.classList.remove('opacity-0', 'transition-opacity', 'duration-500', 'ease-out');
+                    img.style.opacity = '1';
+                    // LQIP 占位层盖在 img 上面（z-index:0），它那 0.5s 淡出同样会挡住 LCP
+                    if (phFrag) phFrag.style.transition = 'none';
+                }
+                slot.appendChild(frag);
+                tpl.remove();
+                // Layout 的全局淡入只扫解析期的图片，克隆进来的要自己接管
+                var ph = slot.querySelector('.lqip-placeholder');
+                if (!img) return;
+                function done() {
+                    img.style.opacity = '1';
+                    if (ph) ph.classList.add('loaded');
+                }
+                if (img.complete && img.naturalWidth > 0) done();
+                else {
+                    img.addEventListener('load', done, { once: true });
+                    img.addEventListener('error', function () {
+                        if (ph) ph.classList.add('loaded');
+                    }, { once: true });
+                }
+            }
+
+            function sync() {
+                var all = container.querySelectorAll('.banner-image-slot');
+                var isLg = window.innerWidth >= 1024;
+                for (var i = 0; i < all.length; i++) {
+                    var el = all[i];
+                    if (isLg && el.classList.contains('lg:hidden')) continue;
+                    if (!isLg && el.classList.contains('hidden') && !el.classList.contains('lg:hidden')) continue;
+                    materialize(el, true);
+                }
+            }
+
+            sync();
+
+            if (window.matchMedia) {
+                var lgQuery = window.matchMedia('(min-width: 1024px)');
+                if (lgQuery.addEventListener) lgQuery.addEventListener('change', sync);
+                else if (lgQuery.addListener) lgQuery.addListener(sync);
+            }
+        })();
+    </script>
+    )}
+    
+    {backgroundWallpaper.playerEnable && typeof backgroundWallpaper.src === "object" && !Array.isArray(backgroundWallpaper.src) && backgroundWallpaper.src.playerUrl && (
+        <BackgroundPlayer playerUrl={backgroundWallpaper.src.playerUrl} playerMode={backgroundWallpaper.common?.playerMode ?? "order"} />
+    )}
+
+    <div id="banner-dim-container" class="absolute inset-0 z-10 pointer-events-none">
+        {state.showBannerDim && <div class="banner-dim-overlay absolute inset-0" style={`background: rgba(0, 0, 0, ${state.dimOpacity})`}></div>}
+    </div>
+
+    <div id="banner-overlay-container" class="absolute inset-0 z-20 pointer-events-none transition-swup-fade">    <!-- Home page text overlay - 始终渲染以便切换模式时控制显示 -->
+    <BannerHomeTextOverlay showHomeText={state.showHomeText} initialRandomSubtitle={state.initialRandomSubtitle} />
+
+    <!-- Non-home non-post page title overlay (desktop only) -->
+    {state.showBannerPageTitle && (
+        <div class="banner-page-title-overlay absolute inset-0 z-20 hidden lg:flex items-center justify-center pointer-events-none">
+            <div class="w-4/5 lg:w-3/4 text-center mb-0">
+                <div class="banner-page-title font-bold text-white leading-tight inline-flex items-center justify-center gap-3">
+                    {/* <Icon name="material-symbols:bookmark-rounded" class="banner-page-title-icon" /> */}
+                    <span class="banner-page-title-text">{title}</span>
+                </div>
+            </div>
+        </div>
+    )}
+
+    <!-- Non-home post banner meta overlay (desktop only) -->
+    <BannerPostMetaOverlay showBannerPostMeta={state.showBannerPostMeta} bannerPostInfoMode={state.bannerPostInfoMode} bannerDescriptionWidth={state.bannerDescriptionWidth} bannerPostMeta={bannerPostMeta} />
+
+    </div>
+
+    <!-- Fullscreen 模式下显示向下滚动指示器（仅首页显示；放在 overlay 容器外，避免被标题视差 transform 带离）。
+         始终渲染：壁纸区在 Swup 容器外、切页不重渲染，若首开非首页则指示器不会出现。
+         是否显示交给 CSS（body.is-home + fullscreen 模式才 display:flex） -->
+    {(state.isFullscreenMode || state.isWallpaperSwitchable) && <ScrollDownIndicator />}
+
+    <!-- Water waves effect - 如果允许切换或任一设备启用则渲染 -->
+    {state.shouldRenderWaves ? (
+    <div class={`waves absolute -bottom-px h-[10vh] max-h-37.5 min-h-12.5 w-full md:h-[15vh]
+        ${!state.wavesEnabledOnMobile ? 'hidden' : ''} ${!state.wavesEnabledOnDesktop ? 'md:hidden' : ''} ${state.wavesEnabledOnDesktop ? 'md:block' : ''}`}
+        id="header-waves"
+        style="transform: translateZ(0);">
+        <!-- 静态占位波浪:随 HTML 首帧渲染,先于壁纸出现避免闪烁;由 WavesEffect.astro 动画 canvas 无缝接管后隐藏 -->
+        <svg
+            class="waves-svg"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 24 150 28"
+            preserveAspectRatio="none"
+            shape-rendering="geometricPrecision"
+            aria-hidden="true"
+        >
+            <defs>
+                <path
+                    id="gentle-wave"
+                    d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v48h-352z"
+                ></path>
+            </defs>
+            <g>
+                <!-- x 偏移 = 四层均匀铺开的起始相位(0/0.25/0.5/0.75)在 t=0 的偏移,首帧即交错,与动画首帧逐像素一致 -->
+                <use
+                    xlink:href="#gentle-wave"
+                    x="-42.000"
+                    y="0"
+                    class="opacity-25 fill-(--page-bg)"
+                ></use>
+                <use
+                    xlink:href="#gentle-wave"
+                    x="2.641"
+                    y="3"
+                    class="opacity-50 fill-(--page-bg)"
+                ></use>
+                <use
+                    xlink:href="#gentle-wave"
+                    x="48.944"
+                    y="5"
+                    class="opacity-65 fill-(--page-bg)"
+                ></use>
+                <use
+                    xlink:href="#gentle-wave"
+                    x="92.468"
+                    y="7"
+                    class="opacity-75 fill-(--page-bg)"
+                ></use>
+            </g>
+        </svg>
+    </div>
+    ) : null}
+
+    <!-- Gradient transition - 当水波纹关闭时显示，提供壁纸底部到背景色的平滑过渡 -->
+    {state.shouldRenderGradient ? (
+    <div class={`wallpaper-gradient absolute bottom-0 left-0 w-full pointer-events-none
+        ${!state.gradientEnabledOnMobile ? 'hidden' : ''} ${!state.gradientEnabledOnDesktop ? 'md:hidden' : ''} ${state.gradientEnabledOnDesktop ? 'md:block' : ''}`}
+        id="wallpaper-gradient"
+        style={`height: ${state.gradientHeight}; background: linear-gradient(to bottom, transparent, var(--page-bg));`}>
+    </div>
+    ) : null}
+</div>
+)}
+
+{/* 当壁纸未渲染时，添加空的 Swup 占位容器，避免 Swup 找不到容器而回退为整页加载 */}
+{!(state.isWallpaperSwitchable || state.isBannerMode || state.isFullscreenMode || state.isOverlayMode) && (
+<>
+    <div id="banner-overlay-container" class="hidden"></div>
+    <div id="banner-dim-container" class="hidden"></div>
+</>
+)}

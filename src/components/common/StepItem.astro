@@ -1,0 +1,146 @@
+---
+import { ICONS, type IconName } from "./mdx-icons";
+
+// MDX 步骤条条目组件（配合 Steps 使用）
+//
+// 属性：
+// - title：步骤标题，可选
+// - type：编号圆颜色，default 为主题色，其余对应提示框色板，可选
+//   （tip / note / important / warning / caution）
+// - icon：内置图标名（同 TimelineItem），有 icon 时编号圆显示图标而非数字，可选
+// - children：步骤正文，支持 Markdown 内容（经 <slot /> 渲染）
+
+interface Props {
+	title?: string;
+	type?: "default" | "tip" | "note" | "important" | "warning" | "caution";
+	icon?: IconName;
+}
+
+const { title, type = "default", icon } = Astro.props;
+const iconHtml = icon ? ICONS[icon] : undefined;
+---
+
+<li class="step-item" data-type={type}>
+	<span class="step-marker" aria-hidden="true">
+		{iconHtml && <span class="step-marker-icon" set:html={iconHtml}></span>}
+	</span>
+	<div class="step-content">
+		{title && <div class="step-item-title">{title}</div>}
+		<div class="step-item-body">
+			<slot />
+		</div>
+	</div>
+</li>
+
+<style>
+	/* 编号圆颜色：default 为主题色，其余对应提示框色板 */
+	.step-item {
+		--step-bg: var(--primary);
+		--step-ring: color-mix(in srgb, var(--primary) 22%, transparent);
+
+		/* 递增放在条目上而非 ::before：有 icon 隐藏数字后，后续编号仍连续 */
+		counter-increment: step;
+		position: relative;
+		z-index: 1;
+		display: flex;
+		gap: var(--spacing-lg);
+		margin: 0;
+		padding: 0 0 var(--spacing-2xl);
+	}
+
+	.step-item[data-type="tip"] {
+		--step-bg: var(--admonitions-color-tip);
+		--step-ring: color-mix(in srgb, var(--admonitions-color-tip) 22%, transparent);
+	}
+	.step-item[data-type="note"] {
+		--step-bg: var(--admonitions-color-note);
+		--step-ring: color-mix(in srgb, var(--admonitions-color-note) 22%, transparent);
+	}
+	.step-item[data-type="important"] {
+		--step-bg: var(--admonitions-color-important);
+		--step-ring: color-mix(in srgb, var(--admonitions-color-important) 22%, transparent);
+	}
+	.step-item[data-type="warning"] {
+		--step-bg: var(--admonitions-color-warning);
+		--step-ring: color-mix(in srgb, var(--admonitions-color-warning) 22%, transparent);
+	}
+	.step-item[data-type="caution"] {
+		--step-bg: var(--admonitions-color-caution);
+		--step-ring: color-mix(in srgb, var(--admonitions-color-caution) 22%, transparent);
+	}
+
+	.step-item:last-child {
+		padding-bottom: 0;
+	}
+
+	.step-marker {
+		flex-shrink: 0;
+		width: var(--steps-marker-size, 1.5rem);
+		height: var(--steps-marker-size, 1.5rem);
+		margin-top: 0.25rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: var(--radius-full);
+		background: var(--step-bg);
+		box-shadow: 0 0 0 3px var(--step-ring);
+		color: #fff;
+		font-size: 0.8rem;
+		font-weight: 700;
+		font-variant-numeric: tabular-nums;
+	}
+
+	/* 自动编号在 ::before 上读值 */
+	.step-marker::before {
+		content: counter(step);
+	}
+
+	/* 有 icon 时隐藏数字（counter 仍递增） */
+	.step-item:has(.step-marker-icon) .step-marker::before {
+		content: none;
+	}
+
+	.step-marker-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+	}
+
+	.step-marker-icon :global(svg) {
+		width: 0.8rem;
+		height: 0.8rem;
+	}
+
+	.step-content {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.step-item-title {
+		margin-top: 0.125rem;
+		font-size: 1.0625rem;
+		font-weight: 600;
+		line-height: 1.5;
+		color: var(--deep-text);
+	}
+
+	/* 暗色下 --deep-text 仍为深色，需覆盖为亮色文字 */
+	:global(.dark) .step-item-title {
+		color: var(--btn-content);
+	}
+
+	.step-item-body {
+		margin-top: var(--spacing-sm);
+	}
+
+	/* 贴平正文首尾的 prose 外边距 */
+	.step-item-body > :first-child {
+		margin-top: 0;
+	}
+
+	.step-item-body > :last-child {
+		margin-bottom: 0;
+	}
+</style>

@@ -1,0 +1,108 @@
+/* 标签 chip 共用样式：只负责配色与圆角，尺寸和间距由各组件的 class 控制 */
+/* 使用处：文章列表底部标签、标签页标签、侧边栏标签 widget */
+
+/* 胶囊样式（默认） - 主题色 tonal chip 风格（配色同分类胶囊，跟随主题色） */
+.tag-item {
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--btn-content) 8%, transparent);
+    color: var(--btn-content);
+}
+.tag-item:hover {
+    background: color-mix(in srgb, var(--btn-content) 18%, transparent);
+    color: var(--primary);
+}
+.tag-item:active {
+    background: color-mix(in srgb, var(--btn-content) 24%, transparent);
+}
+.tag-item .tag-count-badge {
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--btn-content) 12%, transparent);
+    color: inherit;
+}
+
+/* 非交互变体（文章卡片底部的 +N 折叠提示），不响应 hover，配色与普通标签一致（全不透明度） */
+.tag-item.tag-item-static,
+.tag-item.tag-item-static:hover {
+    background: color-mix(in srgb, var(--btn-content) 8%, transparent);
+    color: var(--btn-content);
+}
+
+/* 中性灰胶囊样式（siteConfig.tagStyle = "pill-gray"） - 原版 MD3 Filter Chip 风格，中性灰底描边 */
+html[data-tag-style="pill-gray"] .tag-item {
+    background: rgba(0, 0, 0, 0.05);
+    color: rgb(115, 115, 115);
+}
+html[data-tag-style="pill-gray"] .tag-item:hover {
+    background: var(--btn-regular-bg);
+    color: var(--btn-content);
+}
+html[data-tag-style="pill-gray"] .tag-item:active {
+    background: rgba(0, 0, 0, 0.1);
+}
+html[data-tag-style="pill-gray"].dark .tag-item {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgb(163, 163, 163);
+}
+html[data-tag-style="pill-gray"].dark .tag-item:hover {
+    background: var(--btn-regular-bg);
+    color: var(--btn-content);
+}
+html[data-tag-style="pill-gray"].dark .tag-item:active {
+    background: rgba(255, 255, 255, 0.2);
+}
+html[data-tag-style="pill-gray"] .tag-item .tag-count-badge {
+    background: rgba(0, 0, 0, 0.08);
+    color: rgb(115, 115, 115);
+}
+html[data-tag-style="pill-gray"].dark .tag-item .tag-count-badge {
+    background: rgba(255, 255, 255, 0.15);
+    color: rgb(163, 163, 163);
+}
+html[data-tag-style="pill-gray"] .tag-item.tag-item-static,
+html[data-tag-style="pill-gray"] .tag-item.tag-item-static:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: rgb(163, 163, 163);
+}
+html[data-tag-style="pill-gray"].dark .tag-item.tag-item-static,
+html[data-tag-style="pill-gray"].dark .tag-item.tag-item-static:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgb(115, 115, 115);
+}
+
+/* 矩形样式（siteConfig.tagStyle = "rectangle"） - 主题色底 + 小圆角 */
+html[data-tag-style="rectangle"] .tag-item {
+    border-radius: 0.5rem;
+    background: var(--btn-regular-bg);
+    color: var(--btn-content);
+}
+html[data-tag-style="rectangle"] .tag-item:hover {
+    background: var(--btn-regular-bg-hover);
+    color: var(--btn-content);
+}
+html[data-tag-style="rectangle"] .tag-item:active {
+    background: var(--btn-regular-bg-active);
+}
+html[data-tag-style="rectangle"].dark .tag-item,
+html[data-tag-style="rectangle"].dark .tag-item:hover {
+    color: rgba(255, 255, 255, 0.75);
+}
+html[data-tag-style="rectangle"] .tag-item.tag-item-static,
+html[data-tag-style="rectangle"] .tag-item.tag-item-static:hover {
+    background: var(--btn-regular-bg);
+    color: var(--btn-content);
+    opacity: 0.75;
+}
+html[data-tag-style="rectangle"].dark .tag-item.tag-item-static,
+html[data-tag-style="rectangle"].dark .tag-item.tag-item-static:hover {
+    color: rgba(255, 255, 255, 0.75);
+}
+html[data-tag-style="rectangle"] .tag-item .tag-count-badge,
+html[data-tag-style="rectangle"].dark .tag-item .tag-count-badge {
+    border-radius: 0.375rem;
+    background: color-mix(in srgb, var(--btn-content) 12%, transparent);
+    color: inherit;
+}
+/* 文章卡片底部标签更矮（24px），圆角随之收小以保持弧度观感一致 */
+html[data-tag-style="rectangle"] .post-card-bottom-tags .tag-item {
+    border-radius: 0.375rem;
+}

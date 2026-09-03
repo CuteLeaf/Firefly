@@ -1,0 +1,309 @@
+---
+// 消息框公共组件
+// 用于Live2D和Spine模型的消息显示
+---
+
+<script>
+  // 全局变量，跟踪当前显示的消息容器和隐藏定时器
+  let currentMessageContainer: HTMLDivElement | null = null;
+  let hideMessageTimer: number | null = null;
+
+  // 消息显示函数
+  export function showMessage(message: string, options: { containerId?: string; displayTime?: number } = {}) {
+    // 防止空消息或重复调用
+    if (!message || !message.trim()) {
+      return;
+    }
+
+    // 立即清除之前的消息
+    if (currentMessageContainer) {
+      if (hideMessageTimer !== null) {
+        clearTimeout(hideMessageTimer);
+      }
+      if (currentMessageContainer.parentNode) {
+        currentMessageContainer.parentNode.removeChild(currentMessageContainer);
+      }
+      currentMessageContainer = null;
+    }
+
+    // 确保DOM中没有残留的消息容器
+    const existingMessages = document.querySelectorAll(
+      ".model-message-container"
+    );
+    existingMessages.forEach((msg) => {
+      if (msg.parentNode) {
+        msg.parentNode.removeChild(msg);
+      }
+    });
+
+    // 检测暗色主题
+    const isDarkMode =
+      document.documentElement.classList.contains("dark") ||
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    // 创建消息容器
+    const messageContainer = document.createElement("div");
+    messageContainer.className = "model-message-container";
+
+    // 创建消息元素
+    const messageEl = document.createElement("div");
+    messageEl.className = "model-message";
+    messageEl.textContent = message;
+
+    // 创建箭头元素
+    const arrowEl = document.createElement("div");
+    arrowEl.className = "model-message-arrow";
+
+    // 设置容器样式
+    Object.assign(messageContainer.style, {
+      position: "fixed",
+      zIndex: "1001",
+      pointerEvents: "none",
+      opacity: "0",
+      transform: "translateY(15px) translateX(-50%) scale(0.9)",
+      transition: "all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
+    });
+
+    // 设置消息框美化样式（支持暗色主题）
+    const messageStyles = {
+      position: "relative",
+      background: isDarkMode
+        ? "linear-gradient(135deg, rgba(45, 55, 72, 0.95), rgba(26, 32, 44, 0.9))"
+        : "linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 248, 255, 0.9))",
+      color: isDarkMode ? "#e2e8f0" : "#2c3e50",
+      padding: "12px 16px",
+      borderRadius: "16px",
+      fontSize: "14px",
+      fontWeight: "500",
+      fontFamily:
+        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      maxWidth: "240px",
+      minWidth: "100px",
+      wordWrap: "break-word",
+      textAlign: "center",
+      whiteSpace: "pre-wrap",
+      boxShadow: isDarkMode
+        ? "0 8px 32px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)"
+        : "0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08)",
+      border: isDarkMode
+        ? "1px solid rgba(255, 255, 255, 0.1)"
+        : "1px solid rgba(255, 255, 255, 0.6)",
+      backdropFilter: "blur(12px)",
+      letterSpacing: "0.3px",
+      lineHeight: "1.4",
+    };
+    Object.assign(messageEl.style, messageStyles);
+
+    // 设置箭头样式（居中显示）
+    Object.assign(arrowEl.style, {
+      position: "absolute",
+      top: "100%",
+      left: "50%",
+      transform: "translateX(-50%)", // 箭头居中
+      width: "0",
+      height: "0",
+      borderLeft: "8px solid transparent",
+      borderRight: "8px solid transparent",
+      borderTop: isDarkMode
+        ? "8px solid rgba(45, 55, 72, 0.95)"
+        : "8px solid rgba(255, 255, 255, 0.95)",
+      filter: "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))",
+    });
+
+    // 组装消息框元素
+    messageEl.appendChild(arrowEl);
+    messageContainer.appendChild(messageEl);
+
+    // 添加到页面并保存引用
+    document.body.appendChild(messageContainer);
+    currentMessageContainer = messageContainer;
+
+    // 将消息显示在模型头顶居中
+    const container = document.getElementById(options.containerId || "model-container");
+    if (container) {
+      const rect = container.getBoundingClientRect();
+
+      // 消息框居中显示在模型上方
+      const containerCenterX = rect.left + rect.width / 2;
+
+      // 使用估算的消息框尺寸进行初步定位
+      const estimatedMessageWidth = 240; // 使用maxWidth作为估算
+      const estimatedMessageHeight = 60; // 估算高度
+      const screenPadding = 10; // 距离屏幕边缘的最小距离
+
+      // 计算消息框的实际位置（考虑translateX(-50%)的影响）
+      let messageX = containerCenterX;
+      let messageY = rect.top - estimatedMessageHeight - 25; // 距离模型顶部25px
+
+      // 屏幕边界检查 - 水平方向
+      const minX = screenPadding + estimatedMessageWidth / 2; // 考虑translateX(-50%)
+      const maxX =
+        window.innerWidth - screenPadding - estimatedMessageWidth / 2;
+
+      if (messageX < minX) {
+        messageX = minX;
+      } else if (messageX > maxX) {
+        messageX = maxX;
+      }
+
+      // 屏幕边界检查 - 垂直方向
+      const minY = screenPadding;
+      const maxY = window.innerHeight - estimatedMessageHeight - screenPadding;
+
+      if (messageY < minY) {
+        // 如果上方空间不够，显示在模型下方
+        messageY = rect.bottom + 25;
+        // 调整箭头方向（显示在下方）
+        arrowEl.style.top = "0";
+        arrowEl.style.bottom = "auto";
+        arrowEl.style.borderTop = "none";
+        arrowEl.style.borderBottom = isDarkMode
+          ? "8px solid rgba(45, 55, 72, 0.95)"
+          : "8px solid rgba(255, 255, 255, 0.95)";
+      } else if (messageY > maxY) {
+        messageY = maxY;
+      }
+
+      // 设置位置
+      messageContainer.style.left = messageX + "px";
+      messageContainer.style.top = messageY + "px";
+
+      // 在消息框渲染后，进行精确的边界调整
+      setTimeout(() => {
+        const actualMessageRect = messageContainer.getBoundingClientRect();
+        const actualWidth = actualMessageRect.width;
+        const actualHeight = actualMessageRect.height;
+
+        // 重新计算水平位置
+        let adjustedX = containerCenterX;
+        const actualMinX = screenPadding + actualWidth / 2;
+        const actualMaxX = window.innerWidth - screenPadding - actualWidth / 2;
+
+        if (adjustedX < actualMinX) {
+          adjustedX = actualMinX;
+        } else if (adjustedX > actualMaxX) {
+          adjustedX = actualMaxX;
+        }
+
+        // 重新计算垂直位置
+        let adjustedY = rect.top - actualHeight - 25;
+        const actualMinY = screenPadding;
+        const actualMaxY = window.innerHeight - actualHeight - screenPadding;
+        let isAboveModel = true; // 标记消息框是否在模型上方
+
+        if (adjustedY < actualMinY) {
+          adjustedY = rect.bottom + 25;
+          isAboveModel = false;
+        } else if (adjustedY > actualMaxY) {
+          adjustedY = actualMaxY;
+        }
+
+        // 计算箭头应该指向的位置（模型中心）
+        const modelCenterX = rect.left + rect.width / 2;
+        const messageCenterX = adjustedX; // 消息框中心位置
+        const arrowOffsetX = modelCenterX - messageCenterX; // 箭头相对于消息框中心的偏移
+
+        // 限制箭头偏移范围，避免超出消息框边界
+        const maxOffset = actualWidth / 2 - 20; // 留出20px边距
+        const clampedOffsetX = Math.max(
+          -maxOffset,
+          Math.min(maxOffset, arrowOffsetX)
+        );
+
+        // 根据最终位置调整箭头方向和位置
+        if (isAboveModel) {
+          // 消息框在模型上方，箭头向下
+          Object.assign(arrowEl.style, {
+            position: "absolute",
+            top: "100%",
+            left: "50%",
+            bottom: "auto",
+            transform: `translateX(calc(-50% + ${clampedOffsetX}px))`,
+            width: "0",
+            height: "0",
+            borderLeft: "8px solid transparent",
+            borderRight: "8px solid transparent",
+            borderTop: isDarkMode
+              ? "8px solid rgba(45, 55, 72, 0.95)"
+              : "8px solid rgba(255, 255, 255, 0.95)",
+            borderBottom: "none",
+            filter: "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))",
+          });
+        } else {
+          // 消息框在模型下方，箭头向上
+          Object.assign(arrowEl.style, {
+            position: "absolute",
+            top: "0",
+            left: "50%",
+            bottom: "auto",
+            transform: `translateX(calc(-50% + ${clampedOffsetX}px))`,
+            width: "0",
+            height: "0",
+            borderLeft: "8px solid transparent",
+            borderRight: "8px solid transparent",
+            borderTop: "none",
+            borderBottom: isDarkMode
+              ? "8px solid rgba(45, 55, 72, 0.95)"
+              : "8px solid rgba(255, 255, 255, 0.95)",
+            filter: "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))",
+          });
+        }
+
+        // 应用调整后的位置
+        messageContainer.style.left = adjustedX + "px";
+        messageContainer.style.top = adjustedY + "px";
+      }, 50); // 增加延迟确保消息框完全渲染
+    }
+
+    // 显示动画
+    setTimeout(() => {
+      messageContainer.style.opacity = "1";
+      messageContainer.style.transform =
+        "translateY(0) translateX(-50%) scale(1)";
+    }, 100); // 延迟到边界调整完成后
+
+    // 自动隐藏
+    const displayTime = options.displayTime || 3000;
+    hideMessageTimer = window.setTimeout(() => {
+      messageContainer.style.opacity = "0";
+      messageContainer.style.transform =
+        "translateY(-15px) translateX(-50%) scale(0.95)";
+      setTimeout(() => {
+        if (messageContainer.parentNode) {
+          messageContainer.parentNode.removeChild(messageContainer);
+        }
+        // 清除引用
+        if (currentMessageContainer === messageContainer) {
+          currentMessageContainer = null;
+        }
+      }, 400);
+    }, displayTime);
+  }
+
+  // 清理消息函数
+  export function clearMessage() {
+    if (currentMessageContainer) {
+      if (hideMessageTimer !== null) {
+        clearTimeout(hideMessageTimer);
+      }
+      if (currentMessageContainer.parentNode) {
+        currentMessageContainer.parentNode.removeChild(currentMessageContainer);
+      }
+      currentMessageContainer = null;
+    }
+
+    // 清理所有消息容器
+    const existingMessages = document.querySelectorAll(
+      ".model-message-container"
+    );
+    existingMessages.forEach((msg) => {
+      if (msg.parentNode) {
+        msg.parentNode.removeChild(msg);
+      }
+    });
+  }
+
+  // 将函数暴露到全局作用域
+  (window as any).showModelMessage = showMessage;
+  (window as any).clearModelMessage = clearMessage;
+</script>

@@ -1,0 +1,86 @@
+---
+import { Icon } from "astro-icon/components";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { BannerPostMeta } from "@/utils/banner-visibility-utils";
+import { formatDateToYYYYMMDD } from "@/utils/date-utils";
+
+interface Props {
+	showBannerPostMeta: boolean;
+	bannerPostInfoMode: "description" | "meta";
+	bannerDescriptionWidth: string | undefined;
+	bannerPostMeta?: BannerPostMeta;
+}
+
+const {
+	showBannerPostMeta,
+	bannerPostInfoMode,
+	bannerDescriptionWidth,
+	bannerPostMeta,
+} = Astro.props;
+---
+{showBannerPostMeta && bannerPostMeta && (
+    <div class="banner-post-meta-overlay absolute inset-0 z-20 hidden lg:flex items-center justify-center pointer-events-none">
+        <div class="w-4/5 lg:w-3/4 text-center mb-0">
+            <div class="flex flex-col items-center gap-3">
+                <div class="banner-post-title font-bold text-white leading-tight">
+                    {bannerPostMeta.title}
+                </div>
+                {bannerPostInfoMode === "description" && bannerPostMeta.description && (
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="banner-post-description-divider h-px w-12 bg-white/60"></div>
+                        <div
+                            class="banner-post-description text-left text-white/85"
+                            style={bannerDescriptionWidth
+                                ? `--banner-post-description-width: ${bannerDescriptionWidth}`
+                                : undefined}
+                        >
+                            <Icon
+                                name="material-symbols:format-quote-rounded"
+                                class="banner-post-description-quote banner-post-description-quote-start"
+                                aria-hidden="true"
+                            />
+                            {bannerPostMeta.description}
+                            <Icon
+                                name="material-symbols:format-quote-rounded"
+                                class="banner-post-description-quote banner-post-description-quote-end"
+                                aria-hidden="true"
+                            />
+                        </div>
+                    </div>
+                )}
+                {bannerPostInfoMode === "meta" && (
+                    <div class="banner-post-meta-list flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-white/90 text-sm md:text-base">
+                        <span class="inline-flex items-center gap-1.5">
+                            <Icon name="material-symbols:calendar-month-outline-rounded" class="text-[1.05em]" />
+                            <span>{i18n(I18nKey.publishedAt)} {formatDateToYYYYMMDD(bannerPostMeta.published)}</span>
+                        </span>
+                        {bannerPostMeta.updated &&
+                            bannerPostMeta.updated.getTime() !== bannerPostMeta.published.getTime() && (
+                                <span class="inline-flex items-center gap-1.5">
+                                    <Icon name="material-symbols:update-rounded" class="text-[1.05em]" />
+                                    <span>{i18n(I18nKey.updatedAt)} {formatDateToYYYYMMDD(bannerPostMeta.updated)}</span>
+                                </span>
+                            )}
+                        {typeof bannerPostMeta.words === "number" && (
+                            <span class="inline-flex items-center gap-1.5">
+                                <Icon name="material-symbols:ink-pen-outline-rounded" class="text-[1.05em]" />
+                                <span>
+                                    {bannerPostMeta.words} {i18n(bannerPostMeta.words === 1 ? I18nKey.wordCount : I18nKey.wordsCount)}
+                                </span>
+                            </span>
+                        )}
+                        {typeof bannerPostMeta.minutes === "number" && (
+                            <span class="inline-flex items-center gap-1.5">
+                                <Icon name="material-symbols:schedule-outline-rounded" class="text-[1.05em]" />
+                                <span>
+                                    {bannerPostMeta.minutes} {i18n(bannerPostMeta.minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount)} · {i18n(I18nKey.readTime)}
+                                </span>
+                            </span>
+                        )}
+                    </div>
+                )}
+            </div>
+        </div>
+    </div>
+)}

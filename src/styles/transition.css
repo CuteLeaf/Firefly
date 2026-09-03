@@ -1,0 +1,118 @@
+/* ==========================================================================
+   Page Transition Animations (Swup) & Global Animations
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Swup Page Transitions
+   -------------------------------------------------------------------------- */
+
+/* Main Content Transition */
+.transition-main {
+    transition: 
+        opacity 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Leaving Animation */
+.transition-leaving {
+    transition:
+        transform 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19),
+        opacity 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+/* 切页期间将过渡元素提升到合成层，避免移动端动画在主线程绘制掉帧卡顿 */
+html.is-changing .transition-main,
+html.is-animating .transition-main,
+html.is-animating.is-leaving .transition-leaving {
+    will-change: transform, opacity;
+}
+
+/* State: Changing (Swup) */
+html.is-changing .transition-main {
+    transition: 
+        opacity 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+html.is-leaving .transition-main {
+    transition: 
+        opacity 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19),
+        transform 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+/* State: Animating (Entering) */
+html.is-animating .transition-main {
+    opacity: 0;
+    transform: translateY(2rem);
+}
+
+/* State: Leaving */
+html.is-animating.is-leaving .transition-leaving {
+    transform: translateY(-2rem);
+    opacity: 0;
+}
+
+/* Swup Fade Fallback */
+html.is-changing .transition-swup-fade {
+    transition: all 120ms ease-out;
+}
+
+html.is-animating .transition-swup-fade {
+    opacity: 0;
+    transform: translateY(1rem);
+}
+
+/* --------------------------------------------------------------------------
+   2. Keyframes
+   -------------------------------------------------------------------------- */
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(2rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   3. Onload Animations
+   -------------------------------------------------------------------------- */
+
+.onload-animation {
+    opacity: 0;
+    animation: fade-in-up 120ms ease-out forwards;
+    will-change: transform, opacity;
+}
+
+/* 渐进式动画延迟 */
+.onload-animation:nth-child(1) { animation-delay: 0ms; }
+.onload-animation:nth-child(2) { animation-delay: 30ms; }
+.onload-animation:nth-child(3) { animation-delay: 60ms; }
+.onload-animation:nth-child(4) { animation-delay: 90ms; }
+.onload-animation:nth-child(5) { animation-delay: 120ms; }
+
+/* --------------------------------------------------------------------------
+   4. Navigation Progress Bar
+   -------------------------------------------------------------------------- */
+
+#progress-bar {
+    --progress-height: 3px;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--progress-height);
+    z-index: 9999;
+    pointer-events: none;
+    background: var(--primary);
+    box-shadow: 0 0 8px color-mix(in oklch, var(--primary) 60%, transparent);
+    transform-origin: left center;
+    transform: scaleX(0);
+    opacity: 0;
+    /* 提升到合成层：切页期间主线程忙碌时进度条仍由合成线程平滑推进 */
+    will-change: transform;
+}

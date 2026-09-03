@@ -1,0 +1,534 @@
+---
+import GoogleAnalytics from "@components/analytics/GoogleAnalytics.astro";
+import La51Analytics from "@components/analytics/La51Analytics.astro";
+import MicrosoftClarity from "@components/analytics/MicrosoftClarity.astro";
+import UmamiAnalytics from "@components/analytics/UmamiAnalytics.astro";
+import CodeGroupManager from "@components/features/CodeGroupManager.astro";
+import FancyboxManager from "@components/features/FancyboxManager.astro";
+import FontSetup from "@components/features/FontSetup.astro";
+import GithubCardManager from "@components/features/GithubCardManager.astro";
+import MusicManager from "@components/features/MusicManager.astro";
+import MusicPlayerView from "@components/features/MusicPlayerView.astro";
+import SakuraEffect from "@components/features/SakuraEffect.astro";
+import WavesEffect from "@components/features/WavesEffect.astro";
+import ConfigCarrier from "@components/layout/ConfigCarrier.astro";
+
+import {
+	analyticsConfig,
+	backgroundWallpaper,
+	displaySettingsConfig,
+	expressiveCodeConfig,
+	musicPlayerConfig,
+	navbarMode,
+	profileConfig,
+	siteConfig,
+} from "@/config";
+import {
+	BANNER_HEIGHT,
+	BANNER_HEIGHT_HOME,
+	BANNER_HEIGHT_NON_HOME,
+	BANNER_HEIGHT_NON_HOME_MIN,
+	PAGE_WIDTH,
+} from "@/constants/constants";
+import { defaultFavicons } from "@/constants/icon";
+import type { Favicon } from "@/types/config";
+import { isHomePage } from "@/utils/layout-utils";
+import { getAuthorAvatarUrl, getSiteLogo } from "@/utils/schema-image";
+import { buildSiteGraph, toAbsoluteUrl } from "@/utils/schema-utils";
+import { url } from "@/utils/url-utils";
+
+import "@/styles/main.css";
+import "@/styles/immersive-reading.css";
+import "@/styles/variables.styl";
+import "@rehype-callouts-theme";
+
+interface Props {
+	title?: string;
+	description?: string;
+	lang?: string;
+	setOGTypeArticle?: boolean;
+	postSlug?: string;
+	postCoverImage?: string;
+	hasWallpaper?: boolean;
+}
+
+let {
+	title,
+	description,
+	lang,
+	setOGTypeArticle,
+	postSlug,
+	postCoverImage,
+	hasWallpaper = false,
+} = Astro.props;
+
+// apply a class to the body element to decide the height of the banner, only used for initial page load
+// Swup can update the body for each page visit, but it's after the page transition, causing a delay for banner height change
+// so use Swup hooks instead to change the height immediately when a link is clicked
+const isHomePageCheck = isHomePage(Astro.url.pathname);
+
+// defines global css variables
+// why doing this in Layout instead of GlobalStyles: https://github.com/withastro/astro/issues/6728#issuecomment-1502203757
+const configHue = siteConfig.themeColor.hue;
+
+// 获取导航栏透明模式配置（banner 模式专属）
+const navbarTransparentMode =
+	backgroundWallpaper.banner?.navbar?.transparentMode || "semi";
+// 判断是否应该显示顶部高光效果（只在 semifull 动态透明模式下显示）
+const shouldShowTopHighlight = navbarTransparentMode === "semifull";
+
+// 全屏壁纸布局：classic 为文档流旧版，hero 为固定首屏新版
+const fullscreenLayout = backgroundWallpaper.fullscreen?.layout ?? "classic";
+
+// 子菜单 / 浮动面板的毛玻璃模糊度：跟随 navbar.blur，但不受壁纸模式影响，
+// 且带一个最小值 —— 导航栏可以用 blur: 0 关掉毛玻璃，面板则始终保留毛玻璃。
+// 之所以不复用 #navbar 上的 --navbar-glass-blur：
+// setting-utils.ts 的 updateNavbarTransparency() 会在切到 overlay / none 模式时
+// 把它清成 0px；这里放到 :root 上，同时也能让不在导航栏 DOM 内的
+// .float-panel（#translate-panel、#mobile-toc-panel）继承到。
+const NAVBAR_PANEL_MIN_BLUR = 2;
+const navbarPanelBlur = Math.max(
+	backgroundWallpaper.banner?.navbar?.blur ?? 20,
+	NAVBAR_PANEL_MIN_BLUR,
+);
+
+let pageTitle: string;
+if (title) {
+	pageTitle = `${title} - ${siteConfig.title}`;
+} else {
+	pageTitle = siteConfig.subtitle
+		? `${siteConfig.title} - ${siteConfig.subtitle}`
+		: siteConfig.title;
+}
+
+let ogImageUrl: string | undefined;
+if (siteConfig.post.generateOgImages && postSlug) {
+	ogImageUrl = new URL(`/og/${postSlug}.png`, Astro.site).toString();
+} else if (postCoverImage) {
+	ogImageUrl = postCoverImage; // 已由文章页算成绝对 URL
+}
+
+const favicons: Favicon[] =
+	siteConfig.favicon.length > 0 ? siteConfig.favicon : defaultFavicons;
+
+// const siteLang = siteConfig.lang.replace('_', '-')
+if (!lang) {
+	lang = `${siteConfig.lang}`;
+}
+const siteLang = lang.replace("_", "-");
+
+// 首页站点级结构化数据用的作者头像 URL（Person.image），经 toAbsoluteImageUrl 三分解析
+const avatarUrl = await getAuthorAvatarUrl();
+// 作者个人页（/about/）绝对 URL，作为 Person.url
+const aboutUrl =
+	toAbsoluteUrl("/about/", siteConfig.site_url) ?? siteConfig.site_url;
+// 站点 publisher logo（Organization.logo），用于首页 @graph 的 Organization 节点
+const siteLogo = await getSiteLogo();
+
+// 使用固定的banner偏移量，position配置用于图片定位
+---
+
+<!doctype html>
+<html lang={siteLang} class="bg-(--page-bg) text-[14px] md:text-[16px]" data-wallpaper-mode={backgroundWallpaper.mode} data-fullscreen-layout={fullscreenLayout} data-has-wallpaper={hasWallpaper ? "" : undefined} data-tag-style={siteConfig.tagStyle ?? "pill"} data-category-style={siteConfig.categoryStyle ?? "rectangle"}>
+  <head>
+    <meta charset="UTF-8" />
+    <style is:inline>
+			@layer properties, theme, base, components, utilities;
+		</style>
+    {analyticsConfig?.googleAnalyticsId && (
+            <GoogleAnalytics analyticsId={analyticsConfig.googleAnalyticsId} />
+    )}
+    {analyticsConfig?.microsoftClarityId && (
+            <MicrosoftClarity clarityId={analyticsConfig.microsoftClarityId} />
+    )}
+        {analyticsConfig?.umamiAnalytics?.websiteId && (
+          <UmamiAnalytics
+          websiteId={analyticsConfig.umamiAnalytics.websiteId}
+          scriptUrl={analyticsConfig.umamiAnalytics.scriptUrl}
+          replaysScriptUrl={analyticsConfig.umamiAnalytics.replaysScriptUrl}
+          trackOutboundLinks={analyticsConfig.umamiAnalytics.trackOutboundLinks}
+          collectWebVitals={analyticsConfig.umamiAnalytics.collectWebVitals}
+          replays={analyticsConfig.umamiAnalytics.replays}
+          />
+        )}
+        {analyticsConfig?.la51Analytics?.Id && (
+            <La51Analytics
+            analyticsId={analyticsConfig.la51Analytics.Id}
+            sdkUrl={analyticsConfig.la51Analytics?.sdkUrl}
+            ck={analyticsConfig.la51Analytics?.ck}
+            autoTrack={analyticsConfig.la51Analytics?.autoTrack}
+            hashMode={analyticsConfig.la51Analytics?.hashMode}
+            screenRecord={analyticsConfig.la51Analytics?.screenRecord}
+            />
+    )}
+
+    <title>{pageTitle}</title>
+    <meta
+      name="description"
+      content={description || siteConfig.description || pageTitle}
+    />
+    {
+      siteConfig.keywords && siteConfig.keywords.length > 0 && (
+        <meta name="keywords" content={siteConfig.keywords.join(", ")} />
+      )
+    }
+    <meta name="author" content={profileConfig.name} />
+
+    <link rel="canonical" href={Astro.url} />
+    <meta property="og:site_name" content={siteConfig.title} />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={pageTitle} />
+    <meta
+      property="og:description"
+      content={description || siteConfig.description || pageTitle}
+    />
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+    {
+      setOGTypeArticle ? (
+        <meta property="og:type" content="article" />
+      ) : (
+        <meta property="og:type" content="website" />
+      )
+    }
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta
+      name="twitter:description"
+      content={description || siteConfig.description || pageTitle}
+    />
+
+    {
+      isHomePageCheck && (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(
+            buildSiteGraph({
+              site: siteConfig.site_url,
+              siteConfig,
+              profileConfig,
+              lang: siteLang,
+              authorUrl: aboutUrl,
+              avatarUrl,
+              logo: siteLogo,
+            }),
+          )}
+        />
+      )
+    }
+
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    {
+      favicons.map((favicon) => (
+        <link
+          rel="icon"
+          href={favicon.src.startsWith("/") ? url(favicon.src) : favicon.src}
+          sizes={favicon.sizes}
+          media={favicon.theme && `(prefers-color-scheme: ${favicon.theme})`}
+        />
+      ))
+    }
+
+    <!-- 为特定域名的图片添加 referrerpolicy 以解决 403 问题 -->
+    <!-- 注：静态图片（ImageWrapper 组件、Markdown 正文图）已在构建期加好 referrerpolicy；
+         此脚本仅作为运行时兜底，处理动态注入的图片（解密内容、第三方评论/统计部件等）。 -->
+    {siteConfig.imageOptimization?.noReferrerDomains &&
+     siteConfig.imageOptimization.noReferrerDomains.length > 0 && (
+      <script
+        is:inline
+        define:vars={{
+          noReferrerDomains: JSON.stringify(
+            siteConfig.imageOptimization.noReferrerDomains
+          ),
+        }}
+      >
+        (function() {
+          const domains = JSON.parse(noReferrerDomains);
+
+          // 域名匹配函数，支持通配符
+          function matchesDomain(urlStr, patterns) {
+            try {
+              const urlObj = new URL(urlStr);
+              const hostname = urlObj.hostname;
+
+              return patterns.some(function(pattern) {
+                const regexPattern = pattern.replace(/\./g, '\\.').replace(/\*/g, '.*');
+                const regex = new RegExp('^' + regexPattern + '$');
+                return regex.test(hostname);
+              });
+            } catch (e) {
+              return false;
+            }
+          }
+
+          // 处理单个图片元素
+          function processImage(img) {
+            if (!img.src || img.hasAttribute('referrerpolicy')) return;
+
+            if (matchesDomain(img.src, domains)) {
+              img.setAttribute('referrerpolicy', 'no-referrer');
+            }
+          }
+
+          // 兜底扫描一次当前页面（构建期已处理的图片会因已有属性而快速跳过）
+          document.querySelectorAll('img').forEach(processImage);
+
+          // 使用 MutationObserver 监听动态加载/注入的图片
+          const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+              mutation.addedNodes.forEach(function(node) {
+                if (node.nodeName === 'IMG') {
+                  processImage(node);
+                }
+                if (node.querySelectorAll) {
+                  node.querySelectorAll('img').forEach(processImage);
+                }
+              });
+            });
+          });
+
+          observer.observe(document.documentElement, {
+            childList: true,
+            subtree: true
+          });
+        })();
+      </script>
+    )}
+
+    <!-- Set the theme before the page is rendered to avoid a flash -->
+    <script
+      is:inline
+      define:vars={{
+        PAGE_WIDTH,
+        configHue,
+        defaultMode: siteConfig.themeColor.defaultMode ?? "light",
+        defaultWallpaperMode: backgroundWallpaper.mode,
+        isWallpaperSwitchable:
+          displaySettingsConfig.wallpaperModeSwitchable,
+        darkTheme: expressiveCodeConfig.darkTheme,
+        lightTheme: expressiveCodeConfig.lightTheme,
+        baseUrl: import.meta.env.BASE_URL,
+        cardTransparentOpacity: backgroundWallpaper.overlay?.cardOpacity ?? 0.6,
+        fullscreenLayout,
+      }}
+    >
+      // 主题初始化 - 与setting-utils.ts保持一致
+      const LIGHT_MODE = "light";
+      const DARK_MODE = "dark";
+      const SYSTEM_MODE = "system";
+
+      // 获取存储的主题，如果没有则使用默认值
+      const theme = localStorage.getItem("theme") || defaultMode;
+
+      // 获取系统主题
+      function getSystemTheme() {
+        return window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? DARK_MODE
+          : LIGHT_MODE;
+      }
+
+      // 解析主题（如果是system模式，则获取系统主题）
+      function resolveTheme(themeValue) {
+        if (themeValue === SYSTEM_MODE) {
+          return getSystemTheme();
+        }
+        return themeValue;
+      }
+
+      const resolvedTheme = resolveTheme(theme);
+      const isDark = resolvedTheme === DARK_MODE;
+
+      // 应用主题
+      if (isDark) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+
+      // Set the theme for Expressive Code
+      document.documentElement.setAttribute(
+        "data-theme",
+        isDark ? darkTheme : lightTheme
+      );
+
+      // Load the hue from local storage
+      const hue = localStorage.getItem("hue") || configHue;
+      document.documentElement.style.setProperty("--hue", hue);
+
+      // 设置卡片透明度（全屏透明模式下使用），优先使用用户自定义值
+      const storedCardOpacity = localStorage.getItem("overlayCardOpacity");
+      const parsedCardOpacity = storedCardOpacity === null ? NaN : Number.parseFloat(storedCardOpacity);
+      const resolvedCardOpacity = Number.isFinite(parsedCardOpacity)
+        ? Math.min(1, Math.max(0, parsedCardOpacity))
+        : cardTransparentOpacity;
+      document.documentElement.style.setProperty("--card-transparent-opacity", String(resolvedCardOpacity));
+
+      // 初始化全屏布局：优先使用设置面板保存的运行时选择
+      const storedFullscreenLayout = localStorage.getItem("fullscreenLayout");
+      const resolvedFullscreenLayout =
+        storedFullscreenLayout === "hero" || storedFullscreenLayout === "classic"
+          ? storedFullscreenLayout
+          : fullscreenLayout;
+      document.documentElement.setAttribute(
+        "data-fullscreen-layout",
+        resolvedFullscreenLayout,
+      );
+
+      // 内容定位已由 --content-top 纯 CSS 决定（layout-base.css），无需 --banner-height-extend 变量/计算
+
+      // 初始化壁纸模式 - 在页面渲染前同步应用（其余布局由 CSS 属性选择器接管）
+      const wallpaperMode = isWallpaperSwitchable
+        ? localStorage.getItem("wallpaperMode") || defaultWallpaperMode
+        : defaultWallpaperMode;
+
+      // 设置data-wallpaper-mode属性
+      document.documentElement.setAttribute(
+        "data-wallpaper-mode",
+        wallpaperMode
+      );
+
+      // 初始化期间禁用 content-panel/wrapper 过渡，避免加载时布局/变量变化产生内容移动动画；
+      // load 后移除（仅首次设置，swup 切页重跑脚本时不再重复）。布局已由 CSS 接管，无需 rAF 校正
+      if (!window.__fireflyLayoutTransitionGuard) {
+        window.__fireflyLayoutTransitionGuard = true;
+        document.documentElement.setAttribute("data-layout-init", "");
+        const removeLayoutInit = () =>
+          document.documentElement.removeAttribute("data-layout-init");
+        if (document.readyState === "complete") {
+          requestAnimationFrame(removeLayoutInit);
+        } else {
+          window.addEventListener("load", removeLayoutInit, { once: true });
+        }
+      }
+
+      // 初始化水波纹动画状态 - 在 html 元素上设置属性，CSS 会立即生效
+      (function applyWavesEnabled() {
+        const wavesEnabled = localStorage.getItem("wavesEnabled");
+        if (wavesEnabled !== null) {
+          document.documentElement.setAttribute("data-waves-enabled", wavesEnabled);
+        }
+      })();
+
+      // 初始化渐变过渡状态 - 在 html 元素上设置属性，CSS 会立即生效
+      (function applyGradientEnabled() {
+        const gradientEnabled = localStorage.getItem("gradientEnabled");
+        if (gradientEnabled !== null) {
+          document.documentElement.setAttribute("data-gradient-enabled", gradientEnabled);
+        }
+      })();
+
+      // 初始化横幅标题显示状态 - 在 html 元素上设置属性，CSS 会立即生效
+      (function applyBannerTitleEnabled() {
+        const bannerTitleEnabled = localStorage.getItem("bannerTitleEnabled");
+        if (bannerTitleEnabled !== null) {
+          document.documentElement.setAttribute("data-banner-title-enabled", bannerTitleEnabled);
+        }
+      })();
+    </script>
+    <style
+      define:vars={{
+        configHue,
+        "page-width": `${siteConfig.pageWidth ?? PAGE_WIDTH}rem`,
+        "navbar-panel-blur": `${navbarPanelBlur}px`,
+        "banner-height-home": `${BANNER_HEIGHT_HOME}vh`,
+        "banner-height-non-home": `max(${BANNER_HEIGHT_NON_HOME}vh, ${BANNER_HEIGHT_NON_HOME_MIN}px)`,
+        "banner-height": `${BANNER_HEIGHT}vh`,
+      }}
+    ></style>
+    <!-- defines global css variables. This will be applied to <html> <body> and some other elements idk why -->
+
+    <slot name="head" />
+
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={profileConfig.name}
+      href={`${Astro.site}rss.xml`}
+    />
+
+    <!-- Font Setup (Astro Font API) -->
+    <FontSetup />
+  </head>
+  <body
+    class="min-h-screen"
+    class:list={[
+      {
+        "is-home": isHomePageCheck,
+        "sticky-navbar": navbarMode === "fixed",
+        "dynamic-navbar": navbarMode === "dynamic",
+      },
+    ]}
+  >
+    <!-- 首帧前按运行时壁纸模式翻转卡片透明类（布局已由 data-wallpaper-mode 属性规则接管） -->
+    <script is:inline>
+      (function () {
+        const wm = document.documentElement.getAttribute("data-wallpaper-mode");
+        if (!wm) return;
+        document.body.classList.toggle(
+          "wallpaper-transparent",
+          wm === "overlay" ||
+            (wm === "fullscreen" &&
+              document.documentElement.getAttribute("data-fullscreen-layout") === "hero"),
+        );
+      })();
+    </script>
+
+    <div id="progress-bar"></div>
+
+    {/* 卡片样式：根据 localStorage 覆盖默认配置 */}
+    <script is:inline define:vars={{
+      defaultBorder: siteConfig.card?.border ?? false,
+      defaultFollowTheme: siteConfig.card?.followTheme ?? false,
+    }}>
+      (function() {
+        var stored = localStorage.getItem("cardBorderEnabled");
+        var border = stored !== null ? stored === "true" : defaultBorder;
+        if (border) document.documentElement.classList.add("enable-card-border");
+        else document.documentElement.classList.remove("enable-card-border");
+
+        stored = localStorage.getItem("cardFollowThemeEnabled");
+        var follow = stored !== null ? stored === "true" : defaultFollowTheme;
+        if (follow) document.body.classList.add("card-follow-theme-hue");
+        else document.body.classList.remove("card-follow-theme-hue");
+      })();
+    </script>
+
+    <!-- 页面顶部渐变高光效果 - 只在full和semifull模式下显示 -->
+    {shouldShowTopHighlight && <div class="top-gradient-highlight" />}
+    <ConfigCarrier />
+    <MusicManager />
+    <slot />
+
+    <!-- 播放器视图脚本：必须在 <slot /> 之后（解析到它时所有 widget 的 DOM 要已存在），
+         且在 MusicManager 之后（swup 重跑按文档顺序，window.__fireflyMusic 得先就位） -->
+    {(musicPlayerConfig.showInNavbar || musicPlayerConfig.showInSidebar !== false) && (
+      <MusicPlayerView />
+    )}
+
+
+    <!-- Sakura Effect -->
+    <SakuraEffect />
+
+    <!-- Water Waves Effect -->
+    <WavesEffect />
+
+    <!-- Fancybox Manager -->
+    <FancyboxManager />
+
+    <!-- Tab 代码块交互 -->
+    <CodeGroupManager />
+
+    <!-- GitHub 卡片客户端实时补全（forks/stars） -->
+    <GithubCardManager />
+  </body>
+</html>
+
+
+<script>
+  import { initLayout } from "@/utils/layout-init";
+  initLayout();
+</script>

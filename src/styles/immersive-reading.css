@@ -1,0 +1,188 @@
+/* 沉浸阅读（Immersive Reading）全局样式 */
+
+:root {
+	--immersive-toc-width: 20rem;
+	--immersive-reading-width: 46rem;
+}
+
+/* 沉浸态：阅读面强制为页面底色，遮盖任何壁纸/背景残留；顶部间距归一 1rem */
+body.immersive-reading {
+	background-color: var(--page-bg) !important;
+	--content-top: 1rem !important;
+}
+
+/* 隐藏页面 chrome，只留文章卡片 */
+body.immersive-reading #top-row,
+body.immersive-reading #navbar-wrapper,
+body.immersive-reading #wallpaper-wrapper,
+body.immersive-reading #left-sidebar,
+body.immersive-reading #right-sidebar,
+body.immersive-reading #mobile-bottom-sidebar,
+body.immersive-reading #category-bar-wrapper,
+body.immersive-reading #main-grid .footer,
+body.immersive-reading #outdated-card,
+body.immersive-reading #content-wrapper > *:not(:first-child),
+body.immersive-reading #post-container > .mb-6.rounded-xl,
+body.immersive-reading #post-container .license-container,
+body.immersive-reading .floating-controls-container #back-to-comment-btn,
+body.immersive-reading #floating-toc-wrapper,
+body.immersive-reading #l2d-widget-container,
+body.immersive-reading #spine-model-container,
+body.immersive-reading #bg-player,
+/* 背景装饰：壁纸、水波纹、渐变、横幅叠加、樱花 canvas */
+body.immersive-reading #header-waves,
+body.immersive-reading #wallpaper-gradient,
+body.immersive-reading #banner-images-container,
+body.immersive-reading #banner-overlay-container,
+body.immersive-reading #banner-dim-container,
+body.immersive-reading #canvas_sakura {
+	display: none !important;
+	visibility: hidden !important;
+}
+
+/* 内容贴顶：与目录栏保持一致的 1rem 顶部间距。
+   用高特异性覆盖全屏/经典、透明覆盖、纯色等壁纸布局的 `top/--content-top: ... !important`。 */
+body.immersive-reading .content-panel,
+html[data-wallpaper-mode] body.immersive-reading .content-panel,
+html[data-wallpaper-mode="overlay"] body.immersive-reading .content-panel,
+html[data-wallpaper-mode="none"] body.immersive-reading .content-panel,
+html[data-wallpaper-mode="fullscreen"] body.immersive-reading .content-panel,
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="classic"] body.immersive-reading .content-panel {
+	top: 1rem !important;
+	min-height: calc(100vh - 1rem) !important;
+	margin-top: 0 !important;
+	padding-top: 0 !important;
+	--content-top: 1rem !important;
+}
+
+/* 内容容器也统一为 0 顶部内边距/外边距，避免壁纸模式残留的偏移 */
+body.immersive-reading #main-grid,
+body.immersive-reading #content-wrapper,
+body.immersive-reading #swup-container {
+	margin-top: 0 !important;
+	padding-top: 0 !important;
+}
+
+/* 让主网格退化为单列、水平居中 */
+body.immersive-reading #main-grid {
+	display: flex !important;
+	flex-direction: column !important;
+	align-items: stretch !important;
+	gap: 0 !important;
+	width: 100% !important;
+	margin: 0 auto !important;
+	padding: 0 !important;
+}
+
+/* 文章卡片：居中 + 限宽 */
+body.immersive-reading #post-container {
+	width: 100% !important;
+	max-width: var(--immersive-reading-width, 46rem) !important;
+	margin: 0 auto !important;
+}
+
+/* 沉浸态一律不透明：无论壁纸模式的 wallpaper-transparent 如何，阅读面都不透出壁纸 */
+body.immersive-reading #post-container {
+	background-color: var(--card-bg) !important;
+	--card-bg-transparent: var(--card-bg); /* 让 .custom-md / 表格等子层也回到不透明 */
+}
+
+/* 桌面端：目录打开时给文章让位，关闭后释放空间 */
+@media (min-width: 1024px) {
+	body.immersive-reading.immersive-toc-open #main-grid {
+		padding-left: calc(var(--immersive-toc-width, 20rem) + 1rem) !important;
+	}
+	body.immersive-reading.immersive-toc-right.immersive-toc-open #main-grid {
+		padding-left: 0 !important;
+		padding-right: calc(var(--immersive-toc-width, 20rem) + 1rem) !important;
+	}
+}
+
+/* 目录栏本体 */
+.immersive-toc {
+	position: fixed;
+	top: 1rem;
+	bottom: 1rem;
+	z-index: 40; /* > .content-panel z-30；< 浮动控件 z-1000 */
+	width: var(--immersive-toc-width, 20rem);
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	background: var(--card-bg-transparent);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	border-radius: 1rem;
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	opacity: 0;
+	pointer-events: none;
+	visibility: hidden;
+	transition:
+		transform 0.25s ease,
+		opacity 0.25s ease,
+		visibility 0.25s ease;
+}
+
+.immersive-toc[data-position="left"] {
+	left: 1rem;
+	transform: translateX(-120%);
+}
+.immersive-toc[data-position="right"] {
+	right: 1rem;
+	transform: translateX(120%);
+}
+
+.immersive-toc-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-shrink: 0;
+	padding: 0.9rem 1rem 0.6rem;
+	border-bottom: 1px solid var(--line-divider);
+}
+
+.immersive-toc-title {
+	font-size: 0.85rem;
+	font-weight: 700;
+	color: var(--content-meta);
+}
+
+.immersive-toc-toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.5rem;
+	height: 1.5rem;
+	border-radius: 0.4rem;
+	border: none;
+	background: none;
+	color: var(--content-meta);
+	font-size: 1.15rem;
+	line-height: 1;
+	cursor: pointer;
+	transition: background-color 0.14s ease, color 0.14s ease;
+}
+.immersive-toc-toggle:hover {
+	background: var(--btn-card-bg-hover);
+	color: var(--primary);
+}
+
+.immersive-toc .toc-scroll-container {
+	flex: 1;
+	min-height: 0;
+	padding-inline: 0.5rem; /* 左右留白，避免标题/高亮条贴到面板边缘 */
+}
+
+/* 目录面板：沉浸态且打开（.open）时显示，桌面/移动一致；关闭后释放文章让位空间 */
+body.immersive-reading .immersive-toc.open {
+	transform: none;
+	opacity: 1;
+	pointer-events: auto;
+	visibility: visible;
+}
+
+/* 隐藏状态的沉浸按钮完全不占位，保证与其它按钮间距一致 */
+#immersive-reading-btn.hide,
+#immersive-toc-toggle-btn.hide {
+	display: none !important;
+}

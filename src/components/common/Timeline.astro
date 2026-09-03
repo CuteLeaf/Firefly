@@ -1,0 +1,48 @@
+---
+// MDX 时间线容器组件（.astro，配合 TimelineItem 使用）
+//
+// 用法（.mdx）：
+//   import { Timeline, TimelineItem } from "@/components/firefly-mdx";
+//
+//   <Timeline>
+//     <TimelineItem date="2024-03-10" title="版本 v6.0 发布">
+//       这里可以写 **Markdown** 内容，也可以嵌套其他 MDX 组件。
+//     </TimelineItem>
+//     <TimelineItem date="2023-11-02" title="站点上线" type="tip">
+//       第二条……
+//     </TimelineItem>
+//   </Timeline>
+//
+// 为什么用 .astro：Astro MDX 不允许把框架组件（.svelte）嵌套为另一个框架组件
+// 的 children（渲染时报 NoMatchingRenderer）。纯 .astro 组件是 Astro 原生组件，
+// 内容经 <slot /> 传递，不经过框架 renderer，嵌套和 Markdown 都正常。
+// 布局为左侧竖线对齐：竖线画在本组件上，每个条目由 TimelineItem 渲染圆点节点。
+---
+
+<ol class="timeline">
+	<slot />
+</ol>
+
+<style>
+	.timeline {
+		/* 标记列宽度，竖线与子项圆点/图标圆共用同一坐标 */
+		--timeline-marker-size: 1.25rem;
+
+		position: relative;
+		list-style: none;
+		margin: var(--spacing-2xl) 0;
+		padding: 0;
+	}
+
+	/* 贯穿竖线，位于标记列中心 */
+	.timeline::before {
+		content: "";
+		position: absolute;
+		left: calc(var(--timeline-marker-size) / 2 - 1px);
+		top: var(--spacing-xs);
+		bottom: var(--spacing-xs);
+		width: 2px;
+		background: var(--line-divider);
+		border-radius: var(--radius-full);
+	}
+</style>

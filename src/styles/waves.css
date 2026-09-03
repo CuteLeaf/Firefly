@@ -1,0 +1,192 @@
+/* ==========================================================================
+   Water Waves Animation & Styles
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. 用户控制 - 通过 html 属性控制显隐
+   -------------------------------------------------------------------------- */
+html[data-waves-enabled="false"] #header-waves {
+    display: none !important;
+}
+
+html[data-waves-enabled="true"] #header-waves {
+    display: block !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. 波浪容器基础样式
+   -------------------------------------------------------------------------- */
+#header-waves {
+    isolation: isolate;
+    contain: layout style;
+    margin-bottom: -1px;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+}
+
+.waves {
+    overflow: visible;
+    z-index: 15;
+    transform: translateZ(0);
+    will-change: transform;
+    contain: layout style;
+}
+
+.waves canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+}
+
+.waves .waves-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   4. 页面切换期间优化
+   -------------------------------------------------------------------------- */
+html.is-page-transitioning #header-waves {
+    contain: layout style paint;
+}
+
+/* --------------------------------------------------------------------------
+   5. 主题切换优化
+   -------------------------------------------------------------------------- */
+.theme-changing #header-waves {
+    will-change: auto;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+.is-theme-transitioning #header-waves {
+    color: var(--page-bg);
+    isolation: isolate;
+    contain: layout style paint;
+    transform: translateZ(0);
+    background: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   6. 移动端优化
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+    #header-waves {
+        overflow: visible;
+        z-index: 25;
+        transition: transform 0.3s ease-in, opacity 0.2s ease-in;
+    }
+
+    .mobile-hide-banner #header-waves {
+        display: none !important;
+        transform: translateY(-100%);
+        opacity: 0;
+        transition: transform 0.25s ease-in, opacity 0.15s ease-in;
+    }
+
+    .waves canvas,
+    .waves .waves-svg {
+        min-height: 60px;
+    }
+
+    .waves {
+        bottom: -1px !important;
+        position: absolute !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   7. Overlay 模式隐藏波浪和暗层
+   -------------------------------------------------------------------------- */
+#wallpaper-wrapper.wallpaper-overlay .waves,
+#wallpaper-wrapper.wallpaper-overlay #header-waves,
+#wallpaper-wrapper.wallpaper-overlay #banner-dim-container {
+    display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   8. None 模式隐藏波浪和暗层
+   -------------------------------------------------------------------------- */
+html[data-wallpaper-mode="none"] .waves,
+html[data-wallpaper-mode="none"] #header-waves,
+html[data-wallpaper-mode="none"] #wallpaper-wrapper #banner-dim-container {
+    display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   9. Fullscreen / Overlay 模式隐藏波浪和渐变
+   data-wallpaper-mode 在解析期内联脚本中同步设置，早于 rAF 应用
+   wallpaper-fullscreen/overlay 类；据此隐藏可避免刷新时波浪/渐变先显示后消失的闪烁。
+   -------------------------------------------------------------------------- */
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] body:not(.is-home) #wallpaper-wrapper #banner-dim-container {
+    display: none !important;
+}
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] .waves,
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #header-waves,
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper #wallpaper-gradient,
+html[data-wallpaper-mode="overlay"] .waves,
+html[data-wallpaper-mode="overlay"] #header-waves,
+html[data-wallpaper-mode="overlay"] #wallpaper-wrapper #wallpaper-gradient,
+html[data-wallpaper-mode="overlay"] #wallpaper-wrapper #banner-dim-container {
+    display: none !important;
+}
+
+/* ==========================================================================
+   Gradient Transition Effect
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. 用户控制 - 通过 html 属性控制显隐
+   -------------------------------------------------------------------------- */
+html[data-gradient-enabled="false"] #wallpaper-wrapper #wallpaper-gradient {
+    display: none !important;
+}
+
+html[data-gradient-enabled="true"] #wallpaper-gradient {
+    display: block !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. 水波纹开启时隐藏渐变（水波纹优先）
+   -------------------------------------------------------------------------- */
+html[data-waves-enabled="true"] #wallpaper-gradient {
+    display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. 渐变容器基础样式
+   -------------------------------------------------------------------------- */
+#wallpaper-gradient {
+    z-index: 12;
+    transition: opacity 0.3s ease;
+}
+
+/* --------------------------------------------------------------------------
+   4. Overlay 模式隐藏渐变
+   -------------------------------------------------------------------------- */
+#wallpaper-wrapper.wallpaper-overlay #wallpaper-gradient {
+    display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. None 模式隐藏渐变
+   -------------------------------------------------------------------------- */
+html[data-wallpaper-mode="none"] #wallpaper-wrapper #wallpaper-gradient {
+    display: none !important;
+}
+/* 模式切换（全屏/覆盖/纯色 → 横幅）：水波纹从全屏底部随内容一起上移淡入到横幅底部 */
+@keyframes firefly-waves-slide-up {
+    from { transform: translateY(calc(100vh - var(--banner-height-home))); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+html.is-wallpaper-transitioning[data-wallpaper-mode="banner"] #header-waves {
+    animation: firefly-waves-slide-up 450ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}

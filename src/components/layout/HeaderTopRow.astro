@@ -1,0 +1,32 @@
+---
+import Navbar from "@components/layout/Navbar.astro";
+import type { NavbarMode } from "@/types/siteConfig";
+
+interface Props {
+	navbarMode: NavbarMode;
+	navbarWidthFull: boolean;
+}
+
+const { navbarMode, navbarWidthFull } = Astro.props;
+const isFixedNavbar = navbarMode !== "static";
+---
+
+<!-- 导航栏外壳（从 MainGridLayout.astro 迁出） -->
+<div
+    id="top-row"
+    class="z-50 pointer-events-none relative transition-all duration-700 mx-auto"
+    class:list={[
+        isFixedNavbar ? "h-18 fixed top-0 left-0 right-0 z-80" : "",
+        navbarWidthFull ? "" : "w-full xl:w-[92vw] max-w-(--page-width) px-0 md:px-4",
+    ]}
+>
+    <div
+        id="navbar-wrapper"
+        class:list={[
+            "pointer-events-auto transition-all",
+            navbarMode === "static" ? "sticky top-0" : "",
+        ]}
+    >
+        <Navbar></Navbar>
+    </div>
+</div>

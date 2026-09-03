@@ -1,0 +1,164 @@
+---
+title: MDX 格式文章示例
+published: 1970-01-02
+description: 这是一个 MDX 格式的示例文章，展示了如何在 Markdown 中使用 JSX。
+tags: [MDX, Markdown, 文章示例]
+category: 文章示例
+image: api
+slug: mdx-example
+series: "Firefly 功能示例2"
+seriesOrder: 7
+---
+
+import { Badge, StepItem, Steps, TabGroup, Timeline, TimelineItem } from '@components/firefly-mdx';
+
+:::tip
+[Firefly](https://github.com/CuteLeaf/Firefly) 支持 `MDX` 和 `Markdown` 两种类型的文章，你可以在文章中混合使用两种格式，如果没有特别复杂内容和需求，推荐使用 Markdown 格式就够了。
+:::
+
+## Markdown 和 MDX 的区别
+- Markdown (MD) 是一种轻量级标记语言，允许用户使用纯文本格式编写文档，然后将其转换为格式化的HTML。它因其简洁易用的语法而广受欢迎，特别适合编写文档和博客文章。
+- MDX 是一种扩展了 Markdown 语法的格式，允许在 Markdown 文档中无缝地插入 JSX 代码。通过 MDX，用户可以在文档中嵌入 React 组件，从而实现更丰富的交互性和动态性。
+
+| 特性 | Markdown | MDX |
+| :--- | :--- | :--- |
+| 基础语法 | 支持 (CommonMark) | 支持 (CommonMark) |
+| HTML 标签 | 支持 | 支持 (作为 JSX) |
+| 组件导入 | 不支持 | 支持 (import) |
+| 动态数据 | 不支持 | 支持 (JS 表达式) |
+| 样式定制 | 有限 (class/style) | 灵活 (className/CSS-in-JS) |
+
+---
+
+## Firefly 内置的专属 MDX UI 组件
+这里列出 Firefly 内置的 MDX UI 组件，方便在 MDX 文章中直接使用。
+
+### Tab分组：`TabGroup`
+用于创建可切换的标签页，方便在文章中展示不同语言或不同版本的代码等等。
+````mdx
+<TabGroup labels={["test.js", "test.py"]} client:load>
+  ```js
+  console.log(1)
+  ```
+
+  ```py
+  print("hello world")
+  ```
+</TabGroup>
+````
+<TabGroup labels={["test.js", "test.py"]} client:load>
+  ```js
+  console.log(1)
+  ```
+
+  ```py
+  print("hello world")
+  ```
+</TabGroup>
+
+---
+
+### 时间线：`Timeline` / `TimelineItem`
+
+| 属性 | 必填 | 说明 |
+| :--- | :--- | :--- |
+| `date` | 否 | 时间标签，如 "2024-03-10" |
+| `title` | 否 | 条目标题 |
+| `type` | 否 | 节点颜色，default 为主题色，其余对应提示框色板（tip / note / important / warning / caution） |
+| `icon` | 否 | 内置图标名，显示在圆点内：star / rocket / git / flag / book / heart / zap / bug / tag / calendar / code / edit |
+| 正文 | 否 | `<TimelineItem>` 标签内的内容，支持 Markdown |
+
+```mdx
+<Timeline>
+  <TimelineItem date="2026-08-16" title="新版本发布" icon="rocket">
+    发布了全新版本，带来以下更新：
+
+    - 新增时间线组件
+    - 改进暗色主题
+
+    正文里支持 **Markdown** 内容。
+  </TimelineItem>
+  <TimelineItem date="2025-11-02" title="站点上线" type="tip" icon="flag">
+    欢迎来到我的博客。
+  </TimelineItem>
+  <TimelineItem date="2025-06-15" title="项目立项" type="note">
+    开始规划 Firefly 主题。
+  </TimelineItem>
+</Timeline>
+```
+
+<Timeline>
+  <TimelineItem date="2026-08-16" title="新版本发布" icon="rocket">
+    发布了全新版本，带来以下更新：
+
+    - 新增时间线组件
+    - 改进暗色主题
+
+    正文里支持 **Markdown** 内容。
+  </TimelineItem>
+  <TimelineItem date="2025-11-02" title="站点上线" type="tip" icon="flag">
+    欢迎来到我的博客。
+  </TimelineItem>
+  <TimelineItem date="2025-06-15" title="项目立项" type="note">
+    开始规划 Firefly 主题。
+  </TimelineItem>
+</Timeline>
+
+---
+
+### 步骤条：`Steps` / `StepItem`
+
+编号步骤条，适合教程、部署流程。编号自动生成，无需手动传序号。
+
+| 属性 | 必填 | 说明 |
+| :--- | :--- | :--- |
+| `title` | 否 | 步骤标题 |
+| `type` | 否 | 编号圆颜色，default 为主题色，其余对应提示框色板（tip / note / important / warning / caution） |
+| `icon` | 否 | 内置图标名，有图标时显示图标而非数字（star / rocket / git / flag / book / heart / zap / bug / tag / calendar / code / edit） |
+| 正文 | 否 | `<StepItem>` 标签内的内容，支持 Markdown |
+
+```mdx
+<Steps>
+  <StepItem title="安装依赖">
+    运行 `pnpm install`。
+  </StepItem>
+  <StepItem title="启动开发服务器" type="tip" icon="rocket">
+    运行 `pnpm dev`，打开 `localhost:4321`。
+  </StepItem>
+  <StepItem title="编写文章">
+    在 `src/content/posts/` 新建 `.mdx` 文章。
+  </StepItem>
+</Steps>
+```
+
+<Steps>
+  <StepItem title="安装依赖">
+    运行 `pnpm install`。
+  </StepItem>
+  <StepItem title="启动开发服务器" type="tip" icon="rocket">
+    运行 `pnpm dev`，打开 `localhost:4321`。
+  </StepItem>
+  <StepItem title="编写文章">
+    在 `src/content/posts/` 新建 `.mdx` 文章。
+  </StepItem>
+</Steps>
+
+---
+
+### 徽章：`Badge`
+
+内联彩色小徽章，可嵌在段落或标题里。
+
+| 属性 | 必填 | 说明 |
+| :--- | :--- | :--- |
+| `type` | 否 | default 为主题色，其余对应提示框色板（tip / note / important / warning / caution） |
+
+```mdx
+<Badge type="tip">提示</Badge> <Badge type="warning">注意</Badge>
+```
+
+<Badge>新功能</Badge> <Badge type="tip">提示</Badge> <Badge type="note">笔记</Badge> <Badge type="important">重要</Badge> <Badge type="warning">注意</Badge> <Badge type="caution">危险</Badge>
+
+---
+
+更多信息，请查看 [MDX 文档](https://mdxjs.com/)
