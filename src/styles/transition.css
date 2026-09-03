@@ -84,7 +84,6 @@ html.is-animating .transition-swup-fade {
 .onload-animation {
     opacity: 0;
     animation: fade-in-up 120ms ease-out forwards;
-    will-change: transform, opacity;
 }
 
 /* 渐进式动画延迟 */

@@ -273,20 +273,8 @@ html.is-page-transitioning .banner-home-text-overlay {
     #wallpaper-wrapper {
         transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease-out;
         transform-origin: top center;
-        /* 硬件加速优化 */
-        will-change: transform, opacity;
-        backface-visibility: hidden;
-        -webkit-backface-visibility: hidden;
-        transform: translateZ(0);
-        -webkit-transform: translateZ(0);
     }
-    
-        
-    /* 手机端非首页时主内容区域从顶部开始 - 延迟出现的动画 */
-        
-    
-    /* 移动端非首页隐藏横幅时，移除main-grid的transform偏移 */
-    }
+}
 
 /* 移动端banner性能优化 */
 @media (max-width: 1023px) {
