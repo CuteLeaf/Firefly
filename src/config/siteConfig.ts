@@ -244,6 +244,17 @@ export const siteConfig: SiteConfig = {
 		randomPosts: true,
 		// OpenGraph图片功能，注意开启后要渲染很长时间，不建议本地调试的时候开启
 		generateOgImages: true,
+		// 沉浸阅读配置
+		immersiveReading: {
+			// 总开关：false 则不显示按钮
+			enable: true,
+			// 进入文章页是否默认开启沉浸阅读
+			defaultOn: false,
+			// 沉浸阅读中是否显示目录栏
+			tocEnabled: true,
+			// 目录栏位置："left" | "right"
+			tocPosition: "left",
+		},
 	},
 
 	// ── Bilibili配置 ──────────────────────────────────

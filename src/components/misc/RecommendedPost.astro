@@ -1,11 +1,11 @@
 ---
 import { Icon } from "astro-icon/components";
+import { siteConfig } from "@/config/siteConfig";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import type { PostForList } from "@/utils/content-utils";
 import { formatDateToYYYYMMDD } from "@/utils/date-utils";
 import { getPostUrlBySlug, url } from "@/utils/url-utils";
-import { siteConfig } from "@/config/siteConfig";
 
 interface Props {
 	relatedPosts: PostForList[];
@@ -17,8 +17,8 @@ interface Props {
 const {
 	relatedPosts,
 	currentPostId,
-  showRelatedPosts = siteConfig.post.relatedPosts,
-  showRandomPosts = siteConfig.post.randomPosts,
+	showRelatedPosts = siteConfig.post.relatedPosts,
+	showRandomPosts = siteConfig.post.randomPosts,
 } = Astro.props;
 const apiUrl = url("/api/allPostMeta.json");
 const relatedIds = JSON.stringify(relatedPosts.map((p) => p.id));
