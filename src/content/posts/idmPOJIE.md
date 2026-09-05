@@ -13,7 +13,8 @@ draft: false
 1.请先卸载或移除任何旧的IDM破解补丁，并进入idm官网下载纯净的idm，确保IDM为纯净的官方安装版本。
 
 
-2.进入https://www.dogfight360.com/blog/18682/下载windows版本的Steamcommunity 302，下载后将文件解压，以管理员身份运行文件中的exe
+2.进入https://www.dogfight360.com/blog/18682/
+下载windows版本的Steamcommunity 302，下载后将文件解压，以管理员身份运行文件中的exe
 然后将左侧的服务全部勾上，点击启动服务
 ![Firefly](./images/idmpoj2.avif)
 
