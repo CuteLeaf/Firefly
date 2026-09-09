@@ -83,7 +83,7 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 			},
 			{
 				name: "云盘",
-				url: "https://8806518.ysepan.com/",
+				url: "https://zjykfy.ysepan.com/",
 				external: true,
 				icon: "fa7-solid:cloud",
 			},			
