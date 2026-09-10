@@ -349,6 +349,8 @@ const ogImageAlt = propsOgImageAlt ?? pageTitle;
         defaultWallpaperMode: backgroundWallpaper.mode,
         isWallpaperSwitchable:
           displaySettingsConfig.wallpaperModeSwitchable,
+        isFullscreenLayoutSwitchable:
+          displaySettingsConfig.fullscreenLayoutSwitchable,
         darkTheme: expressiveCodeConfig.darkTheme,
         lightTheme: expressiveCodeConfig.lightTheme,
         baseUrl: import.meta.env.BASE_URL,
@@ -407,8 +409,13 @@ const ogImageAlt = propsOgImageAlt ?? pageTitle;
         : cardTransparentOpacity;
       document.documentElement.style.setProperty("--card-transparent-opacity", String(resolvedCardOpacity));
 
-      // 初始化全屏布局：优先使用设置面板保存的运行时选择
-      const storedFullscreenLayout = localStorage.getItem("fullscreenLayout");
+      // 仅在允许切换时使用设置面板保存的运行时选择；否则配置值始终生效
+      const storedFullscreenLayout = isFullscreenLayoutSwitchable
+        ? localStorage.getItem("fullscreenLayout")
+        : null;
+      if (!isFullscreenLayoutSwitchable) {
+        localStorage.removeItem("fullscreenLayout");
+      }
       const resolvedFullscreenLayout =
         storedFullscreenLayout === "hero" || storedFullscreenLayout === "classic"
           ? storedFullscreenLayout
