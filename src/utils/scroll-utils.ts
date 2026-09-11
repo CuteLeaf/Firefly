@@ -8,7 +8,6 @@ import { isBannerMode, isFullscreenMode } from "@/utils/banner-utils";
 import { updateSidebarStickySpacing } from "@/utils/grid-layout-utils";
 
 const backToTopBtn = document.getElementById("back-to-top-btn");
-const toc = document.getElementById("toc-wrapper");
 const navbar = document.getElementById("navbar-wrapper");
 
 // 动态导航栏：记录上一次滚动位置，用于判断滚动方向（下滑隐藏 / 上滑显示）
@@ -36,16 +35,6 @@ export function scrollFunction(): void {
 				backToTopBtn.classList.remove("hide");
 			} else {
 				backToTopBtn.classList.add("hide");
-			}
-		});
-	}
-
-	if (isBannerMode() && toc) {
-		operations.push(() => {
-			if (scrollTop > bannerHeight) {
-				toc.classList.remove("toc-hide");
-			} else {
-				toc.classList.add("toc-hide");
 			}
 		});
 	}

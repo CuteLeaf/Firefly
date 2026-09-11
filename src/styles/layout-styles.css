@@ -367,17 +367,8 @@ html.is-page-transitioning .banner-home-text-overlay {
 /* 运行时模式为 banner 但 SSR 按 config fullscreen/overlay 渲染了 no-banner-layout：
    data-wallpaper-mode 在解析期同步设置，据此首帧纠正内容定位，避免刷新时内容先出现在
    顶部横幅标题处、DOMContentLoaded 后才跳至横幅下方的闪烁 */
-/* 移动端非首页 banner：横幅隐藏，内容保持从导航栏下方开始 */
-@media (max-width: 1023px) {
-    }
 
-/* 移动端当banner被禁用时的布局样式 */
-@media (max-width: 1023px) {
-    }
 
-/* 小屏手机当banner被禁用时的布局样式 */
-@media (max-width: 480px) {
-    }
 
 /* 平板设备当banner被禁用时的布局样式 */
 @media (min-width: 768px) and (max-width: 1023px) {
@@ -645,11 +636,17 @@ html[data-wallpaper-mode="overlay"] #wallpaper-wrapper .banner-post-meta-overlay
     display: none !important;
 }
 /* none / overlay：内容区从导航栏下方开始（SSR 按 config banner 渲染时内容在横幅下方） */
-html[data-wallpaper-mode="none"] .absolute.w-full.z-30.pointer-events-none,
-html[data-wallpaper-mode="overlay"] .absolute.w-full.z-30.pointer-events-none {
+html[data-wallpaper-mode="none"] #content-panel,
+html[data-wallpaper-mode="overlay"] #content-panel {
     top: 5.5rem !important;
     margin-top: 0 !important;
     min-height: calc(100vh - 5.5rem) !important;
+}
+
+/* Swup 占位容器永远为空，任何断点都不得参与布局（勿依赖 hidden 实用类压过几何规则） */
+#main-grid > #left-sidebar-dynamic[data-sidebar-placeholder="true"],
+#main-grid > #right-sidebar-dynamic[data-sidebar-placeholder="true"] {
+    display: none !important;
 }
 
 /* ============================================
@@ -891,9 +888,6 @@ html[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper::after {
 /* Fullscreen 模式移动端：壁纸始终显示（非首页与 overlay 一致）；
    banner 模式的移动端隐藏仍由 .mobile-hide-banner 的横幅规则控制 */
 
-/* Fullscreen 模式下主内容使用 relative 定位，需要匹配 pointer-events-none 类 */
-@media (max-width: 1023px) {
-    }
 
 /* classic 全屏布局：覆盖新版 fixed Hero 规则，恢复文档流全屏壁纸 */
 html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="classic"] #wallpaper-wrapper {

@@ -8,6 +8,76 @@
     min-height: calc(100vh - var(--content-top, 5.5rem));
   }
 
+  /* #main-grid 列几何全部来自 --cols-* / --*-display-*（computeGridColumns 生成）；
+     子元素不做定位：侧栏包裹层是 display:contents，真正的 grid item 是内层元素 */
+  #main-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+  /* <768px：侧栏一律不参与布局，改由 #mobile-bottom-sidebar 承担 */
+  #main-grid > #left-sidebar-wrapper,
+  #main-grid > #left-sidebar-dynamic,
+  #main-grid > #right-sidebar-static,
+  #main-grid > #right-sidebar-dynamic {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    #main-grid {
+      grid-template-columns: var(--cols-md, 1fr);
+    }
+    #main-grid > #left-sidebar-wrapper,
+    #main-grid > #left-sidebar-dynamic {
+      display: var(--left-display-md, contents);
+    }
+    #main-grid > #right-sidebar-static,
+    #main-grid > #right-sidebar-dynamic {
+      display: var(--right-display-md, contents);
+    }
+    #main-grid #left-sidebar,
+    #main-grid #right-sidebar {
+      max-width: var(--grid-sidebar-width);
+    }
+
+    /* 侧栏已启用但本页型/断点无侧栏列时，内容栏按比例收窄并居中。
+       width:100% 不可省（否则 auto 外边距取消 stretch）；body:not(.immersive-reading) 用于避开沉浸阅读的 flex 列 */
+    body:not(.immersive-reading) #main-grid > #content-column {
+      width: 100%;
+      max-width: calc(100% * var(--content-ratio-md, 1));
+      margin-inline: auto;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    #main-grid {
+      grid-template-columns: var(--cols-xl, 1fr);
+    }
+    #main-grid > #left-sidebar-wrapper,
+    #main-grid > #left-sidebar-dynamic {
+      display: var(--left-display-xl, contents);
+    }
+    #main-grid > #right-sidebar-static,
+    #main-grid > #right-sidebar-dynamic {
+      display: var(--right-display-xl, contents);
+    }
+    body:not(.immersive-reading) #main-grid > #content-column {
+      max-width: calc(100% * var(--content-ratio-xl, 1));
+    }
+  }
+
+  /* 页脚宽度跨「侧栏 + 内容栏」，故挂在 #content-panel-inner 下、#content-column 之外；
+     width 减 #main-grid 两侧内边距（px-2 → 1rem，md:px-4 → 2rem） */
+  #content-panel-inner > .site-footer {
+    width: calc(100% - 1rem);
+    margin-inline: auto;
+  }
+  @media (min-width: 768px) {
+    #content-panel-inner > .site-footer {
+      width: calc(100% - 2rem);
+    }
+  }
+
   /* --content-top 由 html[data-wallpaper-mode] + body.is-home + 媒体查询解析（解析期生效，无 JS 内联 top） */
   /* banner（桌面全页 + 移动首页）：内容在横幅下方，重叠 3.5rem */
   html[data-wallpaper-mode="banner"] .content-panel {
@@ -99,7 +169,6 @@
 
 @layer utilities {
   /* 侧边栏 sticky：#main-grid transform 已删除，无需 --banner-height-extend 补偿；sticky-navbar 统一 5.5rem */
-  body.sticky-navbar #sidebar-sticky,
   body.sticky-navbar #left-sidebar-sticky,
   body.sticky-navbar #right-sidebar-sticky {
     top: 5.5rem !important;
@@ -156,17 +225,14 @@
     transition: translate 0.2s ease-out;
   }
   /* sticky 侧边栏与导航栏显隐同步：显示 5.5rem，隐藏 1rem */
-  body.dynamic-navbar #sidebar-sticky,
   body.dynamic-navbar #left-sidebar-sticky,
   body.dynamic-navbar #right-sidebar-sticky {
     top: 5.5rem !important;
   }
-  body.dynamic-navbar.dynamic-navbar-hidden #sidebar-sticky,
   body.dynamic-navbar.dynamic-navbar-hidden #left-sidebar-sticky,
   body.dynamic-navbar.dynamic-navbar-hidden #right-sidebar-sticky {
     top: 1rem !important;
   }
-  body.dynamic-navbar #sidebar-sticky,
   body.dynamic-navbar #left-sidebar-sticky,
   body.dynamic-navbar #right-sidebar-sticky {
     transition: top 0.2s ease-out;

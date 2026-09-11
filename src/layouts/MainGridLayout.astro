@@ -84,15 +84,12 @@ const sidebar = getEffectiveSidebarState({ isPostPage });
 const { hasWallpaper } = banner;
 const {
 	hideSidebarOnPostPage,
-	effectiveIsBothSidebars,
-	effectiveHasLeftComponents,
-	effectiveHasRightComponents,
-	gridCols,
+	hasLeftComponents,
+	hasRightComponents,
 	sidebarClass,
-	rightSidebarClass,
 	staticBarClass,
-	footerClassName,
-	mobileShowSidebar,
+	gridColumnStyle,
+	gridDataAttrs,
 } = sidebar;
 ---
 
@@ -104,16 +101,15 @@ const {
 <WallpaperSection state={banner} backgroundImages={backgroundImages} title={title} bannerPostMeta={bannerPostMeta} />
 
 <!-- Main content -->
-<div class="content-panel absolute w-full z-30 pointer-events-none">
+<div id="content-panel" class="content-panel absolute w-full z-30 pointer-events-none">
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
-    <div class="relative w-full xl:w-[92vw] max-w-(--page-width) mx-auto pointer-events-auto">
+    <div id="content-panel-inner" class="relative w-full xl:w-[92vw] max-w-(--page-width) mx-auto pointer-events-auto" style={gridColumnStyle}>
+        {/* 列几何唯一真源 = computeGridColumns()，SSR 写在父级 #content-panel-inner 上
+            （页脚作为兄弟节点也要拿到 --content-ratio-*）。子元素无需定位类：
+            侧栏包裹层是 display:contents，真正的 grid item 是内层元素 */}
         <div id="main-grid"
-          class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-[auto_1fr_auto] lg:grid-rows-[auto] mx-auto gap-4 px-2 md:px-4 ${!mobileShowSidebar ? 'mobile-no-sidebar' : ''}`}
-          data-sidebar-enable={sidebarLayoutConfig.enable ? "true" : "false"}
-          data-grid-hide-sidebar-on-post={hideSidebarOnPostPage ? "true" : "false"}
-          data-sidebar-position={sidebarLayoutConfig.position}
-          data-tablet-sidebar={sidebarLayoutConfig.tabletSidebar ?? "left"}
-          data-show-both-sidebars-on-post={sidebarLayoutConfig.showBothSidebarsOnPostPage ? "true" : "false"}
+          class="transition duration-700 w-full left-0 right-0 grid mx-auto gap-4 px-2 md:px-4 mobile-no-sidebar"
+          {...gridDataAttrs}
         >
 
             <SidebarColumn
@@ -121,17 +117,15 @@ const {
                 position={sidebarLayoutConfig.position}
                 enable={sidebarLayoutConfig.enable}
                 hideSidebarOnPostPage={hideSidebarOnPostPage}
-                effectiveIsBothSidebars={effectiveIsBothSidebars}
-                effectiveHasLeftComponents={effectiveHasLeftComponents}
-                effectiveHasRightComponents={effectiveHasRightComponents}
+                hasLeftComponents={hasLeftComponents}
+                hasRightComponents={hasRightComponents}
                 sidebarClass={sidebarClass}
-                rightSidebarClass={rightSidebarClass}
                 headings={headings}
                 encrypted={encrypted}
             />
                     
             {/* 主内容区包装器 - 包含静态栏位和swup容器，作为单个grid item */}
-            <div class={staticBarClass}>
+            <div id="content-column" class={staticBarClass}>
                 {/* 分类导航栏 - 全站渲染并显示 */}
                 {shouldRenderCategoryBar && <div id="category-bar-wrapper"><CategoryBar currentPostCategory={postCategory} /></div>}
                 {/* 主内容区 - 始终渲染，确保 Swup 容器存在 */}
@@ -146,6 +140,13 @@ const {
                     <slot></slot>
                 </div>
             </main>
+
+                {/* 移动端底部组件：<768px 时 #main-grid 是 display:block，必须排在页脚之前 */}
+                {sidebarLayoutConfig.mobileBottomComponents && sidebarLayoutConfig.mobileBottomComponents.length > 0 && (
+                    <div id="mobile-bottom-sidebar" class="block md:hidden mt-4">
+                        <SideBar side="bottom" headings={headings} encrypted={encrypted}></SideBar>
+                    </div>
+                )}
             </div>
 
             <SidebarColumn
@@ -153,29 +154,21 @@ const {
                 position={sidebarLayoutConfig.position}
                 enable={sidebarLayoutConfig.enable}
                 hideSidebarOnPostPage={hideSidebarOnPostPage}
-                effectiveIsBothSidebars={effectiveIsBothSidebars}
-                effectiveHasLeftComponents={effectiveHasLeftComponents}
-                effectiveHasRightComponents={effectiveHasRightComponents}
+                hasLeftComponents={hasLeftComponents}
+                hasRightComponents={hasRightComponents}
                 sidebarClass={sidebarClass}
-                rightSidebarClass={rightSidebarClass}
                 headings={headings}
                 encrypted={encrypted}
             />
 
-            {/* 移动端底部组件 - 768px及以下显示 */}
-            {sidebarLayoutConfig.mobileBottomComponents && sidebarLayoutConfig.mobileBottomComponents.length > 0 && (
-                <div id="mobile-bottom-sidebar" class="col-span-1 block md:hidden mt-4">
-					<SideBar side="bottom" headings={headings} encrypted={encrypted}></SideBar>
-                </div>
-            )}
-
-            <div class={footerClassName}>
-                <Footer></Footer>
-            </div>
         </div>
 
         <SpineModel></SpineModel>
         {live2dWidgetConfig.enable && <Live2DWidget config={live2dWidgetConfig} />}
+
+        {/* 页脚宽度跨「侧栏 + 内容栏」，故在 #content-column 之外；又在 Swup 容器之外，
+            切页不重渲染 */}
+        <Footer />
     </div>
 </div>
 
@@ -193,5 +186,3 @@ const {
 
 
 </Layout>
-
-</style>

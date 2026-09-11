@@ -18,7 +18,6 @@ src/config/
 ├── effectsConfig.ts          # 动画特效配置（樱花等）
 ├── expressiveCodeConfig.ts   # 代码高亮配置
 ├── fontConfig.ts             # 字体配置
-├── footerConfig.ts           # 页脚配置
 ├── friendsConfig.ts          # 友链配置
 ├── galleryConfig.ts          # 相册配置
 ├── licenseConfig.ts          # 许可证配置
@@ -61,7 +60,6 @@ import { profileConfig } from "@/config/profileConfig";
 | `effectsConfig.ts` | 动画特效配置（樱花数量、速度、尺寸等） |
 | `expressiveCodeConfig.ts` | 代码高亮配置（亮色/暗色主题、折叠、语言徽章） |
 | `fontConfig.ts` | 字体配置（字体列表、回退、预加载） |
-| `footerConfig.ts` | 页脚配置（自定义 HTML 注入，如备案号） |
 | `friendsConfig.ts` | 友链配置（友链列表、页面设置） |
 | `galleryConfig.ts` | 相册配置（相册列表、瀑布流列宽） |
 | `licenseConfig.ts` | 许可证配置（CC 协议等） |

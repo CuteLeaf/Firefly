@@ -1,86 +1,89 @@
 ---
 import fs from "node:fs";
 import path from "node:path";
-import { footerConfig, profileConfig } from "@/config";
+import { profileConfig } from "@/config";
 import { url } from "@/utils/url-utils";
 
 const currentYear = new Date().getFullYear();
 
 // 读取FooterConfig.html文件内容
 let customFooterHtml = "";
-if (footerConfig.enable) {
-	try {
-		const footerConfigPath = path.join(
-			process.cwd(),
-			"src",
-			"config",
-			"FooterConfig.html",
-		);
-		customFooterHtml = fs.readFileSync(footerConfigPath, "utf-8");
-		// 移除HTML注释
-		customFooterHtml = customFooterHtml.replace(/<!--[\s\S]*?-->/g, "").trim();
-	} catch (error) {
-		console.warn(
-			"FooterConfig.html文件读取失败:",
-			error instanceof Error ? error.message : String(error),
-		);
-	}
+try {
+	const footerHtmlPath = path.join(
+		process.cwd(),
+		"src",
+		"config",
+		"FooterConfig.html",
+	);
+	customFooterHtml = fs.readFileSync(footerHtmlPath, "utf-8");
+	// 移除HTML注释
+	customFooterHtml = customFooterHtml.replace(/<!--[\s\S]*?-->/g, "").trim();
+} catch (error) {
+	console.warn(
+		"FooterConfig.html 读取失败:",
+		error instanceof Error ? error.message : String(error),
+	);
 }
 ---
 
+<!-- 页脚：普通流位于文档末尾。site-footer 是 immersive-reading 的隐藏选择器，
+     pointer-events-auto 用于覆盖首页 banner 下父级的 pointer-events: none，两者勿删 -->
+<footer class="site-footer pointer-events-auto pb-4 md:pb-6">
+	<div
+		class="transition border-t border-black/10 dark:border-white/15 mt-10 mb-5 border-dashed mx-32"
+	>
+	</div>
 
-<div
-  class="transition border-t border-black/10 dark:border-white/15 my-10 border-dashed mx-32"
->
-</div>
-
-<div
-  class="transition border-dashed border-[oklch(85%_0.01_var(--hue))] dark:border-white/15 rounded-2xl mb-12 flex flex-col items-center justify-center px-6"
->
-  <div class="transition text-50 text-sm text-center wrap">
-    <div class="mb-2">
-      {customFooterHtml && <div set:html={customFooterHtml} />}
-    </div>
-    <div class="mx-0.5 my-2.5 flex gap-x-2 gap-y-2.5 justify-center flex-wrap">
-      &copy; <span id="copyright-year">{currentYear}</span>
-      {profileConfig.name}. All Rights Reserved.
-      <span aria-hidden="true">/</span>
-      <a
-        class="transition link text-(--primary) font-medium"
-        target="_blank"
-        href={url("rss.xml")}>RSS</a
-      >
-      <span aria-hidden="true">/</span>
-      <a
-        class="transition link text-(--primary) font-medium"
-        target="_blank"
-        href={url("atom.xml")}>Atom</a
-      >
-      <span aria-hidden="true">/</span>
-      <a
-        class="transition link text-(--primary) font-medium"
-        target="_blank"
-        href={url("sitemap-index.xml")}>Sitemap</a
-      >
-    </div>
-    <div class="mx-0.5 my-2.5 flex gap-x-2 gap-y-2.5 justify-center flex-wrap">
-      <span>Powered by</span>
-      <a
-        class="transition link text-(--primary) font-medium"
-        target="_blank"
-        href="https://astro.build">Astro</a
-      >
-      <span aria-hidden="true">&</span>
-      <a
-        class="transition link text-(--primary) font-medium"
-        target="_blank"
-        href="https://github.com/CuteLeaf/Firefly">Firefly</a
-      >
-    </div>
-    <!-- 
-      注意：请勿随意修改或删除 "Powered by Astro & Firefly" 部分，这是对开源项目的尊重和支持。
-      如果您需要在底部增加内容，请在src/config/footerConfig.ts中修改enable属性为true，然后编辑src/config/FooterConfig.html文件。
-      您可以随意在src/config/FooterConfig.html中随意添加自定义内容，不需要修改Footer.astro文件。
-    -->
-  </div>
-</div>
+	<div class="transition flex flex-col items-center justify-center px-6">
+		<div class="transition text-50 text-sm text-center wrap">
+			<div class="mb-2">
+				{customFooterHtml && <div set:html={customFooterHtml} />}
+			</div>
+			<div class="mx-0.5 my-2.5 flex gap-x-2 gap-y-2.5 justify-center flex-wrap">
+				&copy; <span id="copyright-year">{currentYear}</span>
+				{profileConfig.name}. All Rights Reserved.
+				<span aria-hidden="true">/</span>
+				<a
+					class="transition link text-(--primary) font-medium"
+					target="_blank"
+					href={url("rss.xml")}>RSS</a
+				>
+				<span aria-hidden="true">/</span>
+				<a
+					class="transition link text-(--primary) font-medium"
+					target="_blank"
+					href={url("atom.xml")}>Atom</a
+				>
+				<span aria-hidden="true">/</span>
+				<a
+					class="transition link text-(--primary) font-medium"
+					target="_blank"
+					href={url("sitemap-index.xml")}>Sitemap</a
+				>
+			</div>
+			<!--
+				注意：请勿随意修改或删除 "Powered by Astro & Firefly" 部分，这是对开源项目的尊重和支持。
+				需要增加底部内容时，直接编辑 src/config/FooterConfig.html 即可，不需要修改 Footer.astro。
+				------
+				Attention: Please do not modify or delete the "Powered by Astro & Firefly" section at will, 
+				as this is a sign of respect and support for open-source projects.
+				When you need to add the bottom content, 
+				you can directly edit src/config/FooterConfig.html without modifying Footer.astro.
+			-->
+			<div class="mx-0.5 my-2.5 flex gap-x-2 gap-y-2.5 justify-center flex-wrap">
+				<span>Powered by</span>
+				<a
+					class="transition link text-(--primary) font-medium"
+					target="_blank"
+					href="https://astro.build">Astro</a
+				>
+				<span aria-hidden="true">&</span>
+				<a
+					class="transition link text-(--primary) font-medium"
+					target="_blank"
+					href="https://github.com/CuteLeaf/Firefly">Firefly</a
+				>
+			</div>
+		</div>
+	</div>
+</footer>

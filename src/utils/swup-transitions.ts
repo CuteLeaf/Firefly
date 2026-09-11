@@ -115,21 +115,6 @@ function registerSwupHooks(): void {
 			initIconLoader();
 		});
 
-		// 检查当前页面是否为文章页面（有TOC元素）
-		const tocWrapper = document.getElementById("toc-wrapper");
-		const isArticlePage = tocWrapper !== null;
-
-		// 只在文章页面重新初始化桌面端 TOC 组件
-		if (isArticlePage) {
-			const tocElement = document.querySelector("table-of-contents");
-			const tocInit = tocElement?.init;
-			if (tocElement && typeof tocInit === "function") {
-				setTimeout(() => {
-					tocInit();
-				}, 100);
-			}
-		}
-
 		// 重新初始化semifull模式的滚动检测
 		// （全屏模式跳过：导航栏状态由 updateNavbarTransparency 统一管理，
 		//   避免切换页面时 initSemifullScrollDetection 重置 scrolled 导致背景闪烁）
@@ -226,18 +211,6 @@ function registerSwupHooks(): void {
 				postListContainer.style.transition = "none";
 			}
 		}
-
-		// increase the page height during page transition to prevent the scrolling animation from jumping
-		const heightExtend = document.getElementById("page-height-extend");
-		if (heightExtend) {
-			heightExtend.classList.remove("hidden");
-		}
-
-		// Hide the TOC while scrolling back to top
-		const toc = document.getElementById("toc-wrapper");
-		if (toc) {
-			toc.classList.add("toc-not-ready");
-		}
 	});
 	window.swup.hooks.on("page:view", () => {
 		// 更新网格列数和侧边栏组件可见性
@@ -247,12 +220,6 @@ function registerSwupHooks(): void {
 		// 过渡结束后再量一次，避免顶部组件未就绪时读到 offsetHeight=0 而误删 mb-4
 		// (sticky 与 top 组件之间间距只在 refreshSidebarStickyState 里恢复，延迟补偿一次更稳)
 		window.setTimeout(() => updateSidebarComponentsVisibility(), 300);
-
-		// hide the temp high element when the transition is done
-		const heightExtend = document.getElementById("page-height-extend");
-		if (heightExtend) {
-			heightExtend.classList.remove("hidden");
-		}
 
 		// 页面切换完成后，同步全屏模式的标题视差位移（Swup 已替换容器内容）
 		updateFullscreenTitleParallax();
@@ -327,17 +294,7 @@ function registerSwupHooks(): void {
 		finishProgressBar();
 
 		setTimeout(() => {
-			const heightExtend = document.getElementById("page-height-extend");
-			if (heightExtend) {
-				heightExtend.classList.add("hidden");
-			}
-
 			// Just make the transition looks better
-			const toc = document.getElementById("toc-wrapper");
-			if (toc) {
-				toc.classList.remove("toc-not-ready");
-			}
-
 			// 移除页面切换保护，恢复过渡动画
 			document.documentElement.classList.remove("is-page-transitioning");
 			scrollFunction();

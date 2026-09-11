@@ -16,6 +16,7 @@ import type {
 	MobileBottomComponentConfig,
 	WidgetComponentConfig,
 } from "@/types/config";
+import { isWidgetVisibleOnPageType } from "@/utils/responsive-utils";
 import { isArticleDetailPage } from "@/utils/url-utils";
 
 interface Props {
@@ -107,25 +108,10 @@ const getAnimationDelay = (index: number): string => {
 const isPostPage = isArticleDetailPage(Astro.url.pathname);
 
 // 判断组件在当前页面首屏是否可见（用于计算布局间距，避免隐藏组件占位）
+// 谓词与列几何共用 isWidgetVisibleOnPageType，避免两处规则漂移
 const isComponentInitiallyVisible = (
 	config: WidgetComponentConfig | MobileBottomComponentConfig,
-): boolean => {
-	if (
-		"showOnPostPage" in config &&
-		config.showOnPostPage === false &&
-		isPostPage
-	) {
-		return false;
-	}
-	if (
-		"hideOnNonPostPage" in config &&
-		config.hideOnNonPostPage === true &&
-		!isPostPage
-	) {
-		return false;
-	}
-	return true;
-};
+): boolean => isWidgetVisibleOnPageType(config, isPostPage);
 
 // 动态构建组件 props
 const getComponentProps = (

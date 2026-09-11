@@ -115,7 +115,7 @@ onMount(() => {
 </script>
 
 <div class="z-50">
-	<button aria-label="Light/Dark Mode" aria-haspopup="menu" aria-controls="theme-mode-panel" aria-expanded="false" class="relative btn-plain scale-animation rounded-lg h-9 w-9 md:h-11 md:w-11 active:scale-90" id="scheme-switch">
+	<button aria-label="Light/Dark Mode" aria-haspopup="menu" aria-controls="theme-mode-panel" aria-expanded="false" class="relative btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="scheme-switch">
         <div class="absolute inset-0 flex items-center justify-center" class:opacity-0={displayedMode !== LIGHT_MODE}>
             <Icon icon="material-symbols:wb-sunny-outline-rounded" class="text-[1.25rem]"></Icon>
         </div>

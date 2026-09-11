@@ -31,7 +31,6 @@ export type {
 	DisplaySettingsConfig,
 	DynamicConfig,
 	ExpressiveCodeConfig,
-	FooterConfig,
 	GalleryAlbum,
 	GalleryConfig,
 	LicenseConfig,
@@ -69,7 +68,6 @@ export { dynamicConfig } from "./dynamicConfig"; // 动态页面配置
 export { sakuraConfig } from "./effectsConfig"; // 动画特效配置（樱花等）
 export { expressiveCodeConfig } from "./expressiveCodeConfig"; // 代码高亮配置
 export { fontConfig, fontsList } from "./fontConfig"; // 字体配置
-export { footerConfig } from "./footerConfig"; // 页脚配置
 export { friendsPageConfig, getEnabledFriends } from "./friendsConfig"; // 友链配置
 export { galleryConfig } from "./galleryConfig"; // 相册配置
 export { licenseConfig } from "./licenseConfig"; // 许可证配置

@@ -55,12 +55,12 @@
     font-size: 0.9rem;
 }
 
-/* banner 首页标题下方有链接时，主内容容器（z-30, pointer-events-auto）会覆盖标题区域、
-   拦截链接点击；让容器不拦截，网格内容（卡片/侧边栏/footer）恢复可交互 */
-body.is-home.enable-banner .w-full.z-30.pointer-events-none > .relative.w-full {
+/* banner 首页标题下有链接时，主内容容器会拦截点击；让容器不拦截、网格内容恢复可交互。
+   规则锚在 #content-panel / #content-panel-inner 两个 ID 上，改 ID 会使其静默失效 */
+body.is-home.enable-banner #content-panel > #content-panel-inner {
     pointer-events: none;
 }
-body.is-home.enable-banner .w-full.z-30.pointer-events-none #main-grid {
+body.is-home.enable-banner #content-panel #main-grid {
     pointer-events: auto;
 }
 
