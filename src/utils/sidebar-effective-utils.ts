@@ -55,7 +55,9 @@ export function getEffectiveSidebarState(
 		hasRightComponents: sidebarConfig.hasRightComponents,
 		// 定位类已由 #main-grid 的列几何接管，这里只剩与列位置无关的公共类
 		sidebarClass: "mb-4 onload-animation",
-		staticBarClass: "min-w-0 overflow-hidden",
+		// 只裁横向、纵向放开：评论区浮层（如 Waline 表情面板）需能溢出内容列；
+		// clip 不产生滚动容器，不影响列内吸顶。
+		staticBarClass: "min-w-0 overflow-x-clip overflow-y-visible",
 		gridColumnStyle: gridColumnVarsToStyle(gridColumnVars),
 		gridDataAttrs: {
 			"data-sidebar-enable": sidebarLayoutConfig.enable ? "true" : "false",

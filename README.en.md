@@ -186,7 +186,7 @@ src/
 │   ├── effectsConfig.ts          # Animation effects config (sakura, etc.)
 │   ├── expressiveCodeConfig.ts   # Code highlighting configuration
 │   ├── fontConfig.ts             # Font configuration
-│   ├── footerConfig.ts           # Footer configuration
+│   ├── FooterConfig.html           # Footer configuration
 │   ├── friendsConfig.ts          # Friend links configuration
 │   ├── galleryConfig.ts          # Gallery configuration
 │   ├── licenseConfig.ts          # License configuration
