@@ -312,6 +312,11 @@ export function getStoredFullscreenLayout(): FullscreenWallpaperLayout {
 	) {
 		return defaultLayout;
 	}
+	const isSwitchable = displaySettingsConfig.fullscreenLayoutSwitchable;
+	if (!isSwitchable) {
+		localStorage.removeItem("fullscreenLayout");
+		return defaultLayout;
+	}
 	const stored = localStorage.getItem("fullscreenLayout");
 	return stored === "hero" || stored === "classic" ? stored : defaultLayout;
 }
