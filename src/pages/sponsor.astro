@@ -1,6 +1,9 @@
 ---
 import Comment from "@components/comment/index.astro";
+import Markdown from "@components/common/Markdown.astro";
 import { Icon } from "astro-icon/components";
+import { Marked } from "marked";
+import sanitizeHtml from "sanitize-html";
 import { commentConfig, siteConfig, sponsorConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
@@ -22,7 +25,35 @@ const isCommentEnabled =
 const title = sponsorConfig.title || i18n(I18nKey.sponsorTitle);
 const description =
 	sponsorConfig.description || i18n(I18nKey.sponsorDescription);
-const enabledMethods = sponsorConfig.methods.filter((method) => method.enabled);
+const markdown = new Marked({ gfm: true });
+const descriptionFiles = import.meta.glob<string>(
+	"/src/content/sponsor/**/*.md",
+	{
+		query: "?raw",
+		import: "default",
+		eager: true,
+	},
+);
+const enabledMethods = sponsorConfig.methods
+	.filter((method) => method.enabled)
+	.map((method) => {
+		const source = method.descriptionFile
+			? descriptionFiles[`/src/content/sponsor/${method.descriptionFile}`]
+			: method.description;
+		if (method.descriptionFile && source === undefined) {
+			throw new Error(
+				`Sponsor description file not found: ${method.descriptionFile}`,
+			);
+		}
+		return {
+			...method,
+			descriptionHtml: source
+				? sanitizeHtml(markdown.parse(source, { async: false }), {
+						allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+					})
+				: "",
+		};
+	});
 const sponsors = sponsorConfig.sponsors || [];
 const showSponsorsList = sponsorConfig.showSponsorsList !== false;
 
@@ -67,7 +98,7 @@ function getQrLqipProps(qrCode: string) {
       <div class="mb-8">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {enabledMethods.map((method) => (
-                      <div class="flex flex-col items-center card-base p-6 rounded-lg bg-neutral-50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 hover:border-(--primary) transition-colors">
+                      <div class="flex flex-col items-center min-w-0 card-base p-6 rounded-lg bg-neutral-50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 hover:border-(--primary) transition-colors">
                         <!-- 图标和名称 -->
                         <div class="flex items-center gap-3 mb-4">
                           {method.icon && (
@@ -79,10 +110,10 @@ function getQrLqipProps(qrCode: string) {
                         </div>
 
                         <!-- 描述 -->
-                        {method.description && (
-                          <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-4 text-center">
-                            {method.description}
-                          </p>
+                        {method.descriptionHtml && (
+                          <Markdown class="sponsor-description w-full min-w-0 mb-4 text-left text-sm! text-neutral-600 dark:text-neutral-400">
+                            <Fragment set:html={method.descriptionHtml} />
+                          </Markdown>
                         )}
 
                         <!-- 二维码或链接 -->
@@ -196,6 +227,18 @@ function getQrLqipProps(qrCode: string) {
 </MainGridLayout>
 
 <style>
+  :global(.sponsor-description) {
+    overflow-wrap: anywhere;
+  }
+
+  :global(.sponsor-description > :first-child) {
+    margin-top: 0;
+  }
+
+  :global(.sponsor-description > :last-child) {
+    margin-bottom: 0;
+  }
+
   /* 透明模式下使用半透明背景 */
   :global(body.wallpaper-transparent .usage-info-box) {
     background-color: rgba(var(--primary-rgb, 70, 130, 180), 0.15) !important;
@@ -213,4 +256,3 @@ function getQrLqipProps(qrCode: string) {
     gap: 0.75rem;
   }
 </style>
-
