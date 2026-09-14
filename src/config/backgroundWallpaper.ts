@@ -7,7 +7,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	// 自定义壁纸：在 src/utils/webgl-wallpaper/scenes/ 添加同名 .ts 模块并修改 scene。
 	webgl: {
 		scene: "cloud-train",
-		options: { speed: 1, resolution: 0.75, feedback: 0.3 },
+		options: { speed: 0.75, resolution: 0.75, detail: 6, feedback: 0.3 },
 	},
 	// 是否启用背景视频播放，配置后将在导航栏显示视频播放按钮
 	playerEnable: true,
