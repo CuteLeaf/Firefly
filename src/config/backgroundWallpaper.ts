@@ -1,8 +1,14 @@
 import type { BackgroundWallpaperConfig } from "@/types/backgroundWallpaper";
 
 export const backgroundWallpaper: BackgroundWallpaperConfig = {
-	// 壁纸模式："banner" 横幅壁纸，"fullscreen" 全屏壁纸，"overlay" 覆盖透明，"none" 纯色背景无壁纸
+	// 壁纸模式："banner" 横幅壁纸，"fullscreen" 全屏壁纸，"overlay" 覆盖透明，"webgl" 动态场景，"none" 纯色背景无壁纸
 	mode: "banner",
+	// 将 mode 设为 "webgl"，或在设置面板选择 WebGL，即可显示此场景。
+	// 自定义壁纸：在 src/utils/webgl-wallpaper/scenes/ 添加同名 .ts 模块并修改 scene。
+	webgl: {
+		scene: "cloud-train",
+		options: { speed: 0.75, resolution: 0.75, detail: 6, feedback: 0.3 },
+	},
 	// 是否启用背景视频播放，配置后将在导航栏显示视频播放按钮
 	playerEnable: true,
 	/**
@@ -62,7 +68,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		// playerUrl: "/assets/videos/firefly.mp4",
 		playerUrl: "https://bed.twoleaf.cn/file/1785658612716_firefly.mp4",
 	},
-	// 横幅壁纸和全屏壁纸共享配置
+	// 横幅、全屏图片和 WebGL 壁纸共享标题、波纹等配置
 	common: {
 		// 壁纸遮罩暗度，让横幅文字显示更清晰，0-1之间，值越大越暗
 		dimOpacity: 0.2,
@@ -187,11 +193,11 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		// 卡片透明度，0-1之间，值越小越透明
 		cardOpacity: 0.6,
 	},
-	// 全屏壁纸模式特有配置
+	// 全屏图片与 WebGL 共用的布局和导航配置
 	// 壁纸模糊度(blur)、卡片透明度(cardOpacity)、层级(zIndex) 复用上方 overlay 模式的配置；
 	// 背景透明度(opacity)不适用（全屏壁纸不透明）；导航栏透明模式由 fullscreen.navbar.transparentMode 控制，脱离 banner 的 navbar 配置
 	fullscreen: {
-		// 布局模式："classic" 经典文档流全屏壁纸，"hero" 固定全屏首屏壁纸
+		// 布局模式："classic" 经典文档流壁纸，"hero" 固定全屏首屏壁纸（WebGL 同样适用）
 		layout: "classic",
 		// 图片位置
 		position: "center",

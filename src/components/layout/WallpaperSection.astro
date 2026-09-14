@@ -26,8 +26,10 @@ const wallpaperPosition = state.isFullscreenMode
 ---
 
 <!-- Wallpaper - 如果允许切换则始终渲染，否则只渲染当前模式 -->
-{(state.isWallpaperSwitchable || state.isBannerMode || state.isFullscreenMode || state.isOverlayMode) && (
+{(state.isWallpaperSwitchable || state.isBannerMode || state.isFullscreenMode || state.isOverlayMode || state.isWebglMode) && (
 <div id="wallpaper-wrapper" class="absolute z-10 w-full overflow-hidden" style="--overlay-opacity: ${backgroundWallpaper.overlay?.opacity ?? 0.8}; --overlay-z-index: ${backgroundWallpaper.overlay?.zIndex ?? -1}; --overlay-blur: ${backgroundWallpaper.overlay?.blur ?? 0}px;">
+    {/* 场景宿主始终存在，只有 WebGL 模式才动态加载模块；图片保留为图形不可用时的回退。 */}
+    <div id="webgl-wallpaper-host" aria-hidden="true"></div>
 <!-- 背景图片显示 -->
     {state.hasMultipleImages ? (
     /* 轮播模式：渲染所有图片为 slide-item */
@@ -627,7 +629,7 @@ const wallpaperPosition = state.isFullscreenMode
 )}
 
 {/* 当壁纸未渲染时，添加空的 Swup 占位容器，避免 Swup 找不到容器而回退为整页加载 */}
-{!(state.isWallpaperSwitchable || state.isBannerMode || state.isFullscreenMode || state.isOverlayMode) && (
+{!(state.isWallpaperSwitchable || state.isBannerMode || state.isFullscreenMode || state.isOverlayMode || state.isWebglMode) && (
 <>
     <div id="banner-overlay-container" class="hidden"></div>
     <div id="banner-dim-container" class="hidden"></div>

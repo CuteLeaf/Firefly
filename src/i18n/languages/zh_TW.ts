@@ -382,6 +382,7 @@ export const zh_TW: Translation = {
 	[Key.fullscreenClassicLayout]: "經典模式",
 	[Key.fullscreenHeroLayout]: "Hero 模式",
 	[Key.wallpaperOverlayMode]: "覆蓋透明",
+	[Key.wallpaperWebglMode]: "WebGL",
 	[Key.wallpaperNoneMode]: "純色背景",
 
 	// 壁紙設置

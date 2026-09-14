@@ -391,6 +391,7 @@ export const ru: Translation = {
 	[Key.fullscreenClassicLayout]: "Классический",
 	[Key.fullscreenHeroLayout]: "Hero",
 	[Key.wallpaperOverlayMode]: "Прозрачный",
+	[Key.wallpaperWebglMode]: "WebGL",
 	[Key.wallpaperNoneMode]: "Однотонный фон",
 
 	// Настройки обоев

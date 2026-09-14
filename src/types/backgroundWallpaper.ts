@@ -1,7 +1,13 @@
 export type FullscreenWallpaperLayout = "classic" | "hero";
 
 export type BackgroundWallpaperConfig = {
-	mode: "banner" | "fullscreen" | "overlay" | "none"; // 壁纸模式：banner横幅模式、fullscreen全屏壁纸、overlay全屏透明覆盖模式或none纯色背景
+	mode: "banner" | "fullscreen" | "overlay" | "webgl" | "none"; // webgl 为可配置的 WebGL 场景壁纸，复用全屏布局
+	webgl?: {
+		// scenes 目录中的模块文件名；可加入自己的模块并在这里切换。
+		scene: string;
+		// 场景自定义参数由对应模块解析，避免站点核心代码绑定某一着色器。
+		options?: Record<string, unknown>;
+	};
 	playerEnable?: boolean; // 是否启用背景视频播放，默认false
 	src:
 		| string
@@ -11,7 +17,7 @@ export type BackgroundWallpaperConfig = {
 				mobile?: string | string[];
 				playerUrl?: string | string[]; // 背景视频播放地址，支持单个视频路径或数组（多视频列表循环）
 		  }; // 支持单个图片、图片数组或分别设置桌面端和移动端图片
-	// 横幅壁纸和全屏壁纸共享配置
+	// 横幅、全屏图片和 WebGL 壁纸共享标题、波纹等配置
 	common?: {
 		dimOpacity?: number; // 横幅文字遮罩暗度，0-1之间，值越大越暗，默认0.15
 		playerMode?: "order" | "random"; // 多视频播放模式："order" 顺序循环（默认），"random" 随机切换
@@ -42,7 +48,7 @@ export type BackgroundWallpaperConfig = {
 			interval?: number; // 轮播间隔时间，单位毫秒
 			transitionEffect?: "fade" | "zoom" | "slide" | "kenburns"; // 过渡效果: 'fade' 渐变 | 'zoom' 缩放 | 'slide' 滑动 | 'kenburns' 旋转木马
 		};
-		// 水波纹动画效果配置，横幅壁纸和全屏壁纸共享，开启会影响页面性能
+		// 水波纹动画效果配置，横幅和 classic 全屏图片/WebGL 共享，开启会影响页面性能
 		waves?: {
 			enable:
 				| boolean
@@ -101,9 +107,9 @@ export type BackgroundWallpaperConfig = {
 		blur?: number; // 背景模糊程度，单位px
 		cardOpacity?: number; // 卡片背景透明度，0-1之间
 	};
-	// 全屏壁纸模式特有配置
+	// 全屏图片与 WebGL 共用的布局和导航配置
 	fullscreen?: {
-		layout?: FullscreenWallpaperLayout; // 全屏布局：classic 文档流模式，hero 固定全屏首屏模式
+		layout?: FullscreenWallpaperLayout; // 全屏图片/WebGL 布局：classic 文档流模式，hero 固定全屏首屏模式
 		position?: string; // 壁纸位置，支持CSS object-position的所有值
 		// 全屏壁纸模式的导航栏配置（仅有半透明/动态透明两种）
 		navbar?: {
