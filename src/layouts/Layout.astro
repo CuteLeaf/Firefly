@@ -85,11 +85,8 @@ const navbarTransparentMode =
 // 判断是否应该显示顶部高光效果（只在 semifull 动态透明模式下显示）
 const shouldShowTopHighlight = navbarTransparentMode === "semifull";
 
-// 首屏布局（fullscreen / webgl 模式生效）：classic 为文档流旧版，hero 为固定首屏新版
-const fullscreenLayout =
-	backgroundWallpaper.mode === "webgl"
-		? (backgroundWallpaper.webgl?.layout ?? "hero")
-		: (backgroundWallpaper.fullscreen?.layout ?? "classic");
+// 全屏壁纸布局：classic 为文档流旧版，hero 为固定首屏新版
+const fullscreenLayout = backgroundWallpaper.fullscreen?.layout ?? "classic";
 
 // 子菜单 / 浮动面板的毛玻璃模糊度：跟随 navbar.blur，但不受壁纸模式影响，
 // 且带一个最小值 —— 导航栏可以用 blur: 0 关掉毛玻璃，面板则始终保留毛玻璃。

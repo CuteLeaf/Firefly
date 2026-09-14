@@ -8,8 +8,6 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	webgl: {
 		scene: "cloud-train",
 		options: { speed: 1, resolution: 0.75, feedback: 0.3 },
-		// 首屏布局："hero" 固定全屏首屏（首页内容推到首屏之下），"classic" 文档流（壁纸随滚动离开）
-		layout: "hero",
 	},
 	// 是否启用背景视频播放，配置后将在导航栏显示视频播放按钮
 	playerEnable: true,

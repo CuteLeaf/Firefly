@@ -349,19 +349,12 @@ export function syncBannerHomeTextVisibility(): void {
 	overlay.classList.toggle("hidden", !show);
 }
 
-export function getDefaultFullscreenLayout(
-	mode: WALLPAPER_MODE = backgroundWallpaper.mode,
-): FullscreenWallpaperLayout {
-	if (mode === WALLPAPER_WEBGL)
-		return backgroundWallpaper.webgl?.layout ?? "hero";
+export function getDefaultFullscreenLayout(): FullscreenWallpaperLayout {
 	return backgroundWallpaper.fullscreen?.layout ?? "classic";
 }
 
 export function getStoredFullscreenLayout(): FullscreenWallpaperLayout {
-	const currentMode = document.documentElement.getAttribute(
-		"data-wallpaper-mode",
-	) as WALLPAPER_MODE | null;
-	const defaultLayout = getDefaultFullscreenLayout(currentMode ?? undefined);
+	const defaultLayout = getDefaultFullscreenLayout();
 	if (
 		typeof localStorage === "undefined" ||
 		typeof localStorage.getItem !== "function"
@@ -419,6 +412,8 @@ export function applyWallpaperModeToDocument(
 	animate = true,
 ): void {
 	const html = document.documentElement;
+	const isHeroFullscreen =
+		html.getAttribute("data-fullscreen-layout") === "hero";
 
 	// 先启用过渡类再设置模式：确保 --content-top 变化时 top 过渡已激活（否则位置瞬间到位不动画）
 	if (animate) {
@@ -430,13 +425,6 @@ export function applyWallpaperModeToDocument(
 	}
 
 	html.setAttribute("data-wallpaper-mode", mode);
-
-	// fullscreen 与 webgl 各自的 layout 配置独立：切模式后重算布局属性
-	// （用户保存的选择优先，否则取新模式下的配置默认值）
-	const resolvedLayout = getStoredFullscreenLayout();
-	html.setAttribute("data-fullscreen-layout", resolvedLayout);
-	const isHeroFullscreen =
-		mode === WALLPAPER_FULLSCREEN && resolvedLayout === "hero";
 
 	// 首页标题显示：按当前模式 + 是否首页同步 hidden 类（SSR 按 config 默认模式渲染 hidden，
 	// 模式运行时切换后需同步）。

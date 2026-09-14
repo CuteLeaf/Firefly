@@ -79,9 +79,7 @@ const defaultWallpaperMode = backgroundWallpaper.mode;
 let fullscreenLayout: FullscreenWallpaperLayout = $state(
 	getDefaultFullscreenLayout(),
 );
-const defaultFullscreenLayout = $derived(
-	getDefaultFullscreenLayout(wallpaperMode),
-);
+const defaultFullscreenLayout = getDefaultFullscreenLayout();
 let currentLayout: "list" | "grid" = $state("list");
 const defaultLayout = siteConfig.postListLayout.defaultMode;
 const mobileDefaultLayout =
@@ -121,8 +119,7 @@ const defaultCardFollowThemeEnabled = getDefaultCardFollowThemeEnabled();
 const isWallpaperSwitchable = displaySettingsConfig.wallpaperModeSwitchable;
 const isFullscreenLayoutSwitchable = $derived(
 	displaySettingsConfig.fullscreenLayoutSwitchable &&
-		(wallpaperMode === WALLPAPER_FULLSCREEN ||
-			wallpaperMode === WALLPAPER_WEBGL),
+		wallpaperMode === WALLPAPER_FULLSCREEN,
 );
 const allowLayoutSwitch = displaySettingsConfig.layoutSwitchable;
 let effectiveDefaultLayout = $derived(
@@ -216,8 +213,7 @@ const hasAppearanceTab = $derived(
 const hasWallpaperTab = $derived(
 	isWallpaperSwitchable ||
 		isFullscreenLayoutSwitchable ||
-		((wallpaperMode === WALLPAPER_OVERLAY ||
-			wallpaperMode === WALLPAPER_WEBGL ||
+		((wallpaperMode === WALLPAPER_OVERLAY || wallpaperMode === WALLPAPER_WEBGL ||
 			wallpaperMode === WALLPAPER_FULLSCREEN) &&
 			hasOverlaySettings) ||
 		((wallpaperMode === WALLPAPER_BANNER ||
@@ -262,8 +258,7 @@ $effect(() => {
 // Auto-switch to wallpaper tab when entering overlay/fullscreen mode
 $effect(() => {
 	if (
-		(wallpaperMode === WALLPAPER_OVERLAY ||
-			wallpaperMode === WALLPAPER_WEBGL ||
+		(wallpaperMode === WALLPAPER_OVERLAY || wallpaperMode === WALLPAPER_WEBGL ||
 			wallpaperMode === WALLPAPER_FULLSCREEN) &&
 		hasOverlaySettings
 	) {
@@ -276,9 +271,7 @@ let overlaySliderItems = $derived<OverlaySliderItem[]>([
 		key: "opacity",
 		// 全屏壁纸模式不需要背景透明度，隐藏该滑块（仍显示模糊与卡片透明度）
 		enabled:
-			isOverlayOpacitySwitchable &&
-			wallpaperMode !== WALLPAPER_FULLSCREEN &&
-			wallpaperMode !== WALLPAPER_WEBGL,
+			isOverlayOpacitySwitchable && wallpaperMode !== WALLPAPER_FULLSCREEN && wallpaperMode !== WALLPAPER_WEBGL,
 		label: i18n(I18nKey.overlayOpacity),
 		displayValue: `${Math.round(overlayOpacity * 100)}%`,
 		ariaLabel: i18n(I18nKey.overlayOpacity),
@@ -336,8 +329,6 @@ function resetHue() {
 function resetWallpaperMode() {
 	wallpaperMode = defaultWallpaperMode;
 	setWallpaperMode(defaultWallpaperMode);
-	// 模式切换可能改变布局默认值（fullscreen/webgl 各自配置），同步面板状态
-	fullscreenLayout = getStoredFullscreenLayout();
 }
 
 function resetFullscreenLayout() {
@@ -472,8 +463,6 @@ function resetCardSettings() {
 function switchWallpaperMode(newMode: WALLPAPER_MODE) {
 	wallpaperMode = newMode;
 	setWallpaperMode(newMode);
-	// 模式切换可能改变布局默认值（fullscreen/webgl 各自配置），同步面板状态
-	fullscreenLayout = getStoredFullscreenLayout();
 	window.scrollTo({ top: 0 });
 
 	if (newMode === WALLPAPER_OVERLAY || newMode === WALLPAPER_FULLSCREEN) {
@@ -657,8 +646,7 @@ $effect(() => {
 		}
 	} else if (wallpaperMode === WALLPAPER_WEBGL) {
 		// WebGL 由场景直接渲染；仅沿用内容卡片透明度。
-		if (isOverlayCardOpacitySwitchable)
-			setOverlayCardOpacity(overlayCardOpacity);
+		if (isOverlayCardOpacitySwitchable) setOverlayCardOpacity(overlayCardOpacity);
 	} else if (wallpaperMode === WALLPAPER_FULLSCREEN) {
 		// 全屏壁纸不透明，只应用模糊与卡片透明度
 		if (isOverlayBlurSwitchable) {
