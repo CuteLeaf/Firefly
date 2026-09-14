@@ -106,11 +106,11 @@ float openingLayer(float start) {
 		source
 			.replace(
 				"#define layer(dh, v)  if (uv.y < h + midlevel - (dh) ) return vec4(v, 1.);",
-				"#define layer(dh, v) { float p=openingLayer(dist>=10. ? .08+.60*(100.-dist)/90. : (dist>1.5 ? .78 : .88)); if(dist!=matchedDepth && uv.y < h + midlevel - (dh)) { matchedDepth=dist; accumulated.rgb+=(1.-accumulated.a)*p*(v); accumulated.a+=(1.-accumulated.a)*p; if(accumulated.a>=1.) return accumulated; } }",
+				"#define layer(dh, v) { float p=openingLayer(dist>=10. ? .08+.60*(100.-dist)/90. : (dist>1.5 ? .78 : .88)); if(uv.y < h + midlevel - (dh)) { accumulated.rgb+=(1.-accumulated.a)*p*(v); accumulated.a+=(1.-accumulated.a)*p; if(accumulated.a>=1.) return accumulated; } }",
 			)
 			.replaceAll(
 				"float midlevel;",
-				"vec4 accumulated=vec4(0.); float matchedDepth=-1.; float midlevel;",
+				"vec4 accumulated=vec4(0.); float midlevel;",
 			)
 			.replace(
 				"return vec4(0.95, 0.80, 0.77, 0.);",
@@ -180,7 +180,8 @@ class CloudTrainRenderer implements WebGLWallpaperScene {
 			"#version 300 es\nprecision highp float;\nuniform vec3 iResolution;uniform float iTime,uFeedback,zoom,offset,amplitude,uDetail,uSamples;uniform sampler2D iChannel0,iChannel1;out vec4 result;\n" +
 			(opening
 				? cloudTrainOpeningSource(cloudTrainColorizeSource(original))
-				: cloudTrainColorizeSource(original))
+				: cloudTrainColorizeSource(original)
+			)
 				.replace(
 					"texture(iChannel1, uv).rgb, 0.3",
 					"texture(iChannel1, uv).rgb, uFeedback",
@@ -295,21 +296,21 @@ class CloudTrainRenderer implements WebGLWallpaperScene {
 				"uSamples",
 				"intro",
 				"introFeather",
-					...tintKeys,
+				...tintKeys,
 			] as const;
 			const openingLocations = locations(openingScene, sceneUniforms);
 			const steadyLocations = locations(steadyScene, sceneUniforms);
 			const b = locations(post, [
-					"resolution",
-					"scene",
-					"vignette",
-					"exposure",
-					"saturation",
-					"hue",
-					"temperature",
-					"intro",
-					"introFeather",
-				]);
+				"resolution",
+				"scene",
+				"vignette",
+				"exposure",
+				"saturation",
+				"hue",
+				"temperature",
+				"intro",
+				"introFeather",
+			]);
 			const quad = gl.createBuffer()!;
 			buffers.push(quad);
 			gl.bindBuffer(gl.ARRAY_BUFFER, quad);
@@ -404,7 +405,8 @@ class CloudTrainRenderer implements WebGLWallpaperScene {
 				if (next === qualityTier) return;
 				qualityTier = next;
 				scale =
-					state.current.resolution * (qualityTiers[next] ?? qualityTiers[0]).scale;
+					state.current.resolution *
+					(qualityTiers[next] ?? qualityTiers[0]).scale;
 				updatePixelSize();
 				slowFrames = 0;
 				fastDuration = 0;
