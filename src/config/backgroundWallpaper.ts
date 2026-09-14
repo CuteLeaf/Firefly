@@ -7,7 +7,15 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	// 自定义壁纸：在 src/utils/webgl-wallpaper/scenes/ 添加同名 .ts 模块并修改 scene。
 	webgl: {
 		scene: "cloud-train",
-		options: { speed: 1, resolution: 0.75, feedback: 0.3 },
+		options: {
+			speed: 1,
+			// WebGL 内部渲染分辨率上限（保持宽高比，DPR 不参与放大）
+			maxRenderWidth: 1920,
+			maxRenderHeight: 1080,
+			resolution: 1,
+			detail: 5,
+			feedback: 0.3,
+		},
 		// 首屏布局："hero" 固定全屏首屏（首页内容推到首屏之下），"classic" 文档流（壁纸随滚动离开）
 		layout: "hero",
 	},
