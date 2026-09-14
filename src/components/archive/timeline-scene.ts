@@ -34,6 +34,7 @@ export async function createTimelineScene(
 	try {
 		renderer = new THREE.WebGLRenderer({
 			antialias: true,
+			alpha: true,
 			powerPreference: "high-performance",
 		});
 	} catch (error) {
@@ -41,12 +42,12 @@ export async function createTimelineScene(
 		throw error;
 	}
 	const scene = new THREE.Scene();
-	scene.background = new THREE.Color("#eae5e1");
+	// 保留真实透明度，让网站壁纸与主题直接透出，而非匹配一块固定底色。
+	renderer.setClearColor(0x000000, 0);
 	const camera = new THREE.PerspectiveCamera(10, 1, 5, 180);
 	const aim = new THREE.Vector3(0, 0.4, 0);
 	camera.position.copy(aim).add(new THREE.Vector3(62.26, 27, 43.28));
 	camera.lookAt(aim);
-	scene.fog = new THREE.Fog("#eae5e1", 84, 106);
 	renderer.toneMapping = THREE.ACESFilmicToneMapping;
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -66,7 +67,8 @@ export async function createTimelineScene(
 	light.shadow.radius = 4;
 	const floor = new THREE.Mesh(
 		new THREE.PlaneGeometry(200, 200),
-		new THREE.MeshStandardMaterial({ color: "#d8c9b9", roughness: 0.95 }),
+		// 地面只接收轻微投影，不再绘制奶黄色实体平面。
+		new THREE.ShadowMaterial({ color: "#172749", opacity: 0.16 }),
 	);
 	floor.rotation.x = -Math.PI / 2;
 	floor.position.y = -4.63;
@@ -78,6 +80,7 @@ export async function createTimelineScene(
 	ao.kernelRadius = 0.38;
 	ao.minDistance = 0.001;
 	ao.maxDistance = 0.09;
+	// SSAOPass 默认乘色混合保留 beauty buffer 的 alpha，空白处保持透明。
 	composer.addPass(ao);
 	composer.addPass(new OutputPass());
 	const capacity = Math.min(25, options.count);

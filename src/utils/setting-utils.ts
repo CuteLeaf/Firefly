@@ -7,6 +7,7 @@ import {
 	WALLPAPER_FULLSCREEN,
 	WALLPAPER_NONE,
 	WALLPAPER_OVERLAY,
+	WALLPAPER_WEBGL,
 } from "@constants/constants";
 import type {
 	FullscreenWallpaperLayout,
@@ -384,6 +385,7 @@ export function applyFullscreenLayoutToDocument(
 	const mode = html.getAttribute("data-wallpaper-mode");
 	const transparent =
 		mode === WALLPAPER_OVERLAY ||
+		mode === WALLPAPER_WEBGL ||
 		(mode === WALLPAPER_FULLSCREEN && safeLayout === "hero");
 	document.body?.classList.toggle("wallpaper-transparent", transparent);
 	window.dispatchEvent(
@@ -431,6 +433,7 @@ export function applyWallpaperModeToDocument(
 	// 卡片透明类：唯一运行时写入者（解析期由 body 起始脚本写入）
 	const transparent =
 		mode === WALLPAPER_OVERLAY ||
+		mode === WALLPAPER_WEBGL ||
 		(mode === WALLPAPER_FULLSCREEN && isHeroFullscreen);
 	document.body.classList.toggle("wallpaper-transparent", transparent);
 
@@ -448,7 +451,7 @@ export function updateNavbarTransparency(mode: WALLPAPER_MODE): void {
 	let blurAmount: number;
 
 	// 根据当前壁纸模式设置导航栏透明模式和模糊效果
-	if (mode === WALLPAPER_OVERLAY) {
+	if (mode === WALLPAPER_OVERLAY || mode === WALLPAPER_WEBGL) {
 		// 全屏透明模式
 		transparentMode = "none";
 		blurAmount = 0;

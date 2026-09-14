@@ -6,6 +6,7 @@ import type {
 	WALLPAPER_FULLSCREEN,
 	WALLPAPER_NONE,
 	WALLPAPER_OVERLAY,
+	WALLPAPER_WEBGL,
 } from "../constants/constants";
 import type { ImmersiveReadingConfig } from "./immersiveReadingConfig";
 import type { NsfwMode } from "./nsfw";
@@ -19,6 +20,7 @@ export type WALLPAPER_MODE =
 	| typeof WALLPAPER_BANNER
 	| typeof WALLPAPER_FULLSCREEN
 	| typeof WALLPAPER_OVERLAY
+	| typeof WALLPAPER_WEBGL
 	| typeof WALLPAPER_NONE;
 
 export type Favicon = {

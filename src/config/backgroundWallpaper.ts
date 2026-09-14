@@ -1,8 +1,14 @@
 import type { BackgroundWallpaperConfig } from "@/types/backgroundWallpaper";
 
 export const backgroundWallpaper: BackgroundWallpaperConfig = {
-	// 壁纸模式："banner" 横幅壁纸，"fullscreen" 全屏壁纸，"overlay" 全屏透明，"none" 纯色背景无壁纸
+	// 壁纸模式："banner" 横幅，"fullscreen" 全屏图片，"overlay" 透明图片，"webgl" 动态场景，"none" 纯色
 	mode: "fullscreen",
+	// 将 mode 设为 "webgl"，或在设置面板选择 WebGL，即可显示此场景。
+	// 自定义壁纸：在 src/utils/webgl-wallpaper/scenes/ 添加同名 .ts 模块并修改 scene。
+	webgl: {
+		scene: "cloud-train",
+		options: { speed: 1, resolution: 0.75, feedback: 0.3 },
+	},
 	// 是否启用背景视频播放，配置后将在导航栏显示视频播放按钮
 	playerEnable: true,
 	/**

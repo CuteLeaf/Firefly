@@ -379,6 +379,7 @@ export const ko: Translation = {
 	[Key.fullscreenClassicLayout]: "클래식",
 	[Key.fullscreenHeroLayout]: "히어로",
 	[Key.wallpaperOverlayMode]: "오버레이 배경화면",
+	[Key.wallpaperWebglMode]: "WebGL 배경화면",
 	[Key.wallpaperNoneMode]: "배경화면 없음",
 
 	// Wallpaper Settings

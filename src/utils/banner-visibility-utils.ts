@@ -23,6 +23,7 @@ export interface BannerVisibilityState {
 	isBannerMode: boolean;
 	isFullscreenMode: boolean;
 	isOverlayMode: boolean;
+	isWebglMode: boolean;
 	isWallpaperSwitchable: boolean;
 	isBackgroundEnabled: boolean;
 	hasWallpaper: boolean;
@@ -101,6 +102,7 @@ export function getBannerVisibilityState(
 	const isClassicFullscreenMode =
 		isFullscreenMode && backgroundWallpaper.fullscreen?.layout !== "hero";
 	const isOverlayMode = backgroundWallpaper.mode === "overlay";
+	const isWebglMode = backgroundWallpaper.mode === "webgl";
 	const isWallpaperSwitchable = displaySettingsConfig.wallpaperModeSwitchable;
 	const isBackgroundEnabled =
 		backgroundWallpaper.mode !== "none" || isWallpaperSwitchable;
@@ -180,13 +182,15 @@ export function getBannerVisibilityState(
 		isBannerMode,
 		isFullscreenMode,
 		isOverlayMode,
+		isWebglMode,
 		isWallpaperSwitchable,
 		isBackgroundEnabled,
 		hasWallpaper:
 			isWallpaperSwitchable ||
 			isBannerMode ||
 			isFullscreenMode ||
-			isOverlayMode,
+			isOverlayMode ||
+			isWebglMode,
 		wavesEnabledOnDesktop,
 		wavesEnabledOnMobile,
 		shouldRenderWaves,

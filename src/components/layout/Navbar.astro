@@ -41,7 +41,7 @@ const navbarTransparentMode =
 						"semifull";
 					return fs === "semifull" && isHomePageCheck ? "semifull" : "semi";
 				})()
-			: "semi";
+			: backgroundWallpaper.mode === "webgl" ? "none" : "semi";
 
 // 获取导航栏模糊度（0 即关闭导航栏毛玻璃）
 const navbarBlur =

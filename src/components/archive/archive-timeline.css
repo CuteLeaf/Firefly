@@ -3,9 +3,13 @@
 #main-grid:has(archive-timeline) > :is(#left-sidebar-wrapper, #right-sidebar-static, #left-sidebar-dynamic, #right-sidebar-dynamic, #mobile-bottom-sidebar) { display: none !important; }
 #main-grid:has(archive-timeline) > :is(div:has(> #swup-container), .footer) { grid-column: 1 / -1 !important; width: 100%; min-width: 0; }
 #main-grid:has(archive-timeline) #category-bar-wrapper { display: none; }
-archive-timeline { display: block; --at-ink: #292c29; --at-muted: #75766e; --at-line: #ccc9c0; --at-accent: #c28e47; color: var(--at-ink); }
+/* 透明正文直接叠在壁纸上，整页统一弱化壁纸，避免再引入局部阅读底板。 */
+body:has(archive-timeline) #banner-images-container { opacity: .16; }
+archive-timeline { display: block; --at-ink: var(--deep-text); --at-muted: var(--content-meta); --at-line: var(--line-color); --at-accent: var(--primary); color: var(--at-ink); }
+/* 深色正文与博客一致；外层与画布不铺色，允许壁纸直接透出。 */
+.dark archive-timeline { --at-ink: #e4eaf6; }
 archive-timeline [hidden] { display: none !important; }
-.at-shell { position: relative; overflow: hidden; background: #eae5e1; border: 1px solid #d6d2c9; border-radius: 6px; padding: 30px 42px 20px; }
+.at-shell { position: relative; overflow: hidden; background: transparent; border: 0; padding: 30px 42px 20px; }
 .at-header, .at-heading, .at-toolbar, .at-footer { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
 .at-header { border-bottom: 1px solid var(--at-line); padding-bottom: 22px; }
 .at-brand { display: flex; align-items: center; gap: 14px; }
@@ -31,8 +35,8 @@ archive-timeline :is(button, a, input, [tabindex]):focus-visible { outline: 2px 
 .at-visual { position: relative; margin: 0 -42px; height: clamp(340px, 34vw, 510px); }
 .at-stage { position: absolute; inset: 0; cursor: grab; touch-action: pan-y; }
 .at-stage:active { cursor: grabbing; }
-.at-stage canvas { display: block; width: 100%; height: 100%; }
-.at-visual::after { content: ""; position: absolute; inset: 0; background: linear-gradient(#eae5e1, transparent 16%, transparent 82%, #eae5e1); pointer-events: none; }
+/* 用透明度羽化边缘，避免有色渐变遮住网站背景。 */
+.at-stage canvas { display: block; width: 100%; height: 100%; mask-image: linear-gradient(transparent, #000 16%, #000 82%, transparent); }
 .at-status, .at-axis-label, .at-gesture { z-index: 1; }
 .at-status { position: absolute; inset: 0; display: grid; place-content: center; color: var(--at-muted); font-size: 13px; pointer-events: none; }
 .at-axis-label { position: absolute; bottom: 45px; left: 42px; right: 42px; display: flex; justify-content: space-between; font-size: 8px; letter-spacing: 2px; color: var(--at-muted); pointer-events: none; }
@@ -43,16 +47,16 @@ archive-timeline :is(button, a, input, [tabindex]):focus-visible { outline: 2px 
 .at-sequence > span { font-size: 9px; letter-spacing: 2px; color: var(--at-muted); }
 .at-sequence b { font-size: 47px; line-height: 1.3; font-weight: 300; font-variant-numeric: tabular-nums; }
 .at-sequence small { font-size: 11px; color: var(--at-muted); font-variant-numeric: tabular-nums; }
-.at-meta { font-size: 10px; letter-spacing: 1px; color: #866e4b; margin: 0 0 7px; }
+.at-meta { font-size: 10px; letter-spacing: 1px; color: var(--btn-content); margin: 0 0 7px; }
 .at-copy h3 { font-size: clamp(19px, 1.8vw, 25px); font-weight: 500; line-height: 1.5; margin: 0; overflow-wrap: anywhere; }
 .at-summary { color: var(--at-muted); font-size: 12px; line-height: 1.8; margin: 8px 0 14px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 .at-read { color: var(--at-ink); display: inline-flex; align-items: center; gap: 32px; font-size: 12px; border-bottom: 1px solid var(--at-ink); padding: 8px 0; min-height: 44px; }
 .at-navigation { display: flex; align-items: start; gap: 8px; }
 .at-navigation button { width: 46px; height: 46px; border: 1px solid var(--at-line); color: var(--at-ink); transition: background .18s; }
-.at-navigation button:hover:not(:disabled) { background: #dcd5ca; }
+.at-navigation button:hover:not(:disabled) { background: var(--btn-plain-bg-hover); }
 .at-footer { border-top: 1px solid var(--at-line); padding-top: 16px; font-size: 10px; color: var(--at-muted); font-variant-numeric: tabular-nums; }
 .at-range-label { font-size: 0; flex: 1; max-width: 520px; }
-.at-range-label input { width: 100%; height: 28px; accent-color: #a6804c; cursor: pointer; }
+.at-range-label input { width: 100%; height: 28px; accent-color: var(--at-accent); cursor: pointer; }
 .at-announcement { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 .at-list { margin-top: 18px; }
 @media (max-width: 700px) {
