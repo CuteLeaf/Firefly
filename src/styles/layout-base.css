@@ -26,8 +26,9 @@
   html[data-wallpaper-mode="fullscreen"] body:not(.is-home) .content-panel {
     --content-top: 5.5rem;
   }
-  /* fullscreen 首页 hero：内容推到首屏之下 */
-  html[data-wallpaper-mode="fullscreen"] body.is-home .content-panel {
+  /* fullscreen / webgl 首页：内容推到首屏之下（hero 固定全屏与 classic 文档流首屏一致） */
+  html[data-wallpaper-mode="fullscreen"] body.is-home .content-panel,
+  html[data-wallpaper-mode="webgl"] body.is-home .content-panel {
     --content-top: 100vh;
   }
 

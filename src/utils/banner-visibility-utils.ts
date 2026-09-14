@@ -103,6 +103,10 @@ export function getBannerVisibilityState(
 		isFullscreenMode && backgroundWallpaper.fullscreen?.layout !== "hero";
 	const isOverlayMode = backgroundWallpaper.mode === "overlay";
 	const isWebglMode = backgroundWallpaper.mode === "webgl";
+	// classic 布局（fullscreen 或 webgl）：非首页在壁纸块上显示页标题/文章信息
+	const isClassicLayoutMode =
+		isClassicFullscreenMode ||
+		(isWebglMode && backgroundWallpaper.webgl?.layout === "classic");
 	const isWallpaperSwitchable = displaySettingsConfig.wallpaperModeSwitchable;
 	const isBackgroundEnabled =
 		backgroundWallpaper.mode !== "none" || isWallpaperSwitchable;
@@ -137,7 +141,7 @@ export function getBannerVisibilityState(
 		backgroundWallpaper.common?.homeText?.linksEnable !== false;
 
 	const showBannerPostMeta =
-		(isBannerMode || isWallpaperSwitchable || isClassicFullscreenMode) &&
+		(isBannerMode || isWallpaperSwitchable || isClassicLayoutMode) &&
 		isBackgroundEnabled &&
 		!isHomePageCheck &&
 		isPostPage &&
@@ -156,7 +160,7 @@ export function getBannerVisibilityState(
 	const dimOpacity = backgroundWallpaper.common?.dimOpacity ?? 0.15;
 
 	const showBannerPageTitle =
-		(isBannerMode || isWallpaperSwitchable || isClassicFullscreenMode) &&
+		(isBannerMode || isWallpaperSwitchable || isClassicLayoutMode) &&
 		isBackgroundEnabled &&
 		!isHomePageCheck &&
 		!isPostPage &&

@@ -7,6 +7,8 @@ export type BackgroundWallpaperConfig = {
 		scene: string;
 		// 场景自定义参数由对应模块解析，避免站点核心代码绑定某一着色器。
 		options?: Record<string, unknown>;
+		// 首屏布局：classic 文档流（首页 100vh、非首页横幅高度），hero 固定全屏首屏；默认 hero
+		layout?: FullscreenWallpaperLayout;
 	};
 	playerEnable?: boolean; // 是否启用背景视频播放，默认false
 	src:

@@ -1,4 +1,22 @@
-import type { WebGLWallpaperScene, WebGLWallpaperSceneContext } from "../types";
+/**
+ * Cloud Train 场景 —— 刻意零外部依赖的单文件实现：
+ * 复制本文件为 scenes/<name>.ts 并按需修改，再把配置 webgl.scene 指向 <name> 即可切换壁纸，
+ * 无需改动宿主（host.ts）或任何 CSS/布局代码。
+ *
+ * 以下两个接口是宿主契约（utils/webgl-wallpaper/types.ts）的本地副本，
+ * 保证本文件可以独立复制；宿主按结构匹配，不要求同一类型来源。
+ */
+interface WebGLWallpaperScene {
+	dispose(): void;
+}
+
+interface WebGLWallpaperSceneContext {
+	canvas: HTMLCanvasElement;
+	options: Record<string, unknown>;
+	signal: AbortSignal;
+	// Call only after a successful frame so the fallback image stays visible on failure.
+	onFirstFrame(): void;
+}
 
 // Scene-specific configuration. The host remains independent of these controls.
 const defaults = {
@@ -133,11 +151,9 @@ float openingLayer(float start) {
 
 function cloudTrainTintRgb(hex: string): [number, number, number] {
 	if (!/^#[0-9a-f]{6}$/i.test(hex)) return [1, 1, 1];
-	return [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255) as [
-		number,
-		number,
-		number,
-	];
+	return [1, 3, 5].map(
+		(i) => Number.parseInt(hex.slice(i, i + 2), 16) / 255,
+	) as [number, number, number];
 }
 
 class CloudTrainRenderer implements WebGLWallpaperScene {
