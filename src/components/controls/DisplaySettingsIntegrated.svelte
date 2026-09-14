@@ -119,7 +119,7 @@ const defaultCardFollowThemeEnabled = getDefaultCardFollowThemeEnabled();
 const isWallpaperSwitchable = displaySettingsConfig.wallpaperModeSwitchable;
 const isFullscreenLayoutSwitchable = $derived(
 	displaySettingsConfig.fullscreenLayoutSwitchable &&
-		wallpaperMode === WALLPAPER_FULLSCREEN,
+		(wallpaperMode === WALLPAPER_FULLSCREEN || wallpaperMode === WALLPAPER_WEBGL),
 );
 const allowLayoutSwitch = displaySettingsConfig.layoutSwitchable;
 let effectiveDefaultLayout = $derived(
@@ -217,7 +217,7 @@ const hasWallpaperTab = $derived(
 			wallpaperMode === WALLPAPER_FULLSCREEN) &&
 			hasOverlaySettings) ||
 		((wallpaperMode === WALLPAPER_BANNER ||
-			wallpaperMode === WALLPAPER_FULLSCREEN) &&
+			wallpaperMode === WALLPAPER_FULLSCREEN || wallpaperMode === WALLPAPER_WEBGL) &&
 			hasBannerSettings),
 );
 const hasEffectsTab = $derived(isSakuraSwitchable);
@@ -465,7 +465,7 @@ function switchWallpaperMode(newMode: WALLPAPER_MODE) {
 	setWallpaperMode(newMode);
 	window.scrollTo({ top: 0 });
 
-	if (newMode === WALLPAPER_OVERLAY || newMode === WALLPAPER_FULLSCREEN) {
+	if (newMode === WALLPAPER_OVERLAY || newMode === WALLPAPER_FULLSCREEN || newMode === WALLPAPER_WEBGL) {
 		requestAnimationFrame(refreshAllRangeProgress);
 	}
 }
@@ -876,7 +876,7 @@ $effect(() => {
 		</div>
 		{/if}
 
-		<!-- Fullscreen Layout Section -->
+		<!-- 全屏图片与 WebGL 共用经典/Hero 布局设置。 -->
 		{#if isFullscreenLayoutSwitchable}
 		<div>
 			<div class="section-title">
@@ -912,8 +912,8 @@ $effect(() => {
 		</div>
 		{/if}
 
-		<!-- Overlay Settings Section（全屏壁纸模式也复用 overlay 的透明/模糊/卡片透明度设置） -->
-		{#if (wallpaperMode === WALLPAPER_OVERLAY || wallpaperMode === WALLPAPER_WEBGL || (wallpaperMode === WALLPAPER_FULLSCREEN && fullscreenLayout === "hero")) && hasOverlaySettings && hasVisibleOverlaySlider}
+		<!-- Overlay 设置仅在覆盖模式或全屏 Hero 布局显示；经典布局保留原有卡片样式。 -->
+		{#if (wallpaperMode === WALLPAPER_OVERLAY || ((wallpaperMode === WALLPAPER_FULLSCREEN || wallpaperMode === WALLPAPER_WEBGL) && fullscreenLayout === "hero")) && hasOverlaySettings && hasVisibleOverlaySlider}
 		<div class="">
 			<div class="section-title">
 				{i18n(I18nKey.overlaySettings)}
@@ -951,7 +951,7 @@ $effect(() => {
 		{/if}
 
 		<!-- Banner Settings Section -->
-		{#if (wallpaperMode === WALLPAPER_BANNER || wallpaperMode === WALLPAPER_FULLSCREEN) && hasBannerSettings}
+		{#if (wallpaperMode === WALLPAPER_BANNER || wallpaperMode === WALLPAPER_FULLSCREEN || wallpaperMode === WALLPAPER_WEBGL) && hasBannerSettings}
 		<div class="">
 			<div class="section-title">
 				{i18n(I18nKey.wallpaperSettings)}
@@ -1000,8 +1000,8 @@ $effect(() => {
 					</div>
 				</button>
 				{/if}
-				<!-- Waves Animation Switch（横幅模式和 classic 全屏模式） -->
-				{#if isWavesSwitchable && (wallpaperMode === WALLPAPER_BANNER || (wallpaperMode === WALLPAPER_FULLSCREEN && fullscreenLayout === "classic"))}
+				<!-- Waves Animation Switch（横幅模式和 classic 全屏图片/WebGL 模式） -->
+				{#if isWavesSwitchable && (wallpaperMode === WALLPAPER_BANNER || ((wallpaperMode === WALLPAPER_FULLSCREEN || wallpaperMode === WALLPAPER_WEBGL) && fullscreenLayout === "classic"))}
 				<button
 					class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
 					class:bg-(--btn-regular-bg-hover)={wavesEnabled}
@@ -1018,8 +1018,8 @@ $effect(() => {
 					</div>
 				</button>
 				{/if}
-				<!-- Gradient Transition Switch（横幅模式和 classic 全屏模式） -->
-				{#if isGradientSwitchable && (wallpaperMode === WALLPAPER_BANNER || (wallpaperMode === WALLPAPER_FULLSCREEN && fullscreenLayout === "classic"))}
+				<!-- Gradient Transition Switch（横幅模式和 classic 全屏图片/WebGL 模式） -->
+				{#if isGradientSwitchable && (wallpaperMode === WALLPAPER_BANNER || ((wallpaperMode === WALLPAPER_FULLSCREEN || wallpaperMode === WALLPAPER_WEBGL) && fullscreenLayout === "classic"))}
 				<button
 					class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
 					class:bg-(--btn-regular-bg-hover)={gradientEnabled}

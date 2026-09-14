@@ -99,10 +99,11 @@ export function getBannerVisibilityState(
 
 	const isBannerMode = backgroundWallpaper.mode === "banner";
 	const isFullscreenMode = backgroundWallpaper.mode === "fullscreen";
-	const isClassicFullscreenMode =
-		isFullscreenMode && backgroundWallpaper.fullscreen?.layout !== "hero";
-	const isOverlayMode = backgroundWallpaper.mode === "overlay";
 	const isWebglMode = backgroundWallpaper.mode === "webgl";
+	const isClassicFullscreenMode =
+		(isFullscreenMode || isWebglMode) &&
+		backgroundWallpaper.fullscreen?.layout !== "hero";
+	const isOverlayMode = backgroundWallpaper.mode === "overlay";
 	const isWallpaperSwitchable = displaySettingsConfig.wallpaperModeSwitchable;
 	const isBackgroundEnabled =
 		backgroundWallpaper.mode !== "none" || isWallpaperSwitchable;
@@ -132,7 +133,9 @@ export function getBannerVisibilityState(
 
 	const homeTextEnable = backgroundWallpaper.common?.homeText?.enable ?? false;
 	const showHomeText =
-		(isBannerMode || isFullscreenMode) && !!homeTextEnable && isHomePageCheck;
+		(isBannerMode || isFullscreenMode || isWebglMode) &&
+		!!homeTextEnable &&
+		isHomePageCheck;
 	const homeTextLinksEnable =
 		backgroundWallpaper.common?.homeText?.linksEnable !== false;
 
@@ -151,7 +154,7 @@ export function getBannerVisibilityState(
 	);
 
 	const showBannerDim =
-		(isBannerMode || isFullscreenMode || isWallpaperSwitchable) &&
+		(isBannerMode || isFullscreenMode || isWebglMode || isWallpaperSwitchable) &&
 		isBackgroundEnabled;
 	const dimOpacity = backgroundWallpaper.common?.dimOpacity ?? 0.15;
 

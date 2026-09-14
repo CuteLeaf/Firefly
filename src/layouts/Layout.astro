@@ -511,8 +511,8 @@ const ogImageAlt = propsOgImageAlt ?? pageTitle;
         if (!wm) return;
         document.body.classList.toggle(
           "wallpaper-transparent",
-		  wm === "overlay" || wm === "webgl" ||
-            (wm === "fullscreen" &&
+          wm === "overlay" ||
+            ((wm === "fullscreen" || wm === "webgl") &&
               document.documentElement.getAttribute("data-fullscreen-layout") === "hero"),
         );
       })();

@@ -34,7 +34,7 @@ export type DisplaySettingsConfig = {
 	// 壁纸模式切换开关
 	wallpaperModeSwitchable: boolean;
 
-	// 全屏壁纸布局切换开关（classic / hero）
+	// 全屏图片与 WebGL 壁纸布局切换开关（classic / hero）
 	fullscreenLayoutSwitchable: boolean;
 
 	// 水波纹动画开关

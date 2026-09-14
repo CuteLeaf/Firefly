@@ -37,7 +37,8 @@ export function updateFullscreenTitleParallax(): void {
 	if (!overlay) return;
 	// 非全屏或页面过渡中：复位（让 transition-swup-fade 的 CSS 生效）
 	if (
-		html.getAttribute("data-wallpaper-mode") !== "fullscreen" ||
+		!(html.getAttribute("data-wallpaper-mode") === "fullscreen" ||
+			html.getAttribute("data-wallpaper-mode") === "webgl") ||
 		!isHeroFullscreenLayout() ||
 		html.classList.contains("is-animating") ||
 		html.classList.contains("is-changing")
@@ -82,7 +83,7 @@ export function syncFullscreenOverlays(): void {
 	);
 	overlays.forEach((el) => {
 		const element = el as HTMLElement;
-		if (mode === "fullscreen" && isHeroFullscreenLayout() && !isHome) {
+		if ((mode === "fullscreen" || mode === "webgl") && isHeroFullscreenLayout() && !isHome) {
 			element.style.setProperty("display", "none", "important");
 		} else {
 			element.style.removeProperty("display");

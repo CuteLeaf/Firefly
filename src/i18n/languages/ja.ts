@@ -379,7 +379,7 @@ export const ja: Translation = {
 	[Key.fullscreenClassicLayout]: "クラシック",
 	[Key.fullscreenHeroLayout]: "ヒーロー",
 	[Key.wallpaperOverlayMode]: "透明",
-	[Key.wallpaperWebglMode]: "WebGL 壁紙",
+	[Key.wallpaperWebglMode]: "WebGL",
 	[Key.wallpaperNoneMode]: "単色背景",
 
 	// 壁紙設定

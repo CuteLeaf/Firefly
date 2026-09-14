@@ -34,14 +34,14 @@ const navbarTransparentMode =
 				const t = backgroundWallpaper.banner?.navbar?.transparentMode || "semi";
 				return t === "semifull" && !isHomePageCheck ? "semi" : t;
 			})()
-		: backgroundWallpaper.mode === "fullscreen"
+		: backgroundWallpaper.mode === "fullscreen" || backgroundWallpaper.mode === "webgl"
 			? (() => {
 					const fs =
 						backgroundWallpaper.fullscreen?.navbar?.transparentMode ||
 						"semifull";
 					return fs === "semifull" && isHomePageCheck ? "semifull" : "semi";
 				})()
-			: backgroundWallpaper.mode === "webgl" ? "none" : "semi";
+			: "semi";
 
 // 获取导航栏模糊度（0 即关闭导航栏毛玻璃）
 const navbarBlur =
@@ -140,7 +140,7 @@ const logoVariants = await Promise.all(
         const isHome = navbar.getAttribute("data-is-home") === "true";
         let mode;
         let blur;
-        if (wm === "fullscreen") {
+        if (wm === "fullscreen" || wm === "webgl") {
           mode = fsTMode === "semifull" && isHome ? "semifull" : "semi";
           blur = fsBlur;
         } else if (wm === "banner") {
