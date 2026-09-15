@@ -1,4 +1,5 @@
 import type { CoverImageConfig } from "../types/coverImageConfig";
+import { mergeUserConfig } from "./user-config";
 
 /**
  * 文章封面图配置
@@ -17,7 +18,7 @@ import type { CoverImageConfig } from "../types/coverImageConfig";
  * image: "api"
  * ---
  */
-export const coverImageConfig: CoverImageConfig = {
+export const coverImageConfigDefaults: CoverImageConfig = {
 	// 是否在文章详情页显示封面图
 	enableInPost: true,
 
@@ -38,3 +39,8 @@ export const coverImageConfig: CoverImageConfig = {
 		],
 	},
 };
+
+export const coverImageConfig: CoverImageConfig = mergeUserConfig(
+	"coverImage",
+	coverImageConfigDefaults,
+);

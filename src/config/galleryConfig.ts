@@ -1,7 +1,8 @@
 import type { GalleryConfig } from "@/types/galleryConfig";
+import { mergeUserConfig } from "./user-config";
 
 // 相册配置
-export const galleryConfig: GalleryConfig = {
+export const galleryConfigDefaults: GalleryConfig = {
 	// 相册列表
 	albums: [
 		// 支持jpg/png/webp/avif/gif格式
@@ -40,3 +41,8 @@ export const galleryConfig: GalleryConfig = {
 	// 值越小列数越多，值越大列数越少
 	columnWidth: 240,
 };
+
+export const galleryConfig: GalleryConfig = mergeUserConfig(
+	"gallery",
+	galleryConfigDefaults,
+);

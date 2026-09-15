@@ -1,0 +1,53 @@
+{
+	"key": "announcement",
+	"title": "公告",
+	"description": "配置博客顶部公告栏的标题、内容和可选链接。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"title": {
+				"type": "string",
+				"title": "公告标题",
+				"description": "公告栏标题，留空则使用 i18n 默认标题。"
+			},
+			"content": {
+				"type": "string",
+				"x-format": "textarea",
+				"title": "公告内容",
+				"description": "公告栏正文内容。"
+			},
+			"closable": {
+				"type": "boolean",
+				"title": "允许关闭",
+				"description": "是否允许用户关闭公告。"
+			},
+			"link": {
+				"type": "object",
+				"title": "链接",
+				"description": "公告栏的可选链接配置。",
+				"properties": {
+					"enable": {
+						"type": "boolean",
+						"title": "启用链接",
+						"description": "是否在公告中启用链接。"
+					},
+					"text": {
+						"type": "string",
+						"title": "链接文本",
+						"description": "链接显示文字。"
+					},
+					"url": {
+						"type": "string",
+						"title": "链接地址",
+						"description": "链接地址，支持内部路径（如 /about/）或完整 URL。"
+					},
+					"external": {
+						"type": "boolean",
+						"title": "外部链接",
+						"description": "是否为外部链接。"
+					}
+				}
+			}
+		}
+	}
+}

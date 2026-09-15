@@ -1,0 +1,259 @@
+{
+	"key": "sidebar",
+	"title": "侧边栏布局",
+	"description": "配置侧边栏的显示位置、平板端展示，以及左右侧边栏与移动端底部的组件列表。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"enable": {
+				"type": "boolean",
+				"title": "启用侧边栏",
+				"description": "是否启用侧边栏功能。"
+			},
+			"position": {
+				"type": "string",
+				"title": "侧边栏位置",
+				"description": "侧边栏位置：仅左侧、仅右侧或双侧（1280px 以上同时显示，769-1279px 按平板端配置显示其中一侧）。",
+				"enum": ["left", "right", "both"],
+				"x-enumLabels": ["左侧", "右侧", "双侧"]
+			},
+			"tabletSidebar": {
+				"type": "string",
+				"title": "平板端侧边栏",
+				"description": "平板端（769-1279px）显示哪侧侧边栏，仅 position 为 both 时生效。",
+				"enum": ["left", "right"],
+				"x-enumLabels": ["左侧", "右侧"]
+			},
+			"hideSidebarOnPostPage": {
+				"type": "boolean",
+				"title": "文章页隐藏侧边栏",
+				"description": "文章详情页隐藏侧边栏，设为 true 则只在首页等非文章页显示。"
+			},
+			"noSidebarContentWidth": {
+				"type": "number",
+				"title": "无侧栏内容宽度",
+				"description": "本页没有侧栏列时，内容栏占「侧栏 + 内容栏」总宽的比例（0–1），不设置或 ≥1 则铺满。",
+				"minimum": 0,
+				"maximum": 1
+			},
+			"leftComponents": {
+				"type": "array",
+				"title": "左侧边栏组件",
+				"description": "左侧边栏组件配置列表，渲染顺序取决于数组中的出现顺序（top 优先于 sticky）。",
+				"x-itemTitle": "type",
+				"items": {
+					"type": "object",
+					"properties": {
+						"type": {
+							"type": "string",
+							"title": "组件类型",
+							"description": "组件类型。",
+							"enum": [
+								"profile",
+								"announcement",
+								"music",
+								"categories",
+								"tags",
+								"dynamic",
+								"stats",
+								"siteInfo",
+								"calendar",
+								"sidebarToc",
+								"advertisement"
+							],
+							"x-enumLabels": [
+								"资料卡",
+								"公告",
+								"音乐",
+								"分类",
+								"标签",
+								"最新动态",
+								"站点统计",
+								"站点信息",
+								"日历",
+								"目录",
+								"广告"
+							]
+						},
+						"enable": {
+							"type": "boolean",
+							"title": "启用组件",
+							"description": "是否启用该组件。"
+						},
+						"showTitle": {
+							"type": "boolean",
+							"title": "显示标题",
+							"description": "是否显示该组件标题，默认 true。"
+						},
+						"position": {
+							"type": "string",
+							"title": "组件位置",
+							"description": "组件位置：top 固定顶部，sticky 粘性定位（会跟随页面滚动）。",
+							"enum": ["top", "sticky"],
+							"x-enumLabels": ["固定顶部", "粘性跟随滚动"]
+						},
+						"showOnPostPage": {
+							"type": "boolean",
+							"title": "文章页显示",
+							"description": "是否在文章详情页显示该组件。"
+						},
+						"hideOnNonPostPage": {
+							"type": "boolean",
+							"title": "非文章页隐藏",
+							"description": "是否在非文章详情页隐藏该组件（true 表示仅文章详情页显示）。"
+						},
+						"specificConfig": {
+							"type": "object",
+							"x-editor": "json",
+							"title": "组件专属配置",
+							"description": "组件专属配置对象，JSON 格式。"
+						}
+					}
+				}
+			},
+			"rightComponents": {
+				"type": "array",
+				"title": "右侧边栏组件",
+				"description": "右侧边栏组件配置列表，渲染顺序取决于数组中的出现顺序（top 优先于 sticky）。",
+				"x-itemTitle": "type",
+				"items": {
+					"type": "object",
+					"properties": {
+						"type": {
+							"type": "string",
+							"title": "组件类型",
+							"description": "组件类型。",
+							"enum": [
+								"profile",
+								"announcement",
+								"music",
+								"categories",
+								"tags",
+								"dynamic",
+								"stats",
+								"siteInfo",
+								"calendar",
+								"sidebarToc",
+								"advertisement"
+							],
+							"x-enumLabels": [
+								"资料卡",
+								"公告",
+								"音乐",
+								"分类",
+								"标签",
+								"最新动态",
+								"站点统计",
+								"站点信息",
+								"日历",
+								"目录",
+								"广告"
+							]
+						},
+						"enable": {
+							"type": "boolean",
+							"title": "启用组件",
+							"description": "是否启用该组件。"
+						},
+						"showTitle": {
+							"type": "boolean",
+							"title": "显示标题",
+							"description": "是否显示该组件标题，默认 true。"
+						},
+						"position": {
+							"type": "string",
+							"title": "组件位置",
+							"description": "组件位置：top 固定顶部，sticky 粘性定位（会跟随页面滚动）。",
+							"enum": ["top", "sticky"],
+							"x-enumLabels": ["固定顶部", "粘性跟随滚动"]
+						},
+						"showOnPostPage": {
+							"type": "boolean",
+							"title": "文章页显示",
+							"description": "是否在文章详情页显示该组件。"
+						},
+						"hideOnNonPostPage": {
+							"type": "boolean",
+							"title": "非文章页隐藏",
+							"description": "是否在非文章详情页隐藏该组件（true 表示仅文章详情页显示）。"
+						},
+						"specificConfig": {
+							"type": "object",
+							"x-editor": "json",
+							"title": "组件专属配置",
+							"description": "组件专属配置对象，JSON 格式。"
+						}
+					}
+				}
+			},
+			"mobileBottomComponents": {
+				"type": "array",
+				"title": "移动端底部组件",
+				"description": "移动端底部组件配置列表，仅在移动端（<768px）显示于页面底部，独立于左右侧边栏配置。",
+				"x-itemTitle": "type",
+				"items": {
+					"type": "object",
+					"properties": {
+						"type": {
+							"type": "string",
+							"title": "组件类型",
+							"description": "组件类型。",
+							"enum": [
+								"profile",
+								"announcement",
+								"music",
+								"categories",
+								"tags",
+								"dynamic",
+								"stats",
+								"siteInfo",
+								"calendar",
+								"sidebarToc",
+								"advertisement"
+							],
+							"x-enumLabels": [
+								"资料卡",
+								"公告",
+								"音乐",
+								"分类",
+								"标签",
+								"最新动态",
+								"站点统计",
+								"站点信息",
+								"日历",
+								"目录",
+								"广告"
+							]
+						},
+						"enable": {
+							"type": "boolean",
+							"title": "启用组件",
+							"description": "是否启用该组件。"
+						},
+						"showTitle": {
+							"type": "boolean",
+							"title": "显示标题",
+							"description": "是否显示该组件标题，默认 true。"
+						},
+						"showOnPostPage": {
+							"type": "boolean",
+							"title": "文章页显示",
+							"description": "是否在文章详情页显示该组件。"
+						},
+						"hideOnNonPostPage": {
+							"type": "boolean",
+							"title": "非文章页隐藏",
+							"description": "是否在非文章详情页隐藏该组件（true 表示仅文章详情页显示）。"
+						},
+						"specificConfig": {
+							"type": "object",
+							"x-editor": "json",
+							"title": "组件专属配置",
+							"description": "组件专属配置对象，JSON 格式。"
+						}
+					}
+				}
+			}
+		}
+	}
+}

@@ -21,7 +21,10 @@
     "lint": "biome check --write ./src ./scripts",
     "preinstall": "npx only-allow pnpm",
     "lqips": "npx tsx scripts/generate-lqips.ts",
-    "github-cards": "npx tsx scripts/generate-github-card-data.ts"
+    "github-cards": "npx tsx scripts/generate-github-card-data.ts",
+    "admin": "tsx admin/server/index.ts",
+    "admin:check": "tsc --noEmit -p admin/tsconfig.json",
+    "admin:hash-password": "node admin/scripts/hash-password.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
@@ -36,6 +39,9 @@
     "@expressive-code/plugin-line-numbers": "^0.44.2",
     "@fancyapps/ui": "^6.1.14",
     "@fontsource-variable/noto-sans-sc": "^5.3.0",
+    "@hono/node-server": "^2.1.1",
+    "ajv": "^8.20.0",
+    "hono": "^4.13.8",
     "@iconify-json/fa7-brands": "^1.2.4",
     "@iconify-json/fa7-regular": "^1.2.3",
     "@iconify-json/fa7-solid": "^1.2.5",
@@ -99,6 +105,7 @@
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/svg-spinners": "^1.2.4",
     "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^24.0.0",
     "@types/qrcode": "^1.5.6",
     "@types/sanitize-html": "^2.16.1",
     "esbuild": "^0.28.2",

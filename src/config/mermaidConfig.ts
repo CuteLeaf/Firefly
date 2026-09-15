@@ -1,4 +1,5 @@
 import type { MermaidConfig } from "../types/mermaidConfig";
+import { mergeUserConfig } from "./user-config";
 
 /**
  * Mermaid 图表渲染配置
@@ -8,7 +9,7 @@ import type { MermaidConfig } from "../types/mermaidConfig";
  *
  * @see https://github.com/Latias94/merman
  */
-export const mermaidConfig: MermaidConfig = {
+export const mermaidConfigDefaults: MermaidConfig = {
 	/**
 	 * 亮色模式主题。
 	 * 可选：editor-light、gruvbox-light、ayu-light。
@@ -21,3 +22,8 @@ export const mermaidConfig: MermaidConfig = {
 	 */
 	darkTheme: "editor-dark",
 };
+
+export const mermaidConfig: MermaidConfig = mergeUserConfig(
+	"mermaid",
+	mermaidConfigDefaults,
+);

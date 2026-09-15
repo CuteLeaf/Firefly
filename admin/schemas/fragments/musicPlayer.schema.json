@@ -1,0 +1,143 @@
+{
+	"key": "musicPlayer",
+	"title": "音乐播放器",
+	"description": "配置导航栏与侧边栏的音乐播放器，支持 Meting API 或本地音乐列表两种模式。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"showInNavbar": {
+				"type": "boolean",
+				"title": "导航栏显示",
+				"description": "是否在导航栏显示音乐播放器入口"
+			},
+			"showInSidebar": {
+				"type": "boolean",
+				"title": "侧边栏显示",
+				"description": "是否在侧边栏显示音乐播放器组件"
+			},
+			"mode": {
+				"type": "string",
+				"title": "使用方式",
+				"description": "选择音乐来源：Meting API 或本地音乐列表",
+				"enum": ["meting", "local"],
+				"x-enumLabels": ["Meting API", "本地列表"]
+			},
+			"volume": {
+				"type": "number",
+				"title": "默认音量",
+				"description": "默认音量（0-1）",
+				"minimum": 0,
+				"maximum": 1
+			},
+			"playMode": {
+				"type": "string",
+				"title": "播放模式",
+				"description": "播放模式：列表循环 / 单曲循环 / 随机播放",
+				"enum": ["list", "one", "random"],
+				"x-enumLabels": ["列表循环", "单曲循环", "随机播放"]
+			},
+			"showLyrics": {
+				"type": "boolean",
+				"title": "显示歌词",
+				"description": "是否显示歌词"
+			},
+			"meting": {
+				"type": "object",
+				"title": "Meting API 配置",
+				"description": "Meting API 音乐平台配置（使用方式为 Meting API 时生效）",
+				"x-if": {
+					"field": "mode",
+					"equals": "meting"
+				},
+				"properties": {
+					"api": {
+						"type": "string",
+						"title": "API 地址",
+						"description": "Meting API 地址，默认使用官方 API，也可以使用自定义 API",
+						"x-format": "url"
+					},
+					"server": {
+						"type": "string",
+						"title": "音乐平台",
+						"description": "音乐平台",
+						"enum": ["netease", "tencent", "kugou", "xiami", "baidu"],
+						"x-enumLabels": ["网易云", "QQ音乐", "酷狗", "虾米", "百度"]
+					},
+					"type": {
+						"type": "string",
+						"title": "资源类型",
+						"description": "资源类型：单曲 / 歌单 / 专辑 / 搜索 / 艺术家",
+						"enum": ["song", "playlist", "album", "search", "artist"],
+						"x-enumLabels": ["单曲", "歌单", "专辑", "搜索", "艺术家"]
+					},
+					"id": {
+						"type": "string",
+						"title": "ID / 关键词",
+						"description": "歌单/专辑/单曲 ID 或搜索关键词"
+					},
+					"auth": {
+						"type": "string",
+						"title": "认证 Token",
+						"description": "认证 token（可选）"
+					},
+					"fallbackApis": {
+						"type": "array",
+						"title": "备用 API",
+						"description": "备用 API 配置（当主 API 失败时使用）",
+						"items": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"local": {
+				"type": "object",
+				"title": "本地音乐配置",
+				"description": "本地音乐列表配置（使用方式为本地列表时生效）",
+				"x-if": {
+					"field": "mode",
+					"equals": "local"
+				},
+				"properties": {
+					"playlist": {
+						"type": "array",
+						"title": "播放列表",
+						"description": "本地音乐播放列表",
+						"x-itemTitle": "name",
+						"items": {
+							"type": "object",
+							"properties": {
+								"name": {
+									"type": "string",
+									"title": "歌曲名称",
+									"description": "歌曲名称"
+								},
+								"artist": {
+									"type": "string",
+									"title": "艺术家",
+									"description": "艺术家"
+								},
+								"url": {
+									"type": "string",
+									"title": "音乐文件路径",
+									"description": "音乐文件路径（相对于 public 目录）"
+								},
+								"cover": {
+									"type": "string",
+									"title": "封面图片路径",
+									"description": "封面图片路径（相对于 public 目录）"
+								},
+								"lrc": {
+									"type": "string",
+									"title": "歌词",
+									"description": "歌词内容，支持 LRC 格式（可填文件路径或歌词字符串）",
+									"x-format": "textarea"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

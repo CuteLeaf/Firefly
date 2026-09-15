@@ -1,0 +1,35 @@
+{
+	"key": "friendsPage",
+	"title": "友链页面",
+	"description": "配置友链页面的标题、描述、自定义内容与排序等显示选项。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"title": {
+				"title": "页面标题",
+				"description": "页面标题，如果留空则使用 i18n 中的翻译。",
+				"type": "string"
+			},
+			"description": {
+				"title": "页面描述",
+				"description": "页面描述文本，如果留空则使用 i18n 中的翻译。",
+				"type": "string"
+			},
+			"showCustomContent": {
+				"title": "显示自定义内容",
+				"description": "是否显示底部自定义内容（friends.mdx 中的内容）。",
+				"type": "boolean"
+			},
+			"showComment": {
+				"title": "显示评论区",
+				"description": "是否显示评论区，需要先在 commentConfig.ts 启用评论系统。",
+				"type": "boolean"
+			},
+			"randomizeSort": {
+				"title": "随机排序",
+				"description": "是否开启随机排序，开启后会忽略权重，构建时进行一次随机排序。",
+				"type": "boolean"
+			}
+		}
+	}
+}

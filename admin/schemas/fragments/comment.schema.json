@@ -1,0 +1,197 @@
+{
+	"key": "comment",
+	"title": "评论系统",
+	"description": "配置博客评论系统：支持 Twikoo、Waline、Giscus、Disqus、Artalk，也可选择不启用评论。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"type": {
+				"type": "string",
+				"title": "评论系统类型",
+				"description": "当前启用的评论系统类型，选择「不启用」则关闭评论系统。",
+				"enum": ["none", "twikoo", "waline", "giscus", "disqus", "artalk"],
+				"x-enumLabels": [
+					"不启用",
+					"Twikoo",
+					"Waline",
+					"Giscus",
+					"Disqus",
+					"Artalk"
+				]
+			},
+			"twikoo": {
+				"type": "object",
+				"title": "Twikoo 配置",
+				"description": "Twikoo 评论系统配置，仅当上方类型选择 Twikoo 时生效。",
+				"x-if": { "field": "type", "equals": "twikoo" },
+				"properties": {
+					"envId": {
+						"type": "string",
+						"x-format": "url",
+						"title": "环境 ID / 服务地址",
+						"description": "Twikoo 部署地址（环境 ID）。"
+					},
+					"lang": {
+						"type": "string",
+						"title": "语言",
+						"description": "设置 Twikoo 评论系统语言。"
+					},
+					"visitorCount": {
+						"type": "boolean",
+						"title": "访问量统计",
+						"description": "是否启用文章访问量统计功能。"
+					},
+					"jsUrl": {
+						"type": "string",
+						"x-format": "url",
+						"title": "JS 文件地址",
+						"description": "Twikoo JS 文件地址，支持 CDN 链接。"
+					},
+					"cssUrl": {
+						"type": "string",
+						"x-format": "url",
+						"title": "CSS 文件地址",
+						"description": "Twikoo 自定义 CSS 文件地址，为空则不加载。"
+					}
+				}
+			},
+			"waline": {
+				"type": "object",
+				"title": "Waline 配置",
+				"description": "Waline 评论系统配置，仅当上方类型选择 Waline 时生效。",
+				"x-if": { "field": "type", "equals": "waline" },
+				"properties": {
+					"serverURL": {
+						"type": "string",
+						"x-format": "url",
+						"title": "后端服务地址",
+						"description": "Waline 后端服务地址。"
+					},
+					"lang": {
+						"type": "string",
+						"title": "语言",
+						"description": "设置 Waline 评论系统语言。"
+					},
+					"emoji": {
+						"type": "array",
+						"title": "表情地址",
+						"description": "设置 Waline 评论系统表情地址，每行一个。",
+						"items": { "type": "string" }
+					},
+					"login": {
+						"type": "string",
+						"title": "登录模式",
+						"description": "评论登录模式：允许匿名与第三方登录、强制登录、或仅匿名评论。",
+						"enum": ["enable", "force", "disable"],
+						"x-enumLabels": ["允许匿名与第三方登录", "强制登录", "仅匿名评论"]
+					},
+					"visitorCount": {
+						"type": "boolean",
+						"title": "访问量统计",
+						"description": "是否启用文章访问量统计功能。"
+					}
+				}
+			},
+			"artalk": {
+				"type": "object",
+				"title": "Artalk 配置",
+				"description": "Artalk 评论系统配置，仅当上方类型选择 Artalk 时生效。",
+				"x-if": { "field": "type", "equals": "artalk" },
+				"properties": {
+					"server": {
+						"type": "string",
+						"x-format": "url",
+						"title": "后端 API 地址",
+						"description": "Artalk 后端程序 API 地址。"
+					},
+					"locale": {
+						"type": "string",
+						"title": "语言",
+						"description": "设置 Artalk 语言，设为 auto 则跟随系统。"
+					},
+					"visitorCount": {
+						"type": "boolean",
+						"title": "访问量统计",
+						"description": "是否启用文章访问量统计功能。"
+					}
+				}
+			},
+			"giscus": {
+				"type": "object",
+				"title": "Giscus 配置",
+				"description": "Giscus 评论系统配置，仅当上方类型选择 Giscus 时生效。",
+				"x-if": { "field": "type", "equals": "giscus" },
+				"properties": {
+					"repo": {
+						"type": "string",
+						"title": "仓库",
+						"description": "设置 Giscus 评论系统仓库。"
+					},
+					"repoId": {
+						"type": "string",
+						"title": "仓库 ID",
+						"description": "设置 Giscus 评论系统仓库 ID。"
+					},
+					"category": {
+						"type": "string",
+						"title": "分类",
+						"description": "设置 Giscus 评论系统分类。"
+					},
+					"categoryId": {
+						"type": "string",
+						"title": "分类 ID",
+						"description": "获取 Giscus 评论系统分类 ID。"
+					},
+					"mapping": {
+						"type": "string",
+						"title": "映射方式",
+						"description": "获取 Giscus 评论系统映射方式。"
+					},
+					"strict": {
+						"type": "string",
+						"title": "严格模式",
+						"description": "获取 Giscus 评论系统严格模式。"
+					},
+					"reactionsEnabled": {
+						"type": "string",
+						"title": "反应功能",
+						"description": "获取 Giscus 评论系统反应功能。"
+					},
+					"emitMetadata": {
+						"type": "string",
+						"title": "元数据功能",
+						"description": "获取 Giscus 评论系统元数据功能。"
+					},
+					"inputPosition": {
+						"type": "string",
+						"title": "输入位置",
+						"description": "获取 Giscus 评论系统输入位置。"
+					},
+					"lang": {
+						"type": "string",
+						"title": "语言",
+						"description": "获取 Giscus 评论系统语言。"
+					},
+					"loading": {
+						"type": "string",
+						"title": "加载方式",
+						"description": "获取 Giscus 评论系统加载方式。"
+					}
+				}
+			},
+			"disqus": {
+				"type": "object",
+				"title": "Disqus 配置",
+				"description": "Disqus 评论系统配置，仅当上方类型选择 Disqus 时生效。",
+				"x-if": { "field": "type", "equals": "disqus" },
+				"properties": {
+					"shortname": {
+						"type": "string",
+						"title": "站点短名",
+						"description": "获取 Disqus 评论系统站点短名（shortname）。"
+					}
+				}
+			}
+		}
+	}
+}

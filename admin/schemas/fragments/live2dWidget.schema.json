@@ -1,0 +1,214 @@
+{
+	"key": "live2dWidget",
+	"title": "Live2D 看板娘",
+	"description": "配置 Live2D 看板娘的模型、位置、菜单与提示气泡等行为（基于 l2d-widget 库）。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"enable": {
+				"type": "boolean",
+				"title": "启用 Live2D 看板娘",
+				"description": "是否启用 Live2D 看板娘"
+			},
+			"model": {
+				"type": "array",
+				"title": "模型配置",
+				"description": "模型配置，支持单个模型或数组（多模型切换）",
+				"x-itemTitle": "path",
+				"items": {
+					"type": "object",
+					"properties": {
+						"path": {
+							"type": "string",
+							"title": "模型文件路径",
+							"description": "Live2D 模型文件路径，支持本地路径或外部直连 URL"
+						},
+						"volume": {
+							"type": "number",
+							"title": "动作声音音量",
+							"description": "动作声音音量，范围 0-1，默认 0（静音）",
+							"minimum": 0,
+							"maximum": 1
+						},
+						"scale": {
+							"type": "number",
+							"title": "模型缩放比例",
+							"description": "模型缩放比例，默认 1",
+							"minimum": 0
+						},
+						"x": {
+							"type": "number",
+							"title": "X 轴偏移",
+							"description": "X 轴偏移，范围 -2~2，正值向右",
+							"minimum": -2,
+							"maximum": 2
+						},
+						"y": {
+							"type": "number",
+							"title": "Y 轴偏移",
+							"description": "Y 轴偏移，范围 -2~2，正值向上",
+							"minimum": -2,
+							"maximum": 2
+						}
+					}
+				}
+			},
+			"position": {
+				"type": "string",
+				"title": "显示位置",
+				"description": "显示位置，默认 bottom-left",
+				"enum": ["bottom-left", "bottom-right"],
+				"x-enumLabels": ["左下角", "右下角"]
+			},
+			"size": {
+				"type": "object",
+				"title": "画布尺寸",
+				"description": "画布尺寸（px）",
+				"properties": {
+					"width": {
+						"type": "number",
+						"title": "画布宽度",
+						"description": "画布宽度（px）",
+						"minimum": 0
+					},
+					"height": {
+						"type": "number",
+						"title": "画布高度",
+						"description": "画布高度（px）",
+						"minimum": 0
+					}
+				}
+			},
+			"primaryColor": {
+				"type": "string",
+				"title": "主题色",
+				"description": "主题色，用于菜单、状态条等 UI 元素的背景色，支持 CSS 变量或 rgba() 等颜色值",
+				"x-format": "color"
+			},
+			"transitionDuration": {
+				"type": "number",
+				"title": "过渡动画时长",
+				"description": "入场/退场动画时长（ms），默认 1500",
+				"minimum": 0
+			},
+			"transitionType": {
+				"type": "string",
+				"title": "过渡动画类型",
+				"description": "入场/退场动画类型，默认 slide",
+				"enum": ["slide", "fade"],
+				"x-enumLabels": ["滑动", "淡入淡出"]
+			},
+			"menus": {
+				"type": "object",
+				"title": "菜单配置",
+				"description": "菜单配置",
+				"properties": {
+					"items": {
+						"type": "array",
+						"title": "菜单项",
+						"description": "完全替换默认菜单项",
+						"x-itemTitle": "label",
+						"items": {
+							"type": "object",
+							"properties": {
+								"icon": {
+									"type": "string",
+									"title": "图标",
+									"description": "菜单图标（iconify 图标名）"
+								},
+								"label": {
+									"type": "string",
+									"title": "标签",
+									"description": "菜单项标签文本"
+								},
+								"action": {
+									"type": "string",
+									"title": "动作",
+									"description": "菜单项动作标识"
+								}
+							}
+						}
+					},
+					"align": {
+						"type": "string",
+						"title": "菜单对齐方式",
+						"description": "菜单对齐方式，默认 right",
+						"enum": ["left", "right"],
+						"x-enumLabels": ["左对齐", "右对齐"]
+					}
+				}
+			},
+			"tips": {
+				"type": "object",
+				"title": "提示气泡配置",
+				"description": "提示气泡配置",
+				"properties": {
+					"enable": {
+						"type": "boolean",
+						"title": "气泡开关",
+						"description": "气泡开关，默认 true"
+					},
+					"welcomeMessage": {
+						"type": "array",
+						"title": "欢迎消息",
+						"description": "初始欢迎消息",
+						"items": { "type": "string" }
+					},
+					"messages": {
+						"type": "array",
+						"title": "循环提示内容",
+						"description": "循环提示内容",
+						"items": { "type": "string" }
+					},
+					"duration": {
+						"type": "number",
+						"title": "文字显示时间",
+						"description": "每条提示展示时长（ms），默认 3000",
+						"minimum": 0
+					},
+					"interval": {
+						"type": "number",
+						"title": "切换间隔",
+						"description": "提示循环间隔（ms），默认 5000",
+						"minimum": 0
+					},
+					"offset": {
+						"type": "object",
+						"title": "位置偏移",
+						"description": "位置偏移量（px），基于默认位置（模型正上方居中）进行微调",
+						"properties": {
+							"x": {
+								"type": "number",
+								"title": "水平偏移",
+								"description": "水平偏移，正值右移，负值左移"
+							},
+							"y": {
+								"type": "number",
+								"title": "垂直偏移",
+								"description": "垂直偏移，正值下移，负值上移"
+							}
+						}
+					}
+				}
+			},
+			"responsive": {
+				"type": "object",
+				"title": "响应式配置",
+				"description": "响应式配置",
+				"properties": {
+					"hideOnMobile": {
+						"type": "boolean",
+						"title": "移动端隐藏",
+						"description": "是否在移动端隐藏"
+					},
+					"mobileBreakpoint": {
+						"type": "number",
+						"title": "移动端断点",
+						"description": "移动端断点（px），默认 768",
+						"minimum": 0
+					}
+				}
+			}
+		}
+	}
+}

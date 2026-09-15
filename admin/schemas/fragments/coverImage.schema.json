@@ -1,0 +1,45 @@
+{
+	"key": "coverImage",
+	"title": "封面图",
+	"description": "配置文章详情页封面图显示与随机封面图 API。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"enableInPost": {
+				"type": "boolean",
+				"title": "在文章详情页显示封面图",
+				"description": "是否在文章详情页显示封面图。"
+			},
+			"enableInPostOverlay": {
+				"type": "boolean",
+				"title": "标题叠加封面布局",
+				"description": "是否使用标题和元数据叠加在封面上的布局。"
+			},
+			"showLoading": {
+				"type": "boolean",
+				"title": "显示加载动画",
+				"description": "是否显示转圈圈加载动画，会替代掉 LQIP。"
+			},
+			"randomCoverImage": {
+				"type": "object",
+				"title": "随机封面图",
+				"description": "随机封面图功能配置，在文章 Frontmatter 中设置 image: \"api\" 即可使用。",
+				"properties": {
+					"enable": {
+						"type": "boolean",
+						"title": "启用随机封面图",
+						"description": "随机封面图功能开关。"
+					},
+					"apis": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"title": "封面图 API 列表",
+						"description": "随机封面图 API 列表，每行一个，系统会依次尝试所有 API，全部失败后保留 LQIP 并显示错误提示。"
+					}
+				}
+			}
+		}
+	}
+}

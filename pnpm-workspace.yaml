@@ -3,3 +3,6 @@ packages:
 allowBuilds:
   esbuild: true
   workerd: true
+  sharp: true
+minimumReleaseAgeExclude:
+  - hono@4.13.8

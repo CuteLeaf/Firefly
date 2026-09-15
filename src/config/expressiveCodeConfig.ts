@@ -1,4 +1,5 @@
 import type { ExpressiveCodeConfig } from "../types/expressiveCodeConfig";
+import { mergeUserConfig } from "./user-config";
 
 /**
  * expressive-code配置
@@ -6,7 +7,7 @@ import type { ExpressiveCodeConfig } from "../types/expressiveCodeConfig";
  * 修改本配置后需要重启Astro开发服务器才能生效
  */
 
-export const expressiveCodeConfig: ExpressiveCodeConfig = {
+export const expressiveCodeConfigDefaults: ExpressiveCodeConfig = {
 	// 暗色主题（用于暗色模式）
 	darkTheme: "one-dark-pro",
 
@@ -44,3 +45,8 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
 		excludedLangs: [],
 	},
 };
+
+export const expressiveCodeConfig: ExpressiveCodeConfig = mergeUserConfig(
+	"expressiveCode",
+	expressiveCodeConfigDefaults,
+);

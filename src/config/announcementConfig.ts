@@ -1,6 +1,7 @@
 import type { AnnouncementConfig } from "../types/announcementConfig";
+import { mergeUserConfig } from "./user-config";
 
-export const announcementConfig: AnnouncementConfig = {
+export const announcementConfigDefaults: AnnouncementConfig = {
 	// 公告标题，留空则走i18n默认标题
 	title: "",
 
@@ -21,3 +22,8 @@ export const announcementConfig: AnnouncementConfig = {
 		external: false,
 	},
 };
+
+export const announcementConfig: AnnouncementConfig = mergeUserConfig(
+	"announcement",
+	announcementConfigDefaults,
+);

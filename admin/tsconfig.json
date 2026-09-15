@@ -1,0 +1,14 @@
+{
+	"extends": "../tsconfig.json",
+	"compilerOptions": {
+		"noEmit": true,
+		"types": ["node"],
+		"strictNullChecks": true
+	},
+	"include": [
+		"./server/**/*",
+		"./scripts/**/*",
+		"./admin.config.ts",
+		"./env.d.ts"
+	]
+}
