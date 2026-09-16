@@ -1,0 +1,31 @@
+{
+	"key": "license",
+	"title": "许可证",
+	"description": "控制文章顶部许可证信息的显示，以及许可证名称、链接与自定义图标。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"enable": {
+				"type": "boolean",
+				"title": "启用许可证显示",
+				"description": "是否启用文章顶部许可证信息显示。"
+			},
+			"name": {
+				"type": "string",
+				"title": "许可证名称",
+				"description": "许可证名称，例如 CC BY-NC-SA 4.0。"
+			},
+			"url": {
+				"type": "string",
+				"title": "许可证链接",
+				"description": "许可证详情页链接。",
+				"x-format": "url"
+			},
+			"icon": {
+				"type": "string",
+				"title": "自定义图标",
+				"description": "可选的自定义许可证图标（iconify 图标名）；留空时根据许可证名称自动匹配图标。"
+			}
+		}
+	}
+}

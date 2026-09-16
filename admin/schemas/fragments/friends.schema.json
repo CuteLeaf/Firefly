@@ -1,0 +1,54 @@
+{
+	"key": "friends",
+	"title": "友链列表",
+	"description": "友链列表，每项代表一个友情链接。",
+	"schema": {
+		"type": "array",
+		"x-itemTitle": "title",
+		"items": {
+			"type": "object",
+			"properties": {
+				"title": {
+					"title": "友链标题",
+					"description": "友链标题。",
+					"type": "string"
+				},
+				"imgurl": {
+					"title": "头像图片",
+					"description": "头像图片 URL。",
+					"type": "string",
+					"x-format": "url"
+				},
+				"desc": {
+					"title": "友链描述",
+					"description": "友链描述。",
+					"type": "string",
+					"x-format": "textarea"
+				},
+				"siteurl": {
+					"title": "友链地址",
+					"description": "友链地址。",
+					"type": "string",
+					"x-format": "url"
+				},
+				"tags": {
+					"title": "标签",
+					"description": "标签数组。",
+					"type": "array",
+					"items": { "type": "string" },
+					"x-tags": true
+				},
+				"weight": {
+					"title": "权重",
+					"description": "权重，数字越大排序越靠前。",
+					"type": "number"
+				},
+				"enabled": {
+					"title": "是否启用",
+					"description": "是否启用该友链。",
+					"type": "boolean"
+				}
+			}
+		}
+	}
+}

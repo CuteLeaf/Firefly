@@ -1,6 +1,7 @@
 import type { DynamicConfig } from "@/types/dynamicConfig";
+import { mergeUserConfig } from "./user-config";
 
-export const dynamicConfig: DynamicConfig = {
+export const dynamicConfigDefaults: DynamicConfig = {
 	// 页面标题，如果留空则使用 i18n 中的翻译
 	title: "",
 
@@ -37,3 +38,8 @@ export const dynamicConfig: DynamicConfig = {
 		parent: "users/xiaye",
 	},
 };
+
+export const dynamicConfig: DynamicConfig = mergeUserConfig(
+	"dynamic",
+	dynamicConfigDefaults,
+);

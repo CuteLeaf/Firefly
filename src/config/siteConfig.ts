@@ -1,6 +1,7 @@
 import type { SiteConfig } from "@/types/siteConfig";
 import { resolvePageToggles } from "../utils/page-toggle-utils";
 import { resolveSiteLang } from "../utils/site-config-utils";
+import { mergeUserConfig } from "./user-config";
 
 // 定义站点语言
 // 语言代码，例如：'zh_CN', 'zh_TW', 'en', 'ja', 'ru', 'ko'。
@@ -40,35 +41,27 @@ const pages = resolvePageToggles({
 	sponsor: true,
 });
 
-export const siteConfig: SiteConfig = {
+export const siteConfigDefaults: SiteConfig = {
 	// 站点标题
-	title: "Firefly",
+	title: "滞弈轩",
 
 	// 站点副标题
-	subtitle: "Demo site",
+	subtitle: "枫弈千魂的个人博客",
 
 	// 站点 URL
-	site_url: "https://firefly.cuteleaf.cn",
+	site_url: "https://47.120.45.22:4321",
 
 	// 站点描述
 	description:
-		"Firefly 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。",
+		"枫弈千魂的个人博客「使用CuteLeaf大佬的模版，感谢！连接如下https://github.com/CuteLeaf/Firefly」",
 
 	// 站点关键词
-	keywords: [
-		"Firefly",
-		"Fuwari",
-		"Astro",
-		"ACGN",
-		"博客",
-		"技术博客",
-		"静态博客",
-	],
+	keywords: ["枫弈千魂", "fengyi_qianhun", "滞弈轩", "博客"],
 
 	// 主题色
 	themeColor: {
 		// 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
-		hue: 165,
+		hue: 0,
 		// 默认模式："light" 亮色，"dark" 暗色，"system" 跟随系统
 		defaultMode: "system",
 	},
@@ -363,3 +356,9 @@ export const siteConfig: SiteConfig = {
 	// 页面开关配置，在本配置文件顶部pages定义
 	pages,
 };
+
+// 合并后台（user-config.json）中的个性化覆盖值
+export const siteConfig: SiteConfig = mergeUserConfig(
+	"site",
+	siteConfigDefaults,
+);

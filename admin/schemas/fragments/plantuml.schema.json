@@ -1,0 +1,31 @@
+{
+	"key": "plantuml",
+	"title": "PlantUML 图表",
+	"description": "控制 Markdown 中 plantuml 代码块到 PlantUML 服务器 SVG 图片的编码与渲染行为。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"enable": {
+				"type": "boolean",
+				"title": "启用 PlantUML",
+				"description": "是否启用 PlantUML 渲染能力；关闭时 plantuml 代码块退化为普通代码高亮。"
+			},
+			"server": {
+				"type": "string",
+				"title": "服务器地址",
+				"description": "PlantUML 服务器地址（尾部斜杠会自动归一化）；默认使用官方公共服务器，敏感内容请替换为自建地址。",
+				"x-format": "url"
+			},
+			"lightTheme": {
+				"type": "string",
+				"title": "亮色主题",
+				"description": "亮色模式下注入到 PlantUML 源码的主题名（对应 !theme <name>）；留空表示不注入主题。"
+			},
+			"darkTheme": {
+				"type": "string",
+				"title": "暗色主题",
+				"description": "暗色模式下注入到 PlantUML 源码的主题名（对应 !theme <name>）；留空表示不注入，默认使用 cyborg 暗色主题。"
+			}
+		}
+	}
+}

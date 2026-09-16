@@ -22,6 +22,7 @@
  * 构建时脚本会自动扫描页面字符并生成轻量 woff2 子集。
  */
 import type { FontDefinition, FontSelectionConfig } from "@/types/fontConfig";
+import { mergeUserConfig } from "./user-config";
 
 // ─── Astro Font API 字体定义 ───────────────────────────────
 // 适用于 Astro Font API 的字体配置，支持自动下载、缓存和优化加载
@@ -84,7 +85,7 @@ export const fontsList: FontDefinition[] = [
 ];
 
 // ─── 字体选择与区域覆盖 ─────────────────────────────────────
-export const fontConfig: FontSelectionConfig = {
+export const fontConfigDefaults: FontSelectionConfig = {
 	// 是否启用自定义字体功能
 	enable: true,
 	// 当前选择的字体 CSS 变量名（对应上方 fonts 中的 cssVariable）
@@ -111,3 +112,8 @@ export const fontConfig: FontSelectionConfig = {
 		},
 	},
 };
+
+export const fontConfig: FontSelectionConfig = mergeUserConfig(
+	"font",
+	fontConfigDefaults,
+);

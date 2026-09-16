@@ -1,0 +1,89 @@
+{
+	"key": "expressiveCode",
+	"title": "代码高亮",
+	"description": "配置 expressive-code 代码高亮的明暗主题与折叠、语言徽章、语言 Logo 插件。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"darkTheme": {
+				"type": "string",
+				"title": "暗色主题",
+				"description": "暗色模式下使用的代码高亮主题，如 one-dark-pro。"
+			},
+			"lightTheme": {
+				"type": "string",
+				"title": "亮色主题",
+				"description": "亮色模式下使用的代码高亮主题，如 one-light。"
+			},
+			"pluginCollapsible": {
+				"type": "object",
+				"title": "代码块折叠插件",
+				"description": "代码块折叠插件配置。",
+				"properties": {
+					"enable": {
+						"type": "boolean",
+						"title": "启用折叠功能",
+						"description": "是否启用代码块折叠功能。"
+					},
+					"lineThreshold": {
+						"type": "integer",
+						"minimum": 1,
+						"title": "触发折叠行数阈值",
+						"description": "当代码行数超过该值时显示折叠按钮，默认 15。"
+					},
+					"previewLines": {
+						"type": "integer",
+						"minimum": 1,
+						"title": "折叠预览行数",
+						"description": "折叠时显示的预览行数，默认 8。"
+					},
+					"defaultCollapsed": {
+						"type": "boolean",
+						"title": "默认折叠",
+						"description": "是否默认折叠长代码块，默认 true。"
+					}
+				}
+			},
+			"pluginLanguageBadge": {
+				"type": "object",
+				"title": "语言徽章插件",
+				"description": "在代码块右上角显示语言名称文本。",
+				"properties": {
+					"enable": {
+						"type": "boolean",
+						"title": "启用语言徽章",
+						"description": "是否启用语言徽章插件。"
+					}
+				}
+			},
+			"pluginLanguageLogo": {
+				"type": "object",
+				"title": "语言 Logo 插件",
+				"description": "在代码块右下角显示语言图标。",
+				"properties": {
+					"enable": {
+						"type": "boolean",
+						"title": "启用语言 Logo",
+						"description": "是否启用语言 Logo 插件。"
+					},
+					"color": {
+						"type": "string",
+						"enum": ["mono", "original", "theme"],
+						"x-enumLabels": ["单色", "原始品牌色", "代码块前景色"],
+						"title": "Logo 颜色模式",
+						"description": "Logo 颜色模式：mono 单色（自动适配亮暗色主题）、original 原始品牌色、theme 代码块前景色，也可填写自定义十六进制色值（如 #ff6600）。"
+					},
+					"excludedLangs": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"x-tags": true,
+						"title": "排除的语言列表",
+						"description": "需要排除的语言列表，这些语言不会显示 Logo。"
+					}
+				}
+			}
+		}
+	}
+}

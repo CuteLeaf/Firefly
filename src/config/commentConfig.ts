@@ -1,6 +1,7 @@
 import type { CommentConfig } from "../types/commentConfig";
+import { mergeUserConfig } from "./user-config";
 
-export const commentConfig: CommentConfig = {
+export const commentConfigDefaults: CommentConfig = {
 	// 评论系统类型: none, twikoo, waline, giscus, disqus, artalk，默认为none，即不启用评论系统
 	type: "none",
 
@@ -83,3 +84,8 @@ export const commentConfig: CommentConfig = {
 		shortname: "firefly",
 	},
 };
+
+export const commentConfig: CommentConfig = mergeUserConfig(
+	"comment",
+	commentConfigDefaults,
+);

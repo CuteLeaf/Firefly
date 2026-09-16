@@ -1,0 +1,158 @@
+{
+	"key": "spineModel",
+	"title": "Spine 看板娘",
+	"description": "配置 Spine 看板娘的显示位置、模型、交互与响应式行为。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"enable": {
+				"type": "boolean",
+				"title": "启用 Spine 看板娘",
+				"description": "是否启用 Spine 看板娘"
+			},
+			"model": {
+				"type": "object",
+				"title": "模型配置",
+				"description": "Spine 模型配置",
+				"properties": {
+					"path": {
+						"type": "string",
+						"title": "模型文件路径",
+						"description": "Spine 模型文件路径（.json）"
+					},
+					"scale": {
+						"type": "number",
+						"title": "模型缩放比例",
+						"description": "模型缩放比例，默认 1.0",
+						"minimum": 0
+					},
+					"x": {
+						"type": "number",
+						"title": "X 轴偏移",
+						"description": "X 轴偏移，默认 0"
+					},
+					"y": {
+						"type": "number",
+						"title": "Y 轴偏移",
+						"description": "Y 轴偏移，默认 0"
+					}
+				}
+			},
+			"position": {
+				"type": "object",
+				"title": "位置配置",
+				"description": "位置配置",
+				"properties": {
+					"corner": {
+						"type": "string",
+						"title": "显示位置",
+						"description": "显示位置，注意：在右下角可能会挡住返回顶部按钮",
+						"enum": ["bottom-left", "bottom-right", "top-left", "top-right"],
+						"x-enumLabels": ["左下角", "右下角", "左上角", "右上角"]
+					},
+					"offsetX": {
+						"type": "number",
+						"title": "水平偏移",
+						"description": "距离边缘的水平偏移（px），默认 0"
+					},
+					"offsetY": {
+						"type": "number",
+						"title": "垂直偏移",
+						"description": "距离边缘的垂直偏移（px），默认 0"
+					}
+				}
+			},
+			"size": {
+				"type": "object",
+				"title": "尺寸配置",
+				"description": "尺寸配置",
+				"properties": {
+					"width": {
+						"type": "number",
+						"title": "容器宽度",
+						"description": "容器宽度（px）",
+						"minimum": 0
+					},
+					"height": {
+						"type": "number",
+						"title": "容器高度",
+						"description": "容器高度（px）",
+						"minimum": 0
+					}
+				}
+			},
+			"interactive": {
+				"type": "object",
+				"title": "交互配置",
+				"description": "交互配置",
+				"properties": {
+					"enabled": {
+						"type": "boolean",
+						"title": "交互功能开关",
+						"description": "是否启用交互功能，默认 true"
+					},
+					"clickAnimations": {
+						"type": "array",
+						"title": "点击动画列表",
+						"description": "点击时随机播放的动画列表",
+						"items": { "type": "string" }
+					},
+					"clickMessages": {
+						"type": "array",
+						"title": "点击消息列表",
+						"description": "点击时随机显示的文字消息",
+						"items": { "type": "string" }
+					},
+					"messageDisplayTime": {
+						"type": "number",
+						"title": "文字显示时间",
+						"description": "文字显示时间（毫秒），默认 3000",
+						"minimum": 0
+					},
+					"idleAnimations": {
+						"type": "array",
+						"title": "待机动画列表",
+						"description": "待机动画列表",
+						"items": { "type": "string" }
+					},
+					"idleInterval": {
+						"type": "number",
+						"title": "待机动画切换间隔",
+						"description": "待机动画切换间隔（毫秒），默认 10000",
+						"minimum": 0
+					}
+				}
+			},
+			"responsive": {
+				"type": "object",
+				"title": "响应式配置",
+				"description": "响应式配置",
+				"properties": {
+					"hideOnMobile": {
+						"type": "boolean",
+						"title": "移动端隐藏",
+						"description": "是否在移动端隐藏，默认 false"
+					},
+					"mobileBreakpoint": {
+						"type": "number",
+						"title": "移动端断点",
+						"description": "移动端断点（px），默认 768",
+						"minimum": 0
+					}
+				}
+			},
+			"zIndex": {
+				"type": "number",
+				"title": "层级",
+				"description": "层级，默认 1000"
+			},
+			"opacity": {
+				"type": "number",
+				"title": "透明度",
+				"description": "透明度，取值范围 0-1，默认 1.0",
+				"minimum": 0,
+				"maximum": 1
+			}
+		}
+	}
+}
