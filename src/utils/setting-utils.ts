@@ -7,6 +7,7 @@ import {
 	WALLPAPER_FULLSCREEN,
 	WALLPAPER_NONE,
 	WALLPAPER_OVERLAY,
+	WALLPAPER_WEBGL,
 } from "@constants/constants";
 import type {
 	FullscreenWallpaperLayout,
@@ -283,7 +284,7 @@ export function initThemeListener(): void {
 // Wallpaper mode functions
 
 /**
- * 同步首页标题显示（hidden 类）：首页 + banner/fullscreen 模式显示标题，其余情况隐藏。
+ * 同步首页标题显示（hidden 类）：首页 + banner/fullscreen/webgl 模式显示标题，其余情况隐藏。
  * SSR 按 config 默认模式渲染 hidden（默认 overlay/none 时带 hidden），而模式可运行时切换、
  * 页面也会经 Swup 切换（body.is-home 变化），因此需要按当前 mode + 是否首页重新计算。
  * 标题开关（user-hidden 类）独立控制，不受影响。
@@ -296,7 +297,10 @@ export function syncBannerHomeTextVisibility(): void {
 	const mode = document.documentElement.getAttribute("data-wallpaper-mode");
 	const isHome = checkIsHomePage(window.location.pathname);
 	const show =
-		isHome && (mode === WALLPAPER_BANNER || mode === WALLPAPER_FULLSCREEN);
+		isHome &&
+		(mode === WALLPAPER_BANNER ||
+			mode === WALLPAPER_FULLSCREEN ||
+			mode === WALLPAPER_WEBGL);
 	overlay.classList.toggle("hidden", !show);
 }
 
@@ -341,7 +345,8 @@ export function applyFullscreenLayoutToDocument(
 	const mode = html.getAttribute("data-wallpaper-mode");
 	const transparent =
 		mode === WALLPAPER_OVERLAY ||
-		(mode === WALLPAPER_FULLSCREEN && safeLayout === "hero");
+		((mode === WALLPAPER_FULLSCREEN || mode === WALLPAPER_WEBGL) &&
+			safeLayout === "hero");
 	document.body?.classList.toggle("wallpaper-transparent", transparent);
 	window.dispatchEvent(
 		new CustomEvent("fullscreenLayoutChange", {
@@ -388,7 +393,8 @@ export function applyWallpaperModeToDocument(
 	// 卡片透明类：唯一运行时写入者（解析期由 body 起始脚本写入）
 	const transparent =
 		mode === WALLPAPER_OVERLAY ||
-		(mode === WALLPAPER_FULLSCREEN && isHeroFullscreen);
+		((mode === WALLPAPER_FULLSCREEN || mode === WALLPAPER_WEBGL) &&
+			isHeroFullscreen);
 	document.body.classList.toggle("wallpaper-transparent", transparent);
 
 	updateNavbarTransparency(mode);
@@ -413,7 +419,7 @@ export function updateNavbarTransparency(mode: WALLPAPER_MODE): void {
 		// 纯色背景模式
 		transparentMode = "none";
 		blurAmount = 0;
-	} else if (mode === WALLPAPER_FULLSCREEN) {
+	} else if (mode === WALLPAPER_FULLSCREEN || mode === WALLPAPER_WEBGL) {
 		// 全屏壁纸：首页 + semifull 动态透明，其余半透明玻璃
 		const isHomePage = checkIsHomePage(window.location.pathname);
 		const fsMode =
@@ -446,7 +452,9 @@ export function updateNavbarTransparency(mode: WALLPAPER_MODE): void {
 	// 滚动检测功能
 	if (
 		transparentMode === "semifull" &&
-		(mode === WALLPAPER_BANNER || mode === WALLPAPER_FULLSCREEN) &&
+		(mode === WALLPAPER_BANNER ||
+			mode === WALLPAPER_FULLSCREEN ||
+			mode === WALLPAPER_WEBGL) &&
 		typeof window.initSemifullScrollDetection === "function"
 	) {
 		// 在Banner和全屏壁纸模式的semifull下启用滚动检测

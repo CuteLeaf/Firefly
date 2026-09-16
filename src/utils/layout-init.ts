@@ -21,6 +21,7 @@ import { initScroll } from "@/utils/scroll-utils";
 import { initThemeListener, initWallpaperMode } from "@/utils/setting-utils";
 import { setupSwupTransitions } from "@/utils/swup-transitions";
 import { initTouchCodeCopyReveal } from "@/utils/touch-copy-utils";
+import { initWebglWallpaper } from "@/utils/webgl-wallpaper/host";
 
 /** 布局初始化编排（从 Layout.astro 迁出） */
 export function initLayout(): void {
@@ -53,6 +54,7 @@ export function initLayout(): void {
 
 	setupSwupTransitions();
 	initFullscreenWallpaper();
+	initWebglWallpaper();
 	registerContentOverflowListeners();
 	// 滚动路径不再读取布局；先在初始化时填充侧边栏 top 容器可见性缓存
 	refreshSidebarStickyState();

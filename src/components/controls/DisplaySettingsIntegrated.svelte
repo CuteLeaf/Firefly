@@ -4,6 +4,7 @@ import {
 	WALLPAPER_FULLSCREEN,
 	WALLPAPER_NONE,
 	WALLPAPER_OVERLAY,
+	WALLPAPER_WEBGL,
 } from "@constants/constants";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
@@ -118,7 +119,8 @@ const defaultCardFollowThemeEnabled = getDefaultCardFollowThemeEnabled();
 const isWallpaperSwitchable = displaySettingsConfig.wallpaperModeSwitchable;
 const isFullscreenLayoutSwitchable = $derived(
 	displaySettingsConfig.fullscreenLayoutSwitchable &&
-		wallpaperMode === WALLPAPER_FULLSCREEN,
+		(wallpaperMode === WALLPAPER_FULLSCREEN ||
+			wallpaperMode === WALLPAPER_WEBGL),
 );
 const allowLayoutSwitch = displaySettingsConfig.layoutSwitchable;
 let effectiveDefaultLayout = $derived(
@@ -213,10 +215,12 @@ const hasWallpaperTab = $derived(
 	isWallpaperSwitchable ||
 		isFullscreenLayoutSwitchable ||
 		((wallpaperMode === WALLPAPER_OVERLAY ||
+			wallpaperMode === WALLPAPER_WEBGL ||
 			wallpaperMode === WALLPAPER_FULLSCREEN) &&
 			hasOverlaySettings) ||
 		((wallpaperMode === WALLPAPER_BANNER ||
-			wallpaperMode === WALLPAPER_FULLSCREEN) &&
+			wallpaperMode === WALLPAPER_FULLSCREEN ||
+			wallpaperMode === WALLPAPER_WEBGL) &&
 			hasBannerSettings),
 );
 const hasEffectsTab = $derived(isSakuraSwitchable);
@@ -258,6 +262,7 @@ $effect(() => {
 $effect(() => {
 	if (
 		(wallpaperMode === WALLPAPER_OVERLAY ||
+			wallpaperMode === WALLPAPER_WEBGL ||
 			wallpaperMode === WALLPAPER_FULLSCREEN) &&
 		hasOverlaySettings
 	) {
@@ -270,7 +275,9 @@ let overlaySliderItems = $derived<OverlaySliderItem[]>([
 		key: "opacity",
 		// 全屏壁纸模式不需要背景透明度，隐藏该滑块（仍显示模糊与卡片透明度）
 		enabled:
-			isOverlayOpacitySwitchable && wallpaperMode !== WALLPAPER_FULLSCREEN,
+			isOverlayOpacitySwitchable &&
+			wallpaperMode !== WALLPAPER_FULLSCREEN &&
+			wallpaperMode !== WALLPAPER_WEBGL,
 		label: i18n(I18nKey.overlayOpacity),
 		displayValue: `${Math.round(overlayOpacity * 100)}%`,
 		ariaLabel: i18n(I18nKey.overlayOpacity),
@@ -287,6 +294,7 @@ let overlaySliderItems = $derived<OverlaySliderItem[]>([
 		// 全屏壁纸模式关闭模糊渐变时隐藏模糊滑块（overlay 模式不受影响）
 		enabled:
 			isOverlayBlurSwitchable &&
+			wallpaperMode !== WALLPAPER_WEBGL &&
 			!(wallpaperMode === WALLPAPER_FULLSCREEN && !isFullscreenBlurRampEnabled),
 		label: i18n(I18nKey.overlayBlur),
 		displayValue: `${overlayBlur.toFixed(1)}px`,
@@ -463,7 +471,11 @@ function switchWallpaperMode(newMode: WALLPAPER_MODE) {
 	setWallpaperMode(newMode);
 	window.scrollTo({ top: 0 });
 
-	if (newMode === WALLPAPER_OVERLAY || newMode === WALLPAPER_FULLSCREEN) {
+	if (
+		newMode === WALLPAPER_OVERLAY ||
+		newMode === WALLPAPER_FULLSCREEN ||
+		newMode === WALLPAPER_WEBGL
+	) {
 		requestAnimationFrame(refreshAllRangeProgress);
 	}
 }
@@ -642,6 +654,10 @@ $effect(() => {
 		if (isOverlayCardOpacitySwitchable) {
 			setOverlayCardOpacity(overlayCardOpacity);
 		}
+	} else if (wallpaperMode === WALLPAPER_WEBGL) {
+		// WebGL 由场景直接渲染；仅沿用内容卡片透明度。
+		if (isOverlayCardOpacitySwitchable)
+			setOverlayCardOpacity(overlayCardOpacity);
 	} else if (wallpaperMode === WALLPAPER_FULLSCREEN) {
 		// 全屏壁纸不透明，只应用模糊与卡片透明度
 		if (isOverlayBlurSwitchable) {
@@ -858,11 +874,20 @@ $effect(() => {
 					<Icon icon="material-symbols:hide-image-outline" class="text-[1.25rem] shrink-0"></Icon>
 					<span class="text-xs font-medium">{i18n(I18nKey.wallpaperNoneMode)}</span>
 				</button>
+				<button
+					class="btn-regular rounded-md py-2 px-3 flex items-center justify-center gap-2 active:scale-95 transition-all relative overflow-hidden"
+					class:opacity-60={wallpaperMode !== WALLPAPER_WEBGL}
+					class:bg-(--btn-regular-bg-hover)={wallpaperMode === WALLPAPER_WEBGL}
+					onclick={() => switchWallpaperMode(WALLPAPER_WEBGL)}
+				>
+					<Icon icon="material-symbols:deployed-code-outline" class="text-[1.25rem] shrink-0"></Icon>
+					<span class="text-xs font-medium">{i18n(I18nKey.wallpaperWebglMode)}</span>
+				</button>
 			</div>
 		</div>
 		{/if}
 
-		<!-- Fullscreen Layout Section -->
+		<!-- 全屏图片与 WebGL 共用经典/Hero 布局设置。 -->
 		{#if isFullscreenLayoutSwitchable}
 		<div>
 			<div class="section-title">
@@ -898,8 +923,8 @@ $effect(() => {
 		</div>
 		{/if}
 
-		<!-- Overlay Settings Section（全屏壁纸模式也复用 overlay 的透明/模糊/卡片透明度设置） -->
-		{#if (wallpaperMode === WALLPAPER_OVERLAY || (wallpaperMode === WALLPAPER_FULLSCREEN && fullscreenLayout === "hero")) && hasOverlaySettings && hasVisibleOverlaySlider}
+		<!-- Overlay 设置仅在覆盖模式或全屏 Hero 布局显示；经典布局保留原有卡片样式。 -->
+		{#if (wallpaperMode === WALLPAPER_OVERLAY || ((wallpaperMode === WALLPAPER_FULLSCREEN || wallpaperMode === WALLPAPER_WEBGL) && fullscreenLayout === "hero")) && hasOverlaySettings && hasVisibleOverlaySlider}
 		<div class="">
 			<div class="section-title">
 				{i18n(I18nKey.overlaySettings)}
@@ -937,7 +962,7 @@ $effect(() => {
 		{/if}
 
 		<!-- Banner Settings Section -->
-		{#if (wallpaperMode === WALLPAPER_BANNER || wallpaperMode === WALLPAPER_FULLSCREEN) && hasBannerSettings}
+		{#if (wallpaperMode === WALLPAPER_BANNER || wallpaperMode === WALLPAPER_FULLSCREEN || wallpaperMode === WALLPAPER_WEBGL) && hasBannerSettings}
 		<div class="">
 			<div class="section-title">
 				{i18n(I18nKey.wallpaperSettings)}
@@ -986,8 +1011,8 @@ $effect(() => {
 					</div>
 				</button>
 				{/if}
-				<!-- Waves Animation Switch（横幅模式和 classic 全屏模式） -->
-				{#if isWavesSwitchable && (wallpaperMode === WALLPAPER_BANNER || (wallpaperMode === WALLPAPER_FULLSCREEN && fullscreenLayout === "classic"))}
+				<!-- Waves Animation Switch（横幅模式和 classic 全屏图片/WebGL 模式） -->
+				{#if isWavesSwitchable && (wallpaperMode === WALLPAPER_BANNER || ((wallpaperMode === WALLPAPER_FULLSCREEN || wallpaperMode === WALLPAPER_WEBGL) && fullscreenLayout === "classic"))}
 				<button
 					class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
 					class:bg-(--btn-regular-bg-hover)={wavesEnabled}
@@ -1004,8 +1029,8 @@ $effect(() => {
 					</div>
 				</button>
 				{/if}
-				<!-- Gradient Transition Switch（横幅模式和 classic 全屏模式） -->
-				{#if isGradientSwitchable && (wallpaperMode === WALLPAPER_BANNER || (wallpaperMode === WALLPAPER_FULLSCREEN && fullscreenLayout === "classic"))}
+				<!-- Gradient Transition Switch（横幅模式和 classic 全屏图片/WebGL 模式） -->
+				{#if isGradientSwitchable && (wallpaperMode === WALLPAPER_BANNER || ((wallpaperMode === WALLPAPER_FULLSCREEN || wallpaperMode === WALLPAPER_WEBGL) && fullscreenLayout === "classic"))}
 				<button
 					class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
 					class:bg-(--btn-regular-bg-hover)={gradientEnabled}

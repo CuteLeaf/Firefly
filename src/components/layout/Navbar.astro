@@ -34,7 +34,8 @@ const navbarTransparentMode =
 				const t = backgroundWallpaper.banner?.navbar?.transparentMode || "semi";
 				return t === "semifull" && !isHomePageCheck ? "semi" : t;
 			})()
-		: backgroundWallpaper.mode === "fullscreen"
+		: backgroundWallpaper.mode === "fullscreen" ||
+				backgroundWallpaper.mode === "webgl"
 			? (() => {
 					const fs =
 						backgroundWallpaper.fullscreen?.navbar?.transparentMode ||
@@ -140,7 +141,7 @@ const logoVariants = await Promise.all(
         const isHome = navbar.getAttribute("data-is-home") === "true";
         let mode;
         let blur;
-        if (wm === "fullscreen") {
+        if (wm === "fullscreen" || wm === "webgl") {
           mode = fsTMode === "semifull" && isHome ? "semifull" : "semi";
           blur = fsBlur;
         } else if (wm === "banner") {

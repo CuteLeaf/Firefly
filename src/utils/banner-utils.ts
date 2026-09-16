@@ -5,10 +5,8 @@ export function isBannerMode(): boolean {
 	);
 }
 
-/** 当前是否为 fullscreen 壁纸模式（static 导航栏在首页需像 banner 一样跨壁纸保持） */
+/** 当前是否为全屏图片或 WebGL 壁纸模式（static 导航栏在首页需像 banner 一样跨壁纸保持） */
 export function isFullscreenMode(): boolean {
-	return (
-		document.documentElement.getAttribute("data-wallpaper-mode") ===
-		"fullscreen"
-	);
+	const mode = document.documentElement.getAttribute("data-wallpaper-mode");
+	return mode === "fullscreen" || mode === "webgl";
 }

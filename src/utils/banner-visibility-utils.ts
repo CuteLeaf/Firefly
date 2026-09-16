@@ -23,6 +23,7 @@ export interface BannerVisibilityState {
 	isBannerMode: boolean;
 	isFullscreenMode: boolean;
 	isOverlayMode: boolean;
+	isWebglMode: boolean;
 	isWallpaperSwitchable: boolean;
 	isBackgroundEnabled: boolean;
 	hasWallpaper: boolean;
@@ -98,8 +99,10 @@ export function getBannerVisibilityState(
 
 	const isBannerMode = backgroundWallpaper.mode === "banner";
 	const isFullscreenMode = backgroundWallpaper.mode === "fullscreen";
+	const isWebglMode = backgroundWallpaper.mode === "webgl";
 	const isClassicFullscreenMode =
-		isFullscreenMode && backgroundWallpaper.fullscreen?.layout !== "hero";
+		(isFullscreenMode || isWebglMode) &&
+		backgroundWallpaper.fullscreen?.layout !== "hero";
 	const isOverlayMode = backgroundWallpaper.mode === "overlay";
 	const isWallpaperSwitchable = displaySettingsConfig.wallpaperModeSwitchable;
 	const isBackgroundEnabled =
@@ -130,7 +133,9 @@ export function getBannerVisibilityState(
 
 	const homeTextEnable = backgroundWallpaper.common?.homeText?.enable ?? false;
 	const showHomeText =
-		(isBannerMode || isFullscreenMode) && !!homeTextEnable && isHomePageCheck;
+		(isBannerMode || isFullscreenMode || isWebglMode) &&
+		!!homeTextEnable &&
+		isHomePageCheck;
 	const homeTextLinksEnable =
 		backgroundWallpaper.common?.homeText?.linksEnable !== false;
 
@@ -149,7 +154,10 @@ export function getBannerVisibilityState(
 	);
 
 	const showBannerDim =
-		(isBannerMode || isFullscreenMode || isWallpaperSwitchable) &&
+		(isBannerMode ||
+			isFullscreenMode ||
+			isWebglMode ||
+			isWallpaperSwitchable) &&
 		isBackgroundEnabled;
 	const dimOpacity = backgroundWallpaper.common?.dimOpacity ?? 0.15;
 
@@ -180,13 +188,15 @@ export function getBannerVisibilityState(
 		isBannerMode,
 		isFullscreenMode,
 		isOverlayMode,
+		isWebglMode,
 		isWallpaperSwitchable,
 		isBackgroundEnabled,
 		hasWallpaper:
 			isWallpaperSwitchable ||
 			isBannerMode ||
 			isFullscreenMode ||
-			isOverlayMode,
+			isOverlayMode ||
+			isWebglMode,
 		wavesEnabledOnDesktop,
 		wavesEnabledOnMobile,
 		shouldRenderWaves,

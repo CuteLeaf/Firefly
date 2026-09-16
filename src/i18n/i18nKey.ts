@@ -376,6 +376,7 @@ enum I18nKey {
 	fullscreenClassicLayout = "fullscreenClassicLayout",
 	fullscreenHeroLayout = "fullscreenHeroLayout",
 	wallpaperOverlayMode = "wallpaperOverlayMode",
+	wallpaperWebglMode = "wallpaperWebglMode",
 	wallpaperNoneMode = "wallpaperNoneMode",
 
 	// 壁纸设置

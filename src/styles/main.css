@@ -299,33 +299,33 @@ html {
 
     /* 全屏壁纸首页动态透明（semifull）：顶部透明，下滑后显示卡片底色。
        需要比上面 wallpaper-transparent 的固定底色更高特异性，才能让顶部透明生效 */
-    html[data-wallpaper-mode="fullscreen"] #navbar[data-transparent-mode="semifull"]:not(.scrolled) > div {
+    html:is([data-wallpaper-mode="fullscreen"], [data-wallpaper-mode="webgl"]) #navbar[data-transparent-mode="semifull"]:not(.scrolled) > div {
         background: transparent !important;
         --navbar-surface-blur: 0px !important;
         box-shadow: none !important;
     }
 
     /* 全屏 semi 玻璃 */
-    html[data-wallpaper-mode="fullscreen"] #navbar[data-transparent-mode="semi"] > div {
+    html:is([data-wallpaper-mode="fullscreen"], [data-wallpaper-mode="webgl"]) #navbar[data-transparent-mode="semi"] > div {
         --navbar-surface-blur: var(--navbar-glass-blur, 20px) !important;
         box-shadow: inset 0 1px 0 var(--navbar-glass-highlight), 0 1px 0 var(--navbar-glass-hairline) !important;
     }
-    :root.dark[data-wallpaper-mode="fullscreen"] #navbar[data-transparent-mode="semi"] > div {
+    :root.dark:is([data-wallpaper-mode="fullscreen"], [data-wallpaper-mode="webgl"]) #navbar[data-transparent-mode="semi"] > div {
         box-shadow: inset 0 1px 0 var(--navbar-glass-highlight), 0 1px 0 var(--navbar-glass-hairline) !important;
     }
     /* 全屏 semifull 滚动后玻璃化 */
-    html[data-wallpaper-mode="fullscreen"] #navbar[data-transparent-mode="semifull"].scrolled > div {
+    html:is([data-wallpaper-mode="fullscreen"], [data-wallpaper-mode="webgl"]) #navbar[data-transparent-mode="semifull"].scrolled > div {
         --navbar-surface-blur: var(--navbar-glass-blur, 20px) !important;
         box-shadow: inset 0 1px 0 var(--navbar-glass-highlight), 0 1px 0 var(--navbar-glass-hairline) !important;
     }
-    :root.dark[data-wallpaper-mode="fullscreen"] #navbar[data-transparent-mode="semifull"].scrolled > div {
+    :root.dark:is([data-wallpaper-mode="fullscreen"], [data-wallpaper-mode="webgl"]) #navbar[data-transparent-mode="semifull"].scrolled > div {
         box-shadow: inset 0 1px 0 var(--navbar-glass-highlight), 0 1px 0 var(--navbar-glass-hairline) !important;
     }
     /* 全屏 semi 滚动后加回投影 */
-    html[data-wallpaper-mode="fullscreen"] #navbar[data-transparent-mode="semi"].navbar-sticky-shadow > div {
+    html:is([data-wallpaper-mode="fullscreen"], [data-wallpaper-mode="webgl"]) #navbar[data-transparent-mode="semi"].navbar-sticky-shadow > div {
         box-shadow: inset 0 1px 0 var(--navbar-glass-highlight), 0 1px 0 var(--navbar-glass-hairline) !important;
     }
-    :root.dark[data-wallpaper-mode="fullscreen"] #navbar[data-transparent-mode="semi"].navbar-sticky-shadow > div {
+    :root.dark:is([data-wallpaper-mode="fullscreen"], [data-wallpaper-mode="webgl"]) #navbar[data-transparent-mode="semi"].navbar-sticky-shadow > div {
         box-shadow: inset 0 1px 0 var(--navbar-glass-highlight), 0 1px 0 var(--navbar-glass-hairline) !important;
     }
 
@@ -342,7 +342,7 @@ html {
 
     /* 全屏壁纸模式：导航栏统一禁用边框/轮廓（覆盖 semifull/none 及 enable-card-border 的卡片边框），
        避免切换页面瞬间 enable-card-border 边框闪现黑色边框 */
-    html[data-wallpaper-mode="fullscreen"] #navbar > div {
+    html:is([data-wallpaper-mode="fullscreen"], [data-wallpaper-mode="webgl"]) #navbar > div {
         border: none !important;
         outline: none !important;
     }

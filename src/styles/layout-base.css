@@ -89,14 +89,14 @@
       --content-top: 5.5rem;
     }
   }
-  /* overlay / none / fullscreen 非首页：内容从导航栏下方开始 */
+  /* overlay / none / 全屏 Hero 非首页：内容从导航栏下方开始 */
   html[data-wallpaper-mode="overlay"] .content-panel,
   html[data-wallpaper-mode="none"] .content-panel,
-  html[data-wallpaper-mode="fullscreen"] body:not(.is-home) .content-panel {
+  html:is([data-wallpaper-mode="fullscreen"], [data-wallpaper-mode="webgl"]) body:not(.is-home) .content-panel {
     --content-top: 5.5rem;
   }
-  /* fullscreen 首页 hero：内容推到首屏之下 */
-  html[data-wallpaper-mode="fullscreen"] body.is-home .content-panel {
+  /* 全屏图片/WebGL 首页 Hero：内容推到首屏之下；classic 仍由文档流承接。 */
+  html:is([data-wallpaper-mode="fullscreen"], [data-wallpaper-mode="webgl"]) body.is-home .content-panel {
     --content-top: 100vh;
   }
 
