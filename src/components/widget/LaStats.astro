@@ -1,0 +1,161 @@
+---
+import { Icon } from "astro-icon/components";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import { analyticsConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { WidgetComponentConfig } from "@/types/config";
+
+interface Props {
+	class?: string;
+	style?: string;
+	widgetConfig?: WidgetComponentConfig;
+}
+
+const { class: className, style, widgetConfig } = Astro.props;
+
+const showTitle = widgetConfig?.showTitle !== false;
+
+const la51Id = analyticsConfig?.la51Analytics?.Id || "";
+const la51StatsDataSource =
+	analyticsConfig?.la51Analytics?.statsDataSource || "quotejs";
+const la51StatsApiUrl = analyticsConfig?.la51Analytics?.statsApiUrl || "";
+
+// 51LA 统计指标定义
+const stats = [
+	{
+		icon: "material-symbols:person-outline",
+		label: i18n(I18nKey.laStatsOnline),
+		id: "la-online",
+	},
+	{
+		icon: "material-symbols:calendar-today-outline",
+		label: i18n(I18nKey.laStatsTodayUV),
+		id: "la-today-uv",
+	},
+	{
+		icon: "material-symbols:visibility-outline",
+		label: i18n(I18nKey.laStatsTodayPV),
+		id: "la-today-pv",
+	},
+	{
+		icon: "material-symbols:calendar-month-outline",
+		label: i18n(I18nKey.laStatsYesterdayUV),
+		id: "la-yesterday-uv",
+	},
+	{
+		icon: "material-symbols:visibility-outline",
+		label: i18n(I18nKey.laStatsYesterdayPV),
+		id: "la-yesterday-pv",
+	},
+	{
+		icon: "material-symbols:calendar-clock-outline",
+		label: i18n(I18nKey.laStatsMonthPV),
+		id: "la-month-pv",
+	},
+	{
+		icon: "mingcute:chart-line-line",
+		label: i18n(I18nKey.laStatsTotalPV),
+		id: "la-total-pv",
+	},
+];
+---
+
+{la51Id && (
+<WidgetLayout name={i18n(I18nKey.laStats)} showTitle={showTitle} id="la-stats" class={className} style={style}>
+  <div class="flex flex-col gap-2">
+    {stats.map((stat) => (
+      <div class="flex items-center justify-between px-3 py-1.5">
+        <div class="flex items-center gap-2.5">
+          <div class="text-(--primary) text-xl">
+            <Icon is:inline name={stat.icon} />
+          </div>
+          <span class="text-neutral-700 dark:text-neutral-300 font-medium text-sm">
+            {stat.label}
+          </span>
+        </div>
+        <span
+          class="text-base font-bold text-neutral-900 dark:text-neutral-100"
+          data-stat-id={stat.id}>
+          -
+        </span>
+      </div>
+    ))}
+  </div>
+</WidgetLayout>
+)}
+
+<script is:inline define:vars={{ la51Id, la51StatsDataSource, la51StatsApiUrl }}>
+  (function() {
+    // 验证 ID 格式：仅允许字母数字字符，防止 URL 注入
+    if (!la51Id || !/^[A-Za-z0-9]+$/.test(la51Id)) return;
+
+    // 全局去重：多侧边栏实例共享同一份逻辑，只初始化一次
+    var ns = window.__laStats || (window.__laStats = { inited: false });
+    if (ns.inited) return;
+    ns.inited = true;
+
+    var STAT_IDS = ["la-online", "la-today-uv", "la-today-pv", "la-yesterday-uv", "la-yesterday-pv", "la-month-pv", "la-total-pv"];
+
+    function setStatValues(values) {
+      for (var i = 0; i < values.length && i < STAT_IDS.length; i++) {
+        var els = document.querySelectorAll('[data-stat-id="' + STAT_IDS[i] + '"]');
+        els.forEach(function(el) { el.textContent = values[i].toLocaleString(); });
+      }
+    }
+
+    function updateViaQuoteJs() {
+      fetch("https://v6-widget.51.la/v6/" + la51Id + "/quote.js")
+        .then(function(res) { if (!res.ok) throw new Error("HTTP " + res.status); return res.text(); })
+        .then(function(text) {
+          var match = text.match(/r\.innerHTML\s*=\s*"([^"]+)"/);
+          if (!match) return;
+          var html = match[1];
+          var pRegex = /<p><span>(\d+)<\/span><span>(\d+)<\/span><\/p>/g;
+          var map = {};
+          var m;
+          while ((m = pRegex.exec(html)) !== null) map[parseInt(m[1], 10)] = parseInt(m[2], 10);
+          var values = [];
+          for (var i = 0; i < STAT_IDS.length; i++) values.push(map[i] || 0);
+          setStatValues(values);
+        })
+        .catch(function(err) { console.error("LA Stats (quotejs) error:", err); });
+    }
+
+    function updateViaApi() {
+      if (!la51StatsApiUrl) { console.error("LA Stats: statsApiUrl is empty"); return; }
+      var url = la51StatsApiUrl.indexOf("{id}") !== -1
+        ? la51StatsApiUrl.replace("{id}", la51Id)
+        : la51StatsApiUrl.replace(/\/+$/, "") + "/" + la51Id;
+      fetch(url)
+        .then(function(res) { if (!res.ok) throw new Error("HTTP " + res.status); return res.json(); })
+        .then(function(json) {
+          if (!json.success || !json.data) return;
+          var d = json.data;
+          setStatValues([
+            d.recentActive || 0,
+            (d.today && d.today.visitors) || 0,
+            (d.today && d.today.views) || 0,
+            (d.yesterday && d.yesterday.visitors) || 0,
+            (d.yesterday && d.yesterday.views) || 0,
+            d.monthViews || 0,
+            d.totalViews || 0
+          ]);
+        })
+        .catch(function(err) { console.error("LA Stats (api) error:", err); });
+    }
+
+    function updateLaStats() {
+      if (la51StatsDataSource === "api") {
+        updateViaApi();
+      } else {
+        updateViaQuoteJs();
+      }
+    }
+
+    updateLaStats();
+    document.addEventListener("swup:contentReplaced", function() {
+      setTimeout(updateLaStats, 100);
+    });
+  })();
+</script>
