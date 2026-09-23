@@ -53,12 +53,6 @@ html {
     scroll-behavior: smooth;
 }
 
-/* 确保链接默认继承文字颜色，避免 iOS WebKit / Safari 回退为 -webkit-link 系统蓝 */
-a, a:link, a:visited {
-    color: inherit;
-    text-decoration: inherit;
-}
-
 /* 全站键盘焦点基线；组件可以在更高的层中覆盖间距或形态。 */
 @layer components {
     :where(
