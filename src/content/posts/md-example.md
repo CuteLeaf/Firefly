@@ -1,9 +1,11 @@
 ---
-title: 草稿示例
-published: 1970-01-01
-tags: [Markdown, 博客, 演示]
-category: 文章示例
-draft: true
+title: md文件格式示例
+published: 2026-10-06
+tags:
+  - Markdown
+  - 教程
+category: 教程
+draft: false
 slug: draft
 ---
 
@@ -21,3 +23,5 @@ tags: [Markdown, 博客, 演示]
 category: 示例
 draft: false
 ---
+```
+

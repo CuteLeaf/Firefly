@@ -26,13 +26,6 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 
 	// 左侧边栏组件配置列表
 	// 组件的渲染顺序完全取决于它们在配置数组中出现的顺序，但top的组件会优先于sticky位置的组件渲染
-	// type 组件类型
-	// enable 是否启用该组件
-	// showTitle 是否显示该组件标题，默认true
-	// position 组件位置：top固定顶部，sticky粘性定位(会跟随页面滚动)
-	// showOnPostPage 是否在文章详情页显示该组件
-	// hideOnNonPostPage 是否在非文章详情页隐藏该组件（true=仅文章详情页显示）
-	// specificConfig 组件专属配置
 	leftComponents: [
 		{
 			// 组件类型：用户资料组件
@@ -45,10 +38,10 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			showOnPostPage: true,
 		},
 		{
-			// 组件类型：公告组件
+			// 组件类型：公告组件（已关闭展示）
 			type: "announcement",
 			// 是否启用该组件
-			enable: true,
+			enable: false,
 			// 组件位置
 			position: "top",
 			// 是否在文章详情页显示
@@ -75,8 +68,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			showOnPostPage: true,
 			// 组件专属配置
 			specificConfig: {
-				// 折叠阈值：当分类数量超过>5个时自动折叠
-				collapseThreshold: 5,
+				// 折叠阈值：调整为超过 10 个时自动折叠
+				collapseThreshold: 10,
 			},
 		},
 		{
@@ -90,7 +83,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			showOnPostPage: true,
 			// 组件专属配置
 			specificConfig: {
-				// 折叠阈值：当标签数量超过>10个时自动折叠
+				// 折叠阈值：超过 10 个时自动折叠
 				collapseThreshold: 10,
 			},
 		},
@@ -174,7 +167,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			hideOnNonPostPage: true,
 		},
 		{
-			// 组件类型：广告栏组件 1
+			// 组件类型：广告栏组件 1（已关闭）
 			type: "advertisement",
 			// 是否启用该组件
 			enable: false,
@@ -184,7 +177,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			position: "sticky",
 			// 是否在文章详情页显示
 			showOnPostPage: true,
-			// 组件专属配置（广告内容直接在此配置）
+			// 组件专属配置
 			specificConfig: {
 				ad: {
 					image: {
@@ -193,11 +186,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 						link: "https://haoka.lot-ml.com/plugreg.html?agentid=1423316",
 						external: true,
 					},
-					// 是否允许关闭广告
 					closable: false,
-					// 显示次数限制，-1为无限制
 					displayCount: -1,
-					// 组件内边距配置
 					padding: {
 						all: "1rem",
 					},
@@ -205,7 +195,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			},
 		},
 		{
-			// 组件类型：广告栏组件 2
+			// 组件类型：广告栏组件 2（已关闭）
 			type: "advertisement",
 			// 是否启用该组件
 			enable: false,
@@ -213,7 +203,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			position: "sticky",
 			// 是否在文章详情页显示
 			showOnPostPage: true,
-			// 组件专属配置（广告内容直接在此配置）
+			// 组件专属配置
 			specificConfig: {
 				ad: {
 					title: "支持博主",
@@ -243,10 +233,10 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			showOnPostPage: true,
 		},
 		{
-			// 组件类型：公告组件
+			// 组件类型：公告组件（与桌面端保持一致，已设为关闭）
 			type: "announcement",
 			// 是否启用该组件
-			enable: true,
+			enable: false,
 			// 是否在文章详情页显示
 			showOnPostPage: true,
 		},
@@ -259,8 +249,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			showOnPostPage: true,
 			// 组件专属配置
 			specificConfig: {
-				// 折叠阈值：当分类数量超过5个时自动折叠
-				collapseThreshold: 5,
+				// 折叠阈值：调整为超过 10 个时自动折叠
+				collapseThreshold: 10,
 			},
 		},
 		{
@@ -272,7 +262,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			showOnPostPage: true,
 			// 组件专属配置
 			specificConfig: {
-				// 折叠阈值：当标签数量超过20个时自动折叠
+				// 折叠阈值：超过 10 个时自动折叠
 				collapseThreshold: 10,
 			},
 		},

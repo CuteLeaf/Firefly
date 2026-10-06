@@ -115,8 +115,8 @@ export const siteConfig: SiteConfig = {
 		// 使用 Astro 图标库时不需要设置 valueDark，图标会自动跟随主题亮暗色切换
 		logo: {
 			type: "image",
-			value: "assets/images/logo/firefly-light.png",
-			valueDark: "assets/images/logo/firefly-dark.png",
+			value: "",
+			valueDark: "/assets/",
 			alt: "🍀",
 		},
 		// 导航栏标题（已更新为 raymond blog）

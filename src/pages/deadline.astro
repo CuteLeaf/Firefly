@@ -1,0 +1,52 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import DeadlinePage from "@/components/custom/DeadlinePage";
+---
+
+<Layout title="Deadline" description="Done is better than perfect!">
+	<!-- 外层容器：纯白背景、避让导航栏、水平强制居中 -->
+	<main class="deadline-wrapper w-full min-h-screen pt-20 pb-16 bg-white dark:bg-[#000000] flex flex-col items-center overflow-x-hidden">
+		<div class="deadline-content-box w-full max-w-[1720px] mx-auto px-4 sm:px-8 xl:px-14 box-border">
+			<DeadlinePage client:only="react" />
+		</div>
+	</main>
+</Layout>
+
+<style is:global>
+	/* 1. 强制覆盖全局背景为纯白/纯黑 */
+	html,
+	body {
+		width: 100%;
+		overflow-x: hidden;
+		background-color: #ffffff !important;
+		background-image: none !important;
+	}
+
+	:root.dark html,
+	:root.dark body {
+		background-color: #000000 !important;
+	}
+
+	/* 2. 修复 Astro 孤岛容器，使其继承父级居中对齐 */
+	.deadline-wrapper astro-island {
+		display: block !important;
+		width: 100% !important;
+		max-width: 1720px !important;
+		margin: 0 auto !important;
+	}
+
+	/* 3. 根治向左偏移：同时清除 Tailwind v4 的原生 translate 和旧版 transform */
+	.deadline-wrapper astro-island > div,
+	.deadline-wrapper [class*="max-w-[1720px]"] {
+		width: 100% !important;
+		max-width: 1720px !important;
+		position: relative !important;
+		left: 0 !important;
+		right: 0 !important;
+		translate: none !important;
+		transform: none !important;
+		margin-left: auto !important;
+		margin-right: auto !important;
+		box-sizing: border-box !important;
+	}
+</style>

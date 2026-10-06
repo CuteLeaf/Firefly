@@ -3,3 +3,6 @@ packages:
 allowBuilds:
   esbuild: true
   workerd: true
+minimumReleaseAgeExclude:
+  - '@astrojs/internal-helpers@0.12.0'
+  - '@astrojs/react@7.0.1'
