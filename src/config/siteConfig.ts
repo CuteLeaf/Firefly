@@ -42,20 +42,23 @@ const pages = resolvePageToggles({
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "Firefly",
+	title: "raymondkkxx",
 
-	// 站点副标题
-	subtitle: "Demo site",
-
-	// 站点 URL
+	// =========================================================================
+	// 🚨 【待配置项】站点实际访问 URL
+	// 说明：生成 sitemap、RSS 订阅链接、OpenGraph 元标签等均依赖此配置。
+	// 后续部署上线并绑定个人域名后，请将下方地址替换为你的实际站点地址（如：https://yourdomain.com）
+	// 注意：末尾请勿添加斜杠 '/'
+	// =========================================================================
 	site_url: "https://firefly.cuteleaf.cn",
 
 	// 站点描述
 	description:
-		"Firefly 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。",
+		"blog of raymondkkxx",
 
 	// 站点关键词
 	keywords: [
+		"raymondkkxx",
 		"Firefly",
 		"Fuwari",
 		"Astro",
@@ -80,8 +83,8 @@ export const siteConfig: SiteConfig = {
 
 	// 网站Card样式配置
 	card: {
-		// 是否开启卡片边框和阴影，开启后让网站更有立体感
-		border: false,
+		// 是否开启卡片边框和阴影，开启后让网站更有立体感（已开启）
+		border: true,
 		// 是否让卡片风格跟随主题色相
 		followTheme: false,
 	},
@@ -112,12 +115,12 @@ export const siteConfig: SiteConfig = {
 		// 使用 Astro 图标库时不需要设置 valueDark，图标会自动跟随主题亮暗色切换
 		logo: {
 			type: "image",
-			value: "assets/images/logo/firefly-light.png",
-			valueDark: "assets/images/logo/firefly-dark.png",
+			value: "",
+			valueDark: "/assets/",
 			alt: "🍀",
 		},
-		// 导航栏标题
-		title: "Firefly Blog",
+		// 导航栏标题（已更新为 raymond blog）
+		title: "raymond blog",
 		// 全宽导航栏，导航栏是否占满屏幕宽度
 		widthFull: false,
 		// 导航菜单对齐方式，left：左对齐，center：居中
@@ -132,13 +135,11 @@ export const siteConfig: SiteConfig = {
 	},
 
 	// 站点开始日期，用于统计运行天数
-	siteStartDate: "2025-01-01",
+	siteStartDate: "2026-10-06",
 
 	// 站点时区（IANA 时区字符串），用于格式化bangumi、rss里的构建日期时间等等..
 	// 示例："Asia/Shanghai", "UTC", 如果为空，则按照构建服务器的时区进行时区转换
 	timezone: "Asia/Shanghai",
-
-	// 页面开关配置 - 控制特定页面的访问权限，设为false会返回404并自动隐藏对应的导航栏菜单项
 
 	// 分类导航栏开关，在首页和归档页顶部显示分类快捷导航
 	categoryBar: true,
