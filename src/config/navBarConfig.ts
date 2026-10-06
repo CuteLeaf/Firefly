@@ -17,17 +17,7 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 	links.push(LinkPresets.Home);
 
 	// 2. 文章及其子菜单
-	links.push({
-		name: "文章",
-		url: "#",
-		icon: "material-symbols:article",
-		children: [
-			LinkPresets.Archive,
-			LinkPresets.Categories,
-			LinkPresets.Tags,
-			LinkPresets.Series,
-		],
-	});
+	links.push(LinkPresets.Archive);
 
 	// 3. 🎯 Deadline（一级常显按钮）
 	links.push(LinkPresets.Deadline);
@@ -37,7 +27,7 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 
 	// 5. 我的及其子菜单
 	links.push({
-		name: "我的",
+		name: "raymond",
 		url: "#",
 		icon: "material-symbols:person",
 		children: [
@@ -54,17 +44,7 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 
 
 
-	// 7. 社交与关于（合并至末尾）
-	links.push({
-		name: "关于",
-		url: "#",
-		icon: "material-symbols:info",
-		children: [
-			LinkPresets.Friends,
-			LinkPresets.Guestbook,
-			LinkPresets.About,
-		],
-	});
+
 
 	return { links } as NavBarConfig;
 };
@@ -85,7 +65,7 @@ export const LinkPresets: Record<string, NavBarLink> = {
 		icon: "material-symbols:home",
 	},
 	Archive: {
-		name: "归档",
+		name: "文章",
 		url: "/archive/",
 		icon: "material-symbols:archive",
 	},
@@ -175,11 +155,6 @@ export const LinkPresets: Record<string, NavBarLink> = {
 		url: "/myanimelist/",
 		icon: "material-symbols:menu-book",
 		pageKey: "mal",
-	},
-	About: {
-		name: "关于",
-		url: "/about/",
-		icon: "material-symbols:person",
 	},
 };
 
