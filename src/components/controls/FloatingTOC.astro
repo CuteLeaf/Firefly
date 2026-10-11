@@ -36,7 +36,7 @@ const hideSidebarOnPostPage =
   <!-- 悬浮TOC面板 - 移到 Wrapper 内部以便相对定位 -->
   <div
     id="floating-toc-panel"
-    class="floating-toc-panel hide overflow-hidden rounded-2xl shadow-2xl backdrop-blur-lg border border-white/20 dark:border-white/10 md:w-80 w-[calc(100vw-2rem)] md:max-h-96 max-h-[calc(100vh-8rem)] py-3"
+    class="floating-toc-panel hide overflow-hidden rounded-2xl shadow-2xl backdrop-blur-lg border border-white/20 dark:border-white/10 md:w-80 w-[calc(100vw-2rem)] py-3"
     style="background-color: var(--card-bg-transparent);"
     >
     <div class="toc-scroll-container px-3">
@@ -88,6 +88,9 @@ const hideSidebarOnPostPage =
 	position: relative
 	z-index: 999
 	overflow: visible
+	/* 面板与滚动容器共用这一处高度，避免两处 max-height 走散把底部条目裁掉 */
+	/* unquote 必需：Stylus 自带同名数学函数 min()，直接写会在编译期报错 */
+	--floating-toc-max-h: unquote("min(24rem, calc(100vh - 8rem))")
 
 .floating-toc-panel
 	position: absolute
@@ -102,6 +105,7 @@ const hideSidebarOnPostPage =
 	backdrop-filter: blur(20px)
 	-webkit-backdrop-filter: blur(20px)
 	z-index: 1001
+	max-height: var(--floating-toc-max-h)
 	
 	&.show
 		transform: translateY(0)
@@ -115,24 +119,23 @@ const hideSidebarOnPostPage =
 		visibility: hidden
 		
 .toc-scroll-container
-	/* 面板 max-height 24rem 减去面板自身 py-3 上下共 1.5rem */
-	max-height: calc(24rem - 1.5rem)
-
-	@media (max-width: 768px)
-		max-height: calc(24rem - 1.5rem)
+	/* 面板 py-3 上下共 1.5rem */
+	max-height: calc(var(--floating-toc-max-h) - 1.5rem)
 
 /* 响应式调整 - 仅保留 Panel 尺寸调整 */
 @media (max-width: 1024px)
+	.floating-toc-wrapper
+		--floating-toc-max-h: unquote("min(20rem, calc(100vh - 8rem))")
 	.floating-toc-panel
 		width: calc(100vw - 2rem)
 		max-width: 20rem
-		max-height: 20rem
 
 @media (max-width: 768px)
+	.floating-toc-wrapper
+		--floating-toc-max-h: unquote("min(28rem, calc(100vh - 8rem))")
 	.floating-toc-panel
 		width: calc(100vw - 1.5rem)
 		max-width: 20rem
-		max-height: 28rem
 		bottom: calc(100% + 1rem)
 
 /* 暗色主题半透明效果 */
