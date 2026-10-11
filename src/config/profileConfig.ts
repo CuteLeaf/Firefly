@@ -9,10 +9,10 @@ export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/avatar.avif",
 
 	// 名字
-	name: "Ning",
+	name: "XiaYe",
 
 	// 个人签名
-	bio: "Hello, I'm Ning.",
+	bio: "Hello, I'm XiaYe.",
 
 	// 链接配置
 	// 已经预装的图标集：fa7-brands，fa7-regular，fa7-solid，material-symbols，simple-icons
@@ -30,7 +30,7 @@ export const profileConfig: ProfileConfig = {
 		{
 			name: "Email",
 			icon: "fa7-solid:envelope",
-			url: "mailto:ning@ningnb.ccwu.cc",
+			url: "mailto:xiaye@msn.com",
 			showName: false,
 		},
 		{
