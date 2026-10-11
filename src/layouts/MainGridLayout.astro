@@ -164,11 +164,8 @@ const {
 
         </div>
 
-<SpineModel></SpineModel>
-
-<FireflyLive2D />
-
-{live2dWidgetConfig.enable && <Live2DWidget config={live2dWidgetConfig} />}
+        <SpineModel></SpineModel>
+        {live2dWidgetConfig.enable && <Live2DWidget config={live2dWidgetConfig} />}
 
         {/* 页脚宽度跨「侧栏 + 内容栏」，故在 #content-column 之外；又在 Swup 容器之外，
             切页不重渲染 */}
