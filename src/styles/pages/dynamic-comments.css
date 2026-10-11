@@ -1,0 +1,13 @@
+/* 动态页内嵌评论 iframe 页专属：去掉外层留白，仅保留评论本身 */
+
+html:has(.page-comment-embed),
+body:has(.page-comment-embed) {
+	overflow: hidden;
+	background: transparent !important;
+}
+
+.page-comment-embed #post-comments {
+	margin: 0;
+	border: 0;
+	box-shadow: none;
+}

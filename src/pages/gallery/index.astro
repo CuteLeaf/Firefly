@@ -5,7 +5,9 @@ import { galleryConfig, siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import "@/styles/pages/common.css";
 import { getAlbumCover, scanAlbumPhotos } from "@/utils/gallery-utils";
+import "@/styles/pages/card-grid.css";
 
 // 检查页面是否启用
 if (!siteConfig.pages.gallery) {
@@ -27,27 +29,19 @@ const allTags = [...new Set(albums.flatMap((a) => a.tags || []))].sort();
 ---
 
 <MainGridLayout title={title} description={description}>
-  <div
-    class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32"
-  >
-    <div class="card-base z-10 px-9 py-6 relative w-full">
-      <!-- 页面标题和描述 -->
+  <div class="page-shell">
+    <!-- 页面标题和描述面板（与下方相册列表分离） -->
+    <div class="card-base z-10 px-9 py-6 mb-4 relative w-full">
       <div class="mb-4">
-        <div class="flex items-center gap-3 mb-3">
-          <div
-            class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70"
-          >
-            <Icon name="material-symbols:photo-library" class="text-[1.5rem]" />
+        <div class="page-heading">
+          <div class="page-icon" aria-hidden="true">
+            <Icon name="material-symbols:photo-library" />
           </div>
-          <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
-            {title}
+          <div>
+            <h2>{title}</h2>
+            {description && <p>{description}</p>}
           </div>
         </div>
-        {description && (
-          <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
-            {description}
-          </p>
-        )}
       </div>
 
       <!-- 搜索框 + 标签筛选 -->
@@ -86,38 +80,38 @@ const allTags = [...new Set(albums.flatMap((a) => a.tags || []))].sort();
           )}
         </gallery-filter>
       )}
-
-      <!-- 相册卡片网格 -->
-      {albums.length > 0 ? (
-        <>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-4">
-            {albums.map((album) => (
-              <AlbumCard
-                id={album.id}
-                name={album.name}
-                cover={album.cover}
-                description={album.description}
-                date={album.date}
-                location={album.location}
-                tags={album.tags}
-                photoCount={album.photoCount}
-                encrypted={!!album.password}
-              />
-            ))}
-          </div>
-          {/* 搜索无结果提示 */}
-          <div class="albums-empty hidden flex-col items-center justify-center py-12 text-neutral-400 dark:text-neutral-500">
-            <Icon name="material-symbols:search-off-rounded" class="text-4xl mb-3" />
-            <div class="text-sm">{i18n(I18nKey.searchNoResults)}</div>
-          </div>
-        </>
-      ) : (
-        <div class="flex flex-col items-center justify-center py-16 text-neutral-400 dark:text-neutral-500">
-          <Icon name="material-symbols:photo-library" class="text-6xl mb-4 opacity-50" />
-          <p class="text-lg">{i18n(I18nKey.galleryNoAlbums)}</p>
-        </div>
-      )}
     </div>
+
+    <!-- 相册卡片网格（独立于标题面板） -->
+    {albums.length > 0 ? (
+      <>
+        <div class="card-grid" style="--card-grid-min-width: 320px">
+          {albums.map((album) => (
+            <AlbumCard
+              id={album.id}
+              name={album.name}
+              cover={album.cover}
+              description={album.description}
+              date={album.date}
+              location={album.location}
+              tags={album.tags}
+              photoCount={album.photoCount}
+              encrypted={!!album.password}
+            />
+          ))}
+        </div>
+        {/* 搜索无结果提示 */}
+        <div class="albums-empty hidden flex-col items-center justify-center py-12 text-neutral-400 dark:text-neutral-500">
+          <Icon name="material-symbols:search-off-rounded" class="text-4xl mb-3" />
+          <div class="text-sm">{i18n(I18nKey.searchNoResults)}</div>
+        </div>
+      </>
+    ) : (
+      <div class="card-base flex flex-col items-center justify-center py-16 text-neutral-400 dark:text-neutral-500">
+        <Icon name="material-symbols:photo-library" class="text-6xl mb-4 opacity-50" />
+        <p class="text-lg">{i18n(I18nKey.galleryNoAlbums)}</p>
+      </div>
+    )}
   </div>
 
   <script slot="head" is:inline>
@@ -158,7 +152,7 @@ const allTags = [...new Set(albums.flatMap((a) => a.tags || []))].sort();
         }
 
         applyFilters() {
-          const container = this.closest(".card-base");
+          const container = this.closest(".page-shell");
           if (!container) return;
 
           const input = this.querySelector("[data-search]");
@@ -170,9 +164,9 @@ const allTags = [...new Set(albums.flatMap((a) => a.tags || []))].sort();
           cards.forEach((card) => {
             const cardEl = card;
             const tags = (cardEl.dataset.tags || "").split(",");
-            const name = (cardEl.querySelector("h3")?.textContent || "").toLowerCase();
-            const desc = (cardEl.querySelector("p")?.textContent || "").toLowerCase();
-            const location = (cardEl.querySelector(".inline-flex")?.textContent || "").toLowerCase();
+            const name = (cardEl.querySelector(".album-card-title")?.textContent || "").toLowerCase();
+            const desc = (cardEl.querySelector(".album-card-desc")?.textContent || "").toLowerCase();
+            const location = (cardEl.querySelector(".album-card-location")?.textContent || "").toLowerCase();
 
             const tagMatch =
               this.selectedTag === "all" ||
@@ -204,4 +198,5 @@ const allTags = [...new Set(albums.flatMap((a) => a.tags || []))].sort();
       customElements.define("gallery-filter", GalleryFilter);
     }
   </script>
+
 </MainGridLayout>

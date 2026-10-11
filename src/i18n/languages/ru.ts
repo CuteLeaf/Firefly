@@ -193,7 +193,7 @@ export const ru: Translation = {
 	[Key.bangumiCategoryReal]: "Реальный",
 
 	// Обновление данных Бангуми
-	[Key.bangumiLastUpdated]: "Данные обновлены",
+	[Key.bangumiLastUpdated]: "Дата обновления данных",
 	[Key.bangumiUpdatedAt]: "Время сборки",
 	[Key.bangumiDataStatic]: "Статические данные",
 
@@ -221,7 +221,7 @@ export const ru: Translation = {
 	[Key.vndbNotConfigured]: "ID пользователя VNDB не настроен",
 	[Key.vndbNotConfiguredDesc]:
 		"Укажите ID пользователя VNDB в src/config/siteConfig.ts",
-	[Key.vndbLastUpdated]: "Данные обновлены",
+	[Key.vndbLastUpdated]: "Дата обновления данных",
 	[Key.vndbVotes]: "голосов",
 	[Key.vndbLengthVeryShort]: "Очень короткая",
 	[Key.vndbLengthShort]: "Короткая",
@@ -248,7 +248,7 @@ export const ru: Translation = {
 	[Key.animeDateDesc]: "Сначала новые",
 	[Key.animeDateAsc]: "Сначала старые",
 	[Key.animeNoResults]: "Аниме не найдено",
-	[Key.animeLastUpdated]: "Данные обновлены",
+	[Key.animeLastUpdated]: "Дата обновления данных",
 	[Key.animeEpStatus]: "Прогресс",
 	[Key.animeViewDetails]: "Подробнее",
 	[Key.animeBilibiliAvg]: "Bilibili ср.",
@@ -290,7 +290,7 @@ export const ru: Translation = {
 	[Key.malNotConfigured]: "MyAnimeList не настроен",
 	[Key.malNotConfiguredDesc]:
 		"Укажите имя пользователя и Client ID MyAnimeList в src/config/siteConfig.ts (список должен быть открытым)",
-	[Key.malLastUpdated]: "Данные обновлены",
+	[Key.malLastUpdated]: "Дата обновления данных",
 	[Key.malSeasonWinter]: "Зима",
 	[Key.malSeasonSpring]: "Весна",
 	[Key.malSeasonSummer]: "Лето",
@@ -514,6 +514,7 @@ export const ru: Translation = {
 	[Key.galleryAlbums]: "альбомов",
 	[Key.galleryNoAlbums]: "Пока нет альбомов",
 	[Key.galleryBackToAlbums]: "Вернуться к альбомам",
+	[Key.galleryEnterAlbum]: "Открыть альбом",
 	[Key.searchAlbums]: "Поиск альбомов...",
 
 	// Защита паролем

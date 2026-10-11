@@ -65,7 +65,7 @@ export function registerDynamicInlineComments(): void {
 
 		private load(panel: HTMLElement) {
 			const frame = document.createElement("iframe");
-			frame.className = "dynamic-comment-frame";
+			frame.className = "page-comment-frame";
 			frame.src = this.dataset.src || "";
 			frame.title =
 				this.querySelector<HTMLElement>("[data-comment-toggle] span")

@@ -10,14 +10,14 @@ interface Props {
 const { src } = Astro.props;
 ---
 
-<dynamic-inline-comments class="dynamic-inline-comments" data-src={src}>
-	<button type="button" class="dynamic-comment-toggle btn-plain" data-comment-toggle>
+<dynamic-inline-comments class="page-inline-comments" data-src={src}>
+	<button type="button" class="page-comment-toggle btn-plain" data-comment-toggle>
 		<Icon name="material-symbols:chat-bubble-outline-rounded" />
 		<span>{i18n(I18nKey.comments)}</span>
 		<Icon
 			name="material-symbols:expand-more-rounded"
-			class="dynamic-comment-chevron"
+			class="page-comment-chevron"
 		/>
 	</button>
-	<div class="dynamic-comment-panel" data-comment-panel hidden></div>
+	<div class="page-comment-panel" data-comment-panel hidden></div>
 </dynamic-inline-comments>

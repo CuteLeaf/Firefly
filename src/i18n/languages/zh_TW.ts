@@ -190,7 +190,7 @@ export const zh_TW: Translation = {
 	[Key.bangumiCategoryReal]: "三次元",
 
 	// 番組數據更新
-	[Key.bangumiLastUpdated]: "數據更新於",
+	[Key.bangumiLastUpdated]: "資料更新日期",
 	[Key.bangumiUpdatedAt]: "構建時間",
 	[Key.bangumiDataStatic]: "靜態數據",
 
@@ -218,7 +218,7 @@ export const zh_TW: Translation = {
 	[Key.vndbNotConfigured]: "未配置 VNDB 用戶ID",
 	[Key.vndbNotConfiguredDesc]:
 		"請在 src/config/siteConfig.ts 中配置你的 VNDB 用戶ID",
-	[Key.vndbLastUpdated]: "數據更新於",
+	[Key.vndbLastUpdated]: "資料更新日期",
 	[Key.vndbVotes]: "票",
 	[Key.vndbLengthVeryShort]: "極短",
 	[Key.vndbLengthShort]: "短",
@@ -245,7 +245,7 @@ export const zh_TW: Translation = {
 	[Key.animeDateDesc]: "最新發布",
 	[Key.animeDateAsc]: "最早發布",
 	[Key.animeNoResults]: "沒有找到匹配的番劇",
-	[Key.animeLastUpdated]: "數據更新於",
+	[Key.animeLastUpdated]: "資料更新日期",
 	[Key.animeEpStatus]: "進度",
 	[Key.animeViewDetails]: "查看詳情",
 	[Key.animeBilibiliAvg]: "Bilibili 均分",
@@ -287,7 +287,7 @@ export const zh_TW: Translation = {
 	[Key.malNotConfigured]: "未配置 MyAnimeList 用戶資訊",
 	[Key.malNotConfiguredDesc]:
 		"請在 src/config/siteConfig.ts 中配置你的 MyAnimeList 用戶名和 Client ID（列表需為公開狀態）",
-	[Key.malLastUpdated]: "數據更新於",
+	[Key.malLastUpdated]: "資料更新日期",
 	[Key.malSeasonWinter]: "冬季",
 	[Key.malSeasonSpring]: "春季",
 	[Key.malSeasonSummer]: "夏季",
@@ -504,6 +504,7 @@ export const zh_TW: Translation = {
 	[Key.galleryAlbums]: "本相簿",
 	[Key.galleryNoAlbums]: "暫無相簿",
 	[Key.galleryBackToAlbums]: "返回相簿列表",
+	[Key.galleryEnterAlbum]: "進入相簿",
 	[Key.searchAlbums]: "搜尋相簿...",
 
 	// 密碼保護

@@ -5,8 +5,10 @@ import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import "@/styles/pages/common.css";
+import "@/styles/pages/media-grid.css";
 import type { MalListItem } from "@/types/mal";
-import { formatDateI18nWithTime } from "@/utils/date-utils";
+import { formatDateI18n } from "@/utils/date-utils";
 import {
 	fetchMalList,
 	type MalCategory,
@@ -20,7 +22,7 @@ if (!siteConfig.pages.mal) {
 }
 
 // 获取构建时间
-const buildTime = formatDateI18nWithTime(new Date());
+const buildTime = formatDateI18n(new Date());
 
 ////////////// MyAnimeList 配置 ////////////////////////
 const malConfig = {
@@ -151,20 +153,19 @@ const activeCategory = categories[0]?.id || "anime";
       <!-- 页面标题 -->
       <div class="relative w-full mb-8">
         <div class="mb-6">
-          <div class="flex items-center gap-3 mb-3">
-            <div class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70">
-              <Icon name="material-symbols:menu-book" class="text-[1.5rem]"></Icon>
+          <div class="page-heading">
+            <div class="page-icon" aria-hidden="true">
+              <Icon name="material-symbols:menu-book" />
             </div>
-            <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
-              {i18n(I18nKey.mal)}
+            <div>
+              <h2>{i18n(I18nKey.mal)}</h2>
+              <p>{i18n(I18nKey.malSubtitle)}</p>
             </div>
+            <p class="page-updated">
+              <span>{i18n(I18nKey.malLastUpdated)}</span>
+              <span>{buildTime}</span>
+            </p>
           </div>
-          <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
-            {i18n(I18nKey.malSubtitle)}
-          </p>
-          <p class="text-xs text-neutral-500 dark:text-neutral-500 mt-2">
-            {i18n(I18nKey.malLastUpdated)} {buildTime}
-          </p>
         </div>
 
         {!isConfigured ? (

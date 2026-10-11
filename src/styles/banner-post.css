@@ -1,0 +1,52 @@
+/* ===== 文章详情页横幅元信息（仅文章详情页可见，见 BannerPostMetaOverlay） ===== */
+
+.banner-post-title {
+    max-width: 72rem;
+    font-size: 2.75rem;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.65);
+}
+
+.banner-post-description {
+    position: relative;
+    max-width: min(var(--banner-post-description-width, 50rem), 78vw);
+    padding: 0.85rem 2.25rem;
+    border-radius: var(--radius-large);
+    background: rgba(0, 0, 0, 0.16);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    font-weight: 400;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+    text-wrap: pretty;
+}
+
+.banner-post-description-quote {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 1.5rem;
+    pointer-events: none;
+}
+
+.banner-post-description-quote-start {
+    top: 0.45rem;
+    left: 0.5rem;
+    transform: rotate(180deg);
+}
+
+.banner-post-description-quote-end {
+    right: 0.5rem;
+    bottom: 0.45rem;
+}
+
+.banner-post-description-divider {
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+}
+
+.banner-post-meta-list {
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 1280px) {
+    .banner-post-title {
+        font-size: 2.35rem;
+    }
+}

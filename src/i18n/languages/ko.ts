@@ -192,7 +192,7 @@ export const ko: Translation = {
 	[Key.bangumiCategoryReal]: "실사",
 
 	// Bangumi Data Update
-	[Key.bangumiLastUpdated]: "데이터 업데이트 시각",
+	[Key.bangumiLastUpdated]: "데이터 업데이트 날짜",
 	[Key.bangumiUpdatedAt]: "빌드 시각",
 	[Key.bangumiDataStatic]: "정적 데이터",
 
@@ -220,7 +220,7 @@ export const ko: Translation = {
 	[Key.vndbNotConfigured]: "VNDB 사용자 ID가 설정되지 않았습니다",
 	[Key.vndbNotConfiguredDesc]:
 		"src/config/siteConfig.ts에서 VNDB 사용자 ID를 설정하세요",
-	[Key.vndbLastUpdated]: "데이터 업데이트 시각",
+	[Key.vndbLastUpdated]: "데이터 업데이트 날짜",
 	[Key.vndbVotes]: "표",
 	[Key.vndbLengthVeryShort]: "매우 짧음",
 	[Key.vndbLengthShort]: "짧음",
@@ -247,7 +247,7 @@ export const ko: Translation = {
 	[Key.animeDateDesc]: "최신순",
 	[Key.animeDateAsc]: "오래된 순",
 	[Key.animeNoResults]: "일치하는 애니메이션이 없습니다",
-	[Key.animeLastUpdated]: "데이터 업데이트 시각",
+	[Key.animeLastUpdated]: "데이터 업데이트 날짜",
 	[Key.animeEpStatus]: "진행 상황",
 	[Key.animeViewDetails]: "상세 보기",
 	[Key.animeBilibiliAvg]: "Bilibili 평균",
@@ -289,7 +289,7 @@ export const ko: Translation = {
 	[Key.malNotConfigured]: "MyAnimeList가 설정되지 않았습니다",
 	[Key.malNotConfiguredDesc]:
 		"src/config/siteConfig.ts에서 MyAnimeList 사용자 이름과 Client ID를 설정하세요 (목록은 공개여야 합니다)",
-	[Key.malLastUpdated]: "데이터 업데이트 시각",
+	[Key.malLastUpdated]: "데이터 업데이트 날짜",
 	[Key.malSeasonWinter]: "겨울",
 	[Key.malSeasonSpring]: "봄",
 	[Key.malSeasonSummer]: "여름",
@@ -510,6 +510,7 @@ export const ko: Translation = {
 	[Key.galleryAlbums]: "앨범",
 	[Key.galleryNoAlbums]: "아직 앨범이 없습니다",
 	[Key.galleryBackToAlbums]: "앨범으로 돌아가기",
+	[Key.galleryEnterAlbum]: "앨범 보기",
 	[Key.searchAlbums]: "앨범 검색...",
 
 	// Password Protection

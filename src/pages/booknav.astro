@@ -4,12 +4,14 @@ import { booknavPageConfig, siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import "@/styles/pages/common.css";
 import {
 	getBooknavDomain,
 	getBooknavLetter,
 	getEnabledBooknavGroups,
 	resolveBooknavIcon,
 } from "@/utils/booknav-utils";
+import "@/styles/pages/booknav.css";
 
 // 检查页面是否启用
 if (!siteConfig.pages.booknav) {
@@ -45,23 +47,15 @@ const description =
     <div class="card-base z-10 px-9 py-6 relative w-full">
       <!-- 页面标题和描述 -->
       <div class="mb-4">
-        <div class="flex items-center gap-3 mb-3">
-          <div
-            class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70"
-          >
-            <Icon name="material-symbols:bookmarks" class="text-[1.5rem]" />
+        <div class="page-heading">
+          <div class="page-icon" aria-hidden="true">
+            <Icon name="material-symbols:bookmarks" />
           </div>
-          <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
-            {title}
+          <div>
+            <h2>{title}</h2>
+            {description && <p>{description}</p>}
           </div>
         </div>
-        {
-          description && (
-            <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
-              {description}
-            </p>
-          )
-        }
       </div>
 
       {
@@ -306,35 +300,4 @@ const description =
     }
   </script>
 
-  <style is:global>
-    /* 自定义元素默认是 inline，需要撑成块级容器 */
-    booknav-list {
-      display: block;
-    }
-
-    .booknav-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 0.75rem;
-    }
-
-    /* 避让固定导航栏，与主题其他锚点保持一致 */
-    .booknav-group {
-      scroll-margin-top: 5.5rem;
-    }
-
-    /* 图标缺失时的首字母兜底样式 */
-    .booknav-letter {
-      font-size: 1.25rem;
-      font-weight: 700;
-      line-height: 1;
-      color: var(--primary);
-      background: color-mix(in srgb, var(--primary) 12%, transparent);
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  </style>
 </MainGridLayout>

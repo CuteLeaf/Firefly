@@ -5,11 +5,13 @@ import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import "@/styles/pages/common.css";
+import "@/styles/pages/media-grid.css";
 import type {
 	UserSubjectCollection,
 	UserSubjectCollectionResponse,
 } from "@/types/bangumi";
-import { formatDateI18nWithTime } from "@/utils/date-utils";
+import { formatDateI18n } from "@/utils/date-utils";
 import { filterNsfw, isBangumiNsfw } from "@/utils/nsfw-utils";
 
 //参考：霞葉 https://kasuha.com/posts/fuwari-enhance-ep2/
@@ -20,7 +22,7 @@ if (!siteConfig.pages.bangumi) {
 }
 
 // 获取构建时间
-const buildTime = formatDateI18nWithTime(new Date());
+const buildTime = formatDateI18n(new Date());
 
 ////////////// Bangumi 配置 ////////////////////////
 const bangumiConfig = {
@@ -221,22 +223,21 @@ const activeTab = tabs[0]?.id || "anime";
         <!-- 页面标题 -->
         <div class="relative w-full mb-8">
             <div class="mb-6">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70">
-                        <Icon name="material-symbols:movie" class="text-[1.5rem]"></Icon>
+                <div class="page-heading">
+                    <div class="page-icon" aria-hidden="true">
+                        <Icon name="material-symbols:movie" />
                     </div>
-                    <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
-                        {i18n(I18nKey.bangumi)}
+                    <div>
+                        <h2>{i18n(I18nKey.bangumi)}</h2>
+                        <p>{i18n(I18nKey.bangumiSubtitle)}</p>
                     </div>
+                    {!isDynamic && (
+                    <p class="page-updated">
+                        <span>{i18n(I18nKey.bangumiLastUpdated)}</span>
+                        <span>{buildTime}</span>
+                    </p>
+                    )}
                 </div>
-                <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                    {i18n(I18nKey.bangumiSubtitle)}
-                </p>
-                {!isDynamic && (
-                <p class="text-xs text-neutral-500 dark:text-neutral-500 mt-2">
-                    {i18n(I18nKey.bangumiLastUpdated)} {buildTime}
-                </p>
-                )}
             </div>
 
       {isDynamic ? (

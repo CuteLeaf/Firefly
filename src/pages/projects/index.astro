@@ -5,13 +5,14 @@ import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
-import "@/styles/dynamic.css";
+import "@/styles/pages/common.css";
 import { getSortedProjects } from "@/utils/content-utils";
 import {
 	getProjectStatusMeta,
 	PROJECT_STATUS_KEYS,
 } from "@/utils/projects-utils";
 import { getFileDirFromPath, removeFileExtension } from "@/utils/url-utils";
+import "@/styles/pages/card-grid.css";
 
 // 检查页面是否启用
 if (!siteConfig.pages.projects) {
@@ -42,11 +43,11 @@ const statusFilters = PROJECT_STATUS_KEYS.map((key) => {
 ---
 
 <MainGridLayout title={title} description={description}>
-	<section class="dynamic-page">
+	<section class="page-shell">
 		<!-- 标题面板 -->
-		<header class="card-base dynamic-page-header">
-			<div class="dynamic-page-heading">
-				<div class="dynamic-page-icon" aria-hidden="true">
+		<header class="card-base page-header">
+			<div class="page-heading">
+				<div class="page-icon" aria-hidden="true">
 					<Icon name="material-symbols:rocket-launch" />
 				</div>
 				<div>
@@ -54,7 +55,7 @@ const statusFilters = PROJECT_STATUS_KEYS.map((key) => {
 					{description && <p>{description}</p>}
 				</div>
 			</div>
-			<div class="dynamic-count" aria-label={title}>
+			<div class="page-count" aria-label={title}>
 				<Icon name="material-symbols:rocket-launch" />
 				<strong>{projectMeta.length}</strong>
 				<span>{title}</span>
@@ -96,7 +97,7 @@ const statusFilters = PROJECT_STATUS_KEYS.map((key) => {
 
 		<!-- 内容面板：项目卡片网格 -->
 		{projectMeta.length > 0 ? (
-			<div class="project-grid" style="--project-card-min-width: 320px">
+			<div class="card-grid" style="--card-grid-min-width: 320px">
 				{projectMeta.map((p) => (
 					<ProjectCard
 						id={p.id}
@@ -151,7 +152,7 @@ const statusFilters = PROJECT_STATUS_KEYS.map((key) => {
 					this.applyFilters();
 				}
 				applyFilters() {
-					const container = this.closest(".dynamic-page");
+					const container = this.closest(".page-shell");
 					if (!container) return;
 					const input = this.querySelector("[data-search]");
 					const query = (input?.value || "").toLowerCase().trim();
@@ -191,15 +192,4 @@ const statusFilters = PROJECT_STATUS_KEYS.map((key) => {
 		}
 	</script>
 
-	<style is:global>
-		/* 与文章列表网格模式一致：auto-fill minmax 自动换列 */
-		.project-grid {
-			display: grid;
-			grid-template-columns: repeat(
-				auto-fill,
-				minmax(var(--project-card-min-width, 320px), 1fr)
-			);
-			gap: 1rem;
-		}
-	</style>
 </MainGridLayout>

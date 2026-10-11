@@ -2,6 +2,7 @@
 import Comment from "@/components/comment/index.astro";
 import { commentConfig, dynamicConfig, siteConfig } from "@/config";
 import Layout from "@/layouts/Layout.astro";
+import "@/styles/pages/dynamic-comments.css";
 
 if (
 	!siteConfig.pages.dynamic ||
@@ -14,7 +15,7 @@ if (
 ---
 
 <Layout title="">
-	<main class="dynamic-comment-embed">
+	<main class="page-comment-embed">
 		<Comment customPath="/dynamic/" />
 	</main>
 </Layout>
@@ -44,16 +45,3 @@ if (
 	window.addEventListener("load", reportHeight);
 </script>
 
-<style is:global>
-	html:has(.dynamic-comment-embed),
-	body:has(.dynamic-comment-embed) {
-		overflow: hidden;
-		background: transparent !important;
-	}
-
-	.dynamic-comment-embed #post-comments {
-		margin: 0;
-		border: 0;
-		box-shadow: none;
-	}
-</style>

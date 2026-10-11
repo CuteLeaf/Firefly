@@ -193,7 +193,7 @@ export const en: Translation = {
 	[Key.bangumiCategoryReal]: "Real",
 
 	// Bangumi Data Update
-	[Key.bangumiLastUpdated]: "Data updated at",
+	[Key.bangumiLastUpdated]: "Data updated on",
 	[Key.bangumiUpdatedAt]: "Build time",
 	[Key.bangumiDataStatic]: "Static data",
 
@@ -221,7 +221,7 @@ export const en: Translation = {
 	[Key.vndbNotConfigured]: "VNDB User ID Not Configured",
 	[Key.vndbNotConfiguredDesc]:
 		"Please configure your VNDB user ID in src/config/siteConfig.ts",
-	[Key.vndbLastUpdated]: "Data updated at",
+	[Key.vndbLastUpdated]: "Data updated on",
 	[Key.vndbVotes]: "votes",
 	[Key.vndbLengthVeryShort]: "Very short",
 	[Key.vndbLengthShort]: "Short",
@@ -248,7 +248,7 @@ export const en: Translation = {
 	[Key.animeDateDesc]: "Newest",
 	[Key.animeDateAsc]: "Oldest",
 	[Key.animeNoResults]: "No matching anime found",
-	[Key.animeLastUpdated]: "Data updated at",
+	[Key.animeLastUpdated]: "Data updated on",
 	[Key.animeEpStatus]: "Progress",
 	[Key.animeViewDetails]: "View Details",
 	[Key.animeBilibiliAvg]: "Bilibili Avg",
@@ -290,7 +290,7 @@ export const en: Translation = {
 	[Key.malNotConfigured]: "MyAnimeList Not Configured",
 	[Key.malNotConfiguredDesc]:
 		"Please configure your MyAnimeList username and Client ID in src/config/siteConfig.ts. The list must be public.",
-	[Key.malLastUpdated]: "Data updated at",
+	[Key.malLastUpdated]: "Data updated on",
 	[Key.malSeasonWinter]: "Winter",
 	[Key.malSeasonSpring]: "Spring",
 	[Key.malSeasonSummer]: "Summer",
@@ -513,6 +513,7 @@ export const en: Translation = {
 	[Key.galleryAlbums]: "albums",
 	[Key.galleryNoAlbums]: "No albums yet",
 	[Key.galleryBackToAlbums]: "Back to albums",
+	[Key.galleryEnterAlbum]: "Enter album",
 	[Key.searchAlbums]: "Search albums...",
 
 	// Password Protection

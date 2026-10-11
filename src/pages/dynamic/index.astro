@@ -6,7 +6,8 @@ import { commentConfig, dynamicConfig, siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
-import "@/styles/dynamic.css";
+import "@/styles/pages/common.css";
+import "@/styles/pages/dynamic.css";
 import { url } from "@/utils/url-utils";
 
 if (!siteConfig.pages.dynamic) {
@@ -29,11 +30,11 @@ const memos = dynamicConfig.memos;
 ---
 
 <MainGridLayout title={title} description={description}>
-	<section class="dynamic-page" aria-labelledby="dynamic-page-title">
+	<section class="page-shell" aria-labelledby="dynamic-page-title">
 		<div>
-			<header class="dynamic-page-header card-base">
-				<div class="dynamic-page-heading">
-					<div class="dynamic-page-icon" aria-hidden="true">
+			<header class="page-header card-base">
+				<div class="page-heading">
+					<div class="page-icon" aria-hidden="true">
 						<Icon name="material-symbols:forum-rounded" />
 					</div>
 					<div>
@@ -42,15 +43,15 @@ const memos = dynamicConfig.memos;
 					</div>
 				</div>
 				<div
-					class="dynamic-count"
+					class="page-count"
 					aria-label={i18n(I18nKey.dynamic)}
 				>
 					<Icon name="material-symbols:dynamic-feed-rounded" />
 					<strong data-dynamic-page-count>0</strong>
 					<span>{i18n(I18nKey.dynamic)}</span>
 				</div>
-				<div class="dynamic-filter">
-					<label class="dynamic-search">
+				<div class="page-filter">
+					<label class="page-search">
 						<Icon name="material-symbols:search-rounded" />
 						<input
 							type="search"
@@ -58,7 +59,7 @@ const memos = dynamicConfig.memos;
 							placeholder={i18n(I18nKey.dynamicSearch)}
 						/>
 					</label>
-					<label class="dynamic-year-select">
+					<label class="page-year-select">
 						<Icon name="material-symbols:calendar-month-rounded" />
 						<select data-year-select aria-label={i18n(I18nKey.year)}>
 							<option value="all">{i18n(I18nKey.dynamicAllYears)}</option>

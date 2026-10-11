@@ -7,8 +7,10 @@ import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import "@/styles/pages/common.css";
+import "@/styles/pages/media-grid.css";
 import type { VndbUlistEntry } from "@/types/vndb";
-import { formatDateI18nWithTime } from "@/utils/date-utils";
+import { formatDateI18n } from "@/utils/date-utils";
 import { isVndbNsfw } from "@/utils/nsfw-utils";
 import {
 	buildVndbTabs,
@@ -21,7 +23,7 @@ if (!siteConfig.pages.vndb) {
 	return Astro.redirect("/404/");
 }
 
-const buildTime = formatDateI18nWithTime(new Date());
+const buildTime = formatDateI18n(new Date());
 
 ////////////// VNDB 配置 ////////////////////////
 const vndbConfig = {
@@ -110,22 +112,21 @@ const activeTab = tabs[0]?.id || "all";
     <div class="card-base z-10 px-9 py-6 relative w-full">
       <div class="relative w-full mb-8">
         <div class="mb-6">
-          <div class="flex items-center gap-3 mb-3">
-            <div class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70">
-              <Icon name="material-symbols:chrome-reader-mode-rounded" class="text-[1.5rem]"></Icon>
+          <div class="page-heading">
+            <div class="page-icon" aria-hidden="true">
+              <Icon name="material-symbols:chrome-reader-mode-rounded" />
             </div>
-            <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
-              {i18n(I18nKey.vndb)}
+            <div>
+              <h2>{i18n(I18nKey.vndb)}</h2>
+              <p>{i18n(I18nKey.vndbSubtitle)}</p>
             </div>
+            {!isDynamic && (
+              <p class="page-updated">
+                <span>{i18n(I18nKey.vndbLastUpdated)}</span>
+                <span>{buildTime}</span>
+              </p>
+            )}
           </div>
-          <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
-            {i18n(I18nKey.vndbSubtitle)}
-          </p>
-          {!isDynamic && (
-            <p class="text-xs text-neutral-500 dark:text-neutral-500 mt-2">
-              {i18n(I18nKey.vndbLastUpdated)} {buildTime}
-            </p>
-          )}
         </div>
 
         {isDynamic ? (

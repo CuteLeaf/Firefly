@@ -42,15 +42,15 @@ const profileUrl = url(dynamicConfig.profileUrl || "/about/");
 
 <dynamic-entry
 	id={anchorId}
-	class="dynamic-entry card-base"
+	class="page-entry card-base"
 	data-dynamic-entry
 	data-year={entry.data.published.getUTCFullYear()}
 >
 	<article aria-labelledby={`${anchorId}-author`}>
-		<header class="dynamic-entry-header">
+		<header class="page-entry-header">
 			<a
 				href={profileUrl}
-				class="dynamic-avatar"
+				class="page-avatar"
 				aria-label={profileLabel}
 			>
 				<ImageWrapper
@@ -61,18 +61,18 @@ const profileUrl = url(dynamicConfig.profileUrl || "/about/");
 					loading="lazy"
 				/>
 			</a>
-			<div class="dynamic-identity">
-				<a href={profileUrl} class="dynamic-author" aria-label={profileLabel}>
+			<div class="page-identity">
+				<a href={profileUrl} class="page-author" aria-label={profileLabel}>
 					<strong id={`${anchorId}-author`}>{profileConfig.name}</strong>
 				</a>
-				<div class="dynamic-meta">
-					<a class="dynamic-time" href={permalink}>
+				<div class="page-meta">
+					<a class="page-time" href={permalink}>
 						<time datetime={entry.data.published.toISOString()}>
 							{published} {timezone}
 						</time>
 					</a>
 					{location && (
-						<span class="dynamic-location" title={location}>
+						<span class="page-location" title={location}>
 							<Icon name="material-symbols:location-on-rounded" />
 							<span>{location}</span>
 						</span>
@@ -80,7 +80,7 @@ const profileUrl = url(dynamicConfig.profileUrl || "/about/");
 				</div>
 			</div>
 			<a
-				class="dynamic-permalink btn-plain"
+				class="page-permalink btn-plain"
 				href={permalink}
 				aria-label={i18n(I18nKey.dynamicPermalink)}
 				title={i18n(I18nKey.dynamicPermalink)}
@@ -89,7 +89,7 @@ const profileUrl = url(dynamicConfig.profileUrl || "/about/");
 			</a>
 		</header>
 
-		<div id={`${anchorId}-content`} class="dynamic-content custom-md">
+		<div id={`${anchorId}-content`} class="page-content custom-md">
 			<Content />
 		</div>
 		<DynamicGallery sourceId={`${anchorId}-content`} />

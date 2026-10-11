@@ -1,0 +1,107 @@
+/* 页面通用外壳与页头：各列表页共用的 .page-* 骨架（按页引入） */
+
+.page-shell {
+	box-sizing: border-box;
+	min-width: 0;
+	width: 100%;
+	max-width: 100%;
+}
+
+.page-header {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 1rem;
+	margin-bottom: 1rem;
+	padding: 1.5rem 2rem;
+}
+
+.page-heading {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.875rem;
+}
+
+.page-count {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 0.3rem;
+	align-self: center;
+	color: var(--primary);
+	white-space: nowrap;
+}
+
+.page-count svg {
+	align-self: center;
+	font-size: 1.35rem;
+}
+
+.page-count strong {
+	font-size: 1.3rem;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.page-count span {
+	color: var(--content-meta);
+	font-size: 0.8rem;
+	font-weight: 500;
+}
+
+.page-icon {
+	display: grid;
+	width: 3.5rem;
+	height: 3.5rem;
+	flex: 0 0 3.5rem;
+	place-items: center;
+	border-radius: var(--radius-large);
+	background: var(--primary);
+	color: white;
+	font-size: 2.5rem;
+}
+
+:root.dark .page-icon {
+	color: rgb(0 0 0 / 70%);
+}
+
+.page-heading h2 {
+	margin: 0;
+	color: rgb(0 0 0 / 90%);
+	font-size: 1.5rem;
+	font-weight: 700;
+	line-height: 1.25;
+}
+
+.page-heading p {
+	margin: 0.2rem 0 0;
+	color: var(--content-meta);
+	font-size: 0.875rem;
+}
+
+/* 更新时间等次要说明行 */
+.page-heading .page-updated {
+	margin: 0 0 0 auto;
+	align-self: center;
+	color: var(--content-meta);
+	font-size: 0.75rem;
+	line-height: 1.5;
+	text-align: center;
+}
+
+.page-heading .page-updated span {
+	display: block;
+}
+
+:root.dark .page-heading h2 {
+	color: rgb(255 255 255 / 90%);
+}
+
+@media (max-width: 640px) {
+	.page-header {
+		padding: 1.25rem;
+	}
+
+	.page-count {
+		align-self: center;
+	}
+}

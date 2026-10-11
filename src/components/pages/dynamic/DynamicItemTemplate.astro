@@ -18,10 +18,10 @@ const profileUrl = url(dynamicConfig.profileUrl || "/about/");
 ---
 
 <template data-dynamic-item-template>
-	<dynamic-entry class="dynamic-entry card-base" data-dynamic-entry>
+	<dynamic-entry class="page-entry card-base" data-dynamic-entry>
 		<article>
-			<header class="dynamic-entry-header">
-				<a href={profileUrl} class="dynamic-avatar" aria-label={profileLabel}>
+			<header class="page-entry-header">
+				<a href={profileUrl} class="page-avatar" aria-label={profileLabel}>
 					<ImageWrapper
 						src={profileConfig.avatar || ""}
 						alt={profileConfig.name}
@@ -31,30 +31,30 @@ const profileUrl = url(dynamicConfig.profileUrl || "/about/");
 						fadeIn={false}
 					/>
 				</a>
-				<div class="dynamic-identity">
-					<a href={profileUrl} class="dynamic-author" aria-label={profileLabel}>
+				<div class="page-identity">
+					<a href={profileUrl} class="page-author" aria-label={profileLabel}>
 						<strong data-dynamic-author>{profileConfig.name}</strong>
 					</a>
-					<div class="dynamic-meta">
-						<a class="dynamic-time" data-dynamic-permalink>
+					<div class="page-meta">
+						<a class="page-time" data-dynamic-permalink>
 							<time data-dynamic-time></time>
 						</a>
-						<span class="dynamic-location" data-dynamic-location hidden>
+						<span class="page-location" data-dynamic-location hidden>
 							<Icon name="material-symbols:location-on-rounded" />
 							<span data-dynamic-location-text></span>
 						</span>
 					</div>
 				</div>
-				<span class="dynamic-pinned-badge" data-dynamic-pinned hidden>
+				<span class="page-pinned-badge" data-dynamic-pinned hidden>
 	<Icon name="material-symbols:push-pin" class="size-3" />
 	{i18n(I18nKey.pinned)}
 </span>
-				<span class="dynamic-entry-decoration" aria-hidden="true">
+				<span class="page-entry-decoration" aria-hidden="true">
 					<Icon name="material-symbols:format-quote-rounded" />
 				</span>
 			</header>
 
-			<div class="dynamic-content custom-md" data-dynamic-content></div>
+			<div class="page-content custom-md" data-dynamic-content></div>
 			<DynamicGallery sourceId="dynamic-template-content" />
 			<DynamicInlineComments src="" />
 		</article>

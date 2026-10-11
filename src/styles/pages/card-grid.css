@@ -1,0 +1,9 @@
+/* 卡片列表通用网格：auto-fill 自动换列，列宽下限由页面通过 --card-grid-min-width 指定 */
+.card-grid {
+	display: grid;
+	grid-template-columns: repeat(
+		auto-fill,
+		minmax(var(--card-grid-min-width, 320px), 1fr)
+	);
+	gap: 1rem;
+}
