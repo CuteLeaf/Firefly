@@ -1,0 +1,128 @@
+{
+	"key": "analytics",
+	"title": "统计分析",
+	"description": "配置 Google Analytics、Microsoft Clarity、Umami 与 51la 等站点统计服务。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"googleAnalyticsId": {
+				"type": "string",
+				"title": "Google Analytics ID",
+				"description": "Google Analytics 测量 ID，留空则不启用该统计。"
+			},
+			"microsoftClarityId": {
+				"type": "string",
+				"title": "Microsoft Clarity ID",
+				"description": "Microsoft Clarity 项目 ID，留空则不启用该统计。"
+			},
+			"umamiAnalytics": {
+				"type": "object",
+				"title": "Umami 统计配置",
+				"description": "Umami 网站统计服务配置。",
+				"properties": {
+					"websiteId": {
+						"type": "string",
+						"title": "Umami Website ID",
+						"description": "Umami 网站 ID。"
+					},
+					"scriptUrl": {
+						"type": "string",
+						"x-format": "url",
+						"title": "Umami JS 地址",
+						"description": "Umami 统计脚本地址，支持使用自建实例。"
+					},
+					"replaysScriptUrl": {
+						"type": "string",
+						"x-format": "url",
+						"title": "会话回放脚本地址",
+						"description": "Umami 会话回放脚本地址，支持使用自建实例。"
+					},
+					"trackOutboundLinks": {
+						"type": "boolean",
+						"title": "追踪出站链接",
+						"description": "是否追踪出站链接点击事件，默认 true。"
+					},
+					"collectWebVitals": {
+						"type": "boolean",
+						"title": "收集浏览器性能指标",
+						"description": "是否自动收集访客浏览器核心网页指标，默认 false。"
+					},
+					"replays": {
+						"type": "object",
+						"title": "会话回放配置",
+						"description": "Umami 会话回放录制配置。",
+						"properties": {
+							"enabled": {
+								"type": "boolean",
+								"title": "启用会话回放",
+								"description": "是否启用会话回放，默认 false。"
+							},
+							"sampleRate": {
+								"type": "number",
+								"minimum": 0,
+								"maximum": 1,
+								"title": "录制会话采样率",
+								"description": "录制会话采样率，范围 0-1，例如 0.15 表示记录 15% 的会话。"
+							},
+							"maskLevel": {
+								"type": "string",
+								"enum": ["moderate", "strict"],
+								"x-enumLabels": ["适中遮罩", "严格遮罩"],
+								"title": "隐私遮罩级别",
+								"description": "隐私遮罩级别：moderate 遮罩所有输入框，strict 额外遮罩页面全部文本。"
+							},
+							"maxDuration": {
+								"type": "integer",
+								"title": "单次录制最大时长",
+								"description": "单次录制最大时长（毫秒），默认 300000。"
+							},
+							"blockSelector": {
+								"type": "string",
+								"title": "排除元素选择器",
+								"description": "需要完全排除录制的元素 CSS 选择器，例如 \".sensitive-widget\"。"
+							}
+						}
+					}
+				}
+			},
+			"la51Analytics": {
+				"type": "object",
+				"title": "51la 统计配置",
+				"description": "51la 网站统计服务配置。",
+				"properties": {
+					"Id": {
+						"type": "string",
+						"title": "51la 统计 ID",
+						"description": "51la 统计 ID。"
+					},
+					"sdkUrl": {
+						"type": "string",
+						"x-format": "url",
+						"title": "自定义 SDK JS 地址",
+						"description": "自定义 SDK JS 地址，防止 DNS 污染，留空使用默认地址。"
+					},
+					"ck": {
+						"type": "string",
+						"title": "数据分离标识",
+						"description": "多个统计 ID 的数据分离标识，留空则使用 Id。"
+					},
+					"autoTrack": {
+						"type": "boolean",
+						"title": "开启事件分析功能",
+						"description": "是否开启事件分析功能。"
+					},
+					"hashMode": {
+						"type": "boolean",
+						"title": "Hash 路由模式",
+						"description": "单页面应用 Hash 路由模式，本项目使用 History API 路由，默认 false。"
+					},
+					"screenRecord": {
+						"type": "boolean",
+						"title": "开启网站录屏",
+						"description": "是否开启网站录屏功能，默认 true。"
+					}
+				}
+			}
+		}
+	}
+}

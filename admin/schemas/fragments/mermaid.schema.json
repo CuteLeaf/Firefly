@@ -1,0 +1,24 @@
+{
+	"key": "mermaid",
+	"title": "Mermaid 图表",
+	"description": "控制 Markdown 中 mermaid 代码块在构建时渲染为静态 SVG 的明暗双主题。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"lightTheme": {
+				"type": "string",
+				"title": "亮色主题",
+				"description": "亮色模式下使用的 merman 宿主主题预设名。",
+				"enum": ["editor-light", "gruvbox-light", "ayu-light"],
+				"x-enumLabels": ["Editor 亮色", "Gruvbox 亮色", "Ayu 亮色"]
+			},
+			"darkTheme": {
+				"type": "string",
+				"title": "暗色主题",
+				"description": "暗色模式下使用的 merman 宿主主题预设名。",
+				"enum": ["editor-dark", "one-dark", "gruvbox-dark", "ayu-dark"],
+				"x-enumLabels": ["Editor 暗色", "One 暗色", "Gruvbox 暗色", "Ayu 暗色"]
+			}
+		}
+	}
+}

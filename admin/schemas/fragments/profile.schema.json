@@ -1,0 +1,56 @@
+{
+	"key": "profile",
+	"title": "用户资料",
+	"description": "配置博客作者的头像、名字、个人签名和社交链接列表。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"avatar": {
+				"type": "string",
+				"title": "头像",
+				"description": "头像图片路径，支持三种格式：1. public 目录（以 \"/\" 开头，不优化）；2. src 目录（不以 \"/\" 开头，自动优化但会增加构建时间，推荐）；3. 远程 URL（如 https://example.com/avatar.jpg）。"
+			},
+			"name": {
+				"type": "string",
+				"title": "名字",
+				"description": "作者显示名称。"
+			},
+			"bio": {
+				"type": "string",
+				"title": "个人签名",
+				"description": "一句话个人签名，展示在名字下方。"
+			},
+			"links": {
+				"type": "array",
+				"title": "链接配置",
+				"description": "个人链接列表，可添加社交主页、邮箱等。showName 为 true 时显示图标和名称，false 时只显示图标。",
+				"items": {
+					"type": "object",
+					"properties": {
+						"name": {
+							"type": "string",
+							"title": "名称",
+							"description": "链接显示名称。"
+						},
+						"icon": {
+							"type": "string",
+							"title": "图标",
+							"description": "Iconify 图标代码，例如 fa7-brands:github，可在 https://icones.js.org/ 查找。"
+						},
+						"url": {
+							"type": "string",
+							"title": "链接地址",
+							"description": "链接地址，支持远程 URL、内部路径（如 /rss/）和邮箱（mailto:xxx@example.com）。"
+						},
+						"showName": {
+							"type": "boolean",
+							"title": "显示名称",
+							"description": "为 true 时显示图标和名称，false 时只显示图标。"
+						}
+					}
+				},
+				"x-itemTitle": "name"
+			}
+		}
+	}
+}

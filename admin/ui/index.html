@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Firefly 管理后台</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body>
+  <div id="app" class="app" hidden>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-logo">🪰</span>
+        <div>
+          <div class="brand-title">Firefly 后台</div>
+          <div class="brand-sub">博客管理面板</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav" id="sidebar-nav">
+        <a href="#/" class="nav-item" data-nav="/">
+          <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm10 8h8V11h-8v10zM3 21h8v-6H3v6zm10-18v6h8V3h-8z"/></svg>
+          仪表盘
+        </a>
+        <a href="#/posts" class="nav-item" data-nav="/posts">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zM8 13h8v2H8v-2zm0 4h8v2H8v-2z"/></svg>
+          文章管理
+        </a>
+        <a href="#/settings" class="nav-item" data-nav="/settings">
+          <svg viewBox="0 0 24 24"><path d="M19.14 12.94a7.5 7.5 0 0 0 .05-.94 7.5 7.5 0 0 0-.05-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.2 7.2 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.59.24-1.14.56-1.63.94l-2.39-.96a.5.5 0 0 0-.61.22L2.63 8.84a.5.5 0 0 0 .12.64l2.03 1.58a7.5 7.5 0 0 0 0 1.88l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.13.23.4.32.61.22l2.39-.96c.49.38 1.04.7 1.63.94l.36 2.54c.03.24.24.42.5.42h3.84c.26 0 .47-.18.5-.42l.36-2.54c.59-.24 1.14-.56 1.63-.94l2.39.96c.21.1.48.01.61-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg>
+          个性化设置
+        </a>
+        <a href="#/media" class="nav-item" data-nav="/media">
+          <svg viewBox="0 0 24 24"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+          媒体库
+        </a>
+        <a href="#/site" class="nav-item" data-nav="/site">
+          <svg viewBox="0 0 24 24"><path d="M13 2 3 14h7v8l10-12h-7V2z"/></svg>
+          构建部署
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <span class="user-avatar" id="user-avatar">A</span>
+          <span class="user-name" id="user-name">admin</span>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="logout-btn">
+          <svg viewBox="0 0 24 24"><path d="M16 17v-3H9v-4h7V7l5 5-5 5zM14 2a2 2 0 0 1 2 2v2h-2V4H5v16h9v-2h2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9z"/></svg>
+          退出登录
+        </button>
+      </div>
+    </aside>
+    <main class="main">
+      <div class="view" id="view"></div>
+    </main>
+  </div>
+  <div id="toast-root" class="toast-root"></div>
+  <div id="modal-root"></div>
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

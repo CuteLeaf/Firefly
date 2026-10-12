@@ -1,9 +1,10 @@
 import type { SidebarLayoutConfig } from "../types/sidebarConfig";
+import { mergeUserConfig } from "./user-config";
 
 /**
  * 侧边栏布局配置
  */
-export const sidebarLayoutConfig: SidebarLayoutConfig = {
+export const sidebarLayoutConfigDefaults: SidebarLayoutConfig = {
 	// 是否启用侧边栏功能
 	enable: true,
 
@@ -316,3 +317,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 		},
 	],
 };
+
+export const sidebarLayoutConfig: SidebarLayoutConfig = mergeUserConfig(
+	"sidebar",
+	sidebarLayoutConfigDefaults,
+);

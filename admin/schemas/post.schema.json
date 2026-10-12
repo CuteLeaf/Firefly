@@ -1,0 +1,123 @@
+{
+	"key": "post",
+	"title": "文章 Frontmatter",
+	"description": "文章元信息表单，对应 src/content.config.ts 中 posts 集合的 schema。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"title": {
+				"type": "string",
+				"title": "标题",
+				"description": "文章标题（必填）。"
+			},
+			"published": {
+				"type": "string",
+				"x-format": "date",
+				"title": "发布日期",
+				"description": "文章发布日期（YYYY-MM-DD），用于列表排序；设为未来日期可实现定时发布（构建后生效）。"
+			},
+			"updated": {
+				"type": "string",
+				"x-format": "date",
+				"title": "更新日期",
+				"description": "上次编辑时间。留空则不显示；正文有改动时后台会自动写入当天日期。"
+			},
+			"draft": {
+				"type": "boolean",
+				"title": "草稿",
+				"description": "草稿状态下生产构建不会输出该文章（开发模式仍可见）。"
+			},
+			"description": {
+				"type": "string",
+				"x-format": "textarea",
+				"title": "摘要",
+				"description": "文章简介，用于列表卡片与 SEO 描述，建议 50-160 字。"
+			},
+			"image": {
+				"type": "string",
+				"title": "封面图",
+				"description": "封面图路径：public 目录以 / 开头（如 /images/admin/xxx.webp），src 目录不以 / 开头，或填写远程 URL；填 \"api\" 使用随机封面图 API。可在「媒体」页上传后复制路径。"
+			},
+			"tags": {
+				"type": "array",
+				"items": { "type": "string" },
+				"x-tags": true,
+				"title": "标签",
+				"description": "文章标签，回车或逗号添加。"
+			},
+			"category": {
+				"type": "string",
+				"title": "分类",
+				"description": "文章分类（单分类）。"
+			},
+			"lang": {
+				"type": "string",
+				"enum": ["", "zh_CN", "zh_TW", "en", "ja", "ru", "ko"],
+				"x-enumLabels": [
+					"不指定（跟随站点）",
+					"简体中文",
+					"繁體中文",
+					"English",
+					"日本語",
+					"Русский",
+					"한국어"
+				],
+				"title": "语言",
+				"description": "文章语言，留空跟随站点配置。"
+			},
+			"pinned": {
+				"type": "boolean",
+				"title": "置顶",
+				"description": "置顶的文章会排在最前。"
+			},
+			"author": {
+				"type": "string",
+				"title": "作者",
+				"description": "署名作者，留空使用站点默认。"
+			},
+			"sourceLink": {
+				"type": "string",
+				"x-format": "url",
+				"title": "原文链接",
+				"description": "转载/翻译文章的原文地址，留空不显示。"
+			},
+			"licenseName": {
+				"type": "string",
+				"title": "许可证名称",
+				"description": "本文单独指定的许可证名称，留空使用站点全局许可证配置。"
+			},
+			"licenseUrl": {
+				"type": "string",
+				"x-format": "url",
+				"title": "许可证链接",
+				"description": "与许可证名称配套的链接。"
+			},
+			"comment": {
+				"type": "boolean",
+				"title": "允许评论",
+				"description": "是否在本文显示评论区（需先启用评论系统）。"
+			},
+			"password": {
+				"type": "string",
+				"title": "访问密码",
+				"description": "设置后该文章将被加密，需要密码才能查看（使用站点加密插件）。留空为公开文章。"
+			},
+			"passwordHint": {
+				"type": "string",
+				"title": "密码提示",
+				"description": "密码输入框旁显示的提示文字。"
+			},
+			"series": {
+				"type": "string",
+				"title": "系列",
+				"description": "所属系列名称，同系列文章会聚合展示。"
+			},
+			"seriesOrder": {
+				"type": "integer",
+				"minimum": 1,
+				"title": "系列序号",
+				"description": "在系列中的排序（从 1 开始），留空按时间排序。"
+			}
+		}
+	}
+}

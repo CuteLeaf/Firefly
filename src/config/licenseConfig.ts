@@ -1,6 +1,7 @@
 import type { LicenseConfig } from "../types/licenseConfig";
+import { mergeUserConfig } from "./user-config";
 
-export const licenseConfig: LicenseConfig = {
+export const licenseConfigDefaults: LicenseConfig = {
 	// 是否启用文章顶部许可证信息显示
 	enable: true,
 
@@ -22,3 +23,8 @@ export const licenseConfig: LicenseConfig = {
 	//   → fa7-regular:copyright
 	icon: "",
 };
+
+export const licenseConfig: LicenseConfig = mergeUserConfig(
+	"license",
+	licenseConfigDefaults,
+);
