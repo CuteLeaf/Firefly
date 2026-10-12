@@ -45,5 +45,14 @@ export const analyticsConfig: AnalyticsConfig = {
 		hashMode: false,
 		// 是否开启网站录屏功能
 		screenRecord: true,
+		// 数据挂件数据源："quotejs" 从官方 quote.js 解析，"api" 从第三方 API 获取 JSON
+		statsDataSource: "quotejs",
+		// 第三方 API 地址模板，仅 statsDataSource 为 "api" 时生效
+		// 自建API参考: https://jishuzhan.net/article/1997120577757315073
+		// 使用 {id} 占位符代表 51la 统计 ID，也可省略则自动追加 /{id}
+		// 示例："https://51la.api.trustdev.org/{id}"
+		//       "https://your-worker.workers.dev?id={id}"
+		//       "https://51la.api.trustdev.org" (自动追加 /{id})
+		statsApiUrl: "",
 	},
 };
