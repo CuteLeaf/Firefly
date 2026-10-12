@@ -415,6 +415,11 @@ export const en: Translation = {
 	[Key.cardBorder]: "Card Border & Shadow",
 	[Key.cardFollowTheme]: "Card Follow Theme Color",
 
+	// Profile Link Style
+	[Key.profileLinkMode]: "Profile Link Style",
+	[Key.profileLinkModeIcon]: "Icons",
+	[Key.profileLinkModeBanner]: "Banner",
+
 	// Post List Layout
 	[Key.postListLayout]: "Post List Layout",
 	[Key.postListLayoutList]: "List",
