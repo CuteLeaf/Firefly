@@ -2,13 +2,16 @@ import type { AnalyticsConfig } from "../types/analyticsConfig";
 
 export const analyticsConfig: AnalyticsConfig = {
 	// Google Analytics ID
-	googleAnalyticsId: "G-G9W2J9J4HV",
+	// 注意：GA 现由 astro-consent 统一管控（见 src/components/features/ConsentScripts.astro），
+	// 留空以避免在获同意前被内建注入。ID 已写在该组件内。
+	googleAnalyticsId: "",
 	// Microsoft Clarity ID
 	microsoftClarityId: "",
 	// Umami 统计配置
 	umamiAnalytics: {
 		// Umami Website ID
-		websiteId: "a4ba198a-25a0-4631-84e1-e3b62e418c87",
+		// 同上，Umami 现由 ConsentScripts 在获得 analytics 同意后加载，这里留空
+		websiteId: "",
 		// Umami JS地址，支持使用自建
 		scriptUrl: "https://umami.mckero.com/script.js",
 		// Umami 会话回放脚本地址，支持使用自建

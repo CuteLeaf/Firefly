@@ -1,3 +1,4 @@
+import astroConsent from "astro-consent";
 import { setMaxListeners } from "node:events";
 import cloudflare from "@astrojs/cloudflare";
 import { unified } from "@astrojs/markdown-remark";
@@ -118,6 +119,31 @@ export default defineConfig({
 	},
 
 	integrations: [
+    // astro-consent:start
+    astroConsent({
+      siteName: "MC_Kero blog",
+      headline: "Cookie 偏好",
+      description: "本站使用 cookie 统计访问情况、优化访问体验。你可以选择允许的类别，之后可随时在页脚更改。",
+      acceptLabel: "全部允许",
+      rejectLabel: "全部拒绝",
+      manageLabel: "管理偏好",
+      cookiePolicyUrl: "/privacy/",
+      privacyPolicyUrl: "/privacy/",
+      presentation: "banner",
+      displayUntilIdle: true,
+      displayIdleDelayMs: 800,
+      consent: {
+        days: 180,
+        storageKey: "mc-kero-consent"
+      },
+      categories: {
+        essential: true,
+        analytics: true,
+        marketing: false
+      }
+    }),
+    // astro-consent:end
+
 		swup({
 			theme: false,
 			animationClass: "transition-swup-", // see https://swup.js.org/options/#animationselector

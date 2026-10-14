@@ -92,6 +92,9 @@ importers:
       astro:
         specifier: 7.3.2
         version: 7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.1)(jiti@2.7.0)(stylus@0.64.0(supports-color@10.2.2))(terser@5.50.0)(tsx@4.23.13)(yaml@2.9.0)
+      astro-consent:
+        specifier: ^2.1.1
+        version: 2.1.1(astro@7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.1)(jiti@2.7.0)(stylus@0.64.0(supports-color@10.2.2))(terser@5.50.0)(tsx@4.23.13)(yaml@2.9.0))
       astro-expressive-code:
         specifier: ^0.44.2
         version: 0.44.2(astro@7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.1)(jiti@2.7.0)(stylus@0.64.0(supports-color@10.2.2))(terser@5.50.0)(tsx@4.23.13)(yaml@2.9.0))
@@ -2891,6 +2894,13 @@ packages:
   astring@1.9.0:
     resolution: {integrity: sha512-LElXdjswlqjWrPpJFg1Fx4wpkOCxj1TDHlSV4PlaRxHGWko024xICaa97ZkMfs6DRKlCguiAI+rbXv5GWwXIkg==}
     hasBin: true
+
+  astro-consent@2.1.1:
+    resolution: {integrity: sha512-jWgt3CxJMv2ViL8N/adNboKeGXCo/Uf+Mjm0n7EDKbZVwLZIBLU227Pxsfki9V4FLatW1aDJ2zjqjSP6LYiRwA==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+    peerDependencies:
+      astro: ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
 
   astro-expressive-code@0.44.2:
     resolution: {integrity: sha512-avop7nZcRwC7quvIxVguhwEZ9Tp6IoTzKUCLwP30Fb7+er+pWQgcysP01dcuzRIJo81kLGg30q/YAI2Yb1Sdzg==}
@@ -8985,6 +8995,10 @@ snapshots:
       is-array-buffer: 3.0.5
 
   astring@1.9.0: {}
+
+  astro-consent@2.1.1(astro@7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.1)(jiti@2.7.0)(stylus@0.64.0(supports-color@10.2.2))(terser@5.50.0)(tsx@4.23.13)(yaml@2.9.0)):
+    dependencies:
+      astro: 7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.1)(jiti@2.7.0)(stylus@0.64.0(supports-color@10.2.2))(terser@5.50.0)(tsx@4.23.13)(yaml@2.9.0)
 
   astro-expressive-code@0.44.2(astro@7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.1)(jiti@2.7.0)(stylus@0.64.0(supports-color@10.2.2))(terser@5.50.0)(tsx@4.23.13)(yaml@2.9.0)):
     dependencies:

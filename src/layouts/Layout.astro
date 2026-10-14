@@ -1,9 +1,11 @@
 ---
+import "../cookiebanner/styles.css"; // astro-consent:css
 import GoogleAnalytics from "@components/analytics/GoogleAnalytics.astro";
 import La51Analytics from "@components/analytics/La51Analytics.astro";
 import MicrosoftClarity from "@components/analytics/MicrosoftClarity.astro";
 import UmamiAnalytics from "@components/analytics/UmamiAnalytics.astro";
 import CodeGroupManager from "@components/features/CodeGroupManager.astro";
+import ConsentScripts from "@components/features/ConsentScripts.astro";
 import FancyboxManager from "@components/features/FancyboxManager.astro";
 import FontSetup from "@components/features/FontSetup.astro";
 import GithubCardManager from "@components/features/GithubCardManager.astro";
@@ -578,6 +580,9 @@ const ogImageAlt = propsOgImageAlt ?? pageTitle;
 
     <!-- GitHub 卡片客户端实时补全（forks/stars） -->
     <GithubCardManager />
+
+    <!-- Cookie 同意：按用户授权按需加载第三方脚本（GA / Umami / AI 摘要） -->
+    <ConsentScripts />
   </body>
 </html>
 

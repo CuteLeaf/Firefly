@@ -1,0 +1,172 @@
+---
+// 第三方脚本由 astro-consent 统一管控：
+//   - 只有用户同意 analytics 类别后，才加载 Google Analytics / Umami；
+//   - AI 智能摘要（洪墨）同为第三方，归入 analytics 类别；
+//   - Twikoo 评论为「必要」功能，保持原本的常驻加载。
+// astro-consent 未提供声明式脚本拦截与 consent 变化事件，这里自行封装。
+---
+
+<script is:inline>
+	(function () {
+		const GA_ID = "G-G9W2J9J4HV";
+		const UMAMI_SRC = "https://umami.mckero.com/script.js";
+		const UMAMI_ID = "a4ba198a-25a0-4631-84e1-e3b62e418c87";
+
+		let loaded = false;
+
+		function hasAnalytics() {
+			try {
+				const c = window.astroConsent && window.astroConsent.get();
+				return !!(c && c.categories && c.categories.analytics);
+			} catch {
+				return false;
+			}
+		}
+
+		function loadGoogleAnalytics() {
+			if (document.getElementById("ga-script")) return;
+			window.dataLayer = window.dataLayer || [];
+			window.gtag = function () {
+				window.dataLayer.push(arguments);
+			};
+			window.gtag("js", new Date());
+			window.gtag("config", GA_ID);
+			const s = document.createElement("script");
+			s.id = "ga-script";
+			s.async = true;
+			s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID;
+			document.head.appendChild(s);
+		}
+
+		function loadUmami() {
+			if (document.getElementById("umami-script")) return;
+			const s = document.createElement("script");
+			s.id = "umami-script";
+			s.defer = true;
+			s.src = UMAMI_SRC;
+			s.setAttribute("data-website-id", UMAMI_ID);
+			document.body.appendChild(s);
+		}
+
+		function loadAiSummary() {
+			if (window.__tianliLoaded) return;
+			window.__tianliLoaded = true;
+			window.tianliGPT_postSelector = ".markdown-content";
+			window.tianliGPT_postURL = "*/posts/*";
+			window.tianliGPT_wordLimit = 700;
+			window.tianliGPT_Title = "智能摘要";
+			window.tianliGPT_key = "S-HMJ7UXQGBIAZ0U8Q";
+
+			const css = document.createElement("link");
+			css.rel = "stylesheet";
+			css.href = "https://ai.zhheo.com/static/public/tianli_gpt.min.css";
+			document.head.appendChild(css);
+
+			const s = document.createElement("script");
+			s.async = true;
+			s.src = "https://ai.zhheo.com/static/public/tianli_gpt.min.js";
+			document.body.appendChild(s);
+
+			// Swup 切页后重新生成摘要
+			if (!window.__tianliHookBound) {
+				window.__tianliHookBound = true;
+				const bind = (swup) => {
+					if (swup && swup.hooks) {
+						swup.hooks.on("content:replace", () => {
+							setTimeout(() => {
+								if (
+									window.tianliGPT &&
+									typeof window.tianliGPT.checkURLAndRun === "function" &&
+									document.querySelector(".markdown-content")
+								) {
+									const old = document.querySelector("#tianliGPT");
+									if (old) old.remove();
+									window.tianliGPT.checkURLAndRun();
+								}
+							}, 400);
+						});
+					}
+				};
+				if (window.swup) bind(window.swup);
+				else
+					document.addEventListener("swup:enable", () => bind(window.swup));
+			}
+		}
+
+		function apply() {
+			if (loaded || !hasAnalytics()) return;
+			loaded = true;
+			loadGoogleAnalytics();
+			loadUmami();
+			loadAiSummary();
+		}
+
+		// astro-consent 的弹窗/横幅文案里有硬编码英文，这里本地化
+		function localize() {
+			const map = {
+				Essential: "必要",
+				Analytics: "统计",
+				Marketing: "营销",
+				"Always on": "始终开启",
+				"Cookie Policy": "Cookie 政策",
+				"Privacy Policy": "隐私政策",
+			};
+			for (const el of document.querySelectorAll(
+				"#astro-consent-modal .cb-row > span, #astro-consent-modal .cb-row > strong, #astro-consent-banner a",
+			)) {
+				const t = el.textContent.trim();
+				if (map[t]) el.textContent = map[t];
+			}
+			// “Read our … and ….” 的引导词
+			for (const el of document.querySelectorAll("#astro-consent-banner .cb-desc")) {
+				if (el.textContent.indexOf("Read our") !== -1) {
+					el.innerHTML = el.innerHTML.replace("Read our", "阅读");
+					el.innerHTML = el.innerHTML.replace(/\s+and\s+/, " 与 ");
+				}
+			}
+		}
+
+		function init() {
+			if (!window.astroConsent) {
+				setTimeout(init, 300);
+				return;
+			}
+
+			const wrapSet = () => {
+				if (window.__consentSetWrapped || !window.astroConsent) return;
+				window.__consentSetWrapped = true;
+				const origSet = window.astroConsent.set;
+				window.astroConsent.set = function (c) {
+					if (origSet) origSet(c);
+					setTimeout(apply, 0);
+				};
+			};
+
+			let scheduled = false;
+			const scheduleLocalize = () => {
+				if (scheduled) return;
+				scheduled = true;
+				requestAnimationFrame(() => {
+					scheduled = false;
+					localize();
+				});
+			};
+
+			wrapSet();
+			apply();
+
+			const observer = new MutationObserver(scheduleLocalize);
+			observer.observe(document.body, { childList: true, subtree: true });
+			scheduleLocalize();
+
+			// 兜底：体积小、代价低。覆盖 astroConsent 被重建、或在别处触发同意的情况。
+			const timer = setInterval(() => {
+				wrapSet();
+				apply();
+				if (loaded) clearInterval(timer);
+			}, 2000);
+		}
+
+		init();
+	})();
+</script>
