@@ -16,6 +16,33 @@ export type SponsorItem = {
 	date?: string; // 打赏日期（可选，ISO 格式）
 };
 
+// 固定支出项目（用于运行成本展示）
+export type SponsorRunningCostItem = {
+	name: string; // 项目名称
+	price: string; // 金额（USD 或其他货币，纯数字字符串）
+	cycle: string; // 周期，如 "每月" / "每年"
+	isYearly?: boolean; // 是否按年计费（用于折算月均）
+	desc?: string; // 用途说明
+};
+
+// 历史收支记录
+export type SponsorCostRecord = {
+	date: string; // 日期，如 "2025/11"
+	cost: string; // 支出金额
+	income?: string; // 赞助金额
+	items: string; // 消费内容
+};
+
+// 运行成本展示配置
+export type SponsorRunningCosts = {
+	enable?: boolean; // 是否显示运行成本板块，默认 false
+	title?: string; // 板块标题
+	description?: string; // 板块说明
+	currency?: string; // 货币符号，默认 "$"
+	fixed?: SponsorRunningCostItem[]; // 固定支出项目
+	history?: SponsorCostRecord[]; // 历史收支明细
+};
+
 // 打赏配置
 export type SponsorConfig = {
 	title?: string; // 页面标题，默认使用 i18n
@@ -26,4 +53,5 @@ export type SponsorConfig = {
 	showSponsorsList?: boolean; // 是否显示打赏者列表，默认 true
 	showComment?: boolean; // 是否显示评论区，默认 false
 	showButtonInPost?: boolean; // 是否在文章详情页底部显示打赏按钮，默认 true
+	runningCosts?: SponsorRunningCosts; // 运行成本展示（可选）
 };

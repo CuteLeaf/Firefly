@@ -2,6 +2,7 @@
 import { render } from "astro:content";
 import Comment from "@components/comment/index.astro";
 import Markdown from "@components/common/Markdown.astro";
+import AiSummary from "@components/features/AiSummary.astro";
 import EncryptedPost from "@components/features/EncryptedPost.astro";
 import KatexManager from "@components/features/KatexManager.astro";
 import License from "@components/misc/License.astro";
@@ -610,6 +611,9 @@ const seriesData = await getSeriesPosts(entry);
       )}
     </div>
   </div>
+
+  <!-- AI 摘要（洪墨 / 天利 GPT） -->
+  <AiSummary />
 
   <!-- 上次编辑时间 -->
   {

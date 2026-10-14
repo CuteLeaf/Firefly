@@ -1,0 +1,104 @@
+---
+import { Icon } from "astro-icon/components";
+import type { SponsorRunningCosts } from "@/types/sponsorConfig";
+
+interface Props {
+	runningCosts: SponsorRunningCosts;
+}
+
+const { runningCosts } = Astro.props;
+
+const currency = runningCosts.currency ?? "$";
+const fixedCosts = runningCosts.fixed ?? [];
+const history = runningCosts.history ?? [];
+
+const totalMonthly = fixedCosts
+	.reduce((acc, item) => {
+		let price = Number.parseFloat(item.price);
+		if (Number.isNaN(price)) return acc;
+		if (item.isYearly) price = price / 12;
+		return acc + price;
+	}, 0)
+	.toFixed(2);
+---
+
+<div class="mt-8">
+	<div class="flex items-center gap-2 mb-4">
+		<div class="h-8 w-8 rounded-lg bg-(--primary)/10 flex items-center justify-center">
+			<Icon name="material-symbols:account-balance-wallet" class="text-[1.25rem] text-(--primary)" />
+		</div>
+		<h2 class="text-xl font-bold text-neutral-900 dark:text-neutral-100">
+			{runningCosts.title || "运行成本"}
+		</h2>
+	</div>
+
+	{runningCosts.description && (
+		<p class="text-sm text-(--content-meta) mb-5">{runningCosts.description}</p>
+	)}
+
+	<div class="mb-8 p-4 rounded-xl bg-(--btn-regular-bg) border border-(--line-divider) text-center md:text-left">
+		<div class="text-sm text-(--content-meta)">每月预估固定支出</div>
+		<div class="text-3xl font-bold text-(--primary)">
+			{currency}{totalMonthly}
+			<span class="text-base font-normal text-(--content-meta)"> / 月</span>
+		</div>
+	</div>
+
+	<div class="w-full overflow-x-auto mb-10">
+		<table class="w-full text-left border-collapse">
+			<thead>
+				<tr class="border-b border-(--line-divider) text-(--content-meta) text-sm">
+					<th class="py-3 px-2 font-medium">项目名称</th>
+					<th class="py-3 px-2 font-medium hidden md:table-cell">用途说明</th>
+					<th class="py-3 px-2 font-medium text-right">费用</th>
+				</tr>
+			</thead>
+			<tbody class="divide-y divide-(--line-divider)">
+				{fixedCosts.map((item) => (
+					<tr class="hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+						<td class="py-4 px-2">
+							<div class="font-bold text-neutral-900 dark:text-neutral-100">{item.name}</div>
+							{item.desc && <div class="text-xs text-(--content-meta) md:hidden mt-1">{item.desc}</div>}
+						</td>
+						<td class="py-4 px-2 hidden md:table-cell">
+							<div class="text-sm text-(--content-meta)">{item.desc}</div>
+						</td>
+						<td class="py-4 px-2 text-right whitespace-nowrap">
+							<div class="font-bold text-neutral-900 dark:text-neutral-100">{currency}{item.price}</div>
+							<div class="text-xs text-(--content-meta)">{item.cycle}</div>
+						</td>
+					</tr>
+				))}
+			</tbody>
+		</table>
+	</div>
+
+	{history.length > 0 && (
+		<div class="w-full">
+			<h3 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 mb-4 flex items-center gap-2">
+				<Icon name="material-symbols:history" class="text-(--primary)" /> 历史收支明细
+			</h3>
+			<div class="flex flex-col gap-3">
+				{history.map((row) => (
+					<div class="flex items-center justify-between p-4 rounded-xl bg-(--btn-regular-bg) border border-(--line-divider)">
+						<div class="flex flex-col gap-1">
+							<div class="font-bold text-neutral-900 dark:text-neutral-100 text-base">{row.items}</div>
+							<div class="text-xs text-(--content-meta) flex items-center gap-1">
+								<Icon name="material-symbols:calendar-month" />{row.date}
+							</div>
+						</div>
+						<div class="text-right flex flex-col gap-0.5">
+							<div class="font-mono font-medium text-(--content-meta)">-{currency}{row.cost}</div>
+							{Number.parseFloat(row.income || "0") > 0 && (
+								<div class="font-mono text-xs font-bold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 px-1.5 py-0.5 rounded">
+									赞助 +{currency}{row.income}
+								</div>
+							)}
+						</div>
+					</div>
+				))}
+			</div>
+			<div class="text-xs text-(--content-meta) mt-4 text-center">* 收支数据通常在次月月初更新</div>
+		</div>
+	)}
+</div>

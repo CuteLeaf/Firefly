@@ -1,60 +1,46 @@
 ---
-title: Firefly 简单使用指南
-published: 1970-01-02
-pinned: true
-description: "如何使用 Firefly 博客模板。"
-image: "./cover.avif"
-tags: ["Firefly", "博客", "Markdown", "指南"]
-category: 博客指南
-series: "Firefly 功能示例"
-seriesOrder: 1
+title: Simple Guides for Fuwari
+published: 2024-04-01
+description: "How to use this blog template."
+image: "./cover.jpeg"
+tags: ["Fuwari", "Blogging", "Customization"]
+category: Guides
+draft: false
 ---
 
+> Cover image source: [Source](https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/208fc754-890d-4adb-9753-2c963332675d/width=2048/01651-1456859105-(colour_1.5),girl,_Blue,yellow,green,cyan,purple,red,pink,_best,8k,UHD,masterpiece,male%20focus,%201boy,gloves,%20ponytail,%20long%20hair,.jpeg)
 
+This blog template is built with [Astro](https://astro.build/). For the things that are not mentioned in this guide, you may find the answers in the [Astro Docs](https://docs.astro.build/).
 
-这个博客模板是基于 [Astro](https://astro.build/) 构建的。对于本指南中未提及的内容，您可以在 [Astro 文档](https://docs.astro.build/) 中找到答案。
-
-## 文章的 Front-matter
+## Front-matter of Posts
 
 ```yaml
 ---
-title: 我的第一篇博客文章
+title: My First Blog Post
 published: 2023-09-09
-description: 这是我新 Astro 博客的第一篇文章。
+description: This is the first post of my new Astro blog.
 image: ./cover.jpg
-tags: [前端, 开发]
-category: 前端开发
+tags: [Foo, Bar]
+category: Front-end
 draft: false
 ---
 ```
 
+| Attribute     | Description                                                                                                                                                                                                 |
+|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `title`       | The title of the post.                                                                                                                                                                                      |
+| `published`   | The date the post was published.                                                                                                                                                                            |
+| `description` | A short description of the post. Displayed on index page.                                                                                                                                                   |
+| `image`       | The cover image path of the post.<br/>1. Start with `http://` or `https://`: Use web image<br/>2. Start with `/`: For image in `public` dir<br/>3. With none of the prefixes: Relative to the markdown file |
+| `tags`        | The tags of the post.                                                                                                                                                                                       |
+| `category`    | The category of the post.                                                                                                                                                                                   |
+| `draft`        | If this post is still a draft, which won't be displayed.                                                                                                                                                    |
+
+## Where to Place the Post Files
 
 
 
-| 属性          | 描述                                                                                                                                                                                                 |
-|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `title`       | 文章标题。                                                                                                                                                                                          |
-| `published`   | 文章发布日期。                                                                                                                                                                                      |
-| `updated`     | 文章更新日期。如果未设置，将默认使用发布日期。                                                                                                                                                      |
-| `pinned`      | 是否将此文章置顶在文章列表顶部。                                                                                                                                                                    |
-| `description` | 文章的简短描述。显示在首页上。                                                                                                                                                                      |
-| `image`       | 文章封面图片路径。<br/>1. 以 `http://` 或 `https://` 开头：使用网络图片<br/>2. 以 `/` 开头：`public` 目录中的图片<br/>3. 不带任何前缀：相对于 markdown 文件的路径 |
-| `tags`        | 文章标签。                                                                                                                                                                                          |
-| `category`    | 文章分类。                                                                                                                                                                                          |
-| `lang`        | 文章语言代码（如 `zh-CN`）。仅当文章语言与站点默认语言不同时设置。                                                                                                                                    |
-| `licenseName` | 文章内容的许可证名称。                                                                                                                                                                              |
-| `licenseUrl`  | 文章内容的许可证链接。                                                                                                                                                                              |
-| `author`      | 文章作者。                                                                                                                                                                                          |
-| `sourceLink`  | 文章内容的来源链接或参考。                                                                                                                                                                          |
-| `draft`       | 如果这篇文章仍是草稿，则不会显示。                                                                                                                                                                  |
-| `comment`     | 是否启用此文章的评论功能。默认为 `true`。                                                                                                                                                           |
-| `slug`        | 自定义文章 URL 路径。如果不设置，将使用文件名作为 URL。                                                                                                                                              |
-| `password`    | 文章密码。设置后文章内容将被 AES-256-GCM 加密，访客需输入密码才能查看。                                                                                                                              |
-| `passwordHint`| 密码提示。显示在密码输入框上方，帮助访客回忆密码，也可以不加。                                                                                                                                                    |
-
-## 文章文件的放置位置
-
-您的文章文件应放置在 `src/content/posts/` 目录中。您也可以创建子目录来更好地组织您的文章和资源。
+Your post files should be placed in `src/content/posts/` directory. You can also create sub-directories to better organize your posts and assets.
 
 ```
 src/content/posts/
@@ -63,60 +49,3 @@ src/content/posts/
     ├── cover.png
     └── index.md
 ```
-
-## 自定义文章 URL (Slug)
-
-### 什么是 Slug？
-
-Slug 是文章 URL 路径的自定义部分。如果不设置 slug，系统将使用文件名作为 URL。
-
-### Slug 使用示例
-
-#### 示例 1：使用文件名作为 URL
-```yaml
----
-title: 我的第一篇博客文章
-published: 2023-09-09
----
-```
-文件：`src/content/posts/my-first-blog-post.md`
-
-URL：`/posts/my-first-blog-post`
-
-#### 示例 2：自定义 Slug
-```yaml
----
-title: 我的第一篇博客文章
-published: 2023-09-09
-slug: hello-world
----
-```
-文件：`src/content/posts/my-first-blog-post.md`
-
-URL：`/posts/hello-world`
-
-#### 示例 3：其他语言文件名使用Slug
-```yaml
----
-title: 如何使用 Firefly 博客主题
-published: 2023-09-09
-slug: how-to-use-firefly-blog-theme
----
-```
-文件：`src/content/posts/如何使用Firefly博客主题.md`
-
-URL：`/posts/how-to-use-firefly-blog-theme`
-
-### Slug 使用建议
-
-1. **使用英文和连字符**：`my-awesome-post` 而不是 `my awesome post`
-2. **保持简洁**：避免过长的 slug
-3. **具有描述性**：让 URL 能够反映文章内容
-4. **避免特殊字符**：只使用字母、数字和连字符
-5. **保持一致性**：在整个博客中使用相似的命名模式
-
-### 注意事项
-
-- Slug 一旦设置并发布，建议不要随意更改，以免影响 SEO 和已存在的链接
-- 如果多个文章使用相同的 slug，后面的文章会覆盖前面的
-- Slug 会自动转换为小写

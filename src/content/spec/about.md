@@ -1,27 +1,38 @@
-# 关于我 / About Me
+# About
 
-你好！我是 **夏叶** ，一个在数字世界中默默无闻的一片叶子。
+这里是 **MC_Kero 的博客**，一个有关于折腾与记录的角落。
 
-## 🛠️ 关于本站
-
-这个网站使用 **Astro** 框架构建，采用了 [Firefly](https://github.com/CuteLeaf/Firefly) 模板，Firefly 是基于 [Fuwari](https://github.com/saicaca/fuwari) 的二次开发。
-
-**Firefly** 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。
-
-
-**🖥️在线预览： [Firefly - Demo site](https://firefly.cuteleaf.cn/)**
-
-**📝Firefly使用文档： [https://docs-firefly.cuteleaf.cn](https://docs-firefly.cuteleaf.cn/)**
-
-**⭐Firefly开源地址：[https://github.com/CuteLeaf/Firefly](https://github.com/CuteLeaf/Firefly)** 
-
-**⭐Fuwari开源地址：[https://github.com/saicaca/fuwari](https://github.com/saicaca/fuwari)**
+本站使用 [Astro](https://astro.build) 框架构建，采用 [Firefly](https://github.com/CuteLeaf/Firefly) 主题（基于 [Fuwari](https://github.com/saicaca/fuwari) 的二次开发）。
 
 ::github{repo="CuteLeaf/Firefly"}
 
-::github{repo="saicaca/fuwari"}
+# 赞助 / 支持我
 
----
+你的支持是我持续更新的最大动力！哪怕是一杯咖啡的钱，也能让我开心很久，非常感谢！
+前往 [打赏页](/sponsor/) 了解支持方式。
 
-*感谢你的来访！希望在这里能找到对你有用的内容！*
+## 感谢列表
 
+### 排名不分先后
+
+- 感谢 adclosenn.top 的站长 Ad_closeNN [Ad_closeNN 的小站](https://adclosenn.top)
+- 感谢 B站 UP主 二叉树树 [AcoFork Blog Z](https://www.2x.nz)
+- 感谢我的英语老师白姐
+
+# AbuseIPDB Contributor Badge
+
+<div style="display: flex; justify-content: center; margin: 20px 0;">
+  <a href="https://www.abuseipdb.com/user/250199" 
+     title="AbuseIPDB is an IP address blacklist for webmasters and sysadmins to report IP addresses engaging in abusive behavior on their networks" 
+     target="_blank" 
+     rel="noopener" 
+     referrerpolicy="no-referrer-when-downgrade">
+    <img src="https://www.abuseipdb.com/contributor/250199.svg" 
+         alt="AbuseIPDB Contributor Badge" 
+         style="width: 285px; max-width: 100%; border-radius: 5px; border-top: 5px solid #058403; border-right: 5px solid #111; border-bottom: 5px solid #111; border-left: 5px solid #058403; padding: 5px; box-shadow: 2px 2px 1px 1px rgba(0, 0, 0, .2); pointer-events: none;">
+  </a>
+</div>
+
+# 隐私政策
+
+本站的隐私政策与使用条款、免责声明请见 [隐私政策](/privacy/) 页面。

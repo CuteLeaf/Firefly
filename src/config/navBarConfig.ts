@@ -93,6 +93,13 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 
 			// 关于页面
 			LinkPresets.About,
+
+			// 隐私政策
+			{
+				name: "隐私政策",
+				url: "/privacy/",
+				icon: "material-symbols:privacy-tip",
+			},
 		],
 	});
 
@@ -104,22 +111,22 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		// 子菜单
 		children: [
 			{
-				name: "GitHub",
-				url: "https://github.com/CuteLeaf/Firefly",
+				name: "状态",
+				url: "https://status.mckero.com",
 				external: true,
-				icon: "fa7-brands:github",
+				icon: "material-symbols:monitor-heart",
 			},
 			{
-				name: "Gitee",
-				url: "https://gitee.com/CuteLeaf/Firefly",
+				name: "统计",
+				url: "https://umami.mckero.com/share/v4wXkxwCYns2ypLN/blog.mckero.com",
 				external: true,
-				icon: "fa7-brands:gitee",
+				icon: "material-symbols:bar-chart",
 			},
 			{
-				name: "Firefly文档",
-				url: "https://docs-firefly.cuteleaf.cn",
+				name: "开往",
+				url: "https://www.travellings.cn/go.html",
 				external: true,
-				icon: "material-symbols:docs",
+				icon: "material-symbols:train",
 			},
 		],
 	});
