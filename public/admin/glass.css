@@ -295,3 +295,178 @@ button,
     width: 100% !important;
   }
 }
+
+
+/* Final polish: align Decap CMS controls with Firefly's calm green theme. */
+:root {
+  --ff-text: #243b35;
+  --ff-muted: #6c817a;
+  --ff-accent: #278b70;
+  --ff-border: #dce9e3;
+  --ff-glass: rgba(255, 255, 255, 0.94);
+  --ff-shadow: 0 8px 24px rgba(36, 75, 61, 0.06);
+}
+
+/* Keep the workspace quiet and consistent instead of layering competing gradients. */
+#nc-root,
+#nc-root [class*="AppMain"],
+#nc-root [class*="appMain"],
+#nc-root [class*="CollectionPage"],
+#nc-root [class*="collectionPage"],
+#nc-root [class*="EditorPage"],
+#nc-root [class*="editorPage"] {
+  color: var(--ff-text);
+}
+
+#nc-root [class*="AppHeader"],
+#nc-root [class*="appHeader"],
+#nc-root [class*="Toolbar"],
+#nc-root [class*="toolbar"] {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: var(--ff-border);
+  box-shadow: 0 1px 0 rgba(36, 75, 61, 0.03);
+}
+
+/* Sidebar and editor surfaces share one radius, border, and restrained shadow. */
+#nc-root [class*="Sidebar"],
+#nc-root [class*="sidebar"],
+#nc-root [class*="ControlPane"],
+#nc-root [class*="controlPane"],
+#nc-root [class*="PreviewPane"],
+#nc-root [class*="previewPane"],
+#nc-root .ui.segment,
+#nc-root .ui.card {
+  border-color: var(--ff-border);
+  box-shadow: var(--ff-shadow);
+}
+
+#nc-root .ui.segment,
+#nc-root .ui.card {
+  border-radius: 12px;
+}
+
+#nc-root .ui.menu,
+#nc-root .ui.secondary.menu {
+  border-color: var(--ff-border);
+  box-shadow: none;
+}
+
+#nc-root .ui.menu .item,
+#nc-root .ui.secondary.menu .item {
+  border-radius: 8px;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+#nc-root .ui.menu .active.item,
+#nc-root .ui.secondary.menu .active.item {
+  color: #216b55;
+  background: #e8f5ef;
+  font-weight: 650;
+}
+
+#nc-root .ui.label {
+  border-radius: 7px;
+  font-weight: 600;
+}
+
+#nc-root .ui.divider {
+  border-top-color: var(--ff-border);
+}
+
+/* Make fields feel like a unified form, with clearer focus and comfortable spacing. */
+#nc-root .field > label,
+#nc-root label {
+  color: var(--ff-text);
+  font-size: 0.9rem;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+#nc-root .field {
+  margin-bottom: 1.15rem;
+}
+
+#nc-root input:not([type="checkbox"]):not([type="radio"]),
+#nc-root textarea,
+#nc-root select,
+#nc-root .ui.input > input {
+  width: 100%;
+  min-height: 42px;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid #d6e5dd !important;
+  border-radius: 9px !important;
+  background: #fff !important;
+  color: var(--ff-text);
+  box-shadow: none !important;
+}
+
+#nc-root textarea {
+  min-height: 140px;
+  line-height: 1.7;
+  resize: vertical;
+}
+
+#nc-root input:focus,
+#nc-root textarea:focus,
+#nc-root select:focus,
+#nc-root .ui.input > input:focus {
+  border-color: var(--ff-accent) !important;
+  box-shadow: 0 0 0 3px rgba(39, 139, 112, 0.12) !important;
+}
+
+/* Buttons: one clear primary action; secondary actions remain quiet. */
+#nc-root .ui.button,
+#nc-root button,
+#nc-root [role="button"] {
+  min-height: 38px;
+  border-radius: 9px;
+  font-weight: 600;
+}
+
+#nc-root .ui.primary.button,
+#nc-root button.primary {
+  background: var(--ff-accent);
+  color: #fff;
+  box-shadow: 0 3px 8px rgba(39, 139, 112, 0.15);
+}
+
+#nc-root .ui.primary.button:hover,
+#nc-root button.primary:hover {
+  background: #216f59;
+}
+
+#nc-root .ui.basic.button,
+#nc-root .ui.button:not(.primary):not(.positive):not(.negative) {
+  box-shadow: none;
+}
+
+#nc-root .ui.table {
+  border-radius: 10px;
+  border-color: var(--ff-border);
+}
+
+#nc-root .ui.table thead th {
+  background: #f0f7f3;
+  color: var(--ff-muted);
+  font-weight: 650;
+}
+
+#nc-root .ui.message {
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+/* Mobile/tablet: preserve usable controls without forcing a desktop split pane. */
+@media (max-width: 760px) {
+  #nc-root .field {
+    margin-bottom: 1rem;
+  }
+
+  #nc-root input:not([type="checkbox"]):not([type="radio"]),
+  #nc-root textarea,
+  #nc-root select,
+  #nc-root .ui.button,
+  #nc-root button {
+    font-size: 16px;
+  }
+}
