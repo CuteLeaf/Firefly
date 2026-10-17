@@ -470,3 +470,76 @@ button,
     font-size: 16px;
   }
 }
+
+
+/* Writing-first editor: reduce CMS chrome and keep the writing surface in focus. */
+#nc-root [class*="AppHeader-logo"],
+#nc-root [class*="appHeader-logo"],
+#nc-root [class*="AppHeaderLogo"],
+#nc-root [class*="appHeaderLogo"] {
+  display: none !important;
+}
+
+#nc-root [class*="AppHeader"],
+#nc-root [class*="appHeader"] {
+  min-height: 54px;
+  padding-inline: clamp(12px, 2.5vw, 28px);
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid #e3ece7;
+  box-shadow: none;
+}
+
+#nc-root [class*="EditorPage"],
+#nc-root [class*="editorPage"],
+#nc-root [class*="EntryEditor"],
+#nc-root [class*="entryEditor"] {
+  background: transparent;
+}
+
+#nc-root [class*="ControlPane"],
+#nc-root [class*="controlPane"] {
+  background: #fff;
+  border: 1px solid #e1ebe5;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(36, 75, 61, 0.045);
+}
+
+#nc-root [class*="PreviewPane"],
+#nc-root [class*="previewPane"] {
+  background: #f7faf8;
+  border-left: 1px solid #e1ebe5;
+}
+
+#nc-root [class*="MarkdownControl"],
+#nc-root [class*="markdownControl"],
+#nc-root [class*="EditorToolbar"],
+#nc-root [class*="editorToolbar"] {
+  border-color: #e1ebe5;
+  box-shadow: none;
+}
+
+#nc-root [contenteditable="true"] {
+  min-height: 52vh;
+  padding: 1.2rem 1.3rem;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+#nc-root [contenteditable="true"]:focus {
+  outline: 2px solid rgba(39, 139, 112, 0.16);
+  outline-offset: 1px;
+}
+
+#nc-root [class*="EditorPage"] h1,
+#nc-root [class*="editorPage"] h1 {
+  letter-spacing: -0.025em;
+}
+
+@media (min-width: 1100px) {
+  #nc-root [class*="ControlPane"],
+  #nc-root [class*="controlPane"] {
+    padding: 18px;
+  }
+}
