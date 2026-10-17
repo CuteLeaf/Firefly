@@ -1,0 +1,149 @@
+---
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+---
+
+<MainGridLayout title="内容管理" description="Firefly 内容管理工作台" heading="内容管理">
+  <section class="manage-page">
+    <header class="manage-hero">
+      <div class="hero-copy">
+        <p class="eyebrow">FIREFLY STUDIO / CONTENT</p>
+        <h2>内容工作台<span class="hero-dot">.</span></h2>
+        <p class="hero-desc">在熟悉的 Firefly 页面环境中管理文章、草稿与发布流程。</p>
+      </div>
+      <a class="open-editor" href="/admin/" target="_blank" rel="noopener noreferrer">
+        <span>独立打开编辑器</span><span aria-hidden="true">↗</span>
+      </a>
+    </header>
+
+    <div class="status-grid" aria-label="工作台功能">
+      <article class="status-card">
+        <span class="card-icon" aria-hidden="true">✎</span>
+        <div><p class="card-label">内容编辑</p><h3>文章与页面</h3><p class="card-note">进入编辑器创建或修改内容</p></div>
+      </article>
+      <article class="status-card">
+        <span class="card-icon" aria-hidden="true">◷</span>
+        <div><p class="card-label">写作流程</p><h3>草稿与审核</h3><p class="card-note">按仓库配置处理内容变更</p></div>
+      </article>
+      <article class="status-card">
+        <span class="card-icon" aria-hidden="true">↗</span>
+        <div><p class="card-label">当前环境</p><h3>独立管理入口</h3><p class="card-note">本页面不改动公开站点导航</p></div>
+      </article>
+    </div>
+
+    <section class="editor-panel">
+      <div class="editor-heading">
+        <div>
+          <p class="eyebrow">EDITOR</p>
+          <h3>内容编辑器</h3>
+        </div>
+        <span class="editor-badge"><span class="live-dot"></span> 内嵌工作区</span>
+      </div>
+      <p class="editor-tip">编辑器加载失败或显示异常时，可使用右上角“独立打开编辑器”。</p>
+      <div class="iframe-shell">
+        <iframe src="/admin/" title="Firefly 内容管理编辑器" loading="eager" referrerpolicy="same-origin"></iframe>
+      </div>
+    </section>
+  </section>
+</MainGridLayout>
+
+<style>
+  .manage-page {
+    --manage-line: var(--line-color, color-mix(in srgb, currentColor 12%, transparent));
+    --manage-panel: var(--card-bg, color-mix(in srgb, currentColor 3%, transparent));
+    width: 100%;
+    color: var(--primary, inherit);
+    padding: 0.25rem 0 2rem;
+  }
+  .manage-hero {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: clamp(1.35rem, 4vw, 2.5rem);
+    border: 1px solid var(--manage-line);
+    border-radius: 1.35rem;
+    background: linear-gradient(125deg, color-mix(in srgb, var(--primary) 8%, transparent), transparent 65%), var(--manage-panel);
+    overflow: hidden;
+  }
+  .eyebrow {
+    margin: 0 0 .65rem;
+    font-size: .7rem;
+    letter-spacing: .17em;
+    font-weight: 750;
+    opacity: .62;
+  }
+  .hero-copy h2 {
+    margin: 0;
+    font-size: clamp(1.75rem, 4vw, 2.65rem);
+    line-height: 1.15;
+    letter-spacing: -.045em;
+    font-weight: 800;
+  }
+  .hero-dot { color: var(--primary); opacity: .55; }
+  .hero-desc { margin: .85rem 0 0; opacity: .72; line-height: 1.7; max-width: 36rem; }
+  .open-editor {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: .8rem;
+    padding: .8rem 1rem;
+    border: 1px solid var(--manage-line);
+    border-radius: .85rem;
+    text-decoration: none;
+    font-size: .9rem;
+    font-weight: 650;
+    background: var(--manage-panel);
+    transition: transform .2s ease, background .2s ease;
+  }
+  .open-editor:hover { transform: translateY(-2px); background: color-mix(in srgb, var(--primary) 8%, transparent); }
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .85rem;
+    margin: 1rem 0;
+  }
+  .status-card {
+    display: flex;
+    align-items: flex-start;
+    gap: .85rem;
+    min-width: 0;
+    padding: 1.1rem;
+    border: 1px solid var(--manage-line);
+    border-radius: 1rem;
+    background: var(--manage-panel);
+  }
+  .card-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 2.35rem;
+    width: 2.35rem;
+    height: 2.35rem;
+    border-radius: .8rem;
+    background: color-mix(in srgb, var(--primary) 9%, transparent);
+    font-size: 1.1rem;
+  }
+  .card-label { margin: 0 0 .3rem; opacity: .62; font-size: .75rem; }
+  .status-card h3 { margin: 0; font-size: 1rem; font-weight: 750; }
+  .card-note { margin: .45rem 0 0; font-size: .78rem; line-height: 1.55; opacity: .68; }
+  .editor-panel {
+    margin-top: 1.2rem;
+    padding: clamp(.85rem, 2vw, 1.25rem);
+    border: 1px solid var(--manage-line);
+    border-radius: 1.25rem;
+    background: var(--manage-panel);
+  }
+  .editor-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .editor-heading .eyebrow { margin-bottom: .3rem; }
+  .editor-heading h3 { margin: 0; font-size: 1.15rem; font-weight: 780; }
+  .editor-badge { display: inline-flex; align-items: center; gap: .45rem; border: 1px solid var(--manage-line); border-radius: 99px; padding: .4rem .7rem; font-size: .75rem; opacity: .8; }
+  .live-dot { width: .45rem; height: .45rem; border-radius: 50%; background: #54b887; box-shadow: 0 0 0 3px color-mix(in srgb, #54b887 17%, transparent); }
+  .editor-tip { margin: .7rem 0 1rem; font-size: .82rem; opacity: .68; }
+  .iframe-shell { overflow: hidden; border: 1px solid var(--manage-line); border-radius: .9rem; background: var(--card-bg, transparent); }
+  .iframe-shell iframe { display: block; width: 100%; height: min(78vh, 980px); min-height: 620px; border: 0; background: transparent; }
+  @media (max-width: 760px) {
+    .manage-hero { align-items: flex-start; flex-direction: column; }
+    .status-grid { grid-template-columns: 1fr; }
+    .status-card { padding: .9rem; }
+    .iframe-shell iframe { height: 72vh; min-height: 540px; }
+  }
+</style>
