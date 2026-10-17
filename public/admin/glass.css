@@ -1,19 +1,19 @@
 
-/* Firefly CMS — Soft Glass UI v1 */
+/* Firefly CMS — Soft Green Glass UI */
 
 :root {
   color-scheme: light;
-  --ff-text: #253047;
-  --ff-muted: #78849a;
-  --ff-accent: #6878e8;
-  --ff-border: rgba(133, 151, 183, 0.22);
-  --ff-glass: rgba(255, 255, 255, 0.76);
-  --ff-shadow: 0 12px 34px rgba(56, 72, 112, 0.09);
+  --ff-text: #263b37;
+  --ff-muted: #718580;
+  --ff-accent: #299b7c;
+  --ff-border: rgba(67, 119, 104, 0.17);
+  --ff-glass: rgba(255, 255, 255, 0.82);
+  --ff-shadow: 0 12px 34px rgba(42, 91, 76, 0.08);
 }
 
 html {
   min-height: 100%;
-  background: #f2f5fb;
+  background: #f1f7f4;
 }
 
 body {
@@ -25,35 +25,46 @@ body {
   background:
     radial-gradient(
       ellipse at 8% 0%,
-      rgba(176, 194, 255, 0.30),
+      rgba(111, 202, 177, 0.22),
       transparent 42%
     ),
     radial-gradient(
       ellipse at 95% 12%,
-      rgba(218, 195, 255, 0.27),
+      rgba(185, 226, 210, 0.24),
       transparent 38%
     ),
-    linear-gradient(145deg, #f7f9fd, #edf1f9) fixed;
+    linear-gradient(145deg, #f8fbf9, #edf5f1) fixed;
 }
 
 /* Top navigation */
 header,
 [class*="appHeader"],
 [class*="AppHeader"] {
+  background: rgba(255, 255, 255, 0.82);
+  border-bottom: 1px solid var(--ff-border);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
 
 /* Common CMS panels */
 [class*="collectionPage"],
+[class*="CollectionPage"],
 [class*="entryEditor"],
+[class*="EntryEditor"],
 [class*="controlPane"],
 [class*="previewPane"],
 [class*="sidebar"],
+[class*="Sidebar"],
 .Pane,
 .ui.segment,
 .ui.card {
   border-color: var(--ff-border);
+}
+
+.ui.segment,
+.ui.card {
+  border-radius: 14px;
+  box-shadow: var(--ff-shadow);
 }
 
 /* Softer form controls */
@@ -64,9 +75,9 @@ select,
   max-width: 100%;
   border: 1px solid var(--ff-border) !important;
   border-radius: 11px !important;
-  background: rgba(255, 255, 255, 0.82) !important;
+  background: rgba(255, 255, 255, 0.90) !important;
   color: var(--ff-text);
-  box-shadow: inset 0 1px 2px rgba(45, 60, 90, 0.025);
+  box-shadow: inset 0 1px 2px rgba(45, 75, 65, 0.025);
   transition:
     border-color 160ms ease,
     box-shadow 160ms ease;
@@ -76,8 +87,8 @@ input:focus,
 textarea:focus,
 select:focus,
 .ui.input > input:focus {
-  border-color: rgba(104, 120, 232, 0.72) !important;
-  box-shadow: 0 0 0 3px rgba(104, 120, 232, 0.12) !important;
+  border-color: rgba(41, 155, 124, 0.78) !important;
+  box-shadow: 0 0 0 3px rgba(41, 155, 124, 0.13) !important;
   outline: none;
 }
 
@@ -93,7 +104,18 @@ button,
 }
 
 .ui.button:not(.basic):not(.inverted) {
-  box-shadow: 0 3px 10px rgba(54, 70, 115, 0.07);
+  box-shadow: 0 3px 10px rgba(42, 91, 76, 0.07);
+}
+
+.ui.primary.button,
+button.primary {
+  background-color: var(--ff-accent);
+  color: #fff;
+}
+
+.ui.primary.button:hover,
+button.primary:hover {
+  background-color: #217e65;
 }
 
 button:focus-visible,
@@ -102,10 +124,13 @@ button:focus-visible,
   outline-offset: 3px;
 }
 
+/* Links */
+a {
+  color: var(--ff-accent);
+}
+
 /* Cards and lists */
 .ui.card {
-  border-radius: 14px;
-  box-shadow: var(--ff-shadow);
   overflow: hidden;
 }
 
@@ -116,7 +141,7 @@ button:focus-visible,
 
 .ui.table thead th {
   color: var(--ff-muted);
-  background: rgba(244, 247, 253, 0.82);
+  background: rgba(233, 244, 239, 0.86);
 }
 
 /* Tablet touch targets */
@@ -152,3 +177,4 @@ button:focus-visible,
     animation-duration: 0.01ms !important;
   }
 }
+
