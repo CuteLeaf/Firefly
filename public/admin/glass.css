@@ -1,0 +1,154 @@
+
+/* Firefly CMS — Soft Glass UI v1 */
+
+:root {
+  color-scheme: light;
+  --ff-text: #253047;
+  --ff-muted: #78849a;
+  --ff-accent: #6878e8;
+  --ff-border: rgba(133, 151, 183, 0.22);
+  --ff-glass: rgba(255, 255, 255, 0.76);
+  --ff-shadow: 0 12px 34px rgba(56, 72, 112, 0.09);
+}
+
+html {
+  min-height: 100%;
+  background: #f2f5fb;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--ff-text);
+  font-family:
+    system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background:
+    radial-gradient(
+      ellipse at 8% 0%,
+      rgba(176, 194, 255, 0.30),
+      transparent 42%
+    ),
+    radial-gradient(
+      ellipse at 95% 12%,
+      rgba(218, 195, 255, 0.27),
+      transparent 38%
+    ),
+    linear-gradient(145deg, #f7f9fd, #edf1f9) fixed;
+}
+
+/* Top navigation */
+header,
+[class*="appHeader"],
+[class*="AppHeader"] {
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+/* Common CMS panels */
+[class*="collectionPage"],
+[class*="entryEditor"],
+[class*="controlPane"],
+[class*="previewPane"],
+[class*="sidebar"],
+.Pane,
+.ui.segment,
+.ui.card {
+  border-color: var(--ff-border);
+}
+
+/* Softer form controls */
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select,
+.ui.input > input {
+  max-width: 100%;
+  border: 1px solid var(--ff-border) !important;
+  border-radius: 11px !important;
+  background: rgba(255, 255, 255, 0.82) !important;
+  color: var(--ff-text);
+  box-shadow: inset 0 1px 2px rgba(45, 60, 90, 0.025);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+.ui.input > input:focus {
+  border-color: rgba(104, 120, 232, 0.72) !important;
+  box-shadow: 0 0 0 3px rgba(104, 120, 232, 0.12) !important;
+  outline: none;
+}
+
+/* Buttons */
+button,
+[role="button"],
+.ui.button {
+  border-radius: 10px;
+  transition:
+    box-shadow 160ms ease,
+    transform 160ms ease,
+    background-color 160ms ease;
+}
+
+.ui.button:not(.basic):not(.inverted) {
+  box-shadow: 0 3px 10px rgba(54, 70, 115, 0.07);
+}
+
+button:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--ff-accent);
+  outline-offset: 3px;
+}
+
+/* Cards and lists */
+.ui.card {
+  border-radius: 14px;
+  box-shadow: var(--ff-shadow);
+  overflow: hidden;
+}
+
+.ui.table {
+  border-color: var(--ff-border);
+  border-radius: 10px;
+}
+
+.ui.table thead th {
+  color: var(--ff-muted);
+  background: rgba(244, 247, 253, 0.82);
+}
+
+/* Tablet touch targets */
+@media (max-width: 900px) {
+  button,
+  [role="button"],
+  .ui.button {
+    min-height: 40px;
+  }
+
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  .ui.input > input {
+    min-height: 42px;
+  }
+
+  textarea {
+    min-height: 100px;
+  }
+
+  body {
+    font-size: 15px;
+  }
+}
+
+/* Avoid unnecessary motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
