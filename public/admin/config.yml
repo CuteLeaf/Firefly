@@ -1,0 +1,40 @@
+
+backend:
+  name: turbo-github
+  turbo_site_id: b56855a4-0303-44db-8399-2d0aed3d7bfb
+  branch: master
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "posts"
+    label: "博客文章"
+    label_singular: "文章"
+    folder: "src/content/posts"
+    create: true
+    delete: true
+    extension: "md"
+    format: "frontmatter"
+    slug: "{{slug}}"
+    fields:
+      - { label: "标题", name: "title", widget: "string" }
+      - { label: "发布日期", name: "published", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "更新日期", name: "updated", widget: "datetime", required: false, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "草稿", name: "draft", widget: "boolean", default: false, required: false }
+      - { label: "文章描述", name: "description", widget: "string", required: false }
+      - { label: "封面图片", name: "image", widget: "image", required: false }
+      - { label: "标签", name: "tags", widget: "list", required: false }
+      - { label: "分类", name: "category", widget: "string", required: false }
+      - { label: "语言", name: "lang", widget: "string", required: false }
+      - { label: "置顶", name: "pinned", widget: "boolean", default: false, required: false }
+      - { label: "作者", name: "author", widget: "string", required: false }
+      - { label: "来源链接", name: "sourceLink", widget: "string", required: false }
+      - { label: "许可证名称", name: "licenseName", widget: "string", required: false }
+      - { label: "许可证链接", name: "licenseUrl", widget: "string", required: false }
+      - { label: "允许评论", name: "comment", widget: "boolean", default: true, required: false }
+      - { label: "文章密码", name: "password", widget: "string", required: false }
+      - { label: "密码提示", name: "passwordHint", widget: "string", required: false }
+      - { label: "系列名称", name: "series", widget: "string", required: false }
+      - { label: "系列顺序", name: "seriesOrder", widget: "number", required: false }
+      - { label: "正文", name: "body", widget: "markdown" }
