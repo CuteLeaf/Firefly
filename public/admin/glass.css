@@ -178,3 +178,120 @@ a {
   }
 }
 
+
+/* Admin editor refinements — this file is only loaded by /admin/. */
+:root {
+  --ff-radius: 14px;
+  --ff-focus: 0 0 0 3px rgba(41, 155, 124, 0.14);
+}
+
+/* CMS workspace */
+#nc-root {
+  min-height: 100vh;
+}
+
+[class*="AppMain"],
+[class*="appMain"],
+[class*="EditorPage"],
+[class*="editorPage"] {
+  background: transparent;
+}
+
+[class*="collection"],
+[class*="Collection"],
+[class*="entry"],
+[class*="Entry"] {
+  scrollbar-color: rgba(41, 155, 124, 0.32) transparent;
+}
+
+/* Make field groups read as calm, separated cards. */
+[class*="ControlPane"],
+[class*="controlPane"],
+[class*="FieldWrapper"],
+[class*="fieldWrapper"],
+[class*="ObjectControl"],
+[class*="objectControl"] {
+  border-color: var(--ff-border);
+}
+
+label {
+  color: var(--ff-text);
+  font-weight: 600;
+}
+
+input,
+textarea,
+select,
+[contenteditable="true"] {
+  accent-color: var(--ff-accent);
+}
+
+textarea,
+[contenteditable="true"] {
+  line-height: 1.75;
+}
+
+/* Split-pane preview layout, when the CMS exposes both panes. */
+.SplitPane {
+  background: transparent;
+}
+
+.SplitPane.horizontal {
+  display: flex;
+  flex-direction: row;
+}
+
+.SplitPane.horizontal > .Pane1,
+.SplitPane.horizontal > .Pane2 {
+  min-width: 0;
+}
+
+.SplitPane.horizontal > .Pane1 {
+  border-right: 1px solid var(--ff-border);
+}
+
+.Resizer {
+  background: rgba(41, 155, 124, 0.12);
+  opacity: 1;
+  z-index: 5;
+}
+
+.Resizer:hover,
+.Resizer:focus {
+  background: rgba(41, 155, 124, 0.48);
+}
+
+[class*="Toolbar"],
+[class*="toolbar"] {
+  border-color: var(--ff-border);
+}
+
+button,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (min-width: 1000px) {
+  [class*="EditorPage"],
+  [class*="editorPage"] {
+    padding: 18px;
+  }
+
+  [class*="ControlPane"],
+  [class*="controlPane"],
+  [class*="PreviewPane"],
+  [class*="previewPane"] {
+    border-radius: 14px;
+  }
+}
+
+@media (max-width: 760px) {
+  .SplitPane.horizontal {
+    display: block;
+  }
+
+  .SplitPane.horizontal > .Pane1,
+  .SplitPane.horizontal > .Pane2 {
+    width: 100% !important;
+  }
+}
