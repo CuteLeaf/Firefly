@@ -13,10 +13,12 @@ import type {
 	LIGHT_DARK_MODE,
 	WALLPAPER_MODE,
 } from "@/types/config";
+import type { ProfileLinkDisplayMode } from "@/types/profileConfig";
 import {
 	backgroundWallpaper,
 	displaySettingsConfig,
 	expressiveCodeConfig,
+	profileConfig,
 	sakuraConfig,
 	siteConfig,
 } from "../config";
@@ -954,5 +956,44 @@ export function setCardFollowThemeEnabled(enabled: boolean): void {
 		document.body.classList.add("card-follow-theme-hue");
 	} else {
 		document.body.classList.remove("card-follow-theme-hue");
+	}
+}
+
+// Profile 链接显示模式函数
+// 模式写在 <html data-profile-link-mode> 上，样式由 src/styles/profile.css 接管
+export function getDefaultProfileLinkMode(): ProfileLinkDisplayMode {
+	return profileConfig.linkDisplayMode ?? "icon";
+}
+
+export function getStoredProfileLinkMode(): ProfileLinkDisplayMode {
+	try {
+		const stored = localStorage.getItem("profileLinkDisplayMode");
+		if (stored === "icon" || stored === "banner") {
+			return stored;
+		}
+	} catch {
+		// 存储不可用（被禁用 / 隐私模式，访问 localStorage 本身就可能抛 SecurityError）
+		// 或非浏览器环境，退回配置默认值
+	}
+	return getDefaultProfileLinkMode();
+}
+
+export function applyProfileLinkModeToDocument(
+	mode: ProfileLinkDisplayMode,
+): void {
+	if (typeof document === "undefined") {
+		return;
+	}
+	document.documentElement.setAttribute("data-profile-link-mode", mode);
+}
+
+export function setProfileLinkMode(mode: ProfileLinkDisplayMode): void {
+	// 先应用到文档再持久化：存储不可用时切换也要即时生效，
+	// 否则面板显示已切换、Profile 却还是旧模式
+	applyProfileLinkModeToDocument(mode);
+	try {
+		localStorage.setItem("profileLinkDisplayMode", mode);
+	} catch {
+		// 存储被禁用或写入超额（QuotaExceededError）时忽略，只影响「刷新后是否记住」
 	}
 }
