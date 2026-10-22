@@ -1,0 +1,65 @@
+{
+	"key": "dynamic",
+	"title": "动态页面",
+	"description": "配置动态（微博客）页面的标题、分页、评论与 Memos 数据源。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"title": {
+				"type": "string",
+				"title": "页面标题",
+				"description": "页面标题，留空则使用 i18n 中的翻译。"
+			},
+			"description": {
+				"type": "string",
+				"x-format": "textarea",
+				"title": "页面描述",
+				"description": "页面描述文本，留空则使用 i18n 中的翻译。"
+			},
+			"profileUrl": {
+				"type": "string",
+				"title": "头像和名称跳转地址",
+				"description": "动态头像和名称的跳转地址，支持站内路径或完整 URL。"
+			},
+			"showComment": {
+				"type": "boolean",
+				"title": "启用评论",
+				"description": "是否为每条动态启用评论，需要先在 commentConfig.ts 启用评论系统。"
+			},
+			"itemsPerPage": {
+				"type": "integer",
+				"minimum": 1,
+				"title": "每页动态数量",
+				"description": "每页显示的动态数量。"
+			},
+			"apiUrl": {
+				"type": "string",
+				"title": "动态数据 JSON 地址",
+				"description": "动态数据 json 地址，本地默认 /api/dynamic.json，可改为第三方接口地址；当 memos.enable 为 true 时此配置被忽略。"
+			},
+			"memos": {
+				"type": "object",
+				"title": "Memos 配置",
+				"description": "Memos 数据源配置，启用后客户端直接从 Memos API 实时获取数据，apiUrl 配置将被忽略。",
+				"properties": {
+					"enable": {
+						"type": "boolean",
+						"title": "启用 Memos 数据源",
+						"description": "是否启用 Memos 数据源。"
+					},
+					"apiUrl": {
+						"type": "string",
+						"x-format": "url",
+						"title": "Memos 实例地址",
+						"description": "Memos 实例地址，如 https://memos.example.com。"
+					},
+					"parent": {
+						"type": "string",
+						"title": "Memos 用户标识",
+						"description": "Memos 用户标识，如 users/xiaye，用于过滤指定用户的动态，需与 Memos API 返回的 creator 字段完全一致。"
+					}
+				}
+			}
+		}
+	}
+}

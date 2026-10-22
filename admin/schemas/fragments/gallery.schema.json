@@ -1,0 +1,75 @@
+{
+	"key": "gallery",
+	"title": "相册",
+	"description": "配置相册列表与瀑布流布局，用于展示图片相册。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"albums": {
+				"title": "相册列表",
+				"description": "相册列表，每添加一项即增加一个相册，记得在 public/gallery/ 下创建对应子目录并放入图片。",
+				"type": "array",
+				"x-itemTitle": "name",
+				"items": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"title": "唯一标识符",
+							"description": "相册唯一标识符，用于目录命名和 URL 路径，如 firefly-2026 对应 public/gallery/firefly-2026/。",
+							"type": "string"
+						},
+						"name": {
+							"title": "相册名称",
+							"description": "相册名称。",
+							"type": "string"
+						},
+						"description": {
+							"title": "相册描述",
+							"description": "相册描述。",
+							"type": "string",
+							"x-format": "textarea"
+						},
+						"location": {
+							"title": "拍摄地点",
+							"description": "相册拍摄地点。",
+							"type": "string"
+						},
+						"date": {
+							"title": "相册日期",
+							"description": "相册日期，格式为 YYYY-MM-DD，用于排序和显示。",
+							"type": "string",
+							"x-format": "date"
+						},
+						"tags": {
+							"title": "相册标签",
+							"description": "相册标签，用于分类和过滤。",
+							"type": "array",
+							"items": { "type": "string" },
+							"x-tags": true
+						},
+						"cover": {
+							"title": "封面图",
+							"description": "手动指定封面图（可选），不填则使用 cover.* 文件或第一张图片作为封面。",
+							"type": "string"
+						},
+						"password": {
+							"title": "访问密码",
+							"description": "访问密码，设置后需要输入密码才能查看相册内容（可选）。",
+							"type": "string"
+						},
+						"passwordHint": {
+							"title": "密码提示",
+							"description": "密码提示，设置后在输入密码错误时显示（可选，需配合 password 使用）。",
+							"type": "string"
+						}
+					}
+				}
+			},
+			"columnWidth": {
+				"title": "瀑布流最小列宽",
+				"description": "瀑布流最小列宽(px)，浏览器根据容器宽度自动计算列数，默认 240。值越小列数越多，值越大列数越少。",
+				"type": "number"
+			}
+		}
+	}
+}

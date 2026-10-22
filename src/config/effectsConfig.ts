@@ -1,8 +1,9 @@
 import type { SakuraConfig } from "../types/effectsConfig";
+import { mergeUserConfig } from "./user-config";
 
 // 特效配置 - 集中管理所有动画特效
 
-export const sakuraConfig: SakuraConfig = {
+export const sakuraConfigDefaults: SakuraConfig = {
 	// 是否启用樱花特效
 	enable: false,
 
@@ -53,3 +54,8 @@ export const sakuraConfig: SakuraConfig = {
 	// 层级，确保樱花在合适的层级显示
 	zIndex: 100,
 };
+
+export const sakuraConfig: SakuraConfig = mergeUserConfig(
+	"sakura",
+	sakuraConfigDefaults,
+);

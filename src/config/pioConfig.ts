@@ -1,7 +1,8 @@
 import type { Live2DWidgetConfig, SpineModelConfig } from "../types/pioConfig";
+import { mergeUserConfig } from "./user-config";
 
 // Spine 看板娘配置
-export const spineModelConfig: SpineModelConfig = {
+export const spineModelConfigDefaults: SpineModelConfig = {
 	// Spine 看板娘开关
 	enable: false,
 
@@ -82,8 +83,13 @@ export const spineModelConfig: SpineModelConfig = {
 	opacity: 1.0,
 };
 
+export const spineModelConfig: SpineModelConfig = mergeUserConfig(
+	"spineModel",
+	spineModelConfigDefaults,
+);
+
 // Live2D 看板娘配置 (使用 l2d-widget 库，文档：https://l2d-widget.hacxy.cn)
-export const live2dWidgetConfig: Live2DWidgetConfig = {
+export const live2dWidgetConfigDefaults: Live2DWidgetConfig = {
 	// Live2D 看板娘开关
 	enable: false,
 	// 模型配置，支持单个模型或数组（多模型切换）
@@ -183,3 +189,8 @@ export const live2dWidgetConfig: Live2DWidgetConfig = {
 		mobileBreakpoint: 768,
 	},
 };
+
+export const live2dWidgetConfig: Live2DWidgetConfig = mergeUserConfig(
+	"live2dWidget",
+	live2dWidgetConfigDefaults,
+);

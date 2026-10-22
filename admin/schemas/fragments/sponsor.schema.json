@@ -1,0 +1,115 @@
+{
+	"key": "sponsor",
+	"title": "打赏",
+	"description": "配置打赏页面、打赏方式列表与打赏者列表。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"title": {
+				"title": "页面标题",
+				"description": "页面标题，如果留空则使用 i18n 中的翻译。",
+				"type": "string"
+			},
+			"description": {
+				"title": "页面描述",
+				"description": "页面描述文本，如果留空则使用 i18n 中的翻译。",
+				"type": "string"
+			},
+			"usage": {
+				"title": "打赏用途说明",
+				"description": "打赏用途说明。",
+				"type": "string",
+				"x-format": "textarea"
+			},
+			"showSponsorsList": {
+				"title": "显示打赏者列表",
+				"description": "是否显示打赏者列表。",
+				"type": "boolean"
+			},
+			"showComment": {
+				"title": "显示评论区",
+				"description": "是否显示评论区，需要先在 commentConfig.ts 启用评论系统。",
+				"type": "boolean"
+			},
+			"showButtonInPost": {
+				"title": "文章内显示打赏按钮",
+				"description": "是否在文章详情页底部显示打赏按钮。",
+				"type": "boolean"
+			},
+			"methods": {
+				"title": "打赏方式列表",
+				"description": "打赏方式列表。",
+				"type": "array",
+				"x-itemTitle": "name",
+				"items": {
+					"type": "object",
+					"properties": {
+						"name": {
+							"title": "方式名称",
+							"description": "打赏方式名称，如「支付宝」「微信」「PayPal」。",
+							"type": "string"
+						},
+						"icon": {
+							"title": "图标",
+							"description": "图标名称（Iconify 格式），如 fa7-brands:alipay。",
+							"type": "string"
+						},
+						"qrCode": {
+							"title": "收款码图片",
+							"description": "收款码图片路径（需要放在 public 目录下）。",
+							"type": "string"
+						},
+						"link": {
+							"title": "打赏链接",
+							"description": "打赏链接 URL，可选，如果提供会显示跳转按钮。",
+							"type": "string",
+							"x-format": "url"
+						},
+						"description": {
+							"title": "描述",
+							"description": "描述文本。",
+							"type": "string"
+						},
+						"enabled": {
+							"title": "是否启用",
+							"description": "是否启用该打赏方式。",
+							"type": "boolean"
+						}
+					}
+				}
+			},
+			"sponsors": {
+				"title": "打赏者列表",
+				"description": "打赏者列表（可选）。",
+				"type": "array",
+				"x-itemTitle": "name",
+				"items": {
+					"type": "object",
+					"properties": {
+						"name": {
+							"title": "打赏者名称",
+							"description": "打赏者名称，如果想显示匿名，可以直接设置为「匿名」或使用 i18n。",
+							"type": "string"
+						},
+						"avatar": {
+							"title": "头像",
+							"description": "打赏者头像图片路径（可选，相对于 public 目录或网络图片）。",
+							"type": "string"
+						},
+						"amount": {
+							"title": "打赏金额",
+							"description": "打赏金额（可选）。",
+							"type": "string"
+						},
+						"date": {
+							"title": "打赏日期",
+							"description": "打赏日期（可选，ISO 格式）。",
+							"type": "string",
+							"x-format": "date"
+						}
+					}
+				}
+			}
+		}
+	}
+}

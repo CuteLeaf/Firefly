@@ -1,0 +1,387 @@
+{
+	"key": "backgroundWallpaper",
+	"title": "背景壁纸",
+	"description": "配置博客背景壁纸的显示模式、图片来源、主页文字、轮播与各模式特有参数。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"mode": {
+				"title": "壁纸模式",
+				"description": "壁纸显示模式：横幅壁纸、全屏壁纸、覆盖透明或纯色背景。",
+				"type": "string",
+				"enum": ["banner", "fullscreen", "overlay", "none"],
+				"x-enumLabels": ["横幅壁纸", "全屏壁纸", "覆盖透明", "纯色背景"]
+			},
+			"playerEnable": {
+				"title": "启用背景视频",
+				"description": "是否启用背景视频播放，启用后将在导航栏显示视频播放按钮。",
+				"type": "boolean"
+			},
+			"src": {
+				"title": "背景图片",
+				"description": "背景图片与视频配置，分别设置桌面端、移动端壁纸与背景视频地址。",
+				"type": "object",
+				"properties": {
+					"desktop": {
+						"title": "桌面端壁纸",
+						"description": "桌面端背景图片，支持单张或多张（数组，刷新随机显示）；支持 public 目录、src 目录或远程 URL。",
+						"type": ["string", "array"],
+						"items": { "type": "string" }
+					},
+					"mobile": {
+						"title": "移动端壁纸",
+						"description": "移动端背景图片，支持单张或多张（数组，刷新随机显示）。",
+						"type": ["string", "array"],
+						"items": { "type": "string" }
+					},
+					"playerUrl": {
+						"title": "背景视频地址",
+						"description": "背景视频播放地址，支持单个视频路径或多个视频（数组）循环，支持远程 URL。",
+						"type": ["string", "array"],
+						"items": { "type": "string" }
+					}
+				}
+			},
+			"common": {
+				"title": "共享配置",
+				"description": "横幅壁纸与全屏壁纸共享的遮罩、主页文字、轮播、水波纹与渐变配置。",
+				"type": "object",
+				"properties": {
+					"dimOpacity": {
+						"title": "遮罩暗度",
+						"description": "壁纸遮罩暗度，让横幅文字显示更清晰，0-1 之间，值越大越暗。",
+						"type": "number",
+						"minimum": 0,
+						"maximum": 1
+					},
+					"playerMode": {
+						"title": "多视频播放模式",
+						"description": "多视频播放模式：顺序循环或随机切换（仅当 playerUrl 为数组时生效）。",
+						"type": "string",
+						"enum": ["order", "random"],
+						"x-enumLabels": ["顺序循环", "随机切换"]
+					},
+					"homeText": {
+						"title": "主页横幅文字",
+						"description": "主页横幅文字、打字机效果与标题下方链接图标配置。",
+						"type": "object",
+						"properties": {
+							"enable": {
+								"title": "启用主页文字",
+								"description": "是否启用主页横幅文字。",
+								"type": "boolean"
+							},
+							"title": {
+								"title": "主标题",
+								"description": "主页横幅主标题。",
+								"type": "string"
+							},
+							"titleSize": {
+								"title": "主标题字体大小",
+								"description": "主页横幅主标题字体大小，如 4.5rem。",
+								"type": "string"
+							},
+							"subtitle": {
+								"title": "副标题",
+								"description": "主页横幅副标题，支持单个字符串或字符串数组（多条循环或随机显示）。",
+								"type": ["string", "array"],
+								"items": { "type": "string" }
+							},
+							"subtitleSize": {
+								"title": "副标题字体大小",
+								"description": "主页横幅副标题字体大小，如 1.5rem。",
+								"type": "string"
+							},
+							"typewriter": {
+								"title": "打字机效果",
+								"description": "打字机效果配置：开启后循环显示所有副标题，关闭后每次刷新随机显示一条。",
+								"type": "object",
+								"properties": {
+									"enable": {
+										"title": "启用打字机",
+										"description": "是否启用打字机效果。",
+										"type": "boolean"
+									},
+									"speed": {
+										"title": "打字速度",
+										"description": "打字速度（毫秒）。",
+										"type": "number",
+										"minimum": 0
+									},
+									"deleteSpeed": {
+										"title": "删除速度",
+										"description": "删除速度（毫秒）。",
+										"type": "number",
+										"minimum": 0
+									},
+									"pauseTime": {
+										"title": "暂停时间",
+										"description": "完全显示后的暂停时间（毫秒）。",
+										"type": "number",
+										"minimum": 0
+									}
+								}
+							},
+							"linksEnable": {
+								"title": "启用链接图标",
+								"description": "是否显示标题下方的链接图标。",
+								"type": "boolean"
+							},
+							"links": {
+								"title": "链接图标",
+								"description": "首页横幅标题下方的链接图标列表（可选，支持 showName 显示文字）。",
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"name": {
+											"title": "名称",
+											"description": "链接名称（用于 aria-label / title / 可选 showName 显示）。",
+											"type": "string"
+										},
+										"icon": {
+											"title": "图标",
+											"description": "Iconify 图标名，如 fa7-brands:github、mdi:rss 等。",
+											"type": "string"
+										},
+										"url": {
+											"title": "链接地址",
+											"description": "链接地址，支持外链、mailto 或站内路径。",
+											"type": "string",
+											"x-format": "url"
+										},
+										"showName": {
+											"title": "显示文字",
+											"description": "是否在图标旁显示名称文字。",
+											"type": "boolean"
+										}
+									}
+								},
+								"x-itemTitle": "name"
+							}
+						}
+					},
+					"carousel": {
+						"title": "壁纸轮播",
+						"description": "壁纸轮播配置，横幅壁纸与全屏壁纸共享，仅在配置多张图片时生效。",
+						"type": "object",
+						"properties": {
+							"enable": {
+								"title": "启用轮播",
+								"description": "是否启用壁纸轮播；关闭时保持每次刷新随机显示一张。",
+								"type": "boolean"
+							},
+							"interval": {
+								"title": "切换间隔",
+								"description": "轮播切换间隔（毫秒）。",
+								"type": "number",
+								"minimum": 0
+							},
+							"transitionEffect": {
+								"title": "过渡效果",
+								"description": "过渡效果：渐变、缩放、滑动或旋转木马。",
+								"type": "string",
+								"enum": ["fade", "zoom", "slide", "kenburns"],
+								"x-enumLabels": ["渐变", "缩放", "滑动", "旋转木马"]
+							}
+						}
+					},
+					"waves": {
+						"title": "水波纹动画",
+						"description": "水波纹动画效果配置，开启会影响页面性能、增加内存占用，请按需开启。",
+						"type": "object",
+						"properties": {
+							"enable": {
+								"title": "启用水波纹",
+								"description": "是否启用水波纹动画效果，可分别设置桌面端与移动端。",
+								"type": "object",
+								"properties": {
+									"desktop": {
+										"title": "桌面端",
+										"description": "桌面端是否启用水波纹动画效果。",
+										"type": "boolean"
+									},
+									"mobile": {
+										"title": "移动端",
+										"description": "移动端是否启用水波纹动画效果。",
+										"type": "boolean"
+									}
+								}
+							}
+						}
+					},
+					"gradient": {
+						"title": "渐变过渡",
+						"description": "渐变过渡效果配置，当水波纹关闭时自动启用，提供壁纸底部到背景色的平滑过渡。",
+						"type": "object",
+						"properties": {
+							"enable": {
+								"title": "启用渐变",
+								"description": "是否启用渐变过渡，可分别设置桌面端与移动端。",
+								"type": "object",
+								"properties": {
+									"desktop": {
+										"title": "桌面端",
+										"description": "桌面端是否启用渐变过渡。",
+										"type": "boolean"
+									},
+									"mobile": {
+										"title": "移动端",
+										"description": "移动端是否启用渐变过渡。",
+										"type": "boolean"
+									}
+								}
+							},
+							"height": {
+								"title": "渐变高度",
+								"description": "渐变过渡高度，如 10%。",
+								"type": "string"
+							}
+						}
+					}
+				}
+			},
+			"banner": {
+				"title": "Banner 模式配置",
+				"description": "横幅壁纸模式特有配置：图片位置、文章横幅信息与导航栏。",
+				"type": "object",
+				"properties": {
+					"position": {
+						"title": "图片位置",
+						"description": "壁纸图片位置，支持 CSS object-position 值，如 center、top、0% 20% 等。",
+						"type": "string"
+					},
+					"postInfo": {
+						"title": "文章横幅信息",
+						"description": "文章横幅信息显示模式。",
+						"type": "object",
+						"properties": {
+							"mode": {
+								"title": "信息模式",
+								"description": "文章横幅信息模式：描述或日期、字数与阅读时长。",
+								"type": "string",
+								"enum": ["description", "meta"],
+								"x-enumLabels": ["描述", "日期、字数与阅读时长"]
+							}
+						}
+					},
+					"navbar": {
+						"title": "导航栏",
+						"description": "Banner 模式下的导航栏透明模式与毛玻璃模糊度。",
+						"type": "object",
+						"properties": {
+							"transparentMode": {
+								"title": "透明模式",
+								"description": "导航栏透明模式：半透明、动态透明或纯色不透明。",
+								"type": "string",
+								"enum": ["semi", "semifull", "none"],
+								"x-enumLabels": ["半透明", "动态透明", "纯色不透明"]
+							},
+							"blur": {
+								"title": "毛玻璃模糊度",
+								"description": "导航栏毛玻璃模糊度，0 即关闭毛玻璃（子菜单与浮动面板始终保留）。",
+								"type": "number",
+								"minimum": 0
+							}
+						}
+					}
+				}
+			},
+			"overlay": {
+				"title": "覆盖透明模式配置",
+				"description": "全屏透明覆盖模式特有配置：层级、透明度、模糊度与卡片透明度。",
+				"type": "object",
+				"properties": {
+					"zIndex": {
+						"title": "层级",
+						"description": "壁纸层级，确保壁纸在背景层（通常为负值）。",
+						"type": "number"
+					},
+					"opacity": {
+						"title": "壁纸透明度",
+						"description": "壁纸透明度，0-1 之间。",
+						"type": "number",
+						"minimum": 0,
+						"maximum": 1
+					},
+					"blur": {
+						"title": "背景模糊度",
+						"description": "背景模糊程度（像素）。",
+						"type": "number",
+						"minimum": 0
+					},
+					"cardOpacity": {
+						"title": "卡片透明度",
+						"description": "卡片背景透明度，0-1 之间，值越小越透明。",
+						"type": "number",
+						"minimum": 0,
+						"maximum": 1
+					}
+				}
+			},
+			"fullscreen": {
+				"title": "全屏壁纸模式配置",
+				"description": "全屏壁纸模式特有配置：布局、位置、导航栏与下滑模糊渐变。",
+				"type": "object",
+				"properties": {
+					"layout": {
+						"title": "布局模式",
+						"description": "全屏布局模式：经典文档流或固定全屏首屏。",
+						"type": "string",
+						"enum": ["classic", "hero"],
+						"x-enumLabels": ["经典文档流", "固定全屏首屏"]
+					},
+					"position": {
+						"title": "图片位置",
+						"description": "壁纸图片位置，支持 CSS object-position 值，如 center。",
+						"type": "string"
+					},
+					"navbar": {
+						"title": "导航栏",
+						"description": "全屏壁纸模式下的导航栏透明模式与毛玻璃模糊度。",
+						"type": "object",
+						"properties": {
+							"transparentMode": {
+								"title": "透明模式",
+								"description": "导航栏透明模式：半透明或动态透明（仅首页顶部透明、下滑玻璃化）。",
+								"type": "string",
+								"enum": ["semi", "semifull"],
+								"x-enumLabels": ["半透明", "动态透明"]
+							},
+							"blur": {
+								"title": "毛玻璃模糊度",
+								"description": "导航栏毛玻璃模糊度，0 即关闭（玻璃态生效）。",
+								"type": "number",
+								"minimum": 0
+							}
+						}
+					},
+					"blurRamp": {
+						"title": "模糊渐变开关",
+						"description": "首页下滑时壁纸模糊渐变开关，从 0 渐变为 overlay.blur 的最大模糊。",
+						"type": "object",
+						"properties": {
+							"enable": {
+								"title": "启用模糊渐变",
+								"description": "是否启用模糊渐变，可分别设置桌面端与移动端；关闭后对应设备全屏壁纸保持清晰。",
+								"type": "object",
+								"properties": {
+									"desktop": {
+										"title": "桌面端",
+										"description": "桌面端是否启用模糊渐变。",
+										"type": "boolean"
+									},
+									"mobile": {
+										"title": "移动端",
+										"description": "移动端是否启用模糊渐变。",
+										"type": "boolean"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

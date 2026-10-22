@@ -1,6 +1,7 @@
 import type { AnalyticsConfig } from "../types/analyticsConfig";
+import { mergeUserConfig } from "./user-config";
 
-export const analyticsConfig: AnalyticsConfig = {
+export const analyticsConfigDefaults: AnalyticsConfig = {
 	// Google Analytics ID
 	googleAnalyticsId: "",
 	// Microsoft Clarity ID
@@ -47,3 +48,8 @@ export const analyticsConfig: AnalyticsConfig = {
 		screenRecord: true,
 	},
 };
+
+export const analyticsConfig: AnalyticsConfig = mergeUserConfig(
+	"analytics",
+	analyticsConfigDefaults,
+);

@@ -1,0 +1,121 @@
+{
+	"key": "navbar",
+	"title": "导航栏",
+	"description": "配置导航栏链接列表，支持名称、链接、图标、外链与多级子菜单。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"links": {
+				"title": "导航链接",
+				"description": "导航栏链接列表，按数组顺序显示在导航栏中。",
+				"type": "array",
+				"items": {
+					"type": "object",
+					"properties": {
+						"name": {
+							"title": "名称",
+							"description": "导航项显示名称。",
+							"type": "string"
+						},
+						"url": {
+							"title": "链接",
+							"description": "链接地址，支持站内路径（如 /archive/、#）或外部链接。",
+							"type": "string",
+							"x-format": "url"
+						},
+						"external": {
+							"title": "外链",
+							"description": "是否为外部链接（将在新窗口打开）。",
+							"type": "boolean"
+						},
+						"icon": {
+							"title": "图标",
+							"description": "菜单项 Iconify 图标名，如 material-symbols:home。",
+							"type": "string"
+						},
+						"children": {
+							"title": "子菜单",
+							"description": "子菜单项列表，结构与导航链接一致，支持继续嵌套。",
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"title": "名称",
+										"description": "子菜单项显示名称。",
+										"type": "string"
+									},
+									"url": {
+										"title": "链接",
+										"description": "子菜单项链接地址，支持站内路径或外部链接。",
+										"type": "string",
+										"x-format": "url"
+									},
+									"external": {
+										"title": "外链",
+										"description": "是否为外部链接（将在新窗口打开）。",
+										"type": "boolean"
+									},
+									"icon": {
+										"title": "图标",
+										"description": "菜单项 Iconify 图标名。",
+										"type": "string"
+									},
+									"children": {
+										"title": "子菜单",
+										"description": "子菜单项列表（一般无需多级嵌套）。",
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"name": {
+													"title": "名称",
+													"description": "子菜单项显示名称。",
+													"type": "string"
+												},
+												"url": {
+													"title": "链接",
+													"description": "子菜单项链接地址。",
+													"type": "string",
+													"x-format": "url"
+												},
+												"external": {
+													"title": "外链",
+													"description": "是否为外部链接。",
+													"type": "boolean"
+												},
+												"icon": {
+													"title": "图标",
+													"description": "菜单项 Iconify 图标名。",
+													"type": "string"
+												},
+												"pageKey": {
+													"title": "页面键",
+													"description": "用于标识特殊页面，一般无需填写。",
+													"type": "string"
+												}
+											}
+										},
+										"x-itemTitle": "name"
+									},
+									"pageKey": {
+										"title": "页面键",
+										"description": "用于标识特殊页面（如 friends、gallery 等），一般无需填写。",
+										"type": "string"
+									}
+								}
+							},
+							"x-itemTitle": "name"
+						},
+						"pageKey": {
+							"title": "页面键",
+							"description": "用于标识特殊页面（如 friends、gallery 等），一般无需填写。",
+							"type": "string"
+						}
+					}
+				},
+				"x-itemTitle": "name"
+			}
+		}
+	}
+}

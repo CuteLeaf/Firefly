@@ -131,6 +131,18 @@
    ```
    博客将在 `http://localhost:4321` 可用
 
+### 🖥️ 图形化管理后台
+
+不喜欢改代码？Firefly 内置了**图形化管理后台**，在网页上即可完成文章的新建 / 编辑 / 发布 / 删除，以及全部个性化配置的编辑（站点信息、导航栏、侧边栏、壁纸、评论、音乐、看板娘、友链……），还带媒体库与一键构建部署：
+
+```bash
+pnpm admin    # 启动后台 → http://localhost:4001
+```
+
+- 默认账号 `admin` / `admin123`，**修改账号密码请编辑 `admin/admin.config.ts`**（网页不提供改密入口）；
+- 后台保存的个性化配置写入 `src/config/user-config.json` 覆盖层，与手写配置互不冲突，可随时一键恢复默认；
+- 详细文档与二次开发指南见 [admin/README.md](./admin/README.md)。
+
 ### 平台托管部署
 - **参考[官方指南](https://docs.astro.build/zh-cn/guides/deploy/)将博客部署至 Vercel, Netlify, Cloudflare Pages, EdgeOne Pages 等。**
 - **Vercel**、**Netlify** 等主流平台自动部署，会根据环境自动选择适配器。

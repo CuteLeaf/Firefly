@@ -1,6 +1,7 @@
 import type { ProfileConfig } from "../types/profileConfig";
+import { mergeUserConfig } from "./user-config";
 
-export const profileConfig: ProfileConfig = {
+export const profileConfigDefaults: ProfileConfig = {
 	// 头像
 	// 图片路径支持三种格式：
 	// 1. public 目录（以 "/" 开头，不优化）："/assets/images/avatar.webp"
@@ -47,3 +48,8 @@ export const profileConfig: ProfileConfig = {
 		},
 	],
 };
+
+export const profileConfig: ProfileConfig = mergeUserConfig(
+	"profile",
+	profileConfigDefaults,
+);

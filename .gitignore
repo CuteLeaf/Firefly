@@ -1,6 +1,13 @@
 # build output
 dist/
 
+# pnpm 本地依赖仓库
+.pnpm-store/
+
+# 管理后台运行时数据（会话密钥 / 文章回收站）
+admin/.secret
+admin/trash/
+
 # generated vndb covers
 public/vndb-covers/
 
