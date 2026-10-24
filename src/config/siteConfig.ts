@@ -52,7 +52,7 @@ export const siteConfig: SiteConfig = {
 
 	// 站点描述
 	description:
-		"一个初中生。的小站",
+		"一个初中学渣的小站",
 
 	// 站点关键词
 	keywords: [
@@ -106,8 +106,8 @@ export const siteConfig: SiteConfig = {
 		// 使用 Astro 图标库时不需要设置 valueDark，图标会自动跟随主题亮暗色切换
 		logo: {
 			type: "image",
-			value: "assets/images/logo/jz.jpg",
-			valueDark: "assets/images/logo/jz.jpg",
+			value: "assets/images/logo/xx.glf",
+			valueDark: "assets/images/logo/xx.glf",
 			alt: "🍊",
 		},
 		// 导航栏标题
