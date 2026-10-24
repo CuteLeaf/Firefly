@@ -13,7 +13,7 @@ const pages = resolvePageToggles({
 	// 友链页面开关
 	friends: true,
 	// 留言板页面开关，需要配置评论系统
-	guestbook: false,
+	guestbook: true,
 
 	// ── 我的 (My) ──────────────────────────────────
 
@@ -85,7 +85,7 @@ export const siteConfig: SiteConfig = {
 	favicon: [
 		{
 			// 图标文件路径
-			src: "/favicon/firefly-32.png",
+			src: "/favicon/jz.jpg",
 			// 可选，指定主题 'light' | 'dark'
 			// theme: "light",
 			// 可选，图标大小
