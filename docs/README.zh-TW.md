@@ -151,6 +151,9 @@ Cloudflare Workers 部署：[【不用服务器，无需备案，零成本搭建
 
    [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/CuteLeaf/Firefly&project-name=Firefly&repository-name=Firefly)
    [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/CuteLeaf/Firefly)
+   [![Deploy to Wasmer](https://img.shields.io/badge/Deploy%20to-Wasmer-171717?logo=wasmer&logoColor=white)](https://wasmer.io/apps/create?github=CuteLeaf%2FFirefly)
+
+   Wasmer 按鈕會匯入此儲存庫以進行建置；如需自訂內容並在推送後自動重新部署，請匯入你自己的 fork。
 
 ## 📖 配置說明
 
