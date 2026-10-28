@@ -156,7 +156,7 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
         display: flex;
         flex-direction: column;
         background: var(--card-bg);
-        border-radius: var(--radius-large) 0 0 var(--radius-large); /* 仅左侧，跟随主题统一圆角 */
+        border-radius: 0; /* 全高侧边抽屉贴满视口上下边缘，与遮罩边界平齐，消除圆角与直角遮罩冲突的“猫耳”视觉断层 */
         box-shadow: -8px 0 32px rgba(0, 0, 0, 0.25);
         border-left: 1px solid rgba(0, 0, 0, 0.08);
         overflow: hidden;
