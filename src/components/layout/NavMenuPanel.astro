@@ -155,7 +155,8 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
         flex-direction: column;
         background: var(--card-bg);
         border-radius: var(--radius-large) 0 0 var(--radius-large); /* 仅左侧，跟随主题统一圆角 */
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
+        box-shadow: -8px 0 32px rgba(0, 0, 0, 0.25);
+        border-left: 1px solid rgba(0, 0, 0, 0.08);
         overflow: hidden;
         transform: translateX(100%);
         transition: transform 0.3s var(--ease-decelerate);
@@ -163,25 +164,31 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
     :root.dark .mobile-menu-drawer {
         --drawer-on-surface: rgba(255, 255, 255, 0.87);
         --drawer-on-surface-variant: rgba(255, 255, 255, 0.62);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+        box-shadow: -8px 0 32px rgba(0, 0, 0, 0.55);
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    /* 跟随导航栏毛玻璃（与 navbar.css 的下拉/面板同款）。
-       仅有可模糊对象时启用（Banner 有壁纸 / 全屏透明模式），
-       data-wallpaper-mode="none" 时无壁纸可模糊，落回上面的不透明卡片。 */
+    /* 移动端抽屉处于黑色全屏遮罩之上：
+       底色必须采用高不透明度卡片底色（跟随主题 var(--card-bg)），
+       避免半透明（如原先的 0.55）直接透出底层黑色遮罩导致菜单栏整体发灰变暗；
+       同时保留毛玻璃模糊滤镜与高光边框，兼顾通透层次感与纯净明亮度。 */
     html:not([data-wallpaper-mode="none"])[data-has-wallpaper] .mobile-menu-drawer,
     html:not([data-wallpaper-mode="none"]) body.wallpaper-transparent .mobile-menu-drawer {
-        background: rgba(255, 255, 255, 0.55) !important;
+        background: color-mix(in srgb, var(--card-bg) 95%, transparent) !important;
+        -webkit-backdrop-filter: blur(var(--navbar-panel-blur, 20px)) saturate(1.5) !important;
         backdrop-filter: blur(var(--navbar-panel-blur, 20px)) saturate(1.5) !important;
-        box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
-        border: 1px solid rgba(0, 0, 0, 0.06) !important;
+        box-shadow: -8px 0 32px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+        border: none !important;
+        border-left: 1px solid rgba(0, 0, 0, 0.08) !important;
     }
     :root.dark:not([data-wallpaper-mode="none"])[data-has-wallpaper] .mobile-menu-drawer,
     :root.dark:not([data-wallpaper-mode="none"]) body.wallpaper-transparent .mobile-menu-drawer {
-        background: rgba(23, 23, 23, 0.6) !important;
+        background: color-mix(in srgb, var(--card-bg) 95%, transparent) !important;
+        -webkit-backdrop-filter: blur(var(--navbar-panel-blur, 20px)) saturate(1.5) !important;
         backdrop-filter: blur(var(--navbar-panel-blur, 20px)) saturate(1.5) !important;
-        box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        box-shadow: -8px 0 32px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+        border: none !important;
+        border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
     #nav-menu-panel:not(.float-panel-closed) .mobile-menu-drawer {
         transform: translateX(0);
