@@ -121,14 +121,15 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
         pointer-events: none;
     }
 
-    /* ---- 遮罩（scrim）：fixed 锚定视口，铺满整屏 ---- */
+    /* ---- 遮罩（scrim）：fixed 锚定视口，通过 clip-path 动态避开抽屉，避免遮罩透黑导致毛玻璃发灰变暗 ---- */
     .mobile-menu-scrim {
         position: fixed;
         inset: 0;
         background: rgba(0, 0, 0, 0.5);
         opacity: 0;
         pointer-events: none;
-        transition: opacity 0.28s var(--ease-standard);
+        clip-path: inset(0 0 0 0);
+        transition: opacity 0.28s var(--ease-standard), clip-path 0.3s var(--ease-decelerate);
     }
     :root.dark .mobile-menu-scrim {
         background: rgba(0, 0, 0, 0.62);
@@ -136,6 +137,7 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
     #nav-menu-panel:not(.float-panel-closed) .mobile-menu-scrim {
         opacity: 1;
         pointer-events: auto;
+        clip-path: inset(0 min(70vw, 340px) 0 0);
     }
 
     /* ---- 抽屉面板：fixed 锚定视口占满整高 ---- */
@@ -168,13 +170,12 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
         border-left: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    /* 移动端抽屉处于黑色全屏遮罩之上：
-       底色必须采用高不透明度卡片底色（跟随主题 var(--card-bg)），
-       避免半透明（如原先的 0.55）直接透出底层黑色遮罩导致菜单栏整体发灰变暗；
-       同时保留毛玻璃模糊滤镜与高光边框，兼顾通透层次感与纯净明亮度。 */
+    /* 移动端毛玻璃抽屉（跟随导航栏毛玻璃与 navbar.css 同款）：
+       底层黑色遮罩已通过 clip-path 避开抽屉区域，抽屉直接对底层壁纸进行高斯模糊，
+       完美保留原本 0.55/0.6 的毛玻璃半透明透视质感，同时彻底解决底层遮罩透黑发灰的 Bug。 */
     html:not([data-wallpaper-mode="none"])[data-has-wallpaper] .mobile-menu-drawer,
     html:not([data-wallpaper-mode="none"]) body.wallpaper-transparent .mobile-menu-drawer {
-        background: color-mix(in srgb, var(--card-bg) 95%, transparent) !important;
+        background: rgba(255, 255, 255, 0.55) !important;
         -webkit-backdrop-filter: blur(var(--navbar-panel-blur, 20px)) saturate(1.5) !important;
         backdrop-filter: blur(var(--navbar-panel-blur, 20px)) saturate(1.5) !important;
         box-shadow: -8px 0 32px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
@@ -183,7 +184,7 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
     }
     :root.dark:not([data-wallpaper-mode="none"])[data-has-wallpaper] .mobile-menu-drawer,
     :root.dark:not([data-wallpaper-mode="none"]) body.wallpaper-transparent .mobile-menu-drawer {
-        background: color-mix(in srgb, var(--card-bg) 95%, transparent) !important;
+        background: rgba(23, 23, 23, 0.6) !important;
         -webkit-backdrop-filter: blur(var(--navbar-panel-blur, 20px)) saturate(1.5) !important;
         backdrop-filter: blur(var(--navbar-panel-blur, 20px)) saturate(1.5) !important;
         box-shadow: -8px 0 32px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
