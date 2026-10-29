@@ -11,10 +11,10 @@ interface Props {
 const processedLinks = Astro.props.links;
 const navTitle = siteConfig.navbar.title || siteConfig.title;
 ---
-<div id="nav-menu-panel" class:list={["float-panel-closed fixed inset-0 z-1100"]} data-floating-panel data-floating-panel-trigger="nav-menu-switch" data-floating-panel-scroll-lock inert aria-hidden="true">
-    <!-- 先绘制毛玻璃，再绘制遮罩，避免 backdrop-filter 采样到黑色遮罩。 -->
+<div id="nav-menu-panel" class:list={["float-panel-closed absolute inset-x-0 z-1100"]} data-floating-panel data-floating-panel-trigger="nav-menu-switch" data-floating-panel-scroll-lock data-floating-panel-close-delay="300" inert aria-hidden="true">
+    <!-- 一个滑动容器保证内容、毛玻璃和遮罩边缘处于同一合成坐标系。 -->
+    <div class="mobile-menu-motion">
     <div class="mobile-menu-glass" aria-hidden="true"></div>
-    <!-- 遮罩（scrim）：点击关闭 -->
     <div class="mobile-menu-scrim" aria-hidden="true"></div>
     <!-- 抽屉：MD3 侧边导航，右侧滑入，占满整高，内部滚动 -->
     <aside class="mobile-menu-drawer" role="dialog" aria-modal="true" aria-label="导航菜单">
@@ -85,6 +85,7 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
             ))}
         </nav>
     </aside>
+    </div>
 </div>
 
 <style>
@@ -106,8 +107,13 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
 
     /* MD3 抽屉：面板改成透明全屏定位层，动画放在「遮罩/抽屉」子层上 */
     #nav-menu-panel {
-        top: 0;
-        bottom: 0;
+        position: absolute;
+        top: var(--mobile-menu-document-top, 0px);
+        bottom: auto;
+        height: max(100lvh, var(--mobile-menu-paint-height, 100vh));
+        overflow: clip; /* 裁掉滑出部分，避免增加页面横向滚动范围 */
+        overscroll-behavior: none;
+        --mobile-menu-width: min(70vw, 340px);
         border-radius: 0; /* 覆盖 .float-panel 的圆角，避免遮罩四角被裁剪 */
         background: transparent !important;
         border: none !important;
@@ -127,25 +133,46 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
         transition-delay: 0.3s; /* 等子层滑出后隐藏，清除屏幕边缘的残留阴影 */
     }
 
-    /* 三层合成：页面 -> 毛玻璃 -> 圆角反向遮罩 -> 菜单内容。
-       不给共同祖先添加 opacity/filter/isolation，保持毛玻璃可以采样页面。 */
-    .mobile-menu-glass,
-    .mobile-menu-scrim::before,
-    .mobile-menu-drawer {
-        position: fixed;
+    /* Safari 浮动底栏后方使用与抽屉相同的毛玻璃。
+       z-index: 0 先采样原页面；滑动容器只占可见高度，不把黑色遮罩铺到这里。 */
+    #nav-menu-panel::after {
+        content: "";
+        position: absolute;
+        top: var(--mobile-menu-visible-height, 100dvh);
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 0;
+        background: var(--card-bg);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.28s var(--ease-standard);
+    }
+    #nav-menu-panel:not(.float-panel-closed)::after {
+        opacity: 1;
+    }
+
+    /* 不给共同祖先 opacity/filter，毛玻璃继续采样真实页面。 */
+    .mobile-menu-motion {
+        position: absolute;
         top: 0;
         right: 0;
-        bottom: 0;
-        width: min(70vw, 340px);
-        box-sizing: border-box;
-        border-radius: var(--radius-large) 0 0 var(--radius-large);
+        width: var(--mobile-menu-width);
+        height: var(--mobile-menu-visible-height, 100dvh);
+        z-index: 1;
         transform: translateX(100%);
         transition: transform 0.3s var(--ease-decelerate);
+        will-change: transform;
     }
-    #nav-menu-panel:not(.float-panel-closed) .mobile-menu-glass,
-    #nav-menu-panel:not(.float-panel-closed) .mobile-menu-scrim::before,
-    #nav-menu-panel:not(.float-panel-closed) .mobile-menu-drawer {
+    #nav-menu-panel:not(.float-panel-closed) .mobile-menu-motion {
         transform: translateX(0);
+    }
+    .mobile-menu-glass,
+    .mobile-menu-drawer {
+        position: absolute;
+        inset: 0;
+        box-sizing: border-box;
+        border-radius: var(--radius-large) 0 0 var(--radius-large);
     }
 
     /* ---- 毛玻璃：位于遮罩之前，连圆角边缘的模糊采样也不会被遮罩污染 ---- */
@@ -159,41 +186,58 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
         box-shadow: -8px 0 24px rgba(0, 0, 0, 0.45);
     }
     html:not([data-wallpaper-mode="none"])[data-has-wallpaper] .mobile-menu-glass,
-    html:not([data-wallpaper-mode="none"]) body.wallpaper-transparent .mobile-menu-glass {
+    html:not([data-wallpaper-mode="none"]) body.wallpaper-transparent .mobile-menu-glass,
+    html:not([data-wallpaper-mode="none"])[data-has-wallpaper] #nav-menu-panel::after,
+    html:not([data-wallpaper-mode="none"]) body.wallpaper-transparent #nav-menu-panel::after {
         background: rgba(255, 255, 255, 0.55);
         -webkit-backdrop-filter: blur(var(--navbar-panel-blur, 20px)) saturate(1.5);
         backdrop-filter: blur(var(--navbar-panel-blur, 20px)) saturate(1.5);
     }
     :root.dark:not([data-wallpaper-mode="none"])[data-has-wallpaper] .mobile-menu-glass,
-    :root.dark:not([data-wallpaper-mode="none"]) body.wallpaper-transparent .mobile-menu-glass {
+    :root.dark:not([data-wallpaper-mode="none"]) body.wallpaper-transparent .mobile-menu-glass,
+    :root.dark:not([data-wallpaper-mode="none"])[data-has-wallpaper] #nav-menu-panel::after,
+    :root.dark:not([data-wallpaper-mode="none"]) body.wallpaper-transparent #nav-menu-panel::after {
         background: rgba(23, 23, 23, 0.6);
     }
 
-    /* ---- 遮罩：全屏容器只淡入淡出；开口与抽屉共享每一帧的几何形状 ---- */
+    /* 左侧矩形和两个圆角补集组成遮罩，无 SVG 蒙版、无巨大阴影。
+       矩形向左延伸一屏：整个动画中每个抽屉外的像素均被覆盖，只改变透明度。 */
     .mobile-menu-scrim {
-        position: fixed;
-        inset: 0;
+        --scrim-color: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 100%;
+        width: 100vw;
         z-index: 1;
-        overflow: hidden;
+        background: var(--scrim-color);
         opacity: 0;
         pointer-events: none;
+        touch-action: none;
         transition: opacity 0.28s var(--ease-standard);
     }
     #nav-menu-panel:not(.float-panel-closed) .mobile-menu-scrim {
         opacity: 1;
         pointer-events: auto;
     }
-    /* 零模糊的外扩阴影是圆角开口的补集。开口跟随抽屉，而外部每个像素
-       始终是同一种黑色，只受全屏容器 opacity 控制，不存在横向移动的渐变墙。
-       200vmax 足以在开口完全移出视口时仍覆盖整个视口。
-       遮罩在毛玻璃上方，因此既不参与模糊采样，也不会提前挖空最终落位区域。 */
-    .mobile-menu-scrim::before {
-        content: "";
-        box-shadow: 0 0 0 200vmax rgba(0, 0, 0, 0.5);
-        pointer-events: none;
+    :root.dark .mobile-menu-scrim {
+        --scrim-color: rgba(0, 0, 0, 0.62);
     }
-    :root.dark .mobile-menu-scrim::before {
-        box-shadow: 0 0 0 200vmax rgba(0, 0, 0, 0.62);
+    .mobile-menu-scrim::before,
+    .mobile-menu-scrim::after {
+        content: "";
+        position: absolute;
+        left: 100%;
+        width: var(--radius-large);
+        height: var(--radius-large);
+    }
+    .mobile-menu-scrim::before {
+        top: 0;
+        background: radial-gradient(circle at 100% 100%, transparent var(--radius-large), var(--scrim-color) var(--radius-large));
+    }
+    .mobile-menu-scrim::after {
+        bottom: 0;
+        background: radial-gradient(circle at 100% 0%, transparent var(--radius-large), var(--scrim-color) var(--radius-large));
     }
 
     /* ---- 内容：透明独立层，不重复绘制底色或 backdrop-filter ---- */
@@ -204,6 +248,8 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
         --drawer-selected-bg: color-mix(in oklch, var(--primary) 14%, transparent);
 
         z-index: 2;
+        height: 100%;
+        height: var(--mobile-menu-visible-height, 100dvh); /* 菜单内容避开浏览器控件，背景继续向下绘制 */
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -218,10 +264,9 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
         #nav-menu-panel.float-panel-closed {
             transition-delay: 0s;
         }
-        .mobile-menu-glass,
-        .mobile-menu-scrim,
-        .mobile-menu-scrim::before,
-        .mobile-menu-drawer {
+        #nav-menu-panel::after,
+        .mobile-menu-motion,
+        .mobile-menu-scrim {
             transition: none;
         }
     }
@@ -232,7 +277,7 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
         align-items: center;
         justify-content: space-between;
         gap: 16px;
-        padding: 20px 16px 12px 24px;
+        padding: max(20px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) 12px 24px;
         flex-shrink: 0;
     }
     .mobile-menu-title {
@@ -265,7 +310,7 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
         flex: 1;
         overflow-y: auto;
         overscroll-behavior: contain;
-        padding: 8px 12px 16px;
+        padding: 8px max(12px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) 12px;
         display: flex;
         flex-direction: column;
         gap: 6px;

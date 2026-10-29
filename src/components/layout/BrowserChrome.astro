@@ -1,0 +1,41 @@
+<!-- 仅同步浏览器主题信息，不在网页内部绘制状态栏或渐变覆盖层。 -->
+<script>
+    // theme-color 接受的是单一颜色；渐变由上面的网页边缘层负责。
+    // 取实际 page-bg 并转换成 sRGB，避免旧浏览器不识别 meta 内的 OKLCH。
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 1;
+    const context = canvas.getContext("2d", { willReadFrequently: true });
+    let updatePending = false;
+
+    function syncBrowserTheme(): void {
+        updatePending = false;
+        const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+        if (!meta || !context || !document.body) return;
+        const probe = document.createElement("span");
+        probe.style.cssText = "position:absolute;width:0;height:0;visibility:hidden;background-color:var(--page-bg)";
+        document.body.append(probe);
+        const color = getComputedStyle(probe).backgroundColor;
+        probe.remove();
+        context.clearRect(0, 0, 1, 1);
+        context.fillStyle = color;
+        context.fillRect(0, 0, 1, 1);
+        const [red, green, blue] = context.getImageData(0, 0, 1, 1).data;
+        const hex = `#${[red, green, blue].map((value) => value.toString(16).padStart(2, "0")).join("")}`;
+        if (meta.content !== hex) meta.content = hex;
+        const scheme = document.documentElement.classList.contains("dark") ? "dark" : "light";
+        if (document.documentElement.style.colorScheme !== scheme) document.documentElement.style.colorScheme = scheme;
+    }
+
+    function scheduleBrowserTheme(): void {
+        if (updatePending) return;
+        updatePending = true;
+        requestAnimationFrame(syncBrowserTheme);
+    }
+
+    const observer = new MutationObserver(scheduleBrowserTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class", "style"] });
+    observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+    document.addEventListener("astro:page-load", scheduleBrowserTheme);
+    document.addEventListener("swup:contentReplaced", scheduleBrowserTheme);
+    syncBrowserTheme();
+</script>

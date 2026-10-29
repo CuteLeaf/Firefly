@@ -1,4 +1,5 @@
 ---
+import BrowserChrome from "@/components/layout/BrowserChrome.astro";
 import GoogleAnalytics from "@components/analytics/GoogleAnalytics.astro";
 import La51Analytics from "@components/analytics/La51Analytics.astro";
 import MicrosoftClarity from "@components/analytics/MicrosoftClarity.astro";
@@ -251,9 +252,9 @@ const ogImageAlt = propsOgImageAlt ?? pageTitle;
       )
     }
 
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content={`hsl(${siteConfig.themeColor.hue} 90% 60%)`} />
+    <meta name="theme-color" content={`hsl(${siteConfig.themeColor.hue} 12% 96%)`} />
     {
       favicons.map((favicon) => (
         <link
@@ -400,6 +401,9 @@ const ogImageAlt = propsOgImageAlt ?? pageTitle;
       // Load the hue from local storage
       const hue = localStorage.getItem("hue") || configHue;
       document.documentElement.style.setProperty("--hue", hue);
+      // 首帧先匹配深浅背景，BrowserChrome 随后同步实际计算后的主题底色。
+      const browserThemeMeta = document.querySelector('meta[name="theme-color"]');
+      if (browserThemeMeta) browserThemeMeta.setAttribute("content", `hsl(${hue} 12% ${document.documentElement.classList.contains("dark") ? "10%" : "96%"})`);
 
       // 设置卡片透明度（全屏透明模式下使用），优先使用用户自定义值
       const storedCardOpacity = localStorage.getItem("overlayCardOpacity");
@@ -517,6 +521,7 @@ const ogImageAlt = propsOgImageAlt ?? pageTitle;
       },
     ]}
   >
+    <BrowserChrome />
     <!-- 首帧前按运行时壁纸模式翻转卡片透明类（布局已由 data-wallpaper-mode 属性规则接管） -->
     <script is:inline>
       (function () {

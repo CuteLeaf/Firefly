@@ -6,6 +6,7 @@ export const FLOATING_PANEL_CLOSE_EVENT = "floating-panel:close";
 const panelObservers = new Map<HTMLElement, MutationObserver>();
 const panelOpenStates = new WeakMap<HTMLElement, boolean>();
 let escapeListenerAttached = false;
+const scrollUnlockCleanup = new WeakMap<HTMLElement, () => void>();
 
 function getPanelTriggers(panel: HTMLElement): HTMLElement[] {
 	const triggerIds = panel.dataset.floatingPanelTrigger
@@ -28,9 +29,24 @@ function isVisible(element: HTMLElement): boolean {
 	);
 }
 
+// 文档定位绕过 Safari 对 fixed 图层在浮动工具栏上方的裁剪。
+// 只在打开及视口尺寸变化时测量，不参与每帧动画。
+function updateMobileMenuBounds(panel: HTMLElement): void {
+	if (panel.id !== "nav-menu-panel") return;
+	const viewport = window.visualViewport;
+	const visibleHeight = viewport?.height ?? window.innerHeight;
+	const paintHeight = window.matchMedia("(pointer: coarse)").matches
+		? Math.max(window.screen.height, window.innerHeight, visibleHeight)
+		: Math.max(window.innerHeight, visibleHeight);
+	panel.style.setProperty("--mobile-menu-document-top", `${window.scrollY + (viewport?.offsetTop ?? 0)}px`);
+	panel.style.setProperty("--mobile-menu-paint-height", `${paintHeight}px`);
+	panel.style.setProperty("--mobile-menu-visible-height", `${visibleHeight}px`);
+}
+
 function syncFloatingPanelState(panel: HTMLElement): void {
 	const isOpen = !panel.classList.contains(CLOSED_CLASS);
 	const wasOpen = panelOpenStates.get(panel);
+	if (isOpen && wasOpen !== true) updateMobileMenuBounds(panel);
 
 	panel.inert = !isOpen;
 	panel.setAttribute("aria-hidden", String(!isOpen));
@@ -50,7 +66,38 @@ function syncFloatingPanelState(panel: HTMLElement): void {
 	// 带 data-floating-panel-scroll-lock 的面板打开时锁定背景滚动（app drawer 行为）；
 	// 该函数在初始化/class 变化/Swup 重扫时都会跑，各类关闭路径都会同步滚动锁。
 	if (panel.hasAttribute("data-floating-panel-scroll-lock")) {
-		document.body.classList.toggle("menu-open", isOpen);
+		const cancelUnlock = scrollUnlockCleanup.get(panel);
+		if (isOpen) {
+			cancelUnlock?.();
+			scrollUnlockCleanup.delete(panel);
+			document.body.classList.add("menu-open");
+		} else if (wasOpen === true) {
+			// 保持关闭动画期间视口稳定，避免 iOS 滚动解锁触发工具栏/布局跳动。
+			const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+				? 0
+				: Number(panel.dataset.floatingPanelCloseDelay) || 0;
+			const unlock = () => {
+				scrollUnlockCleanup.get(panel)?.();
+				scrollUnlockCleanup.delete(panel);
+				const anotherOpen = document.querySelector(
+					"[data-floating-panel-scroll-lock]:not(.float-panel-closed)",
+				);
+				if (!anotherOpen) document.body.classList.remove("menu-open");
+				panel.style.removeProperty("--mobile-menu-document-top");
+			};
+			if (delay > 0) {
+				// 以真正绘制结束为准；计时器仅在 transitionend 未触发时兜底。
+				const onEnd = (event: TransitionEvent) => {
+					if (event.target === panel && event.propertyName === "visibility") unlock();
+				};
+				const timer = setTimeout(unlock, delay + 100);
+				panel.addEventListener("transitionend", onEnd);
+				scrollUnlockCleanup.set(panel, () => {
+					clearTimeout(timer);
+					panel.removeEventListener("transitionend", onEnd);
+				});
+			} else unlock();
+		}
 	}
 }
 
@@ -128,6 +175,12 @@ export function initializeFloatingPanels(root: ParentNode = document): void {
 
 	if (!escapeListenerAttached) {
 		document.addEventListener("keydown", handleEscape);
+		const updateOpenMenu = () => {
+			const panel = document.getElementById("nav-menu-panel");
+			if (panel && !panel.classList.contains(CLOSED_CLASS)) updateMobileMenuBounds(panel);
+		};
+		window.addEventListener("resize", updateOpenMenu, { passive: true });
+		window.visualViewport?.addEventListener("resize", updateOpenMenu, { passive: true });
 		escapeListenerAttached = true;
 	}
 }
