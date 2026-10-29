@@ -30,7 +30,7 @@ const widgetId =
     </div>
 
     <!-- Info Section -->
-    <div class="flex-1 min-w-0 flex flex-col overflow-hidden">
+    <div class="flex-1 min-w-0 flex flex-col">
         <div class="flex items-center justify-between overflow-hidden gap-2">
             <div class="flex-1 min-w-0 overflow-hidden relative">
                 <h3 class="music-title font-bold text-base text-neutral-800 dark:text-neutral-100 leading-tight truncate">
@@ -65,8 +65,10 @@ const widgetId =
                     <Icon name="material-symbols:volume-off-rounded" class="icon-vol-mute text-lg hidden" aria-hidden="true" />
                 </button>
                 <div class="w-16 transition-all duration-300 ease-out flex items-center">
-                    <div class="vol-container h-1 w-16 bg-neutral-300/50 dark:bg-neutral-500/40 rounded-full cursor-pointer relative ml-1" role="slider" aria-label={i18n(I18nKey.musicVolume)} aria-valuemin="0" aria-valuemax="100" aria-valuenow="70">
-                        <div class="vol-bar absolute left-0 top-0 h-full bg-(--primary) rounded-full w-[70%]"></div>
+                    <div class="vol-container h-1 w-full bg-neutral-300/50 dark:bg-neutral-500/40 rounded-full cursor-pointer relative touch-none before:absolute before:-top-2 before:-bottom-2 before:left-0 before:right-0 group" role="slider" aria-label={i18n(I18nKey.musicVolume)} aria-valuemin="0" aria-valuemax="100" aria-valuenow="70">
+                        <div class="vol-bar pointer-events-none absolute left-0 top-0 h-full bg-(--primary) rounded-full w-[70%] transition-[width] duration-100"></div>
+                        <!-- Hover Thumb -->
+                        <div class="vol-thumb pointer-events-none absolute top-1/2 -mt-1.5 -ml-1.5 w-3 h-3 bg-(--primary) ring-2 ring-white dark:ring-neutral-800 rounded-full shadow-sm scale-0 group-hover:scale-100 transition-transform duration-200 left-[70%]"></div>
                     </div>
                 </div>
             </div>
@@ -76,15 +78,15 @@ const widgetId =
 
 <!-- Progress Bar (Slim) -->
 <div class="px-1">
-    <div class="progress-container relative w-full h-1 bg-neutral-300/60 dark:bg-neutral-500/40 rounded-full cursor-pointer touch-none mb-2 group mt-2" role="slider" aria-label={i18n(I18nKey.musicProgress)} aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-        <div class="progress-bar absolute left-0 top-0 h-full bg-(--primary) rounded-full w-0 transition-[width] duration-100"></div>
+    <div class="progress-container relative w-full h-1 bg-neutral-300/60 dark:bg-neutral-500/40 rounded-full cursor-pointer touch-none mb-2 group mt-2 before:absolute before:-top-2 before:-bottom-2 before:left-0 before:right-0" role="slider" aria-label={i18n(I18nKey.musicProgress)} aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="progress-bar pointer-events-none absolute left-0 top-0 h-full bg-(--primary) rounded-full w-0 transition-[width] duration-100"></div>
         <!-- Hover Thumb -->
-        <div class="progress-thumb absolute top-1/2 -mt-1.5 -ml-1.5 w-3 h-3 bg-(--primary) ring-2 ring-white dark:ring-neutral-800 rounded-full shadow-sm scale-0 group-hover:scale-100 transition-transform duration-200"></div>
+        <div class="progress-thumb pointer-events-none absolute top-1/2 -mt-1.5 -ml-1.5 w-3 h-3 bg-(--primary) ring-2 ring-white dark:ring-neutral-800 rounded-full shadow-sm scale-0 group-hover:scale-100 transition-transform duration-200"></div>
     </div>
 </div>
 
 <!-- Controls Row -->
-<div class="flex items-center justify-between px-1 select-none">
+<div class="flex items-center justify-between px-1 py-1.5 select-none">
     <!-- Repeat Mode -->
     <button class="btn-repeat text-neutral-300 dark:text-neutral-600 hover:text-(--primary) transition-colors p-2 active:scale-95" title={i18n(I18nKey.musicPlayMode)} aria-label={i18n(I18nKey.musicPlayMode)}>
         <Icon name="material-symbols:repeat-rounded" class="icon-repeat text-xl" aria-hidden="true" />

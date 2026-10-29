@@ -1,5 +1,6 @@
 ---
 import { musicPlayerConfig } from "@/config/musicConfig";
+import { siteConfig } from "@/config/siteConfig";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { url } from "@/utils/url-utils";
@@ -29,6 +30,7 @@ const localPlaylist =
 		: [];
 
 const managerConfigStr = JSON.stringify({
+	siteTitle: siteConfig.title,
 	mode: config.mode,
 	meting: config.meting,
 	localPlaylist: localPlaylist,
@@ -130,6 +132,141 @@ const managerConfigStr = JSON.stringify({
         window.dispatchEvent(new CustomEvent(name, { detail: detail || {} }));
     }
 
+    // ── Media Session & Play State helpers ───────────────────
+    function getAbsoluteUrl(url) {
+        if (!url) return "";
+        try {
+            return new URL(url, window.location.href).href;
+        } catch (e) {
+            return url;
+        }
+    }
+
+    function updateMediaSessionPlaybackState(playbackState) {
+        if ("mediaSession" in navigator) {
+            try {
+                navigator.mediaSession.playbackState = playbackState;
+            } catch (e) {
+                // Ignore
+            }
+        }
+    }
+
+    function updateMediaSessionMetadata(track) {
+        if (!("mediaSession" in navigator) || !window.MediaMetadata) return;
+        if (!track) {
+            navigator.mediaSession.metadata = null;
+            return;
+        }
+        var artwork = [];
+        if (track.pic) {
+            var picUrl = getAbsoluteUrl(track.pic);
+            artwork = [
+                { src: picUrl, sizes: "96x96" },
+                { src: picUrl, sizes: "128x128" },
+                { src: picUrl, sizes: "192x192" },
+                { src: picUrl, sizes: "256x256" },
+                { src: picUrl, sizes: "384x384" },
+                { src: picUrl, sizes: "512x512" }
+            ];
+        }
+        try {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: track.name || "",
+                artist: track.artist || "",
+                album: config.siteTitle || "Firefly Music",
+                artwork: artwork
+            });
+        } catch (e) {
+            console.warn("Failed to set MediaMetadata:", e);
+        }
+    }
+
+    var lastPositionUpdate = 0;
+    function updateMediaSessionPositionState(force) {
+        if (!("mediaSession" in navigator) || !("setPositionState" in navigator.mediaSession)) return;
+        var now = Date.now();
+        if (!force && now - lastPositionUpdate < 1000) return;
+        lastPositionUpdate = now;
+        if (audio.duration && !isNaN(audio.duration) && isFinite(audio.duration) && audio.duration > 0) {
+            try {
+                navigator.mediaSession.setPositionState({
+                    duration: audio.duration,
+                    playbackRate: audio.playbackRate || 1,
+                    position: Math.min(Math.max(0, audio.currentTime), audio.duration)
+                });
+            } catch (e) {
+                // Ignore
+            }
+        }
+    }
+
+    function emitPlayState(isPlaying, force) {
+        if (!force && state.isPlaying === isPlaying) return;
+        state.isPlaying = isPlaying;
+        if (isPlaying) {
+            state.error = null;
+            updateMediaSessionPlaybackState("playing");
+        } else {
+            updateMediaSessionPlaybackState("paused");
+        }
+        updateMediaSessionPositionState(true);
+        emit("fm:play-state", { isPlaying: isPlaying });
+    }
+
+    function setupMediaSession() {
+        if (!("mediaSession" in navigator)) return;
+        if (!state.playlist || state.playlist.length === 0) return;
+
+        var actions = [
+            ["play", function () {
+                if (!state.playlist || state.playlist.length === 0) return;
+                if (audio.paused) {
+                    audio.play().catch(function (e) {
+                        if (e.name === "AbortError") return;
+                        console.warn("Playback failed:", e);
+                    });
+                }
+            }],
+            ["pause", function () {
+                if (!audio.paused) {
+                    audio.pause();
+                }
+            }],
+            ["previoustrack", function () {
+                playPrev();
+            }],
+            ["nexttrack", function () {
+                playNext(false);
+            }],
+            ["seekto", function (details) {
+                if (details && details.seekTime !== undefined && details.seekTime !== null && !isNaN(details.seekTime)) {
+                    seekToTime(details.seekTime);
+                }
+            }],
+            ["seekbackward", function (details) {
+                var offset = (details && details.seekOffset) || 10;
+                seekToTime(audio.currentTime - offset);
+            }],
+            ["seekforward", function (details) {
+                var offset = (details && details.seekOffset) || 10;
+                seekToTime(audio.currentTime + offset);
+            }],
+            ["stop", function () {
+                audio.pause();
+                audio.currentTime = 0;
+            }]
+        ];
+
+        actions.forEach(function (pair) {
+            try {
+                navigator.mediaSession.setActionHandler(pair[0], pair[1]);
+            } catch (e) {
+                // Ignore unsupported actions in current browser
+            }
+        });
+    }
+
     // ── Meting fetch ─────────────────────────────────────────
     async function fetchMetingData() {
         if (!config.meting) return;
@@ -214,17 +351,15 @@ const managerConfigStr = JSON.stringify({
         if (autoPlay) {
             audio.play().then(function () {
                 if (ver !== loadVersion) return; // stale, discard
-                state.isPlaying = true;
-                state.error = null;
-                emit('fm:play-state', { isPlaying: true });
+                emitPlayState(true, true);
             }).catch(function (e) {
                 if (ver !== loadVersion) return; // stale, discard
                 if (e.name === 'AbortError') return; // interrupted by new load
                 console.warn('Autoplay blocked:', e);
+                emitPlayState(false, true);
             });
         } else {
-            state.isPlaying = false;
-            emit('fm:play-state', { isPlaying: false });
+            emitPlayState(false, true);
         }
     }
 
@@ -259,6 +394,8 @@ const managerConfigStr = JSON.stringify({
 
         loadLyrics(track);
 
+        updateMediaSessionMetadata(track);
+
         emit('fm:track', { index: index, track: track, autoPlay: !!autoPlay });
 
         tryPlayCurrentTrackUrl(autoPlay, ver);
@@ -266,25 +403,28 @@ const managerConfigStr = JSON.stringify({
 
     // ── Playback controls ────────────────────────────────────
     function togglePlay() {
+        if (!state.playlist || state.playlist.length === 0) return;
         if (audio.paused) {
             audio.play().then(function () {
-                state.isPlaying = true;
-                emit('fm:play-state', { isPlaying: true });
+                emitPlayState(true);
             }).catch(function (e) {
                 if (e.name === 'AbortError') return;
                 console.warn('Playback failed:', e);
             });
         } else {
             audio.pause();
-            state.isPlaying = false;
-            emit('fm:play-state', { isPlaying: false });
+            emitPlayState(false);
         }
     }
 
     function playNext(auto) {
+        if (state.playlist.length === 0) return;
         if (state.playMode === 1 && auto) {
             audio.currentTime = 0;
-            audio.play();
+            audio.play().catch(function (e) {
+                if (e.name === 'AbortError') return;
+                console.warn('Playback failed:', e);
+            });
             return;
         }
         var nextIndex;
@@ -297,6 +437,7 @@ const managerConfigStr = JSON.stringify({
     }
 
     function playPrev() {
+        if (state.playlist.length === 0) return;
         var prevIndex;
         if (state.playMode === 2) {
             prevIndex = Math.floor(Math.random() * state.playlist.length);
@@ -334,11 +475,13 @@ const managerConfigStr = JSON.stringify({
     function seek(percent) {
         if (!audio.duration) return;
         audio.currentTime = Math.max(0, Math.min(1, percent)) * audio.duration;
+        updateMediaSessionPositionState(true);
     }
 
     function seekToTime(time) {
         if (!audio.duration) return;
         audio.currentTime = Math.max(0, Math.min(time, audio.duration));
+        updateMediaSessionPositionState(true);
     }
 
     function playTrackByIndex(index) {
@@ -350,6 +493,28 @@ const managerConfigStr = JSON.stringify({
     }
 
     // ── Audio events → broadcast ─────────────────────────────
+    audio.addEventListener('play', function () {
+        emitPlayState(true, true);
+    });
+
+    audio.addEventListener('pause', function () {
+        emitPlayState(false, true);
+    });
+
+    audio.addEventListener('volumechange', function () {
+        state.volume = audio.volume;
+        state.isMuted = audio.muted;
+        emit('fm:volume', { volume: state.volume, isMuted: state.isMuted });
+    });
+
+    audio.addEventListener('loadedmetadata', function () {
+        updateMediaSessionPositionState(true);
+    });
+
+    audio.addEventListener('seeked', function () {
+        updateMediaSessionPositionState(true);
+    });
+
     audio.addEventListener('timeupdate', function () {
         if (isNaN(audio.duration)) return;
         var ct = audio.currentTime;
@@ -363,6 +528,8 @@ const managerConfigStr = JSON.stringify({
             currentTimeStr: formatTime(ct),
             durationStr: formatTime(dur)
         });
+
+        updateMediaSessionPositionState(false);
 
         // Lyrics sync
         if (state.lyrics.length > 0) {
@@ -383,6 +550,7 @@ const managerConfigStr = JSON.stringify({
     });
 
     audio.addEventListener('error', function () {
+        emitPlayState(false, true);
         var ver = loadVersion;
         if (currentTrackUrlIndex < currentTrackUrls.length - 1) {
             currentTrackUrlIndex++;
@@ -432,6 +600,7 @@ const managerConfigStr = JSON.stringify({
                 });
 
                 loadTrack(startIndex, false);
+                setupMediaSession();
             } else {
                 state.initialized = true;
                 emit('fm:init', {
@@ -462,11 +631,13 @@ const managerConfigStr = JSON.stringify({
         init: init,
         getState: function () {
             var track = state.playlist[state.currentIndex] || null;
+            var isPlaying = !audio.paused;
+            state.isPlaying = isPlaying;
             return {
                 playlist: state.playlist,
                 currentIndex: state.currentIndex,
                 track: track,
-                isPlaying: state.isPlaying,
+                isPlaying: isPlaying,
                 playMode: state.playMode,
                 volume: state.volume,
                 isMuted: state.isMuted,

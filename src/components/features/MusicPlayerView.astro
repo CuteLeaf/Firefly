@@ -59,6 +59,13 @@ const viewConfigStr = JSON.stringify({
     var mgr = window.__fireflyMusic;
     if (!mgr) return;
 
+    function formatTime(seconds) {
+        if (!seconds || isNaN(seconds)) return '0:00';
+        var min = Math.floor(seconds / 60);
+        var sec = Math.floor(seconds % 60);
+        return min + ':' + (sec < 10 ? '0' : '') + sec;
+    }
+
     var initScheduled = false;
     function scheduleInit() {
         if (initScheduled) return;
@@ -84,6 +91,7 @@ const viewConfigStr = JSON.stringify({
     }
 
     function initWidget(widget) {
+        var root = widget.closest('widget-layout') || widget;
         // ── UI element refs ──────────────────────────────────────
         var ui = {
             widget: widget,
@@ -110,9 +118,10 @@ const viewConfigStr = JSON.stringify({
             iconVolMute: widget.querySelector('.icon-vol-mute'),
             volContainer: widget.querySelector('.vol-container'),
             volBar: widget.querySelector('.vol-bar'),
-            btnLrc: widget.querySelector('.btn-lrc-toggle'),
-            iconLrcOn: widget.querySelector('.icon-lrc-on'),
-            iconLrcOff: widget.querySelector('.icon-lrc-off'),
+            volThumb: widget.querySelector('.vol-thumb'),
+            btnLrc: root.querySelector('.btn-lrc-toggle'),
+            iconLrcOn: root.querySelector('.icon-lrc-on'),
+            iconLrcOff: root.querySelector('.icon-lrc-off'),
             lrcDrawer: widget.querySelector('.lrc-drawer'),
             lrcContainer: widget.querySelector('.lrc-container'),
             btnDrawer: widget.querySelector('.btn-drawer-toggle'),
@@ -123,7 +132,7 @@ const viewConfigStr = JSON.stringify({
 
         // Verify critical elements
         var _critical = [ui.btnPlay, ui.btnRepeat, ui.btnMute, ui.volContainer,
-            ui.btnDrawer, ui.btnLrc, ui.lrcDrawer, ui.lrcContainer,
+            ui.btnDrawer, ui.lrcDrawer, ui.lrcContainer,
             ui.progressContainer, ui.btnNext, ui.btnPrev, ui.loading,
             ui.cover, ui.title, ui.artist, ui.playlistContainer, ui.itemTemplate];
         if (_critical.some(function(el) { return !el; })) return;
@@ -135,6 +144,9 @@ const viewConfigStr = JSON.stringify({
             isUserScrolling: false,
             scrollTimeout: null,
             currentLrcIndex: -1,
+            isDraggingProgress: false,
+            progressPointerId: null,
+            isDraggingVolume: false,
             vs: {
                 playlist: [],
                 currentIndex: -1,
@@ -213,6 +225,9 @@ const viewConfigStr = JSON.stringify({
         function updateVolumeUI(volume, isMuted) {
             var pct = isMuted ? 0 : volume * 100;
             ui.volBar.style.width = pct + '%';
+            if (ui.volThumb) {
+                ui.volThumb.style.left = pct + '%';
+            }
             ui.volContainer.setAttribute('aria-valuenow', Math.round(pct).toString());
             if (isMuted || volume === 0) {
                 ui.iconVolHigh.classList.add('hidden');
@@ -244,7 +259,8 @@ const viewConfigStr = JSON.stringify({
             ui.cover.classList.remove('animate-spin-slow');
             void ui.cover.offsetWidth;
             ui.cover.classList.add('animate-spin-slow');
-            ui.cover.style.animationPlayState = 'paused';
+            var isPlaying = mgr.getState().isPlaying;
+            ui.cover.style.animationPlayState = isPlaying ? "running" : "paused";
 
             // Reset progress
             ui.progressBar.style.width = '0%';
@@ -440,8 +456,25 @@ const viewConfigStr = JSON.stringify({
             }
             lyrics.forEach(function (line, index) {
                 var lineEl = document.createElement('div');
-                lineEl.className = 'lrc-line transition-all duration-300 text-sm text-neutral-400 py-1 cursor-pointer hover:text-(--primary)';
-                lineEl.innerText = line.text;
+                lineEl.className = 'lrc-line transition-all duration-300 text-sm text-neutral-400 py-1 cursor-pointer hover:text-(--primary) flex flex-col items-center justify-center leading-snug';
+
+                // 智能识别括号内的中文翻译（如 "人はみんな幸福を願い (人们都祈求幸福)"），拆为上下双行
+                var match = line.text.match(/^(.*?)\s*[(（](.+?)[)）]\s*$/);
+                if (match && match[1] && match[2]) {
+                    var origSpan = document.createElement('span');
+                    origSpan.className = 'lrc-orig transition-all duration-300';
+                    origSpan.innerText = match[1].trim();
+
+                    var transSpan = document.createElement('span');
+                    transSpan.className = 'lrc-trans text-xs opacity-70 font-normal mt-0.5 tracking-wide transition-all duration-300';
+                    transSpan.innerText = match[2].trim();
+
+                    lineEl.appendChild(origSpan);
+                    lineEl.appendChild(transSpan);
+                } else {
+                    lineEl.innerText = line.text;
+                }
+
                 lineEl.dataset.index = index;
                 lineEl.setAttribute('role', 'option');
                 lineEl.setAttribute('aria-label', line.text);
@@ -458,12 +491,21 @@ const viewConfigStr = JSON.stringify({
 
             var lines = ui.lrcContainer.querySelectorAll('.lrc-line');
             lines.forEach(function (line, i) {
+                var trans = line.querySelector('.lrc-trans');
                 if (i === index) {
                     line.classList.add('text-(--primary)', 'font-bold', 'text-base');
                     line.classList.remove('text-neutral-400', 'text-sm');
+                    if (trans) {
+                        trans.classList.remove('opacity-70');
+                        trans.classList.add('opacity-90');
+                    }
                 } else {
                     line.classList.remove('text-(--primary)', 'font-bold', 'text-base');
                     line.classList.add('text-neutral-400', 'text-sm');
+                    if (trans) {
+                        trans.classList.remove('opacity-90');
+                        trans.classList.add('opacity-70');
+                    }
                 }
             });
 
@@ -542,8 +584,25 @@ const viewConfigStr = JSON.stringify({
 
         on('fm:track', function (e) {
             var d = e.detail;
+            if (local.isDraggingProgress) {
+                local.isDraggingProgress = false;
+                try {
+                    if (local.progressPointerId !== null) {
+                        ui.progressContainer.releasePointerCapture(local.progressPointerId);
+                    }
+                } catch (err) {}
+                local.progressPointerId = null;
+                ui.progressBar.style.transition = '';
+                ui.progressThumb.style.transition = '';
+                if (ui.progressThumb) {
+                    ui.progressThumb.classList.remove('scale-100');
+                }
+            }
             updateTrackUI(d.track);
             updatePlaylistActiveUI(d.index);
+            if (d.autoPlay || mgr.getState().isPlaying) {
+                updatePlayStateUI(true);
+            }
         });
 
         on('fm:play-state', function (e) {
@@ -552,10 +611,12 @@ const viewConfigStr = JSON.stringify({
 
         on('fm:time', function (e) {
             var d = e.detail;
-            ui.progressBar.style.width = d.progress + '%';
-            ui.progressThumb.style.left = d.progress + '%';
-            ui.progressContainer.setAttribute('aria-valuenow', Math.round(d.progress).toString());
-            ui.currentTime.innerText = d.currentTimeStr;
+            if (!local.isDraggingProgress) {
+                ui.progressBar.style.width = d.progress + '%';
+                ui.progressThumb.style.left = d.progress + '%';
+                ui.progressContainer.setAttribute('aria-valuenow', Math.round(d.progress).toString());
+                ui.currentTime.innerText = d.currentTimeStr;
+            }
             ui.totalTime.innerText = d.durationStr;
         });
 
@@ -579,58 +640,232 @@ const viewConfigStr = JSON.stringify({
             ui.title.innerText = e.detail.message || cfg.i18n.error;
         });
 
-        // ── Button click delegates ───────────────────────────────
-        ui.btnPlay.addEventListener('click', function () { mgr.togglePlay(); });
-        ui.btnNext.addEventListener('click', function () { mgr.playNext(); });
-        ui.btnPrev.addEventListener('click', function () { mgr.playPrev(); });
-        ui.btnRepeat.addEventListener('click', function () { mgr.cyclePlayMode(); });
-        ui.btnMute.addEventListener('click', function () { mgr.toggleMute(); });
-
-        ui.volContainer.addEventListener('click', function (e) {
-            var rect = ui.volContainer.getBoundingClientRect();
-            var x = e.clientX - rect.left;
-            var val = Math.max(0, Math.min(1, x / rect.width));
-            mgr.setVolume(val);
-        });
-
-        ui.progressContainer.addEventListener('click', function (e) {
-            var rect = ui.progressContainer.getBoundingClientRect();
-            var clickX = e.clientX - rect.left;
-            var percent = Math.min(Math.max(clickX / rect.width, 0), 1);
-            mgr.seek(percent);
-        });
-
-        // ── Drawer logic (local state) ───────────────────────────
-        ui.btnLrc.addEventListener('click', function () {
-            var isOpen = ui.lrcDrawer.style.gridTemplateRows === '1fr';
-            if (isOpen) {
-                ui.lrcDrawer.style.gridTemplateRows = '0fr';
-                ui.lrcDrawer.classList.remove('opacity-100');
-                ui.lrcDrawer.classList.add('opacity-0');
-                ui.btnLrc.classList.remove('text-(--primary)');
-                ui.btnLrc.classList.add('text-neutral-400');
-                ui.iconLrcOn.classList.add('hidden');
-                ui.iconLrcOff.classList.remove('hidden');
-            } else {
-                // Close playlist if open
+        // ── Drawer helpers ──────────────────────────────────────
+        function openLyricsDrawer() {
+            if (!ui.lrcDrawer) return;
+            // Close playlist if open
+            if (ui.playlistDrawer) {
                 ui.playlistDrawer.style.gridTemplateRows = '0fr';
                 ui.playlistDrawer.classList.remove('opacity-100');
                 ui.playlistDrawer.classList.add('opacity-0');
-                ui.btnDrawer.classList.remove('text-(--primary)');
-                ui.btnDrawer.classList.add('text-neutral-400');
+                if (ui.btnDrawer) {
+                    ui.btnDrawer.classList.remove('text-(--primary)');
+                    ui.btnDrawer.classList.add('text-neutral-400');
+                }
+                local.vs.drawerOpen = false;
+            }
 
-                ui.lrcDrawer.style.gridTemplateRows = '1fr';
-                ui.lrcDrawer.classList.add('opacity-100');
-                ui.lrcDrawer.classList.remove('opacity-0');
+            ui.lrcDrawer.style.gridTemplateRows = '1fr';
+            ui.lrcDrawer.classList.add('opacity-100');
+            ui.lrcDrawer.classList.remove('opacity-0');
+            if (ui.btnLrc) {
                 ui.btnLrc.classList.add('text-(--primary)');
                 ui.btnLrc.classList.remove('text-neutral-400');
-                ui.iconLrcOn.classList.remove('hidden');
-                ui.iconLrcOff.classList.add('hidden');
+                if (ui.iconLrcOn) ui.iconLrcOn.classList.remove('hidden');
+                if (ui.iconLrcOff) ui.iconLrcOff.classList.add('hidden');
             }
+        }
+
+        function closeLyricsDrawer() {
+            if (!ui.lrcDrawer) return;
+            ui.lrcDrawer.style.gridTemplateRows = '0fr';
+            ui.lrcDrawer.classList.remove('opacity-100');
+            ui.lrcDrawer.classList.add('opacity-0');
+            if (ui.btnLrc) {
+                ui.btnLrc.classList.remove('text-(--primary)');
+                ui.btnLrc.classList.add('text-neutral-400');
+                if (ui.iconLrcOn) ui.iconLrcOn.classList.add('hidden');
+                if (ui.iconLrcOff) ui.iconLrcOff.classList.remove('hidden');
+            }
+        }
+
+        // ── Button click delegates ───────────────────────────────
+        ui.btnPlay.addEventListener('click', function (e) {
+            if (e.detail > 0) ui.btnPlay.blur();
+            var st = mgr.getState();
+            // 进入网站首次点击播放时，左侧播放器自动展开展歌词
+            if (cfg.showLyrics && ui.btnLrc && !st.isPlaying && !window.__fireflyHasAutoOpenedLyrics) {
+                window.__fireflyHasAutoOpenedLyrics = true;
+                openLyricsDrawer();
+            }
+            mgr.togglePlay();
+        });
+        ui.btnNext.addEventListener("click", function (e) {
+            if (e.detail > 0) ui.btnNext.blur();
+            mgr.playNext();
+        });
+        ui.btnPrev.addEventListener("click", function (e) {
+            if (e.detail > 0) ui.btnPrev.blur();
+            mgr.playPrev();
+        });
+        ui.btnRepeat.addEventListener("click", function (e) {
+            if (e.detail > 0) ui.btnRepeat.blur();
+            mgr.cyclePlayMode();
+        });
+        ui.btnMute.addEventListener("click", function (e) {
+            if (e.detail > 0) ui.btnMute.blur();
+            mgr.toggleMute();
         });
 
-        ui.btnDrawer.addEventListener('click', function () {
-            var isOpen = ui.playlistDrawer.style.gridTemplateRows === '1fr';
+        // ── Volume Bar Drag & Click ──────────────────────────────
+        function getVolumePercent(e) {
+            var rect = ui.volContainer.getBoundingClientRect();
+            if (!rect.width) return 0;
+            var x = e.clientX - rect.left;
+            return Math.max(0, Math.min(1, x / rect.width));
+        }
+
+        function onVolumePointerDown(e) {
+            if (e.button !== 0) return;
+            local.isDraggingVolume = true;
+            try {
+                ui.volContainer.setPointerCapture(e.pointerId);
+            } catch (err) {}
+            if (ui.volThumb) {
+                ui.volThumb.classList.add("scale-100");
+                ui.volThumb.style.transition = "none";
+            }
+            ui.volBar.style.transition = "none";
+            var val = getVolumePercent(e);
+            mgr.setVolume(val);
+        }
+
+        function onVolumePointerMove(e) {
+            if (!local.isDraggingVolume) return;
+            var val = getVolumePercent(e);
+            mgr.setVolume(val);
+        }
+
+        function onVolumePointerUp(e) {
+            if (!local.isDraggingVolume) return;
+            local.isDraggingVolume = false;
+            try {
+                ui.volContainer.releasePointerCapture(e.pointerId);
+            } catch (err) {}
+            if (ui.volThumb) {
+                ui.volThumb.classList.remove("scale-100");
+                ui.volThumb.style.transition = "";
+            }
+            ui.volBar.style.transition = "";
+            var val = getVolumePercent(e);
+            mgr.setVolume(val);
+        }
+
+        function onVolumePointerCancel(e) {
+            if (!local.isDraggingVolume) return;
+            local.isDraggingVolume = false;
+            try {
+                ui.volContainer.releasePointerCapture(e.pointerId);
+            } catch (err) {}
+            if (ui.volThumb) {
+                ui.volThumb.classList.remove("scale-100");
+                ui.volThumb.style.transition = "";
+            }
+            ui.volBar.style.transition = "";
+            var s = mgr.getState();
+            updateVolumeUI(s.volume, s.isMuted);
+        }
+
+        ui.volContainer.addEventListener("pointerdown", onVolumePointerDown);
+        ui.volContainer.addEventListener("pointermove", onVolumePointerMove);
+        ui.volContainer.addEventListener("pointerup", onVolumePointerUp);
+        ui.volContainer.addEventListener("pointercancel", onVolumePointerCancel);
+
+        // ── Progress Bar Drag & Click ────────────────────────────
+        function getProgressPercent(e) {
+            var rect = ui.progressContainer.getBoundingClientRect();
+            if (!rect.width) return 0;
+            var clickX = e.clientX - rect.left;
+            return Math.min(Math.max(clickX / rect.width, 0), 1);
+        }
+
+        function updateProgressVisual(percent) {
+            var pct = (percent * 100) + "%";
+            ui.progressBar.style.width = pct;
+            ui.progressThumb.style.left = pct;
+            ui.progressContainer.setAttribute("aria-valuenow", Math.round(percent * 100).toString());
+            var dur = mgr.getState().duration;
+            if (dur > 0) {
+                ui.currentTime.innerText = formatTime(percent * dur);
+            }
+        }
+
+        function onProgressPointerDown(e) {
+            if (e.button !== 0) return;
+            local.isDraggingProgress = true;
+            local.progressPointerId = e.pointerId;
+            try {
+                ui.progressContainer.setPointerCapture(e.pointerId);
+            } catch (err) {}
+            ui.progressBar.style.transition = "none";
+            ui.progressThumb.style.transition = "none";
+            ui.progressThumb.classList.add("scale-100");
+
+            var percent = getProgressPercent(e);
+            updateProgressVisual(percent);
+        }
+
+        function onProgressPointerMove(e) {
+            if (!local.isDraggingProgress) return;
+            var percent = getProgressPercent(e);
+            updateProgressVisual(percent);
+        }
+
+        function onProgressPointerCancel(e) {
+            if (!local.isDraggingProgress) return;
+            local.isDraggingProgress = false;
+            try {
+                ui.progressContainer.releasePointerCapture(e.pointerId);
+            } catch (err) {}
+            local.progressPointerId = null;
+            ui.progressBar.style.transition = "";
+            ui.progressThumb.style.transition = "";
+            if (ui.progressThumb) {
+                ui.progressThumb.classList.remove("scale-100");
+            }
+            var s = mgr.getState();
+            if (s.duration > 0) {
+                updateProgressVisual(s.progress / 100);
+            }
+        }
+
+        function onProgressPointerUp(e) {
+            if (!local.isDraggingProgress) return;
+            local.isDraggingProgress = false;
+            local.progressPointerId = null;
+            try {
+                ui.progressContainer.releasePointerCapture(e.pointerId);
+            } catch (err) {}
+            ui.progressBar.style.transition = "";
+            ui.progressThumb.style.transition = "";
+            ui.progressThumb.classList.remove("scale-100");
+
+            var percent = getProgressPercent(e);
+            updateProgressVisual(percent);
+            mgr.seek(percent);
+        }
+
+        ui.progressContainer.addEventListener("pointerdown", onProgressPointerDown);
+        ui.progressContainer.addEventListener("pointermove", onProgressPointerMove);
+        ui.progressContainer.addEventListener("pointerup", onProgressPointerUp);
+        ui.progressContainer.addEventListener("pointercancel", onProgressPointerCancel);
+
+        // ── Drawer logic (local state) ───────────────────────────
+        if (ui.btnLrc) {
+            ui.btnLrc.addEventListener("click", function (e) {
+                if (e.detail > 0) ui.btnLrc.blur();
+                var isOpen = ui.lrcDrawer.style.gridTemplateRows === "1fr";
+                if (isOpen) {
+                    closeLyricsDrawer();
+                } else {
+                    openLyricsDrawer();
+                }
+            });
+        }
+
+        ui.btnDrawer.addEventListener("click", function (e) {
+            if (e.detail > 0) ui.btnDrawer.blur();
+            var isOpen = ui.playlistDrawer.style.gridTemplateRows === "1fr";
             if (isOpen) {
                 ui.playlistDrawer.style.gridTemplateRows = '0fr';
                 ui.playlistDrawer.classList.remove('opacity-100');
@@ -640,13 +875,7 @@ const viewConfigStr = JSON.stringify({
                 local.vs.drawerOpen = false;
             } else {
                 // Close lyrics if open
-                ui.lrcDrawer.style.gridTemplateRows = '0fr';
-                ui.lrcDrawer.classList.remove('opacity-100');
-                ui.lrcDrawer.classList.add('opacity-0');
-                ui.btnLrc.classList.remove('text-(--primary)');
-                ui.btnLrc.classList.add('text-neutral-400');
-                ui.iconLrcOn.classList.add('hidden');
-                ui.iconLrcOff.classList.remove('hidden');
+                closeLyricsDrawer();
 
                 ui.playlistDrawer.style.gridTemplateRows = '1fr';
                 ui.playlistDrawer.classList.add('opacity-100');
