@@ -1,4 +1,5 @@
 import type { PlantUMLConfig } from "../types/plantumlConfig";
+import { mergeUserConfig } from "./user-config";
 
 /**
  * PlantUML 图表渲染配置
@@ -9,7 +10,7 @@ import type { PlantUMLConfig } from "../types/plantumlConfig";
  * @see https://plantuml.com/zh/theme
  * @see https://plantuml.com/zh/server
  */
-export const plantumlConfig: PlantUMLConfig = {
+export const plantumlConfigDefaults: PlantUMLConfig = {
 	/**
 	 * 是否启用 PlantUML 渲染能力。
 	 * 关闭时 `plantuml` 代码块退化为普通代码高亮，由 Expressive Code 处理。
@@ -35,3 +36,8 @@ export const plantumlConfig: PlantUMLConfig = {
 	 */
 	darkTheme: "cyborg",
 };
+
+export const plantumlConfig: PlantUMLConfig = mergeUserConfig(
+	"plantuml",
+	plantumlConfigDefaults,
+);

@@ -1,0 +1,92 @@
+{
+	"key": "displaySettings",
+	"title": "显示设置面板",
+	"description": "配置前台视图设置面板中各切换项的开关，控制哪些设置项对用户可见。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"enable": {
+				"type": "boolean",
+				"title": "总开关",
+				"description": "视图设置面板总开关，关闭时下方所有设置项均不生效，前台将不显示设置面板"
+			},
+			"themeColorSwitchable": {
+				"type": "boolean",
+				"title": "主题色选择器开关",
+				"description": "是否显示主题色选择器开关"
+			},
+			"layoutSwitchable": {
+				"type": "boolean",
+				"title": "文章列表布局切换开关",
+				"description": "是否显示文章列表布局切换开关"
+			},
+			"cardBorderSwitchable": {
+				"type": "boolean",
+				"title": "卡片边框和阴影开关",
+				"description": "是否显示卡片边框和阴影开关"
+			},
+			"cardFollowThemeSwitchable": {
+				"type": "boolean",
+				"title": "卡片风格跟随主题色开关",
+				"description": "是否显示卡片风格跟随主题色开关"
+			},
+			"wallpaperModeSwitchable": {
+				"type": "boolean",
+				"title": "壁纸模式切换开关",
+				"description": "是否显示壁纸模式切换开关；关闭时始终使用 backgroundWallpaper 配置的默认壁纸模式"
+			},
+			"fullscreenLayoutSwitchable": {
+				"type": "boolean",
+				"title": "全屏壁纸布局切换开关",
+				"description": "是否显示全屏壁纸布局切换开关（classic / hero）"
+			},
+			"wavesSwitchable": {
+				"type": "boolean",
+				"title": "水波纹动画开关",
+				"description": "是否显示水波纹动画开关"
+			},
+			"gradientSwitchable": {
+				"type": "boolean",
+				"title": "渐变过渡效果开关",
+				"description": "是否显示渐变过渡效果开关"
+			},
+			"bannerTitleSwitchable": {
+				"type": "boolean",
+				"title": "横幅标题显示开关",
+				"description": "是否显示横幅标题显示开关（需同时启用 homeText.enable）"
+			},
+			"bannerCarouselSwitchable": {
+				"type": "boolean",
+				"title": "壁纸轮播开关",
+				"description": "是否显示壁纸轮播开关"
+			},
+			"overlaySwitchable": {
+				"type": "object",
+				"title": "全屏覆盖模式参数调节开关",
+				"description": "全屏壁纸/透明覆盖模式参数调节开关，可单独控制每个滑块",
+				"properties": {
+					"opacity": {
+						"type": "boolean",
+						"title": "壁纸透明度调节开关",
+						"description": "是否显示壁纸透明度调节开关"
+					},
+					"blur": {
+						"type": "boolean",
+						"title": "背景模糊度调节开关",
+						"description": "是否显示背景模糊度调节开关"
+					},
+					"cardOpacity": {
+						"type": "boolean",
+						"title": "卡片透明度调节开关",
+						"description": "是否显示卡片透明度调节开关"
+					}
+				}
+			},
+			"sakuraSwitchable": {
+				"type": "boolean",
+				"title": "樱花特效开关",
+				"description": "是否显示樱花特效开关"
+			}
+		}
+	}
+}

@@ -1,0 +1,37 @@
+{
+	"key": "booknavPage",
+	"title": "书签导航页面",
+	"description": "配置书签导航页面的标题、描述与 favicon 自动获取。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"title": {
+				"type": "string",
+				"title": "页面标题",
+				"description": "页面标题，如果留空则使用 i18n 中的翻译"
+			},
+			"description": {
+				"type": "string",
+				"title": "页面描述",
+				"description": "页面描述文本，如果留空则使用 i18n 中的翻译"
+			},
+			"favicon": {
+				"type": "object",
+				"title": "favicon 自动获取配置",
+				"description": "favicon 自动获取配置",
+				"properties": {
+					"enabled": {
+						"type": "boolean",
+						"title": "自动获取 favicon",
+						"description": "书签未填写 icon 时，是否自动获取目标站点的 favicon 图标"
+					},
+					"api": {
+						"type": "string",
+						"title": "favicon 接口地址",
+						"description": "favicon 接口地址，{domain} 为占位符，会被替换成目标站点域名"
+					}
+				}
+			}
+		}
+	}
+}

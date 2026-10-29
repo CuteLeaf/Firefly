@@ -1,0 +1,50 @@
+{
+	"key": "font",
+	"title": "字体",
+	"description": "配置自定义字体开关、全局与各区域字体选择以及本地字体子集化。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"enable": {
+				"type": "boolean",
+				"title": "启用自定义字体",
+				"description": "是否启用自定义字体功能。"
+			},
+			"selected": {
+				"type": "array",
+				"items": {
+					"type": "string"
+				},
+				"x-tags": true,
+				"title": "选择的字体",
+				"description": "当前选择的字体 CSS 变量名（对应 fontsList 中的 cssVariable），支持多个字体组合；使用 system 表示系统字体（不加载任何自定义字体）。"
+			},
+			"bannerTitleFont": {
+				"type": "string",
+				"title": "横幅主标题字体",
+				"description": "主页横幅主标题字体 CSS 变量名，留空则使用全局 selected 字体。"
+			},
+			"bannerSubtitleFont": {
+				"type": "string",
+				"title": "横幅副标题字体",
+				"description": "主页横幅副标题字体 CSS 变量名，留空则使用全局 selected 字体。"
+			},
+			"navbarTitleFont": {
+				"type": "string",
+				"title": "导航栏标题字体",
+				"description": "导航栏标题字体 CSS 变量名，留空则使用全局 selected 字体。"
+			},
+			"codeFont": {
+				"type": "string",
+				"title": "代码块字体",
+				"description": "代码块字体 CSS 变量名，用于代码高亮和等宽字体场景。"
+			},
+			"subsetFonts": {
+				"type": "object",
+				"x-editor": "json",
+				"title": "本地字体子集化配置",
+				"description": "本地字体子集化配置，key 为 fontsList 中对应的 cssVariable，value 为子集化选项（如 extraChars 额外包含的字符）。"
+			}
+		}
+	}
+}

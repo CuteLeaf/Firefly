@@ -1,0 +1,117 @@
+{
+	"key": "sakura",
+	"title": "樱花特效",
+	"description": "配置页面樱花飘落动画的数量、尺寸、不透明度、移动速度与层级等参数。",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"enable": {
+				"type": "boolean",
+				"title": "启用樱花特效",
+				"description": "是否启用樱花特效"
+			},
+			"sakuraNum": {
+				"type": "number",
+				"title": "樱花数量",
+				"description": "樱花数量，默认 21",
+				"minimum": 0
+			},
+			"limitTimes": {
+				"type": "number",
+				"title": "越界限制次数",
+				"description": "樱花越界限制次数，-1 为无限循环",
+				"minimum": -1
+			},
+			"size": {
+				"type": "object",
+				"title": "樱花尺寸",
+				"description": "樱花尺寸倍数范围",
+				"properties": {
+					"min": {
+						"type": "number",
+						"title": "最小尺寸倍数",
+						"description": "樱花最小尺寸倍数"
+					},
+					"max": {
+						"type": "number",
+						"title": "最大尺寸倍数",
+						"description": "樱花最大尺寸倍数"
+					}
+				}
+			},
+			"opacity": {
+				"type": "object",
+				"title": "樱花不透明度",
+				"description": "樱花不透明度范围",
+				"properties": {
+					"min": {
+						"type": "number",
+						"title": "最小不透明度",
+						"description": "樱花最小不透明度"
+					},
+					"max": {
+						"type": "number",
+						"title": "最大不透明度",
+						"description": "樱花最大不透明度"
+					}
+				}
+			},
+			"speed": {
+				"type": "object",
+				"title": "移动速度",
+				"description": "樱花移动、旋转与消失速度",
+				"properties": {
+					"horizontal": {
+						"type": "object",
+						"title": "水平移动",
+						"description": "水平移动速度范围",
+						"properties": {
+							"min": {
+								"type": "number",
+								"title": "水平速度最小值",
+								"description": "水平移动速度最小值"
+							},
+							"max": {
+								"type": "number",
+								"title": "水平速度最大值",
+								"description": "水平移动速度最大值"
+							}
+						}
+					},
+					"vertical": {
+						"type": "object",
+						"title": "垂直移动",
+						"description": "垂直移动速度范围",
+						"properties": {
+							"min": {
+								"type": "number",
+								"title": "垂直速度最小值",
+								"description": "垂直移动速度最小值"
+							},
+							"max": {
+								"type": "number",
+								"title": "垂直速度最大值",
+								"description": "垂直移动速度最大值"
+							}
+						}
+					},
+					"rotation": {
+						"type": "number",
+						"title": "旋转速度",
+						"description": "旋转速度"
+					},
+					"fadeSpeed": {
+						"type": "number",
+						"title": "消失速度",
+						"description": "消失速度，不应大于最小不透明度"
+					}
+				}
+			},
+			"zIndex": {
+				"type": "number",
+				"title": "层级",
+				"description": "层级，确保樱花在合适的层级显示"
+			}
+		}
+	}
+}

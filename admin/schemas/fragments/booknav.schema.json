@@ -1,0 +1,76 @@
+{
+	"key": "booknav",
+	"title": "书签导航",
+	"description": "配置书签导航的分类分组与各分组下的书签条目。",
+	"schema": {
+		"type": "array",
+		"x-itemTitle": "name",
+		"items": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string",
+					"title": "分组唯一标识",
+					"description": "分组唯一标识，用作锚点 id，如 \"dev\""
+				},
+				"name": {
+					"type": "string",
+					"title": "分组名称",
+					"description": "分组名称"
+				},
+				"icon": {
+					"type": "string",
+					"title": "分组图标",
+					"description": "分组图标，支持 iconify 图标名（如 material-symbols:code-rounded）"
+				},
+				"desc": {
+					"type": "string",
+					"title": "分组描述",
+					"description": "分组描述"
+				},
+				"weight": {
+					"type": "number",
+					"title": "分组权重",
+					"description": "分组权重，数字越大排序越靠前，默认 0"
+				},
+				"items": {
+					"type": "array",
+					"title": "书签列表",
+					"description": "分组内的书签列表",
+					"x-itemTitle": "title",
+					"items": {
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string",
+								"title": "书签标题",
+								"description": "书签标题"
+							},
+							"url": {
+								"type": "string",
+								"title": "书签地址",
+								"description": "书签地址",
+								"x-format": "url"
+							},
+							"desc": {
+								"type": "string",
+								"title": "书签描述",
+								"description": "书签描述"
+							},
+							"icon": {
+								"type": "string",
+								"title": "书签图标",
+								"description": "书签图标，留空则自动获取目标站点的 favicon。支持三种写法：1. 网络图片 URL；2. public 目录图片路径；3. iconify / astro-icon 图标名（如 fa7-brands:github）"
+							},
+							"weight": {
+								"type": "number",
+								"title": "组内权重",
+								"description": "组内权重，数字越大排序越靠前，默认 0"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
