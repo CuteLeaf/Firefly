@@ -29,6 +29,9 @@ export type DisplaySettingsConfig = {
 	// 卡片风格跟随主题色开关
 	cardFollowThemeSwitchable: boolean;
 
+	// Profile 链接显示模式切换开关（仅图标 / 横幅）
+	profileLinkModeSwitchable: boolean;
+
 	// ── 壁纸 (Wallpaper) ──────────────────────────────────
 
 	// 壁纸模式切换开关
