@@ -6,6 +6,7 @@ export const FLOATING_PANEL_CLOSE_EVENT = "floating-panel:close";
 const panelObservers = new Map<HTMLElement, MutationObserver>();
 const panelOpenStates = new WeakMap<HTMLElement, boolean>();
 let escapeListenerAttached = false;
+const mobileMenuViewports = new WeakMap<HTMLElement, { width: number; scale: number; orientation: string }>();
 const scrollUnlockCleanup = new WeakMap<HTMLElement, () => void>();
 
 function getPanelTriggers(panel: HTMLElement): HTMLElement[] {
@@ -30,12 +31,22 @@ function isVisible(element: HTMLElement): boolean {
 }
 
 // 文档定位绕过 Safari 对 fixed 图层在浮动工具栏上方的裁剪。
-// 只在打开及视口尺寸变化时测量，不参与每帧动画。
-function updateMobileMenuBounds(panel: HTMLElement): void {
+// 打开时测量；移动端忽略浏览器工具栏引起的纯高度变化，旋转/缩放仍重新测量。
+function updateMobileMenuBounds(panel: HTMLElement, force = false): void {
 	if (panel.id !== "nav-menu-panel") return;
 	const viewport = window.visualViewport;
+	const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+	const bounds = {
+		width: window.innerWidth,
+		scale: viewport?.scale ?? 1,
+		orientation: window.screen.orientation?.type ?? `${window.screen.width}x${window.screen.height}`,
+	};
+	const previous = mobileMenuViewports.get(panel);
+	if (!force && coarsePointer && previous && previous.width === bounds.width &&
+		previous.scale === bounds.scale && previous.orientation === bounds.orientation) return;
+	mobileMenuViewports.set(panel, bounds);
 	const visibleHeight = viewport?.height ?? window.innerHeight;
-	const paintHeight = window.matchMedia("(pointer: coarse)").matches
+	const paintHeight = coarsePointer
 		? Math.max(window.screen.height, window.innerHeight, visibleHeight)
 		: Math.max(window.innerHeight, visibleHeight);
 	panel.style.setProperty("--mobile-menu-document-top", `${window.scrollY + (viewport?.offsetTop ?? 0)}px`);
@@ -46,7 +57,7 @@ function updateMobileMenuBounds(panel: HTMLElement): void {
 function syncFloatingPanelState(panel: HTMLElement): void {
 	const isOpen = !panel.classList.contains(CLOSED_CLASS);
 	const wasOpen = panelOpenStates.get(panel);
-	if (isOpen && wasOpen !== true) updateMobileMenuBounds(panel);
+	if (isOpen && wasOpen !== true) updateMobileMenuBounds(panel, true);
 
 	panel.inert = !isOpen;
 	panel.setAttribute("aria-hidden", String(!isOpen));
@@ -87,13 +98,24 @@ function syncFloatingPanelState(panel: HTMLElement): void {
 			};
 			if (delay > 0) {
 				// 以真正绘制结束为准；计时器仅在 transitionend 未触发时兜底。
-				const onEnd = (event: TransitionEvent) => {
-					if (event.target === panel && event.propertyName === "visibility") unlock();
+				let firstFrame = 0;
+				let secondFrame = 0;
+				const afterHiddenPaint = () => {
+					if (firstFrame || secondFrame) return;
+					// 先让隐藏态绘制一帧，再解锁；Safari 底栏变化不再重排仍可见的玻璃。
+					firstFrame = requestAnimationFrame(() => {
+						secondFrame = requestAnimationFrame(unlock);
+					});
 				};
-				const timer = setTimeout(unlock, delay + 100);
+				const onEnd = (event: TransitionEvent) => {
+					if (event.target === panel && event.propertyName === "visibility") afterHiddenPaint();
+				};
+				const timer = setTimeout(afterHiddenPaint, delay + 100);
 				panel.addEventListener("transitionend", onEnd);
 				scrollUnlockCleanup.set(panel, () => {
 					clearTimeout(timer);
+					cancelAnimationFrame(firstFrame);
+					cancelAnimationFrame(secondFrame);
 					panel.removeEventListener("transitionend", onEnd);
 				});
 			} else unlock();

@@ -110,7 +110,7 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
         position: absolute;
         top: var(--mobile-menu-document-top, 0px);
         bottom: auto;
-        height: max(100lvh, var(--mobile-menu-paint-height, 100vh));
+        height: var(--mobile-menu-paint-height, 100lvh); /* 打开时快照，避免 Safari 工具栏动画改变绘制边界 */
         overflow: clip; /* 裁掉滑出部分，避免增加页面横向滚动范围 */
         overscroll-behavior: none;
         --mobile-menu-width: min(70vw, 340px);
