@@ -43,29 +43,31 @@ const coverLqipProps = cover
   <!-- 相册封面横幅 -->
   <div class="w-full rounded-(--radius-large) overflow-hidden relative">
     {cover ? (
-      <div class="relative w-full aspect-3/1 min-h-[200px] max-h-[360px] overflow-hidden">
+      <div class="relative w-full min-h-[260px] sm:min-h-[280px] md:aspect-3/1 md:max-h-[360px] flex flex-col justify-between p-5 sm:p-6 overflow-hidden">
         <div class="lqip-placeholder absolute inset-0 pointer-events-none" style={coverLqipProps.style} aria-hidden="true"></div>
         <img
           src={cover}
           alt={albumMeta.name}
-          class="w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-out"
+          class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-out"
         />
-        <div class="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent" />
-        <!-- 返回按钮 -->
-        <a
-          href={url("/gallery/")}
-          class="absolute top-4 left-4 inline-flex items-center gap-1.5 text-sm text-white/90 hover:text-white bg-black/30 hover:bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-lg transition-colors"
-        >
-          <Icon name="material-symbols:arrow-back" class="text-base" />
-          {i18n(I18nKey.galleryBackToAlbums)}
-        </a>
-        <!-- 封面上的信息 -->
-        <div class="absolute bottom-0 left-0 right-0 p-6">
+        <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-black/20 pointer-events-none" />
+        <!-- 顶部：返回按钮 -->
+        <div class="relative z-20 self-start">
+          <a
+            href={url("/gallery/")}
+            class="inline-flex items-center gap-1.5 text-sm text-white/90 hover:text-white bg-black/40 hover:bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg transition-colors border border-white/10 active:scale-95"
+          >
+            <Icon name="material-symbols:arrow-back" class="text-base" />
+            {i18n(I18nKey.galleryBackToAlbums)}
+          </a>
+        </div>
+        <!-- 底部：封面上的信息 -->
+        <div class="relative z-10 pt-4">
           <div class="text-2xl sm:text-3xl font-bold text-white mb-2 drop-shadow-lg">
             {albumMeta.name}
           </div>
           {albumMeta.description && (
-            <p class="text-sm text-white/75 leading-relaxed mb-2 max-w-2xl line-clamp-2">
+            <p class="text-sm text-white/80 leading-relaxed mb-2 max-w-2xl line-clamp-2">
               {albumMeta.description}
             </p>
           )}
@@ -110,6 +112,11 @@ const coverLqipProps = cover
         <div class="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-neutral-100">
           {albumMeta.name}
         </div>
+        {albumMeta.description && (
+          <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed mt-2 mb-2 max-w-2xl">
+            {albumMeta.description}
+          </p>
+        )}
         <div class="flex items-center gap-4 text-sm text-neutral-500 dark:text-neutral-400 mt-2 flex-wrap">
           {albumMeta.date && (
             <span class="inline-flex items-center gap-1">
@@ -125,6 +132,15 @@ const coverLqipProps = cover
           )}
           <span>{photos.length} {i18n(I18nKey.galleryPhotos)}</span>
         </div>
+        {albumMeta.tags && albumMeta.tags.length > 0 && (
+          <div class="flex flex-wrap gap-1.5 mt-2.5">
+            {albumMeta.tags.map((tag) => (
+              <span class="text-xs px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     )}
   </div>
