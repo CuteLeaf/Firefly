@@ -107,8 +107,22 @@ export function formatDateI18nWithTime(dateInput: Date | string): string {
 }
 
 export function formatDynamicDate(dateInput: Date | string): string {
+	if (!dateInput) return "";
+
+	if (typeof dateInput === "string") {
+		const trimmed = dateInput.trim();
+		if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+			return `${trimmed} 00:00:00`;
+		}
+	}
+
 	const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
-	if (!date || Number.isNaN(date.getTime())) return "";
+	if (Number.isNaN(date.getTime())) return "";
+
+	// 纯日期输入保留原日历日期，避免在 UTC 以西时区倒退一天
+	if (isDateOnly(date)) {
+		return `${date.toISOString().substring(0, 10)} 00:00:00`;
+	}
 
 	const options: Intl.DateTimeFormatOptions = {
 		year: "numeric",
