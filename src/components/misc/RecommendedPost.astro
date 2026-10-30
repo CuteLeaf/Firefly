@@ -118,10 +118,22 @@ const noRandomPostsText = i18n(I18nKey.noRandomPosts);
 </div>
 
 {showRandomPosts && (
-<script is:inline>
+<script is:inline define:vars={{ siteTimezone: siteConfig.timezone || "" }}>
 function renderRandomPosts() {
   var container = document.getElementById('random-posts-list');
   if (!container) return;
+
+  function formatDateToYYYYMMDD(timestamp) {
+    var d = new Date(timestamp);
+    if (isNaN(d.getTime())) return '';
+    var isDateOnly = d.getUTCHours() === 0 && d.getUTCMinutes() === 0 && d.getUTCSeconds() === 0 && d.getUTCMilliseconds() === 0;
+    if (isDateOnly) return d.toISOString().substring(0, 10);
+    var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    if (siteTimezone) options.timeZone = siteTimezone;
+    var parts = new Intl.DateTimeFormat('en-CA', options).formatToParts(d);
+    var get = function(t) { for (var i = 0; i < parts.length; i++) if (parts[i].type === t) return parts[i].value; return ''; };
+    return get('year') + '-' + get('month') + '-' + get('day');
+  }
 
   var apiUrl = container.dataset.apiUrl;
   var currentId = container.dataset.currentId;
@@ -193,7 +205,7 @@ function renderRandomPosts() {
 
       var desc = document.createElement('span');
       desc.className = 'truncate';
-      desc.textContent = post.description || new Date(post.published).toISOString().substring(0, 10);
+      desc.textContent = post.description || post.publishedDate || formatDateToYYYYMMDD(post.published);
       meta.appendChild(desc);
 
       content.appendChild(title);

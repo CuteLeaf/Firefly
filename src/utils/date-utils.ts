@@ -1,8 +1,38 @@
 import { siteConfig } from "../config";
 
+/**
+ * 判断日期是否为纯日期输入（如 YAML 中仅填写 YYYY-MM-DD，解析为 UTC 午夜）。
+ * 对于此类纯日历日期，应保留原日期，避免在 UTC 以西时区（如美西/美东）转换后倒退一天。
+ */
+export function isDateOnly(dateInput: Date | string): boolean {
+	if (typeof dateInput === "string") {
+		return /^\d{4}-\d{2}-\d{2}$/.test(dateInput.trim());
+	}
+	return (
+		dateInput.getUTCHours() === 0 &&
+		dateInput.getUTCMinutes() === 0 &&
+		dateInput.getUTCSeconds() === 0 &&
+		dateInput.getUTCMilliseconds() === 0
+	);
+}
+
 export function formatDateToYYYYMMDD(dateInput: Date | string): string {
+	if (!dateInput) return "";
+
+	if (typeof dateInput === "string") {
+		const trimmed = dateInput.trim();
+		if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+			return trimmed;
+		}
+	}
+
 	const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
-	if (!date || Number.isNaN(date.getTime())) return "";
+	if (Number.isNaN(date.getTime())) return "";
+
+	// 纯日期输入保留原日历日期，避免在 UTC 以西时区倒退一天
+	if (isDateOnly(date)) {
+		return date.toISOString().substring(0, 10);
+	}
 
 	const options: Intl.DateTimeFormatOptions = {
 		year: "numeric",
@@ -88,11 +118,8 @@ export function formatDynamicDate(dateInput: Date | string): string {
 		minute: "2-digit",
 		second: "2-digit",
 		hourCycle: "h23",
+		timeZone: siteConfig.timezone || "UTC",
 	};
-
-	if (siteConfig.timezone) {
-		options.timeZone = siteConfig.timezone;
-	}
 
 	const parts = new Intl.DateTimeFormat("en-CA", options).formatToParts(date);
 	const get = (type: Intl.DateTimeFormatPartTypes) =>

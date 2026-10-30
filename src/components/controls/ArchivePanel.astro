@@ -3,6 +3,7 @@ import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { getSortedPostsList } from "@/utils/content-utils";
+import { isDateOnly } from "@/utils/date-utils";
 import { getPostUrlBySlug, url } from "@/utils/url-utils";
 
 // 归档列表：全量按年分组，服务端渲染。筛选（?tag=/?category=/?uncategorized）
@@ -14,7 +15,7 @@ const posts = sortedPostsList
 	.slice()
 	.sort((a, b) => b.data.published.getTime() - a.data.published.getTime());
 
-// 按年份分组（根据 siteConfig 时区配置计算，避免 CI/构建环境为 UTC 导致年份或跨天归档分组偏差）
+// 按年份分组（根据 siteConfig 时区配置计算，同时保留纯日历日期的原始日期，避免时区偏差导致归档年份或跨天漂移）
 const timezone = siteConfig.timezone || undefined;
 const yearFormatter = new Intl.DateTimeFormat("en-CA", {
 	year: "numeric",
@@ -26,9 +27,16 @@ const monthDayFormatter = new Intl.DateTimeFormat("en-CA", {
 	timeZone: timezone,
 });
 
+function getPostYear(date: Date): number {
+	if (isDateOnly(date)) {
+		return date.getUTCFullYear();
+	}
+	return Number(yearFormatter.format(date));
+}
+
 const grouped = new Map<number, typeof posts>();
 for (const post of posts) {
-	const year = Number(yearFormatter.format(post.data.published));
+	const year = getPostYear(post.data.published);
 	if (!grouped.has(year)) grouped.set(year, []);
 	grouped.get(year)?.push(post);
 }
@@ -41,6 +49,11 @@ const foldArticle = siteConfig.foldArticle !== false;
 const collapseAllButFirst = foldArticle && groups.length > 1;
 
 function formatDate(date: Date) {
+	if (isDateOnly(date)) {
+		const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+		const day = String(date.getUTCDate()).padStart(2, "0");
+		return `${month}-${day}`;
+	}
 	return monthDayFormatter.format(date);
 }
 
