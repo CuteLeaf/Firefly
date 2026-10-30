@@ -43,7 +43,7 @@ const coverLqipProps = cover
   <!-- 相册封面横幅 -->
   <div class="w-full rounded-(--radius-large) overflow-hidden relative">
     {cover ? (
-      <div class="relative w-full min-h-[260px] sm:min-h-[280px] md:aspect-3/1 md:max-h-[360px] flex flex-col justify-between p-5 sm:p-6 overflow-hidden">
+      <div class="relative w-full min-h-[260px] sm:min-h-[280px] md:min-h-[320px] flex flex-col justify-between p-5 sm:p-6">
         <div class="lqip-placeholder absolute inset-0 pointer-events-none" style={coverLqipProps.style} aria-hidden="true"></div>
         <img
           src={cover}
