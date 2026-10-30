@@ -1,7 +1,24 @@
 import { siteConfig } from "../config";
 
-export function formatDateToYYYYMMDD(date: Date): string {
-	return date.toISOString().substring(0, 10);
+export function formatDateToYYYYMMDD(dateInput: Date | string): string {
+	const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
+	if (!date || Number.isNaN(date.getTime())) return "";
+
+	const options: Intl.DateTimeFormatOptions = {
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+	};
+
+	if (siteConfig.timezone) {
+		options.timeZone = siteConfig.timezone;
+	}
+
+	const parts = new Intl.DateTimeFormat("en-CA", options).formatToParts(date);
+	const get = (type: Intl.DateTimeFormatPartTypes) =>
+		parts.find((p) => p.type === type)?.value || "";
+
+	return `${get("year")}-${get("month")}-${get("day")}`;
 }
 
 // 国际化日期格式化函数
@@ -61,8 +78,9 @@ export function formatDateI18nWithTime(dateInput: Date | string): string {
 
 export function formatDynamicDate(dateInput: Date | string): string {
 	const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
-	const parts = new Intl.DateTimeFormat("en-CA", {
-		timeZone: "UTC",
+	if (!date || Number.isNaN(date.getTime())) return "";
+
+	const options: Intl.DateTimeFormatOptions = {
 		year: "numeric",
 		month: "2-digit",
 		day: "2-digit",
@@ -70,7 +88,13 @@ export function formatDynamicDate(dateInput: Date | string): string {
 		minute: "2-digit",
 		second: "2-digit",
 		hourCycle: "h23",
-	}).formatToParts(date);
+	};
+
+	if (siteConfig.timezone) {
+		options.timeZone = siteConfig.timezone;
+	}
+
+	const parts = new Intl.DateTimeFormat("en-CA", options).formatToParts(date);
 	const get = (type: Intl.DateTimeFormatPartTypes) =>
 		parts.find((part) => part.type === type)?.value || "";
 	return `${get("year")}-${get("month")}-${get("day")} ${get("hour")}:${get("minute")}:${get("second")}`;

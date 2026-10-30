@@ -14,10 +14,21 @@ const posts = sortedPostsList
 	.slice()
 	.sort((a, b) => b.data.published.getTime() - a.data.published.getTime());
 
-// 按年份分组
+// 按年份分组（根据 siteConfig 时区配置计算，避免 CI/构建环境为 UTC 导致年份或跨天归档分组偏差）
+const timezone = siteConfig.timezone || undefined;
+const yearFormatter = new Intl.DateTimeFormat("en-CA", {
+	year: "numeric",
+	timeZone: timezone,
+});
+const monthDayFormatter = new Intl.DateTimeFormat("en-CA", {
+	month: "2-digit",
+	day: "2-digit",
+	timeZone: timezone,
+});
+
 const grouped = new Map<number, typeof posts>();
 for (const post of posts) {
-	const year = post.data.published.getFullYear();
+	const year = Number(yearFormatter.format(post.data.published));
 	if (!grouped.has(year)) grouped.set(year, []);
 	grouped.get(year)?.push(post);
 }
@@ -30,9 +41,7 @@ const foldArticle = siteConfig.foldArticle !== false;
 const collapseAllButFirst = foldArticle && groups.length > 1;
 
 function formatDate(date: Date) {
-	const month = (date.getMonth() + 1).toString().padStart(2, "0");
-	const day = date.getDate().toString().padStart(2, "0");
-	return `${month}-${day}`;
+	return monthDayFormatter.format(date);
 }
 
 function formatTag(tagList: string[]) {
