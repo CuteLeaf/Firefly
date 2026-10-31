@@ -100,6 +100,8 @@ export const en: Translation = {
 	[Key.fcirclePostsUpdated]: "updates",
 	[Key.fcircleBuildHint]:
 		"Content is fetched automatically during site build and is not updated in real time",
+	[Key.fcircleAuthor]: "Author",
+	[Key.fcircleSubscription]: "Feed",
 	[Key.booknav]: "Bookmark Nav",
 	[Key.booknavDescription]:
 		"A curated collection of useful sites, organized by category.",

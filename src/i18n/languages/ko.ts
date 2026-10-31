@@ -100,6 +100,8 @@ export const ko: Translation = {
 	[Key.fcirclePostsUpdated]: "개 업데이트",
 	[Key.fcircleBuildHint]:
 		"콘텐츠는 사이트 빌드 시 자동으로 수집되며 실시간으로 동기화되지 않습니다",
+	[Key.fcircleAuthor]: "작성자",
+	[Key.fcircleSubscription]: "구독",
 	[Key.booknav]: "북마크 모음",
 	[Key.booknavDescription]: "유용한 사이트를 카테고리별로 모았습니다.",
 	[Key.searchBooknav]: "북마크 검색...",

@@ -100,6 +100,8 @@ export const ru: Translation = {
 	[Key.fcirclePostsUpdated]: "обновлений",
 	[Key.fcircleBuildHint]:
 		"Контент собирается автоматически во время сборки сайта и не обновляется в реальном времени",
+	[Key.fcircleAuthor]: "Автор",
+	[Key.fcircleSubscription]: "Подписка",
 	[Key.booknav]: "Каталог закладок",
 	[Key.booknavDescription]:
 		"Подборка полезных сайтов, сгруппированных по категориям.",

@@ -100,6 +100,8 @@ export const ja: Translation = {
 	[Key.fcirclePostsUpdated]: "件の更新",
 	[Key.fcircleBuildHint]:
 		"コンテンツはサイトビルド時に自動収集されるため、リアルタイム更新ではありません",
+	[Key.fcircleAuthor]: "著者",
+	[Key.fcircleSubscription]: "購読",
 	[Key.booknav]: "ブックマーク集",
 	[Key.booknavDescription]: "便利なサイトをカテゴリ別に集めました",
 	[Key.searchBooknav]: "ブックマークを検索...",

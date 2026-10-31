@@ -17,6 +17,7 @@ const dateFormatterCache = new Map<string, Intl.DateTimeFormat>();
 const timeFormatterCache = new Map<string, Intl.DateTimeFormat>();
 const weekdayFormatterCache = new Map<string, Intl.DateTimeFormat>();
 const monthDayFormatterCache = new Map<string, Intl.DateTimeFormat>();
+const relativeTimeFormatterCache = new Map<string, Intl.RelativeTimeFormat>();
 
 function asDate(dateInput: Date | string): Date {
 	return dateInput instanceof Date ? dateInput : new Date(dateInput);
@@ -135,6 +136,19 @@ function getMonthDayString(
 	return formatter.format(date);
 }
 
+function getRelativeTimeFormatter(
+	normalizedLang: string,
+): Intl.RelativeTimeFormat {
+	let formatter = relativeTimeFormatterCache.get(normalizedLang);
+	if (!formatter) {
+		formatter = new Intl.RelativeTimeFormat(normalizedLang, {
+			numeric: "auto",
+		});
+		relativeTimeFormatterCache.set(normalizedLang, formatter);
+	}
+	return formatter;
+}
+
 export function getFcircleDatePresentation(
 	dateInput: Date | string,
 	referenceInput: Date | string,
@@ -151,28 +165,15 @@ export function getFcircleDatePresentation(
 	const weekDayStr = getWeekdayString(date, timeZone, lang);
 	const monthDayStr = getMonthDayString(date, timeZone, lang);
 
-	if (relativeDays === 0) {
+	if (relativeDays >= 0 && relativeDays <= 2) {
+		const normalized = normalizeLocale(lang);
+		const rtf = getRelativeTimeFormatter(normalized);
+		const rawRelative = rtf.format(-relativeDays, "day");
+		const displayDate =
+			rawRelative.charAt(0).toUpperCase() + rawRelative.slice(1);
 		return {
 			dateKey,
-			displayDate: lang.startsWith("zh") ? "今天" : "Today",
-			subLabel: `${monthDayStr} · ${weekDayStr}`,
-			relativeDays,
-		};
-	}
-
-	if (relativeDays === 1) {
-		return {
-			dateKey,
-			displayDate: lang.startsWith("zh") ? "昨天" : "Yesterday",
-			subLabel: `${monthDayStr} · ${weekDayStr}`,
-			relativeDays,
-		};
-	}
-
-	if (relativeDays === 2) {
-		return {
-			dateKey,
-			displayDate: lang.startsWith("zh") ? "前天" : "2 days ago",
+			displayDate,
 			subLabel: `${monthDayStr} · ${weekDayStr}`,
 			relativeDays,
 		};

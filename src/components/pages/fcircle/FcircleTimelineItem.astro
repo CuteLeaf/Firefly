@@ -1,5 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
 import { formatFcircleTime } from "@/utils/fcircle-date-utils";
 import type { FcircleItem } from "@/utils/fcircle-utils";
 
@@ -56,12 +58,12 @@ const timeStr = formatFcircleTime(item.pubDate, timeZone);
 			</span>
 			{item.sourceType === "subscription" && (
 				<span class="text-[10px] px-1.5 py-0.2 rounded-md bg-(--primary)/10 text-(--primary) font-normal border border-(--primary)/20 shrink-0">
-					{item.tags?.[0] || "订阅"}
+					{item.tags?.[0] || i18n(I18nKey.fcircleSubscription)}
 				</span>
 			)}
 			{item.sourceType === "self" && (
 				<span class="text-[10px] px-1.5 py-0.2 rounded-md bg-(--primary)/15 text-(--primary) font-medium border border-(--primary)/30 shrink-0">
-					博主
+					{i18n(I18nKey.fcircleAuthor)}
 				</span>
 			)}
 			{timeStr && timeStr !== "00:00" && (
