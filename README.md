@@ -197,7 +197,8 @@ src/
 │   ├── plantumlConfig.ts         # PlantUML 图表配置
 │   ├── profileConfig.ts          # 用户资料配置
 │   ├── sidebarConfig.ts          # 侧边栏布局配置
-│   └── sponsorConfig.ts          # 打赏配置
+│   ├── sponsorConfig.ts          # 打赏配置
+│   └── subscriptionConfig.ts     # 独立订阅配置
 ```
 
 ## ⚙️ 文章 Frontmatter

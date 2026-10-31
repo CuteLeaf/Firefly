@@ -4,9 +4,11 @@ export type FriendLink = {
 	imgurl: string; // 头像图片URL
 	desc: string; // 友链描述
 	siteurl: string; // 友链地址
+	feedUrl?: string; // 友链 RSS/Atom 订阅地址（可选，未填写时构建时将自动探测默认 RSS/Atom 地址）
 	tags?: string[]; // 标签数组
 	weight: number; // 权重，数字越大排序越靠前
 	enabled: boolean; // 是否启用
+	fcircle?: boolean; // 是否加入友链朋友圈（可选，默认：博客类友链为 true，导航/工具类为 false；设为 false 时不抓取、不聚合到朋友圈中）
 };
 
 export type FriendsPageConfig = {

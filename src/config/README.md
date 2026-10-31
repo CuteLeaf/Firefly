@@ -29,6 +29,7 @@ src/config/
 ├── profileConfig.ts          # 用户资料配置
 ├── sidebarConfig.ts          # 侧边栏布局配置
 ├── sponsorConfig.ts          # 打赏配置
+├── subscriptionConfig.ts     # 独立订阅源配置（朋友圈 RSS）
 └── README.md                 # 本文件
 ```
 
@@ -60,7 +61,7 @@ import { profileConfig } from "@/config/profileConfig";
 | `effectsConfig.ts` | 动画特效配置（樱花数量、速度、尺寸等） |
 | `expressiveCodeConfig.ts` | 代码高亮配置（亮色/暗色主题、折叠、语言徽章） |
 | `fontConfig.ts` | 字体配置（字体列表、回退、预加载） |
-| `friendsConfig.ts` | 友链配置（友链列表、页面设置） |
+| `friendsConfig.ts` | 友链配置（友链列表、页面设置、朋友圈 RSS 配置与智能嗅探） |
 | `galleryConfig.ts` | 相册配置（相册列表、瀑布流列宽） |
 | `licenseConfig.ts` | 许可证配置（CC 协议等） |
 | `musicConfig.ts` | 音乐播放器配置（Meting API / 本地音乐、导航栏和侧边栏开关） |
@@ -70,6 +71,7 @@ import { profileConfig } from "@/config/profileConfig";
 | `profileConfig.ts` | 用户资料配置（头像、姓名、社交链接） |
 | `sidebarConfig.ts` | 侧边栏布局配置（左侧/右侧/移动端组件列表） |
 | `sponsorConfig.ts` | 打赏配置（打赏方式、打赏者列表） |
+| `subscriptionConfig.ts` | 独立订阅源配置（无需在友链展示但需聚合进朋友圈的文章源，支持 RSS/Atom/JSON Feed） |
 
 ## 📝 说明
 
