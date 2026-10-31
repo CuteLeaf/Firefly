@@ -113,62 +113,85 @@ export function isSafePublicUrl(urlString: string | null | undefined): boolean {
 }
 
 /**
- * 安全抓取远程 Feed 文本：统一应用 5MB 流量截断与超时控制
+ * 安全抓取远程 Feed 文本：校验每一跳重定向（防范 SSRF 重定向穿透），并统一应用 5MB 流量截断与超时控制
  */
 async function fetchSafeFeedText(
-	url: string,
+	initialUrl: string,
 	signal: AbortSignal,
 ): Promise<string | null> {
-	if (!isSafePublicUrl(url)) {
-		return null;
-	}
+	let currentUrl = initialUrl;
+	const MAX_REDIRECTS = 3;
 
-	try {
-		const res = await fetch(url, {
-			headers: {
-				"User-Agent": BROWSER_UA,
-				Accept:
-					"application/rss+xml, application/atom+xml, application/feed+json, application/xml, text/xml, application/json, */*",
-			},
-			signal,
-		});
-
-		if (!res.ok || !res.body) {
+	for (let redirectCount = 0; redirectCount <= MAX_REDIRECTS; redirectCount++) {
+		if (!isSafePublicUrl(currentUrl)) {
 			return null;
 		}
 
-		const contentLength = res.headers.get("content-length");
-		if (contentLength && Number.parseInt(contentLength, 10) > MAX_FEED_BYTES) {
-			return null;
-		}
+		try {
+			const res = await fetch(currentUrl, {
+				headers: {
+					"User-Agent": BROWSER_UA,
+					Accept:
+						"application/rss+xml, application/atom+xml, application/feed+json, application/xml, text/xml, application/json, */*",
+				},
+				signal,
+				redirect: "manual",
+			});
 
-		const reader = res.body.getReader();
-		const chunks: Uint8Array[] = [];
-		let receivedBytes = 0;
-
-		while (true) {
-			const { done, value } = await reader.read();
-			if (done) break;
-			if (value) {
-				receivedBytes += value.length;
-				if (receivedBytes > MAX_FEED_BYTES) {
-					await reader.cancel();
+			// 严格校验每一跳重定向，阻断内网与私有目标
+			if ([301, 302, 303, 307, 308].includes(res.status)) {
+				const location = res.headers.get("location");
+				if (!location) return null;
+				const nextUrl = new URL(location, currentUrl).toString();
+				if (!isSafePublicUrl(nextUrl)) {
 					return null;
 				}
-				chunks.push(value);
+				currentUrl = nextUrl;
+				continue;
 			}
-		}
 
-		const decoder = new TextDecoder();
-		let result = "";
-		for (const chunk of chunks) {
-			result += decoder.decode(chunk, { stream: true });
+			if (!res.ok || !res.body) {
+				return null;
+			}
+
+			const contentLength = res.headers.get("content-length");
+			if (
+				contentLength &&
+				Number.parseInt(contentLength, 10) > MAX_FEED_BYTES
+			) {
+				return null;
+			}
+
+			const reader = res.body.getReader();
+			const chunks: Uint8Array[] = [];
+			let receivedBytes = 0;
+
+			while (true) {
+				const { done, value } = await reader.read();
+				if (done) break;
+				if (value) {
+					receivedBytes += value.length;
+					if (receivedBytes > MAX_FEED_BYTES) {
+						await reader.cancel();
+						return null;
+					}
+					chunks.push(value);
+				}
+			}
+
+			const decoder = new TextDecoder();
+			let result = "";
+			for (const chunk of chunks) {
+				result += decoder.decode(chunk, { stream: true });
+			}
+			result += decoder.decode();
+			return result;
+		} catch {
+			return null;
 		}
-		result += decoder.decode();
-		return result;
-	} catch {
-		return null;
 	}
+
+	return null;
 }
 
 /**
@@ -253,7 +276,7 @@ async function fetchAndParseFeed(
 }
 
 /**
- * 当未显式指定 feedUrl 时，并发嗅探站点常用 RSS/Atom 规范路径，首个成功者即作为结果
+ * 当未显式指定 feedUrl 时，依序轻量嗅探常用 RSS/Atom 规范路径，首个成功者即作为结果并终止后续探测
  */
 async function discoverAndFetchFeed(
 	siteUrl: string,
@@ -272,20 +295,19 @@ async function discoverAndFetchFeed(
 		`${base}/index.xml`,
 	];
 
-	try {
-		const result = await Promise.any(
-			candidates.map(async (candidateUrl) => {
-				const entries = await fetchAndParseFeed(candidateUrl, parser, signal);
-				if (entries && entries.length > 0) {
-					return entries;
-				}
-				throw new Error(`No entries at ${candidateUrl}`);
-			}),
-		);
-		return result;
-	} catch {
-		return [];
+	for (const candidateUrl of candidates) {
+		if (signal.aborted) break;
+		try {
+			const entries = await fetchAndParseFeed(candidateUrl, parser, signal);
+			if (entries && entries.length > 0) {
+				return entries;
+			}
+		} catch {
+			// 单个探测路径失败，继续依序探测下一个
+		}
 	}
+
+	return [];
 }
 
 /**

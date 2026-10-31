@@ -11,6 +11,7 @@ import {
 	getFcircleItems,
 	getFcircleStats,
 	groupFcircleByDate,
+	isValidHttpUrl,
 } from "@/utils/fcircle-utils";
 import "@/styles/pages/common.css";
 import "@/styles/pages/fcircle.css";
@@ -175,10 +176,15 @@ const description = i18n(I18nKey.fcircleDescription);
         >
           {items.map((item) => {
             const dateStr = formatFcircleDate(item.pubDate, fcircleTimeZone, lang);
+            const safeLink =
+              isValidHttpUrl(item.link) ||
+              (item.sourceType === "self" && item.link.startsWith("/"))
+                ? item.link
+                : "#";
 
             return (
               <a
-                href={item.link}
+                href={safeLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="group flex flex-col justify-start p-4 sm:p-5 rounded-2xl border border-(--line-divider) bg-(--card-bg) hover:border-(--primary) transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 relative overflow-hidden"

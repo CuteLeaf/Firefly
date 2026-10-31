@@ -3,7 +3,7 @@ import { Icon } from "astro-icon/components";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { formatFcircleTime } from "@/utils/fcircle-date-utils";
-import type { FcircleItem } from "@/utils/fcircle-utils";
+import { type FcircleItem, isValidHttpUrl } from "@/utils/fcircle-utils";
 
 interface Props {
 	item: FcircleItem;
@@ -14,10 +14,17 @@ const { item, timeZone } = Astro.props;
 
 // 发布时间统一按站点时区格式化
 const timeStr = formatFcircleTime(item.pubDate, timeZone);
+
+// 确保外链协议安全（防御 javascript: 等伪协议注入）
+const safeLink =
+	isValidHttpUrl(item.link) ||
+	(item.sourceType === "self" && item.link.startsWith("/"))
+		? item.link
+		: "#";
 ---
 
 <a
-	href={item.link}
+	href={safeLink}
 	data-pub-date={item.pubDate.toISOString()}
 	target="_blank"
 	rel="noopener noreferrer"
