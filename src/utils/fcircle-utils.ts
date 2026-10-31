@@ -47,6 +47,32 @@ const SOURCE_ORDER: Record<string, number> = {
 };
 
 /**
+ * 判断友链是否属于导航/工具类站点（默认不聚合到朋友圈动态）
+ * 友链页面的“导航”分区为工具与推荐网站（非博主个人自留地），不应抓取其文章或聚合动态
+ */
+function isNavigationFriend(friend: {
+	tags?: string[];
+	fcircle?: boolean;
+}): boolean {
+	// 若显式指定 fcircle 为 true，则强制允许抓取
+	if (friend.fcircle === true) {
+		return false;
+	}
+	if (!friend.tags || friend.tags.length === 0) {
+		return false;
+	}
+	const navKeywords = new Set([
+		"导航",
+		"nav",
+		"navigation",
+		"工具",
+		"tool",
+		"tools",
+	]);
+	return friend.tags.some((tag) => navKeywords.has(tag.trim().toLowerCase()));
+}
+
+/**
  * 校验是否为合法 HTTP/HTTPS 链接（防范 javascript: / data: 等 XSS 伪协议）
  */
 export function isValidHttpUrl(urlString: string | null | undefined): boolean {
@@ -377,9 +403,9 @@ export async function getFcircleItems(): Promise<FcircleItem[]> {
 		console.warn("[Fcircle] Failed to load local self posts:", err);
 	}
 
-	// 2. 启用的友链列表（排除显式标记 fcircle === false 的条目）
+	// 2. 启用的友链列表（排除显式标记 fcircle === false 以及非博客类的导航/工具站点）
 	const friends = getEnabledFriends()
-		.filter((f) => f.fcircle !== false)
+		.filter((f) => f.fcircle !== false && !isNavigationFriend(f))
 		.map((f) => ({
 			title: f.title,
 			siteurl: f.siteurl,

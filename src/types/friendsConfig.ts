@@ -8,7 +8,7 @@ export type FriendLink = {
 	tags?: string[]; // 标签数组
 	weight: number; // 权重，数字越大排序越靠前
 	enabled: boolean; // 是否启用
-	fcircle?: boolean; // 是否加入友链朋友圈（可选，默认 true，设为 false 时不聚合到朋友圈中）
+	fcircle?: boolean; // 是否加入友链朋友圈（可选，默认：博客类友链为 true，导航/工具类为 false；设为 false 时不抓取、不聚合到朋友圈中）
 };
 
 export type FriendsPageConfig = {
