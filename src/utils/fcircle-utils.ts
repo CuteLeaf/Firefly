@@ -73,6 +73,22 @@ function isNavigationFriend(friend: {
 }
 
 /**
+ * 判断远程源是否为博主自身站点（避免在友链列表中展示自身卡片时，又通过 RSS 重复抓取自身文章）
+ */
+function isSelfSite(url?: string): boolean {
+	if (!url) return false;
+	const selfUrl = siteConfig.site_url;
+	if (!selfUrl) return false;
+	try {
+		const selfHost = new URL(selfUrl).hostname.toLowerCase();
+		const parsed = new URL(url, selfUrl);
+		return parsed.hostname.toLowerCase() === selfHost;
+	} catch {
+		return false;
+	}
+}
+
+/**
  * 校验是否为合法 HTTP/HTTPS 链接（防范 javascript: / data: 等 XSS 伪协议）
  */
 export function isValidHttpUrl(urlString: string | null | undefined): boolean {
@@ -403,9 +419,15 @@ export async function getFcircleItems(): Promise<FcircleItem[]> {
 		console.warn("[Fcircle] Failed to load local self posts:", err);
 	}
 
-	// 2. 启用的友链列表（排除显式标记 fcircle === false 以及非博客类的导航/工具站点）
+	// 2. 启用的友链列表（排除显式标记 fcircle === false、博主自身站点以及非博客类的导航/工具站点）
 	const friends = getEnabledFriends()
-		.filter((f) => f.fcircle !== false && !isNavigationFriend(f))
+		.filter(
+			(f) =>
+				f.fcircle !== false &&
+				!isSelfSite(f.siteurl) &&
+				!isSelfSite(f.feedUrl) &&
+				!isNavigationFriend(f),
+		)
 		.map((f) => ({
 			title: f.title,
 			siteurl: f.siteurl,
@@ -416,29 +438,31 @@ export async function getFcircleItems(): Promise<FcircleItem[]> {
 		}));
 
 	// 3. 启用的独立订阅源（支持 feedUrl 自动提取 origin 与默认 favicon）
-	const subscriptions = getEnabledSubscriptions().map((s) => {
-		let derivedSiteUrl = s.siteurl;
-		if (!derivedSiteUrl && s.feedUrl) {
-			try {
-				derivedSiteUrl = new URL(s.feedUrl).origin;
-			} catch {
-				derivedSiteUrl = s.feedUrl;
+	const subscriptions = getEnabledSubscriptions()
+		.filter((s) => !isSelfSite(s.siteurl) && !isSelfSite(s.feedUrl))
+		.map((s) => {
+			let derivedSiteUrl = s.siteurl;
+			if (!derivedSiteUrl && s.feedUrl) {
+				try {
+					derivedSiteUrl = new URL(s.feedUrl).origin;
+				} catch {
+					derivedSiteUrl = s.feedUrl;
+				}
 			}
-		}
-		const finalSiteUrl = derivedSiteUrl || "";
-		const defaultFavicon = finalSiteUrl
-			? `${finalSiteUrl.replace(/\/+$/, "")}/favicon.ico`
-			: "/favicon/favicon.ico";
+			const finalSiteUrl = derivedSiteUrl || "";
+			const defaultFavicon = finalSiteUrl
+				? `${finalSiteUrl.replace(/\/+$/, "")}/favicon.ico`
+				: "/favicon/favicon.ico";
 
-		return {
-			title: s.title,
-			siteurl: finalSiteUrl,
-			imgurl: s.imgurl || defaultFavicon,
-			feedUrl: s.feedUrl,
-			tags: s.tags && s.tags.length > 0 ? s.tags : undefined,
-			sourceType: "subscription" as const,
-		};
-	});
+			return {
+				title: s.title,
+				siteurl: finalSiteUrl,
+				imgurl: s.imgurl || defaultFavicon,
+				feedUrl: s.feedUrl,
+				tags: s.tags && s.tags.length > 0 ? s.tags : undefined,
+				sourceType: "subscription" as const,
+			};
+		});
 
 	const remoteSources = [...friends, ...subscriptions];
 
@@ -513,11 +537,36 @@ export async function getFcircleItems(): Promise<FcircleItem[]> {
 		return true;
 	});
 
-	// 根据文章链接去重
+	// 归一化文章链接（同时兼容站内相对路径与带有 site_url 前缀的绝对路径），防止博主自身或友链文章重复
+	const normalizeLink = (link: string): string => {
+		let clean = link.trim().replace(/\/+$/, "").toLowerCase();
+		if (siteConfig.site_url) {
+			try {
+				const origin = new URL(siteConfig.site_url).origin.toLowerCase();
+				if (clean.startsWith(origin)) {
+					clean = clean.slice(origin.length);
+				}
+			} catch {}
+		}
+		return clean || "/";
+	};
+
+	// 综合链接与博主自身文章标题去重，彻底阻断外部抓取镜像产生重复
 	const seenLinks = new Set<string>();
+	const seenSelfTitles = new Set<string>();
 	const uniqueItems: FcircleItem[] = [];
+
 	for (const item of validItems) {
-		const normLink = item.link.replace(/\/+$/, "").toLowerCase();
+		const normLink = normalizeLink(item.link);
+		const normTitle = (item.title || "").trim().toLowerCase();
+
+		if (item.sourceType === "self") {
+			seenSelfTitles.add(normTitle);
+		} else if (seenSelfTitles.has(normTitle)) {
+			// 若非 self 条目的标题与博主自身文章相同，判定为自身文章的外部 RSS 镜像，予以跳过
+			continue;
+		}
+
 		if (!seenLinks.has(normLink)) {
 			seenLinks.add(normLink);
 			uniqueItems.push(item);
