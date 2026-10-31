@@ -197,7 +197,8 @@ src/
 │   ├── plantumlConfig.ts         # PlantUML diagram configuration
 │   ├── profileConfig.ts          # User profile configuration
 │   ├── sidebarConfig.ts          # Sidebar layout configuration
-│   └── sponsorConfig.ts          # Sponsor configuration
+│   ├── sponsorConfig.ts          # Sponsor configuration
+│   └── subscriptionConfig.ts     # Independent subscriptions configuration
 ```
 
 
