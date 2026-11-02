@@ -96,6 +96,11 @@
     }
   }
 
+  /* 行内代码保留连续空格；代码块（pre > code）不受影响 */
+  :not(pre) > code {
+    white-space: break-spaces;
+  }
+
   .expressive-code {
     @apply my-4;
   }
