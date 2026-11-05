@@ -1,0 +1,69 @@
+/* Profile 组件链接按钮：图标 / 横幅两种显示模式
+ *
+ * 模式由 <html data-profile-link-mode> 决定，默认值来自 profileConfig.linkDisplayMode，
+ * 首帧前由 Layout.astro 的内联脚本按 localStorage 覆盖，之后可在显示设置面板里即时切换。
+ * 两种模式共用同一份 DOM，只靠这里的 CSS 改形态，避免切换时重排组件。
+ */
+
+.profile-links {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.5rem;
+	margin-bottom: 0.25rem;
+}
+
+/* ── 基础样式 = 仅图标模式（原版行为）：紧凑方形按钮，只留图标 ────────── */
+
+.profile-link {
+	flex: 0 0 auto;
+	width: 2.5rem;
+	height: 2.5rem;
+	gap: 0.5rem;
+	font-weight: 700;
+	white-space: nowrap;
+}
+
+.profile-link-icon {
+	font-size: 1.5rem;
+	line-height: 1;
+	flex-shrink: 0;
+}
+
+.profile-link-name {
+	display: none;
+}
+
+/* 仅图标模式下，单条链接仍可通过 links[].showName 打开名称 */
+.profile-link[data-show-name="true"] {
+	width: auto;
+	padding-inline: 0.75rem;
+}
+
+.profile-link[data-show-name="true"] .profile-link-name {
+	display: inline;
+}
+
+/* ── 横幅模式：横向宽按钮、常显名称 ────────────────────────────────── */
+
+/* flex: 1 1 auto —— 换行先按内容宽度决定，同一行的按钮再拉伸铺满剩余空间。
+ * 于是侧边栏窄到放不下两个按钮时会自动从一行两个变成一行一个，
+ * 单个按钮过宽时（min-width: 0 + 名称省略号）也不会撑破卡片。 */
+:root[data-profile-link-mode="banner"] .profile-link {
+	flex: 1 1 auto;
+	width: auto;
+	min-width: 0;
+	max-width: 100%;
+	padding-inline: 1rem;
+}
+
+:root[data-profile-link-mode="banner"] .profile-link-icon {
+	font-size: 1.25rem;
+}
+
+:root[data-profile-link-mode="banner"] .profile-link-name {
+	display: inline;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}

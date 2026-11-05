@@ -18,6 +18,7 @@ import {
 	getDefaultOverlayBlur,
 	getDefaultOverlayCardOpacity,
 	getDefaultOverlayOpacity,
+	getDefaultProfileLinkMode,
 	getDefaultSakuraEnabled,
 	getDefaultWavesEnabled,
 	getHue,
@@ -30,6 +31,7 @@ import {
 	getStoredOverlayBlur,
 	getStoredOverlayCardOpacity,
 	getStoredOverlayOpacity,
+	getStoredProfileLinkMode,
 	getStoredSakuraEnabled,
 	getStoredWallpaperMode,
 	getStoredWavesEnabled,
@@ -43,6 +45,7 @@ import {
 	setOverlayBlur,
 	setOverlayCardOpacity,
 	setOverlayOpacity,
+	setProfileLinkMode,
 	setSakuraEnabled,
 	setWallpaperMode,
 	setWavesEnabled,
@@ -55,6 +58,7 @@ import {
 	siteConfig,
 } from "@/config";
 import type { FullscreenWallpaperLayout, WALLPAPER_MODE } from "@/types/config";
+import type { ProfileLinkDisplayMode } from "@/types/profileConfig";
 
 type OverlaySliderItem = {
 	key: "opacity" | "blur" | "cardOpacity";
@@ -114,6 +118,8 @@ let cardBorderEnabled = $state(false);
 const defaultCardBorderEnabled = getDefaultCardBorderEnabled();
 let cardFollowThemeEnabled = $state(false);
 const defaultCardFollowThemeEnabled = getDefaultCardFollowThemeEnabled();
+let profileLinkMode: ProfileLinkDisplayMode = $state("icon");
+const defaultProfileLinkMode = getDefaultProfileLinkMode();
 
 const isWallpaperSwitchable = displaySettingsConfig.wallpaperModeSwitchable;
 const isFullscreenLayoutSwitchable = $derived(
@@ -138,6 +144,8 @@ const isSakuraSwitchable = displaySettingsConfig.sakuraSwitchable;
 const isCardBorderSwitchable = displaySettingsConfig.cardBorderSwitchable;
 const isCardFollowThemeSwitchable =
 	displaySettingsConfig.cardFollowThemeSwitchable;
+const isProfileLinkModeSwitchable =
+	displaySettingsConfig.profileLinkModeSwitchable;
 // 是否有任何横幅设置可显示（后续添加新设置时在此处添加条件）
 const hasBannerSettings =
 	isWavesSwitchable ||
@@ -191,6 +199,9 @@ let cardSettingsIsDefault = $derived(
 		(!isCardFollowThemeSwitchable ||
 			cardFollowThemeEnabled === defaultCardFollowThemeEnabled),
 );
+let profileLinkModeIsDefault = $derived(
+	profileLinkMode === defaultProfileLinkMode,
+);
 
 const hasAnyContent = $derived(
 	showThemeColor ||
@@ -199,7 +210,8 @@ const hasAnyContent = $derived(
 		allowLayoutSwitch ||
 		hasBannerSettings ||
 		hasOverlaySettings ||
-		isSakuraSwitchable,
+		isSakuraSwitchable ||
+		isProfileLinkModeSwitchable,
 );
 
 // --- Tab visibility ---
@@ -207,7 +219,8 @@ const hasAppearanceTab = $derived(
 	showThemeColor ||
 		allowLayoutSwitch ||
 		isCardBorderSwitchable ||
-		isCardFollowThemeSwitchable,
+		isCardFollowThemeSwitchable ||
+		isProfileLinkModeSwitchable,
 );
 const hasWallpaperTab = $derived(
 	isWallpaperSwitchable ||
@@ -458,6 +471,17 @@ function resetCardSettings() {
 	}
 }
 
+function switchProfileLinkMode(mode: ProfileLinkDisplayMode) {
+	profileLinkMode = mode;
+	setProfileLinkMode(mode);
+}
+
+function resetProfileLinkMode() {
+	if (profileLinkMode === defaultProfileLinkMode) return;
+	profileLinkMode = defaultProfileLinkMode;
+	setProfileLinkMode(defaultProfileLinkMode);
+}
+
 function switchWallpaperMode(newMode: WALLPAPER_MODE) {
 	wallpaperMode = newMode;
 	setWallpaperMode(newMode);
@@ -553,6 +577,9 @@ onMount(() => {
 	// 从localStorage读取卡片样式状态
 	cardBorderEnabled = getStoredCardBorderEnabled();
 	cardFollowThemeEnabled = getStoredCardFollowThemeEnabled();
+
+	// 从localStorage读取 Profile 链接显示模式
+	profileLinkMode = getStoredProfileLinkMode();
 
 	// 从localStorage读取全屏透明设置状态
 	overlayOpacity = getStoredOverlayOpacity();
@@ -801,6 +828,51 @@ $effect(() => {
 					</div>
 				</button>
 				{/if}
+			</div>
+		</div>
+		{/if}
+
+		<!-- Profile Link Style Section -->
+		{#if isProfileLinkModeSwitchable}
+		<div>
+			<div class="section-title">
+				{i18n(I18nKey.profileLinkMode)}
+				<button aria-label="Reset to Default" class="btn-regular rounded-md active:scale-90"
+						class:opacity-0={profileLinkModeIsDefault} class:pointer-events-none={profileLinkModeIsDefault}
+						disabled={profileLinkModeIsDefault} aria-hidden={profileLinkModeIsDefault ? "true" : undefined} onclick={resetProfileLinkMode}>
+					<div class="text-(--btn-content)">
+						<Icon icon="fa7-solid:arrow-rotate-left" class="text-[0.75rem]"></Icon>
+					</div>
+				</button>
+			</div>
+			<!-- 按钮组按面板宽度自适应列数，选项变多或标签变长都不会溢出 -->
+			<div class="settings-adaptive-grid">
+				<button
+					aria-label={i18n(I18nKey.profileLinkModeIcon)}
+					class="btn-regular rounded-md py-2 px-3 flex items-center justify-center gap-2 active:scale-95 transition-all relative overflow-hidden"
+					class:opacity-60={profileLinkMode !== "icon"}
+					class:bg-(--btn-regular-bg-hover)={profileLinkMode === "icon"}
+					onclick={() => switchProfileLinkMode("icon")}
+					title={i18n(I18nKey.profileLinkModeIcon)}
+				>
+					<svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+						<path d="M3 8h5v8H3zm6.5 0h5v8h-5zM16 8h5v8h-5z"/>
+					</svg>
+					<span class="text-xs font-medium truncate">{i18n(I18nKey.profileLinkModeIcon)}</span>
+				</button>
+				<button
+					aria-label={i18n(I18nKey.profileLinkModeBanner)}
+					class="btn-regular rounded-md py-2 px-3 flex items-center justify-center gap-2 active:scale-95 transition-all relative overflow-hidden"
+					class:opacity-60={profileLinkMode !== "banner"}
+					class:bg-(--btn-regular-bg-hover)={profileLinkMode === "banner"}
+					onclick={() => switchProfileLinkMode("banner")}
+					title={i18n(I18nKey.profileLinkModeBanner)}
+				>
+					<svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+						<path d="M3 5h18v6H3zm0 8h18v6H3z"/>
+					</svg>
+					<span class="text-xs font-medium truncate">{i18n(I18nKey.profileLinkModeBanner)}</span>
+				</button>
 			</div>
 		</div>
 		{/if}

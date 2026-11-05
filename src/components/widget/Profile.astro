@@ -52,45 +52,30 @@ const className = Astro.props.class;
     <div class="text-center text-neutral-400 mb-2.5 transition">
       {profileConfig.bio}
     </div>
-        <div class="flex flex-wrap gap-2 justify-center mb-1">
-            {profileConfig.links.length > 1 && profileConfig.links.map(item =>
-                    {
-                    const showName = item.showName;
-                    const className = showName 
-                        ? "btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95" 
-                        : "btn-regular rounded-lg h-10 w-10 active:scale-90";
-
-                    if (item.url.startsWith("mailto:")) {
-                        const encodedEmail = encodeMailto(item.url);
-                        return <a rel="me" aria-label={item.name} href="#" data-encoded-email={encodedEmail} onclick={MAILTO_ONCLICK_SCRIPT},
-                                    class={className}>
-                            <Icon name={item.icon} class="text-[1.5rem]"></Icon>
-                            {showName && item.name}
-                        </a>
-                    } else {
-                        return <a rel="me" aria-label={item.name} href={item.url} target="_blank" class={className}>
-                            <Icon name={item.icon} class="text-[1.5rem]"></Icon>
-                            {showName && item.name}
-                        </a>
-                    }
-                    }
-            )}
-            {profileConfig.links.length == 1 && (function(item){
+        <div class="profile-links">
+            {profileConfig.links.map((item) => {
+                // 图标 / 横幅两种模式共用同一份 DOM，由 html[data-profile-link-mode] 上的
+                // CSS（src/styles/profile.css）切换形态，这样才能在显示设置面板里即时切换。
+                // data-show-name 只对「仅图标」模式有意义：该模式下逐条决定是否显示名称。
+                // 只有一条链接时恒显示名称 —— 原版该情形走单独的分支、忽略 showName，
+                // 这里保持同样行为，避免单链接配置升级后按钮突然变成纯图标。
+                const showName =
+                    item.showName || profileConfig.links.length === 1 ? "true" : "false";
                 if (item.url.startsWith("mailto:")) {
-                        const encodedEmail = encodeMailto(item.url);
-                        return <a rel="me" aria-label={item.name} href="#" data-encoded-email={encodedEmail} onclick={MAILTO_ONCLICK_SCRIPT},
-                                    class="btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95">
-                            <Icon name={item.icon} class="text-[1.5rem]"></Icon>
-                            {item.name}
-                        </a>
-                    } else {
-                        return <a rel="me" aria-label={item.name} href={item.url} target="_blank"
-                                            class="btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95">
-                                <Icon name={item.icon} class="text-[1.5rem]"></Icon>
-                                {item.name}
-                            </a>
-                    }
-            })(profileConfig.links[0])}
+                    const encodedEmail = encodeMailto(item.url);
+                    return <a rel="me" aria-label={item.name} href="#" data-encoded-email={encodedEmail} onclick={MAILTO_ONCLICK_SCRIPT},
+                                class="profile-link btn-regular rounded-lg active:scale-95" data-show-name={showName}>
+                        <Icon name={item.icon} class="profile-link-icon"></Icon>
+                        <span class="profile-link-name">{item.name}</span>
+                    </a>
+                } else {
+                    return <a rel="me" aria-label={item.name} href={item.url} target="_blank"
+                                class="profile-link btn-regular rounded-lg active:scale-95" data-show-name={showName}>
+                        <Icon name={item.icon} class="profile-link-icon"></Icon>
+                        <span class="profile-link-name">{item.name}</span>
+                    </a>
+                }
+            })}
         </div>
   </div>
 </div>

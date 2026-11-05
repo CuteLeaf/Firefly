@@ -175,3 +175,12 @@
 	align-items: center;
 	justify-content: center;
 }
+
+/* 多选设置项的按钮组：按面板宽度自适应列数
+ * auto-fit + minmax 让每列不低于 6.5rem，放不下就自动减少列数并换行，
+ * 因此新增选项或标签变长都不会把按钮挤到面板外面。 */
+#display-setting .settings-adaptive-grid {
+	display: grid;
+	gap: 0.5rem;
+	grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+}
