@@ -148,6 +148,9 @@
 
    [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/CuteLeaf/Firefly&project-name=Firefly&repository-name=Firefly)
    [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/CuteLeaf/Firefly)
+   [![Deploy to Wasmer](https://img.shields.io/badge/Deploy%20to-Wasmer-171717?logo=wasmer&logoColor=white)](https://wasmer.io/apps/create?github=CuteLeaf%2FFirefly)
+
+   Wasmer ボタンは、このリポジトリをビルド用にインポートします。カスタマイズし、プッシュ時に自動で再デプロイするには、自分のフォークをインポートしてください。
 
 ## 📖 設定説明
 
