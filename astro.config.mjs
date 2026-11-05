@@ -351,7 +351,22 @@ export default defineConfig({
 		}),
 	},
 	vite: {
-		plugins: [tailwindcss()],
+		plugins: [
+			tailwindcss(),
+			{
+				name: "defer-non-critical-css",
+				// Defer expressive-code CSS (non-critical for initial render) using
+				// the media="print" + onload trick. This moves the stylesheet out
+				// of the critical path so it doesn't block first paint / LCP.
+				transformIndexHtml(html) {
+					return html.replace(
+						/<link rel="stylesheet" href="([^"]*MainGridLayout[^"]*)">/g,
+						(match, href) =>
+							`<link rel="stylesheet" href="${href}" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="${href}"></noscript>`,
+					);
+				},
+			},
+		],
 		server: {
 			watch: {
 				ignored: ["**/package/**", "**/Firefly-docs/**"],

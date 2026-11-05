@@ -5,3 +5,24 @@
 	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 	gap: 0.75rem;
 }
+
+/* 截图预览样式 */
+.friend-screenshot-preview {
+	transition: max-height 0.4s ease, opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.friend-screenshot-preview img {
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.friend-card:hover .friend-screenshot-preview img {
+	transform: scale(1.01);
+	box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.2);
+}
+
+/* 响应式调整：移动端隐藏截图预览 */
+@media (max-width: 768px) {
+	.friend-screenshot-preview {
+		display: none;
+	}
+}
