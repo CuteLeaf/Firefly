@@ -137,15 +137,34 @@ export function computeGridColumns(input: GridColumnsInput): GridColumnVars {
 	const rightIn =
 		sidebarActive && input.hasRightWidgets && input.position !== "left";
 
-	// 平板端：position 为 both 时只显示 tabletSidebar 指定的那一侧
+	// 平板端：position 为 both 时只显示 tabletSidebar 指定的那一侧。
+	// 若指定的一侧没有可用组件（hasLeft/hasRightWidgets 为 false），则回退到另一侧，
+	// 避免平板宽度下整列侧边栏直接消失。
+	let tabletSide = input.tabletSidebar;
+	if (
+		input.position === "both" &&
+		tabletSide === "left" &&
+		!input.hasLeftWidgets &&
+		input.hasRightWidgets
+	) {
+		tabletSide = "right";
+	} else if (
+		input.position === "both" &&
+		tabletSide === "right" &&
+		!input.hasRightWidgets &&
+		input.hasLeftWidgets
+	) {
+		tabletSide = "left";
+	}
+
 	const mdLeft =
 		leftIn &&
 		(input.position === "left" ||
-			(input.position === "both" && input.tabletSidebar === "left"));
+			(input.position === "both" && tabletSide === "left"));
 	const mdRight =
 		rightIn &&
 		(input.position === "right" ||
-			(input.position === "both" && input.tabletSidebar === "right"));
+			(input.position === "both" && tabletSide === "right"));
 
 	// 侧栏已启用但本断点无侧栏列 → 内容栏按比例收窄；比例钳到 [0,1]，1 即不收窄
 	// 闸门用 enabled 而非 sidebarActive：enable: false 时仍铺满。md 与 xl 需各自判定
