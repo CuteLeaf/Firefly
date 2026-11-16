@@ -148,6 +148,85 @@
    [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/CuteLeaf/Firefly&project-name=Firefly&repository-name=Firefly)
    [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/CuteLeaf/Firefly)
 
+### GitLab Pages에 배포하기
+
+GitLab Pages는 **비공개 저장소**에서도 사이트를 배포할 수 있으므로, 소스 코드를 공개하지 않은 채로 자체 도메인에서 블로그를 운영할 수 있습니다.
+
+1. **저장소를 GitLab으로 push하기**
+
+   GitLab에서 빈 프로젝트를 만든 뒤 Firefly를 push 합니다:
+
+   ```bash
+   git remote add gitlab https://gitlab.com/<your-username>/<your-project>.git
+   git push -u gitlab master
+   ```
+
+2. **CI/CD 설정 추가하기**
+
+   이 저장소에는 바로 사용할 수 있는 `.gitlab-ci.yml`이 포함되어 있습니다. 프로젝트와 함께 push되었는지 확인하세요. 내용은 다음과 같습니다:
+
+   ```yaml
+   # GitLab Pages deployment for Firefly
+   # Docs: see the "GitLab Pages Deployment" section in README.md
+
+   image: node:24
+
+   stages:
+     - build
+     - deploy
+
+   variables:
+     # Astro caches the pnpm store between jobs
+     PNPM_HOME: "/builds/.pnpm"
+     npm_config_cache: "/builds/.pnpm/npm-cache"
+     ASTRO_TELEMETRY_DISABLED: "1"
+
+   cache:
+     key:
+       files:
+         - pnpm-lock.yaml
+     paths:
+       - .pnpm-store/
+
+   build:
+     stage: build
+     script:
+       - corepack enable
+       - corepack prepare pnpm@11.22.0 --activate
+       - pnpm config set store-dir "$CI_PROJECT_DIR/.pnpm-store"
+       - pnpm install --frozen-lockfile
+       - pnpm run build
+     artifacts:
+       paths:
+         - dist
+       expire_in: 1 week
+
+   pages:
+     stage: deploy
+     dependencies:
+       - build
+     script:
+       - rm -rf public
+       - mv dist public
+       - test -f public/index.html
+     artifacts:
+       paths:
+         - public
+       expire_in: 1 week
+     rules:
+       - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+   ```
+
+3. **GitLab Pages 활성화하기**
+
+   `Settings > Pages`에서 배포 소스를 **GitLab CI/CD**로 설정합니다. 첫 파이프라인이 성공하면 `https://<your-username>.gitlab.io/<your-project>/`에 사이트가 공개됩니다.
+
+   기본 브랜치가 `master`가 아니라면 `rules` 조건을 그에 맞게 수정하세요.
+
+4. **자체 도메인 사용하기(선택)**
+
+   `Settings > Pages > Domains`에서 도메인을 추가하고 안내에 따라 DNS를 설정합니다. 그다음 `src/config/siteConfig.ts`의 `siteConfig.site_url`을 해당 도메인으로 바꿔 정규 링크와 사이트맵이 올바른 주소를 가리키도록 하세요.
+
 ## 📖 구성 안내
 
 > 📚 **상세 구성 문서**: 전체 구성 안내는 [Firefly 문서](https://docs-firefly.cuteleaf.cn/)를 확인하세요.

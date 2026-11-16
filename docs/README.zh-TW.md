@@ -152,6 +152,85 @@ Cloudflare Workers 部署：[【不用服务器，无需备案，零成本搭建
    [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/CuteLeaf/Firefly&project-name=Firefly&repository-name=Firefly)
    [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/CuteLeaf/Firefly)
 
+### GitLab Pages 部署
+
+GitLab Pages 支援從**私有倉庫**發布站台，因此原始碼可以保持私有，部落格依然能透過自己的網域存取。
+
+1. **將倉庫推送到 GitLab**
+
+   在 GitLab 上新增一個空專案，然後將 Firefly 推送到該專案：
+
+   ```bash
+   git remote add gitlab https://gitlab.com/<your-username>/<your-project>.git
+   git push -u gitlab master
+   ```
+
+2. **新增 CI/CD 設定**
+
+   本倉庫已內建可直接使用的 `.gitlab-ci.yml`，只需確認它隨專案一起推送。其內容如下：
+
+   ```yaml
+   # GitLab Pages deployment for Firefly
+   # Docs: see the "GitLab Pages Deployment" section in README.md
+
+   image: node:24
+
+   stages:
+     - build
+     - deploy
+
+   variables:
+     # Astro caches the pnpm store between jobs
+     PNPM_HOME: "/builds/.pnpm"
+     npm_config_cache: "/builds/.pnpm/npm-cache"
+     ASTRO_TELEMETRY_DISABLED: "1"
+
+   cache:
+     key:
+       files:
+         - pnpm-lock.yaml
+     paths:
+       - .pnpm-store/
+
+   build:
+     stage: build
+     script:
+       - corepack enable
+       - corepack prepare pnpm@11.22.0 --activate
+       - pnpm config set store-dir "$CI_PROJECT_DIR/.pnpm-store"
+       - pnpm install --frozen-lockfile
+       - pnpm run build
+     artifacts:
+       paths:
+         - dist
+       expire_in: 1 week
+
+   pages:
+     stage: deploy
+     dependencies:
+       - build
+     script:
+       - rm -rf public
+       - mv dist public
+       - test -f public/index.html
+     artifacts:
+       paths:
+         - public
+       expire_in: 1 week
+     rules:
+       - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+   ```
+
+3. **啟用 GitLab Pages**
+
+   在 `Settings > Pages` 中將部署來源設定為 **GitLab CI/CD**。管線首次執行成功後，站台會發布在 `https://<your-username>.gitlab.io/<your-project>/`。
+
+   若預設分支不是 `master`，請相應調整 `rules` 條件。
+
+4. **使用自有網域（選用）**
+
+   在 `Settings > Pages > Domains` 中新增網域並依照畫面指示設定 DNS。接著將 `src/config/siteConfig.ts` 中的 `siteConfig.site_url` 改為該網域，讓規範連結與網站地圖指向正確位址。
+
 ## 📖 配置說明
 
 > 📚 **詳細配置文檔**: 查看 [Firefly使用文檔](https://docs-firefly.cuteleaf.cn/) 獲取完整的配置指南
