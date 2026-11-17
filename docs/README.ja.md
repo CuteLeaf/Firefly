@@ -198,7 +198,8 @@ src/
 │   ├── plantumlConfig.ts         # PlantUML 図表設定
 │   ├── profileConfig.ts          # ユーザープロフィール設定
 │   ├── sidebarConfig.ts          # サイドバーレイアウト設定
-│   └── sponsorConfig.ts          # スポンサー設定
+│   ├── sponsorConfig.ts          # スポンサー設定
+│   └── subscriptionConfig.ts     # 独立購読設定
 ```
 
 ## ⚙️ 記事のFrontmatter

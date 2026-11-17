@@ -85,6 +85,23 @@ export const en: Translation = {
 		"Here are my friends, welcome to visit and communicate with each other",
 	[Key.searchFriends]: "Search friends...",
 	[Key.friendsEmpty]: "No friends yet.",
+	[Key.fcircle]: "Friend Circle",
+	[Key.fcircleDescription]: "Latest updates from friend blogs",
+	[Key.fcircleEmpty]:
+		"No updates yet. Friends may not have feedUrl configured, or no new posts have been published",
+	[Key.fcircleTimeline]: "Timeline",
+	[Key.fcircleGrid]: "Grid",
+	[Key.fcircleToday]: "Today",
+	[Key.fcircleWeek]: "Past 7 Days",
+	[Key.fcircleTotal]: "Total",
+	[Key.fcircleSites]: "Blogs",
+	[Key.fcirclePostUnit]: "posts",
+	[Key.fcircleSiteUnit]: "sites",
+	[Key.fcirclePostsUpdated]: "updates",
+	[Key.fcircleBuildHint]:
+		"Content is fetched automatically during site build and is not updated in real time",
+	[Key.fcircleAuthor]: "Author",
+	[Key.fcircleSubscription]: "Feed",
 	[Key.booknav]: "Bookmark Nav",
 	[Key.booknavDescription]:
 		"A curated collection of useful sites, organized by category.",

@@ -85,6 +85,23 @@ export const ru: Translation = {
 		"Вот мои друзья, добро пожаловать посетить и общаться друг с другом",
 	[Key.searchFriends]: "Поиск друзей...",
 	[Key.friendsEmpty]: "Друзей пока нет.",
+	[Key.fcircle]: "Круг друзей",
+	[Key.fcircleDescription]: "Последние обновления из блогов друзей",
+	[Key.fcircleEmpty]:
+		"Обновлений пока нет. Возможно, у друзей не настроен feedUrl или нет новых записей",
+	[Key.fcircleTimeline]: "Хронология",
+	[Key.fcircleGrid]: "Сетка",
+	[Key.fcircleToday]: "Сегодня",
+	[Key.fcircleWeek]: "За 7 дней",
+	[Key.fcircleTotal]: "Всего",
+	[Key.fcircleSites]: "Блоги",
+	[Key.fcirclePostUnit]: "постов",
+	[Key.fcircleSiteUnit]: "сайтов",
+	[Key.fcirclePostsUpdated]: "обновлений",
+	[Key.fcircleBuildHint]:
+		"Контент собирается автоматически во время сборки сайта и не обновляется в реальном времени",
+	[Key.fcircleAuthor]: "Автор",
+	[Key.fcircleSubscription]: "Подписка",
 	[Key.booknav]: "Каталог закладок",
 	[Key.booknavDescription]:
 		"Подборка полезных сайтов, сгруппированных по категориям.",

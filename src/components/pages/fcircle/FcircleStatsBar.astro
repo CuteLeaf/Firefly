@@ -1,0 +1,118 @@
+---
+import { Icon } from "astro-icon/components";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { FcircleStats } from "@/utils/fcircle-utils";
+
+interface Props {
+	stats: FcircleStats;
+}
+
+const { stats } = Astro.props;
+---
+
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-4 select-none">
+	<!-- 今日更新 -->
+	<div
+		id="fcircle-today-stat-card"
+		class:list={[
+			"p-3 rounded-xl border flex items-center gap-3 transition-all duration-300 relative overflow-hidden group bg-(--card-bg)",
+			stats.todayCount > 0
+				? "border-(--primary)/30 bg-(--primary)/5 hover:border-(--primary)"
+				: "border-(--line-divider) hover:border-(--primary)/40",
+		]}
+	>
+		<div
+			id="fcircle-today-stat-icon"
+			class:list={[
+				"w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-105",
+				stats.todayCount > 0
+					? "bg-(--primary) text-white shadow-xs"
+					: "bg-(--primary)/10 text-(--primary)",
+			]}
+			aria-hidden="true"
+		>
+			<Icon name="mingcute:flash-line" class="text-lg" />
+		</div>
+		<div class="flex flex-col min-w-0">
+			<span class="text-xs text-neutral-500 dark:text-neutral-400 font-medium">{i18n(I18nKey.fcircleToday)}</span>
+			<div class="flex items-baseline gap-1 mt-0.5">
+				<span
+					id="fcircle-today-count"
+					class:list={[
+						"text-lg font-bold tabular-nums leading-tight",
+						stats.todayCount > 0
+							? "text-(--primary)"
+							: "text-neutral-800 dark:text-neutral-200",
+					]}
+				>
+					{stats.todayCount}
+				</span>
+				<span class="text-xs text-neutral-400">{i18n(I18nKey.fcirclePostUnit)}</span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 近 7 天更新 -->
+	<div
+		class="p-3 rounded-xl border border-(--line-divider) flex items-center gap-3 transition-all duration-300 relative overflow-hidden group bg-(--card-bg) hover:border-(--primary)/40"
+	>
+		<div
+			class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-(--primary)/10 text-(--primary) transition-transform duration-300 group-hover:scale-105"
+			aria-hidden="true"
+		>
+			<Icon name="mingcute:calendar-line" class="text-lg" />
+		</div>
+		<div class="flex flex-col min-w-0">
+			<span class="text-xs text-neutral-500 dark:text-neutral-400 font-medium">{i18n(I18nKey.fcircleWeek)}</span>
+			<div class="flex items-baseline gap-1 mt-0.5">
+				<span id="fcircle-week-count" class="text-lg font-bold tabular-nums leading-tight text-neutral-800 dark:text-neutral-200">
+					{stats.weekCount}
+				</span>
+				<span class="text-xs text-neutral-400">{i18n(I18nKey.fcirclePostUnit)}</span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 最新动态 -->
+	<div
+		class="p-3 rounded-xl border border-(--line-divider) flex items-center gap-3 transition-all duration-300 relative overflow-hidden group bg-(--card-bg) hover:border-(--primary)/40"
+	>
+		<div
+			class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-(--primary)/10 text-(--primary) transition-transform duration-300 group-hover:scale-105"
+			aria-hidden="true"
+		>
+			<Icon name="mingcute:document-2-line" class="text-lg" />
+		</div>
+		<div class="flex flex-col min-w-0">
+			<span class="text-xs text-neutral-500 dark:text-neutral-400 font-medium">{i18n(I18nKey.fcircleTotal)}</span>
+			<div class="flex items-baseline gap-1 mt-0.5">
+				<span class="text-lg font-bold tabular-nums leading-tight text-neutral-800 dark:text-neutral-200">
+					{stats.totalCount}
+				</span>
+				<span class="text-xs text-neutral-400">{i18n(I18nKey.fcirclePostUnit)}</span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 订阅博主 -->
+	<div
+		class="p-3 rounded-xl border border-(--line-divider) flex items-center gap-3 transition-all duration-300 relative overflow-hidden group bg-(--card-bg) hover:border-(--primary)/40"
+	>
+		<div
+			class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-(--primary)/10 text-(--primary) transition-transform duration-300 group-hover:scale-105"
+			aria-hidden="true"
+		>
+			<Icon name="mingcute:earth-2-line" class="text-lg" />
+		</div>
+		<div class="flex flex-col min-w-0">
+			<span class="text-xs text-neutral-500 dark:text-neutral-400 font-medium">{i18n(I18nKey.fcircleSites)}</span>
+			<div class="flex items-baseline gap-1 mt-0.5">
+				<span class="text-lg font-bold tabular-nums leading-tight text-neutral-800 dark:text-neutral-200">
+					{stats.siteCount}
+				</span>
+				<span class="text-xs text-neutral-400">{i18n(I18nKey.fcircleSiteUnit)}</span>
+			</div>
+		</div>
+	</div>
+</div>
