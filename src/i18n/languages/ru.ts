@@ -416,6 +416,11 @@ export const ru: Translation = {
 	[Key.cardBorder]: "Рамка и тень карточек",
 	[Key.cardFollowTheme]: "Карточки跟随主题色",
 
+	// Стиль ссылок профиля
+	[Key.profileLinkMode]: "Стиль ссылок профиля",
+	[Key.profileLinkModeIcon]: "Только иконки",
+	[Key.profileLinkModeBanner]: "Баннер",
+
 	// Макет списка сообщений
 	[Key.postListLayout]: "Макет списка сообщений",
 	[Key.postListLayoutList]: "Список",

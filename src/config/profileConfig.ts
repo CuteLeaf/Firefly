@@ -14,12 +14,19 @@ export const profileConfig: ProfileConfig = {
 	// 个人签名
 	bio: "Hello, I'm XiaYe.",
 
+	// 链接显示模式
+	// "icon"   = 仅图标：紧凑方形按钮（默认，与旧版表现一致）
+	// "banner" = 横幅：横向宽按钮、常显名称，一行放不下自动换行
+	// 这里只是默认值，开启显示设置面板后可在「外观 → Profile 链接样式」里运行时切换
+	linkDisplayMode: "icon",
+
 	// 链接配置
 	// 已经预装的图标集：fa7-brands，fa7-regular，fa7-solid，material-symbols，simple-icons
 	// 访问https://icones.js.org/ 获取图标代码，
 	// 如果想使用尚未包含相应的图标集，则需要安装它
 	// `pnpm add @iconify-json/<icon-set-name>`
-	// showName: true 时显示图标和名称，false 时只显示图标
+	// showName 只在「仅图标」模式下生效：true 显示图标和名称，false 只显示图标
+	// 「横幅」模式下恒显示名称，showName 被忽略
 	links: [
 		{
 			name: "GitHub",

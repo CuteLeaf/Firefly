@@ -412,6 +412,11 @@ export const ja: Translation = {
 	[Key.cardBorder]: "カードのボーダーと影",
 	[Key.cardFollowTheme]: "カードのテーマカラー追随",
 
+	// プロフィールリンクのスタイル
+	[Key.profileLinkMode]: "プロフィールリンク",
+	[Key.profileLinkModeIcon]: "アイコンのみ",
+	[Key.profileLinkModeBanner]: "バナー",
+
 	// 投稿リストレイアウト
 	[Key.postListLayout]: "投稿リストレイアウト",
 	[Key.postListLayoutList]: "リスト",

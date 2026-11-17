@@ -405,6 +405,11 @@ export const zh_CN: Translation = {
 	[Key.cardBorder]: "卡片边框和阴影",
 	[Key.cardFollowTheme]: "卡片跟随主题色",
 
+	// Profile 链接样式
+	[Key.profileLinkMode]: "Profile 链接样式",
+	[Key.profileLinkModeIcon]: "仅图标",
+	[Key.profileLinkModeBanner]: "横幅",
+
 	// 文章布局
 	[Key.postListLayout]: "文章布局",
 	[Key.postListLayoutList]: "列表",

@@ -401,6 +401,11 @@ enum I18nKey {
 	cardBorder = "cardBorder",
 	cardFollowTheme = "cardFollowTheme",
 
+	// Profile 链接样式
+	profileLinkMode = "profileLinkMode",
+	profileLinkModeIcon = "profileLinkModeIcon",
+	profileLinkModeBanner = "profileLinkModeBanner",
+
 	// 文章布局
 	postListLayout = "postListLayout",
 	postListLayoutList = "postListLayoutList",
