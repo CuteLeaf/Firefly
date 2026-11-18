@@ -430,19 +430,196 @@ console.log(a, b);
 
 ### 不止是代码块
 
-标签页内可以放任意内容，例如文字、列表或图片：
+需要在同一标签页内组合说明文字、代码和列表时，使用富内容语法：外层是 `:::: code-group`，每个标签页用 `::: code-tab label="..."` 包裹。这样代码前后的说明会与代码一起切换。
 
-::: code-group labels=[说明, 列表]
+````markdown
+:::: code-group label="Installation choices"
 
-这是一段普通的段落内容。
+::: code-tab label="npm"
 
-- 列表项一
-- 列表项二
+先安装依赖，再启动开发服务器。
+
+```sh
+npm install
+npm run dev
+```
+
+保持终端运行，然后打开本地预览地址。
 
 :::
 
+::: code-tab label="pnpm"
+
+使用 pnpm 安装并启动项目。
+
+```sh
+pnpm install
+pnpm dev
+```
+
+- 需要 Node.js 22.23 或更新版本。
+- 使用项目指定的 pnpm 版本。
+
+:::
+
+::::
+````
+
+渲染效果：
+
+:::: code-group label="Installation choices"
+
+::: code-tab label="npm"
+
+先安装依赖，再启动开发服务器。
+
+```sh
+npm install
+npm run dev
+```
+
+保持终端运行，然后打开本地预览地址。
+
+:::
+
+::: code-tab label="pnpm"
+
+使用 pnpm 安装并启动项目。
+
+```sh
+pnpm install
+pnpm dev
+```
+
+- 需要 Node.js 22.23 或更新版本。
+- 使用项目指定的 pnpm 版本。
+
+:::
+
+::::
+
+### 在代码围栏上填写标签
+
+也可以省略 `labels=[...]`，将标签写在代码围栏的方括号中。Emoji 短代码仍然可用，Expressive Code 的 `title`、行号和高亮配置也可以一起使用。
+
+````markdown
+::: code-group
+
+```sh [:package: npm]
+npm install rehype-code-group
+```
+
+```sh [:package: pnpm]
+pnpm add rehype-code-group
+```
+
+:::
+````
+
+::: code-group
+
+```sh [:package: npm]
+npm install rehype-code-group
+```
+
+```sh [:package: pnpm]
+pnpm add rehype-code-group
+```
+
+:::
+
+### 自动生成包管理器标签
+
+在组内给 npm 命令的围栏添加 `npm2yarn`，构建时会自动生成 npm、pnpm、Yarn 和 Bun 的命令标签，无需手动维护四份命令。
+
+````markdown
+::: code-group
+
+```sh npm2yarn
+npm install rehype-code-group
+```
+
+:::
+````
+
+::: code-group
+
+```sh npm2yarn
+npm install rehype-code-group
+```
+
+:::
+
+### 同步选择、记忆与纵向布局
+
+下面两组使用相同的 `sync="firefly-package-manager"` 和 `persist="local"`：在一组中选择 pnpm，另一组也会切换，刷新后仍会保留选择。跨组同步依靠相同的 `value`，标签文字可以不同。
+
+给外层添加 `orientation="vertical"` 可在宽屏上将标签放到侧边；窄屏会自动改为顶部标签。纵向标签使用 <kbd>↑</kbd> / <kbd>↓</kbd>，横向标签使用 <kbd>←</kbd> / <kbd>→</kbd>。
+
+````markdown
+:::: code-group label="Install dependencies" sync="firefly-package-manager" persist="local"
+
+::: code-tab label="npm" value="npm"
+
+```sh
+npm install
+```
+
+:::
+
+::: code-tab label="pnpm" value="pnpm"
+
+```sh
+pnpm install
+```
+
+:::
+
+::::
+````
+
+:::: code-group label="Install dependencies" sync="firefly-package-manager" persist="local"
+
+::: code-tab label="npm" value="npm"
+
+```sh
+npm install
+```
+
+:::
+
+::: code-tab label="pnpm" value="pnpm"
+
+```sh
+pnpm install
+```
+
+:::
+
+::::
+
+:::: code-group label="Start development server" sync="firefly-package-manager" persist="local" orientation="vertical"
+
+::: code-tab label="npm" value="npm"
+
+```sh
+npm run dev
+```
+
+:::
+
+::: code-tab label="pnpm" value="pnpm"
+
+```sh
+pnpm dev
+```
+
+:::
+
+::::
+
 > [!TIP]
-> 标签栏在构建期生成，默认展开第一项；支持鼠标点击与键盘 <kbd>←</kbd> / <kbd>→</kbd> / <kbd>Home</kbd> / <kbd>End</kbd> 切换。
+> 标签栏在构建期生成，默认展开第一项；支持鼠标点击与键盘 <kbd>←</kbd> / <kbd>→</kbd> / <kbd>Home</kbd> / <kbd>End</kbd> 切换。禁用 JavaScript 或打印文章时，所有标签页的内容都会显示。
 
 ### 在提醒框内使用（MDX 组件）
 
