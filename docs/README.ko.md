@@ -147,6 +147,9 @@
 
    [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/CuteLeaf/Firefly&project-name=Firefly&repository-name=Firefly)
    [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/CuteLeaf/Firefly)
+   [![Deploy to Wasmer](https://img.shields.io/badge/Deploy%20to-Wasmer-171717?logo=wasmer&logoColor=white)](https://wasmer.io/apps/create?github=CuteLeaf%2FFirefly)
+
+   Wasmer 버튼은 빌드를 위해 이 저장소를 가져옵니다. 내용을 수정하고 푸시할 때 자동으로 다시 배포하려면 자신이 포크한 저장소를 가져오세요.
 
 ## 📖 구성 안내
 
