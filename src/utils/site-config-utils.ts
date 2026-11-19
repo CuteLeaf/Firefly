@@ -63,6 +63,7 @@ export function getOgLocale(lang: string): string {
 		case "ru":
 			return "ru_RU";
 		case "es":
+		case "es_es":
 			return "es_ES";
 		default:
 			return "en_US";
