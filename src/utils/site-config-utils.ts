@@ -27,6 +27,7 @@ function normalizeSiteLang(
 	if (v === "ja" || v === "ja_jp" || v === "ja-jp") return "ja";
 	if (v === "ru" || v === "ru_ru" || v === "ru-ru") return "ru";
 	if (v === "ko" || v === "ko_kr" || v === "ko-kr") return "ko";
+	if (v === "es" || v === "es_es" || v === "es-es") return "es";
 	if (
 		v === "en" ||
 		v === "en_us" ||
@@ -48,7 +49,7 @@ export function resolveSiteLang(
 }
 
 // 由语言代码生成 OpenGraph og:locale（language_TERRITORY 格式）。
-// 站点语言已是下划线形式（zh_CN/zh_TW/en/ja/ko/ru），仅需为无地区的语言补全区号。
+// 站点语言已是下划线形式（zh_CN/zh_TW/en/ja/ko/ru/es），仅需为无地区的语言补全区号。
 export function getOgLocale(lang: string): string {
 	switch (lang.toLowerCase().replace("-", "_")) {
 		case "zh_cn":
@@ -61,6 +62,8 @@ export function getOgLocale(lang: string): string {
 			return "ko_KR";
 		case "ru":
 			return "ru_RU";
+		case "es":
+			return "es_ES";
 		default:
 			return "en_US";
 	}
