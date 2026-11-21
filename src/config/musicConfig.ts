@@ -9,7 +9,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	showInSidebar: true,
 
 	// 使用方式："meting" 使用 Meting API，"local" 使用本地音乐列表
-	mode: "meting",
+	mode: "local",
 
 	// 默认音量 (0-1)
 	volume: 0.7,
@@ -18,9 +18,9 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	playMode: "list",
 
 	// 是否显启用歌词
-	showLyrics: true,
+	showLyrics: false,
 
-	// 是否启用底部悬浮歌词（PC端为三行歌词，移动端为一行歌词，播放时显示允许手动关闭，重新播放后会再次展示）
+	// 是否启用底部悬浮歌词（桌面端为三行歌词，移动端为一行歌词，播放时显示允许手动关闭，重新播放后会再次展示）
 	showFloatingLyrics: true,
 
 	// Meting API 配置
