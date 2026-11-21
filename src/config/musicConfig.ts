@@ -20,6 +20,9 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	// 是否显启用歌词
 	showLyrics: false,
 
+	// 是否启用底部悬浮歌词（桌面端为三行歌词，移动端为一行歌词，播放时显示允许手动关闭，重新播放后会再次展示）
+	showFloatingLyrics: true,
+
 	// Meting API 配置
 	meting: {
 		// Meting API 地址

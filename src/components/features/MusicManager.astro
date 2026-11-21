@@ -309,6 +309,9 @@ const managerConfigStr = JSON.stringify({
 
     // ── Lyrics ───────────────────────────────────────────────
     function loadLyrics(track) {
+        // 记录本次歌词请求对应的加载版本；切歌后旧请求才返回时必须丢弃，
+        // 否则上一首的歌词会覆盖当前曲目（并广播到所有视图）。
+        var ver = loadVersion;
         state.lyrics = [];
         state.currentLrcIndex = -1;
 
@@ -326,10 +329,12 @@ const managerConfigStr = JSON.stringify({
             fetch(track.lrc)
                 .then(function (r) { return r.text(); })
                 .then(function (text) {
+                    if (ver !== loadVersion) return; // 已切歌，丢弃过期响应
                     state.lyrics = parseLRC(text);
                     emit('fm:lyrics', { lyrics: state.lyrics, status: 'loaded' });
                 })
                 .catch(function () {
+                    if (ver !== loadVersion) return;
                     state.lyrics = [];
                     emit('fm:lyrics', { lyrics: [], status: 'failed' });
                 });
