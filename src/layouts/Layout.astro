@@ -5,6 +5,7 @@ import MicrosoftClarity from "@components/analytics/MicrosoftClarity.astro";
 import UmamiAnalytics from "@components/analytics/UmamiAnalytics.astro";
 import CodeGroupManager from "@components/features/CodeGroupManager.astro";
 import FancyboxManager from "@components/features/FancyboxManager.astro";
+import FloatingLyrics from "@components/features/FloatingLyrics.astro";
 import FontSetup from "@components/features/FontSetup.astro";
 import GithubCardManager from "@components/features/GithubCardManager.astro";
 import MusicManager from "@components/features/MusicManager.astro";
@@ -567,6 +568,9 @@ const ogImageAlt = propsOgImageAlt ?? pageTitle;
     {(musicPlayerConfig.showInNavbar || musicPlayerConfig.showInSidebar !== false) && (
       <MusicPlayerView />
     )}
+
+    <!-- 悬浮歌词：底部居中三行歌词条，移动端时为一行，播放时出现，可点右侧 X 关闭 -->
+    {musicPlayerConfig.showFloatingLyrics !== false && <FloatingLyrics />}
 
 
     <!-- Sakura Effect -->

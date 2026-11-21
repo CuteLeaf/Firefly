@@ -1,0 +1,368 @@
+---
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+
+// 底部悬浮歌词：桌面端三行、移动端单行，歌词数据来自 MusicManager 的 fm:* 事件。
+---
+
+<div
+	id="floating-lyrics"
+	class="floating-lyrics"
+	role="region"
+	aria-label={i18n(I18nKey.musicFloatingLyrics)}
+>
+	<div class="floating-lyrics-panel">
+		<div class="floating-lyrics-viewport" aria-hidden="true">
+			<div class="floating-lyrics-track"></div>
+		</div>
+		<div class="floating-lyrics-actions">
+			<button
+				type="button"
+				class="floating-lyrics-close"
+				aria-label={i18n(I18nKey.musicCloseFloatingLyrics)}
+				title={i18n(I18nKey.musicCloseFloatingLyrics)}
+			>
+				<svg
+					class="floating-lyrics-close-icon"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					aria-hidden="true"
+				>
+					<path d="M18 6 6 18M6 6l12 12"></path>
+				</svg>
+			</button>
+		</div>
+	</div>
+</div>
+
+<script is:inline>
+(function () {
+    var el = document.getElementById('floating-lyrics');
+    if (!el) return;
+
+    // 组件位于 swup 容器之外，换页后会重跑本脚本，用单例守卫避免重复绑定
+    var prev = window.__fireflyFloatingLyrics;
+    if (prev && prev.el === el && document.contains(el)) return;
+
+    var mgr = window.__fireflyMusic;
+    if (!mgr) return;
+
+    var track = el.querySelector('.floating-lyrics-track');
+    var viewport = el.querySelector('.floating-lyrics-viewport');
+    var closeBtn = el.querySelector('.floating-lyrics-close');
+    if (!track || !viewport || !closeBtn) return;
+
+    var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+    var lyrics = [];
+    var currentIndex = -1;
+    // armed：播放开始后才允许显示；点 X 关闭会置 false，再次播放时恢复
+    var armed = false;
+    var visible = false;
+	
+    function getOriginalText(text) {
+        return text.replace(/\s*[(（][^()（）]*[)）]\s*$/, '').trim() || text;
+    }
+
+    function syncOffset() {
+        if (!visible) return;
+        document.body.style.setProperty('--floating-lyrics-height', el.offsetHeight + 'px');
+    }
+
+    function setVisible(next) {
+        if (visible === next) return;
+        visible = next;
+        el.classList.toggle('is-visible', next);
+        document.body.classList.toggle('floating-lyrics-visible', next);
+        if (next) {
+            syncOffset();
+            // 重新显示时直接定位到当前句，避免从顶部滚动
+            if (currentIndex >= 0) scrollToIndex(currentIndex, true);
+        } else {
+            document.body.style.removeProperty('--floating-lyrics-height');
+        }
+    }
+
+    function getLineEl(index) {
+        return track.querySelector('.floating-lyrics-line[data-index="' + index + '"]');
+    }
+
+    function scrollToIndex(index, immediate) {
+        var lineEl = getLineEl(index);
+        if (!lineEl || !viewport.clientHeight) return;
+        var top = lineEl.offsetTop - (viewport.clientHeight - lineEl.offsetHeight) / 2;
+        if (top < 0) top = 0;
+        if (immediate || reduceMotion) {
+            viewport.scrollTop = top;
+        } else {
+            viewport.scrollTo({ top: top, behavior: 'smooth' });
+        }
+    }
+
+    function renderLyrics() {
+        currentIndex = -1;
+        track.textContent = '';
+        if (lyrics.length === 0) {
+            viewport.scrollTop = 0;
+            return;
+        }
+
+        var frag = document.createDocumentFragment();
+        lyrics.forEach(function (line, index) {
+            var item = document.createElement('div');
+            item.className = 'floating-lyrics-line';
+            item.dataset.index = String(index);
+            item.textContent = getOriginalText(line.text);
+            item.addEventListener('click', function () {
+                mgr.seekToTime(line.time);
+            });
+            frag.appendChild(item);
+        });
+        track.appendChild(frag);
+
+        var s = mgr.getState();
+        updateIndex(s.currentLrcIndex, true);
+        if (s.currentLrcIndex < 0) viewport.scrollTop = 0;
+    }
+
+    function updateIndex(index, immediate) {
+        if (!immediate && index === currentIndex) return;
+
+        var prevEl = currentIndex >= 0 ? getLineEl(currentIndex) : null;
+        if (prevEl) prevEl.classList.remove('is-active');
+
+        currentIndex = index;
+        if (index < 0) return;
+
+        var lineEl = getLineEl(index);
+        if (lineEl) lineEl.classList.add('is-active');
+        scrollToIndex(index, immediate);
+    }
+
+    function syncVisibility() {
+        setVisible(armed && lyrics.length > 0);
+    }
+
+    // 管理器事件
+    window.addEventListener('fm:lyrics', function (e) {
+        lyrics = (e.detail && e.detail.lyrics) || [];
+        renderLyrics();
+        syncVisibility();
+    });
+
+    window.addEventListener('fm:lrc-index', function (e) {
+        updateIndex(e.detail ? e.detail.index : -1);
+    });
+
+    window.addEventListener('fm:play-state', function (e) {
+        // 开始播放即恢复显示，曾被 X 关闭也会重新出现
+        if (e.detail && e.detail.isPlaying) armed = true;
+        syncVisibility();
+    });
+
+    closeBtn.addEventListener('click', function () {
+        armed = false;
+        setVisible(false);
+        closeBtn.blur();
+    });
+
+    window.addEventListener('resize', function () {
+        syncOffset();
+        if (visible && currentIndex >= 0) scrollToIndex(currentIndex, true);
+    });
+
+    // 迟到挂载时按管理器状态同步一次
+    (function initialSync() {
+        var s = mgr.getState();
+        if (!s.initialized) return;
+        lyrics = s.lyrics || [];
+        renderLyrics();
+        armed = !!s.isPlaying;
+        syncVisibility();
+    })();
+
+    window.__fireflyFloatingLyrics = { el: el };
+})();
+</script>
+
+<style is:global>
+	/* 歌词行由 JS 动态创建，拿不到 Astro 作用域 hash，故使用全局样式 */
+	.floating-lyrics {
+		--fl-line-height: 1.7rem;
+		--fl-lines: 3;
+
+		position: fixed;
+		left: 50%;
+		bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+		z-index: 1000;
+		width: min(42rem, calc(100vw - 2rem));
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+		transform: translate3d(-50%, 1.25rem, 0);
+		transition:
+			opacity var(--duration-slower, 300ms) var(--ease-standard, ease),
+			transform var(--duration-slower, 300ms) var(--ease-standard, ease),
+			visibility var(--duration-slower, 300ms) var(--ease-standard, ease);
+		will-change: opacity, transform;
+	}
+
+	.floating-lyrics.is-visible {
+		opacity: 1;
+		visibility: visible;
+		transform: translate3d(-50%, 0, 0);
+	}
+
+	.floating-lyrics-panel {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		padding: 0.35rem 0.35rem 0.35rem 1.1rem;
+		border-radius: 1.25rem;
+		background: var(--card-bg);
+		background: color-mix(in oklch, var(--card-bg) 84%, transparent);
+		-webkit-backdrop-filter: blur(var(--blur-xl, 16px)) saturate(1.15);
+		backdrop-filter: blur(var(--blur-xl, 16px)) saturate(1.15);
+		border: 1px solid var(--line-color);
+		box-shadow: var(--shadow-lg);
+		pointer-events: auto;
+	}
+
+	.floating-lyrics-viewport {
+		position: relative;
+		flex: 1 1 auto;
+		min-width: 0;
+		height: calc(var(--fl-line-height) * var(--fl-lines));
+		overflow: hidden;
+		overscroll-behavior: contain;
+		scrollbar-width: none;
+		-webkit-mask-image: linear-gradient(
+			to bottom,
+			transparent 0,
+			#000 22%,
+			#000 78%,
+			transparent 100%
+		);
+		mask-image: linear-gradient(to bottom, transparent 0, #000 22%, #000 78%, transparent 100%);
+	}
+
+	.floating-lyrics-viewport::-webkit-scrollbar {
+		display: none;
+	}
+
+	.floating-lyrics-track {
+		display: flex;
+		flex-direction: column;
+		/* 上下各留一行，让首句/末句也能滚到窗口正中 */
+		padding: var(--fl-line-height) 0;
+	}
+
+	.floating-lyrics-line {
+		display: block;
+		height: var(--fl-line-height);
+		line-height: var(--fl-line-height);
+		padding: 0 0.5rem;
+		font-size: 0.875rem;
+		text-align: center;
+		color: var(--content-meta);
+		opacity: 0.55;
+		cursor: pointer;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		transform: scale(0.96);
+		transform-origin: center;
+		transition:
+			opacity var(--duration-slower, 300ms) var(--ease-standard, ease),
+			color var(--duration-slower, 300ms) var(--ease-standard, ease),
+			transform var(--duration-slower, 300ms) var(--ease-standard, ease);
+	}
+
+	.floating-lyrics-line:hover {
+		opacity: 0.85;
+	}
+
+	.floating-lyrics-line.is-active {
+		color: var(--primary);
+		font-weight: 700;
+		opacity: 1;
+		transform: scale(1);
+	}
+
+	.floating-lyrics-actions {
+		flex: 0 0 auto;
+		display: flex;
+		align-items: center;
+		padding-left: 0.35rem;
+		border-left: 1px solid var(--line-divider);
+	}
+
+	.floating-lyrics-close {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		border: none;
+		border-radius: 9999px;
+		background: transparent;
+		color: var(--content-meta);
+		cursor: pointer;
+		transition:
+			color var(--duration-normal, 150ms) var(--ease-standard, ease),
+			background-color var(--duration-normal, 150ms) var(--ease-standard, ease);
+	}
+
+	.floating-lyrics-close:hover {
+		color: var(--primary);
+		background-color: var(--btn-plain-bg-hover);
+	}
+
+	.floating-lyrics-close:active {
+		background-color: var(--btn-plain-bg-active);
+		transform: scale(0.94);
+	}
+
+	.floating-lyrics-close-icon {
+		width: 1.15rem;
+		height: 1.15rem;
+	}
+
+	/* 窄屏时把右下角悬浮控件上移，避免被歌词条遮挡 */
+	@media (max-width: 860px) {
+		.floating-controls-container {
+			transition: bottom var(--duration-slower, 300ms) var(--ease-standard, ease);
+		}
+
+		body.floating-lyrics-visible .floating-controls-container {
+			bottom: calc(var(--floating-lyrics-height, 6rem) + 2.25rem);
+		}
+	}
+
+	/* 移动端只显示当前一句，不需要上下渐隐 */
+	@media (max-width: 768px) {
+		.floating-lyrics {
+			--fl-line-height: 1.75rem;
+			--fl-lines: 1;
+		}
+
+		.floating-lyrics-viewport {
+			-webkit-mask-image: none;
+			mask-image: none;
+		}
+
+		.floating-lyrics-line {
+			padding: 0 0.25rem;
+			font-size: 0.9rem;
+		}
+	}
+
+	@media print {
+		.floating-lyrics {
+			display: none;
+		}
+	}
+</style>

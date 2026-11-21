@@ -12,6 +12,9 @@ export type MusicPlayerConfig = {
 	// 是否显示歌词
 	showLyrics?: boolean;
 
+	// 是否启用底部悬浮歌词（PC端为三行歌词，移动端为一行歌词，播放时显示允许手动关闭，重新播放后会再次展示）
+	showFloatingLyrics?: boolean;
+
 	// 是否在导航栏显示音乐播放器
 	showInNavbar?: boolean;
 

@@ -69,6 +69,8 @@ export const ko: Translation = {
 	[Key.musicCover]: "커버",
 	[Key.musicNoCover]: "커버 이미지 없음",
 	[Key.musicAudioPlayer]: "오디오 플레이어",
+	[Key.musicFloatingLyrics]: "플로팅 가사",
+	[Key.musicCloseFloatingLyrics]: "플로팅 가사 닫기",
 
 	// Announcement
 	[Key.announcement]: "공지사항",
