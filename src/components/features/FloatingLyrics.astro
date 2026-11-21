@@ -12,7 +12,7 @@ import { i18n } from "@/i18n/translation";
 	aria-label={i18n(I18nKey.musicFloatingLyrics)}
 >
 	<div class="floating-lyrics-panel">
-		<div class="floating-lyrics-viewport" aria-hidden="true">
+		<div class="floating-lyrics-viewport">
 			<div class="floating-lyrics-track"></div>
 		</div>
 		<div class="floating-lyrics-actions">
@@ -62,9 +62,20 @@ import { i18n } from "@/i18n/translation";
     // armed：播放开始后才允许显示；点 X 关闭会置 false，再次播放时恢复
     var armed = false;
     var visible = false;
-	
+    var wasPlaying = false;
+
+    // 去掉行尾的中文译文（如「人はみんな幸福を願い (人们都祈求幸福)」），
+    // 但保留 (yeah)、(ラララ) 这类有意义的括号内容，避免误删歌词
     function getOriginalText(text) {
-        return text.replace(/\s*[(（][^()（）]*[)）]\s*$/, '').trim() || text;
+        var match = text.match(/\s*[(（]([^()（）]+)[)）]\s*$/);
+        if (!match) return text;
+        var inner = match[1];
+        var main = text.slice(0, match.index).trim();
+        // 括号内是中文、且原文含假名或拉丁字母时，才判定为译文
+        if (main && /[\u4e00-\u9fff]/.test(inner) && /[\u3040-\u30ffA-Za-z]/.test(main)) {
+            return main;
+        }
+        return text;
     }
 
     function syncOffset() {
@@ -116,9 +127,6 @@ import { i18n } from "@/i18n/translation";
             item.className = 'floating-lyrics-line';
             item.dataset.index = String(index);
             item.textContent = getOriginalText(line.text);
-            item.addEventListener('click', function () {
-                mgr.seekToTime(line.time);
-            });
             frag.appendChild(item);
         });
         track.appendChild(frag);
@@ -158,8 +166,11 @@ import { i18n } from "@/i18n/translation";
     });
 
     window.addEventListener('fm:play-state', function (e) {
-        // 开始播放即恢复显示，曾被 X 关闭也会重新出现
-        if (e.detail && e.detail.isPlaying) armed = true;
+        var isPlaying = !!(e.detail && e.detail.isPlaying);
+        // 只在「暂停 → 播放」的跳变时恢复显示：同一次播放会收到重复的 true 通知，
+        // 若用户在这期间点了 X，不应被重复通知重新打开
+        if (isPlaying && !wasPlaying) armed = true;
+        wasPlaying = isPlaying;
         syncVisibility();
     });
 
@@ -181,6 +192,7 @@ import { i18n } from "@/i18n/translation";
         lyrics = s.lyrics || [];
         renderLyrics();
         armed = !!s.isPlaying;
+        wasPlaying = !!s.isPlaying;
         syncVisibility();
     })();
 
@@ -269,7 +281,6 @@ import { i18n } from "@/i18n/translation";
 		text-align: center;
 		color: var(--content-meta);
 		opacity: 0.55;
-		cursor: pointer;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -279,10 +290,6 @@ import { i18n } from "@/i18n/translation";
 			opacity var(--duration-slower, 300ms) var(--ease-standard, ease),
 			color var(--duration-slower, 300ms) var(--ease-standard, ease),
 			transform var(--duration-slower, 300ms) var(--ease-standard, ease);
-	}
-
-	.floating-lyrics-line:hover {
-		opacity: 0.85;
 	}
 
 	.floating-lyrics-line.is-active {
