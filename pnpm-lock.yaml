@@ -75,11 +75,11 @@ importers:
         specifier: ^3.1.7
         version: 3.1.7
       '@mermanjs/node':
-        specifier: 0.9.3
-        version: 0.9.3
+        specifier: 0.10.0
+        version: 0.10.0
       '@mermanjs/web':
-        specifier: 0.9.3
-        version: 0.9.3
+        specifier: 0.10.0
+        version: 0.10.0
       '@napi-rs/wasm-runtime':
         specifier: ^1.2.6
         version: 1.2.6(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)
@@ -2232,44 +2232,58 @@ packages:
   '@mdx-js/mdx@3.1.1':
     resolution: {integrity: sha512-f6ZO2ifpwAQIpzGWaBQT2TXxPv6z3RBzQKpVftEWN78Vl/YweF1uwussDx8ECAXVtr3Rs89fKyG9YlzUs9DyGQ==}
 
-  '@mermanjs/node-darwin-arm64@0.9.3':
-    resolution: {integrity: sha512-60wjosh1ybTqk/UaLv+Rt8v70+a+TiKt2RorHZObNAy3lwnJYUkSHygpFgZYDjzBPI9BD9QaEcUHJIzzLzxolw==}
+  '@mermanjs/node-darwin-arm64@0.10.0':
+    resolution: {integrity: sha512-J5v3Ptfki/Emj1l0jtsbai6mEn5uCcw/f3qL+uEPylETnTUuMXSq/GtbP9cvpfaX6Psetd8kqXjmE8CISXwXYw==}
     engines: {node: '>=22.0.0'}
     cpu: [arm64]
     os: [darwin]
 
-  '@mermanjs/node-darwin-x64@0.9.3':
-    resolution: {integrity: sha512-RCUTdYw3QjRfoANpHSIXwJehuMhqqCtKJZyMn6FbwjLiDvAIhc6xqztNkRGuWgeidjket8ucvHTLSN6M5GT6jA==}
+  '@mermanjs/node-darwin-x64@0.10.0':
+    resolution: {integrity: sha512-kFOSuDmedG/3Uh8CZP5dGfotazmAvvEWPeK/fIP6/JekF0kFwJ7w3Ac0ispf2g41z8H7W9IbAsziXxomY+D/7A==}
     engines: {node: '>=22.0.0'}
     cpu: [x64]
     os: [darwin]
 
-  '@mermanjs/node-linux-x64-gnu@0.9.3':
-    resolution: {integrity: sha512-LTR9ZEbl4YDibzG8F5ZkYjwc7pJWLkG9uiusNrcb+QohlXPmGTZUXZA7gE+jDH8mRzqcvex84qzPaAta/nGYcQ==}
+  '@mermanjs/node-linux-arm64-gnu@0.10.0':
+    resolution: {integrity: sha512-Oau1/s7RNogHzAnmFj/AB+IRg2f+1NNaRcK3vZVVx/X/rXhVy4yzRxje6dPzKL4FVejugC+0WaWe5wU8iddE7Q==}
+    engines: {node: '>=22.0.0'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@mermanjs/node-linux-arm64-musl@0.10.0':
+    resolution: {integrity: sha512-UuXk1dW6M/tZgPnysL8mKOXFItLCXuy/KardIENQ/wbboBLG3ES5US6enN90Ndx2aOFjRc1OIDnNx/zFfnsi8Q==}
+    engines: {node: '>=22.0.0'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@mermanjs/node-linux-x64-gnu@0.10.0':
+    resolution: {integrity: sha512-oc3du2G4sxuF3uPhAl3egRUIcJ4/4wD1a4K700fCWC7qpSImqinnhapSRz3vJC/qSHuVVfvRpaaTHEGJCBqnMQ==}
     engines: {node: '>=22.0.0'}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@mermanjs/node-linux-x64-musl@0.9.3':
-    resolution: {integrity: sha512-aa5AjZbJyN8sNBtN5gTaOF4RzwBmds0JDGBAyiasWBAGbzwr524GFAF/sk9vPX6oT+Z0VsjLy3ZoQmHt8AL3lQ==}
+  '@mermanjs/node-linux-x64-musl@0.10.0':
+    resolution: {integrity: sha512-+4NBaFVwbNp9AfWKXxx6w/wTKLAy6YKH9L6id/hp/YD+yMtWc1nTd5cwshdmF4NkMWykcdmQM7YWTiL1xH7KwQ==}
     engines: {node: '>=22.0.0'}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@mermanjs/node-win32-x64-msvc@0.9.3':
-    resolution: {integrity: sha512-UsUD3zbPv0cy4usMFMFFfQFhPY7An7meHj1YZLPEqLnx6HBG1BJ/ONvy5nxSZ9Ai/Oj9JozKI0VS3SYTl8geSQ==}
+  '@mermanjs/node-win32-x64-msvc@0.10.0':
+    resolution: {integrity: sha512-y8ZKYCj3Jmwo5bD7dFMS0JFuCVBEAccosfRCmF4whqldHBDUteIyibpb6DbbjGHq1VXSmPljqC6yvYFqHCLA6w==}
     engines: {node: '>=22.0.0'}
     cpu: [x64]
     os: [win32]
 
-  '@mermanjs/node@0.9.3':
-    resolution: {integrity: sha512-82NQI8z4R6pNAOvZEfm6MS5sMJjQ1SEVjznM/3E5VrDu2g1tQlNj2BXdt4pnCnsRofsXoiklWinzO8WLAvVmqA==}
+  '@mermanjs/node@0.10.0':
+    resolution: {integrity: sha512-jGv/7YevzoH9kL24VBjH3BgQ2pkBF667yekAo9ri+y1q/HacSpE65Vu8YEzXCUCxj202alK5SLYfHxoXMjz69g==}
     engines: {node: '>=22.0.0'}
 
-  '@mermanjs/web@0.9.3':
-    resolution: {integrity: sha512-+Oeu4Mr3KGwf0cAKyOC2Ho5HA2jiV+4+Q6zEtw7lNpM6AND0CY0dqI6l5tWF4kFDKuSZT+zMsthieS/exn1Uyw==}
+  '@mermanjs/web@0.10.0':
+    resolution: {integrity: sha512-bVPIPmcR3ONGt3fO8nrDPT0WotEszxhTHG1yIj1DlSJ6s6ekx1+CyAv+vDvEYFaSJjmXUOxmHXF+AX00hK+Org==}
 
   '@napi-rs/wasm-runtime@1.2.4':
     resolution: {integrity: sha512-AJxoUD2/15ESHbvpcyjU274nsAPLuOtPHCk0vKJM5pj//Fg/B1FXNWjPnXTT9PymCYYiHo4zPj0ZomXBKhoy7g==}
@@ -8680,30 +8694,38 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mermanjs/node-darwin-arm64@0.9.3':
+  '@mermanjs/node-darwin-arm64@0.10.0':
     optional: true
 
-  '@mermanjs/node-darwin-x64@0.9.3':
+  '@mermanjs/node-darwin-x64@0.10.0':
     optional: true
 
-  '@mermanjs/node-linux-x64-gnu@0.9.3':
+  '@mermanjs/node-linux-arm64-gnu@0.10.0':
     optional: true
 
-  '@mermanjs/node-linux-x64-musl@0.9.3':
+  '@mermanjs/node-linux-arm64-musl@0.10.0':
     optional: true
 
-  '@mermanjs/node-win32-x64-msvc@0.9.3':
+  '@mermanjs/node-linux-x64-gnu@0.10.0':
     optional: true
 
-  '@mermanjs/node@0.9.3':
+  '@mermanjs/node-linux-x64-musl@0.10.0':
+    optional: true
+
+  '@mermanjs/node-win32-x64-msvc@0.10.0':
+    optional: true
+
+  '@mermanjs/node@0.10.0':
     optionalDependencies:
-      '@mermanjs/node-darwin-arm64': 0.9.3
-      '@mermanjs/node-darwin-x64': 0.9.3
-      '@mermanjs/node-linux-x64-gnu': 0.9.3
-      '@mermanjs/node-linux-x64-musl': 0.9.3
-      '@mermanjs/node-win32-x64-msvc': 0.9.3
+      '@mermanjs/node-darwin-arm64': 0.10.0
+      '@mermanjs/node-darwin-x64': 0.10.0
+      '@mermanjs/node-linux-arm64-gnu': 0.10.0
+      '@mermanjs/node-linux-arm64-musl': 0.10.0
+      '@mermanjs/node-linux-x64-gnu': 0.10.0
+      '@mermanjs/node-linux-x64-musl': 0.10.0
+      '@mermanjs/node-win32-x64-msvc': 0.10.0
 
-  '@mermanjs/web@0.9.3': {}
+  '@mermanjs/web@0.10.0': {}
 
   '@napi-rs/wasm-runtime@1.2.4(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)':
     dependencies:
