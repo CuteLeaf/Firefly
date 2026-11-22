@@ -132,7 +132,10 @@ export function formatDynamicDate(dateInput: Date | string): string {
 		minute: "2-digit",
 		second: "2-digit",
 		hourCycle: "h23",
-		timeZone: siteConfig.timezone || "UTC",
+		// Dynamic `published` values are site-local times written without an offset
+		// (scripts/new-dynamic.js), which YAML parses as UTC. Format them in UTC so the
+		// authored time is shown, instead of shifting it by the site timezone again.
+		timeZone: "UTC",
 	};
 
 	const parts = new Intl.DateTimeFormat("en-CA", options).formatToParts(date);
