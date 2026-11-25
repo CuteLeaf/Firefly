@@ -65,3 +65,11 @@ jobs:
 
       - name: Run Astro Build
         run: pnpm astro build
+
+      - name: Install Chromium for code group tests
+        if: matrix.node == 22
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Test code groups in the production build
+        if: matrix.node == 22
+        run: pnpm test:code-groups

@@ -109,6 +109,12 @@ body.wallpaper-transparent .expressive-code .ec-collapse__gradient {
  */
 
 .rehype-code-group {
+  --rcg-accent: var(--primary);
+  --rcg-border-color: var(--line-divider);
+  --rcg-focus-color: var(--primary);
+  --rcg-tab-color: var(--btn-content);
+  --rcg-tab-background: transparent;
+  --rcg-tab-background-active: transparent;
   margin: 1rem 0;
 }
 
@@ -146,6 +152,16 @@ body.wallpaper-transparent .expressive-code .ec-collapse__gradient {
 /* 面板内的代码块贴合标签栏，去掉 markdown 默认的上下外边距 */
 .rehype-code-group .rcg-block > .expressive-code {
   margin: 0 !important;
+}
+
+/* Tailwind Preflight hides [hidden] with !important in its base layer.
+ * Keep the package's print fallback in that layer so every panel is printable. */
+@layer base {
+  @media print {
+    .rehype-code-group .rcg-block[hidden] {
+      display: block !important;
+    }
+  }
 }
 
 
