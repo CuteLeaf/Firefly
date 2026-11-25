@@ -35,10 +35,12 @@ function removeSvgMaxWidth(svg) {
 	return svg.replace(/(<svg[^>]*style="[^"]*?)max-width:\s*[^;]+;?/, "$1");
 }
 
-function renderMermaidSvg(mermaidCode, preset, diagramId) {
+// merman 0.10 起使用 Options JSON schema 3：主题 = preset（设计组）× appearance（light/dark）
+function renderMermaidSvg(mermaidCode, preset, appearance, diagramId) {
 	return mermanEngine.renderSvgSync(mermaidCode, {
 		optionsJson: JSON.stringify({
-			presentation: { theme: { preset } },
+			version: 3,
+			theme: { preset, appearance },
 			svg: { diagram_id: diagramId, pipeline: "parity" },
 		}),
 	});
@@ -48,11 +50,13 @@ function buildMermaidSvgs(mermaidCode, themeConfig, diagramIndex) {
 	const lightSvg = renderMermaidSvg(
 		mermaidCode,
 		themeConfig.lightTheme,
+		"light",
 		`mermaid-${diagramIndex}-light`,
 	);
 	const darkSvg = renderMermaidSvg(
 		mermaidCode,
 		themeConfig.darkTheme,
+		"dark",
 		`mermaid-${diagramIndex}-dark`,
 	);
 
@@ -72,8 +76,8 @@ function buildMermaidSvgs(mermaidCode, themeConfig, diagramIndex) {
  */
 export function rehypeMermaid(options = {}) {
 	const themeConfig = {
-		lightTheme: options.lightTheme || "editor-light",
-		darkTheme: options.darkTheme || "editor-dark",
+		lightTheme: options.lightTheme || "editor",
+		darkTheme: options.darkTheme || "editor",
 	};
 
 	return (tree) => {

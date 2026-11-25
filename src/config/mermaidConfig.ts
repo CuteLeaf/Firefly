@@ -10,14 +10,14 @@ import type { MermaidConfig } from "../types/mermaidConfig";
  */
 export const mermaidConfig: MermaidConfig = {
 	/**
-	 * 亮色模式主题。
-	 * 可选：editor-light、gruvbox-light、ayu-light。
+	 * 亮色模式主题（以 light appearance 渲染）。
+	 * 可选：editor、gruvbox、ayu、brutalist、spotless、ghibli、paper-cut、carbon-copy、pop-art。
 	 */
-	lightTheme: "editor-light",
+	lightTheme: "editor",
 
 	/**
-	 * 暗色模式主题。
-	 * 可选：editor-dark、one-dark、gruvbox-dark、ayu-dark。
+	 * 暗色模式主题（以 dark appearance 渲染）。
+	 * 可选：editor、gruvbox、ayu、one-dark、cyberpunk。
 	 */
-	darkTheme: "editor-dark",
+	darkTheme: "editor",
 };
