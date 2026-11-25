@@ -1,0 +1,544 @@
+import Key from "../i18nKey";
+import type { Translation } from "../translation";
+
+export const es: Translation = {
+	[Key.home]: "Inicio",
+	[Key.about]: "Sobre mí",
+	[Key.archive]: "Archivo",
+	[Key.search]: "Buscar",
+	[Key.searchNoResults]: "No se han encontrado resultados.",
+	[Key.searchTypeSomething]: "Escribe algo para buscar...",
+	[Key.searchLoading]: "Buscando...",
+	[Key.searchSummary]: "Resumen",
+	[Key.searchContent]: "Contenido",
+	[Key.searchViewMore]: "Ver más resultados ({count} más)",
+	[Key.other]: "Otros",
+
+	// Navbar menu groups
+	[Key.navArticles]: "Artículos",
+	[Key.navSocial]: "Social",
+	[Key.navMine]: "Personal",
+	[Key.navAbout]: "Acerca de",
+	[Key.navLinks]: "Enlaces",
+	[Key.all]: "Todo",
+
+	[Key.tags]: "Etiquetas",
+	[Key.categories]: "Categorías",
+	[Key.allCategories]: "Todas las categorías",
+	[Key.allTags]: "Todas las etiquetas",
+	[Key.allSeries]: "Todas las series",
+	[Key.recentPosts]: "Entradas recientes",
+	[Key.postList]: "Lista de entradas",
+	[Key.tableOfContents]: "Índice",
+	[Key.tocEmpty]: "Esta página no tiene índice",
+	[Key.music]: "Música",
+	[Key.dynamic]: "Momentos",
+	[Key.latestDynamics]: "Últimos momentos",
+	[Key.moreDynamics]: "Más momentos",
+	[Key.dynamicDescription]: "Reflexiones breves y momentos del día a día.",
+	[Key.dynamicEmpty]: "Aún no se ha publicado ningún momento",
+	[Key.dynamicSearch]: "Buscar momentos...",
+	[Key.dynamicNoResults]: "No se han encontrado momentos",
+	[Key.dynamicLoading]: "Cargando momentos",
+	[Key.dynamicAllYears]: "Todos los años",
+	[Key.dynamicLoadMore]: "Cargar más",
+	[Key.dynamicBackToList]: "Volver a los momentos",
+	[Key.dynamicProfile]: "Ver el perfil de {name}",
+	[Key.dynamicPermalink]: "Enlace permanente a este momento",
+	[Key.dynamicCollapseGallery]: "Contraer",
+	[Key.dynamicViewOriginal]: "Ver a tamaño completo",
+	[Key.dynamicPreviousImage]: "Imagen anterior",
+	[Key.dynamicNextImage]: "Imagen siguiente",
+	[Key.dynamicViewImage]: "Ver imagen {index}",
+	[Key.dynamicSelectImage]: "Seleccionar imagen {index}",
+	[Key.musicNoPlaying]: "Nada en reproducción",
+	[Key.musicLyrics]: "Letra",
+	[Key.musicVolume]: "Volumen",
+	[Key.musicPlayMode]: "Cambiar modo de reproducción",
+	[Key.musicPrev]: "Anterior",
+	[Key.musicNext]: "Siguiente",
+	[Key.musicPlaylist]: "Lista de reproducción",
+	[Key.musicNoLyrics]: "Letra no disponible",
+	[Key.musicLoadingLyrics]: "Cargando letra...",
+	[Key.musicFailedLyrics]: "No se ha podido cargar la letra",
+	[Key.musicNoSongs]: "No hay canciones",
+	[Key.musicError]: "Error del reproductor",
+	[Key.musicPlay]: "Reproducir",
+	[Key.musicPause]: "Pausar",
+	[Key.musicProgress]: "Progreso de reproducción",
+	[Key.musicCover]: "Portada",
+	[Key.musicNoCover]: "Portada no disponible",
+	[Key.musicAudioPlayer]: "Reproductor de audio",
+
+	// Announcement
+	[Key.announcement]: "Anuncio",
+	[Key.announcementClose]: "Cerrar",
+
+	[Key.comments]: "Comentarios",
+	[Key.commentSection]: "Comentarios",
+	[Key.commentSubtitle]: "Comparte tu opinión y conversa con los demás",
+	[Key.commentNotConfigured]: "Sistema de comentarios no configurado",
+	[Key.guestbookCommentHint]:
+		"Aún no has activado el sistema de comentarios en el archivo de configuración. Cuando lo actives, los visitantes podrán dejar mensajes aquí",
+	[Key.friends]: "Amigos",
+	[Key.friendsDescription]:
+		"Estos son mis amigos: visita sus sitios y conócelos",
+	[Key.searchFriends]: "Buscar amigos...",
+	[Key.friendsEmpty]: "Aún no hay amigos.",
+	[Key.booknav]: "Marcadores",
+	[Key.booknavDescription]:
+		"Una selección de sitios útiles, organizados por categorías.",
+	[Key.searchBooknav]: "Buscar marcadores...",
+	[Key.booknavEmpty]: "Aún no hay marcadores.",
+
+	// Project showcase
+	[Key.projects]: "Proyectos",
+	[Key.projectsDescription]: "Estos son los proyectos que he creado",
+	[Key.projectDetails]: "Ver detalles",
+	[Key.projectBack]: "Volver a los proyectos",
+	[Key.projectEmpty]: "Aún no hay proyectos",
+	[Key.projectSearch]: "Buscar proyectos",
+	[Key.projectStatusPlanning]: "En planificación",
+	[Key.projectStatusDeveloping]: "En desarrollo",
+	[Key.projectStatusPublished]: "Publicado",
+	[Key.projectStatusArchived]: "Archivado",
+	[Key.guestbook]: "Libro de visitas",
+	[Key.guestbookDescription]:
+		"Deja aquí tu huella y comparte tus ideas y sugerencias",
+	[Key.untitled]: "Sin título",
+	[Key.uncategorized]: "Sin categoría",
+	[Key.noTags]: "Sin etiquetas",
+
+	[Key.wordCount]: "palabra",
+	[Key.wordsCount]: "palabras",
+	[Key.minuteCount]: "minuto",
+	[Key.minutesCount]: "minutos",
+	[Key.postCount]: "entrada",
+	[Key.postsCount]: "entradas",
+	[Key.tagsCount]: "etiquetas",
+	[Key.noData]: "Aún no hay datos",
+
+	[Key.themeColor]: "Color del tema",
+
+	[Key.lightMode]: "Claro",
+	[Key.darkMode]: "Oscuro",
+	[Key.systemMode]: "Sistema",
+
+	[Key.more]: "Más",
+	[Key.collapse]: "Contraer",
+
+	[Key.author]: "Autor",
+	[Key.publishedAt]: "Publicado el",
+	[Key.updatedAt]: "Actualizado el",
+	[Key.readTime]: "Tiempo de lectura",
+	[Key.license]: "Licencia",
+	[Key.bangumi]: "Bangumi",
+
+	// Bangumi Filter and Status Text
+	[Key.bangumiTitle]: "Mi Bangumi",
+	[Key.bangumiSubtitle]: "Registro de mi viaje por el mundo ACG",
+	[Key.bangumiFilterAll]: "Todo",
+	[Key.bangumiFilterWatched]: "Visto",
+	[Key.bangumiFilterWatching]: "Viendo",
+	[Key.bangumiFilterWish]: "Quiero ver",
+	[Key.bangumiFilterOnHold]: "En pausa",
+	[Key.bangumiFilterDropped]: "Abandonado",
+	[Key.bangumiFilterGamePlayed]: "Jugado",
+	[Key.bangumiFilterGamePlaying]: "Jugando",
+	[Key.bangumiFilterGameWish]: "Quiero jugar",
+	[Key.bangumiFilterBookRead]: "Leído",
+	[Key.bangumiFilterBookReading]: "Leyendo",
+	[Key.bangumiFilterBookWish]: "Quiero leer",
+	[Key.bangumiFilterMusicListened]: "Escuchado",
+	[Key.bangumiFilterMusicListening]: "Escuchando",
+	[Key.bangumiFilterMusicWish]: "Quiero escuchar",
+	[Key.bangumiStatusWish]: "Quiero ver",
+	[Key.bangumiStatusWatched]: "Visto",
+	[Key.bangumiStatusWatching]: "Viendo",
+	[Key.bangumiStatusOnHold]: "En pausa",
+	[Key.bangumiStatusDropped]: "Abandonado",
+	[Key.bangumiStatusGameWish]: "Quiero jugar",
+	[Key.bangumiStatusGamePlayed]: "Jugado",
+	[Key.bangumiStatusGamePlaying]: "Jugando",
+	[Key.bangumiStatusBookWish]: "Quiero leer",
+	[Key.bangumiStatusBookRead]: "Leído",
+	[Key.bangumiStatusBookReading]: "Leyendo",
+	[Key.bangumiStatusMusicWish]: "Quiero escuchar",
+	[Key.bangumiStatusMusicListened]: "Escuchado",
+	[Key.bangumiStatusMusicListening]: "Escuchando",
+	[Key.bangumiStatusUnknown]: "Desconocido",
+	[Key.bangumiNoData]: "Sin datos",
+	[Key.bangumiNoDataDescription]: "No hay elementos en esta categoría",
+	[Key.bangumiEmpty]: "Sin datos",
+	[Key.bangumiEmptyReason]:
+		"Posibles causas: el nombre de usuario no existe, hay un problema de conexión o se ha alcanzado el límite de la API",
+	[Key.bangumiFetchError]: "Error al obtener los datos de Bangumi",
+	[Key.bangumiFetchErrorDesc]:
+		"No se han podido obtener los datos de la API de Bangumi durante la compilación. Esta página no está disponible temporalmente.",
+	[Key.bangumiUsername]: "Nombre de usuario",
+	[Key.bangumiApi]: "API",
+	[Key.bangumiConfigTip]:
+		"Consejo: indica el nombre de usuario correcto de Bangumi en la configuración de la página",
+	[Key.bangumiPrevPage]: "Anterior",
+	[Key.bangumiNextPage]: "Siguiente",
+	[Key.bangumiCurrentPage]: "Página",
+	[Key.bangumiTotalPages]: "de",
+	[Key.bangumiPage]: "página",
+
+	// Bangumi Categories
+	[Key.bangumiCategoryBook]: "Libros",
+	[Key.bangumiCategoryAnime]: "Anime",
+	[Key.bangumiCategoryMusic]: "Música",
+	[Key.bangumiCategoryGame]: "Juegos",
+	[Key.bangumiCategoryReal]: "Imagen real",
+
+	// Bangumi Data Update
+	[Key.bangumiLastUpdated]: "Datos actualizados el",
+	[Key.bangumiUpdatedAt]: "Fecha de compilación",
+	[Key.bangumiDataStatic]: "Datos estáticos",
+
+	// VNDB
+	[Key.vndb]: "VNDB",
+	[Key.vndbSubtitle]: "Mi lista de novelas visuales en VNDB",
+	[Key.vndbFilterAll]: "Todo",
+	[Key.vndbFilterVoted]: "Con voto",
+	[Key.vndbFilterUnvoted]: "Sin voto",
+	[Key.vndbFilterNotes]: "Con notas",
+	[Key.vndbStatusWishlist]: "Lista de deseos",
+	[Key.vndbStatusPlaying]: "Jugando",
+	[Key.vndbStatusFinished]: "Terminado",
+	[Key.vndbStatusStalled]: "Estancado",
+	[Key.vndbStatusDropped]: "Abandonado",
+	[Key.vndbStatusUnknown]: "Desconocido",
+	[Key.vndbNoData]: "Sin datos",
+	[Key.vndbNoDataDescription]: "No hay elementos en esta categoría",
+	[Key.vndbEmpty]: "Sin datos",
+	[Key.vndbEmptyReason]:
+		"Posibles causas: el ID de usuario no existe, la lista es privada, hay un problema de red o se ha alcanzado el límite de la API",
+	[Key.vndbFetchError]: "Error al obtener los datos de VNDB",
+	[Key.vndbFetchErrorDesc]:
+		"No se han podido obtener los datos de la API de VNDB durante la compilación. Esta página no está disponible temporalmente.",
+	[Key.vndbNotConfigured]: "ID de usuario de VNDB no configurado",
+	[Key.vndbNotConfiguredDesc]:
+		"Configura tu ID de usuario de VNDB en src/config/siteConfig.ts",
+	[Key.vndbLastUpdated]: "Datos actualizados el",
+	[Key.vndbVotes]: "votos",
+	[Key.vndbLengthVeryShort]: "Muy corta",
+	[Key.vndbLengthShort]: "Corta",
+	[Key.vndbLengthMedium]: "Media",
+	[Key.vndbLengthLong]: "Larga",
+	[Key.vndbLengthVeryLong]: "Muy larga",
+
+	// Anime Tracking - Bilibili
+	[Key.bilibili]: "Bilibili",
+	[Key.bilibiliSubtitle]: "Lo que sigo en Bilibili (anime y series)",
+	[Key.bilibiliNotConfigured]: "Bilibili no configurado",
+	[Key.bilibiliNotConfiguredDesc]:
+		"Configura bilibili.uid en src/config/siteConfig.ts",
+
+	// Anime Tracking - Shared components
+	[Key.animeTotal]: "Total",
+	[Key.animeAverageRating]: "Nota media",
+	[Key.animeSearch]: "Buscar anime...",
+	[Key.animeAllTypes]: "Todo",
+	[Key.animeTV]: "Anime de TV",
+	[Key.animeMovie]: "Película",
+	[Key.animeRatingDesc]: "Mayor puntuación",
+	[Key.animeRatingAsc]: "Menor puntuación",
+	[Key.animeDateDesc]: "Más recientes",
+	[Key.animeDateAsc]: "Más antiguos",
+	[Key.animeNoResults]: "No se ha encontrado ningún anime",
+	[Key.animeLastUpdated]: "Datos actualizados el",
+	[Key.animeEpStatus]: "Progreso",
+	[Key.animeViewDetails]: "Ver detalles",
+	[Key.animeBilibiliAvg]: "Media en Bilibili",
+	[Key.animeNoOverview]: "Sinopsis no disponible",
+	[Key.animeClose]: "Cerrar",
+	[Key.animeSynopsis]: "Sinopsis",
+	[Key.animeWatchNow]: "Ver ahora",
+	[Key.animeAllWithCount]: "Todo ({count})",
+	[Key.animeTVWithCount]: "TV ({count})",
+	[Key.animeMovieWithCount]: "Películas ({count})",
+	[Key.animeTypeAnime]: "Anime",
+	[Key.animeTypeMovie]: "Película",
+	[Key.animeTypeDocumentary]: "Documental",
+	[Key.animeTypeChinese]: "Animación china",
+	[Key.animeTypeDrama]: "Serie de TV",
+	[Key.animeTypeConcert]: "Concierto",
+
+	// MyAnimeList
+	[Key.mal]: "MyAnimeList",
+	[Key.malSubtitle]: "Mis listas de anime y manga en MyAnimeList",
+	[Key.malCategoryAnime]: "Anime",
+	[Key.malCategoryManga]: "Manga",
+	[Key.malFilterAll]: "Todo",
+	[Key.malStatusWatching]: "Viendo",
+	[Key.malStatusReading]: "Leyendo",
+	[Key.malStatusCompleted]: "Completado",
+	[Key.malStatusOnHold]: "En pausa",
+	[Key.malStatusDropped]: "Abandonado",
+	[Key.malStatusPlanToWatch]: "Pendiente de ver",
+	[Key.malStatusPlanToRead]: "Pendiente de leer",
+	[Key.malNoData]: "Sin datos",
+	[Key.malNoDataDescription]: "No hay elementos en esta categoría",
+	[Key.malEmpty]: "Sin datos",
+	[Key.malEmptyReason]:
+		"Posibles causas: el nombre de usuario no existe, la lista es privada, el Client ID no es válido o hay un problema de red",
+	[Key.malFetchError]: "Error al obtener los datos de MyAnimeList",
+	[Key.malFetchErrorDesc]:
+		"No se han podido obtener los datos de la API de MyAnimeList durante la compilación. Comprueba el nombre de usuario y el Client ID, y asegúrate de que la lista sea pública.",
+	[Key.malNotConfigured]: "MyAnimeList no configurado",
+	[Key.malNotConfiguredDesc]:
+		"Configura tu nombre de usuario y el Client ID de MyAnimeList en src/config/siteConfig.ts. La lista debe ser pública.",
+	[Key.malLastUpdated]: "Datos actualizados el",
+	[Key.malSeasonWinter]: "Invierno",
+	[Key.malSeasonSpring]: "Primavera",
+	[Key.malSeasonSummer]: "Verano",
+	[Key.malSeasonFall]: "Otoño",
+
+	// Pagination
+	[Key.paginationFirst]: "Primera",
+	[Key.paginationPrev]: "Anterior",
+	[Key.paginationNext]: "Siguiente",
+	[Key.paginationLast]: "Última",
+	[Key.paginationPage]: "Página",
+	[Key.paginationOf]: "de",
+	[Key.paginationTotal]: ", total",
+	[Key.paginationRecords]: " registros",
+	[Key.paginationJump]: "Ir a la página",
+
+	// 404 Page
+	[Key.notFound]: "404",
+	[Key.notFoundTitle]: "Página no encontrada",
+	[Key.notFoundDescription]:
+		"Lo sentimos, la página que buscas no existe o se ha movido.",
+	[Key.backToHome]: "Volver al inicio",
+
+	// RSS Page
+	[Key.rss]: "Feed RSS",
+	[Key.rssDescription]: "Suscríbete para recibir las últimas novedades",
+	[Key.rssSubtitle]:
+		"Suscríbete por RSS para recibir al instante los últimos artículos y novedades",
+	[Key.rssLink]: "Enlace RSS",
+	[Key.rssCopyToReader]: "Copia el enlace en tu lector RSS",
+	[Key.rssCopyLink]: "Copiar enlace",
+	[Key.rssLatestPosts]: "Últimas entradas",
+	[Key.rssWhatIsRSS]: "¿Qué es RSS?",
+	[Key.rssWhatIsRSSDescription]:
+		"RSS (Really Simple Syndication) es un formato estándar para publicar contenido que se actualiza con frecuencia. Con RSS puedes:",
+	[Key.rssBenefit1]:
+		"Recibir a tiempo el contenido más reciente de un sitio web sin tener que visitarlo",
+	[Key.rssBenefit2]:
+		"Gestionar las suscripciones a varios sitios web en un solo lugar",
+	[Key.rssBenefit3]: "No perderte actualizaciones ni artículos importantes",
+	[Key.rssBenefit4]: "Disfrutar de una lectura limpia y sin anuncios",
+	[Key.rssHowToUse]:
+		"Te recomendamos usar Feedly, Inoreader u otro lector RSS para suscribirte a este sitio.",
+	[Key.rssCopied]: "¡Enlace RSS copiado al portapapeles!",
+	[Key.rssCopyFailed]: "No se ha podido copiar; copia el enlace manualmente",
+
+	// Atom Page
+	[Key.atom]: "Feed Atom",
+	[Key.atomDescription]: "Suscríbete para recibir las últimas novedades",
+	[Key.atomSubtitle]:
+		"Suscríbete por Atom para recibir al instante los últimos artículos y novedades",
+	[Key.atomLink]: "Enlace Atom",
+	[Key.atomCopyToReader]: "Copia el enlace en tu lector Atom",
+	[Key.atomCopied]: "¡Enlace Atom copiado al portapapeles!",
+
+	// Last Modified Time Card
+	[Key.lastModifiedPrefix]: "Última actualización: ",
+	[Key.lastModifiedOutdated]: "Parte del contenido puede estar desactualizado",
+	[Key.lastModifiedDaysAgo]: "hace {days} días",
+	[Key.year]: "año",
+	[Key.month]: "mes",
+	[Key.day]: "día",
+	[Key.hour]: "hora",
+	[Key.minute]: "minuto",
+	[Key.second]: "segundo",
+
+	// Page Views Statistics
+	[Key.pageViews]: "Visitas",
+	[Key.pageViewsLoading]: "Cargando...",
+	[Key.pageViewsError]: "Estadísticas no disponibles",
+
+	// Pinned
+	[Key.pinned]: "Fijado",
+
+	// Related Posts
+	[Key.relatedPosts]: "Entradas relacionadas",
+	[Key.randomPosts]: "Entradas aleatorias",
+	[Key.smartRecommend]: "Inteligente",
+	[Key.randomRecommend]: "Aleatorio",
+	[Key.noRelatedPosts]: "No hay entradas relacionadas",
+	[Key.noRandomPosts]: "No hay entradas aleatorias",
+
+	// Article Series
+	[Key.series]: "Series",
+	[Key.seriesPartOf]: "Parte de la serie",
+	[Key.seriesPart]: "Parte {n}",
+	[Key.seriesThisArticle]: "Este artículo",
+	[Key.noSeries]: "Aún no hay series",
+
+	// Encrypted
+	[Key.postEncrypted]: "Esta entrada está cifrada",
+
+	// Wallpaper Mode
+	[Key.wallpaperMode]: "Modo de fondo",
+	[Key.wallpaperBannerMode]: "Fondo en banner",
+	[Key.wallpaperFullscreenMode]: "Fondo a pantalla completa",
+	[Key.fullscreenLayout]: "Diseño a pantalla completa",
+	[Key.fullscreenClassicLayout]: "Clásico",
+	[Key.fullscreenHeroLayout]: "Hero",
+	[Key.wallpaperOverlayMode]: "Fondo superpuesto",
+	[Key.wallpaperNoneMode]: "Sin fondo",
+
+	// Wallpaper Settings
+	[Key.wallpaperSettings]: "Ajustes del fondo",
+	[Key.wallpaperTitle]: "Título del fondo de inicio",
+	[Key.wallpaperCarousel]: "Carrusel de fondos",
+	[Key.wavesAnimation]: "Animación de olas",
+	[Key.gradientTransition]: "Transición degradada",
+	[Key.sakuraEffect]: "Efecto sakura",
+	[Key.effectsSettings]: "Ajustes de efectos",
+	[Key.overlaySettings]: "Ajustes de transparencia",
+	[Key.overlayOpacity]: "Opacidad del fondo",
+	[Key.overlayBlur]: "Desenfoque del fondo",
+	[Key.overlayCardOpacity]: "Opacidad de las tarjetas",
+
+	// Settings Panel Tabs
+	[Key.settingsTabAppearance]: "Apariencia",
+	[Key.settingsTabWallpaper]: "Fondo",
+	[Key.settingsTabEffects]: "Efectos",
+
+	// Card Style
+	[Key.cardSettings]: "Estilo de tarjetas",
+	[Key.cardBorder]: "Borde y sombra de tarjetas",
+	[Key.cardFollowTheme]: "Tarjetas con el color del tema",
+
+	// Post List Layout
+	[Key.postListLayout]: "Diseño de la lista de entradas",
+	[Key.postListLayoutList]: "Lista",
+	[Key.postListLayoutGrid]: "Cuadrícula",
+
+	// Sponsor Page
+	[Key.sponsor]: "Patrocinio",
+	[Key.sponsorTitle]: "Apóyame",
+	[Key.sponsorDescription]:
+		"Si mi contenido te ha resultado útil, puedes apoyarme a través de los siguientes métodos. ¡Tu apoyo me anima a seguir creando!",
+	[Key.sponsorMethods]: "Métodos de pago",
+	[Key.sponsorList]: "Patrocinadores",
+	[Key.sponsorEmpty]: "Aún no hay patrocinadores",
+	[Key.sponsorAmount]: "Importe",
+	[Key.sponsorDate]: "Fecha",
+	[Key.sponsorMessage]: "Mensaje",
+	[Key.sponsorAnonymous]: "Anónimo",
+	[Key.scanToSponsor]: "Escanea para apoyar",
+	[Key.sponsorGoTo]: "Ir a patrocinar",
+	[Key.sponsorButton]: "Apoyar y compartir",
+	[Key.sponsorButtonText]:
+		"Si este artículo te ha ayudado, ¡compártelo o apóyame!",
+
+	[Key.shareOnSocial]: "Compartir artículo",
+	[Key.shareOnSocialDescription]:
+		"Si este artículo te ha ayudado, ¡compártelo con otras personas!",
+
+	// Site Statistics
+	[Key.siteStats]: "Estadísticas del sitio",
+	[Key.siteStatsPostCount]: "Entradas",
+	[Key.siteStatsDynamicCount]: "Momentos",
+	[Key.siteStatsCategoryCount]: "Categorías",
+	[Key.siteStatsTagCount]: "Etiquetas",
+	[Key.siteStatsTotalWords]: "Total de palabras",
+	[Key.siteStatsRunningDays]: "Días en línea",
+	[Key.siteStatsLastUpdate]: "Última actividad",
+	[Key.siteStatsDaysAgo]: "{days} días atrás",
+	[Key.siteStatsDays]: "{days} días",
+	[Key.today]: "Hoy",
+
+	// Site Info
+	[Key.siteInfo]: "Información del sitio",
+	[Key.siteInfoBuildTime]: "Fecha de compilación",
+	[Key.siteInfoBuildPlatform]: "Plataforma de compilación",
+	[Key.siteInfoBlogVersion]: "Versión del blog",
+	[Key.siteInfoAstroVersion]: "Versión de Astro",
+	[Key.siteInfoNodeVersion]: "Versión de Node",
+	[Key.siteInfoPnpmVersion]: "Versión de pnpm",
+	[Key.siteInfoSystem]: "Sistema",
+	[Key.siteInfoExpand]: "Mostrar información de compilación",
+	[Key.siteInfoCollapse]: "Ocultar información de compilación",
+	[Key.siteInfoDomain]: "Dominio",
+	[Key.siteInfoLicense]: "Licencia",
+
+	// Calendar Component
+	[Key.calendarSunday]: "Dom",
+	[Key.calendarMonday]: "Lun",
+	[Key.calendarTuesday]: "Mar",
+	[Key.calendarWednesday]: "Mié",
+	[Key.calendarThursday]: "Jue",
+	[Key.calendarFriday]: "Vie",
+	[Key.calendarSaturday]: "Sáb",
+	[Key.calendarJanuary]: "Ene",
+	[Key.calendarFebruary]: "Feb",
+	[Key.calendarMarch]: "Mar",
+	[Key.calendarApril]: "Abr",
+	[Key.calendarMay]: "May",
+	[Key.calendarJune]: "Jun",
+	[Key.calendarJuly]: "Jul",
+	[Key.calendarAugust]: "Ago",
+	[Key.calendarSeptember]: "Sep",
+	[Key.calendarOctober]: "Oct",
+	[Key.calendarNovember]: "Nov",
+	[Key.calendarDecember]: "Dic",
+	[Key.calendar]: "Calendario del sitio",
+	[Key.calendarHeatmapWeek]: "Semana {week} del mes {month}: {count} entradas",
+	[Key.advertisement]: "Publicidad",
+
+	[Key.shareArticle]: "Compartir",
+	[Key.generatingPoster]: "Generando póster...",
+	[Key.copied]: "Copiado",
+	[Key.copyLink]: "Copiar enlace",
+	[Key.savePoster]: "Guardar póster",
+	[Key.scanToRead]: "Escanea para leer",
+
+	// Code Block Collapsible Configuration
+	[Key.codeCollapsibleShowMore]: "Mostrar más",
+	[Key.codeCollapsibleShowLess]: "Mostrar menos",
+	[Key.codeCollapsibleExpanded]: "Bloque de código desplegado",
+	[Key.codeCollapsibleCollapsed]: "Bloque de código contraído",
+
+	// Gallery Page
+	[Key.gallery]: "Galería",
+	[Key.galleryDescription]: "Capturando los momentos bonitos de la vida",
+	[Key.galleryPhotos]: "fotos",
+	[Key.galleryAlbums]: "álbumes",
+	[Key.galleryNoAlbums]: "Aún no hay álbumes",
+	[Key.galleryBackToAlbums]: "Volver a los álbumes",
+	[Key.galleryEnterAlbum]: "Abrir álbum",
+	[Key.searchAlbums]: "Buscar álbumes...",
+
+	// Password Protection
+	[Key.passwordProtected]: "Protegido con contraseña",
+	[Key.passwordProtectedDesc]:
+		"Este contenido está protegido con contraseña. Introdúcela para verlo.",
+	[Key.passwordHint]: "Pista",
+	[Key.passwordPlaceholder]: "Introduce la contraseña",
+	[Key.passwordSubmit]: "Desbloquear",
+	[Key.passwordError]: "Contraseña incorrecta. Inténtalo de nuevo.",
+	[Key.passwordProtectedRss]:
+		"Este artículo está cifrado. Visita el sitio web para verlo.",
+
+	// Background video player
+	[Key.videoPlay]: "Reproducir vídeo de fondo",
+	[Key.videoPause]: "Pausar vídeo de fondo",
+	[Key.videoPrev]: "Vídeo anterior",
+	[Key.videoNext]: "Vídeo siguiente",
+	[Key.videoLoadError]: "No se ha podido cargar el vídeo",
+
+	// Immersive Reading
+	[Key.immersiveReading]: "Lectura inmersiva",
+	[Key.enterImmersiveReading]: "Activar lectura inmersiva",
+	[Key.exitImmersiveReading]: "Salir de la lectura inmersiva",
+	[Key.tocExpand]: "Desplegar índice",
+	[Key.tocCollapse]: "Contraer índice",
+};
