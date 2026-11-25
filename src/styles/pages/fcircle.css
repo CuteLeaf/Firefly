@@ -1,0 +1,43 @@
+/* 朋友圈页面样式 */
+
+#timeline-view.hidden,
+#grid-view.hidden {
+	display: none !important;
+}
+
+.fcircle-track {
+	position: absolute;
+	left: 1rem;
+	top: 1rem;
+	bottom: 1rem;
+	width: 2px;
+	background: linear-gradient(
+		to bottom,
+		var(--line-divider),
+		var(--line-divider),
+		transparent
+	);
+	transform: translateX(-50%);
+	pointer-events: none;
+}
+
+@media (min-width: 640px) {
+	.fcircle-track {
+		left: 1.25rem;
+	}
+}
+
+.fcircle-date-marker {
+	transition: all 0.3s ease;
+}
+
+.fcircle-timeline-card {
+	transition:
+		border-color 0.3s ease,
+		box-shadow 0.3s ease,
+		transform 0.3s ease;
+}
+
+.fcircle-timeline-card:hover {
+	transform: translateY(-1px);
+}

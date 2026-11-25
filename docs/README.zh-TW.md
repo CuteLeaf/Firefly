@@ -202,7 +202,8 @@ src/
 │   ├── plantumlConfig.ts         # PlantUML 圖表配置
 │   ├── profileConfig.ts          # 使用者資料配置
 │   ├── sidebarConfig.ts          # 側邊欄版面配置
-│   └── sponsorConfig.ts          # 打賞配置
+│   ├── sponsorConfig.ts          # 打賞配置
+│   └── subscriptionConfig.ts     # 獨立訂閱配置
 ```
 
 
