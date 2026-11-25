@@ -26,12 +26,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          node-version: '24' # LTS
           
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
         with:
-          version: 11.22.0
+          # 版本取自 package.json 的 packageManager 字段，避免多处维护
           run_install: false
           
       - name: Install dependencies
