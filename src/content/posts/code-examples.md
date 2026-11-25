@@ -530,25 +530,17 @@ pnpm add rehype-code-group
 
 ### 自动生成包管理器标签
 
-在组内给 npm 命令的围栏添加 `npm2yarn`，构建时会自动生成 npm、pnpm、Yarn 和 Bun 的命令标签，无需手动维护四份命令。
+给 npm 命令的围栏加上 `npm2yarn` 即可，构建时会自动展开成 npm、pnpm、Yarn 和 Bun 四个标签页，无需再手写 `::: code-group`，也无需维护四份命令。
 
 ````markdown
-::: code-group
-
 ```sh npm2yarn
 npm install rehype-code-group
 ```
-
-:::
 ````
 
-::: code-group
-
 ```sh npm2yarn
 npm install rehype-code-group
 ```
-
-:::
 
 ### 同步选择、记忆与纵向布局
 
