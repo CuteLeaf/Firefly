@@ -73,7 +73,7 @@ function getPlainText(html: string): string {
 }
 
 // 格式化日期
-// 本地 API 使用 formatDynamicDate（带时区转换）
+// Local API: formatDynamicDate shows the authored site-local time, same as the dynamic page
 // 第三方 API 和 Memos 使用浏览器本地时区，不做额外转换
 function formatDate(timestamp: number): string {
 	if (apiUrl.startsWith("http") || memos?.enable) {
