@@ -1,0 +1,49 @@
+# GitLab Pages deployment for Firefly
+# Docs: see the "GitLab Pages Deployment" section in README.md
+
+image: node:24
+
+stages:
+  - build
+  - deploy
+
+variables:
+  # Astro caches the pnpm store between jobs
+  PNPM_HOME: "/builds/.pnpm"
+  npm_config_cache: "/builds/.pnpm/npm-cache"
+  ASTRO_TELEMETRY_DISABLED: "1"
+
+cache:
+  key:
+    files:
+      - pnpm-lock.yaml
+  paths:
+    - .pnpm-store/
+
+build:
+  stage: build
+  script:
+    - corepack enable
+    - corepack prepare pnpm@11.22.0 --activate
+    - pnpm config set store-dir "$CI_PROJECT_DIR/.pnpm-store"
+    - pnpm install --frozen-lockfile
+    - pnpm run build
+  artifacts:
+    paths:
+      - dist
+    expire_in: 1 week
+
+pages:
+  stage: deploy
+  dependencies:
+    - build
+  script:
+    - rm -rf public
+    - mv dist public
+    - test -f public/index.html
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 week
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

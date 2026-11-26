@@ -148,6 +148,85 @@
    [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/CuteLeaf/Firefly&project-name=Firefly&repository-name=Firefly)
    [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/CuteLeaf/Firefly)
 
+### GitLab Pages 部署
+
+GitLab Pages 支持从**私有仓库**发布站点，因此源码可以保持私有，博客依然能通过自己的域名访问。
+
+1. **将仓库推送到 GitLab**
+
+   在 GitLab 上新建一个空项目，然后将 Firefly 推送过去：
+
+   ```bash
+   git remote add gitlab https://gitlab.com/<你的用户名>/<你的项目>.git
+   git push -u gitlab master
+   ```
+
+2. **添加 CI/CD 配置**
+
+   仓库已内置可直接使用的 `.gitlab-ci.yml`，只需确保推送时一并带上。其内容为：
+
+   ```yaml
+   # GitLab Pages deployment for Firefly
+   # Docs: see the "GitLab Pages Deployment" section in README.md
+
+   image: node:24
+
+   stages:
+     - build
+     - deploy
+
+   variables:
+     # Astro caches the pnpm store between jobs
+     PNPM_HOME: "/builds/.pnpm"
+     npm_config_cache: "/builds/.pnpm/npm-cache"
+     ASTRO_TELEMETRY_DISABLED: "1"
+
+   cache:
+     key:
+       files:
+         - pnpm-lock.yaml
+     paths:
+       - .pnpm-store/
+
+   build:
+     stage: build
+     script:
+       - corepack enable
+       - corepack prepare pnpm@11.22.0 --activate
+       - pnpm config set store-dir "$CI_PROJECT_DIR/.pnpm-store"
+       - pnpm install --frozen-lockfile
+       - pnpm run build
+     artifacts:
+       paths:
+         - dist
+       expire_in: 1 week
+
+   pages:
+     stage: deploy
+     dependencies:
+       - build
+     script:
+       - rm -rf public
+       - mv dist public
+       - test -f public/index.html
+     artifacts:
+       paths:
+         - public
+       expire_in: 1 week
+     rules:
+       - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+   ```
+
+3. **开启 GitLab Pages**
+
+   在 `Settings > Pages` 中将部署来源设置为 **GitLab CI/CD**。流水线首次运行成功后，站点会发布在 `https://<你的用户名>.gitlab.io/<你的项目>/`。
+
+   如果默认分支不是 `master`，请相应调整 `rules` 条件。
+
+4. **绑定自有域名（可选）**
+
+   在 `Settings > Pages > Domains` 中添加域名并按提示配置 DNS。然后将 `src/config/siteConfig.ts` 中的 `siteConfig.site_url` 改为该域名，使规范链接与站点地图指向正确地址。
+
 ## 📖 配置说明
 
 > 📚 **详细配置文档**: 查看 [Firefly 使用文档](https://docs-firefly.cuteleaf.cn/) 获取完整的配置指南

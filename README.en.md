@@ -148,6 +148,85 @@ If you have useful features and optimizations, please submit a [Pull Request](ht
    [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/CuteLeaf/Firefly&project-name=Firefly&repository-name=Firefly)
    [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/CuteLeaf/Firefly)
 
+### GitLab Pages Deployment
+
+GitLab Pages can publish the site from a **private** repository, so you can keep the source private while the blog stays reachable on your own domain.
+
+1. **Push the repository to GitLab**
+
+   Create a new empty project on GitLab and push Firefly to it:
+
+   ```bash
+   git remote add gitlab https://gitlab.com/<your-username>/<your-project>.git
+   git push -u gitlab master
+   ```
+
+2. **Add the CI/CD configuration**
+
+   This repository already ships a ready-to-use `.gitlab-ci.yml` — just make sure it is pushed together with the rest of the project. Its content is:
+
+   ```yaml
+   # GitLab Pages deployment for Firefly
+   # Docs: see the "GitLab Pages Deployment" section in README.md
+
+   image: node:24
+
+   stages:
+     - build
+     - deploy
+
+   variables:
+     # Astro caches the pnpm store between jobs
+     PNPM_HOME: "/builds/.pnpm"
+     npm_config_cache: "/builds/.pnpm/npm-cache"
+     ASTRO_TELEMETRY_DISABLED: "1"
+
+   cache:
+     key:
+       files:
+         - pnpm-lock.yaml
+     paths:
+       - .pnpm-store/
+
+   build:
+     stage: build
+     script:
+       - corepack enable
+       - corepack prepare pnpm@11.22.0 --activate
+       - pnpm config set store-dir "$CI_PROJECT_DIR/.pnpm-store"
+       - pnpm install --frozen-lockfile
+       - pnpm run build
+     artifacts:
+       paths:
+         - dist
+       expire_in: 1 week
+
+   pages:
+     stage: deploy
+     dependencies:
+       - build
+     script:
+       - rm -rf public
+       - mv dist public
+       - test -f public/index.html
+     artifacts:
+       paths:
+         - public
+       expire_in: 1 week
+     rules:
+       - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+   ```
+
+3. **Enable GitLab Pages**
+
+   In `Settings > Pages`, set the deployment source to **GitLab CI/CD**. After the first pipeline succeeds the site is published at `https://<your-username>.gitlab.io/<your-project>/`.
+
+   If your default branch is not `master`, adjust the `rules` condition accordingly.
+
+4. **Use your own domain (optional)**
+
+   In `Settings > Pages > Domains`, add your domain and follow the DNS instructions. Then set `siteConfig.site_url` in `src/config/siteConfig.ts` to your domain so that canonical URLs and the sitemap point to the right address.
+
 ## 📖 Configuration
 
 > 📚 **Detailed Configuration Documentation**: Check [Firefly Documentation](https://docs-firefly.cuteleaf.cn/) for complete configuration guide
