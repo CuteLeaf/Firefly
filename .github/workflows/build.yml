@@ -65,6 +65,9 @@ jobs:
 
       - name: Run Astro Build
         run: pnpm astro build
+        env:
+          # Only the Node.js 22 job builds the E2E fixture pages that the code group tests need.
+          FIREFLY_E2E: ${{ matrix.node == 22 && '1' || '' }}
 
       - name: Install Chromium for code group tests
         if: matrix.node == 22

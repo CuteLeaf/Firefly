@@ -1,0 +1,20 @@
+---
+import Markdown from "@components/common/Markdown.astro";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { Content } from "@/e2e/code-groups.md";
+
+// E2E fixtures are only generated when FIREFLY_E2E is set, so regular builds
+// and deployments never include them.
+export function getStaticPaths() {
+	return import.meta.env.FIREFLY_E2E
+		? [{ params: { fixture: "code-groups" } }]
+		: [];
+}
+---
+
+<MainGridLayout title="Code group E2E fixture">
+	<meta slot="head" name="robots" content="noindex, nofollow" />
+	<Markdown class="mb-6 markdown-content">
+		<Content />
+	</Markdown>
+</MainGridLayout>
