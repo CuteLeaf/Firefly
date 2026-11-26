@@ -104,6 +104,7 @@ test("sync and local persistence survive reload and Swup navigation", async ({
 	});
 	await page.locator("#code-group-navigation").click();
 	await expect(page).toHaveURL(/\/about\/$/);
+	await expect(page.locator("#code-group-navigation")).toHaveCount(0);
 	await page.evaluate(() => {
 		const link = document.createElement("a");
 		link.href = "/posts/code-examples/";
