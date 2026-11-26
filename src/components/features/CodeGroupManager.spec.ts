@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-const article = "/posts/code-examples/";
+const article = "/e2e/code-groups/";
 
 test("compact tabs maintain one keyboard stop and hide only inactive panels", async ({
 	page,
@@ -107,13 +107,13 @@ test("sync and local persistence survive reload and Swup navigation", async ({
 	await expect(page.locator("#code-group-navigation")).toHaveCount(0);
 	await page.evaluate(() => {
 		const link = document.createElement("a");
-		link.href = "/posts/code-examples/";
+		link.href = "/e2e/code-groups/";
 		link.id = "code-group-return";
-		link.textContent = "Code examples";
+		link.textContent = "Code group fixture";
 		document.querySelector("main")?.append(link);
 	});
 	await page.locator("#code-group-return").click();
-	await expect(page).toHaveURL(/\/posts\/code-examples\/$/);
+	await expect(page).toHaveURL(/\/e2e\/code-groups\/$/);
 	expect(
 		await page.evaluate(() => Reflect.get(window, "__codeGroupNavigation")),
 	).toBe(true);

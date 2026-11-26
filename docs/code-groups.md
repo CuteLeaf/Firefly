@@ -1,6 +1,6 @@
 # Code groups
 
-Firefly uses `rehype-code-group` for Markdown code tabs, with Expressive Code for highlighting, code titles, line numbers, diffs, folding and copy buttons. The live examples are in `src/content/posts/code-examples.md`.
+Firefly uses `rehype-code-group` for Markdown code tabs, with Expressive Code for highlighting, code titles, line numbers, diffs, folding and copy buttons. The live examples are in `src/content/posts/code-examples.md`; the browser tests use their own fixture, `src/e2e/code-groups.md`.
 
 ## Integration
 
@@ -54,12 +54,12 @@ A group containing fences such as `sh [npm]` can omit `labels=[...]`. A grouped 
 ```sh
 pnpm check
 pnpm type-check
-pnpm build
+FIREFLY_E2E=1 pnpm astro build
 pnpm exec playwright install chromium
 pnpm test:code-groups
 ```
 
-The browser suite serves the production build through `astro preview` on port 4336. It verifies the existing compact examples, rich text and code in one tab, fence labels and emoji, generated package-manager commands, keyboard focus, Swup navigation, sync, persistence, narrow layouts, themes, RTL, no-JavaScript output and print. Node 22's build job runs these tests in CI.
+The browser suite tests `/e2e/code-groups/`, rendered from `src/e2e/code-groups.md` by `src/pages/e2e/[...fixture].astro`. The page is generated only when `FIREFLY_E2E` is set, so regular builds and deployments do not include it; rebuild with the variable before running the tests. The suite serves that production build through `astro preview` on port 4336. It verifies compact examples, rich text and code in one tab, fence labels and emoji, generated package-manager commands, keyboard focus, Swup navigation, sync, persistence, narrow layouts, themes, RTL, no-JavaScript output and print. Node 22's build job runs these tests in CI.
 
 ## Screenshots
 
