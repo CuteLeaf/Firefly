@@ -9,8 +9,11 @@
   }
 
   /* #main-grid 列几何全部来自 --cols-* / --*-display-*（computeGridColumns 生成）；
-     子元素不做定位：侧栏包裹层是 display:contents，真正的 grid item 是内层元素 */
+     子元素不做定位：侧栏包裹层是 display:contents，真正的 grid item 是内层元素；
+     显式赋予相对定位与层叠优先级（z-index: 10），确保其内部弹出浮窗天生高于后置兄弟元素（如页脚） */
   #main-grid {
+    position: relative;
+    z-index: 10;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto;
@@ -49,9 +52,44 @@
     }
   }
 
+  @media (min-width: 768px) and (max-width: 1279px) {
+    /* 平板端双侧栏收缩合并：仅在两侧均激活合并（data-tablet-merged="true"）时生效 */
+    #main-grid[data-tablet-merged="true"] {
+      grid-template-rows: max-content 1fr;
+      row-gap: 1rem;
+    }
+
+    #main-grid[data-tablet-merged="true"][data-tablet-sidebar="left"] > #content-column {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+    }
+    #main-grid[data-tablet-merged="true"][data-tablet-sidebar="left"] #left-sidebar {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    #main-grid[data-tablet-merged="true"][data-tablet-sidebar="left"] #right-sidebar {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    #main-grid[data-tablet-merged="true"][data-tablet-sidebar="right"] > #content-column {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+    }
+    #main-grid[data-tablet-merged="true"][data-tablet-sidebar="right"] #left-sidebar {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    #main-grid[data-tablet-merged="true"][data-tablet-sidebar="right"] #right-sidebar {
+      grid-column: 2;
+      grid-row: 2;
+    }
+  }
+
   @media (min-width: 1280px) {
     #main-grid {
       grid-template-columns: var(--cols-xl, 1fr);
+      grid-template-rows: auto;
     }
     #main-grid > #left-sidebar-wrapper,
     #main-grid > #left-sidebar-dynamic {
@@ -61,14 +99,24 @@
     #main-grid > #right-sidebar-dynamic {
       display: var(--right-display-xl, contents);
     }
+    /* 恢复子元素默认流式栅格位置，避免硬编码 column 破坏桌面端单侧栏布局 */
+    #main-grid #left-sidebar,
+    #main-grid > #content-column,
+    #main-grid #right-sidebar {
+      grid-column: auto;
+      grid-row: auto;
+    }
     body:not(.immersive-reading) #main-grid > #content-column {
       max-width: calc(100% * var(--content-ratio-xl, 1));
     }
   }
 
   /* 页脚宽度跨「侧栏 + 内容栏」，故挂在 #content-panel-inner 下、#content-column 之外；
-     width 减 #main-grid 两侧内边距（px-2 → 1rem，md:px-4 → 2rem） */
+     width 减 #main-grid 两侧内边距（px-2 → 1rem，md:px-4 → 2rem）；
+     显式层叠基底（z-index: 1），避免页脚文字穿透遮挡主栅格内的高阶弹出浮层 */
   #content-panel-inner > .site-footer {
+    position: relative;
+    z-index: 1;
     width: calc(100% - 1rem);
     margin-inline: auto;
   }

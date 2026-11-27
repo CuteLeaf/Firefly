@@ -16,7 +16,10 @@ import type {
 	MobileBottomComponentConfig,
 	WidgetComponentConfig,
 } from "@/types/config";
-import { isWidgetVisibleOnPageType } from "@/utils/responsive-utils";
+import {
+	getResponsiveSidebarConfig,
+	isWidgetVisibleOnPageType,
+} from "@/utils/responsive-utils";
 import { isArticleDetailPage } from "@/utils/url-utils";
 
 interface Props {
@@ -117,9 +120,10 @@ const isComponentInitiallyVisible = (
 const getComponentProps = (
 	config: WidgetComponentConfig | MobileBottomComponentConfig,
 	index: number,
+	extraClass?: string,
 ): Record<string, unknown> => {
 	const baseProps: Record<string, unknown> = {
-		class: "onload-animation",
+		class: extraClass ? `onload-animation ${extraClass}` : "onload-animation",
 		style: `animation-delay: ${getAnimationDelay(index)}`,
 		widgetConfig: config,
 	};
@@ -164,10 +168,39 @@ const bottomComponents = isMobileBottom ? filteredComponents : [];
 const hasInitiallyVisibleTopComponents = topComponents.some(
 	isComponentInitiallyVisible,
 );
+
+// 平板端双侧栏收缩合并时的顺序调整：
+// 仅在配置为 both，且两侧均有启用的组件时，平板端才会真正发生双侧栏收缩合并
+const responsiveConfig = getResponsiveSidebarConfig();
+const isMergedBoth =
+	sidebarLayoutConfig.enable &&
+	sidebarLayoutConfig.position === "both" &&
+	responsiveConfig.hasLeftComponents &&
+	responsiveConfig.hasRightComponents;
+
+const TABLET_BOTTOM_TYPES = new Set(["categories", "tags"]);
+
+// 在右侧边栏末尾追加启用的 categories 和 tags（平板端显示，桌面端隐藏）
+// 无论它们原先配置在 leftComponents 还是 rightComponents 中，均收集并在合并列最底部展示
+const tabletBottomComponents =
+	isMergedBoth && side === SIDEBAR_SIDE.RIGHT
+		? ([
+				...sidebarLayoutConfig.leftComponents,
+				...sidebarLayoutConfig.rightComponents,
+			]
+				.filter((c) => c.enable && TABLET_BOTTOM_TYPES.has(c.type))
+				.filter(
+					(c, index, self) =>
+						self.findIndex((item) => item.type === c.type) === index,
+				) as WidgetComponentConfig[])
+		: [];
 ---
 
 {
-	(topComponents.length > 0 || stickyComponents.length > 0 || bottomComponents.length > 0) && (
+	(topComponents.length > 0 ||
+		stickyComponents.length > 0 ||
+		bottomComponents.length > 0 ||
+		tabletBottomComponents.length > 0) && (
 		<div id={`${side}-sidebar`} class:list={[className, "flex flex-col w-full pt-0"]}>
 			{/* Mobile bottom components - 直接渲染所有组件，不分组 */}
 			{isMobileBottom ? (
@@ -192,7 +225,11 @@ const hasInitiallyVisibleTopComponents = topComponents.some(
 							{topComponents.map((comp, index) => {
 								const Component = componentMap[comp.type];
 								if (!Component) return null;
-								const props = getComponentProps(comp, index) as any;
+								const extraClass =
+									isMergedBoth && TABLET_BOTTOM_TYPES.has(comp.type)
+										? "hidden xl:block"
+										: undefined;
+								const props = getComponentProps(comp, index, extraClass) as any;
 								return <Component {...props} />;
 							})}
 						</div>
@@ -211,11 +248,47 @@ const hasInitiallyVisibleTopComponents = topComponents.some(
 							{stickyComponents.map((comp, index) => {
 								const Component = componentMap[comp.type];
 								if (!Component) return null;
+								const extraClass =
+									isMergedBoth && TABLET_BOTTOM_TYPES.has(comp.type)
+										? "hidden xl:block"
+										: undefined;
 								const props = getComponentProps(
 									comp,
-									topComponents.length + index
+									topComponents.length + index,
+									extraClass
 								) as any;
 								return <Component {...props} />;
+							})}
+
+							{/* 平板端将分类与标签排在日历最底部 */}
+							{tabletBottomComponents.map((comp, index) => {
+								const Component = componentMap[comp.type];
+								if (!Component) return null;
+								const props = getComponentProps(
+									comp,
+									topComponents.length + stickyComponents.length + index,
+									"block xl:hidden"
+								) as any;
+								return <Component {...props} id={`${comp.type}-tablet`} />;
+							})}
+						</div>
+					)}
+
+					{/* 若右侧栏无 sticky 组件，平板端底部组件单独作为容器渲染（防止因 stickyComponents 为空而丢失） */}
+					{stickyComponents.length === 0 && tabletBottomComponents.length > 0 && (
+						<div
+							id={`${side}-sidebar-tablet-bottom`}
+							class="flex flex-col w-full mt-0 gap-4 block xl:hidden"
+						>
+							{tabletBottomComponents.map((comp, index) => {
+								const Component = componentMap[comp.type];
+								if (!Component) return null;
+								const props = getComponentProps(
+									comp,
+									topComponents.length + index,
+									"block xl:hidden"
+								) as any;
+								return <Component {...props} id={`${comp.type}-tablet`} />;
 							})}
 						</div>
 					)}

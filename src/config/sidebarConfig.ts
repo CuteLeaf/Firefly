@@ -10,12 +10,12 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 	// 侧边栏位置：
 	// left: 仅显示左侧边栏
 	// right: 仅显示右侧边栏
-	// both: 双侧边栏，1280px以上同时显示左右，769-1279px根据tabletSidebar配置显示其中一侧
+	// both: 双侧边栏，1280px以上同时显示左右，769-1279px合并为单侧栏显示
 	position: "both",
 
-	// 平板端(769-1279px)显示哪侧侧边栏，仅position为both时生效
-	// left: 平板端显示左侧边栏
-	// right: 平板端显示右侧边栏
+	// 平板端(769-1279px)合并到哪侧侧边栏，仅position为both时生效
+	// left: 平板端双侧栏合并至左侧列
+	// right: 平板端双侧栏合并至右侧列
 	tabletSidebar: "left",
 
 	// 文章详情页隐藏侧边栏，设为 true 则只在首页等非文章页显示

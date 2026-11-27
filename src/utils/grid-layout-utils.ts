@@ -42,25 +42,50 @@ export function updateMainGridCols(): void {
 	const capRaw = mainGrid.getAttribute("data-no-sidebar-content-width");
 	const capNum = capRaw ? Number(capRaw) : Number.NaN;
 
+	const enabled = flag("data-sidebar-enable");
+	const position =
+		positionAttr === "right" || positionAttr === "both" ? positionAttr : "left";
+	const hideSidebarOnPostPage =
+		mainGrid.getAttribute("data-grid-hide-sidebar-on-post") === "true";
+	const hasLeftWidgets = flag(
+		isPostPage ? "data-has-left-on-post" : "data-has-left-on-non-post",
+	);
+	const hasRightWidgets = flag(
+		isPostPage ? "data-has-right-on-post" : "data-has-right-on-non-post",
+	);
+
+	const sidebarActive = enabled && !(isPostPage && hideSidebarOnPostPage);
+	const leftIn = sidebarActive && hasLeftWidgets && position !== "right";
+	const rightIn = sidebarActive && hasRightWidgets && position !== "left";
+
+	let tabletSide: "left" | "right" =
+		mainGrid.getAttribute("data-tablet-sidebar") === "right" ? "right" : "left";
+	if (position === "both" && tabletSide === "left" && !leftIn && rightIn) {
+		tabletSide = "right";
+	} else if (
+		position === "both" &&
+		tabletSide === "right" &&
+		!rightIn &&
+		leftIn
+	) {
+		tabletSide = "left";
+	}
+
+	const isTabletMerged = position === "both" && leftIn && rightIn;
+	mainGrid.setAttribute(
+		"data-tablet-merged",
+		isTabletMerged ? "true" : "false",
+	);
+	mainGrid.setAttribute("data-tablet-sidebar", tabletSide);
+
 	const vars = computeGridColumns({
-		enabled: flag("data-sidebar-enable"),
-		position:
-			positionAttr === "right" || positionAttr === "both"
-				? positionAttr
-				: "left",
-		tabletSidebar:
-			mainGrid.getAttribute("data-tablet-sidebar") === "right"
-				? "right"
-				: "left",
-		hideSidebarOnPostPage:
-			mainGrid.getAttribute("data-grid-hide-sidebar-on-post") === "true",
+		enabled,
+		position,
+		tabletSidebar: tabletSide,
+		hideSidebarOnPostPage,
 		isPostPage,
-		hasLeftWidgets: flag(
-			isPostPage ? "data-has-left-on-post" : "data-has-left-on-non-post",
-		),
-		hasRightWidgets: flag(
-			isPostPage ? "data-has-right-on-post" : "data-has-right-on-non-post",
-		),
+		hasLeftWidgets,
+		hasRightWidgets,
 		noSidebarContentWidth: Number.isFinite(capNum) ? capNum : undefined,
 	});
 
