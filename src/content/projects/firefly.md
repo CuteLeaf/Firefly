@@ -102,3 +102,7 @@ link:
    构建命令： `pnpm run build`
 
    安装命令： `pnpm install`
+
+   [![Deploy to Wasmer](https://img.shields.io/badge/Deploy%20to-Wasmer-171717?logo=wasmer&logoColor=white)](https://wasmer.io/apps/create?github=CuteLeaf%2FFirefly)
+
+   Wasmer 按钮会导入本仓库用于构建；如需自定义并在推送后自动重新部署，请导入你自己的 fork。
