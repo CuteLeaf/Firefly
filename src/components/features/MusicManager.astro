@@ -104,6 +104,41 @@ const managerConfigStr = JSON.stringify({
     document.body.appendChild(audio);
     audio.pause(); // 确保不自动播放
 
+	// ── Web Audio API GainNode for platforms with read-only audio.volume (iOS / iPadOS) ──
+	var audioCtx = null;
+	var gainNode = null;
+	var isGainNodeConnected = false;
+
+	function ensureGainNode() {
+		var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+		if (!AudioContextClass) return;
+		if (!audioCtx) {
+			try {
+				audioCtx = new AudioContextClass();
+			} catch (e) {
+				return;
+			}
+		}
+		if (audioCtx.state === "suspended") {
+			audioCtx.resume().catch(function () {});
+		}
+		if (isGainNodeConnected) return;
+		try {
+			gainNode = audioCtx.createGain();
+			gainNode.gain.value = state.isMuted ? 0 : state.volume;
+			var source = audioCtx.createMediaElementSource(audio);
+			source.connect(gainNode);
+			gainNode.connect(audioCtx.destination);
+			isGainNodeConnected = true;
+			// 成功接管后，原生 audio.volume 保持 1.0，避免与 GainNode 产生乘积衰减 (v²)
+			try {
+				audio.volume = 1.0;
+			} catch (e) {}
+		} catch (e) {
+			console.warn("Web Audio gain node setup skipped or failed:", e);
+		}
+	}
+
     // ── State ────────────────────────────────────────────────
     var loadVersion = 0; // incremented on each loadTrack to discard stale play() results
     var state = {
@@ -219,15 +254,16 @@ const managerConfigStr = JSON.stringify({
         if (!state.playlist || state.playlist.length === 0) return;
 
         var actions = [
-            ["play", function () {
-                if (!state.playlist || state.playlist.length === 0) return;
-                if (audio.paused) {
-                    audio.play().catch(function (e) {
-                        if (e.name === "AbortError") return;
-                        console.warn("Playback failed:", e);
-                    });
-                }
-            }],
+			["play", function () {
+				if (!state.playlist || state.playlist.length === 0) return;
+				ensureGainNode();
+				if (audio.paused) {
+					audio.play().catch(function (e) {
+						if (e.name === "AbortError") return;
+						console.warn("Playback failed:", e);
+					});
+				}
+			}],
             ["pause", function () {
                 if (!audio.paused) {
                     audio.pause();
@@ -353,8 +389,9 @@ const managerConfigStr = JSON.stringify({
         var playUrl = currentTrackUrls[currentTrackUrlIndex];
         audio.src = playUrl;
 
-        if (autoPlay) {
-            audio.play().then(function () {
+		if (autoPlay) {
+			ensureGainNode();
+			audio.play().then(function () {
                 if (ver !== loadVersion) return; // stale, discard
                 emitPlayState(true, true);
             }).catch(function (e) {
@@ -409,6 +446,7 @@ const managerConfigStr = JSON.stringify({
     // ── Playback controls ────────────────────────────────────
     function togglePlay() {
         if (!state.playlist || state.playlist.length === 0) return;
+        ensureGainNode();
         if (audio.paused) {
             audio.play().then(function () {
                 emitPlayState(true);
@@ -422,24 +460,25 @@ const managerConfigStr = JSON.stringify({
         }
     }
 
-    function playNext(auto) {
-        if (state.playlist.length === 0) return;
-        if (state.playMode === 1 && auto) {
-            audio.currentTime = 0;
-            audio.play().catch(function (e) {
-                if (e.name === 'AbortError') return;
-                console.warn('Playback failed:', e);
-            });
-            return;
-        }
-        var nextIndex;
-        if (state.playMode === 2) {
-            nextIndex = Math.floor(Math.random() * state.playlist.length);
-        } else {
-            nextIndex = (state.currentIndex + 1) % state.playlist.length;
-        }
-        loadTrack(nextIndex, true);
-    }
+	function playNext(auto) {
+		if (state.playlist.length === 0) return;
+		if (state.playMode === 1 && auto) {
+			ensureGainNode();
+			audio.currentTime = 0;
+			audio.play().catch(function (e) {
+				if (e.name === "AbortError") return;
+				console.warn("Playback failed:", e);
+			});
+			return;
+		}
+		var nextIndex;
+		if (state.playMode === 2) {
+			nextIndex = Math.floor(Math.random() * state.playlist.length);
+		} else {
+			nextIndex = (state.currentIndex + 1) % state.playlist.length;
+		}
+		loadTrack(nextIndex, true);
+	}
 
     function playPrev() {
         if (state.playlist.length === 0) return;
@@ -461,21 +500,45 @@ const managerConfigStr = JSON.stringify({
         setPlayMode((state.playMode + 1) % 3);
     }
 
-    function setVolume(val) {
-        val = Math.max(0, Math.min(1, val));
-        state.volume = val;
-        state.isMuted = false;
-        audio.volume = val;
-        audio.muted = false;
-        localStorage.setItem('music-player-volume', val.toString());
-        emit('fm:volume', { volume: val, isMuted: false });
-    }
+	function setVolume(val) {
+		val = Math.max(0, Math.min(1, val));
+		state.volume = val;
+		state.isMuted = false;
+		ensureGainNode();
+		if (isGainNodeConnected && gainNode) {
+			try {
+				if (audioCtx) {
+					gainNode.gain.setValueAtTime(val, audioCtx.currentTime);
+				} else {
+					gainNode.gain.value = val;
+				}
+				audio.volume = 1.0;
+			} catch (e) {}
+		} else {
+			try {
+				audio.volume = val;
+			} catch (e) {}
+		}
+		audio.muted = false;
+		localStorage.setItem("music-player-volume", val.toString());
+		emit("fm:volume", { volume: val, isMuted: false });
+	}
 
-    function toggleMute() {
-        state.isMuted = !state.isMuted;
-        audio.muted = state.isMuted;
-        emit('fm:volume', { volume: state.volume, isMuted: state.isMuted });
-    }
+	function toggleMute() {
+		state.isMuted = !state.isMuted;
+		audio.muted = state.isMuted;
+		if (isGainNodeConnected && gainNode) {
+			try {
+				var targetGain = state.isMuted ? 0 : state.volume;
+				if (audioCtx) {
+					gainNode.gain.setValueAtTime(targetGain, audioCtx.currentTime);
+				} else {
+					gainNode.gain.value = targetGain;
+				}
+			} catch (e) {}
+		}
+		emit("fm:volume", { volume: state.volume, isMuted: state.isMuted });
+	}
 
     function seek(percent) {
         if (!audio.duration) return;
@@ -490,6 +553,7 @@ const managerConfigStr = JSON.stringify({
     }
 
     function playTrackByIndex(index) {
+        ensureGainNode();
         if (index === state.currentIndex && !audio.paused) {
             togglePlay();
         } else {
@@ -506,11 +570,25 @@ const managerConfigStr = JSON.stringify({
         emitPlayState(false, true);
     });
 
-    audio.addEventListener('volumechange', function () {
-        state.volume = audio.volume;
-        state.isMuted = audio.muted;
-        emit('fm:volume', { volume: state.volume, isMuted: state.isMuted });
-    });
+	audio.addEventListener("volumechange", function () {
+		// 若已接入 GainNode 接管增益，原生 volume 设为 1.0，不应反向覆盖用户设置的 state.volume
+		if (isGainNodeConnected) {
+			state.isMuted = audio.muted;
+			emit("fm:volume", { volume: state.volume, isMuted: state.isMuted });
+			return;
+		}
+		// 在 iOS / iPadOS 等苹果 WebKit 设备上，audio.volume 始终锁死在 1.0 且不可写。
+		// 如果 state.volume 被设为非 1 的值，但 audio.volume 依然为 1，说明该环境不支持 audio.volume 写，
+		// 此时绝不可用 audio.volume 覆盖 state.volume，否则会强制刷回 100% 并破坏用户交互。
+		if (audio.volume === 1 && state.volume !== 1) {
+			state.isMuted = audio.muted;
+			emit("fm:volume", { volume: state.volume, isMuted: state.isMuted });
+			return;
+		}
+		state.volume = audio.volume;
+		state.isMuted = audio.muted;
+		emit("fm:volume", { volume: state.volume, isMuted: state.isMuted });
+	});
 
     audio.addEventListener('loadedmetadata', function () {
         updateMediaSessionPositionState(true);
