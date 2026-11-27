@@ -137,34 +137,48 @@ export function computeGridColumns(input: GridColumnsInput): GridColumnVars {
 	const rightIn =
 		sidebarActive && input.hasRightWidgets && input.position !== "left";
 
-	// 平板端：position 为 both 时只显示 tabletSidebar 指定的那一侧。
-	// 若指定的一侧没有可用组件（hasLeft/hasRightWidgets 为 false），则回退到另一侧，
-	// 避免平板宽度下整列侧边栏直接消失。
+	// 平板端：position 为 both 时优先显示 tabletSidebar 指定的那一侧。
+	// 若指定的一侧没有可用组件（hasLeft/hasRightWidgets 为 false），则回退到另一侧。
 	let tabletSide = input.tabletSidebar;
 	if (
 		input.position === "both" &&
 		tabletSide === "left" &&
-		!input.hasLeftWidgets &&
-		input.hasRightWidgets
+		!leftIn &&
+		rightIn
 	) {
 		tabletSide = "right";
 	} else if (
 		input.position === "both" &&
 		tabletSide === "right" &&
-		!input.hasRightWidgets &&
-		input.hasLeftWidgets
+		!rightIn &&
+		leftIn
 	) {
 		tabletSide = "left";
 	}
 
+	// 平板端双侧栏收缩合并逻辑：
+	// 当 position 为 "both" 时，若两侧都有组件，两侧容器均设为 contents 并通过 CSS 栅格合并至同一侧栏列；
+	// 若仅一侧有组件或配置为单侧栏，则仅显示该侧。
+	const isBoth = input.position === "both";
+	const mdBothActive = isBoth && leftIn && rightIn;
+
 	const mdLeft =
 		leftIn &&
-		(input.position === "left" ||
-			(input.position === "both" && tabletSide === "left"));
+		(mdBothActive ||
+			input.position === "left" ||
+			(isBoth && tabletSide === "left"));
 	const mdRight =
 		rightIn &&
-		(input.position === "right" ||
-			(input.position === "both" && tabletSide === "right"));
+		(mdBothActive ||
+			input.position === "right" ||
+			(isBoth && tabletSide === "right"));
+
+	// 平板端轨道：若两侧合并，则由 tabletSide 决定侧栏列位于左侧还是右侧
+	const mdCols = mdBothActive
+		? tabletSide === "right"
+			? trackSegments(false, true)
+			: trackSegments(true, false)
+		: trackSegments(mdLeft, mdRight);
 
 	// 侧栏已启用但本断点无侧栏列 → 内容栏按比例收窄；比例钳到 [0,1]，1 即不收窄
 	// 闸门用 enabled 而非 sidebarActive：enable: false 时仍铺满。md 与 xl 需各自判定
@@ -175,7 +189,7 @@ export function computeGridColumns(input: GridColumnsInput): GridColumnVars {
 	const ratioXl = input.enabled && !leftIn && !rightIn ? ratio : 1;
 
 	return {
-		"--cols-md": trackSegments(mdLeft, mdRight),
+		"--cols-md": mdCols,
 		"--cols-xl": trackSegments(leftIn, rightIn),
 		"--left-display-md": mdLeft ? "contents" : "none",
 		"--left-display-xl": leftIn ? "contents" : "none",

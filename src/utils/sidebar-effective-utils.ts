@@ -34,18 +34,48 @@ export function getEffectiveSidebarState(
 	const hideSidebarOnPostPage =
 		sidebarLayoutConfig.hideSidebarOnPostPage === true;
 
+	const hasLeftWidgets = isPostPage
+		? sidebarConfig.hasLeftWidgetsOnPost
+		: sidebarConfig.hasLeftWidgetsOnNonPost;
+	const hasRightWidgets = isPostPage
+		? sidebarConfig.hasRightWidgetsOnPost
+		: sidebarConfig.hasRightWidgetsOnNonPost;
+
+	const sidebarActive =
+		sidebarLayoutConfig.enable && !(isPostPage && hideSidebarOnPostPage);
+	const leftIn =
+		sidebarActive && hasLeftWidgets && sidebarLayoutConfig.position !== "right";
+	const rightIn =
+		sidebarActive && hasRightWidgets && sidebarLayoutConfig.position !== "left";
+
+	let tabletSide = sidebarConfig.tabletSidebar;
+	if (
+		sidebarLayoutConfig.position === "both" &&
+		tabletSide === "left" &&
+		!leftIn &&
+		rightIn
+	) {
+		tabletSide = "right";
+	} else if (
+		sidebarLayoutConfig.position === "both" &&
+		tabletSide === "right" &&
+		!rightIn &&
+		leftIn
+	) {
+		tabletSide = "left";
+	}
+
+	const isTabletMerged =
+		sidebarLayoutConfig.position === "both" && leftIn && rightIn;
+
 	const gridColumnVars = computeGridColumns({
 		enabled: sidebarLayoutConfig.enable,
 		position: sidebarLayoutConfig.position,
-		tabletSidebar: sidebarConfig.tabletSidebar,
+		tabletSidebar: tabletSide,
 		hideSidebarOnPostPage,
 		isPostPage,
-		hasLeftWidgets: isPostPage
-			? sidebarConfig.hasLeftWidgetsOnPost
-			: sidebarConfig.hasLeftWidgetsOnNonPost,
-		hasRightWidgets: isPostPage
-			? sidebarConfig.hasRightWidgetsOnPost
-			: sidebarConfig.hasRightWidgetsOnNonPost,
+		hasLeftWidgets,
+		hasRightWidgets,
 		noSidebarContentWidth: sidebarLayoutConfig.noSidebarContentWidth,
 	});
 
@@ -65,7 +95,8 @@ export function getEffectiveSidebarState(
 				? "true"
 				: "false",
 			"data-sidebar-position": sidebarLayoutConfig.position,
-			"data-tablet-sidebar": sidebarConfig.tabletSidebar,
+			"data-tablet-sidebar": tabletSide,
+			"data-tablet-merged": isTabletMerged ? "true" : "false",
 			// noSidebarContentWidth（0–1 比例），空串表示未配置
 			"data-no-sidebar-content-width": String(
 				sidebarLayoutConfig.noSidebarContentWidth ?? "",
